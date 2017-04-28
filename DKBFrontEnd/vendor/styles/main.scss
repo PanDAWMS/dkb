@@ -1,0 +1,26 @@
+@import "misc";
+
+@import "diagram/connectionsMenu";
+@import "diagram/elementLayer";
+@import "diagram/halo";
+@import "diagram/paperArea";
+
+@import "viewUtils/spinner";
+
+@import "widgets/classTree";
+@import "widgets/instancesSearch";
+@import "widgets/linksToolbox";
+@import "widgets/listElementView";
+@import "widgets/progress";
+@import "widgets/toolbar";
+
+@import "workspace/accordion";
+@import "workspace/resizableSidebar";
+@import "workspace/workspace";
+
+@import "templates/icons";
+@import "templates/bigIcon";
+@import "templates/defaultElement";
+@import "templates/leftBar";
+@import "templates/organization";
+@import "templates/person";

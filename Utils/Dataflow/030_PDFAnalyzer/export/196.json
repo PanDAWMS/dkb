@@ -1,0 +1,137 @@
+{
+    "datasets": {}, 
+    "num_pages": 89, 
+    "datatables": {
+        "1": [
+            "Table 1: Runs used in the inclusive photon analysis, which cover all runs through period E4, except runs\n158443 and 160975, which had prescales applied on the g10 loose trigger chain. A lumi block (LB) is\nbad either if the trigger was disabled, or if the luminosity value for that lumi block in the database is\ninvalid.\n\n", 
+            [
+                [
+                    "Run Number", 
+                    "Data Period", 
+                    "Good LB", 
+                    "Bad LB", 
+                    "Luminosity [nb\u22121]"
+                ], 
+                [
+                    "160387", 
+                    "E1", 
+                    "235", 
+                    "0", 
+                    "58.4255"
+                ], 
+                [
+                    "160472", 
+                    "E1", 
+                    "366", 
+                    "0", 
+                    "76.3450"
+                ], 
+                [
+                    "160479", 
+                    "E1", 
+                    "25", 
+                    "0", 
+                    "4.6985"
+                ], 
+                [
+                    "160530", 
+                    "E2", 
+                    "424", 
+                    "0", 
+                    "92.4522"
+                ], 
+                [
+                    "160613", 
+                    "E3", 
+                    "189", 
+                    "0", 
+                    "48.0307"
+                ], 
+                [
+                    "160736", 
+                    "E3", 
+                    "59", 
+                    "0", 
+                    "17.1593"
+                ], 
+                [
+                    "160800", 
+                    "E3", 
+                    "61", 
+                    "1", 
+                    "16.1291"
+                ], 
+                [
+                    "160801", 
+                    "E3", 
+                    "370", 
+                    "0", 
+                    "75.7851"
+                ], 
+                [
+                    "160879", 
+                    "E3", 
+                    "409", 
+                    "0", 
+                    "80.6187"
+                ], 
+                [
+                    "160899", 
+                    "E4", 
+                    "15", 
+                    "0", 
+                    "4.8064"
+                ], 
+                [
+                    "160953", 
+                    "E4", 
+                    "53", 
+                    "0", 
+                    "19.4108"
+                ], 
+                [
+                    "160954", 
+                    "E4", 
+                    "62", 
+                    "1", 
+                    "16.6286"
+                ], 
+                [
+                    "160958", 
+                    "E4", 
+                    "195", 
+                    "0", 
+                    "40.6305"
+                ], 
+                [
+                    "160963", 
+                    "E4", 
+                    "13", 
+                    "0", 
+                    "2.3340"
+                ], 
+                [
+                    "160980", 
+                    "E4", 
+                    "30", 
+                    "0", 
+                    "8.9862"
+                ], 
+                [
+                    "Total", 
+                    "A-E4", 
+                    "12113", 
+                    "65", 
+                    "877.603"
+                ]
+            ]
+        ]
+    }, 
+    "data taking year": 2010, 
+    "luminosity": "880 nb-1", 
+    "energy": "7 TeV", 
+    "title": null, 
+    "campaigns": [], 
+    "collisions": "proton-proton", 
+    "rotated_pages": []
+}

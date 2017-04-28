@@ -1,0 +1,10 @@
+/node_modules
+/dist/dts
+/*.sh
+/*.bat
+
+.idea/
+.vscode/
+
+*.iml
+*.log

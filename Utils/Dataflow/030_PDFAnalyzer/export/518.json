@@ -1,0 +1,1259 @@
+{
+    "datasets": {}, 
+    "datatables": {
+        "1": [
+            "Table 1: Vector boson + jet Monte Carlo samples used in the mono-jet analyses including cross section\ntimes branching ratio, the k\u2013factors and the number of generated events of the sample. The k\u2013factors\nare the NNLO/LO scaling factors used to scale the overall cross-section for W \u2192 l\u03bd to the total NNLO\ninclusive cross section.\n\n", 
+            [
+                [
+                    "Sample ID", 
+                    "Name", 
+                    "Generator", 
+                    "Cross Section [pb]", 
+                    "k\u2013factor", 
+                    "Ngen"
+                ], 
+                [
+                    "107680", 
+                    "WenuNp0 pt20", 
+                    "Alpgen Jimmy", 
+                    "6932", 
+                    "1.1955", 
+                    "3458883"
+                ], 
+                [
+                    "107681", 
+                    "WenuNp1 pt20", 
+                    "Alpgen Jimmy", 
+                    "1305", 
+                    "1.1955", 
+                    "2499645"
+                ], 
+                [
+                    "107682", 
+                    "WenuNp2 pt20", 
+                    "Alpgen Jimmy", 
+                    "378", 
+                    "1.1955", 
+                    "3768632"
+                ], 
+                [
+                    "107683", 
+                    "WenuNp3 pt20", 
+                    "Alpgen Jimmy", 
+                    "101.9", 
+                    "1.1955", 
+                    "1008947"
+                ], 
+                [
+                    "107684", 
+                    "WenuNp4 pt20", 
+                    "Alpgen Jimmy", 
+                    "25.7", 
+                    "1.1955", 
+                    "250000"
+                ], 
+                [
+                    "144018", 
+                    "WenuNp5 excl pt20", 
+                    "Alpgen Jimmy", 
+                    "5.81", 
+                    "1.1955", 
+                    "979197"
+                ], 
+                [
+                    "144022", 
+                    "WenuNp6 pt20", 
+                    "Alpgen Jimmy", 
+                    "1.55", 
+                    "1.1955", 
+                    "144998"
+                ], 
+                [
+                    "144196", 
+                    "WenuNp1 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "7.38", 
+                    "1.1955", 
+                    "180899"
+                ], 
+                [
+                    "144197", 
+                    "WenuNp2 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "6.24", 
+                    "1.1955", 
+                    "134998"
+                ], 
+                [
+                    "144198", 
+                    "WenuNp3 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "3.47", 
+                    "1.1955", 
+                    "139999"
+                ], 
+                [
+                    "144199", 
+                    "WenuNp4 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "1.45", 
+                    "1.1955", 
+                    "75000"
+                ], 
+                [
+                    "107690", 
+                    "WmunuNp0 pt20", 
+                    "Alpgen Jimmy", 
+                    "6932", 
+                    "1.1955", 
+                    "3462942"
+                ], 
+                [
+                    "107691", 
+                    "WmunuNp1 pt20", 
+                    "Alpgen Jimmy", 
+                    "1305", 
+                    "1.1955", 
+                    "2499593"
+                ], 
+                [
+                    "107692", 
+                    "WmunuNp2 pt20", 
+                    "Alpgen Jimmy", 
+                    "378", 
+                    "1.1955", 
+                    "3768737"
+                ], 
+                [
+                    "107693", 
+                    "WmunuNp3 pt20", 
+                    "Alpgen Jimmy", 
+                    "101.9", 
+                    "1.1955", 
+                    "1008446"
+                ], 
+                [
+                    "107694", 
+                    "WmunuNp4 pt20", 
+                    "Alpgen Jimmy", 
+                    "25.7", 
+                    "1.1955", 
+                    "254950"
+                ], 
+                [
+                    "144019", 
+                    "WmunuNp5 excl pt20", 
+                    "Alpgen Jimmy", 
+                    "5.82", 
+                    "1.1955", 
+                    "979794"
+                ], 
+                [
+                    "144023", 
+                    "WmunuNp6 pt20", 
+                    "Alpgen Jimmy", 
+                    "1.54", 
+                    "1.1955", 
+                    "144999"
+                ], 
+                [
+                    "144200", 
+                    "WmunuNp1 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "7.08", 
+                    "1.1955", 
+                    "171000"
+                ], 
+                [
+                    "144201", 
+                    "WmunuNp2 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "6.14", 
+                    "1.1955", 
+                    "139900"
+                ], 
+                [
+                    "144202", 
+                    "WmunuNp3 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "3.42", 
+                    "1.1955", 
+                    "139899"
+                ], 
+                [
+                    "144203", 
+                    "WmunuNp4 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "1.44", 
+                    "1.1955", 
+                    "70000"
+                ], 
+                [
+                    "107700", 
+                    "WtaunuNp0 pt20", 
+                    "Alpgen Jimmy", 
+                    "6932", 
+                    "1.1955", 
+                    "3418296"
+                ], 
+                [
+                    "107701", 
+                    "WtaunuNp1 pt20", 
+                    "Alpgen Jimmy", 
+                    "1305", 
+                    "1.1955", 
+                    "2499194"
+                ], 
+                [
+                    "107702", 
+                    "WtaunuNp2 pt20", 
+                    "Alpgen Jimmy", 
+                    "378", 
+                    "1.1955", 
+                    "3750986"
+                ], 
+                [
+                    "107703", 
+                    "WtaunuNp3 pt20", 
+                    "Alpgen Jimmy", 
+                    "101.9", 
+                    "1.1955", 
+                    "1009946"
+                ], 
+                [
+                    "107704", 
+                    "WtaunuNp4 pt20", 
+                    "Alpgen Jimmy", 
+                    "25.7", 
+                    "1.1955", 
+                    "249998"
+                ], 
+                [
+                    "107705", 
+                    "WtaunuNp5 excl pt20", 
+                    "Alpgen Jimmy", 
+                    "5.82", 
+                    "1.1955", 
+                    "989595"
+                ], 
+                [
+                    "144024", 
+                    "WtaunuNp6 pt20", 
+                    "Alpgen Jimmy", 
+                    "1.54", 
+                    "1.1955", 
+                    "149999"
+                ], 
+                [
+                    "144204", 
+                    "WtaunuNp1 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "10.9", 
+                    "1.1955", 
+                    "265000"
+                ], 
+                [
+                    "144205", 
+                    "WtaunuNp2 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "9.25", 
+                    "1.1955", 
+                    "204999"
+                ], 
+                [
+                    "144206", 
+                    "WtaunuNp3 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "5.10", 
+                    "1.1955", 
+                    "209900"
+                ], 
+                [
+                    "144207", 
+                    "WtaunuNp4 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "2.10", 
+                    "1.1955", 
+                    "104999"
+                ]
+            ]
+        ], 
+        "2": [
+            "Table 2: Vector boson + jet Monte Carlo samples used in the mono-jet analyses including cross section\ntimes branching ratio, the k\u2013factors and the number of generated events of the sample. The k\u2013factors\nare the NNLO/LO scaling factors used to scale the overall cross-section for Z \u2192 \u03bd\u00af\u03bd and Z \u2192 l+l\u2212 to the\ntotal NNLO inclusive cross section.\n\n", 
+            [
+                [
+                    "Sample ID", 
+                    "Name", 
+                    "Generator", 
+                    "Cross Section [pb]", 
+                    "k\u2013factor", 
+                    "Ngen"
+                ], 
+                [
+                    "107650", 
+                    "ZeeNp0 pt20", 
+                    "Alpgen Jimmy", 
+                    "669.6", 
+                    "1.24345", 
+                    "6617284"
+                ], 
+                [
+                    "107651", 
+                    "ZeeNp1 pt20", 
+                    "Alpgen Jimmy", 
+                    "134.6", 
+                    "1.24345", 
+                    "1334897"
+                ], 
+                [
+                    "107652", 
+                    "ZeeNp2 pt20", 
+                    "Alpgen Jimmy", 
+                    "40.65", 
+                    "1.24345", 
+                    "809999"
+                ], 
+                [
+                    "107653", 
+                    "ZeeNp3 pt20", 
+                    "Alpgen Jimmy", 
+                    "11.26", 
+                    "1.24345", 
+                    "220000"
+                ], 
+                [
+                    "107654", 
+                    "ZeeNp4 pt20", 
+                    "Alpgen Jimmy", 
+                    "2.84", 
+                    "1.24345", 
+                    "60000"
+                ], 
+                [
+                    "107655", 
+                    "ZeeNp5 pt20", 
+                    "Alpgen Jimmy", 
+                    "0.76", 
+                    "1.24345", 
+                    "20000"
+                ], 
+                [
+                    "116250", 
+                    "ZeeNp0 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "3054.7", 
+                    "1.24345", 
+                    "994949"
+                ], 
+                [
+                    "116251", 
+                    "ZeeNp1 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "84.9", 
+                    "1.24345", 
+                    "299998"
+                ], 
+                [
+                    "116252", 
+                    "ZeeNp2 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "41.2", 
+                    "1.24345", 
+                    "939946"
+                ], 
+                [
+                    "116253", 
+                    "ZeeNp3 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "8.35", 
+                    "1.24345", 
+                    "149998"
+                ], 
+                [
+                    "116254", 
+                    "ZeeNp4 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "1.85", 
+                    "1.24345", 
+                    "40000"
+                ], 
+                [
+                    "116255", 
+                    "ZeeNp5 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "0.46", 
+                    "1.24345", 
+                    "10000"
+                ], 
+                [
+                    "107660", 
+                    "ZmumuNp0 pt20", 
+                    "Alpgen Jimmy", 
+                    "669.6", 
+                    "1.24345", 
+                    "6615230"
+                ], 
+                [
+                    "107661", 
+                    "ZmumuNp1 pt20", 
+                    "Alpgen Jimmy", 
+                    "134.6", 
+                    "1.24345", 
+                    "1334296"
+                ], 
+                [
+                    "107662", 
+                    "ZmumuNp2 pt20", 
+                    "Alpgen Jimmy", 
+                    "40.65", 
+                    "1.24345", 
+                    "404947"
+                ], 
+                [
+                    "107663", 
+                    "ZmumuNp3 pt20", 
+                    "Alpgen Jimmy", 
+                    "11.26", 
+                    "1.24345", 
+                    "110000"
+                ], 
+                [
+                    "107664", 
+                    "ZmumuNp4 pt20", 
+                    "Alpgen Jimmy", 
+                    "2.84", 
+                    "1.24345", 
+                    "30000"
+                ], 
+                [
+                    "107665", 
+                    "ZmumuNp5 pt20", 
+                    "Alpgen Jimmy", 
+                    "0.76", 
+                    "1.24345", 
+                    "10000"
+                ], 
+                [
+                    "116260", 
+                    "ZmumuNp0 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "3054.9", 
+                    "1.24345", 
+                    "999849"
+                ], 
+                [
+                    "116261", 
+                    "ZmumuNp1 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "84.78", 
+                    "1.24345", 
+                    "300000"
+                ], 
+                [
+                    "116262", 
+                    "ZmumuNp2 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "41.13", 
+                    "1.24345", 
+                    "999995"
+                ], 
+                [
+                    "116263", 
+                    "ZmumuNp3 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "8.34", 
+                    "1.24345", 
+                    "150000"
+                ], 
+                [
+                    "116264", 
+                    "ZmumuNp4 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "1.87", 
+                    "1.24345", 
+                    "39999"
+                ], 
+                [
+                    "116265", 
+                    "ZmumuNp5 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "0.46", 
+                    "1.24345", 
+                    "10000"
+                ], 
+                [
+                    "107670", 
+                    "ZtautauNp0 pt20", 
+                    "Alpgen Jimmy", 
+                    "669.6", 
+                    "1.24345", 
+                    "10613179"
+                ], 
+                [
+                    "107671", 
+                    "ZtautauNp1 pt20", 
+                    "Alpgen Jimmy", 
+                    "134.6", 
+                    "1.24345", 
+                    "3334137"
+                ], 
+                [
+                    "107672", 
+                    "ZtautauNp2 pt20", 
+                    "Alpgen Jimmy", 
+                    "40.65", 
+                    "1.24345", 
+                    "1004847"
+                ], 
+                [
+                    "107673", 
+                    "ZtautauNp3 pt20", 
+                    "Alpgen Jimmy", 
+                    "11.26", 
+                    "1.24345", 
+                    "509847"
+                ], 
+                [
+                    "107674", 
+                    "ZtautauNp4 pt20", 
+                    "Alpgen Jimmy", 
+                    "2.84", 
+                    "1.24345", 
+                    "144999"
+                ], 
+                [
+                    "107675", 
+                    "ZtautauNp5 pt20", 
+                    "Alpgen Jimmy", 
+                    "0.76", 
+                    "1.24345", 
+                    "45000"
+                ], 
+                [
+                    "116940", 
+                    "ZtautauNp0 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "3054.8", 
+                    "1.24345", 
+                    "41500"
+                ], 
+                [
+                    "116941", 
+                    "ZtautauNp1 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "84.88", 
+                    "1.24345", 
+                    "79950"
+                ], 
+                [
+                    "116942", 
+                    "ZtautauNp2 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "41.28", 
+                    "1.24345", 
+                    "34500"
+                ], 
+                [
+                    "116943", 
+                    "ZtautauNp3 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "8.35", 
+                    "1.24345", 
+                    "15000"
+                ], 
+                [
+                    "116944", 
+                    "ZtautauNp4 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "1.83", 
+                    "1.24345", 
+                    "5000"
+                ], 
+                [
+                    "116945", 
+                    "ZtautauNp5 Mll10to40 pt20", 
+                    "Alpgen Jimmy", 
+                    "0.46", 
+                    "1.24345", 
+                    "2000"
+                ], 
+                [
+                    "107710", 
+                    "ZnunuNp0 pt20", 
+                    "Alpgen Jimmy", 
+                    "39.62", 
+                    "1.2604", 
+                    "54949"
+                ], 
+                [
+                    "107711", 
+                    "ZnunuNp1 pt20", 
+                    "Alpgen Jimmy", 
+                    "451.5", 
+                    "1.2604", 
+                    "909848"
+                ], 
+                [
+                    "107712", 
+                    "ZnunuNp2 pt20", 
+                    "Alpgen Jimmy", 
+                    "196.5", 
+                    "1.2604", 
+                    "169899"
+                ], 
+                [
+                    "107713", 
+                    "ZnunuNp3 pt20", 
+                    "Alpgen Jimmy", 
+                    "59.89", 
+                    "1.2604", 
+                    "144999"
+                ], 
+                [
+                    "107714", 
+                    "ZnunuNp4 pt20", 
+                    "Alpgen Jimmy", 
+                    "15.51", 
+                    "1.2604", 
+                    "309899"
+                ], 
+                [
+                    "144017", 
+                    "ZnunuNp5 excl pt20", 
+                    "Alpgen Jimmy", 
+                    "3.57", 
+                    "1.2604", 
+                    "185000"
+                ], 
+                [
+                    "144021", 
+                    "ZnunuNp6 pt20", 
+                    "Alpgen Jimmy", 
+                    "0.92", 
+                    "1.2604", 
+                    "114999"
+                ], 
+                [
+                    "144192", 
+                    "ZnunuNp1 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "12.86", 
+                    "1.2604", 
+                    "499898"
+                ], 
+                [
+                    "144193", 
+                    "ZnunuNp2 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "10.14", 
+                    "1.2604", 
+                    "399999"
+                ], 
+                [
+                    "144194", 
+                    "ZnunuNp3 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "5.40", 
+                    "1.2604", 
+                    "299998"
+                ], 
+                [
+                    "144195", 
+                    "ZnunuNp4 pt20 susyfilt", 
+                    "Alpgen Jimmy", 
+                    "2.18", 
+                    "1.2604", 
+                    "184998"
+                ]
+            ]
+        ], 
+        "3": [
+            "Table 3: Top Monte Carlo samples used in the mono-jet analyses including cross section times branching\nratio, the k\u2013factors and the number of generated events of the sample. The k\u2013factors are the NNLO/LO\nscaling factors used to scale the overall cross-section to the total NNLO inclusive cross section. AcerMC\nand MC@NLO simulations of single top processes provided similar results for this analysis.\n\n", 
+            [
+                [
+                    "Sample ID Name", 
+                    "Generator", 
+                    "Cross Section [pb]", 
+                    "k\u2013factor", 
+                    "Ngen"
+                ], 
+                [
+                    "105200", 
+                    "T1", 
+                    "MC@NLO Jimmy", 
+                    "90.6", 
+                    "14983835"
+                ], 
+                [
+                    "105204", 
+                    "TTbar", 
+                    "FullHad", 
+                    "MC@NLO Jimmy", 
+                    "1198875"
+                ], 
+                [
+                    "105500", 
+                    "Wt", 
+                    "Acer MC", 
+                    "15.74", 
+                    "994897"
+                ], 
+                [
+                    "117360", 
+                    "st tchan enu", 
+                    "Acer MC", 
+                    "6.97", 
+                    "999295"
+                ], 
+                [
+                    "117361", 
+                    "st", 
+                    "tchan munu Acer", 
+                    "MC", 
+                    "999948"
+                ], 
+                [
+                    "117362", 
+                    "st tchan taunu", 
+                    "Acer MC", 
+                    "6.97", 
+                    "998995"
+                ], 
+                [
+                    "117363", 
+                    "st schan enu", 
+                    "Acer MC", 
+                    "0.5", 
+                    "199899"
+                ], 
+                [
+                    "117364", 
+                    "st", 
+                    "schan munu Acer", 
+                    "MC", 
+                    "199850"
+                ], 
+                [
+                    "117365", 
+                    "st", 
+                    "schan taunu Acer", 
+                    "MC", 
+                    "200000"
+                ], 
+                [
+                    "108346", 
+                    "st Wt", 
+                    "MC@NLO Jimmy", 
+                    "14.37", 
+                    "899694"
+                ], 
+                [
+                    "108340", 
+                    "st tchan enu", 
+                    "MC@NLO Jimmy", 
+                    "6.83", 
+                    "299998"
+                ], 
+                [
+                    "108341", 
+                    "st", 
+                    "tchan munu MC@NLO", 
+                    "Jimmy", 
+                    "299999"
+                ], 
+                [
+                    "108342", 
+                    "st", 
+                    "tchan taunu MC@NLO", 
+                    "Jimmy", 
+                    "299999"
+                ], 
+                [
+                    "108343", 
+                    "st schan enu", 
+                    "MC@NLO Jimmy", 
+                    "0.46", 
+                    "299948"
+                ], 
+                [
+                    "108344", 
+                    "st", 
+                    "schan munu", 
+                    "MC@NLO Jimmy", 
+                    "299998"
+                ], 
+                [
+                    "108345", 
+                    "st", 
+                    "schan taunu MC@NLO", 
+                    "Jimmy", 
+                    "299899"
+                ]
+            ]
+        ], 
+        "4": [
+            "Table 4: Diboson processes Monte Carlo samples used in the mono-jet analyses including cross section\ntimes branching ratio and the number of generated events of the sample.\n\n", 
+            [
+                [
+                    "Sample ID", 
+                    "Name", 
+                    "Generator", 
+                    "Cross Section [pb]", 
+                    "Ngen"
+                ], 
+                [
+                    "125950", 
+                    "Ztoee2JetsEW2JetsQCD15GeVM40", 
+                    "Sherpa", 
+                    "0.447", 
+                    "199999"
+                ], 
+                [
+                    "125951", 
+                    "Ztomm2JetsEW2JetsQCD15GeVM40", 
+                    "Sherpa", 
+                    "0.446", 
+                    "181200"
+                ], 
+                [
+                    "125952", 
+                    "Ztott2JetsEW2JetsQCD15GeVM40", 
+                    "Sherpa", 
+                    "0.444", 
+                    "199899"
+                ], 
+                [
+                    "125956", 
+                    "Ztoee2JetsEW2JetsQCD15GeVM7to40", 
+                    "Sherpa", 
+                    "0.477", 
+                    "100000"
+                ], 
+                [
+                    "125957", 
+                    "Ztomm2JetsEW2JetsQCD15GeVM7to40", 
+                    "Sherpa", 
+                    "0.477", 
+                    "100000"
+                ], 
+                [
+                    "125958", 
+                    "Ztott2JetsEW2JetsQCD15GeVM7to40", 
+                    "Sherpa", 
+                    "0.469", 
+                    "99900"
+                ], 
+                [
+                    "128810", 
+                    "WWlnulnu", 
+                    "Sherpa", 
+                    "2.983", 
+                    "1999697"
+                ], 
+                [
+                    "128811", 
+                    "WZlllnu", 
+                    "Sherpa", 
+                    "0.362", 
+                    "299950"
+                ], 
+                [
+                    "128812", 
+                    "WZlllnuLowMass", 
+                    "Sherpa", 
+                    "1.021", 
+                    "299949"
+                ], 
+                [
+                    "128813", 
+                    "ZZllll", 
+                    "Sherpa", 
+                    "0.267", 
+                    "100000"
+                ], 
+                [
+                    "128814", 
+                    "ZZllnn", 
+                    "Sherpa", 
+                    "0.238", 
+                    "349900"
+                ], 
+                [
+                    "143062", 
+                    "WZlnnn", 
+                    "Sherpa", 
+                    "0.719", 
+                    "100000"
+                ], 
+                [
+                    "143063", 
+                    "WZqqnn", 
+                    "Sherpa", 
+                    "1.425", 
+                    "99900"
+                ], 
+                [
+                    "143064", 
+                    "Wtolnu2JetsEW1JetQCD", 
+                    "Sherpa", 
+                    "24.54", 
+                    "99900"
+                ], 
+                [
+                    "143065", 
+                    "Ztonunu2JetsEW1JetQCD", 
+                    "Sherpa", 
+                    "1.337", 
+                    "99999"
+                ]
+            ]
+        ], 
+        "5": [
+            "Table 5: QCD processes Monte Carlo samples used in the mono-jet analyses including cross section\ntimes branching ratio and the number of generated events of the sample.\n\n", 
+            [
+                [
+                    "Sample ID", 
+                    "Name", 
+                    "Generator", 
+                    "Cross Section [pb]", 
+                    "Ngen"
+                ], 
+                [
+                    "105009", 
+                    "J0 jetjet", 
+                    "Pythia", 
+                    "9860\u00b7106", 
+                    "999997"
+                ], 
+                [
+                    "105010", 
+                    "J1 jetjet", 
+                    "Pythia", 
+                    "678\u00b7106", 
+                    "999993"
+                ], 
+                [
+                    "105011", 
+                    "J2 jetjet", 
+                    "Pythia", 
+                    "41.0\u00b7106", 
+                    "999999"
+                ], 
+                [
+                    "105012", 
+                    "J3 jetjet", 
+                    "Pythia", 
+                    "2.19\u00b7106", 
+                    "999992"
+                ], 
+                [
+                    "105013", 
+                    "J4 jetjet", 
+                    "Pythia", 
+                    "87.7\u00b7103", 
+                    "989992"
+                ], 
+                [
+                    "105014", 
+                    "J5 jetjet", 
+                    "Pythia", 
+                    "2350", 
+                    "999987"
+                ], 
+                [
+                    "105015", 
+                    "J6 jetjet", 
+                    "Pythia", 
+                    "33.6", 
+                    "999974"
+                ], 
+                [
+                    "105016", 
+                    "J7 jetjet", 
+                    "Pythia", 
+                    "0.137", 
+                    "998955"
+                ], 
+                [
+                    "105017", 
+                    "J8 jetjet", 
+                    "Pythia", 
+                    "6.2\u00b710\u22126", 
+                    "998948"
+                ]
+            ]
+        ], 
+        "6": [
+            "Table 6: ADD signal samples for various (\u03b4, MD) phase space points, with pT cut = 80 GeV at the\ngenerator level. CTEQ6.6 cross-sections are quoted.\n\n", 
+            [
+                [
+                    "Sample ID", 
+                    "Name", 
+                    "cross-section [pb]"
+                ], 
+                [
+                    "145318", 
+                    "qqbar-delta2 MD 3500", 
+                    "0.09149"
+                ], 
+                [
+                    "145319", 
+                    "qg-delta2 MD 3500", 
+                    "0.9751"
+                ], 
+                [
+                    "145320", 
+                    "gg-delta2 MD 3500", 
+                    "1.159"
+                ], 
+                [
+                    "145333", 
+                    "qqbar-delta3 MD 2500", 
+                    "0.1972"
+                ], 
+                [
+                    "145334", 
+                    "qg-delta3 MD 2500", 
+                    "1.153"
+                ], 
+                [
+                    "145335", 
+                    "gg-delta3 MD 2500", 
+                    "1.379"
+                ], 
+                [
+                    "145342", 
+                    "qqbar-delta4 MD 2500", 
+                    "0.1262"
+                ], 
+                [
+                    "145343", 
+                    "qg-delta4 MD 2500", 
+                    "0.4804"
+                ], 
+                [
+                    "145344", 
+                    "gg-delta4 MD 2500", 
+                    "0.5877"
+                ], 
+                [
+                    "145351", 
+                    "qqbar-delta5 MD 2500", 
+                    "0.08668"
+                ], 
+                [
+                    "145352", 
+                    "qg-delta5 MD 2500", 
+                    "0.2447"
+                ], 
+                [
+                    "145353", 
+                    "gg-delta5 MD 2500", 
+                    "0.3098"
+                ], 
+                [
+                    "145360", 
+                    "qqbar-delta6 MD 2500", 
+                    "0.06143"
+                ], 
+                [
+                    "145361", 
+                    "qg-delta6 MD 2500", 
+                    "0.1419"
+                ], 
+                [
+                    "145362", 
+                    "gg-delta6 MD 2500", 
+                    "0.185"
+                ]
+            ]
+        ], 
+        "7": [
+            "Table 7: WIMP signal samples used to produce limits.\n\n", 
+            [
+                [
+                    "Sample ID", 
+                    "Operator", 
+                    "WIMP mass", 
+                    "Lead-parton cut ( GeV", 
+                    ") Cross-section ( fb )"
+                ], 
+                [
+                    "144960", 
+                    "D1", 
+                    "10", 
+                    "80", 
+                    "5.16e-06"
+                ], 
+                [
+                    "144964", 
+                    "D1", 
+                    "50", 
+                    "80", 
+                    "4.21e-06"
+                ], 
+                [
+                    "144968", 
+                    "D1", 
+                    "100", 
+                    "80", 
+                    "2.80e-06"
+                ], 
+                [
+                    "144972", 
+                    "D1", 
+                    "200", 
+                    "80", 
+                    "1.11e-06"
+                ], 
+                [
+                    "144961", 
+                    "D5", 
+                    "10", 
+                    "80", 
+                    "380.64"
+                ], 
+                [
+                    "144965", 
+                    "D5", 
+                    "50", 
+                    "80", 
+                    "373.56"
+                ], 
+                [
+                    "144969", 
+                    "D5", 
+                    "100", 
+                    "80", 
+                    "338.13"
+                ], 
+                [
+                    "144973", 
+                    "D5", 
+                    "200", 
+                    "80", 
+                    "254.25"
+                ], 
+                [
+                    "144976", 
+                    "D1", 
+                    "10", 
+                    "300", 
+                    "1.19e-07"
+                ], 
+                [
+                    "144978", 
+                    "D1", 
+                    "50", 
+                    "300", 
+                    "1.07e-07"
+                ], 
+                [
+                    "144980", 
+                    "D1", 
+                    "100", 
+                    "300", 
+                    "8.79e-08"
+                ], 
+                [
+                    "144982", 
+                    "D1", 
+                    "200", 
+                    "300", 
+                    "4.64e-08"
+                ], 
+                [
+                    "144977", 
+                    "D5", 
+                    "10", 
+                    "300", 
+                    "23.12"
+                ], 
+                [
+                    "144979", 
+                    "D5", 
+                    "50", 
+                    "300", 
+                    "22.78"
+                ], 
+                [
+                    "144981", 
+                    "D5", 
+                    "100", 
+                    "300", 
+                    "22.18"
+                ], 
+                [
+                    "144983", 
+                    "D5", 
+                    "200", 
+                    "300", 
+                    "18.87"
+                ], 
+                [
+                    "144962", 
+                    "D9", 
+                    "10", 
+                    "80", 
+                    "90.00"
+                ], 
+                [
+                    "144966", 
+                    "D9", 
+                    "50", 
+                    "80", 
+                    "68.63"
+                ], 
+                [
+                    "144970", 
+                    "D9", 
+                    "100", 
+                    "80", 
+                    "64.69"
+                ], 
+                [
+                    "144974", 
+                    "D9", 
+                    "200", 
+                    "80", 
+                    "41.29"
+                ], 
+                [
+                    "144963", 
+                    "D11", 
+                    "10", 
+                    "80", 
+                    "246.54"
+                ], 
+                [
+                    "144967", 
+                    "D11", 
+                    "50", 
+                    "80", 
+                    "233.99"
+                ], 
+                [
+                    "144971", 
+                    "D11", 
+                    "100", 
+                    "80", 
+                    "189.21"
+                ], 
+                [
+                    "144975", 
+                    "D11", 
+                    "200", 
+                    "80", 
+                    "134.39"
+                ]
+            ]
+        ]
+    }, 
+    "data taking year": "2011", 
+    "luminosity": "4.7 fb-1", 
+    "energy": "7 TeV", 
+    "campaigns": [
+        "mc11c"
+    ], 
+    "collisions": "proton-proton"
+}

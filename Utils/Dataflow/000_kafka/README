@@ -1,0 +1,364 @@
+=============
+* Stage 00  *
+=============
+
+1. Description
+--------------
+Java scripts for automatic management of DKB Dataflow.
+Operates in testing mode.
+
+2. Service utils
+----------------
+
+compile.sh
+---
+Uses variable KAFKA_HOME to prepare CLASSPATH and then compiles given files.
+
+USAGE:
+./compile.sh FileToCompile1.java [FileToCompile2.java ...]
+
+
+run-class.sh
+---
+A wrapper for $KAFKA_HOME/bin/kafka-run-class.sh.
+Runs Java class and passes it cmdline parameters.
+
+
+run.sh
+---
+Runs stages of Dataflow as Kafka processes.
+TODO: add other stages that could be run now with the ExternalProcessor
+      or ExternalSourceConnector.
+
+USAGE:
+./run.sh <stage> {start|stop|restart}
+
+STAGES
+  010GlancePapers -- Glance source for papers
+  050Links2TTL    -- Links to TTL transformation
+  060VirtuosoSink -- TTL and SPARQL sinks to Virtuoso
+
+
+runStreamsApplication.sh
+---
+Runs Streams application configured in files passed as cmdline arguments.
+
+USAGE:
+./runStreamsApplication.sh application.properties topology1.properties \
+                                                      [topology2.properties ...]
+
+
+runExternalProcessor.sh
+---
+Runs Streams application with plain topology of 1 source, 1 processor & 1 sink:
+  source(topic1[,topic2...])->
+    ->processor(ExternalProcessor(yourCommand))->
+        ->sink(your-out-topic)
+
+USAGE:
+./runExternalProcessor.sh application.properties plain-topology.properties
+
+
+3. Java modules and programms
+-----------------------------
+
+StreamsApplication
+---
+...runs configured in *.properties files stream data processing.
+
+How to run:
+i) Create file with application properties
+An example file:
+  config/application.properties
+
+ii) Create file (or files) with streams topology description
+An example file:
+  config/topology.properties
+
+iii) Run
+
+./runStreamsApplication.sh application.properties topology1.properties \
+                                                      [topology2.properties ...]
+
+
+ExternalSourceConnector
+---
+...uses external process to source data into Kafka from an external storage.
+
+How to run:
+
+i) Create file with the SourceConnector properties.
+An example file:
+  config/example-source.properties
+
+You need to change:
+* name (a unique identificator for the task)
+* topic (the Kafka topics to publish data to)
+* external.command (your script, which takes data from an external source
+  and writes them to STDOUT)
+* poll.interval.ms (how often to run the external program to get the new data)
+* data.type (how to treat data from the output connector)
+* data.json.key (how to find a key field in JSON data, if needed)
+
+
+ii) Create file with properties for KafkaConnect.
+An example file:
+  config/connect-sources-standalone.properties
+
+You need to change:
+* rest.port (must be unique for all connect processes run at a time)
+* {key|value}.converter (according to the topics format):
+  org.apache.kafka.connect.storage.StringConverter -- pure String
+  org.apache.kafka.connect.json.JsonConverter      -- Json data
+* {key|value}.converter.schemas.enable (according to the topics format)
+
+Optional:
+* offset.storage.file.filename (as for now, ExternalSourceConnector does not
+  work with offset, so don't worry about it. Simply not delete and that's it)
+* offset.flush.interval.ms
+
+
+iii) Run
+
+$KAFKA_HOME/bin/connect-standalone.sh myConnect.properties mySource.properties
+
+
+ExternalSinkConnector
+---
+...uses external process to sink data from Kafka to an external (final) storage.
+
+How to run:
+
+i) Create file with the SinkConnector properties.
+An example file:
+  config/example-sink.properties
+
+You need to change:
+* name (a unique identificator for the task)
+* topics (the Kafka topics to consume data from)
+* external.command (your script, which takes data from STDIN and send it to an
+  external (final) storage)
+
+Optional:
+* batch.size
+  N>0 : number of messages (at max) that should be combined when sending them
+        to an external sink process. Messages are sending one by one, and '\0'
+        marks the end-of-batch;
+  N=0 : autobatching (size of the batch is the number of messages read from
+        a topic at one time)
+  N<0 : no batching (when your script is taking '\n' as a message delimiter)
+
+
+
+ii) Create file with properties for KafkaConnect.
+An example file:
+  config/connect-sinks-standalone.properties
+
+You need to change:
+* rest.port (must be unique for all connect processes run at a time)
+* {key|value}.converter (according to the topics format):
+  org.apache.kafka.connect.storage.StringConverter -- pure String
+  org.apache.kafka.connect.json.JsonConverter      -- Json data
+* {key|value}.converter.schemas.enable (according to the topics format)
+
+Optional:
+* offset.storage.file.filename (as for Sink connectors, they store offsets in
+  __cunsumer_offsets, so don't worry about it. Simply not delete and that's it)
+* offset.flush.interval.ms
+
+iii) Run
+
+$KAFKA_HOME/bin/connect-standalone.sh myConnect.properties mySink.properties
+
+
+runExternalProcessor
+---
+...is to check if a given programm is compatible with ExternalProcessorSupplier
+(which allows us to run external programms as Kafka Stream processor).
+It takes configuration files as cmdline arguments:
+  application.properties       (example: config/application.properties)
+  plain-topology.properties    (example: config/plain-topology.properties)
+
+How to run:
+
+  java -cp $CLASSPATH ru/kiae/dkb/kafka/streams/runExternalProcessor \
+    application.properties plain-topology.properties
+
+runPipeConnector
+---
+...is to consume data from external source via pipe.
+Say you already have script that gets data from somewhere and then writes it to
+a file. Then you can easily ask the script write its data to a named pipe (by
+cron or with timeout or...), and run a PipeConsumer to read data from the pipe
+as soon as they are written.
+Usage of pipes instead of files saves us from storing input data locally (as
+FileStreamConnector wouldn't recognize the read file was truncated and would
+keep on waiting for the data after remembered offset).
+
+It understand following options:
+
+ -O (--out-topic) VAL : output topic
+ -S (--source) VAL    : source pipe name
+ -c (--command) VAL   : external command to run (with parameters) to write data
+                        into pipe. The command must be able to understand
+                        parameter --pipe PIPE and take care of producing data
+                        continuously.
+ -n (--name) VAL      : processor name. There must be either --name or --command
+                        specified (connector name can't be invented from scratch).
+
+TODO: replace it with ExternalSourceConnector?
+
+How to run:
+
+  java -cp $CLASSPATH ru.kiae.dkb.kafka.connect.runPipeConnector \
+    -S ../010_glancePapers/list_of_papers -O glance-raw -n glance-connect \
+    -c "../010_glancePapers/local_papersFromGLANCE.py -u USERNAME"
+OR
+  java -cp $CLASSPATH ru.kiae.dkb.kafka.connect.runPipeConnector \
+    -S ../010_glancePapers/list_of_papers -O glance-raw -n glance-connect
+
+
+runGlanceProcessor
+---
+...is to parse input from 010_glancePapers PipeConnector and push forward (to
+the output topic) only new / changed records.
+
+It understands following options:
+
+ -O (--out-topic) VAL    : output topic (DEFAULT: glance-parsed)
+ -S (--source-topic) VAL : source topic (DEFAULT: glance-raw)
+ -c (--clean-up)         : reset application (remove State Store and offsets)
+ -n (--name) VAL         : processor name (DEFAULT: glance-raw-processor)
+
+
+How to run:
+
+  java -cp $CLASSPATH ru.kiae.dkb.kafka.streams.runGlanceProcessor
+
+
+2. Compilation and running the programm.
+---------------------------------------
+For Bamboo.
+
+runExternalProcessor
+---
+{{{
+# Run processor
+cd /home/dkb/Dataflow/000_kafka
+./compile.sh ru/kiae/dkb/kafka/streams/csv2ttlProcessor.java
+java -cp $CLASSPATH ru/kiae/dkb/kafka/streams/csv2ttlProcessor &
+
+# Start Kafka server (if needed)
+cd /usr/lib/kafka
+bin/kafka-server-start.sh config/server.properties >~/kafka-server.log &
+
+# Create source topic
+bin/kafka-topics.sh --create --if-not-exists --topic dataset-metadata-csv \
+  --zookeeper localhost:2181 --partitions 1 --replication 1
+
+# Send some data to the topic
+head /home/dkb/Dataflow/053_datasets2TTL/input/impala-csv-example | \
+  bin/kafka-console-producer.sh --topic dataset-metadata-csv \
+  --broker localhost:9092
+
+# NOTE: if you start the consumer before sending something to the source topic,
+#       you'll see the new lines appearing as the Processor consuming new
+#       records and processing them.
+
+# Read TTL result
+bin/kafka-console-consumer.sh --topic dataset-metadata-ttl \
+  --zookeeper localhost:2181 --from-beginning
+^C
+# Read SPARQL result
+bin/kafka-console-consumer.sh --topic dataset-metadata-sparql \
+  --zookeeper localhost:2181 --from-beginning
+^C
+
+# After everything is done, please stop the csv2ttlProcessor, remove created
+# topics and stop Kafka server (if you have started it before):
+# Stopping processor
+kill -s SIGINT %1
+
+}}}
+
+runPipeConnector
+---
+{{{
+cern_user=FIXME
+cd /home/dkb/Dataflow/000_kafka
+# Compile
+javac -cp $CLASSPATH ru/kiae/dkb/kafka/connect/runPipeConnector.java
+
+# Get CERN authorization
+kinit $cern_user@CERN.CH
+
+# Run connector
+java -cp $CLASSPATH ru/kiae/dkb/kafka/connect/runPipeConnector \
+  -S ../010_glancePapers/list_of_papers -O glance-raw -n glance-connect &
+
+# Run data miner
+cd ../010_glancePapers/
+./papersFromGLANCE.sh -u $cern_user -p list_of_papers
+
+# Check data in Kafka topic
+cd /usr/lib/kafka
+bin/kafka-console-consumer.sh --topic glance-raw --zookeeper localhost:2181 \
+  --from-beginning
+
+# Don't forget to stop the connector
+# To check the number (%3) of a command in background, run 'jobs'
+kill -s SIGINT %3
+}}}
+
+runGlanceProcessor
+---
+{{{
+CLASSPATH=$CLASSPATH:/opt/rh/devtoolset-4/root/usr/share/java/jackson-core.jar
+cd /home/dkb/Dataflow/000_kafka
+# Compile
+javac -cp $CLASSPATH ru/kiae/dkb/kafka/streams/GlanceProcessorSupplier.java
+javac -cp $CLASSPATH ru/kiae/dkb/kafka/streams/runGlanceProcessor.java
+
+# Run the processor
+java -cp $CLASSPATH ru.kiae.dkb.kafka.streams.runGlanceProcessor --name gp_test &
+
+# Check the results in Kafka Topic
+cd /usr/lib/kafka
+bin/kafka-console-consumer.sh --topic glance-parsed --zookeeper localhost:2181 \
+  --from-beginning
+
+# If no results are seen for a while, try to send new message to glance-raw
+# with PipeConnector, or look below for instructions on application reset.
+# It happens mainly for one of two reasons:
+# 1) either the application think it has already read all the records from
+#    input topic (or just don't hurry to read next one) -- then new record will
+#    provoke its activity;
+# 2) or the application has already pushed to the sink all records, and unless
+#    there are new or changed information about papers, there will be nothing
+#     on the output -- then only full reset or modified input will change smth.
+# You can also try to start the processor with another --name value.
+
+# Don't forget to stop the processor.
+# To check the number (%4) of a command in background, run 'jobs'
+kill -s SIGINT %4
+
+# To reset the application (clean up its State Store and offsets)
+# some of this magic must work:
+bin/kafka-streams-application-reset.sh --application-id gp_test --input-topic glance-raw
+cd /home/dkb/Dataflow/000_kafka
+java -cp $CLASSPATH ru/kiae/dkb/kafka/streams/runGlanceProcessor --name gp_test -c
+}}}
+
+Removing topics and stopping the server
+---
+{{{
+removing topics
+bin/kafka-topics.sh --delete --topic dataset-metadata-csv --zookeeper localhost:2181
+bin/kafka-topics.sh --delete --topic dataset-metadata-ttl --zookeeper localhost:2181
+bin/kafka-topics.sh --delete --topic dataset-metadata-sparql --zookeeper localhost:2181
+bin/kafka-topics.sh --delete --topic glance-raw --zookeeper localhost:2181
+bin/kafka-topics.sh --delete --topic glance-parsed --zookeeper localhost:2181
+
+# Stopping the server
+kill -s SIGINT %2
+}}}

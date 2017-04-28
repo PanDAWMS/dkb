@@ -1,0 +1,168 @@
+=======================================
+* Detailed description of the datafow *
+=======================================
+
+*** NOTE: stages are to be named with three leading digits (XXX_StageName). ***
+
+=====================
+* Brief description *
+=====================
+Stage		Stage Name			Stage Description 
+Number   
+********************************************************************************************
+0.0              000_kafka                      Dataflow managing Kafka applications
+1.0		 010_glancePapers 		Get papers with links to supporting documents from GLANCE
+1.1		 011_CDSPapers			Get papers metadata from CDS
+1.2		 012_CDSSupportDocs		Get supporting notes metadata from CDS
+1.3		 013_path2PDF			Get PDF URLs from CDS
+2.0		 020_PDFDownloader		Download Supporting Notes PDF papers from CDS
+3.0		 030_PDFAnalyzer		PDF Analyzer (search dataset in PDF Supporting Notes)
+4.0		 040_datasetMetadata		Get datasets metadata from Impala Storage
+5.0		 050_links2TTL			Convert papers and supporting document links to triples
+5.1		 051_papers2TTL			Convert paper metadata to triples
+5.2		 052_supportDoc2TTL		Convert SupportingDocuments metadata to triples
+5.3		 053_datasets2TTL		Convert dataset metadata to triples
+6.0		 060_upload2virtuoso		Upload data to Virtuoso
+
+
+
+=========================
+* Dataflows description *
+=========================
+Dataflow 							Description
+********************************************************************************************************
+010/output -> (011|012|013)    					using output of 010 as input for (011), (012) and (013) 
+013/output -> 020/output -> 030/output -> 040			download PDF, analyze them and search results in Impala
+010/output -> 050						generate TTL file for paper&support document links
+011/output -> 051						... for paper's metadata
+012/output -> 052						... for support docs metadata
+040/output -> 053						... for datasets metadata
+(050|051|052|053)/output -> 060					upload links, papers, support docs and datasets TTL 
+								  files to Virtuoso
+========
+* TODO *
+========
+The numbers below are not about the importance level or execution order.
+Just for convenience.
+
+1. Turn all the source stages into "Connector" mode
+   (see "3. External Sources" below)
+(+) 010_glancePaper
+
+2. Turn all the processing stages into "Streaming" mode
+   (see "2. Streaming Mode" below)
+(+) 011_CDSPapers
+(-) 012_CDSSupportDoc
+(-) 013_path2PDF
+(-) 020_PDFDownloader
+(-) 030_PDFAnalyzer
+(-) 040_datasetMetadata
+(-) 050_links2TTL
+(-) 051_papers2TTL
+(-) 052_supportDoc2TTL
+(+) 053_datasets2TTL
+
+3. Understand what's with "Sink" stages:
+(?) 060_upload2virtuoso
+
+4. Oracle -> Impala pipeline.
+
+5. Combine the whole DataFlow into Kafka Application.
+(-) Create main application
+...and add stages:
+(-) 010_glancePapers
+(-) 011_CDSPapers
+(-) 012_CDSSupportDocs
+(-) 013_path2PDF
+(-) 020_PDFDownloader
+(-) 030_PDFAnalyzer
+(-) 040_datasetMetadata
+(-) 050_links2TTL
+(-) 051_papers2TTL
+(-) 052_supportDoc2TTL
+(-) 053_datasets2TTL
+(-) 060_upload2virtuoso
+
+6. Add Kerberos authorization possibility to CDS stages
+   (move custom Connector classes from 012 to Dataflow/common and reuse in
+   other stages)
+(-) 011_CDSPapers
+(+) 012_CDSSupportDoc
+(-) 013_path2PDF
+
+==============
+* REFERENCES *
+==============
+Conventions, in-between data location in HDFS storage etc.
+
+===========================
+* 1. Data Samples in HDFS *
+===========================
+Catalog					Description						Link to Dataflow Stage   	
+***********************************************************************************************************************
+/user/DKB/store/DatasetsFromPDF		dataset names and ID's, found by PDFAnalyzer module   	[030_PDFAnalyzer/output]
+/user/DKB/store/PapersMetadata		ATLAS Papers metadata from CDS 				[011_CDSPapers/output]
+/user/DKB/store/SupportDocsMetadata	ATLAS Supporting Documents metadata from CDS 		[012_CDSSupportDocs/output]
+/user/DKB/store/SupportDocsPDF		ATLAS Supporting Documents full-text in PDF 		[020_PDFDownloader/output]
+
+
+=======================================
+* 2. Streaming mode (data processing) *
+=======================================
+To automate all the processes in the DataFlow, we need to run all the stages in
+a streaming mode.  It means, that every (processing) stage is to meet the
+following requirements:
+- can be run in a quasi-infinite loop (waiting for input data and reading and
+  so on unless the input stream is closed) [1]; - read input data from STDIN;
+- write output data to STDOUT;
+- not to write anything but processing result to STDOUT (meaning that any log
+  and error messages are going to STDERR or can be suppressed by some kind of
+  --silent option); - in case of multiple output messages as a result of
+  processing of one input message, use '\0' as a separator between sets of
+  output messages [2];
+- in case of multiline result use empty line or '\3' as a message separator[3].
+
+[1] In case of input data that cannot be easily transformed in a 'one-line
+    message' (as PDF files), use names of the files in HDFS as input or learn
+    how to distinguish where one input message ends and starts another one.
+
+[2] For now, ExternalProcessor supposes that even one-message results should be
+    separated with '\0'.
+
+[3] Not implemented yet in ExternalProcessor, so let M.Golosova know if it is a
+    crying need.
+
+=====================================
+* 3. External sources (data mining) *
+=====================================
+There are two general cases of external data sources.
+1. Standard sources (like RDBMS) - here we can use standard connectors.
+2. Non-standard sources (like GLANCE).
+
+For non-standard sources there are three ways to connect them with Kafka:
+- custom Connector for every source (would be the most Kafka way);
+- custom Connector, which runs external programm and consumes its output (would
+  be nice: still looks Kafka-way yet allows us to use external programms);
+- run FileStreamSource Connector, feeding it with data from a named pipe - and
+  write data to the pipe via external programm.
+
+The last variant looked as the simpliest way, so I've started with it and now
+it kinda works.
+
+The requirements it poses to a data mining scripts are not that strict:
+- it must be able to write data to a single file (named pipe) and/or to STDOUT;
+- one entity - one line. If the script generates only one line, be sure it adds
+  "\n" to its end.
+
+Looks like that's all.
+
+There also is an option to run external programm in the same application, that
+runs FileStreamSource Connector. It saves us from cron, yet poses some
+additional requirements:
+- output data strictly in a single file / named pipe (STDOUT won`t work);
+- understand --pipe PIPE parameter and be able to create named pipe with a
+  given name (if it doesn't exist);
+- take care of non-stop data production (running data mining process every now
+  and then);
+- OPTIONAL: understand --timeout SEC parameter for data production frequency
+  control.

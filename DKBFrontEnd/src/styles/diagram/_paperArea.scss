@@ -1,0 +1,24 @@
+.paper-area {
+  flex: auto;
+  cursor: default;
+  overflow: scroll;
+
+  // create new layer to to fix “repaints on scroll” bottleneck
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  transform: translateZ(0);
+
+  background-image: url('../images/transparent-background.png');
+  .paper {
+    margin: 0;
+    position: relative;
+    display: inline-block;
+    border: 1px solid black;
+    background-color: white;
+  }
+}
+
+.uiElementView__iri {
+    fill: #969696;
+    font-size: smaller;
+}
