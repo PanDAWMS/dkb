@@ -18,11 +18,12 @@ output metadata:
 
 '''
 
-from invenio_client import InvenioConnector
-from invenio_client.contrib.cds import CDSInvenioConnector
 import json
 from urlparse import urlparse
 import sys, getopt
+
+sys.path.append("../")
+from pyDKB.dataflow import CDSInvenioConnector, KerberizedCDSInvenioConnector
 
 import warnings
 from requests.packages.urllib3.exceptions import InsecurePlatformWarning
@@ -49,63 +50,6 @@ OPTIONS
   -h, --help              Show this message and exit
 '''
    sys.stderr.write(msg)
-
-import splinter
-try:
-   import kerberos
-except ImportError:
-   pass
-
-class MyCDSInvenioConnector(CDSInvenioConnector):
-   def __enter__(self):
-      return self
-
-   def __exit__(self, exc_type, exc_val, exc_tb):
-      if self.browser:
-         self.browser.quit()
-      if isinstance(exc_val, KeyboardInterrupt):
-         sys.stderr.write("Interrupted by user.\n")
-         return True
-      return False
-
-class KerberizedCDSInvenioConnector(MyCDSInvenioConnector):
-   '''
-   Represents same CDSInvenioConnector, but this one is aware about SPNEGO:
-   Simple and Protected GSSAPI Negotiation Mechanism
-   '''
-   def __init__(self,login="user",password="password"):
-      '''
-      Run parent's constructor with fake login/password to make it run
-      _init_browser().
-      Can't use input parameters as if they're empty strings, _init_browser
-      won't be caslled.
-      '''
-      try: kerberos
-      except NameError:
-         sys.stderr.write("ERROR: Seems like Kerberos Python package is not installed.\n"
-                          "       Can't proceed with Kerberos authorization.\n")
-         sys.exit(4)
-
-      super(KerberizedCDSInvenioConnector,self).__init__("user","password")
-
-   def _init_browser(self):
-      '''
-      Update it every time the CERN SSO login form is refactored.
-      '''
-      try:
-        (_, vc) = kerberos.authGSSClientInit("HTTP@login.cern.ch")
-        kerberos.authGSSClientStep(vc,"")
-        token = kerberos.authGSSClientResponse(vc)
-
-        headers = {'Authorization': 'Negotiate '+token}
-
-        self.browser = splinter.Browser('phantomjs',custom_headers=headers)
-        self.browser.visit(self.server_url)
-        self.browser.find_link_by_partial_text("Sign in").click()
-
-      except kerberos.GSSError, e:
-        sys.stderr.write(str(e)+"\n")
-        sys.exit(3)
 
 def search_notes(cds, notes):
    '''
@@ -245,7 +189,7 @@ def main(argv):
    warnings.simplefilter("once",InsecurePlatformWarning)
 
    if kerberos: Connector=KerberizedCDSInvenioConnector
-   else:        Connector=MyCDSInvenioConnector
+   else:        Connector=CDSInvenioConnector
 
    with Connector(login,password) as cds:
 
