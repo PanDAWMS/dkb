@@ -1,0 +1,11 @@
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/846e4fef-1696-4d83-a00b-65b9d0bf8921> <http://nosql.tpu.ru/ontology/ATLAS#hasCreationDate> "2010-12-14T23:48:32"^^xsd:date .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/846e4fef-1696-4d83-a00b-65b9d0bf8921> <http://nosql.tpu.ru/ontology/ATLAS#hasCDSReportNumber> "CERN-ATL-COM-PHYS-2010-1045" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/846e4fef-1696-4d83-a00b-65b9d0bf8921> <http://nosql.tpu.ru/ontology/ATLAS#hasFullTitle> "SUSY searches with dileptons and high missing transverse momentum" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/846e4fef-1696-4d83-a00b-65b9d0bf8921> <http://nosql.tpu.ru/ontology/ATLAS#hasCDS_ID> 1314226 .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/846e4fef-1696-4d83-a00b-65b9d0bf8921> <http://nosql.tpu.ru/ontology/ATLAS#hasAbstract> "A search for R-parity conserving supersymmetry using the ATLAS detector is described. The final state under study includes two leptons and high missing transverse momentum. Results are based on data collected at ATLAS detector in 2010 that corresponds to 35ipb of integrated luminosity." .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/846e4fef-1696-4d83-a00b-65b9d0bf8921> <http://nosql.tpu.ru/ontology/ATLAS#hasKeyword> "SUSY" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/person/c44ba48f-0a66-4ceb-833c-3b37be72b771> a <http://nosql.tpu.ru/ontology/ATLAS#Person> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/person/c44ba48f-0a66-4ceb-833c-3b37be72b771> <http://nosql.tpu.ru/ontology/ATLAS#hasFirstName> "ATLAS" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/person/c44ba48f-0a66-4ceb-833c-3b37be72b771> <http://nosql.tpu.ru/ontology/ATLAS#hasLastName> "Collaboration" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/846e4fef-1696-4d83-a00b-65b9d0bf8921> <http://nosql.tpu.ru/ontology/ATLAS#hasAuthor> <http://nosql.tpu.ru:8890/DAV/ATLAS/person/c44ba48f-0a66-4ceb-833c-3b37be72b771> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/person/c44ba48f-0a66-4ceb-833c-3b37be72b771> <http://nosql.tpu.ru/ontology/ATLAS#wrote> <http://nosql.tpu.ru:8890/DAV/ATLAS/document/846e4fef-1696-4d83-a00b-65b9d0bf8921> .

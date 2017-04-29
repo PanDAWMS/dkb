@@ -1,0 +1,28 @@
+PDF Analyzer
+
+Introduction
+PDF Analyzer is intended for extracting certain data from PDF files and exporting it into JSON files. Currently it works with ATLAS supporting notes and extracts information about datasets.
+PDF Analyzer uses PDFMiner (https://pypi.python.org/pypi/pdfminer/) as a basic tool for converting PDF to TXT and XML. PDFMiner python package must be installed before using PDF Analyzer.
+
+Files
+PDF Analyzer consists of the following files:
+manager.py - main file which contains the most important classes and functions and which is used to launch the analyzer.
+pdfwork.py - functions for invoking PDFMiner and performing some other tasks concerning the whole text of the document.
+xmltable.py - classes and functions for table reconstruction.
+kafkamode.py - script for launching cmd/kafka mode.
+config.json - configuration file. Will be created automatically if none is present.
+help.txt - this file.
+
+Interactive mode
+This mode will be activated if manager.py is launched.
+The main window displays a column of buttons corresponding to papers (With paper title to the right of the button if config options was set to determine and title was determined).
+Pressing a button opens a new window displaying information about corresponding paper. Main actions which should be performed to analyze the paper are "Attributes", "Datasets" and "Dataset tables". Other actions are used for further development.
+Warning: some operations, such as adding new papers and exporting, take a considerable amount of time to perform, and PDF Analyzer may "hang" during them.
+
+Cmd/kafka mode
+Launching kafkamode.py will start the kafka mode. 
+This mode works in a cycle, accepts file names via standart input (one filename per input string) and prints resulting JSON file followed by "\0" into standart output. Cycle can be stopped by entering an empty string (or any combinations of spaces, newlines, etc, which are reduced to empty string by strip()).
+Two types of files are accepted, input for them looks as following:
+Local files: /user/username/file.pdf
+Files located on HDFS: hdfs:file.pdf
+Warning: before using HDFS files make sure that kerberos ticket was acquired and config file contains correct values for HDFS_PDF_DIR and HDFS_DOWNLOAD_COMMAND.

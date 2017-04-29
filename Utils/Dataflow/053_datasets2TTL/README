@@ -1,0 +1,114 @@
+=============
+* Stage 53  *
+=============
+
+1. Description
+--------------
+Transformation of source CSV files with dataset metadata into TTL and SPARQL
+files, which are the appropriate formats to be uploaded to Virtuoso database.
+
+csv2sparql.py
+-------------
+Main logical unit of the step.
+
+Can be launched as a Mapping function for Hadoop MapReduce (see section 5).
+
+Can be launched in a Streaming mode for Kafka Streams (see section 6).
+
+2. Input
+--------
+...comes from 040_datasetMetadata.
+It is a CSV file with headers:
+{{{
+datatype,glanceid,name,tid,chain_tid,phys_group,events,files,status,timestamp,pr_id,campaign,ddm_erase_timestamp,vuid,grid_exec,se,file_size_mb
+montecarlo,554,mc11_7TeV.107692.AlpgenJimmyWmunuNp2_pt20.merge.NTUP_SMWZ.e825_a131_s1353_a133_r2780_p756_tid572646_00,572646,572646,gr_SM,0,NULL,deleted,NULL,NULL,NULL,NULL,770a1b7c-fff5-11e0-a41c-00155dff097a,panda,unknown,0
+montecarlo,554,mc11_7TeV.107694.AlpgenJimmyWmunuNp4_pt20.merge.NTUP_TAUMEDIUM.e825_a131_s1353_a145_r2993_p851_tid01085034_00,1085034,1085034,GP_Tau,0,NULL,frozen,NULL,NULL,NULL,NULL,69ff17e0-3e3b-11e2-b111-00155dff097a,panda,unknown,0
+...
+}}}
+OR
+{{{
+datatype,glanceid,name,tid,chain_tid,phys_group,events,files,status,timestamp,pr_id,campaign,ddm_erase_timestamp,vuid,grid_exec,se,file_size_mb
+montecarlo,554,mc11_7TeV.107692.AlpgenJimmyWmunuNp2_pt20.merge.NTUP_SMWZ.e825_a131_s1353_a133_r2780_p756_tid572646_00,572646,572646,gr_SM,0,\N,deleted,\N,\N,\N,\N,770a1b7c-fff5-11e0-a41c-00155dff097a,panda,unknown,0
+montecarlo,554,mc11_7TeV.107694.AlpgenJimmyWmunuNp4_pt20.merge.NTUP_TAUMEDIUM.e825_a131_s1353_a145_r2993_p851_tid01085034_00,1085034,1085034,GP_Tau,0,\N,frozen,\N,\N,\N,\N,69ff17e0-3e3b-11e2-b111-00155dff097a,panda,unknown,0
+...
+}}}
+
+3. Output
+---------
+...goes to .TTL and .(N.)SPARQL files with INSERT...WHERE statements for lookup
+insert.
+As Sparql isn`t happy about too long queries, it was decided to keep .SPARQL
+files within 1 MB. So it is possible that will be created files <FNAME>.sparql,
+<FNAME>.1.sparql etc.
+
+TODO
+----
+--(
+I believe these two points are no longer needed as we can run this stage
+via MapReduce directly on the cluster:
+1) Make the script get data from HDFS:
+- getting files
+- selecting data from Impala table
+2) Make the script to output data to HDFS
+
+But for the full image that would be a nice addition.
+)--
+
+4. HDFS
+-------
+Input CSV data are stored in Impala dkb_temp.datasets table.
+It is located in hdfs://kiae/user/DKB/temp/datasets.
+
+To get all the data from Impala table, use:
+{{{
+  impala-shell -k -i nosql-three \
+               -d dkb_temp \
+               -q "SELECT distinct * from datasets" \
+               -B --output_delimiter="," \
+               --print_header \
+               -o <OUTFILE>.css
+}}}
+
+To copy source files from the HDFS use:
+{{{
+  DEST_DIR=<DEST_DIR>
+  hadoop fs -get /user/DKB/temp/datasets/* $DEST_DIR
+  rm -r $DEST_DIR/_impala_insert_staging
+  for f in $DEST_DIR/*; do
+    mv $f ${f%\.}.csv
+  done
+}}} 
+
+5. MapReduce
+------------
+To run this stage as a MapReduce task, use mr.sh:
+{{{
+./mr.sh -h
+USAGE:
+  ./mr.sh <options>
+
+OPTIONS:
+  -f, --flags        FLAGS  String of additional flags for csv2sparql
+  -r, --reducers     N      Number of reduce tasks (that is to say, the number of
+                            output files).
+  -i, --input        DIR    Input directory in HDFS
+                            DEFAULT: /user/DKB/temp/datasets
+  -t, --ttl-output   DIR    Output directory in HDFS for TTL files
+                            DEFAULT: ${INPUT_DIR}_TTL
+  -l, --link-output  DIR    Output directory in HDFS for TTL files
+                            DEFAULT: ${INPUT_DIR}_LINK
+}}}
+
+6. Kafka Streams
+----------------
+Before running this stage as a Kafka Stream Application, you need to have:
+1) installed Apache Kafka with
+2) created topic 'datasets-metadata-csv'
+
+To run Kafka Stream Application, which reuses csv2sparql.py, type:
+
+  java -jar csv2ttlProcessor.jar
+
+Now every single CSV line, published to datasets-metadata-csv, will be consumed,
+processed and the result will be published to 'datasets-metadata-ttl' and 
+'datasets-metadata-sparql' topics.
