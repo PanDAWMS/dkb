@@ -1,0 +1,73 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+36
+
+Figure 30: Figure shows the NTracks distribution in linear and log (inset) scales in the heavy-ﬂavor rich
+control region defined in Sec. 5.1. The data (solid black line) is normalized to the b¯b MC (red points).
+The KS probability of agreement of shapes is 0.96.
+
+556
+
+557
+
+558
+
+559
+
+560
+
+561
+
+562
+
+563
+
+564
+
+565
+
+566
+
+567
+
+568
+
+569
+
+570
+
+571
+
+572
+
+573
+
+F Fraction of like-sign dimuon events in bb Monte-Carlo events with and
+
+without mixing
+
+The bb Monte-Carlo sample used in this analysis was produced with B meson mixing turned off. In
+order to estimate the potential effect of this we estimate the fraction of like-sign dimuon pairs expected
+in a generic sample of bb events. The following estimate does not take differences in the pT spectrum of
+muons B and D decays into account.
+
+We make the following assumptions:
+• We consider only muons from B and D decays.
+• We assume a single average semi-leptonic branching fraction fS L = 0.10 for the decay of all b
+hadrons and D mesons into a muon (the inclusive branching fractions into muons are quite different
+for D± and D0, but their average is sufficiently close to 0.10 for the purpose of this estimate).
+
+• We use an average B − B mixing parameter χ = 0.13 [5].
+• We assume the production of at least one D meson in each B decay.
+• We define a right sign muon as a µ+ (µ−) produced directly or through a secondary decay from a
+b (b) hadron. Muons of the opposite charge will be referred to as wrong sign muons. Similarly,
+we refer to D0, D+, and D+
+s ) produced in a b (b) hadron decay as right sign
+D since their semi-muonic decay would produce a right sign muon. Based on the inclusive data
+available from [5]. we assume that a wrong sign D meson is produced in a fraction w = 0.8 of
+
+s (D0, D−, and D−
+
+Notreviewed,forinternalcirculationonly  

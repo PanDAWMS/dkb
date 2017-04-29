@@ -1,0 +1,146 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+2
+
+1 Introduction
+The hierarchy problem, in which the Planck scale (MPl = 1.2 × 1019 GeV) is vastly large compared to
+the electroweak scale of 100 GeV, is one of the major motivations for new physics. A theory introducing
+extra dimensions is one possible solution. In some theories of extra dimensions, the gravitational field
+propagates into n + 4 dimensions, where n is the number of extra dimensions over the 4 spacetime
+dimensions. The Standard Model particles are localized in the 4 space-time dimensions. Since the
+gravitational field propagates into the extra dimensions, it is reduced from the fundamental gravitational
+force to the weak gravitational field we observe. Thus, the fundamental Planck scale in n + 4 dimensions,
+MD, would be much smaller than MPl and comparable with the electroweak scale.
+
+One of the theories of the extra dimensions is the ADD model, which is the model of large ﬂat
+extra dimensions, proposed by Arkani-Hamed, Dimopoulos, and Dvali [1, 2, 3]. Extra dimensions are
+compactified in cylinder shape of which radius equal R, and MD is related to MPl as [4, 5]
+
+M2
+Pl
+
+= 8πRnMn+2
+D .
+
+(1)
+
+Experimental limits on MD by the collider experiments are reported by the LEP and the Tevatron exper-
+iments; MD > 1.60, 1.20, 1.04, 0.98, 0.94 , 0.80 TeV for each n = 2,··· , 7, respectively [6, 7, 8]. The
+CMS experiment at the LHC excludes the production of black holes with MTH of 4, 4.4, and 4.5 TeV for
+MD of 1.5 TeV for n = 2, 4, and 6 respectively [9], where MTH is the minimum mass of the produced
+black holes.
+
+If extra dimensions exist and MD is of order TeV, mini black holes with TeV scale mass can exist and
+they can be produced by the Large Hadron Collider. In this analysis, mini black holes were searched for
+in a same charge dimuon final state. The analysis presented in this note is an extension of the analysis
+carried out in 2010 data and documented in Ref. [10, 11]. The reader is urged to read those notes to gain
+an understanding of the motivation for this analysis and for some of the selections used here.
+
+A brief review of the theoretical considerations of black hole production and decay can be found
+
+in [12].
+
+1.1 Analysis Strategy
+Black holes decay to all particles in the Standard Model. If black holes are produced with masses well
+above the new physics scale, they are anticipated to decay initially by Hawking evaporation. In this
+case, the relative production probabilities for different particle types from the black holes depend on
+the coupling of the particle to gravity, and the dynamics of the process given by the relative thermal
+emissivities. Since gravity couples only to the energy-momentum content of matter, it is anticipated that
+gravity couples to all particle degrees of freedom in the theory equally. The relative emissivity of the
+process is governed by the dynamics and depends on the mass, angular momentum, and gauges charges
+of the non-perturbative gravitation state and the mass, spin, and gauge charges of the particle being
+emitted.
+
+The classic signature for a black hole decay is multiple high pT objects. An analysis based on a
+multijet signature is presented in Ref. [13]. We use a different approach in this analysis: the signal region
+is defined in terms of track multiplicity, and we use leptons to reduce Standard Model backgrounds.
+Specifically, we require that there are two muons, and that the muons are of the same charge. This
+has the benefit of having very small Standard Model background, while having an appreciable signal
+acceptance. We perform a cut-and-count analysis after explicitly defining the signal selection in terms of
+track multiplicity.
+
+46
+
+47
+
+48
+
+49
+
+50
+
+51
+
+52
+
+53
+
+54
+
+55
+
+56
+
+57
+
+58
+
+59
+
+60
+
+61
+
+62
+
+63
+
+64
+
+65
+
+66
+
+67
+
+68
+
+69
+
+70
+
+71
+
+72
+
+73
+
+74
+
+75
+
+76
+
+77
+
+78
+
+79
+
+80
+
+81
+
+82
+
+83
+
+84
+
+85
+
+86
+
+Notreviewed,forinternalcirculationonly

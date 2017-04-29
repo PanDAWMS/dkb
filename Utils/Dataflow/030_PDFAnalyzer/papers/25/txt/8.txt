@@ -1,0 +1,283 @@
+123
+
+124
+
+125
+
+126
+
+127
+
+128
+
+129
+
+130
+
+131
+
+132
+
+133
+
+134
+
+135
+
+136
+
+137
+
+4.1.1 Choice of Prior
+The prior in Eq. 4 can be factored as P(q ,n ) = P(q )P(n ). Ideally we would like to choose P(q ) to be
+ﬂat in the observable parameter q . Since the interference term in Eq. (2) dominates as L → ¥
+, we choose
+
+a prior of the form
+
+q =
+
+1
+L 2 .
+
+(7)
+
+Typically, this is the prior chosen for contact interaction searches.
+
+P(n ) is taken as a Gaussian with width dNexp, representing the effect of systematic uncertainties to
+is integrated out by sampling from P(n ) in
+
+be discussed later in the text. The posterior dependence on n
+each mass bin 50,000 times (enough to cover the Gaussian-distributed systematics’ phase space).
+
+4.1.2 Limit Setting Method and Results
+
+k
+
+We can write Eq. (3) using nk = number of events observed in data in a given invariant mass bin k
+and m k = Nexp
+(q ,n k), the number of expected events in each mass bin in the presence of new physics.
+We have chosen 9 mass bins with limits of Mmm = 150, 170, 200, 240, 300, 400, 550, 800, 1200 and
+2000 GeV (Fig. 6) and calculated the expected number of events after normalizing the distribution in the
+control region. To provide more values of Nexp to be used in the construction of the posterior PDF, we fit
+the number of expected events in each bin according to
+Nexp(L ) = c0 +
+
+(8)
+
+c1
+L 2 +
+
+c2
+L 4 .
+
+138
+
+The fits for both constructive and destructive interference are shown in Fig. 7.
+
+V
+V
+e
+e
+G
+G
+
+ 
+ 
+/
+/
+ 
+ 
+
+p
+p
+x
+x
+e
+e
+N
+N
+
+1
+1
+
+-110
+-110
+
+V
+V
+e
+e
+G
+G
+
+ 
+ 
+/
+/
+ 
+ 
+
+p
+p
+x
+x
+e
+e
+N
+N
+
+1
+1
+
+-110
+-110
+
+-210
+-210
+
+-310
+-310
+
+-410
+-410
+
+-510
+-510
+
+SM DY
+
+-
+
+-
+
+-
+
+-
+
+ = 7 TeV
+ = 5 TeV
+ = 4 TeV
+ = 3 TeV
+
+210·2
+210·2
+
+·3
+·3
+
+210
+210
+
+-210
+-210
+
+-310
+-310
+
+-410
+-410
+
+-510
+-510
+
+SM DY
++L
++L
++L
++L
+
+ = 5 TeV
+ = 4 TeV
+ = 3 TeV
+ = 2 TeV
+
+210·2
+210·2
+
+·3
+·3
+
+210
+210
+
+310
+310
+
+·2
+·2
+
+310
+310
+
+mm
+mm
+
+ [GeV]
+ [GeV]
+
+310
+310
+
+·2
+·2
+
+310
+310
+
+mm
+mm
+
+ [GeV]
+ [GeV]
+
+Figure 6: Number of expected events as a function of invariant mass for constructive (left) and destructive
+(right) interference models, normalized to the bin width.
+
+139
+
+140
+
+141
+
+142
+
+143
+
+144
+
+145
+
+146
+
+147
+
+148
+
+For for the expected limit, we take the number of SM-only background events bk as the number
+of observed events from MC in each mass bin. The posterior PDF with marginalized systematics is
+drawn as a function of q which takes the prior discussed in section 4.1.1 into account. Without sys-
+tematics, the integral of the normalized posterior PDF in Eq. (6) with q = 1
+L 2 yields an expected limit
+of L −lim = 5.2 TeV for constructive interference and L +
+lim = 4.9 TeV for destructive interference (both
+at 95% C.L.). Fig 8 shows the expected posterior PDF distributions from MC for SM-only and in the
+presence of a L − = 5 TeV constructive interference signal. In the latter case, there would be a clear
+preference at 1
+
+L 2 = 0.04 [TeV−2].
+
+In order to determine the range of the expected limit within statistical ﬂuctuations, 5000 pseudo-
+experiments were performed, varying Ni events in each bin by a random Poisson amount. The resulting
+
+8
+
+m
+L
+L
+L
+L
+m
+m
+m
+

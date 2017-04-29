@@ -1,0 +1,176 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+31
+
+Sample
+
+LF
+
+LF
+
+scaled to 1(fb−1)
+
+J0
+J1
+J2
+J3
+J4
+J5
+J6
+J7
+J8
+
+0
+0
+0
+0
+4
+16
+56
+143
+341
+
+0
+0
+0
+0
+125
+13.4
+0.7
+0.01
+1.5e-6
+
+HF
+
+0
+0
+1
+35
+153
+375
+577
+675
+576
+
+HF
+
+scaled to 1(fb−1)
+
+0
+0
+
+14635
+27365
+4792
+314.7
+6.92
+0.066
+2.5e-6
+
+Table 10: The number of dimuon events from the different jet-jet samples for the nominal selection. LF
+(HF) designates events where the parent of the leading muon is a light (heavy) ﬂavor meson.
+
+C Fraction of heavy ﬂavor in region C
+The method to estimate b¯b background as described in Section 5.1 depends on the fraction of heavy
+ﬂavor to light ﬂavor dimuon events in region Cdata. Ideally this fraction should be 1. We study the
+fraction of heavy ﬂavor events for the region C selection in simulation. The samples used for this study
+are the P jet-jet samples (J0 to J8, dataset ID 105009 to 105017 respectively).
+
+For a given dimuon selection, we count the number of dimuon events where the leading muon parent
+is a heavy ﬂavor meson (400 <pdgID< 600), designated by HF. The dimuon events where the leading
+muon parent is not from heavy ﬂavor is designated as LF (for light ﬂavor).
+
+In these samples, J0 to J3 have nearly no statistics, but high cross sections as compared to J4 to J8.
+If all the samples are combined according to respective cross sections, then the J0-J3 samples with large
+statistical uncertainties dominate the estimates and make drawing any conclusion impossible. To address
+this we present numbers in two formats. First, we present the individually obtained numbers in each
+sample, and the simple sum of numbers in each sample. Secondly, we present the cross-section weighted
+sum of the J5 to J8 samples.
+
+We start with the following nominal selection
+• Two muons of the same charge with pT > 25, 15 GeV respectively.
+• The leading muon is non isolated; we require ptcone20/pT > 0.2.
+• The leading muon has high impact parameter significance; we require |d0/derr
+
+0 | > 3.
+
+and pID
+
+This gives the fraction of HF to LF as (81 ± 1)% from the simple sum, and (96 ± 1)% from the weighted
+sum of samples J5-J8. The raw numbers from the different samples are presented in Table 11.
+
+Now in addition to the nominal selection, we require both muons to satisfy 1 − pMS
+
+T < 0.2,
+where pMS
+T are the pT of the muon measured in the muon spectrometer (MS) and inner detector
+T
+(ID) respectively. This distribution is shown in Fig. 24 for all subleading muons in the A W+jets
+samples. The distribution is shown separately for muons whose parent is either a light ﬂavor or a heavy
+ﬂavor meson. After this selection has been imposed, the fraction of HF to LF is (96 ± 1)% from the
+simple sum, and (98 ± 1)% from the weighted sum of samples J5-J8. The numbers for this heavy ﬂavor
+enhanced selection are shown in Table 10.
+
+T /pID
+
+We conclude that after our selections, the fraction of HF in region C is very nearly one.
+
+500
+
+501
+
+502
+
+503
+
+504
+
+505
+
+506
+
+507
+
+508
+
+509
+
+510
+
+511
+
+512
+
+513
+
+514
+
+515
+
+516
+
+517
+
+518
+
+519
+
+520
+
+521
+
+522
+
+523
+
+524
+
+525
+
+526
+
+527
+
+Notreviewed,forinternalcirculationonly

@@ -1,0 +1,143 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+18
+
+Process
+
+t¯t
+
+µµ+fake
+WZ + ZZ
+
+Wt
+
+Predicted
+Observed
+
+Events
+
+41.4 ± 0.6(stat) ± 6.0(syst) ± 1.5(lumi)
+
+5.8 ± 0.1(stat) ± 1.2(syst)
+
+7.9 ± 0.4(stat)
+2.3 ± 0.4(stat)
+
+57.4 ± 0.8(stat) ± 6.1(syst)
+
+78
+
+Table 4: Number of expected and observed events in the t¯t control region. Systematic uncertainties on
+the backgrounds from dibosons and Wt are not considered.
+
+one eligible track, the total event weight is given by w = 1 −(cid:81)n
+
+i=1(1 − fi). The uncertainties on fi for
+all tracks in a given event are completely correlated and we account for this correlation when calculating
+the uncertainty on w. The sum of uncertainties for all such events gives the uncertainty on the data based
+estimate of background from the measurement statistics.
+
+Some other effects that we considered are described here.
+• The nominal fake rate is measured after subtracting b¯b and t¯t contributions as shown in Fig. 7. The
+total subtraction (t¯t + b¯b) is varied up and down by 1σ to get a low and high fake rate respectively.
+The t¯t background is varied by the total systematic uncertainty on this background (see Table 5).
+The b¯b background is varied by the uncertainty on R (see sec 5.1.1). The difference in background
+predictions from the low and high fake rate is −20% and +18%. We take a systematic uncertainty
+of 20% on the µ+fake background due to this subtraction.
+
+• The selection of W events is a possible source of systematic uncertainty. To estimate this, we
+perform the same measurement in a Z window. We select dimuon events of opposite sign which
+satisfy an invariant mass requirement (76 < Mµµ < 106 GeV). Both muons are required to be
+isolated.
+In these dimuon events, we look for an extra track to form the denominator. Then
+we look for a third muon in the event passing all muon requirements for the second muon of
+our analysis. This forms the numerator. We compare the muon rate from the W-window and
+Z-window integrated over all track pT. The rate from W after b¯b, t¯t and diboson subtraction is
+0.0033 ± 0.0002(stat) ± 0.0007(syst). The corresponding rate from Z is 0.0043 ± 0.0004(stat).
+These rates are in reasonable agreement and we do not assign a systematic uncertainty for W-
+window selection.
+
+The total systematic uncertainty on the data based estimate is thus a sum in quadrature of the uncer-
+
+tainty from measurement statistics and the 20% due to subtraction of other processes.
+
+6.2 Estimation of t¯t background
+The t¯t background is estimated using MC samples. The uncertainty on the theoretical cross section of t¯t
+is 9.6% [31, 32]. Predictions in Ref. [32] are calculated with Hathor [33] with mtop = 172.5 GeV, and
+CTEQ66. The uncertainty is calculated by adding the scale and PDF uncertainties linearly. The scale
+uncertainty is 5.6%, while the PDF uncertainty is 4%. We consider the following systematic variations :
+• To check the effect of generator we check the t¯t background from samples generated with 
+
+and hadronized with either  or . This yields a 5.1% uncertainty in the signal region.
+
+• We also vary the mass of the top quark down to 170 GeV and up to 175 GeV. This yields a 4.5%
+
+systematic in the signal region.
+
+316
+
+317
+
+318
+
+319
+
+320
+
+321
+
+322
+
+323
+
+324
+
+325
+
+326
+
+327
+
+328
+
+329
+
+330
+
+331
+
+332
+
+333
+
+334
+
+335
+
+336
+
+337
+
+338
+
+339
+
+340
+
+341
+
+342
+
+343
+
+344
+
+345
+
+346
+
+347
+
+Notreviewed,forinternalcirculationonly

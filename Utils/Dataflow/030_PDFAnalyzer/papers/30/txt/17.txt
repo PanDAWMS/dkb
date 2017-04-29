@@ -1,0 +1,14 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+16
+
+(a) Second muon pT: NTracks < 10
+
+(b) Second muon pT: NTracks < 10
+
+Figure 10: The second muon pT distribution in linear and log scale in the background region. The
+background histograms are stacked. The rightmost bin along X-axis shows the overﬂows.
+
+Notreviewed,forinternalcirculationonly) [GeV]2m(Tp050100150200250300350400Nevents / 8 GeV5001000150020002500Data+fakemttbbDibosonSingle top: Wt) [GeV]2m(Tp050100150200250300350400Nevents / 8 GeV-110110210310Data+fakemttbbDibosonSingle top: Wt

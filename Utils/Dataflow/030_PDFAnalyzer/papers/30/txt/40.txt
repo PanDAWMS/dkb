@@ -1,0 +1,64 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+39
+
+Figure 32: Figure shows the isolation efficiency for leading muon in different signal MC samples as a
+function of muon pT. The efficiency is measured only for those muons which originate promptly from
+the black hole, or for muons arising from the decay of W and Z bosons from the black hole.
+
+isolation cut is stable for all < µ >.
+
+We also check to see if our track selection is sensitive to pileup. Figure 34 shows the two dimensional
+distribution of NTracks versus < µ > for events with at least two muons with pT > 15 GeV each. We
+check to see if the NTracks are correlated with the number of interactions; the correlation factors5 show
+no such correlation. This is expected since the track pT is required to be greater than 10 GeV and the
+tracks are required to point back to the same vertex as the muons in the event.
+
+H Miscellaneous Figures
+Figure 35 shows the distribution of events in the b¯b and t¯t simulation samples in the different regions as
+described by Fig. 1. Figures 37, 38, 39, 40, 41, and 42 show the ratio of data to predicted background in
+the bottom part of the figure; these figures are counterparts to figs. 9, 10, 11, 12, 13, and 14 respectively.
+Figures 43,43, and 43 show the limit plots for 2, 4 and 6 extra dimensions respectively with the actual
+
+sample points used for limit calculation overlaid as black points.
+
+I Location of code
+
+The code used for this analysis can be found here:
+https://svnweb.cern.ch/trac/atlasgrp/browser/Institutes/LBNL/MultiObjectAnalysis
+
+611
+
+612
+
+613
+
+614
+
+615
+
+616
+
+617
+
+618
+
+619
+
+620
+
+621
+
+622
+
+623
+
+624
+
+625
+
+5TH2::GetCorrelationFactor()
+
+Notreviewed,forinternalcirculationonly [GeV]T p1m0500100015002000Isolation Efficiency00.20.40.60.81 = 4000 GeVTHM = 5000 GeVTHM

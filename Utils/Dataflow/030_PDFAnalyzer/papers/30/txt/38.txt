@@ -1,0 +1,101 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+37
+
+b-hadron decays (a more precise value for w could be obtained from Monte-Carlo, but this didn’t
+seem necessary).
+
+When only muons from B and D decays are considered, we can obtain a like-sign dimuon pair
+from a generic bb event if one of the b-hadrons undergoes mixing or if a wrong sign D decays into
+a muon. With the above assumptions, the total fraction of like-sign dimuon pairs expected from the
+different combinations of semi-leptonic decay of b hadron or D meson, mixing, and production of right
+and wrong sign D mesons is:
+
+fpair = 2 · f 2
+S L {
+
++ O( f 3
+S L)
+
+(1 − χ)χ +
+
+(1 − χ)(1 − fS L)(cid:2)(1 − χ)w + χ(1 − w)(cid:3) +
+χ(1 − fS L)(cid:2)(1 − χ)(1 − w) + χw(cid:3) +
+(1 − fS L)2(cid:2)(1 − χ)(1 − w) + χw(cid:3) ·
+(cid:2)(1 − χ)w + χ(1 − w)(cid:3) }
+
+(2)
+(3)
+(4)
+(5)
+(6)
+(7)
+
+Term 1 concerns the case where both muons come from semi-muonic b-hadron decays, terms 2 and 3 are
+from events where one muon comes from a b-hadron and the other comes from a D decay, while terms
+4 and 5 account for muons coming from D decays only. Contributions with more than two semileptonic
+decays are of O( f 3
+
+S L) and are neglected in this simple estimate.
+
+With the numerical values for χ and w indicated above we obtain
+
+If mixing is turned off (χ = 0), we get
+
+fpair = 0.87 · 2 f 2
+
+S L
+
+fpair = 0.85 · 2 f 2
+
+S L
+
+(8)
+
+(9)
+
+Thus with the above assumptions the fractions of like-sign dimuon pairs obtained with and without
+B mixing are very similar. This is not surprising, given that the fraction w of wrong-sign D mesons
+is relatively large (i.e. when mixing is turned off, a B meson that would have otherwise decayed after
+mixing is likely to decay into a wrong-sign D meson and to produce a muon of the required charge, thus
+compensating for turning off mixing).
+
+574
+
+575
+
+576
+
+577
+
+578
+
+579
+
+580
+
+581
+
+582
+
+583
+
+584
+
+585
+
+586
+
+587
+
+588
+
+589
+
+590
+
+591
+
+Notreviewed,forinternalcirculationonly

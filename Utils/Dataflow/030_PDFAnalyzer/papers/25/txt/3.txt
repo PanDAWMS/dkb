@@ -1,0 +1,170 @@
+]
+
+b
+p
+
+[
+ 
+)
+
+ 
+
+V
+e
+G
+0
+2
+1
+>
+M
+
+(
+ 
+
+18
+17
+16
+15
+14
+13
+12
+11
+10
+9
+8
+0
+
+DY only (
+
+ = 7 TeV)
+s
+
+DY + signal (
+
+ = -1)
+
+DY + signal (
+
+ = +1)
+
+2
+
+4
+
+6
+
+8
+
+10 12 14 16 18 20
+ [TeV]
+
+Figure 2: PYTHIA LO cross section (mmm > 120 GeV) as a function of the contact interaction scale L
+
+.
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+33
+
+34
+
+35
+
+36
+
+37
+
+38
+
+39
+
+40
+
+41
+
+42
+
+43
+
+44
+
+45
+
+46
+
+47
+
+48
+
+49
+
+50
+
+51
+
+52
+
+53
+
+2 Datasets and Monte Carlo Production
+Our dataset consists of the full 2010 run. This corresponds to ∼42 pb−1 of muon-triggered data, collected
+with stable beam conditions and fully operational inner detector and muon spectrometer systems.
+To model the expected contributions from SM processes, we use leading-order (LO) PYTHIA [4]
+Monte Carlo event generation and Geant simulation in the ATHENA MC10 framework. We apply data-
+driven momentum corrections to each individual muon and event-level weighting for multiple vertices
+according to the same prescription as the Z′ analysis, extensively described in [5]. For the main irre-
+ducible background, Z0/g → mm
+(DY), we also account for higher order processes by applying QCD
+and EW corrections as a function of the true invariant mass. Since the Z0 peak dominates our statis-
+tics, we produce the DY samples in invariant mass bins in order to increase the number of events in
+the high-mass region. Also included are Z → tt
+and the most dominant non-DY background processes
+(t¯t,WW,W Z and ZZ) as described in [5], which include muon momentum corrections and vertex pileup
+event weights applied. Together, these samples as well as the DY make the total background (b).
+
+For our signal (s) samples, four benchmark values for L
+
+in both the constructive and destructive
+LLIM have been chosen (Table 1). Like the DY samples, these are also produced in PYTHIA (LO), and
+contain the DY component as well as the interference and pure CI terms. We require the dimuon invariant
+mass mmm ≥ 120 GeV in the event generation stage to increase statistics above the Z0 peak where the
+new physics would appear. In Table 2, we show the production cross section times the branching fraction
+BF(X → mm
+) for each of the benchmark samples. We also apply all MC corrections to these samples
+in the same way as they have been applied to the DY MC, with the exception of EW corrections. In
+this case, since the internal process of the contact term is unknown but the signal sample includes DY as
+well, an overall shift in the number of expected events is applied corresponding to the difference in DY
+expected events with and without EW corrections. This is important because we extrapolate the expected
+, as we will show later in section 4.1.2. Fig. 3 shows the resulting dimuon
+invariant mass distribution after event generation, simulation, reconstruction and MC corrections in the
+two interference models.
+
+number of events as L → ¥
+
+All event-level and muon selection criteria are identical to that described in [5]. This includes the
+
+following:
+
+• Event-level:
+
+3
+
+L
+s
+h
+h
+

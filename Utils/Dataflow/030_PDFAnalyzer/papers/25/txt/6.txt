@@ -1,0 +1,331 @@
+Table 4: Expected number of events in the presence of new physics for various contact interaction scales
+with constructive (L −) and destructive (L +) interference. The errors quoted are statistical only.
+
+Mass (GeV)
+L − = 3 TeV
+L − = 4 TeV
+L − = 5 TeV
+L − = 7 TeV
+L + = 2 TeV
+L + = 3 TeV
+L + = 4 TeV
+L + = 5 TeV
+
+150-170
+
+19.14 ± 0.46
+18.79 ± 0.43
+17.44 ± 0.39
+17.32 ± 0.39
+21.64 ± 0.59
+18.59 ± 0.43
+18.16 ± 0.40
+18.48 ± 0.40
+
+170-200
+
+15.73 ± 0.41
+14.27 ± 0.37
+14.25 ± 0.36
+13.84 ± 0.35
+19.31 ± 0.55
+15.18 ± 0.39
+14.29 ± 0.35
+13.62 ± 0.34
+
+200-240
+
+11.22 ± 0.35
+10.01 ± 0.31
+9.40 ± 0.29
+9.26 ± 0.28
+15.80 ± 0.50
+10.05 ± 0.31
+8.81 ± 0.27
+8.84 ± 0.27
+
+240-300
+8.47 ± 0.30
+6.54 ± 0.24
+6.17 ± 0.24
+6.30 ± 0.23
+15.22 ± 0.50
+7.19 ± 0.26
+6.05 ± 0.23
+5.44 ± 0.21
+
+300-400
+7.89 ± 0.30
+5.04 ± 0.22
+4.33 ± 0.20
+3.26 ± 0.17
+21.23 ± 0.60
+5.45 ± 0.23
+3.62 ± 0.18
+2.91 ± 0.15
+
+400-550
+6.01 ± 0.26
+3.03 ± 0.17
+1.95 ± 0.13
+1.26 ± 0.10
+21.60 ± 0.60
+4.59 ± 0.21
+2.10 ± 0.14
+1.61 ± 0.12
+
+550-800
+6.50 ± 0.27
+2.27 ± 0.15
+1.29 ± 0.11
+0.58 ± 0.07
+25.46 ± 0.64
+5.27 ± 0.23
+1.59 ± 0.12
+0.88 ± 0.09
+
+800-1200
+5.11 ± 0.24
+1.45 ± 0.12
+0.72 ± 0.08
+0.21 ± 0.04
+21.41 ± 0.58
+4.29 ± 0.20
+1.52 ± 0.12
+0.53 ± 0.07
+
+1200-2000
+2.97 ± 0.17
+1.08 ± 0.09
+0.36 ± 0.055
+0.11 ± 0.031
+15.05 ± 0.46
+3.07 ± 0.17
+0.84 ± 0.08
+0.28 ± 0.05
+
+3 Consistency of Data with Standard Model Simulation
+
+One way to visually check whether or not there is an excess of events present in our data sample is to
+
+as a function of mmm
+
+. Fig. 4 shows no indication of an excess.
+
+draw the integral from mmm → ¥
+
+In order to quantify this agreement, we construct a binned log-likelihood (−ln(L)) test between our
+dataset and the expected number of events from SM-only processes. Calculating the Poisson probabil-
+ity between the total number of events observed in data and SM-expected events in each mass bin, we
+find −ln(L) =10.7. 100k pseudo-experiments were performed to determine the negative log-likelihood
+between the nominal SM and a random Poisson ﬂuctuations independently each mass bin. Fig. 5 shows
+the resulting distribution, with an arrow indicating the −ln(L) value found in data. By integrating this
+pseudo-experiment distribution from the observed value to infinity, we find a p-value of 56%, thus show-
+ing consistency with the SM.
+
+]
+]
+
+i
+i
+
+ 
+ 
+,
+,
+n
+n
+m
+m
+m
+m
+
+[
+[
+ 
+ 
+s
+s
+t
+t
+
+n
+n
+e
+e
+v
+v
+e
+e
+
+ 
+ 
+f
+f
+
+o
+o
+
+ 
+ 
+r
+r
+e
+e
+b
+b
+m
+m
+u
+u
+N
+N
+
+510
+510
+
+410
+410
+
+310
+310
+
+210
+210
+
+10
+10
+
+1
+1
+
+-110
+-110
+
+-210
+-210
+
+Data
+
+Standard Model
+
+-1
+ L dt = 42 pb
+
+s
+
+=7 TeV
+
+-
+
+-
+
+-
+
+ = 3 TeV
+
+ = 4 TeV
+
+ = 5 TeV
+
++L
+
++L
+
++L
+
+ = 3 TeV
+
+ = 4 TeV
+
+ = 5 TeV
+
+80
+80
+
+210
+210
+
+·2
+·2
+
+210
+210
+
+310
+310
+mm
+mm
+
+minm
+minm
+
+·2
+·2
+ [GeV]
+ [GeV]
+
+310
+310
+
+Figure 4: Integral of mmm → ¥
+
+samples.
+
+as a function of mmm
+
+for data, SM-only, and various contact interaction
+
+4 Bayesian Limit-setting
+
+As we have ruled out the presence of new physics in our data set, we use a Bayesian counting method in
+order to set a limit on L
+in the absence of observed signal. In general, one can construct the likelihood
+in Nk invariant mass bins for ¯n observed events given expected signal and background events (s and b,
+respectively) as:
+
+6
+
+88
+
+89
+
+90
+
+91
+
+92
+
+93
+
+94
+
+95
+
+96
+
+97
+
+98
+
+99
+
+100
+
+101
+
+102
+
+103
+
+¥
+m
+m
+¥
+m
+m
+L
+L
+L
+(cid:242)
+

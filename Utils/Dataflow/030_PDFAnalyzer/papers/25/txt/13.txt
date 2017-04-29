@@ -1,0 +1,63 @@
+192
+
+193
+
+194
+
+195
+
+196
+
+197
+
+198
+
+199
+
+200
+
+201
+
+202
+
+203
+
+204
+
+205
+
+206
+
+References
+
+[1] K. Nakamura etal.(Particle Data Group), J. Phys. G 37, 075021 (2010).
+
+[2] E. Eichten, K. Lane, and M. Peskin, “New Tests for Quark and Lepton Substructure”, Phys. Rev.
+
+Lett. 50 11 811-814, 1983.
+
+[3] K. Abe etal.(CDF Collaboration), Phys. Rev. Lett. 79, 2198 (1997).
+
+[4] T. Sj¨ostrand, P. Ed´en, C. Friberg, L. L¨onnblad, G. Miu, S. Mrenna and E. Norrbin, Computer Phys.
+
+Commun. 125 238 (LU TP 00-30, hep-ph/0010017, 2001.
+
+[5] ATLAS Exotics Dimuon support note, ATL-COM-PHYS-2011-084, 2011.
+
+[6] ATLAS Exotics Dilepton statistics note, ATL-COM-PHYS-2011-085, 2011.
+
+[7] G. Aad etal.(ATLAS Collaboration), “Expected Performance of the ATLAS Experiment, Detector,
+
+Trigger and Physics”, CERN-OPEN-2008-020, 2008.
+
+[8] G. Aad et al. (ATLAS Collaboration), “The ATLAS Experiment at the CERN Large Hadron Col-
+
+lider”, Journal of Instrumentation 3 08 S08003, http://stacks.iop.org/1748-0221/3/S08003, 2008.
+
+[9] Thompson, E N, Willocq, S, Black, K M,“Search for Contact Interactions in the Dimuon Final State
+
+at ATLAS”, DPF’09 talk proceedings (http://arxiv.org/abs/0910.3384), October 2009.
+
+13
+
+

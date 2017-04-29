@@ -1,0 +1,170 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+26
+
+[10] Search for strong gravity effects in same-sign dimuon final states, Tech. Rep.
+
+ATLAS-CONF-2011-065, CERN, Geneva.
+
+[11] Search for new physics in like sign dimuon final state, Tech. Rep. ATL-COM-PHYS-2011-102,
+
+CERN, Geneva.
+
+[12] Search for Mini Black Holes in the Multijet Final State in pp Collisions at
+
+√
+
+s = 7 TeV, Tech. Rep.
+
+ATL-COM-PHYS-2011-025, CERN, Geneva.
+√
+
+[13] Search for Microscopic Black Holes in Multi-Jet Final States with the ATLAS Detector at
+
+s = 7 TeV, Tech. Rep. ATLAS-CONF-2011-068, CERN, Geneva.
+
+[14] SUSY Group Goodrun Lists, Available at
+
+https://twiki.cern.ch/twiki/bin/view/atlasprotected/luminositysummer2010.
+
+[15] Updated Luminosity Determination in pp Collisions at root(s)=7 TeV using the ATLAS Detector,
+
+Tech. Rep. ATL-COM-CONF-2011-034, CERN, Geneva.
+
+[16] S. Fixione and B. Webber, Matching NLO QCD computations and parton shower simulations,
+
+JHEP 06 (2002) 029, arXiv:0204244 [hep-ph].
+
+[17] S. Fixione, P. Nason, and B. Webber, Matching NLO QCD and parton showers in heavy ﬂavour
+
+production, JHEP 08 (2003) 007, arXiv:0305252 [hep-ph].
+
+[18] J. M. Butterworth et al., Multiparton interactions in photoproduction at HERA, Z.Phys.C 72
+
+(1996) 637.
+
+[19] Atlas Collaboration, G. Aad et al., Measurement of the top quark-pair production cross section
+
+s = 7 TeV , accepted by EPJC (2010) , arXiv:1012.1792
+
+with ATLAS in pp collisions at
+[hep-ex].
+
+√
+
+[20] P. M. Nadolsky, Implications of CTEQ global analysis for collider observables, Phys.Rev. D78
+
+(2008) 031004, arXiv:0802.0007 [hep-ph].
+
+[21] G. Corcella et al., HERWIG 6.5: an event generator for Hadron Emission Reactions With
+
+Interfering Gluons (including supersymmetric processes), JHEP 01 (2001) 010, arXiv:0011363
+[hep-ph].
+
+[22] B. P. Kersevan and E. Richter-Was, The Monte Carlo event generator AcerMC version 2.0 with
+
+interfaces to PYTHIA 6.2 and HERWIG 6.5, arXiv:0405247 [hep-ph].
+
+[23] A. Sherstnev and R. S. Thorne, Parton Distributions for LO Generators, arXiv:0711.2473
+
+[hep-ph].
+
+[24] D. C. Dai et al., BlackMax: A black-hole event generator with rotation, recoil, split branes and
+
+brane tension, Phys.Rev. D77 (2008) 076007, arXiv:0711.3012 [hep-ph].
+
+[25] D. C. Dai et al., Manual of BlackMax, a black-hole event generator with rotation, recoil, split
+
+branes and brane tension, arXiv:0902.3577 [hep-ph].
+
+[26] MC10b Production Details, available at
+
+https://twiki.cern.ch/twiki/bin/view/AtlasProtected/AtlasProductionGroupMC10b.
+
+[27] Observation of t-channel Single Top-Quark Production in pp Collisions at
+
+ATLAS detector, Tech. Rep. ATLAS-CONF-2011-088, CERN, Geneva.
+
+√
+
+s = 7 TeV with the
+
+435
+
+436
+
+437
+
+438
+
+439
+
+440
+
+441
+
+442
+
+443
+
+444
+
+445
+
+446
+
+447
+
+448
+
+449
+
+450
+
+451
+
+452
+
+453
+
+454
+
+455
+
+456
+
+457
+
+458
+
+459
+
+460
+
+461
+
+462
+
+463
+
+464
+
+465
+
+466
+
+467
+
+468
+
+469
+
+470
+
+471
+
+472
+
+Notreviewed,forinternalcirculationonly

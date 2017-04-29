@@ -1,0 +1,69 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+27
+
+473
+
+474
+
+475
+
+476
+
+477
+
+478
+
+479
+
+480
+
+481
+
+482
+
+483
+
+484
+
+485
+
+486
+
+487
+
+488
+
+[28] Top Group MC10For2011Data, available at
+
+https://twiki.cern.ch/twiki/bin/view/AtlasProtected/TopMC10For2011Data.
+
+[29] Guidelines for analysis in Rel 15, available at
+
+https://twiki.cern.ch/twiki/bin/view/AtlasProtected/MCPAnalysisGuidelinesRel15.
+
+[30] M. Bianco, E. Gorini, M. Primavera, and A. Ventura, Efficiencies of Muon Triggers, Atlas Muon
+
+Signature Group weekly meeting 2011-05-26,
+https://indico.cern.ch/conferenceDisplay.py?confId=140870.
+
+[31] S. Moch and P. Uwer, Theoretical status and prospects for top-quark pair production at hadron
+
+colliders, Phys. Rev. D78 (2008) 034003.
+
+[32] U. Langenfeld, S. Moch, and P. Uwer, New results for t¯t production at hadron colliders, Proc. XVII
+
+Int. Workshop on Deep-Inelastic Scattering and Related Topics, arXiv:0907.2527 [hep-ph].
+
+[33] M. Aliev et al., HATHOR HAdronic Top and Heavy quarks crOss section calculatoR,
+
+arXiv:1007.1327 [hep-ph].
+
+[34] A. L. Read, Presentation of search results: The CL(s) technique, J.Phys. G28 (2002) 2693–2704.
+
+[35] A. S. Forum, Frequentist Limits Recommendation, available at
+https://twiki.cern.ch/twiki/pub/AtlasProtected/StatisticsTools.
+
+Notreviewed,forinternalcirculationonly

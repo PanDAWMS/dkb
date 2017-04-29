@@ -1,0 +1,148 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+4
+
+Process
+b¯b + c¯c
+
+t¯t
+ZZ
+WZ
+Wt
+
+BH MTH = 4 TeV, MD = 0.8 TeV, n = 6
+
+Generator
+
+P
+
+@ + J
+
+H
+H
+AMC
+B
+
+Cross section (pb) Luminosity(pb−1)
+
+2797
+164.6
+
+6
+18
+14.6
+
+2
+
+106.2
+
+120.6×103
+197.6×103
+45.1×103
+20.5×103
+9.6×103
+
+Table 1: Monte Carlo samples used for background estimates in this analysis. The cross section for t¯t is
+from the top paper [19], and for the single-top Wt is from the single-top note [27]. The cross sections for
+the other processes are obtained from Ref. [28].
+
+following parameters: MD = 800 GeV, MTH = 4000 GeV, 6 extra dimensions. The cross section for this
+point is 2 pb.
+
+All simulation samples are generated with the pileup conditions corresponding to MC10b [26].
+
+4 Event Selection
+
+The basic event selection is two muons of the same charge. We describe the details of this selection
+below.
+
+• Data events are required to pass the EF mu20 trigger. No trigger requirement is imposed on MC
+
+events.
+
+• We require a primary vertex with the number of tracks associated to the vertex > 5. The tracks in
+
+this case are required to have pT > 150 MeV.
+
+• Combined muons are selected from the StacoMuonCollection [29]. The muons are required to
+have |η| < 2.4 and pass the tight muon criteria as defined by the muon performance group. In addi-
+tion the muon track should have a B-layer hit if the track traverses an active B-layer module, at least
+one hit in the pixel detector, at least 6 hits in the SCT, and pass TRT requirements recommended
+by the MCP group. The muons are required to come from the primary vertex by calculating the
+muon track z0 with respect to the primary vertex and requiring that |z0 sin(θ)| < 1.5 mm. This is
+done to ensure that even in high pile-up events, the muons and the selected tracks in the signal
+region (as describe below) will come from the primary interaction.
+
+• The muons are ordered in pT. The leading muon is required to have pT > 25 GeV, and the second
+
+muon is required to have pT > 15 GeV.
+
+• The leading muon is also required to be isolated by requiring the sum of transverse momenta of
+tracks in a cone of ∆Rη−φ < 0.2 around the muon (ptcone20) to be less than 0.2×pT of the muon.
+0 | < 3.
+
+• The leading muon is required to have low impact parameter significance by imposing |d0/derr
+
+The impact parameter is calculated with respect to the primary vertex in the event.
+
+• No isolation or impact parameter requirements are made on the second muon. Muons can arise
+promptly from the black hole, or from the decay of heavy ﬂavor quarks from the black hole. By
+not requiring isolation, good signal acceptance to these heavy ﬂavor muons is maintained.
+
+126
+
+127
+
+128
+
+129
+
+130
+
+131
+
+132
+
+133
+
+134
+
+135
+
+136
+
+137
+
+138
+
+139
+
+140
+
+141
+
+142
+
+143
+
+144
+
+145
+
+146
+
+147
+
+148
+
+149
+
+150
+
+151
+
+152
+
+Notreviewed,forinternalcirculationonly

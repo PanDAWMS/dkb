@@ -1,0 +1,26 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+9
+
+(a) Region A, C : pT distribution.
+
+(b) Region A, C: Emiss
+
+T
+
+distribution.
+
+Figure 4: Figure shows the pT distribution for the leading muon (4(a)) and Emiss
+distribution(4(b)) for
+events in regions Cdata and AMC. The data distribution has been normalized to the simulation. The KS
+probability of the agreement of shapes is 0.59 for the pT distribution and 0.21 for the Emiss
+distribution.
+See section 5.1.1 for details.
+
+T
+
+T
+
+Notreviewed,forinternalcirculationonly [GeV]T p1m020406080100120140160180200Events / 4 GeV05101520253035404550Databb [GeV]missTE020406080100120140160180200Events0510152025Databb

@@ -1,0 +1,230 @@
+d
+e
+t
+c
+e
+p
+x
+e
+ 
+N
+d
+
+2
+1.8
+1.6
+1.4
+1.2
+1
+0.8
+0.6
+0.4
+0.2
+0
+
+Constructive
+
+-1
+ L dt = 42 pb
+
+s
+
+=7 TeV
+
+Mass bin 150-170GeV
+Mass bin 170-200GeV
+Mass bin 200-240GeV
+Mass bin 240-300GeV
+Mass bin 300-400GeV
+Mass bin 400-550GeV
+Mass bin 550-800GeV
+Mass bin 800-1200GeV
+Mass bin 1200-2000GeV
+
+0.02
+
+0.04
+
+0.06
+
+0.08
+
+0.1
+2L1/
+
+0.12
+]-2
+
+ [TeV
+
+d
+e
+t
+c
+e
+p
+x
+e
+ 
+N
+d
+
+3
+
+2.5
+
+2
+
+1.5
+
+1
+
+0.5
+
+0
+
+Destructive
+
+-1
+ L dt = 42 pb
+
+s
+
+=7 TeV
+
+Mass bin 150-170GeV
+Mass bin 170-200GeV
+Mass bin 200-240GeV
+Mass bin 240-300GeV
+Mass bin 300-400GeV
+Mass bin 400-550GeV
+Mass bin 550-800GeV
+Mass bin 800-1200GeV
+Mass bin 1200-2000GeV
+
+0.05
+
+0.1
+
+0.15
+
+0.2
+
+0.25
+ [TeV
+
+2L1/
+
+]-2
+
+Figure 12: 2nd-order polynomial fits to dN in each mass bin for the constructive (left) and destructive
+(right) interference models as a function of 1
+values shown as points. Note that
+the total systematic uncertainty for background only ( 1
+L 2 = 0) was not used in this fit because the DY
+systematics were treated differently than for the signal samples.
+
+L 2 , with benchmark L
+
+Table 5: Systematic uncertainty on Nexp at Mmm = 1 TeV. All systematics have a linear dependence on
+mass, with the exception of muon momentum resolution which has a quadratic dependence. The MC
+samples on which each of these are applied are shown.
+value at Z0
+
+at 1 TeV Signal DY-only Other BGs
+
+Systematic
+Trigger and Reconstruction Efficiency
+Muon momentum resolution
+PDF Uncertainty
+QCD K-factor
+EW K-factor
+
+0.3%
+0.01%
+
+3%
+0.3%
+0.4%
+
+3%
+2.7%
+6%
+3%
+4.5%
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+X
+
+187
+
+188
+
+189
+
+190
+
+5 Conclusions
+With the full 2010 data set, we are able to set limits on the 4-fermion contact interaction q ¯q → m +m − in
+
+the LLIM model, for both constructive and destructive interference:
+
+L − > 4.9 TeV (95% C.L.)
+L + > 4.5 TeV (95% C.L.)
+
+(9)
+
+(10)
+
+191
+
+These are the best limits to date.
+
+Table 6: Expected and observed lower limits on L with and without systematic uncertainties. The 2nd
+decimal place is shown to illustrate the change with the addition of systematics.
+
+Expected Limit (TeV)
+
+Observed Limit (TeV)
+
+Constructive Destructive Constructive Destructive
+
+Without Systematics
+Including Systematics
+
+5.22
+5.14
+
+4.86
+4.82
+
+5.11
+4.94
+
+4.64
+4.50
+
+12
+
+(cid:242)
+(cid:242)
+

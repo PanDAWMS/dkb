@@ -1,0 +1,139 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+3
+
+1.1.1 Sources of Background
+
+The muons from background processes considered in this analysis can come from three sources. Muons
+can arise from processes such as the decay of W (which are prompt muons - µprompt) and the semi-leptonic
+decay of b and c hadrons (HF muons - µHF). The decay in ﬂight of pions and kaons also gives rise to
+muons, which we designate as non-prompt or fake muons (µfake). It is also possible to reconstruct muons
+from a pion or kaon which punches through to the muon spectrometer. For the following discussion and
+this analysis we include the punch throughs in µfake along with the decay-in-ﬂight.
+
+The backgrounds considered in this analysis fall in two categories. The two muons in an event can
+
+be produced in association, or they may be arise from decay chains with no connection to each other.
+
+• Associated production of like sign dimuons consists of dimuons from the decay of b¯b 1 and
+t¯t events. These dimuon events are predominantly of the µHFµHF category for b¯b and of the
+µpromptµHF category for t¯t. We estimate the t¯t background using a simulated sample. We estimate
+the b¯b background from simulated samples normalized to data as described in section 5.1.
+
+• Like-sign dimuons from uncorrelated decay chains typically arise from W+jets events, where the
+leading muon is µprompt from W decay and the second muon is either a µHF from b, c decay or a
+µfake from the jets. Low energy QCD processes can also give like-sign dimuons. The dimuons
+in this case consist of the following categories : µpromptµHF, µpromptµfake, µfakeµfake. To estimate
+this uncorrelated production we select all events with one muon and an extra track (or tracks).
+These events are weighted by the probability for a track (or tracks) to give rise to a muon to get the
+dimuon estimate. The measurement of this probability and the method is described in section 5.2.
+
+2 Data Samples and Triggers Used
+
+The data sample used for this analysis was collected with a single muon trigger with pT > 20 GeV
+(EF mu20). The data were processed with release 16 of the ATLAS software. The goodrun list pro-
+duced by the SUSY Group [14] was used to select periods of data-taking suitable for this analysis. The
+integrated luminosity of the data sample is (1.31 ± 0.05) fb−1 [15].
+
+3 Simulation Samples
+
+The Monte-Carlo samples used in this analysis and their corresponding cross-sections are listed in Ta-
+ble 1. Some other details of the generated samples are shown in Table 8. The t¯t sample is generated with
+@ + J [16, 17, 18] at the nominal top mass of 172.5 GeVand is filtered to have one lepton (e
+or µ or τ with pT > 1 GeV) at the generator level. The cross section for the t¯t process is taken from the
+top cross section paper [19]. The t¯t sample is generated using the CTEQ66 parton distribution function
+(PDF) [20].
+
+The b¯b sample is generated with P. It is filtered at the generator level to have two muons with
+pT > 10 GeV each. The diboson samples (WZ and ZZ) are generated with H [21]. They are filtered
+to have at least one electron or muon with pT > 10 GeV. The single top background in the Wt channel
+is estimated using a sample generated with AMC [22] 2. The b¯b, diboson and single top samples are
+all generated using the MRST2007 PDF [23].
+
+The signal samples are generated with B [24, 25] and are hadronized with P. The PDF
+used is the CTEQ66 PDF. The nominal black hole signal sample is for a rotating black hole with the
+
+1The discussion of b¯b in this note implicitly includes dimuons from c¯c as well.
+2The single top backgrounds from t and s-channel production are included in the data driven background estimate.
+
+87
+
+88
+
+89
+
+90
+
+91
+
+92
+
+93
+
+94
+
+95
+
+96
+
+97
+
+98
+
+99
+
+100
+
+101
+
+102
+
+103
+
+104
+
+105
+
+106
+
+107
+
+108
+
+109
+
+110
+
+111
+
+112
+
+113
+
+114
+
+115
+
+116
+
+117
+
+118
+
+119
+
+120
+
+121
+
+122
+
+123
+
+124
+
+125
+
+Notreviewed,forinternalcirculationonly

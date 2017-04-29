@@ -9,7 +9,8 @@ CONFIG_FILE = "config.json"
 default_cfg = {
         "WORK_DIR":             os.getcwd(),
         "DETERMINE_TITLE":      False,
-        "OPEN_INTERVALS":       False,
+        "OPEN_INTERVALS_TEXT":  False,
+        "OPEN_INTERVALS_TABLES":False,
         "HDFS_PDF_DIR":         "",
         "HDFS_DOWNLOAD_COMMAND":"hadoop fs -get"
     }
@@ -100,7 +101,7 @@ class DatasetCategory:
         for s in strings:
             s = s.strip()
             if "INTERVAL" in s:
-                if cfg["OPEN_INTERVALS"]:
+                if cfg["OPEN_INTERVALS_TEXT"]:
     #                print "STRING WITH INTERVALS:", s
                     nums = re.findall("INTERVAL(\d+)!", s)
                     arr = []
@@ -170,7 +171,7 @@ montecarlo = DatasetCategory("montecarlo", r"""mc\d\d           # Project. Examp
                                            (\n*_\n*[a-z]\d+)+   # AMITag or several
                                            (_tid\d+(_\d\d)?)?   # Possible production system task and subtask numbers                                           
                                            """)    
-physcont = DatasetCategory("physics container", r"""[a-zA-Z\d\-_\.:!]+
+physcont = DatasetCategory("physcont", r"""[a-zA-Z\d\-_\.:!]+
                                            \n*\.\n*             # Field separator
                                            PhysCont             # prodStep - it's always the same.
                                            \n*\.\n*             # Field separator
@@ -202,6 +203,16 @@ database = DatasetCategory("database", r"""ddo                  # Project tag.
                                            [a-zA-Z\d\-_\.:!]+   #
                                            """)
 
+category_export_dict = {
+        "group":"group",
+        "user":"user",
+        "montecarlo":"mc",
+        "physcont":"cont",
+        "calibration":"calib",
+        "realdata":"real",
+        "database":"db"
+    }
+
 # Regular expressions
 #dataset_categories = [group, user, montecarlo, physcont, calibration, realdata, database]
 dataset_categories = [montecarlo, physcont, calibration, realdata, database] # We don't need group and user datasets for now.
@@ -215,42 +226,44 @@ re_dsid_diap = re.compile("^\d{4,8}-\d{1,8}$")
 re_xml_symbol = re.compile("^<text[^>]+ size=\"([0-9.]+)\">(.+)</text>$")
 re_xml_empty_symbol = re.compile("^<text> </text>$")
 re_campaign = re.compile(r"""(
-                        mc11(?![abc])
-                        |
-                        mc11[abc]
-                        |
-                        mc12(?![ab])
-                        |
-                        mc12[ab]
-                        |
-                        pro1[045]
-                        |
-                        repro0[389]
-                        |
-                        repro1[4-9]
-                        |
-                        repro20
-                        |
-                        repro04_v1
-                        |
-                        repro05_v2
-                        |
-                        t0pro0[089]
-                        |
-                        t0pro1[1234579]
-                        |
-                        t0pro20
-                        |
-                        t0pro04_v1
-                        |
-                        t0proc03_v1
-                        )""", re.X)
+                                mc11(?![abc])
+                                |
+                                mc11[abc]
+                                |
+                                mc12(?![ab])
+                                |
+                                mc12[ab]
+                                |
+                                pro1[045]
+                                |
+                                repro0[389]
+                                |
+                                repro1[4-9]
+                                |
+                                repro20
+                                |
+                                repro04_v1
+                                |
+                                repro05_v2
+                                |
+                                t0pro0[089]
+                                |
+                                t0pro1[1234579]
+                                |
+                                t0pro20
+                                |
+                                t0pro04_v1
+                                |
+                                t0proc03_v1
+                                )"""
+                         , re.X)
 re_energy = re.compile("(\d+\.?\d*) (G|T)eV")
 re_luminosity = re.compile("(\d+\.?\d*) ?(m|n|p|f)b(?:−|\(cid:0\))1") # WARNING: this "fb-1" is in UTF-8 coding and was copied from miner output. Simple "fb-1" does not works.
 re_collisions = re.compile("(proton-proton|heavy-ion|pp) collisions")
 re_year = re.compile("(?:acquired|collected|measured|recorded).{0,100}(20\d\d)", re.DOTALL)
 re_year_general = re.compile(".{0,100} 20\d\d.{0,100}")
 re_interval = re.compile("\[(?:[0-9][\\/][0-9\\/\n]+|[0-9]+-[0-9]+)\]") # interval must contain at least two numbers, i.e. [1/2] or [3\4\5].
+re_link = re.compile("(.*)\n? ?(https?://cds\.cern\.ch/record/\d+)")
 
 def find_cut_reg(reg, text):
     # Find patterns matching regular expression in text and cut them out.
@@ -339,7 +352,7 @@ def cmp_papernames(x, y):
 
 class Paper:
     # Represents a document which needs to be analyzed, as well as files and other things associated with it.
-    attributes_general = ["campaigns", "energy", "luminosity", "collisions", "data taking year"]
+    attributes_general = ["campaigns", "energy", "luminosity", "collisions", "data taking year", "project_montecarlo", "project_realdata", "links"]
     attributes_to_determine = attributes_general + ["title", "datasets", "datatables"] # Paper attributes which are needed but cannot be determined precisely yet (unlike, for example, number of pages).
     attributes_metadata = attributes_to_determine + ["num_pages", "rotated_pages"] # Attributes which are saved / loaded to / from a file.
     def __init__(self, fname, dirname = False):
@@ -499,6 +512,11 @@ class Paper:
         if tmp:
             attrs["luminosity"] = tmp.group(0).replace("−","-").replace("(cid:0)", "-")
 
+        links = re_link.findall(pages)
+        attrs["links"] = {}
+        for (key, value) in links:
+            attrs["links"][key] = value
+
         pages = pages.lower()
 
         attrs["collisions"] = False
@@ -515,12 +533,30 @@ class Paper:
         else:
             attrs["possible years"] = list(set(re_year_general.findall(text)))
 
+        if attrs["campaigns"] and attrs["energy"]:
+            mcc = False
+            for c in attrs["campaigns"]:
+                if c.startswith("mc"):
+                    mcc = c
+                    break
+            if mcc:
+                attrs["project_montecarlo"] = mcc + "_" + attrs["energy"].replace(" ", "")
+            else:
+                attrs["project_montecarlo"] = False
+        else:
+            attrs["project_montecarlo"] = False
+
+        if attrs["data taking year"] and attrs["energy"]:
+            attrs["project_realdata"] = "data" + attrs["data taking year"][2:4] + "_" + attrs["energy"].replace(" ", "")
+        else:
+            attrs["project_realdata"] = False
+
         return attrs
     def find_datasets(self):
         # Find datasets in text of the document.
         text = self.get_text()
         text, intervals = mask_intervals(text)
-        if cfg["OPEN_INTERVALS"]:
+        if cfg["OPEN_INTERVALS_TEXT"]:
             intervals = organize_intervals(intervals)
         datasets = {}
 
@@ -588,7 +624,7 @@ class Paper:
                         coef = float(rows_with_proper_id) / len(rows)
 #                        print rows_with_proper_id, "OUT OF", len(rows), "ROWS HAVE PROPER DATASET ID. COEFFICIENT:", coef
                         if coef >= 0.7 and coef <= 1:
-                            if cfg["OPEN_INTERVALS"] and diaps:
+                            if cfg["OPEN_INTERVALS_TABLES"] and diaps:
 #                                print "TABLE CONTAINS DATASET DIAPASONS, PROCESSING THEM AND MULTIPLYING ROWS"
                                 rows_new = []
                                 for row in rows:
@@ -633,29 +669,38 @@ class Paper:
             outf = path_join(EXPORT_DIR, "%s.json" % (self.fname))
             
         outp["fname"] = self.fname # Some applications processing exported data may discard the filename but it must be preserved.
+
         if self.title is not None:
             outp["title"] = self.title
+
+        outp["content"] = {}
+        outp["content"]["plain_text"] = {}
         if self.campaigns is not None: # All general attributes are determined together, so we can check only one.
             for a in self.attributes_general:
-                outp[a] = self.__dict__[a]
+                outp["content"]["plain_text"][a] = self.__dict__[a]
         elif quick:
             attrs = self.find_attributes_general()
             for a in attrs:
-                outp[a] = attrs[a]
+                outp["content"]["plain_text"][a] = attrs[a]
+
         if self.datasets is not None:
-            outp["datasets"] = self.datasets
+            for category in self.datasets:
+                outp["content"][category_export_dict[category] + "_datasets"] = self.datasets[category]
         elif quick:
             (text, datasets) = self.find_datasets()
-            for c in datasets:
+            for category in datasets:
                 d = []
-                for [name, special] in datasets[c]:
+                for [name, special] in datasets[category]:
                     d.append(name)
-                datasets[c] = d
-            outp["datasets"] = datasets
+                outp["content"][category_export_dict[category] + "_datasets"] = d
         if self.datatables is not None:
-            outp["datatables"] = self.datatables
+            for num in self.datatables:
+                outp["content"]["table_" + str(num)] = self.datatables[num]
         elif quick:
-            outp["datatables"] = self.find_datatables()
+            tables = self.find_datatables()
+            for num in tables:
+                outp["content"]["table_" + str(num)] = tables[num]
+
         if outp:
             with open(outf, "w") as f:
                 json.dump(outp, f, indent = 4)
@@ -757,8 +802,10 @@ class Manager:
         w.grab_set()
         determine_title = BooleanVar()
         determine_title.set(cfg["DETERMINE_TITLE"])
-        open_intervals = BooleanVar()
-        open_intervals.set(cfg["OPEN_INTERVALS"])
+        open_intervals_text = BooleanVar()
+        open_intervals_text.set(cfg["OPEN_INTERVALS_TEXT"])
+        open_intervals_tables = BooleanVar()
+        open_intervals_tables.set(cfg["OPEN_INTERVALS_TABLES"])
         work_dir = StringVar()
         work_dir.set(cfg["WORK_DIR"])
 
@@ -774,10 +821,15 @@ class Manager:
         b = Checkbutton(frame, variable = determine_title)
         b.grid(row = 1, column = 1)
         
-        l = Label(frame, text = "Open intervals")
+        l = Label(frame, text = "Open intervals in text")
         l.grid(row = 2, column = 0)
-        b = Checkbutton(frame, variable = open_intervals)
+        b = Checkbutton(frame, variable = open_intervals_text)
         b.grid(row = 2, column = 1)
+
+        l = Label(frame, text = "Open intervals in tables")
+        l.grid(row = 3, column = 0)
+        b = Checkbutton(frame, variable = open_intervals_tables)
+        b.grid(row = 3, column = 1)
 
         frame.grid(row = 0, column = 0)
         b = Button(w, text = "Done", command = w.destroy)
@@ -792,10 +844,14 @@ class Manager:
             cfg["DETERMINE_TITLE"] = True
         else:
             cfg["DETERMINE_TITLE"] = False
-        if open_intervals.get():
-            cfg["OPEN_INTERVALS"] = True
+        if open_intervals_text.get():
+            cfg["OPEN_INTERVALS_TEXT"] = True
         else:
-            cfg["OPEN_INTERVALS"] = False
+            cfg["OPEN_INTERVALS_TEXT"] = False
+        if open_intervals_tables.get():
+            cfg["OPEN_INTERVALS_TABLES"] = True
+        else:
+            cfg["OPEN_INTERVALS_TABLES"] = False
         save_config(cfg)
         if restart:
             tkMessageBox.showwarning("Restart needed", "Program needs to be restarted to apply the changes.")
@@ -1057,9 +1113,23 @@ class Manager:
         else:
             r = 0
             for a in paper.attributes_general:
-                l = Label(window, text = "%s:%s"%(a, str(paper.__dict__[a])))
-                l.grid(row = r, column = 0)
-                r += 1
+                if a == "links":
+                    if paper.__dict__[a]:
+                        l = Label(window, text = "Links:")
+                        l.grid(row = r, column = 0)
+                        r += 1
+                        for key in paper.__dict__[a]:
+                            l = Label(window, text = "%s %s" % (key, paper.__dict__[a][key]))
+                            l.grid(row = r, column = 0)
+                            r += 1                            
+                    else:
+                        l = Label(window, text = "No links")
+                        l.grid(row = r, column = 0)
+                        r += 1
+                else:
+                    l = Label(window, text = "%s:%s"%(a, str(paper.__dict__[a])))
+                    l.grid(row = r, column = 0)
+                    r += 1
             b = Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
             b.grid(row = r, column = 0)            
     def show_paper_datasets(self, window, paper):
@@ -1381,9 +1451,9 @@ class Manager:
                 if outp:
                     n_p += 1
                     for a in Paper.attributes_general:
-                        if not outp[a]:
+                        if not outp["content"]["plain_text"][a]:
                             no_attr[a].append(p.fname)
-                    if not outp["datasets"] and not outp["datatables"]:
+                    if not outp["content"] or outp["content"].keys() == ["plain_text"]:
                         no_attr["datasets"].append(p.fname)
             except Exception as e:
                 outp = False

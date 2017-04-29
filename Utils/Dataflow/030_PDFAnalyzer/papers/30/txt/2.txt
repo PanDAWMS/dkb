@@ -1,0 +1,207 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+Contents
+
+1
+
+Introduction
+1.1 Analysis Strategy .
+
+1.1.1
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Sources of Background . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+.
+
+.
+
+.
+
+.
+
+.
+
+2 Data Samples and Triggers Used
+
+3 Simulation Samples
+
+4 Event Selection
+
+4.1 Muon Trigger and Identification . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+5 Background Estimation
+
+.
+
+5.1.1
+5.1.2
+
+5.1 Estimation of b¯b background .
+
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Step 1 - In the background region with NTracks < 10 . . . . . . . . . . . . . . .
+Step 2 - Extrapolating to signal region (NTracks ≥ 10)
+. . . . . . . . . . . . . .
+5.2 Data based estimate of the fake background . . . . . . . . . . . . . . . . . . . . . . . .
+5.3 Validation of Background Estimate . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+Validation of t¯t MC . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+5.3.1
+
+6 Systematic Uncertainties
+
+6.1 Data based estimation of background . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+6.2 Estimation of t¯t background . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+6.3 Estimation of b¯b background .
+. . . . . . . . . . . . . . . . . . . . . . . . . . . . . .
+
+.
+
+7 Results
+
+8
+
+Interpretation of Results
+
+9 Conclusion
+
+Appendices
+
+A Signal Properties
+
+B Details of Monte Carlo samples
+
+C Fraction of heavy ﬂavor in region C
+
+D Fake rate studies in MC
+
+E Studies of shape of track multiplicity
+
+F Fraction of like-sign dimuon events in bb Monte-Carlo events with and without mixing
+
+G Miscellaneous Studies
+
+H Miscellaneous Figures
+
+I Location of code
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+33
+
+34
+
+35
+
+36
+
+37
+
+38
+
+39
+
+40
+
+41
+
+42
+
+43
+
+44
+
+45
+
+1
+
+2
+2
+3
+
+3
+
+3
+
+4
+5
+
+5
+6
+6
+7
+11
+14
+14
+
+14
+14
+18
+19
+
+19
+
+22
+
+23
+
+28
+
+28
+
+28
+
+31
+
+33
+
+34
+
+36
+
+38
+
+39
+
+39
+
+Notreviewed,forinternalcirculationonly

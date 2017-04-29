@@ -1,0 +1,19 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+21
+
+(a) signal region, leading muon pT
+
+(b) signal region, second muon pT
+
+Figure 13: The leading and second muon pT distributions in the signal region. The background his-
+tograms are stacked, the signal histogram is overlaid. The rightmost bin along X-axis shows the over-
+ﬂows.
+
+Figure 14: Figure shows the invariant mass distribution of the dimuons in the signal region. The back-
+ground histograms are stacked, the signal histogram is overlaid. The rightmost bin along X-axis shows
+the overﬂows.
+
+Notreviewed,forinternalcirculationonly) [GeV]1m(Tp050100150200250300350400Nevents / 16 GeV0510152025-1L dt = 1.3 fb(cid:242)= 7 TeVsData : +fakemtt=4 TeVTHM) [GeV]1m(Tp050100150200250300350400Nevents / 16 GeV-110110-1L dt = 1.3 fb(cid:242)= 7 TeVsData : +fakemtt=4 TeVTHM) [GeV]2m(Tp050100150200250300350400Nevents / 16 GeV051015202530354045-1L dt = 1.3 fb(cid:242)= 7 TeVsData : +fakemtt=4 TeVTHM) [GeV]2m(Tp050100150200250300350400Nevents / 16 GeV-110110-1L dt = 1.3 fb(cid:242)= 7 TeVsData : +fakemtt=4 TeVTHM [GeV]mmM050100150200250300350400Nevents / 16 GeV024681012141618-1L dt = 1.3 fb(cid:242)= 7 TeVsData : +fakemtt=4 TeVTHM [GeV]mmM050100150200250300350400Nevents / 16 GeV-110110-1L dt = 1.3 fb(cid:242)= 7 TeVsData : +fakemtt=4 TeVTHM

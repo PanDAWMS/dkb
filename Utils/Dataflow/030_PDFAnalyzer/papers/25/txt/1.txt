@@ -1,0 +1,21 @@
+ATLAS NOTE
+
+ATL-COM-PHYS-2011-081
+
+March 15, 2011
+
+Search for Contact Interactions in Dimuon Events from proton-proton
+
+Collisions at √s = 7 TeV with the ATLAS detector
+
+The ATLAS Collaboration
+
+Abstract
+
+We discuss the possibility to discover new physics in the ATLAS Detector via a four-
+fermion contact interaction between two initial-state quarks and two final-state muons. In
+the absence of new physics signal, we set a 95% C.L. lower limit on the effective scale
+L > 4.9 TeV (4.5 TeV) for the constructive (destructive) Left-left Isoscalar Model of quark
+compositeness with integrated luminosity of 42 pb−1 at √s = 7 TeV.
+
+

@@ -1,0 +1,85 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+32
+
+Figure 24: Figure shows the 1 − pMS
+T distribution for subleading muons in the A W+jets
+samples. LF (HF) designates events where the parent of the subleading muon is a light (heavy) ﬂavor
+meson. The bottom part of the figure shows the ratio of HF to LF events. We require 1 − pMS
+T < 0.2
+in the b¯b control region (region C) to enhance the HF contribution.
+
+T /pID
+
+T /pID
+
+Sample LF
+
+LF
+
+scaled to 1(fb−1)
+
+J0
+J1
+J2
+J3
+J4
+J5
+J6
+J7
+J8
+
+0
+0
+0
+0
+4
+5
+7
+19
+17
+
+0
+0
+0
+0
+125
+4.2
+0.08
+0.002
+7.4e-8
+
+HF
+
+0
+0
+1
+23
+124
+269
+368
+337
+182
+
+HF
+
+scaled to 1(fb−1)
+
+0
+0
+
+14635
+17983
+3884
+225.8
+4.42
+0.033
+7.9e-7
+
+Table 11: The number of dimuon events from the different jet-jet samples for the heavy ﬂavor enhanced
+selection. LF (HF) designates events where the parent of the leading muon is a light (heavy) ﬂavor
+meson.
+
+Notreviewed,forinternalcirculationonlyArbitrary Units00.050.10.150.20.250.30.350.4LFHF[GeV]-2-1.5-1-0.500.511.52HF / LF-410-2101210

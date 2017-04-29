@@ -1,0 +1,16 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+35
+
+Figure 27: Figure shows the shape of the track multiplicity distribution for the µ+fake, t¯t and b¯b back-
+grounds.
+
+Figure 28: Figure shows the shape of the track multiplicity distribution for the µ+fake data-driven back-
+grounds compared to the shapes from W+jet MC samples used in Appendix D.
+
+Figure 29: Figure shows the shape of the track multiplicity distribution for the nominal t¯t sample com-
+pared to the shapes from a P + P sample. The shapes agree well.
+
+Notreviewed,forinternalcirculationonlytrkN51015202530Events-410-310-210-1101+fakemttbbtrkN51015202530Events-510-410-310-210-110+fakemData: Alpgen W+jetsSherpa W+jetstrkN51015202530Events-410-310-210-110 : MC@NLO+Herwigtt : Powheg+Pythiatt

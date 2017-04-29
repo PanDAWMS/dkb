@@ -1,0 +1,13 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+13
+
+(a) Fake rate as function of pT.
+
+(b) Fake rate as function of |η|.
+
+Figure 8: Figure shows the measured fake rate in data as a function of track pT (8(a)) and η (8(b)).
+
+Notreviewed,forinternalcirculationonly [GeV]TTrack p20406080100120Fake Muon Rate00.0020.0040.0060.0080.010.0120.014 / ndf 2c 2.324 / 2Prob   0.3128p0        0.0001247– 0.003687  / ndf 2c 2.324 / 2Prob   0.3128p0        0.0001247– 0.003687 hTrack 00.511.522.5Fake Muon Rate00.0020.0040.0060.0080.010.0120.014 / ndf 2c  2.25 / 1Prob   0.1336p0        0.0003047– 0.0006013 p1        0.0003692– 0.003436  / ndf 2c  2.25 / 1Prob   0.1336p0        0.0003047– 0.0006013 p1        0.0003692– 0.003436 

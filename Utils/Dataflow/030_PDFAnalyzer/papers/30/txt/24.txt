@@ -1,0 +1,87 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+23
+
+Figure 16: The acceptance from 44 samples corresponding to the error sets of the CTEQ66 PDF set
+are shown for a signal point with these parameters: MTH = 4000 GeV and MD = 500 GeV, n = 6,
+non-rotating black hole. On left, the acceptance is shown for each error set. On right, the histogram
+of acceptances is shown. In both cases, the red points/curve correspond to 5000 generated events per
+sample, the black points/curve correspond to 10000 events per sample.
+
+distribution indicates the uncertainty due to signal acceptance. This distribution has been checked for a
+different signal point as well. The uncertainty is 3% based on these studies.
+
+Thus the uncertainty on the signal prediction consists of the following components: the uncertainty
+on the truth-level acceptance scaling factor, the uncertainty on signal acceptance due to PDF, the uncer-
+tainty on the luminosity of the data sample, the experimental uncertainty on acceptance due to muon
+trigger and identification measurements and a statistical uncertainty due to the finite MC statistics. These
+along with the uncertainties on background estimates described previously give the uncertainties on the
+exclusion limits.
+
+Figure 17 shows the exclusion contours for models with non-rotating and rotating black holes with 2
+extra dimensions, while Fig. 18 and 19 shows the exclusion for 4 and 6 extra dimensions respectively.
+The dashed blue line shows the expected exclusion contour with the 1 σ and 2 σ uncertainty in green
+and yellow respectively. The solid black line shows the observed exclusion contour. The region below
+the curves is excluded. The figures also show lines of constant slope (MD/MTH) of 3, 4 and 5. The
+semi-classical approximations used for black hole production and decay are only valid for slopes much
+larger than 1.
+
+9 Conclusion
+
+A search for mini black holes in the final state with two same charge muons was presented in this note.
+No excess over the standard model predictions was observed. These results are used to exclude models
+in the (MD, MT H) plane.
+
+References
+
+[1] N. Arkani-Hamed, S. Dimopoulos, and G. R. Dvali, The hierarchy problem and new dimensions at
+
+a millimeter, Phys. Lett. B429 (1998) 263–272, arXiv:hep-ph/9803315.
+
+394
+
+395
+
+396
+
+397
+
+398
+
+399
+
+400
+
+401
+
+402
+
+403
+
+404
+
+405
+
+406
+
+407
+
+408
+
+409
+
+410
+
+411
+
+412
+
+413
+
+414
+
+415
+
+Notreviewed,forinternalcirculationonlyCTEQ66 PDF set number051015202530354045Acceptance0.10.1050.110.1150.120.1250.130.1350.140.1450.15Nevgen=5000Entries  44Mean   0.1227RMS    0.003306Acceptance from CTEQ66 (45 PDF sets)0.10.110.120.130.140.150.160.170.180.190.20510152025Nevgen=5000Entries  44Mean   0.1227RMS    0.003306Nevgen=9500Entries  44Mean   0.1222RMS    0.002965

@@ -1,0 +1,97 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+22
+
+Figure 15: The ratio of reconstructed acceptance to truth acceptance is shown for a subset of the black
+hole samples.
+
+367
+
+368
+
+369
+
+370
+
+371
+
+372
+
+373
+
+374
+
+375
+
+376
+
+377
+
+378
+
+379
+
+380
+
+381
+
+382
+
+383
+
+384
+
+385
+
+386
+
+387
+
+388
+
+389
+
+390
+
+391
+
+392
+
+393
+
+8 Interpretation of Results
+
+No excess over the predicted standard model background is observed in the signal region. The p-value
+for the observed result is 0.4 which corresponds to a 0.3 σ excess4. Using the observed number of data
+events and the background expectations, upper limits are set on the cross section (σ) × the branching
+ratio to dimuons (BR) × the acceptance (A) of non standard model contribution in the signal region. The
+recommended CLs method [34, 35] is used to derive these upper limits. All statistical and systematic
+uncertainties on the background are taken into account. The observed 95% confidence level limit on
+σ × BR × A is 0.018 pb. The observed limit is very close to the expected limit of 0.016 pb. The 1σ and
+2σ uncertainty band on the expected limit is 0.012-0.022 and 0.008-0.029 pb respectively.
+
+Limits on the reduced Planck mass (MD) and the minimum mass of the black hole (MTH) are set
+for several models. No theoretical uncertainty on signal prediction is assessed, that is, the exclusion
+limits are set for the exact benchmark models as implemented in the B generator. The observed
+results are used to obtain exclusion contours in the plane of MD and MTH. The MD-MTH plane has to
+be populated by a large number of points to obtain the exclusion contours. For all points in this plane,
+the signal acceptance is measured using generator level truth information. This truth-level acceptance is
+compared to the acceptance from full detector simulation for a smaller set of model points (Appendix B
+: Table 9). To account for the difference in acceptances, the truth level acceptance is scaled by a constant
+factor of 0.7 ± 0.1 which is measured using the set of fully simulated points. The ratio of reconstructed
+acceptance to truth accetpance is shown in Fig. 15.
+
+The signal samples are generated with the CTEQ66 PDF. The uncertainty on the signal acceptance
+from the choice of PDF is estimated by using the 44 error sets of the CTEQ66 PDF. For one signal sample
+corresponding to a non-rotating black hole in six extra dimensions with MTH = 4000 GeV and MD =
+500 GeV, statistically independent samples are generated for each error set. Two sets of such samples
+are generated, one with 5000 events per sample, and one with 10000 events per sample. Figure 16
+(left) shows the acceptance for each sample as a function of error set. The nominal value is at x=0.
+Acceptances from both sets are shown; in red for 5000 events per sample, in black for 10000 events per
+sample. The histogram of acceptances from the error sets is shown in Fig. 16 (right). The RMS of the
+
+4The p-value is calculated using rs numbercountingutils.C in Roostats.
+
+Notreviewed,forinternalcirculationonlyRatio of Acceptances (Reconstructed/Truth)00.10.20.30.40.50.60.70.80.91Number of points01234567Entries  16Mean   0.7012RMS    0.1028

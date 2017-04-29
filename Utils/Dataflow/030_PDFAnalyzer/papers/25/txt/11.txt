@@ -1,0 +1,199 @@
+163
+
+164
+
+165
+
+166
+
+167
+
+168
+
+muon momentum resolution uncertainty, each of these were taken as linear functions of mmm
+starting at
+the Z0 peak and rising to ± the value obtained at mmm = 1 TeV. The effect of the momentum resolu-
+tion uncertainty was assessed by taking the full magnitude of the muon momentum correction to the MC
+mentioned in Section 2 as the systematic uncertainty. This was found by fitting the ratio of invariant mass
+distributions with and without muon momentum corrections with a second order polynomial (Fig. 11).
+The values of this function at the Z0 peak and at mmm = 1 TeV are also shown in Table 5.
+
+410
+410
+310
+310
+210
+210
+10
+10
+
+Unsmeared Z 
+
+m  
+
+Corrected Z 
+
+m  
+
+V
+V
+e
+e
+G
+G
+ 
+ 
+0
+0
+0
+0
+1
+1
+/
+/
+s
+s
+e
+e
+i
+i
+r
+r
+t
+t
+n
+n
+E
+E
+
+1
+1
+-110
+-110
+-210
+-210
+-310
+-310
+-410
+-410
+-510
+-510
+
+200 400 600 800 1000 1200 1400 1600 1800 2000
+200 400 600 800 1000 1200 1400 1600 1800 2000
+ [GeV]
+ [GeV]
+
+mm
+mm
+
+m
+o
+n
+
+/
+r
+a
+e
+m
+s
+ 
+
+o
+
+i
+t
+
+a
+R
+
+1.2
+
+1
+
+0.8
+
+200
+
+400
+
+600
+
+800 1000 1200 1400 1600 1800 2000
+
+Figure 11: DY distributions before and after muon resolution smearing corrections. Though a small
+effect, the ratio between smeared/nominal shows a ∼ 10% difference at 2 TeV.
+
+During the creation of the invariant mass distributions, each systematic uncertainty was applied indi-
+vidually as an event weight either as a function of true mass (in the case of K-factor and PDF uncertain-
+ties) or reconstructed mass (in the case of muon efficiency and momentum resolution uncertainties).
+
+L = (Nk
+
+systematic − Nk
+
+With each systematic individually ﬂuctuated up and down, we create a family of invariant mass
+distributions for each MC sample. Note that not all systematics are applied to every sample (as listed
+in Table 5). The difference between the expected number of events for each systematic uncertainty
+in k mass bins dNi,k
+nominal)iL was calculated on the ith systematic for both the full
+SM-only background and the benchmark signal samples separately using both upwards and downwards
+ﬂuctuations. Taking the larger of either the up or down ﬂuctuation for dNi, the systematics in each mass
+bin were added in quadrature: dNkL = (dN1 ⊕ dN2 ⊕ ...⊕ dNi)kL
+. Here, we also consider an additional
+systematic in the extrapolation fit of Nexp by adding the MC statistical uncertainty of signal samples in
+(these values are quoted in Table 4). Finally dNk was fit in each
+each mass bin in quadrature to dNkL
+mass bin as a function of 1/L 2 to extrapolate between the benchmark signal values (Fig. 12). The value
+of dNk at a particular 1/L 2 becomes the width of the Gaussian prior in Eq. 5 in each mass bin (and dNk
+b,
+the value for SM-only, is used for the p-value and expected limit range calculations). Table 6 shows the
+limit with and without adding systematic uncertainties. The effect is smaller than the statistical range of
+the limit shown in Fig. 9, with an observed limit difference of 0.17 TeV for constructive interference and
+0.14 TeV for destructive interference.
+
+169
+
+170
+
+171
+
+172
+
+173
+
+174
+
+175
+
+176
+
+177
+
+178
+
+179
+
+180
+
+181
+
+182
+
+183
+
+184
+
+185
+
+186
+
+11
+
+m
+m
+fi
+m
+fi
+m
+

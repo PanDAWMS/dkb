@@ -1,0 +1,18 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+42
+
+Figure 36: Figure shows the d0/derr
+(left) and relative isolation (right) distributions for the leading muon
+0
+for all dimuon events in the b¯b MC for events with 3 <NTracks< 7 and NTracks> 6. The distributions are
+normalized to area. The KS probability of agreement of shapes is 0.66 for d0 significance and 6.6× 10−4
+for the isolation.
+
+Figure 37: The leading muon pT distribution in log scale in the background region (NTracks < 10). The
+background histograms are stacked. The bottom part of the figure shows the ratio of data to prediction.
+The error on the points is statistical, while the red band shows the systematic uncertainty.
+
+Notreviewed,forinternalcirculationonlysig0 d1m-100-80-60-40-20020406080100sEvents / 4051015202530 MCbb3<NTracks<7NTracks>6T ptcone20/p1m012345678910Events / 0.20246810121416182022 MCbb3<NTracks<7NTracks>6Nevents110210310Data+fakemttbbDibosonSingle top: Wt) [GeV]1m(Tp050100150200250300350400data / bkg024

@@ -1,0 +1,19 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+8
+
+(a) Region C : µ2 d0/derr
+
+0 distribution.
+
+(b) Region C: µ2 isolation distribution.
+
+Figure 3: Figure shows the d0 significance (3(a)) and isolation(3(b)) distributions for the second muon for
+events in region C. The data distribution has been normalized to the simulation. The KS probability of
+the agreement of shapes is 0.64 for the d0 significance distribution, and 0.03 for the isolation distribution.
+Although no selections are made on the second muon, these distributions give confidence in the modeling
+of the distributions in MC. See section 5.1.1 for details.
+
+Notreviewed,forinternalcirculationonly d0sig2m-40-30-20-10010203040sEvents / 20200400600800100012001400Databb d0sig2m-100-80-60-40-20020406080100sEvents / 2110210310DatabbT ptcone20/p2m012345678910Events / 0.40200400600800100012001400160018002000Databb

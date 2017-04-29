@@ -1,0 +1,367 @@
+Table 2: Benchmark L values with PYTHIA LO cross sections (s × BF(X → mm
+with constructive (h = −1) and destructive (h = +1) interference.
+
+s × BF for h = −1 [pb]
+
+s × BF for h = +1 [pb]
+
+[TeV]
+
+)) for mmm ≥120 GeV
+
+16.94
+10.32
+9.40
+9.18
+
+-
+
+s
+
+=7 TeV
+
+ L dt = 42 pb
+
+-1
+
++L
++L
++L
++L
+
+ = 2 TeV
+ = 3 TeV
+ = 4 TeV
+ = 5 TeV
+
+Data 2010
+*gZ/
+Diboson
+tt
+fiW 
+
+m  
+
+2
+3
+4
+5
+7
+
+-
+
+11.69
+10.15
+9.73
+9.41
+
+(DY-only)
+
+9.19
+
+s
+s
+e
+e
+i
+i
+r
+r
+t
+t
+
+n
+n
+E
+E
+
+410
+410
+
+310
+310
+
+210
+210
+
+10
+10
+
+1
+1
+
+-110
+-110
+
+-210
+-210
+
+s
+
+=7 TeV
+
+ L dt = 42 pb
+
+-1
+
+-
+
+-
+
+-
+
+-
+
+ = 3 TeV
+ = 4 TeV
+ = 5 TeV
+ = 7 TeV
+
+Data 2010
+*gZ/
+Diboson
+tt
+fiW 
+
+m  
+
+80
+80
+
+210
+210
+
+·2
+·2
+
+210
+210
+
+310
+310
+mm
+mm
+
+310
+310
+
+·2
+·2
+ [GeV]
+ [GeV]
+
+s
+s
+e
+e
+i
+i
+r
+r
+t
+t
+
+n
+n
+E
+E
+
+410
+410
+
+310
+310
+
+210
+210
+
+10
+10
+
+1
+1
+
+-110
+-110
+
+-210
+-210
+
+80
+80
+
+210
+210
+
+·2
+·2
+
+210
+210
+
+310
+310
+mm
+mm
+
+310
+310
+
+·2
+·2
+ [GeV]
+ [GeV]
+
+Figure 3: Dimuon mass spectra after reconstruction and event selection for different benchmark L values
+and either constructive interference (left) or destructive interference (right), along with data and dominant
+SM backgrounds.
+
+. This is because lower L
+
+to L
+values have increasingly larger production in the high-mass tail of the
+dimuon spectrum, and these events are produced more centrally within the acceptance of the detector.
+We use this tight event selection to minimize poorly-reconstructed DY muons, which if mis-measured,
+could appear as an excess in the tail of the mass spectrum and mimic a signal.
+
+Table 3 shows the number of data events in various mass bins after all selection as well as the
+expected SM-only events after normalizing to the Z0 peak in the control region. Table 4 shows the
+expected number of events after all selection for each signal process (with non-DY backgrounds added)
+using the same normalization scale.
+
+80
+
+81
+
+82
+
+83
+
+84
+
+85
+
+86
+
+87
+
+Table 3: Expected and observed number of events in the dimuon channel. The errors quoted are statistical
+only.
+Mass (GeV)
+
+150-170
+
+170-200
+
+DY
+t ¯t
+
+Diboson
+W+jets
+Total
+Data
+
+70-110
+7547 ± 7
+5.96 ± 0.22
+10.06 ± 0.14
+0.25 ± 0.17
+7563 ± 7
+7563
+
+17.19 ± 0.33
+1.24 ± 0.04
+0.48 ± 0.04
+0.00 ± 0.00
+18.92 ± 0.34
+
+11
+
+12.77 ± 0.29
+1.22 ± 0.03
+0.41 ± 0.03
+0.00 ± 0.00
+14.40 ± 0.29
+
+11
+
+200-240
+7.81 ± 0.22
+1.03 ± 0.03
+0.28 ± 0.03
+0.00 ± 0.00
+9.12 ± 0.23
+
+7
+
+240-300
+5.05 ± 0.11
+0.73 ± 0.02
+0.24 ± 0.02
+0.00 ± 0.00
+6.02 ± 0.11
+
+6
+
+300-400
+2.49 ± 0.04
+0.37 ± 0.01
+0.16 ± 0.02
+0.00 ± 0.00
+3.03 ± 0.05
+
+2
+
+400-550
+0.99 ± 0.01
+0.11 ± 0.00
+0.06 ± 0.01
+0.00 ± 0.00
+1.16 ± 0.02
+
+0
+
+550-800
+0.29 ± 0.00
+0.02 ± 0.00
+0.02 ± 0.01
+0.00 ± 0.00
+0.33 ± 0.01
+
+1
+
+800-1200
+0.06 ± 0.00
+0.00 ± 0.00
+0.01 ± 0.00
+0.00 ± 0.00
+0.07 ± 0.00
+
+0
+
+1200-2000
+0.01 ± 0.00
+0.00 ± 0.00
+0.00 ± 0.00
+0.00 ± 0.00
+0.01 ± 0.00
+
+0
+
+5
+
+L
+¥
+m
+L
+L
+L
+L
+n
+m
+(cid:242)
+m
+n
+m
+(cid:242)
+

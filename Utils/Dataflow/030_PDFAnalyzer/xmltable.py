@@ -1,8 +1,5 @@
 import re
 
-from Tkinter import *
-from tkFileDialog import askopenfilename
-
 from pdfwork import *
 
 PAGE_SIZE = 1000 # TO DO: improve this.

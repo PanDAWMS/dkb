@@ -1,0 +1,16 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+29
+
+Figure 21: Figure shows the isolation distribution for leading muon for rotating black hole signal in
+models with 6 extra dimensions. The distributions are shown for three choices of MTH; 3000, 4000,
+and 5000 GeV with MD fixed at 1500GeV. The first bin corresponds to ptcone20/pT < 0.2 which is the
+requirement on the leading muon.
+
+Figure 22: Figure shows the NTracks distribution for rotating black hole signal in models with 6 extra
+dimensions. The distributions are shown for three choices of MTH; 3000, 4000, and 5000 GeV with MD
+fixed at 1500GeV.
+
+Notreviewed,forinternalcirculationonlyT ptcone20/p1m02468101214161820Events (varying bin size)-1101 = 3000 GeVTHM = 4000 GeVTHM = 5000 GeVTHMNTracks0102030405060708090100Events00.020.040.060.080.10.120.140.160.180.20.22 = 3000 GeVTHM = 4000 GeVTHM = 5000 GeVTHM

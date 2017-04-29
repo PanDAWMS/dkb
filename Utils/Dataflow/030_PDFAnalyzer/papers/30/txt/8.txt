@@ -1,0 +1,103 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+7
+
+Figure 2: Figure shows the d0/derr
+0 distribution for the leading muon in region C, in events where the
+leading muon has ptcone20/pT > 0.2. The distributions are normalized to area. The KS probability of
+the agreement of shapes is 0.11. The figure on the left is with a linear scale on y-axis, the right is with a
+log scale.
+
+T
+
+Fig. 3 we show the d0 significance and isolation for the second muon in region C. While we make no
+requirements on d0 significance and isolation for the second muon, the agreement shown in the figure
+gives confidence in the modeling of these variables in the simulation. Region C is expected to be dom-
+inated by b¯b + c¯c, with total contributions of t¯t and W+jets estimated from MC to be around 2% of the
+total. The comparison of the shapes of the pT and Emiss
+distributions between Cdata and AMC is shown
+in Fig. 4. These show good agreement; the KS probability for the agreement of shapes ranges from 0.11
+for the leading muon d0 significance distribution to 0.59 for the leading muon pT distribution.
+5.1.2 Step 2 - Extrapolating to signal region (NTracks ≥ 10)
+The region Cdata cannot be used with NTracks ≥ 10 due to potential signal in this region. The signal
+region has zero events in the b¯b MC. To estimate the fraction of b¯b events in the signal region, the
+NTracks shape in the b¯b MC, i.e. in AMC is extrapolated into the signal region. A simple exponential
+function is used for the fit to NTracks and the fit is shown in Fig. 6 (left). The fitted function is Events=
+ea−b×NTracks, with a = 6.5 ± 0.2, and b = 0.94 ± 0.08. The function is then integrated from 10 to infinity
+to obtain the total number of events with NTracks ≥ 10. The ratio of events in the signal region to
+the background region is 0.00036. This ratio, and Adata calculated above yields the b¯b background in
+the signal region as 0.77 events. We assign a 100% systematic uncertainty to the b¯b prediction as a
+conservative choice.
+
+A cross check of this method is done by relaxing the pT requirements on the two muons in the b¯b
+MC till one event is found in the signal region. The relaxed cuts are pT > 12, 11 GeV for the two muons.
+The ratio of events in signal region to the background region in this relaxed sample is 0.00031 with a
+100% uncertainty.
+The nominal fit is done using all events in the b¯b sample, i.e. for 2 < NTracks < 8. We also try various
+fit ranges such as [2 − 5] (predict: 0.65), [3 − 8] (predict: 1.1) and [4 − 8] (predict: 1.9). The various
+predictions are in decent agreement with the nominal prediction of 0.77 given the 100% uncertainty.
+
+We check the choice of fit, and perform a closure test of the method in the t¯t MC. This is shown in
+Fig. 6 (right). The NTracks distribution has a different shape for NTracks < 5 in t¯t versus b¯b as the t¯t
+process peaks at 4 tracks (two W’s and two b’s in each event). We fit the NTracks for 6 <NTracks< 11.
+We then use the fit to predict the number of events with NTracks ≥ 15 and ≥ 20. The predicted number
+
+218
+
+219
+
+220
+
+221
+
+222
+
+223
+
+224
+
+225
+
+226
+
+227
+
+228
+
+229
+
+230
+
+231
+
+232
+
+233
+
+234
+
+235
+
+236
+
+237
+
+238
+
+239
+
+240
+
+241
+
+242
+
+243
+
+244
+
+245
+
+Notreviewed,forinternalcirculationonly d0sig1m-40-30-20-10010203040sEvents / 20100200300400500600700Databb d0sig1m-100-80-60-40-20020406080100sEvents / 2110210Databb
