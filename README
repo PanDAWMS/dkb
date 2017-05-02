@@ -34,6 +34,8 @@ Directory layout
   tmp/
      StageX/
 
+./DatasetDiscovery # all information about datasets, theirs parameters, Oracle/AMI/RUCIO 		   # requests
+
 ./README           # This file
 
 ========
