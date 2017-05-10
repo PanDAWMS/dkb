@@ -56,7 +56,8 @@ if __name__ == "__main__":
 
     PAPERS_DIR = path_join(cfg["WORK_DIR"], "papers") # Directory for papers' directories.
     EXPORT_DIR = path_join(cfg["WORK_DIR"], "export") # Directory for exported files.
-    NO_ATTRS_FILE = path_join(EXPORT_DIR, "stat.txt") # File for information about exported papers with missing attributes.
+    ATTRS_FILE = path_join(EXPORT_DIR, "stat.txt") # File for information about exported papers with attributes.
+    CSV_FILE = path_join(EXPORT_DIR, "stat.csv")
     HEADING_FONT = ("Times New Roman", 20) # Font used for headings in the program.
 
 TXT_DIR = "txt" # Name of the subdirectory with txt files in a paper's directory.
@@ -1425,7 +1426,7 @@ class Manager:
             text = p.get_text()
             with open(path_join(d, "%s.txt" % (p.fname)), "w") as f:
                 f.write(text)
-    def export_all(self, quick = False, n = None, n_p = None, errors = None, no_attr = None):
+    def export_all(self, quick = False, n = None, n_p = None, errors = None, attr = None, csv = None):
         # Export all papers' metadata. Quick export: determine metadata first if none is available, skipping all user interaction.
         if n is None:
             if self.unsaved_papers():
@@ -1437,11 +1438,15 @@ class Manager:
             n = 1
             n_p = 0
             errors = {}
-            no_attr = {}
-            no_attr["datasets"] = []
+            s = "document name,datasets"
             for a in Paper.attributes_general:
-                no_attr[a] = []
-            self.window.after(100, lambda: self.export_all(quick, n, n_p, errors, no_attr))
+                s += ",%s" % a
+            csv = [s + "\n"]
+            attr = {}
+            attr["datasets"] = []
+            for a in Paper.attributes_general:
+                attr[a] = []
+            self.window.after(100, lambda: self.export_all(quick, n, n_p, errors, attr, csv))
         else:
             p = self.papers[n - 1]
             self.status_set("Performing export %d/%d. Paper: %s. Please, wait..." % (n, len(self.papers), p.fname))
@@ -1450,31 +1455,49 @@ class Manager:
                 outp = p.export(quick)
                 if outp:
                     n_p += 1
+                    s = "%s," % p.fname
+                    if outp["content"] and outp["content"].keys() != ["plain_text"]:
+                        attr["datasets"].append(p.fname)
+                        s += "1,"
+                    else:
+                        s += ","
                     for a in Paper.attributes_general:
-                        if not outp["content"]["plain_text"][a]:
-                            no_attr[a].append(p.fname)
-                    if not outp["content"] or outp["content"].keys() == ["plain_text"]:
-                        no_attr["datasets"].append(p.fname)
+                        if outp["content"]["plain_text"][a]:
+                            attr[a].append(p.fname)
+                            s += "1,"
+                        else:
+                            s += ","
+                    csv += s.rstrip(",") + "\n"
             except Exception as e:
                 outp = False
                 errors[p.fname] = e
             if n < len(self.papers):
                 n += 1
-                self.window.after(100, lambda: self.export_all(quick, n, n_p, errors, no_attr))
+                self.window.after(100, lambda: self.export_all(quick, n, n_p, errors, attr, csv))
             else:
                 msg = False
                 if errors:
                     msg = "These papers were not exported for some reason:\n\n"
                     for e in errors:
                         msg += "%s : %s\n\n" % (e, errors[e])
-                with open(NO_ATTRS_FILE, "w") as f:
-                    for a in no_attr:
-                        f.write("No %s: %d out of %d papers (%f%%) \n"%(a, len(no_attr[a]), n_p, float(len(no_attr[a])) / n_p * 100))
-                        for p in no_attr[a]:
+                with open(ATTRS_FILE, "w") as f:
+                    for a in attr:
+                        f.write("%s found: %d out of %d papers (%f%%) \n"%(a, len(attr[a]), n_p, float(len(attr[a])) / n_p * 100))
+                        for p in attr[a]:
                             f.write(p + "\n")
                         f.write("\n")
                     if msg:
                         f.write(msg)
+                with open(CSV_FILE, "w") as f:
+                    csv += "TOTAL\n"
+                    s = "%d,%d," % (n_p, len(attr["datasets"]))
+                    s_p = "100%%,%f%%," % (float(len(attr["datasets"])) / n_p * 100)
+                    for a in Paper.attributes_general:
+                        s += "%d," % len(attr[a])
+                        s_p += "%f%%," % (float(len(attr[a])) / n_p * 100)
+                    csv += s.rstrip(",") + "\n"
+                    csv += s_p.rstrip(",") + "\n"
+                    f.writelines(csv)
                 self.status_set("")
                 if msg:
                     tkMessageBox.showwarning("Unable to export papers", msg)
