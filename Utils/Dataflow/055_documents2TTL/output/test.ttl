@@ -1,0 +1,45 @@
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> a <http://nosql.tpu.ru/ontology/ATLAS#Paper> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#hasGLANCE_ID> "82"^^xsd:int .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#hasShortTitle> "Diphoton cross section" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#hasFullTitle> "Measurement of isolated diphoton cross-section in pp collision at sqrt(s) = 7 TeV with the ATLAS detector" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#hasRefCode> "STDM-2011-05" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#hasCreationDate> "2012-02-07T10:48:37"^^xsd:dateTime .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#hasCDSReportNumber> "CERN-PH-EP-2012-014" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#hasCDSInternal> "ATLAS-HIGG-2012-01-003" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#hasCDS_ID> "1421965"^^xsd:integer .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#hasAbstract> "This Letter presents a search for the Standard Model Higgs boson in the decay channel H->ZZ(*)->l+l-l\\'+l\\'-, where l,l\\'=e or mu, using proton-proton collisions at sqrt(s)=7 TeV recorded with the ATLAS detector and corresponding to an integrated luminosity of 4.8 fb^-1. The four-lepton mass distribution is compared with Standard Model background expectations to derive upper limits on the cross section of a Standard Model Higgs boson with a mass between 110 GeV and 600 GeV which exclude the mass ranges 134-156 GeV, 182-233 GeV, 256-265 GeV and 266-415 GeV at the 95% confidence level. The largest upward deviations from the background-only hypothesis are observed for Higgs boson masses of 125, 244 and 500 GeV with local significances of 2.1, 2.2 and 2.1 standard deviations, respectively. Once the look-elsewhere effect is considered, none of these excesses are significant." .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#hasArXivCode> "arXiv:1202.1415" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#hasFullTitle> "Search for the Standard Model Higgs boson in the decay channel $H \\to ZZ^{(*)} \\to 4l$ with 4.8 fb$^{-1}$ of pp collisions at $\\sqrt{s}$=7 TeV with ATLAS" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#hasDOI> "10.1016/j.physletb.2012.03.005"^^xsd:string .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#hasKeyword> "Higgs physics"^^xsd:string .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#hasKeyword> "lepton production"^^xsd:string .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#hasKeyword> "experimental results"^^xsd:string .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/journal_issue/Phys.Lett.B_710_2012> a <http://nosql.tpu.ru/ontology/ATLAS#JournalIssue> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/journal_issue/Phys.Lett.B_710_2012> <http://nosql.tpu.ru/ontology/ATLAS#hasTitle> "Phys. Lett. B"^^xsd:string .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/journal_issue/Phys.Lett.B_710_2012> <http://nosql.tpu.ru/ontology/ATLAS#hasVolume> "710"^^xsd:string .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/journal_issue/Phys.Lett.B_710_2012> <http://nosql.tpu.ru/ontology/ATLAS#hasYear> "2012"^^xsd:string .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/journal_issue/Phys.Lett.B_710_2012> <http://nosql.tpu.ru/ontology/ATLAS#containsPublication> <http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2011-081> a <http://nosql.tpu.ru/ontology/ATLAS#SupportingDocument> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2011-081> <http://nosql.tpu.ru/ontology/ATLAS#hasGLANCE_ID> "255"^^xsd:int .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2011-081> <http://nosql.tpu.ru/ontology/ATLAS#hasLabel> "http://cdsweb.cern.ch/record/1337015" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2011-081> <http://nosql.tpu.ru/ontology/ATLAS#hasURL> "http://cdsweb.cern.ch/record/1337015" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2011-081> <http://nosql.tpu.ru/ontology/ATLAS#hasCreationDate> "2011-02-01T00:37:53"^^xsd:dateTime .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2011-081> <http://nosql.tpu.ru/ontology/ATLAS#hasCDSInternal> "CERN-ATL-COM-PHYS-2011-081" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2011-081> <http://nosql.tpu.ru/ontology/ATLAS#hasCDS_ID> "1325587"^^xsd:integer .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2011-081> <http://nosql.tpu.ru/ontology/ATLAS#hasAbstract> "We discuss the possibility to discover new physics in the ATLAS Detector via a four-fermion contact interaction between two initial-state quarks and two final-state muons. In the absence of new physics signal, we set a 95% C.L. lower limit on the effective scale Lambda > 4.9 TeV (4.5 TeV) for the constructive (destructive) Left-left Isoscalar Model of quark compositeness with integrated luminosity of 42 pb1 at sqrt(s) = 7 TeV." .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2011-081> <http://nosql.tpu.ru/ontology/ATLAS#hasFullTitle> "Search for Contact Interactions in the Dimuon Final State" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2011-081> <http://nosql.tpu.ru/ontology/ATLAS#hasKeyword> "EXOTICS"^^xsd:string .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2010-1045> a <http://nosql.tpu.ru/ontology/ATLAS#SupportingDocument> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2010-1045> <http://nosql.tpu.ru/ontology/ATLAS#hasGLANCE_ID> "258"^^xsd:int .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2010-1045> <http://nosql.tpu.ru/ontology/ATLAS#hasLabel> "Working paper draft" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2010-1045> <http://nosql.tpu.ru/ontology/ATLAS#hasURL> "http://cdsweb.cern.ch/record/1342526" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2010-1045> <http://nosql.tpu.ru/ontology/ATLAS#hasCreationDate> "2010-12-14T23:48:32"^^xsd:dateTime .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2010-1045> <http://nosql.tpu.ru/ontology/ATLAS#hasCDSInternal> "CERN-ATL-COM-PHYS-2010-1045" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2010-1045> <http://nosql.tpu.ru/ontology/ATLAS#hasCDS_ID> "1314226"^^xsd:integer .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2010-1045> <http://nosql.tpu.ru/ontology/ATLAS#hasAbstract> "A search for R-parity conserving supersymmetry using the ATLAS detector is described. The final state under study includes two leptons and high missing transverse momentum. Results are based on data collected at ATLAS detector in 2010 that corresponds to 35ipb of integrated luminosity." .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2010-1045> <http://nosql.tpu.ru/ontology/ATLAS#hasFullTitle> "SUSY searches with dileptons and high missing transverse momentum" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2010-1045> <http://nosql.tpu.ru/ontology/ATLAS#hasKeyword> "SUSY"^^xsd:string .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#isBasedOn> <http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2011-081> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/ATLAS-HIGG-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#isBasedOn> <http://nosql.tpu.ru:8890/DAV/ATLAS/document/CERN-ATL-COM-PHYS-2010-1045> .
+
+ 
