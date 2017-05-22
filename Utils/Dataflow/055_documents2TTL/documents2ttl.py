@@ -389,7 +389,7 @@ def process_journals(data, doc_iri):
        <{journal_resource}{journalIssueID}> <{ontology}#hasVolume> "{volume}"^^xsd:string .
        <{journal_resource}{journalIssueID}> <{ontology}#hasYear> "{year}"^^xsd:string .
        <{journal_resource}{journalIssueID}> <{ontology}#containsPublication> {doc_iri} .
-       '''.format(journalIssueID=id, title=item['title'], volume=item['volume'],
+       '''.format(journalIssueID=journal_id, title=item['title'], volume=item['volume'],
                   year=item['year'], doc_iri=doc_iri, journal_resource=GRAPH+'/journal_issue/',
                   ontology=ONTOLOGY)
     return ttl
