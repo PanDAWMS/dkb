@@ -125,46 +125,24 @@ def get_document_iri(doc_id):
     obj = "document/%s" % doc_id
     return "<%s/%s>" % (GRAPH, obj)
 
-def document_glance(data, doc_id, doc_type):
+def document_glance(data, doc_iri, glance_attrs):
     """
     converting document GLANCE metadata from JSON to TTL (Turtle)
     :param data: JSON data from file or stream
-    :param doc_id: document ID from "dkbID" JSON parameter
-    :param doc_type: document type 'paper' or 'note'
+    :param doc_iri: document IRI
+    :param glance_attrs: PAPER_GLANCE_ATTRS | NOTE_GLANCE_ATTRS
     :return ttl string with GLANCE metadata:
     """
     # if isinstance(data, dict):
     #     raise ValueError("expected parameter of type %s, got %s\n" % (dict, type(data)))
     ttl = ""
-    doc_iri = get_document_iri(doc_id)
-
-    if doc_type == 'paper':
-        ttl += "{docIRI} a <{ontology}#Paper> .\n"\
-            .format(docIRI=doc_iri, ontology=ONTOLOGY)
-        glance = {}
-        glance['id'] = data['id']
-        glance['short_title'] = fix_string(data["short_title"])
-        glance['full_title'] = fix_string(data["full_title"])
-        glance['ref_code'] = data["ref_code"]
-
-        for item in PAPER_GLANCE_ATTRS:
-            curr_value = glance[item['GLANCE']]
-            ttl += '{docIRI} <{ontology}#{ONTO}> "{value}"{xsdType} .\n'\
-                .format(docIRI=doc_iri, ontology=ONTOLOGY, ONTO=item['ONTO'],
-                        value=curr_value, xsdType=item['TYPE'])
-    elif doc_type == 'note':
-        ttl += "{docIRI} a <{ontology}#SupportingDocument> .\n"\
-            .format(docIRI=doc_iri, ontology=ONTOLOGY)
-        glance = {}
-        glance['id'] = data['id']
-        glance['label'] = fix_string(data["label"])
-        glance['url'] = fix_string(data["url"])
-
-        for item in NOTE_GLANCE_ATTRS:
-            curr_value = glance[item['GLANCE']]
-            ttl += '{docIRI} <{ontology}#{ONTO}> "{value}"{xsdType} .\n'\
-                .format(docIRI=doc_iri, ontology=ONTOLOGY, ONTO=item['ONTO'],
-                        value=curr_value, xsdType=item['TYPE'])
+    for param in glance_attrs:
+        data[param['GLANCE']] = glance_parameter_extraction(param['GLANCE'], data)
+    for item in glance_attrs:
+        curr_value = data[item['GLANCE']]
+        ttl += '{docIRI} <{ontology}#{ONTO}> "{value}"{xsdType} .\n' \
+            .format(docIRI=doc_iri, ontology=ONTOLOGY, ONTO=item['ONTO'],
+                    value=curr_value, xsdType=item['TYPE'])
     return ttl
 
 def documents_links(data):
@@ -182,55 +160,30 @@ def documents_links(data):
             .format(paperIRI=paper_iri, ontology=ONTOLOGY, noteIRI=note_iri)
     return ttl
 
-def document_cds(data, doc_iri, doc_type):
+def document_cds(data, doc_iri, cds_attrs):
     """
     Read JSON document with supporting document metadata and generating TTL
     :param data: metadata fro JSON file or stream
     :param doc_iri: document IRI for current graph
-    :param doc_type: paper or note
+    :param cds_attrs: PAPER_CDS_ATTRS | NOTE_CDS_ATTRS
     :return ttl: string with metadata
     """
     ttl = ''
-    if doc_type == 'paper':
-
-        # processing single value parameters
-        data['abstract'] = abstract_extraction(data)
-        data['title'] = title_extraction(data)
-        data['CDS_ID'] = cds_id_extraction(data)
-        data['creation_date'] = creation_date_extraction(data)
-        data['arXivCode'] = arxiv_extraction(data)
-        data['CDSInternal'] = cds_internal_extraction(data)
-        data['CDS_ReportNumber'] = report_number_extraction(data)
-
-        for item in PAPER_CDS_ATTRS:
-            curr_value = data[item['CDS']]
-            if curr_value is not None:
-                ttl += '{docIRI} <{ontology}#{ONTO}> "{value}"{xsdType} .\n'\
-                    .format(docIRI=doc_iri, ontology=ONTOLOGY, ONTO=item['ONTO'],
-                            value=curr_value, xsdType=item['TYPE'])
-        # processing multivalue parameters
-        if 'doi' in data:
-            ttl += doi2ttl(data['doi'], doc_iri)
-        if 'keywords' in data:
-            ttl += keywords2ttl(data['keywords'], doc_iri)
-        if 'publication_info' in data:
-            ttl += process_journals(data['publication_info'], doc_iri)
-    elif doc_type == 'note':
-        data['abstract'] = abstract_extraction(data)
-        data['title'] = title_extraction(data)
-        data['CDS_ID'] = cds_id_extraction(data)
-        data['creation_date'] = creation_date_extraction(data)
-        data['CDSInternal'] = cds_internal_extraction(data)
-        data['CDS_ReportNumber'] = report_number_extraction(data)
-
-        for item in NOTE_CDS_ATTRS:
-            curr_value = data[item['CDS']]
-            if curr_value is not None:
-                ttl += '{docIRI} <{ontology}#{ONTO}> "{value}"{xsdType} .\n'\
-                    .format(docIRI=doc_iri, ontology=ONTOLOGY, ONTO=item['ONTO'],
-                            value=curr_value, xsdType=item['TYPE'])
-        if 'keywords' in data:
-            ttl += keywords2ttl(data['keywords'], doc_iri)
+    for param in cds_attrs:
+        data[param['CDS']] = cds_parameter_extraction(param['CDS'], data)
+    for item in cds_attrs:
+        curr_value = data[item['CDS']]
+        if curr_value is not None:
+            ttl += '{docIRI} <{ontology}#{ONTO}> "{value}"{xsdType} .\n' \
+                .format(docIRI=doc_iri, ontology=ONTOLOGY, ONTO=item['ONTO'],
+                        value=curr_value, xsdType=item['TYPE'])
+    # processing multivalue parameters
+    if 'doi' in data:
+        ttl += doi2ttl(data['doi'], doc_iri)
+    if 'keywords' in data:
+        ttl += keywords2ttl(data['keywords'], doc_iri)
+    if 'publication_info' in data:
+        ttl += process_journals(data['publication_info'], doc_iri)
     sys.stderr.write("done!\n")
     return ttl
 
@@ -309,6 +262,48 @@ def report_number_extraction(data):
         if 'report_number' in report_number:
             return report_number['report_number']
 
+
+def glance_parameter_extraction(param_name, json_data):
+    """
+    Extracting single value parameters from GLANCE json 
+    :param param_name: 
+    :param json_data: JSON with GLANCE metadata
+    :return:
+    """
+    if param_name == 'id':
+        return json_data['id']
+    elif param_name == 'short_title':
+        return fix_string(json_data["short_title"])
+    elif param_name == 'full_title':
+        return fix_string(json_data["full_title"])
+    elif param_name == 'ref_code':
+        return json_data["ref_code"]
+    elif param_name == 'label':
+        return fix_string(json_data["label"])
+    elif param_name == 'url':
+        return fix_string(json_data["url"])
+
+def cds_parameter_extraction(param_name, json_data):
+    """
+    Extracting parameters from json string with CDS parameters
+    :param param_name: name of parameter, defined in *_CDS_ATTRS dict
+    :param json_data: json string with CDS parameters
+    :return: 
+    """
+    if param_name == 'abstract':
+        return abstract_extraction(json_data)
+    if param_name == 'title':
+        return title_extraction(json_data)
+    if param_name == 'CDS_ID':
+        return cds_id_extraction(json_data)
+    if param_name == 'creation_date':
+        return creation_date_extraction(json_data)
+    if param_name == 'primary_report_number':
+        return arxiv_extraction(json_data)
+    if param_name == 'CDSInternal':
+        return cds_internal_extraction(json_data)
+    if param_name == 'CDS_ReportNumber':
+        return report_number_extraction(json_data)
 
 def abstract_extraction(data):
     """
@@ -620,17 +615,17 @@ def main(argv):
     paper_id = items['dkbID']
     doc_iri = get_document_iri(paper_id)
     doc_ttl = ""
-    doc_ttl += document_glance(items["GLANCE"], paper_id, 'paper')
-    doc_ttl += document_cds(items["CDS"], doc_iri, 'paper')
+    doc_ttl += document_glance(items["GLANCE"], doc_iri, PAPER_GLANCE_ATTRS)
+    doc_ttl += document_cds(items["CDS"], doc_iri, PAPER_CDS_ATTRS)
 
     # supporting documents processing
 
     if "supporting_notes" in items:
         for note in items["supporting_notes"]:
             note_id = note["dkbID"]
-            doc_iri = get_document_iri(note_id)
-            doc_ttl += document_glance(note["GLANCE"], note_id, 'note')
-            doc_ttl += document_cds(note["CDS"], doc_iri, 'note')
+            note_iri = get_document_iri(note_id)
+            doc_ttl += document_glance(note["GLANCE"], note_iri, NOTE_GLANCE_ATTRS)
+            doc_ttl += document_cds(note["CDS"], note_iri, NOTE_CDS_ATTRS)
 
     doc_ttl += documents_links(items)
     if args.processing_mode == 'f':
