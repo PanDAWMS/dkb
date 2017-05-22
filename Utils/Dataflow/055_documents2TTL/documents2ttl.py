@@ -235,17 +235,18 @@ def cds_internal_extraction(data):
     :param data: JSON string
     :return report number:
     """
-    report_number = data['report_number']
-    if isinstance(report_number, list):
-        for item in report_number:
-            if 'internal' in item:
-                return item['internal']
-    elif isinstance(report_number, dict):
-        if 'internal' in report_number:
-            return report_number['internal']
-        elif 'internal' not in report_number:
-            if 'primary_report_number' in report_number:
-                return report_number['primary_report_number']
+    if 'report_number' in data:
+        report_number = data['report_number']
+        if isinstance(report_number, list):
+            for item in report_number:
+                if 'internal' in item:
+                    return item['internal']
+        elif isinstance(report_number, dict):
+            if 'internal' in report_number:
+                return report_number['internal']
+            elif 'internal' not in report_number:
+                if 'primary_report_number' in report_number:
+                    return report_number['primary_report_number']
 
 def report_number_extraction(data):
     """
@@ -253,14 +254,15 @@ def report_number_extraction(data):
     :param data:
     :return:
     """
-    report_number = data['report_number']
-    if isinstance(report_number, list):
-        for item in report_number:
-            if 'report_number' in item:
-                return item['report_number']
-    elif isinstance(report_number, dict):
-        if 'report_number' in report_number:
-            return report_number['report_number']
+    if 'report_number' in data:
+        report_number = data['report_number']
+        if isinstance(report_number, list):
+            for item in report_number:
+                if 'report_number' in item:
+                    return item['report_number']
+        elif isinstance(report_number, dict):
+            if 'report_number' in report_number:
+                return report_number['report_number']
 
 
 def glance_parameter_extraction(param_name, json_data):
