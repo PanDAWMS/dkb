@@ -216,7 +216,7 @@ def keywords2ttl(keywords, doc_iri):
     keyword = []
     if isinstance(keywords, list):
         keyword = [item['term'] for item in list(keywords)]
-    elif isinstance(keywords, str):
+    elif isinstance(keywords.get('term'), str):
         splitted = keywords.get('term').split(',')
         if len(splitted) > 0:
             keyword = splitted
