@@ -55,6 +55,8 @@ import sys
 import json
 import urllib
 import urllib2
+sys.path.append("../")
+from pyDKB.dataflow import stage
 
 #defaults
 GRAPH = "http://nosql.tpu.ru:8890/DAV/ATLAS"
@@ -114,7 +116,8 @@ def get_items(fds):
     :return:
     """
     for data_file in fds:
-        data = ''.join(iter(data_file.readline, ''))
+        with open(data_file, "r") as infile:
+            data = ''.join(iter(infile.readline, ''))
         return json.loads(json.dumps(json.loads(data)))
 
 def get_document_iri(doc_id):
@@ -537,83 +540,48 @@ def main(argv):
     :param argv: arguments
     :return:
     """
-    parser = argparse.ArgumentParser(
-        description=u'Converts Paper and SupportingDocuments '
-                    u'basic metadata from JSON format to TTL.')
-    parser.add_argument('infiles', metavar=u'JSON-FILE', type=argparse.FileType('r'), nargs='*',
-                        help=u'Source JSON file.')
-    parser.add_argument('-g', '--graph', action='store', type=str, nargs='?',
+    processor = stage.AbstractProcessorStage()
+    processor.defaultArguments()
+    processor.add_argument('-g', '--graph', action='store', type=str, nargs='?',
                         help='Virtuoso DB graph name (default: %(default)s)',
                         default=GRAPH,
                         const=GRAPH,
                         metavar='GRAPH',
-                        dest='GRAPH'
-                       )
-    parser.add_argument('-O', '--ontology', action='store', type=str, nargs='?',
+                        dest='GRAPH')
+    processor.add_argument('-O', '--ontology', action='store', type=str, nargs='?',
                         help='Virtuoso ontology prefix (default: %(default)s)',
                         default=ONTOLOGY,
                         const=ONTOLOGY,
                         metavar='ONT',
-                        dest='ONTOLOGY'
-                       )
-    parser.add_argument('-S', '--sparql', action='store', type=str, nargs='?',
+                        dest='ONTOLOGY')
+    processor.add_argument('-SPARQL', '--sparql', action='store', type=str, nargs='?',
                         help='SPARQL Endpoint (default: %(default)s)',
                         default=SPARQL,
                         const=SPARQL,
                         metavar='SPARQL',
-                        dest='SPARQL'
-                       )
-    parser.add_argument('-o', '--output', action='store', type=argparse.FileType('w'), nargs='?',
-                        help=u'Name of the file to store triples (default: <CSV-FILE without CSV>.ttl).',
-                        metavar='OUTFILE',
-                        dest='outfile'
-                       )
-    parser.add_argument('-m', '--mode', action='store', nargs='?',
-                        help=u'''VALUES:
-                        f -- works with files (default)
-                        s -- run in a Kafka Streams mode (as processor).
-                        Ignore options: -o|--output (use STDOUT)
-                        ''',
-                        default='f',
-                        dest='processing_mode',
-                        choices=['f', 's']
-                       )
-    parser.add_argument('-d', '--delimiter', action='store', nargs='?',
+                        dest='SPARQL')
+    processor.add_argument('-delim', '--delimiter', action='store', nargs='?',
                         help=u'EOP marker for Kafka mode (default: \0)',
                         default='',
-                        dest='EOPmarker'
-                       )
-    # parser.add_argument('-vl', '--vitruoso-login', action='store', type=str, nargs='?',
-    #                     help='Virtuoso Conductior Login',
-    #                     default=LOGIN,
-    #                     const=LOGIN,
-    #                     metavar='LOGIN',
-    #                     dest='LOGIN'
-    #                     )
-    # parser.add_argument('-vp', '--vitruoso-password', action='store', type=str, nargs='?',
-    #                     help='Virtuoso Conductior Password',
-    #                     default=PASSWORD,
-    #                     const=PASSWORD,
-    #                     metavar='PASSWORD',
-    #                     dest='PASSWORD'
-    #                     )
+                        dest='EOPmarker')
+    processor.parse_args(argv)
+    define_globals(processor.ARGS)
 
-    args = parser.parse_args(argv)
-    if args.processing_mode == 'f':
-        if not args.infiles:
+    # args = parser.parse_args(argv)
+    if processor.ARGS.mode == 'f':
+        if not processor.ARGS.input_files:
             sys.stderr.write('(INFO) No input JSON file presented. Switching to streaming mode.\n')
-            args.processing_mode = 's'
-        if not args.outfile:
+            processor.ARGS.mode = 's'
+        if not processor.ARGS.output_dir:
             sys.stderr.write('(INFO) No output file specified. Write to stdout\n')
-            args.outfile = sys.stdout
-    if args.processing_mode == 's':
-        args.infiles = [sys.stdin]
-        args.outfile = sys.stdout
-        if not args.EOPmarker:
-            args.EOPmarker = '\0'
+            processor.ARGS.output_dir = sys.stdout
+    if processor.ARGS.mode == 's':
+        processor.ARGS.input_files = [sys.stdin]
+        processor.ARGS.output_dir = sys.stdout
+        if not processor.ARGS.EOPmarker:
+            processor.ARGS.EOPmarker = '\0'
 
-    define_globals(args)
-    items = get_items(args.infiles)
+    items = get_items(processor.ARGS.input_files)
     paper_id = items['dkbID']
     doc_iri = get_document_iri(paper_id)
     doc_ttl = ""
@@ -630,7 +598,7 @@ def main(argv):
             doc_ttl += document_cds(note["CDS"], note_iri, NOTE_CDS_ATTRS)
 
     doc_ttl += documents_links(items)
-    if args.processing_mode == 'f':
+    if processor.ARGS.mode == 'f':
         write_ttl2file("test.ttl", doc_ttl)
     else:
         sys.stdout.write(doc_ttl + "\n\0")
