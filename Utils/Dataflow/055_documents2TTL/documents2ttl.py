@@ -109,17 +109,6 @@ def define_globals(args):
     global SPARQL
     SPARQL = args.SPARQL
 
-def get_items(fds):
-    """
-    Get JSON from file or stream
-    :param fds:
-    :return:
-    """
-    for data_file in fds:
-        with open(data_file, "r") as infile:
-            data = ''.join(iter(infile.readline, ''))
-        return json.loads(json.dumps(json.loads(data)))
-
 def get_document_iri(doc_id):
     """
     :param doc_id:
@@ -534,6 +523,34 @@ def convert_to_list(data):
     return list_dicts
 
 
+def files_generator(args):
+    """
+    Generator returning file content for each 
+    item in input_files list
+    :param args: 
+    :return: 
+    """
+    for f in args.input_files:
+        name = f.split('/')[-1]
+        args.__current_file = name
+        if args.input_dir:
+            f = args.input_dir + "/" + f
+        args.__current_file_full = f
+        try:
+            with open(f, "r") as infile:
+                data = infile.read().replace('\n', '')
+                yield data
+        except IOError:
+            print 'oops!'
+
+def stream_generator():
+    """
+    Generator, returning each stream from stdin
+    :return: 
+    """
+    for f in [sys.stdin]:
+        yield f.read()
+
 def main(argv):
     """
     Parsing command line arguments and processing JSON string from file or from stream
@@ -567,42 +584,35 @@ def main(argv):
     processor.parse_args(argv)
     define_globals(processor.ARGS)
 
-    # args = parser.parse_args(argv)
-    if processor.ARGS.mode == 'f':
-        if not processor.ARGS.input_files:
-            sys.stderr.write('(INFO) No input JSON file presented. Switching to streaming mode.\n')
-            processor.ARGS.mode = 's'
-        if not processor.ARGS.output_dir:
-            sys.stderr.write('(INFO) No output file specified. Write to stdout\n')
-            processor.ARGS.output_dir = sys.stdout
     if processor.ARGS.mode == 's':
-        processor.ARGS.input_files = [sys.stdin]
-        processor.ARGS.output_dir = sys.stdout
-        if not processor.ARGS.EOPmarker:
-            processor.ARGS.EOPmarker = '\0'
+        gen = stream_generator()
+    elif processor.ARGS.mode == 'f':
+        gen = files_generator(processor.ARGS)
 
-    items = get_items(processor.ARGS.input_files)
-    paper_id = items['dkbID']
-    doc_iri = get_document_iri(paper_id)
-    doc_ttl = ""
-    doc_ttl += document_glance(items["GLANCE"], doc_iri, PAPER_GLANCE_ATTRS)
-    doc_ttl += document_cds(items["CDS"], doc_iri, PAPER_CDS_ATTRS)
+    for f in gen:
+        data = json.loads(f)
+        paper_id = data.get('dkbID')
+        doc_iri = get_document_iri(paper_id)
+        doc_ttl = ""
+        doc_ttl += document_glance(data.get('GLANCE'), doc_iri, PAPER_GLANCE_ATTRS)
+        doc_ttl += document_cds(data.get('CDS'), doc_iri, PAPER_CDS_ATTRS)
 
-    # supporting documents processing
+        # supporting documents processing
 
-    if "supporting_notes" in items:
-        for note in items["supporting_notes"]:
-            note_id = note["dkbID"]
-            note_iri = get_document_iri(note_id)
-            doc_ttl += document_glance(note["GLANCE"], note_iri, NOTE_GLANCE_ATTRS)
-            doc_ttl += document_cds(note["CDS"], note_iri, NOTE_CDS_ATTRS)
+        if "supporting_notes" in data:
+            for note in data.get('supporting_notes'):
+                note_id = note["dkbID"]
+                note_iri = get_document_iri(note_id)
+                doc_ttl += document_glance(note["GLANCE"], note_iri, NOTE_GLANCE_ATTRS)
+                doc_ttl += document_cds(note["CDS"], note_iri, NOTE_CDS_ATTRS)
 
-    doc_ttl += documents_links(items)
-    if processor.ARGS.mode == 'f':
-        write_ttl2file("test.ttl", doc_ttl)
-    else:
-        sys.stdout.write(doc_ttl + "\n\0")
-        sys.stdout.flush()
+        doc_ttl += documents_links(data)
+
+        if processor.ARGS.mode == 'f':
+            write_ttl2file("test.ttl", doc_ttl)
+        else:
+            sys.stdout.write(doc_ttl + processor.ARGS.EOPmarker)
+            sys.stdout.flush()
 
 if __name__ == "__main__":
     main(sys.argv[1:])
