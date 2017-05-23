@@ -609,7 +609,11 @@ def main(argv):
         doc_ttl += documents_links(data)
 
         if processor.ARGS.mode == 'f':
-            write_ttl2file("test.ttl", doc_ttl)
+            if processor.ARGS.output_dir != '':
+                output = processor.ARGS.output_dir + '/' + paper_id + '.ttl'
+            else:
+                output = paper_id + '.ttl'
+            write_ttl2file(output, doc_ttl)
         else:
             sys.stdout.write(doc_ttl + processor.ARGS.EOPmarker)
             sys.stdout.flush()
