@@ -35,7 +35,10 @@ counter = 0
 def usage():
    msg='''
 USAGE
-  ./getCDSPapers.py <options>
+  ./getCDSPapers.py <options> [file]
+
+ARGUMENTS
+  file                    Input file name (default: Input/list_of_papers.json)
 
 OPTIONS
   -l, --login     LOGIN   CERN account login
@@ -334,6 +337,13 @@ def main(argv):
       elif opt in ("-P", "--pretty"):
          indent = 2
 
+   if len(args) == 0:
+     infile = 'Input/list_of_papers.json'
+   elif len(args) == 1:
+     infile = args[0]
+   else:
+     usage()
+
    if not login and not kerberos:
       sys.stderr.write("WARNING: no authentication method will be used.\n")
 
@@ -345,7 +355,7 @@ def main(argv):
    with Connector(login,password) as cds:
 
       if mode in ("f","file"):
-         input_file_handle('Input/list_of_papers.json',cds,indent)
+         input_file_handle(infile,cds,indent)
 
       elif mode in ("s", "stream"):
          input_stream_handle(sys.stdin,cds)
