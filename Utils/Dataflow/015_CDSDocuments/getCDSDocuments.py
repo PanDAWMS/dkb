@@ -206,7 +206,10 @@ def formOutputData(GLANCEdata, ppCDSdata, sdCDSdata):
   result = {}
 
   ppGLANCEdata = GLANCEdata.copy()
-  sdGLANCEdata = ppGLANCEdata.pop("supporting_notes")
+  if ppGLANCEdata.get("supporting_notes"):
+    sdGLANCEdata = ppGLANCEdata.pop("supporting_notes")
+  else:
+    sdGLANCEdata = []
 
   result["GLANCE"] = ppGLANCEdata
   result["CDS"] = ppCDSdata
