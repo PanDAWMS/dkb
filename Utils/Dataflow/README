@@ -12,8 +12,6 @@ Number
 ********************************************************************************************
 0.0              000_kafka                      Dataflow managing Kafka applications
 1.0		 010_glancePapers 		Get papers with links to supporting documents from GLANCE
---(1.1		 011_CDSPapers			Get papers metadata from CDS)--
---(1.2		 012_CDSSupportDocs		Get supporting notes metadata from CDS)--
 1.3		 013_path2PDF			Get PDF URLs from CDS
 1.5              015_CDSDocuments               Get metadata for paper (and its supporting documents) from CDS
 2.0		 020_PDFDownloader		Download Supporting Notes PDF papers from CDS
@@ -50,7 +48,7 @@ Just for convenience.
    (see "3. External Sources" below)
 (+) 010_glancePaper
 
-2. Unite 011,012 into 015.
+--(2. Unite 011,012 into 015.)--
 
 3. Unite 050,051,052 into 055.
 
@@ -99,7 +97,7 @@ Conventions, in-between data location in HDFS storage etc.
 Catalog					Description						Link to Dataflow Stage   	
 ***********************************************************************************************************************
 /user/DKB/store/DatasetsFromPDF		dataset names and ID's, found by PDFAnalyzer module   	[030_PDFAnalyzer/output]
-/user/DKB/store/PapersMetadata          ATLAS Papers metadata from CDS                          [011_CDSPapers/output]
+/user/DKB/store/PapersMetadata          ATLAS Papers metadata from CDS                          [015_CDSDocuments/output]
 /user/DKB/store/SupportDocsMetadata	ATLAS Supporting Documents metadata from CDS 		[012_CDSSupportDocs/output]
 /user/DKB/store/SupportDocsPDF		ATLAS Supporting Documents full-text in PDF 		[020_PDFDownloader/output]
 
