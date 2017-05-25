@@ -21,6 +21,7 @@ output metadata:
 import json
 from urlparse import urlparse
 import sys, getopt
+import os
 
 sys.path.append("../")
 from pyDKB.dataflow import CDSInvenioConnector, KerberizedCDSInvenioConnector
@@ -52,6 +53,8 @@ OPTIONS
                                                       output to files
                             s|stream -- stream mode: read from STDIN,
                                                      output to STDOUT
+
+  -o, --output-dir DIR    Output directory name
 
   -h, --help              Show this message and exit
 '''
@@ -260,7 +263,7 @@ def input_json_handle(json_data, cds):
    return result
 
 
-def input_file_handle(fname, cds, indent):
+def input_file_handle(fname, cds, indent, out_dir = "./"):
    '''
    Handles input file.
    '''
@@ -277,7 +280,7 @@ def input_file_handle(fname, cds, indent):
       sys.stderr.write(item["id"]+"\n")
       result = input_json_handle(item,cds)
       if not result: continue
-      file = open("SupportingDocuments/%s.json" % item["id"], "w")
+      file = open(out_dir + "/%s.json" % item["id"], "w")
       json.dump(result,file,indent=indent)
       file.close()
 
@@ -317,8 +320,10 @@ def main(argv):
    kerberos = False
    mode = 'f'
    indent = None
+   out_dir = "./"
    try:
-      opts, args = getopt.getopt(argv, "hl:p:km:P",["login=","password=","kerberos","mode=","pretty"])
+      opts, args = getopt.getopt(argv, "hl:p:km:Po:",
+          ["login=","password=","kerberos","mode=","pretty","output-dir"])
    except getopt.GetoptError:
       usage()
       sys.exit(2)
@@ -336,6 +341,8 @@ def main(argv):
          mode = arg
       elif opt in ("-P", "--pretty"):
          indent = 2
+      elif opt in ("-o", "--output-dir"):
+         out_dir = arg
 
    if len(args) == 0:
      infile = 'Input/list_of_papers.json'
@@ -343,6 +350,15 @@ def main(argv):
      infile = args[0]
    else:
      usage()
+
+   if not os.path.isdir(out_dir):
+     sys.stderr.write("Creating output directory...\n")
+     try:
+       os.mkdir(out_dir)
+     except OSError, e:
+       sys.stderr.write("ERROR: Failed to create output directory: %s\n" % e)
+       sys.stderr.write("Output to the current dir instead.\n")
+       out_dir = "./"
 
    if not login and not kerberos:
       sys.stderr.write("WARNING: no authentication method will be used.\n")
@@ -355,7 +371,7 @@ def main(argv):
    with Connector(login,password) as cds:
 
       if mode in ("f","file"):
-         input_file_handle(infile,cds,indent)
+         input_file_handle(infile,cds,indent,out_dir)
 
       elif mode in ("s", "stream"):
          input_stream_handle(sys.stdin,cds)
