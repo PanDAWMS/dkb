@@ -257,12 +257,11 @@ def input_json_handle(json_data, cds):
    return result
 
 
-def input_file_handle(filename, cds, indent):
+def input_file_handle(fname, cds, indent):
    '''
    Handles input file.
    '''
    try:
-      fname = 'Input/list_of_papers.json'
       data_file = open(fname)
    except IOError, e:
       sys.stderr.write("ERROR: %s: %s\n" % (fname, e.strerror))
