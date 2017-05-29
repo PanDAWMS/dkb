@@ -226,6 +226,7 @@ re_dsid = re.compile("^\d{4,8}$")
 re_dsid_diap = re.compile("^\d{4,8}-\d{1,8}$")
 re_xml_symbol = re.compile("^<text[^>]+ size=\"([0-9.]+)\">(.+)</text>$")
 re_xml_empty_symbol = re.compile("^<text> </text>$")
+re_atlas_name = re.compile("[A-Z0-9-]+-20\d\d-[A-Z0-9-]+")
 re_campaign = re.compile(r"""(
                                 mc11(?![abc])
                                 |
@@ -353,7 +354,7 @@ def cmp_papernames(x, y):
 
 class Paper:
     # Represents a document which needs to be analyzed, as well as files and other things associated with it.
-    attributes_general = ["campaigns", "energy", "luminosity", "collisions", "data taking year", "project_montecarlo", "project_realdata", "links"]
+    attributes_general = ["atlas_name", "campaigns", "energy", "luminosity", "collisions", "data taking year", "project_montecarlo", "project_realdata", "links"]
     attributes_to_determine = attributes_general + ["title", "datasets", "datatables"] # Paper attributes which are needed but cannot be determined precisely yet (unlike, for example, number of pages).
     attributes_metadata = attributes_to_determine + ["num_pages", "rotated_pages"] # Attributes which are saved / loaded to / from a file.
     def __init__(self, fname, dirname = False):
@@ -517,6 +518,11 @@ class Paper:
         attrs["links"] = {}
         for (key, value) in links:
             attrs["links"][key] = value
+
+        attrs["atlas_name"] = False
+        tmp = re_atlas_name.search(pages)
+        if tmp:
+            attrs["atlas_name"] = tmp.group(0)
 
         pages = pages.lower()
 
@@ -1464,7 +1470,10 @@ class Manager:
                     for a in Paper.attributes_general:
                         if outp["content"]["plain_text"][a]:
                             attr[a].append(p.fname)
-                            s += "1,"
+                            if a == "atlas_name":
+                                s += "%s," % (outp["content"]["plain_text"][a])
+                            else:
+                                s += "1,"
                         else:
                             s += ","
                     csv += s.rstrip(",") + "\n"
