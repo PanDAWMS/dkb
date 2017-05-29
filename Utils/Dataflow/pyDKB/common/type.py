@@ -3,23 +3,49 @@ Abstrac class for type definitions.
 """
 
 class Type(object):
+    """
+    Abstrac class for type definitions.
+    Usage:
+        myType = Type("Orange", "Apple")
 
-  def __init__(self, *args):
-    self.ind = 1
-    self.hash = {}
-    for arg in args:
-      self.add(arg)
+        myType.add("Plum")
 
-  def add(self, name):
-    setattr(self, name, self.ind)
-    self.hash[self.ind] = name
-    self.ind += 1
+        t = myType.Orange
 
-  def member(self, name):
-    return getattr(self, name, False)
+        if t == myType.Orange:
+            # Oranges stuff
+        elif t == myType.member("Apple"):
+            # Apples stuff
+        ...
 
-  def memberName(self, val):
-    return self.hash.get(val, False)
+        if not myType.hasMember(t):
+            print "Wrong type!"
+    """
 
-  def hasMember(self, val):
-    return self.memberName(val) != False
+    def __init__(self, *args):
+        self.ind = 1
+        self.hash = {}
+        for arg in args:
+            self.add(arg)
+
+    def add(self, name):
+        """ Add new Type member.  """
+        setattr(self, name, self.ind)
+        self.hash[self.ind] = name
+        self.ind += 1
+
+    def member(self, name):
+        """ Check if the member exists (by name).
+
+        Return member value or False.
+        """
+        return getattr(self, name, False)
+
+    def hasMember(self, val):
+        """ Check if the member exists (by value). """
+        return self.memberName(val) != False
+
+    def memberName(self, val):
+        """ Return string name of the member. """
+        return self.hash.get(val, False)
+
