@@ -84,7 +84,7 @@ class TTLMessage(AbstractMessage):
         TODO: check some formal matter to confirm the string is TTL.
         """
         if not self.message:
-            self.message = self.__orig
+            self.message = self.getOriginal()
         return self.message
 
 __message_class[messageType.TTL] = TTLMessage
