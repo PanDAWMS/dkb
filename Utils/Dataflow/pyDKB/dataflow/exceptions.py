@@ -5,5 +5,5 @@ Definition of DKB Dataflow exceptions
 __all__ = ["DataflowException"]
 
 class DataflowException(Exception):
-  pass
-
+    """ Base Exception for Dataflow modules. """
+    pass

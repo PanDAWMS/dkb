@@ -1,3 +1,7 @@
+"""
+Common library for Data Knowledge Base development.
+"""
+
 import dataflow
 import common
 
