@@ -129,12 +129,12 @@ def document_glance(data, doc_iri, glance_attrs):
     #     raise ValueError("expected parameter of type %s, got %s\n" % (dict, type(data)))
     ttl = ""
     for param in glance_attrs:
-        data[param['GLANCE']] = glance_parameter_extraction(param['GLANCE'], data)
+        data[param.get('GLANCE')] = glance_parameter_extraction(param.get('GLANCE'), data)
     for item in glance_attrs:
-        curr_value = data[item['GLANCE']]
+        curr_value = data[item.get('GLANCE')]
         ttl += '{docIRI} <{ontology}#{ONTO}> "{value}"{xsdType} .\n' \
-            .format(docIRI=doc_iri, ontology=ONTOLOGY, ONTO=item['ONTO'],
-                    value=curr_value, xsdType=item['TYPE'])
+            .format(docIRI=doc_iri, ontology=ONTOLOGY, ONTO=item.get('ONTO'),
+                    value=curr_value, xsdType=item.get('TYPE'))
     return ttl
 
 def documents_links(data):
@@ -145,9 +145,9 @@ def documents_links(data):
     PAPER atlas:isBasedOn SUPPORTING_DOCUMENT .
     """
     ttl = ''
-    paper_iri = get_document_iri(data['dkbID'])
-    for item in data['supporting_notes']:
-        note_iri = get_document_iri(item['dkbID'])
+    paper_iri = get_document_iri(data.get('dkbID'))
+    for item in data.get('supporting_notes'):
+        note_iri = get_document_iri(item.get('dkbID'))
         ttl += '{paperIRI} <{ontology}#isBasedOn> {noteIRI} .\n'\
             .format(paperIRI=paper_iri, ontology=ONTOLOGY, noteIRI=note_iri)
     return ttl
@@ -162,20 +162,20 @@ def document_cds(data, doc_iri, cds_attrs):
     """
     ttl = ''
     for param in cds_attrs:
-        data[param['CDS']] = cds_parameter_extraction(param['CDS'], data)
+        data[param.get('CDS')] = cds_parameter_extraction(param.get('CDS'), data)
     for item in cds_attrs:
-        curr_value = data[item['CDS']]
+        curr_value = data[item.get('CDS')]
         if curr_value is not None:
             ttl += '{docIRI} <{ontology}#{ONTO}> "{value}"{xsdType} .\n' \
-                .format(docIRI=doc_iri, ontology=ONTOLOGY, ONTO=item['ONTO'],
-                        value=curr_value, xsdType=item['TYPE'])
+                .format(docIRI=doc_iri, ontology=ONTOLOGY, ONTO=item.get('ONTO'),
+                        value=curr_value, xsdType=item.get('TYPE'))
     # processing multivalue parameters
     if 'doi' in data:
-        ttl += doi2ttl(data['doi'], doc_iri)
+        ttl += doi2ttl(data.get('doi'), doc_iri)
     if 'keywords' in data:
-        ttl += keywords2ttl(data['keywords'], doc_iri)
+        ttl += keywords2ttl(data.get('keywords'), doc_iri)
     if 'publication_info' in data:
-        ttl += process_journals(data['publication_info'], doc_iri)
+        ttl += process_journals(data.get('publication_info'), doc_iri)
     sys.stderr.write("done!\n")
     return ttl
 
@@ -207,7 +207,7 @@ def keywords2ttl(keywords, doc_iri):
     ttl = ''
     keyword = []
     if isinstance(keywords, list):
-        keyword = [item['term'] for item in list(keywords)]
+        keyword = [item.get('term') for item in list(keywords)]
     elif isinstance(keywords.get('term'), str):
         splitted = keywords.get('term').split(',')
         if len(splitted) > 0:
@@ -228,17 +228,17 @@ def cds_internal_extraction(data):
     :return report number:
     """
     if 'report_number' in data:
-        report_number = data['report_number']
+        report_number = data.get('report_number')
         if isinstance(report_number, list):
             for item in report_number:
                 if 'internal' in item:
-                    return item['internal']
+                    return item.get('internal')
         elif isinstance(report_number, dict):
             if 'internal' in report_number:
-                return report_number['internal']
+                return report_number.get('internal')
             elif 'internal' not in report_number:
                 if 'primary_report_number' in report_number:
-                    return report_number['primary_report_number']
+                    return report_number.get('primary_report_number')
 
 def report_number_extraction(data):
     """
@@ -247,14 +247,14 @@ def report_number_extraction(data):
     :return:
     """
     if 'report_number' in data:
-        report_number = data['report_number']
+        report_number = data.get('report_number')
         if isinstance(report_number, list):
             for item in report_number:
                 if 'report_number' in item:
-                    return item['report_number']
+                    return item.get('report_number')
         elif isinstance(report_number, dict):
             if 'report_number' in report_number:
-                return report_number['report_number']
+                return report_number.get('report_number')
 
 
 def glance_parameter_extraction(param_name, json_data):
@@ -267,15 +267,15 @@ def glance_parameter_extraction(param_name, json_data):
     if param_name == 'id':
         return json_data['id']
     elif param_name == 'short_title':
-        return fix_string(json_data["short_title"])
+        return fix_string(json_data.get('short_title'))
     elif param_name == 'full_title':
-        return fix_string(json_data["full_title"])
+        return fix_string(json_data.get('full_title'))
     elif param_name == 'ref_code':
-        return json_data["ref_code"]
+        return json_data.get('ref_code')
     elif param_name == 'label':
-        return fix_string(json_data["label"])
+        return fix_string(json_data.get('label'))
     elif param_name == 'url':
-        return fix_string(json_data["url"])
+        return fix_string(json_data.get('url'))
 
 def cds_parameter_extraction(param_name, json_data):
     """
@@ -306,7 +306,7 @@ def abstract_extraction(data):
     :return: string with abstract
     """
     if 'abstract' in data:
-        return fix_string(data['abstract']['summary'])
+        return fix_string(data.get('abstract').get('summary'))
 
 def title_extraction(data):
     """
@@ -315,7 +315,7 @@ def title_extraction(data):
     :return: string with title
     """
     if 'title' in data:
-        return fix_string(data['title']['title'])
+        return fix_string(data.get('title').get('title'))
 
 def cds_id_extraction(data):
     """
@@ -324,7 +324,7 @@ def cds_id_extraction(data):
     :return: string with CDS_ID
     """
     if 'recid' in data:
-        return int(data['recid'])
+        return int(data.get('recid'))
 
 def creation_date_extraction(data):
     """
@@ -333,7 +333,7 @@ def creation_date_extraction(data):
     :return: string with date
     """
     if 'creation_date' in data:
-        return fix_string(data['creation_date'])
+        return fix_string(data.get('creation_date'))
 
 def arxiv_extraction(data):
     """
@@ -342,7 +342,7 @@ def arxiv_extraction(data):
     :return: string with arXiv
     """
     if 'primary_report_number' in data:
-        return fix_string(data['primary_report_number'])
+        return fix_string(data.get('primary_report_number'))
 
 def generate_journal_id(journal_dict):
     """
@@ -352,11 +352,11 @@ def generate_journal_id(journal_dict):
     """
     journal_id = ''
     if 'title' in journal_dict:
-        journal_id += journal_dict['title'].replace(" ", "")
+        journal_id += journal_dict.get('title').replace(" ", "")
     if 'volume' in journal_dict:
-        journal_id += '_' + journal_dict['volume'].replace(" ", "")
+        journal_id += '_' + journal_dict.get('volume').replace(" ", "")
     if 'year' in journal_dict:
-        journal_id += '_' + journal_dict['year'].replace(" ", "")
+        journal_id += '_' + journal_dict.get('year').replace(" ", "")
     return journal_id
 
 def process_journals(data, doc_iri):
@@ -383,8 +383,8 @@ def process_journals(data, doc_iri):
        <{journal_resource}{journalIssueID}> <{ontology}#hasVolume> "{volume}"^^xsd:string .
        <{journal_resource}{journalIssueID}> <{ontology}#hasYear> "{year}"^^xsd:string .
        <{journal_resource}{journalIssueID}> <{ontology}#containsPublication> {doc_iri} .
-       '''.format(journalIssueID=journal_id, title=item['title'], volume=item['volume'],
-                  year=item['year'], doc_iri=doc_iri, journal_resource=GRAPH+'/journal_issue/',
+       '''.format(journalIssueID=journal_id, title=item.get('title'), volume=item.get('volume'),
+                  year=item.get('year'), doc_iri=doc_iri, journal_resource=GRAPH+'/journal_issue/',
                   ontology=ONTOLOGY)
     return ttl
 
@@ -419,8 +419,8 @@ def has_results(results):
     :param results:
     :return:
     """
-    if isinstance(results['results']['bindings'], list):
-        length = len(results['results']['bindings'])
+    if isinstance(results.get('results').get('bindings'), list):
+        length = len(results.get('results').get('bindings'))
     return True if length > 0 else False
 
 def get_journal_by_id(journal_id):
@@ -437,7 +437,7 @@ def get_journal_by_id(journal_id):
                                  rdf_prefix='http://www.w3.org/1999/02/22-rdf-syntax-ns')
     results = sparql_query(journal_query, SPARQL)
     if has_results(results):
-        res = results['results']['bindings'][0]['callret-0']['value']
+        res = results.get('results').get('bindings')[0]['callret-0']['value']
         return res != str('0')
 
 
@@ -568,10 +568,10 @@ def main(argv):
 
         if "supporting_notes" in data:
             for note in data.get('supporting_notes'):
-                note_id = note["dkbID"]
+                note_id = note.get('dkbID')
                 note_iri = get_document_iri(note_id)
-                doc_ttl += document_glance(note["GLANCE"], note_iri, NOTE_GLANCE_ATTRS)
-                doc_ttl += document_cds(note["CDS"], note_iri, NOTE_CDS_ATTRS)
+                doc_ttl += document_glance(note.get('GLANCE'), note_iri, NOTE_GLANCE_ATTRS)
+                doc_ttl += document_cds(note.get('CDS'), note_iri, NOTE_CDS_ATTRS)
 
         doc_ttl += documents_links(data)
 
