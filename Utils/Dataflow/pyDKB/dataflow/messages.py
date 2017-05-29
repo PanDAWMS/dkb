@@ -5,6 +5,7 @@ Definition of abstract message class and specific message classes
 from . import messageType
 
 import json
+import sys
 
 __message_class = {}
 
