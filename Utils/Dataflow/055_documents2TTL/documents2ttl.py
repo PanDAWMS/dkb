@@ -523,42 +523,13 @@ def convert_to_list(data):
     return list_dicts
 
 
-def files_generator(args):
-    """
-    Generator returning file content for each 
-    item in input_files list
-    :param args: 
-    :return: 
-    """
-    for f in args.input_files:
-        name = f.split('/')[-1]
-        args.__current_file = name
-        if args.input_dir:
-            f = args.input_dir + "/" + f
-        args.__current_file_full = f
-        try:
-            with open(f, "r") as infile:
-                data = infile.read().replace('\n', '')
-                yield data
-        except IOError:
-            print 'oops!'
-
-def stream_generator():
-    """
-    Generator, returning each stream from stdin
-    :return: 
-    """
-    for f in [sys.stdin]:
-        yield f.read()
-
 def main(argv):
     """
     Parsing command line arguments and processing JSON string from file or from stream
     :param argv: arguments
     :return:
     """
-    processor = stage.AbstractProcessorStage()
-    processor.defaultArguments()
+    processor = stage.JSONProcessorStage()
     processor.add_argument('-g', '--graph', action='store', type=str, nargs='?',
                         help='Virtuoso DB graph name (default: %(default)s)',
                         default=GRAPH,
@@ -583,14 +554,10 @@ def main(argv):
                         dest='EOPmarker')
     processor.parse_args(argv)
     define_globals(processor.ARGS)
-
-    if processor.ARGS.mode == 's':
-        gen = stream_generator()
-    elif processor.ARGS.mode == 'f':
-        gen = files_generator(processor.ARGS)
+    gen = processor.input()
 
     for f in gen:
-        data = json.loads(f)
+        data = f.content()
         paper_id = data.get('dkbID')
         doc_iri = get_document_iri(paper_id)
         doc_ttl = ""
