@@ -53,15 +53,12 @@ TODO: This module doesn't convert authors metadata. This task is still under con
 import argparse
 import sys
 import json
-import urllib
-import urllib2
 sys.path.append("../")
 from pyDKB.dataflow import stage
 
 #defaults
 GRAPH = "http://nosql.tpu.ru:8890/DAV/ATLAS"
 ONTOLOGY = "http://nosql.tpu.ru/ontology/ATLAS"
-SPARQL = "http://nosql.tpu.ru:8890/sparql"
 
 # Lists of dictionaries with parameters names for JSON documents and Ontology representation
 
@@ -89,25 +86,12 @@ NOTE_CDS_ATTRS = [{'CDS': 'creation_date', 'ONTO': 'hasCreationDate', 'TYPE': '^
                   {'CDS': 'abstract', 'ONTO': 'hasAbstract', 'TYPE': ''},
                   {'CDS': 'title', 'ONTO': 'hasFullTitle', 'TYPE': ''},]
 
-# SPARQL Queries
-
-SPARQL_QUERY = '''
-                WITH <{graph}> SELECT ?guid, ?{param_name}
-                WHERE {{
-                    ?guid <{ontology}#{ONTO}> ?{param_name} .
-                    FILTER(?{param_name} IN ({params_list}))
-                }}
-            '''
-
 def define_globals(args):
     global GRAPH
     GRAPH = args.GRAPH
 
     global ONTOLOGY
     ONTOLOGY = args.ONTOLOGY
-
-    global SPARQL
-    SPARQL = args.SPARQL
 
 def get_document_iri(doc_id):
     """
@@ -382,15 +366,7 @@ def process_journals(data, doc_iri):
     ttl = ''
     for item in journals:
         journal_id = generate_journal_id(item)
-        if get_journal_by_id(journal_id):
-            ttl += '<{journal_resource}{journalIssueID}> ' \
-                   '<{ontology}#containsPublication> {doc_iri} .\n'\
-                .format(journalIssueID=journal_id,
-                        doc_iri=doc_iri,
-                        ontology=ONTOLOGY,
-                        journal_resource=GRAPH+'/journal_issue/')
-        else:
-            ttl += '''<{journal_resource}{journalIssueID}> a <{ontology}#JournalIssue> .
+        ttl += '''<{journal_resource}{journalIssueID}> a <{ontology}#JournalIssue> .
        <{journal_resource}{journalIssueID}> <{ontology}#hasTitle> "{title}"^^xsd:string .
        <{journal_resource}{journalIssueID}> <{ontology}#hasVolume> "{volume}"^^xsd:string .
        <{journal_resource}{journalIssueID}> <{ontology}#hasYear> "{year}"^^xsd:string .
@@ -399,59 +375,6 @@ def process_journals(data, doc_iri):
                   year=item.get('year'), doc_iri=doc_iri, journal_resource=GRAPH+'/journal_issue/',
                   ontology=ONTOLOGY)
     return ttl
-
-def sparql_query(query, base_url, output_format="application/sparql-results+json"):
-    """
-    Execute SPARQL requests with urllib2 library
-    :param query:
-    :param base_url:
-    :param output_format:
-    :return:
-    """
-    params = {
-        "query": query,
-        "format": output_format
-    }
-    querypart = urllib.urlencode(params)
-    try:
-        response = urllib.urlopen(base_url, querypart).read()
-    except urllib2.HTTPError as exception:
-        sys.stderr.write('The server couldn\'t fulfill the request.')
-        sys.stderr.write('Error code: '), exception.code
-    except urllib2.URLError as exception:
-        sys.stderr.write('We failed to reach a server.')
-        sys.stderr.write('Reason: '), exception.reason
-    else:
-        return json.loads(response)
-
-
-def has_results(results):
-    """
-    check if results in Virtuoso
-    :param results:
-    :return:
-    """
-    if isinstance(results.get('results').get('bindings'), list):
-        length = len(results.get('results').get('bindings'))
-    return True if length > 0 else False
-
-def get_journal_by_id(journal_id):
-    """
-    Search journal ID in Virtuoso DB
-    :param journal_id:
-    :return:
-    """
-    journal_query = '''WITH <{graph}> SELECT count(?journal)
-                    WHERE {{
-                        <{journal_resource}{journalIssueID}> <{rdf_prefix}#type> ?journal .
-                    }}'''.format(journalIssueID=journal_id, graph=GRAPH,
-                                 journal_resource=GRAPH+'/journal_issue/',
-                                 rdf_prefix='http://www.w3.org/1999/02/22-rdf-syntax-ns')
-    results = sparql_query(journal_query, SPARQL)
-    if has_results(results):
-        res = results.get('results').get('bindings')[0]['callret-0']['value']
-        return res != str('0')
-
 
 def fix_string(wrong_string):
     """
@@ -554,12 +477,6 @@ def main(argv):
                         const=ONTOLOGY,
                         metavar='ONT',
                         dest='ONTOLOGY')
-    processor.add_argument('-SPARQL', '--sparql', action='store', type=str, nargs='?',
-                        help='SPARQL Endpoint (default: %(default)s)',
-                        default=SPARQL,
-                        const=SPARQL,
-                        metavar='SPARQL',
-                        dest='SPARQL')
     processor.add_argument('-delim', '--delimiter', action='store', nargs='?',
                         help=u'EOP marker for Kafka mode (default: \0)',
                         default='',
