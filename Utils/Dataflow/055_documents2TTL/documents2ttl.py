@@ -342,7 +342,19 @@ def arxiv_extraction(data):
     :return: string with arXiv
     """
     if 'primary_report_number' in data:
-        return fix_string(data.get('primary_report_number'))
+        report_number = data.get('primary_report_number')
+        # primary_report_number can be string, unicode and list
+        # if we don't find any string, started with 'arXiv' -
+        # it means that there is no arXiv code and
+        # we don't need to add it to TTL
+        if isinstance(report_number, (str, unicode)):
+            if report_number.startswith('arXiv'):
+                return fix_string(report_number)
+        elif isinstance(report_number, list):
+            for item in report_number:
+                if item is not None and item.startswith('arXiv'):
+                    return fix_string(item)
+
 
 def generate_journal_id(journal_dict):
     """
