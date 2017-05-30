@@ -206,7 +206,10 @@ def formOutputData(GLANCEdata, ppCDSdata, sdCDSdata):
   result = {}
 
   ppGLANCEdata = GLANCEdata.copy()
-  sdGLANCEdata = ppGLANCEdata.pop("supporting_notes")
+  if ppGLANCEdata.get("supporting_notes"):
+    sdGLANCEdata = ppGLANCEdata.pop("supporting_notes")
+  else:
+    sdGLANCEdata = []
 
   result["GLANCE"] = ppGLANCEdata
   result["CDS"] = ppCDSdata
@@ -257,12 +260,11 @@ def input_json_handle(json_data, cds):
    return result
 
 
-def input_file_handle(filename, cds, indent):
+def input_file_handle(fname, cds, indent):
    '''
    Handles input file.
    '''
    try:
-      fname = 'Input/list_of_papers.json'
       data_file = open(fname)
    except IOError, e:
       sys.stderr.write("ERROR: %s: %s\n" % (fname, e.strerror))
