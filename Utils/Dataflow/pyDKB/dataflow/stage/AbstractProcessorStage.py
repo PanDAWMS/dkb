@@ -248,7 +248,7 @@ class AbstractProcessorStage(AbstractStage):
         For now: STDOUT.
         TODO: rewrite to act according to cmdline args.
         """
-        print message
+        print message.content()
 
 
     def __localFiles(self):
