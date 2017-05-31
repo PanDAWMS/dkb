@@ -48,7 +48,7 @@ class TTLProcessorStage(AbstractProcessorStage):
 
     # Override
     def output(self, message):
-        pass
+        super(TTLProcessorStage, self).output(message)
 
 class JSON2TTLProcessorStage(JSONProcessorStage, TTLProcessorStage):
     """ JSON2TTL Procssor Stage
