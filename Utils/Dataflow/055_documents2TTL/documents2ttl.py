@@ -362,7 +362,11 @@ def process_journals(data, doc_iri):
     :param doc_iri: document IRI for current graph
     :return: ttl string with journal issue with connection to paper
     """
-    journals = convert_to_list(data)
+    journals = []
+    if isinstance(data, list):
+        journals = data
+    elif isinstance(data,dict):
+        journals.append(data)
     ttl = ''
     for item in journals:
         journal_id = generate_journal_id(item)
@@ -395,23 +399,6 @@ def fix_list_values(list_vals):
         item = fix_string(item)
     return list_vals
 
-def fix_dict_values(dict_vals, keys_to_fix):
-    """
-    Fixing dictionary values with wrong unicode symbols
-    :param dict_vals: initial dictionary
-    :param keys_to_fix: list of keys to fix
-    :return:
-    """
-    for key in keys_to_fix:
-        if key in dict_vals.keys():
-            if isinstance(dict_vals[key], str) or isinstance(dict_vals[key], unicode):
-                dict_vals[key] = fix_string(dict_vals[key])
-            elif isinstance(dict_vals[key], list):
-                dict_vals[key] = fix_string(str(dict_vals[key]))
-        else:
-            continue
-    return dict_vals
-
 def write_ttl2file(output, ttl_string):
     """
     write ttl string with document metadata to TTL file
@@ -432,31 +419,6 @@ def write_ttl2file(output, ttl_string):
         else:
             ttl_file.close()
             sys.stderr.write("TTL file has written!")
-
-def convert_to_list(data):
-    """
-    convert mixed data (list and dicts) to list representation
-    :param data:
-    :return:
-    """
-    list_dicts = []
-    if isinstance(data, dict):
-        list_dicts.append(fix_dict_values(data, ['first_name',
-                                                 'last_name',
-                                                 'affiliation',
-                                                 'e-mail',
-                                                 'INSPIRE_Number',
-                                                 'control_number']))
-    elif isinstance(data, list):
-        for item in data:
-            list_dicts.append(fix_dict_values(item, ['first_name',
-                                                     'last_name',
-                                                     'affiliation',
-                                                     'e-mail',
-                                                     'INSPIRE_Number',
-                                                     'control_number']))
-    return list_dicts
-
 
 def main(argv):
     """
