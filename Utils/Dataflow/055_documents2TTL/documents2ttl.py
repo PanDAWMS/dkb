@@ -452,6 +452,8 @@ def main(argv):
         paper_id = data.get('dkbID')
         doc_iri = get_document_iri(paper_id)
         doc_ttl = ""
+        doc_ttl += '{docIRI} a <{ontology}#Paper> .\n' \
+            .format(docIRI=doc_iri, ontology=ONTOLOGY)
         doc_ttl += document_glance(data.get('GLANCE'), doc_iri, PAPER_GLANCE_ATTRS)
         doc_ttl += document_cds(data.get('CDS'), doc_iri, PAPER_CDS_ATTRS)
 
@@ -461,6 +463,8 @@ def main(argv):
             for note in data.get('supporting_notes'):
                 note_id = note.get('dkbID')
                 note_iri = get_document_iri(note_id)
+                doc_ttl += '{noteIRI} a <{ontology}#SupportingDocument> .\n' \
+                    .format(noteIRI=note_iri, ontology=ONTOLOGY)
                 doc_ttl += document_glance(note.get('GLANCE'), note_iri, NOTE_GLANCE_ATTRS)
                 doc_ttl += document_cds(note.get('CDS'), note_iri, NOTE_CDS_ATTRS)
 
