@@ -1,0 +1,2 @@
+#!/bin/bash
+./generate-mapping -o mapping.ttl -d oracle.jdbc.OracleDriver -u [USER] -p [PASSWORD] --tables T_INPUT_DATASET,T_PRODUCTION_DATASET,T_PRODUCTION_CONTAINER,T_PRODMANAGER_REQUEST,T_PRODUCTION_TASK,ATLAS_DEFT.T_HASHTAG,ALTAS_DEFT.T_T_HT_TO_TASK jdbc:oracle:thin:@//ADCR2-ADG-S.cern.ch:10121/ADCR.cern.ch
