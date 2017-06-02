@@ -9,7 +9,10 @@ Definition of an abstract class for Dataflow Data Processing Stages.
                                           local (f)iles, (s)tdin, (h)dfs
          -i, --input-dir    DIR         - base directory for relative input
                                           file names (for local and HDFS
-                                          sources)
+                                          sources).
+                                          If <input files> not specified,
+                                          all files from the directory will
+                                          be taken as the input.
 
          -d, --dest         {f|s|h}     - where to send data to:
                                           local (f)iles, (s)tdin, (h)dfs
@@ -42,6 +45,7 @@ import sys
 from . import AbstractStage
 from . import messageType
 from . import Message
+from pyDKB.common import hdfs
 
 class AbstractProcessorStage(AbstractStage):
     """ Abstract class to implement Processor stages
@@ -112,7 +116,9 @@ class AbstractProcessorStage(AbstractStage):
         self.add_argument('-i', '--input-dir', action='store', type=str,
                           nargs='?',
                           help=u'Base directory in local file system '
-                                'or in HDFS (for relative FILE names)',
+                                'or in HDFS (for relative FILE names). '
+                                'If no FILE specified, all files from the '
+                                'directory will be taken.',
                           default='',
                           const='',
                           metavar='DIR',
@@ -169,16 +175,24 @@ class AbstractProcessorStage(AbstractStage):
             self.ARGS.dest = 's'
 
         if   self.ARGS.source == 'h':
-            self.__input = self.__hdfsFiles()
+            if self.ARGS.input_files or self.ARGS.mode == 'm':
+            # In MapReduce mode we`re going to get the list of files from STDIN
+                self.__input = self.__hdfsFiles()
+            else:
+                self.__input = self.__hdfsDir()
         elif self.ARGS.source == 'f':
-            self.__input = self.__localFiles()
+            if self.ARGS.input_files:
+                self.__input = self.__localFiles()
+            else:
+                self.__input = self.__localDir()
         elif self.ARGS.source == 's':
             self.__input = [sys.stdin]
         else:
             raise ValueError("Unrecognized source type: %s" % self.ARGS.source)
 
         # Check that data source is specified
-        if self.ARGS.source == 'f' and not self.ARGS.input_files:
+        if self.ARGS.source == 'f' \
+            and not (self.ARGS.input_files or self.ARGS.input_dir):
             sys.stderr.write("No input data sources specified.\n")
             self.print_usage(sys.stderr)
 
@@ -251,6 +265,22 @@ class AbstractProcessorStage(AbstractStage):
         print message.content()
 
 
+    def __localDir(self):
+        """ Call file descriptors generator for files in local dir. """
+        dirname = self.ARGS.input_dir
+        files = []
+        try:
+            for f in os.listdir(dirname):
+                if os.path.isfile(os.path.join(dirname, f)):
+                    files.append(f)
+        except OSError, err:
+            sys.stderr.write("(ERROR) Failed to get list of files.\n"
+                             "Error message: %s\n" % err)
+        if not files:
+            return []
+        self.ARGS.input_files = files
+        return self.__localFiles()
+
     def __localFiles(self):
         """ Generator for file descriptors to read data from (local files). """
         filenames = self.ARGS.input_files
@@ -263,6 +293,15 @@ class AbstractProcessorStage(AbstractStage):
             with open(f, 'r') as infile:
                 yield infile
 
+
+    def __hdfsDir(self):
+        """ Call file descriptors generator for files in HDFS dir. """
+        dirname = self.ARGS.input_dir
+        files = hdfs.listdir(dirname, "f")
+        self.ARGS.input_files = files
+        if not files:
+            return []
+        return self.__hdfsFiles()
 
     def __hdfsFiles(self):
         """ Generator for file descriptors to read data from (HDFS files). """
