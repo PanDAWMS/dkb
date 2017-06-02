@@ -268,7 +268,7 @@ class AbstractProcessorStage(AbstractStage):
         """ Generator for file descriptors to read data from (HDFS files). """
         filenames = self.ARGS.input_files
         if not filenames:
-            filenames = iter(sys.stdin.readline)
+            filenames = iter(sys.stdin.readline, "")
         DEVNULL = open("/dev/null", "w")
         for f in filenames:
             f = f.strip()
