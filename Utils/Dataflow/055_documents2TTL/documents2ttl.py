@@ -371,10 +371,10 @@ def process_journals(data, doc_iri):
     for item in journals:
         journal_id = generate_journal_id(item)
         ttl += '''<{journal_resource}{journalIssueID}> a <{ontology}#JournalIssue> .
-       <{journal_resource}{journalIssueID}> <{ontology}#hasTitle> "{title}"^^xsd:string .
-       <{journal_resource}{journalIssueID}> <{ontology}#hasVolume> "{volume}"^^xsd:string .
-       <{journal_resource}{journalIssueID}> <{ontology}#hasYear> "{year}"^^xsd:string .
-       <{journal_resource}{journalIssueID}> <{ontology}#containsPublication> {doc_iri} .
+<{journal_resource}{journalIssueID}> <{ontology}#hasTitle> "{title}"^^xsd:string .
+<{journal_resource}{journalIssueID}> <{ontology}#hasVolume> "{volume}"^^xsd:string .
+<{journal_resource}{journalIssueID}> <{ontology}#hasYear> "{year}"^^xsd:string .
+<{journal_resource}{journalIssueID}> <{ontology}#containsPublication> {doc_iri} .
        '''.format(journalIssueID=journal_id, title=item.get('title'), volume=item.get('volume'),
                   year=item.get('year'), doc_iri=doc_iri, journal_resource=GRAPH+'/journal_issue/',
                   ontology=ONTOLOGY)
