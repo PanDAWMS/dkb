@@ -308,25 +308,15 @@ class AbstractProcessorStage(AbstractStage):
         filenames = self.ARGS.input_files
         if not filenames:
             filenames = iter(sys.stdin.readline, "")
-        DEVNULL = open("/dev/null", "w")
         for f in filenames:
             f = f.strip()
-            name = f.split('/')[-1]
             if self.ARGS.input_dir:
                 f = self.ARGS.input_dir + "/" + f
             if not f:
                 continue
+            name = hdfs.getfile(f)
             self.__current_file_full = f
             self.__current_file = name
-            cmd = "hadoop fs -get %s" % f
-            try:
-                if os.access(name, os.F_OK):
-                    os.remove(name)
-                subprocess.check_call(cmd, shell=True, stderr=DEVNULL,
-                                      stdout=DEVNULL)
-            except (subprocess.CalledProcessError, OSError), err:
-                raise RuntimeError("(ERROR) Failed to get file from HDFS: %s\n"
-                                   "Error message: %s\n" % (f, err))
 
             with open(name, 'r') as infile:
                 yield infile

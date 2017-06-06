@@ -5,8 +5,29 @@ Utils to interact with HDFS.
 import sys
 import subprocess
 import select
+import os
 
 from . import HDFSException
+
+DEVNULL = open("/dev/null", "w")
+
+def getfile(fname):
+    """ Download file from HDFS.
+
+    Check if there already is a local version of the file and remove it.
+
+    Return value: file name (without directory)
+    """
+    cmd = ["hadoop", "fs", "-get", fname]
+    name = fname.split('/')[-1]
+    try:
+        if os.access(name, os.F_OK):
+            os.remove(name)
+        subprocess.check_call(cmd, stderr=DEVNULL, stdout=DEVNULL)
+    except (subprocess.CalledProcessError, OSError), err:
+        raise RuntimeError("(ERROR) Failed to get file from HDFS: %s\n"
+                           "Error message: %s\n" % (fname, err))
+    return name
 
 def listdir(dirname, mode='a'):
     """ List files and/or subdirectories of HDFS directory.
