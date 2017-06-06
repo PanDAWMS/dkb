@@ -53,15 +53,12 @@ TODO: This module doesn't convert authors metadata. This task is still under con
 import argparse
 import sys
 import json
-import urllib
-import urllib2
 sys.path.append("../")
 from pyDKB.dataflow import stage
 
 #defaults
 GRAPH = "http://nosql.tpu.ru:8890/DAV/ATLAS"
 ONTOLOGY = "http://nosql.tpu.ru/ontology/ATLAS"
-SPARQL = "http://nosql.tpu.ru:8890/sparql"
 
 # Lists of dictionaries with parameters names for JSON documents and Ontology representation
 
@@ -89,25 +86,12 @@ NOTE_CDS_ATTRS = [{'CDS': 'creation_date', 'ONTO': 'hasCreationDate', 'TYPE': '^
                   {'CDS': 'abstract', 'ONTO': 'hasAbstract', 'TYPE': ''},
                   {'CDS': 'title', 'ONTO': 'hasFullTitle', 'TYPE': ''},]
 
-# SPARQL Queries
-
-SPARQL_QUERY = '''
-                WITH <{graph}> SELECT ?guid, ?{param_name}
-                WHERE {{
-                    ?guid <{ontology}#{ONTO}> ?{param_name} .
-                    FILTER(?{param_name} IN ({params_list}))
-                }}
-            '''
-
 def define_globals(args):
     global GRAPH
     GRAPH = args.GRAPH
 
     global ONTOLOGY
     ONTOLOGY = args.ONTOLOGY
-
-    global SPARQL
-    SPARQL = args.SPARQL
 
 def get_document_iri(doc_id):
     """
@@ -342,7 +326,19 @@ def arxiv_extraction(data):
     :return: string with arXiv
     """
     if 'primary_report_number' in data:
-        return fix_string(data.get('primary_report_number'))
+        report_number = data.get('primary_report_number')
+        # primary_report_number can be string, unicode and list
+        # if we don't find any string, started with 'arXiv' -
+        # it means that there is no arXiv code and
+        # we don't need to add it to TTL
+        if isinstance(report_number, (str, unicode)):
+            if report_number.startswith('arXiv'):
+                return fix_string(report_number)
+        elif isinstance(report_number, list):
+            for item in report_number:
+                if item is not None and item.startswith('arXiv'):
+                    return fix_string(item)
+
 
 def generate_journal_id(journal_dict):
     """
@@ -366,80 +362,23 @@ def process_journals(data, doc_iri):
     :param doc_iri: document IRI for current graph
     :return: ttl string with journal issue with connection to paper
     """
-    journals = convert_to_list(data)
+    journals = []
+    if isinstance(data, list):
+        journals = data
+    elif isinstance(data,dict):
+        journals.append(data)
     ttl = ''
     for item in journals:
         journal_id = generate_journal_id(item)
-        if get_journal_by_id(journal_id):
-            ttl += '<{journal_resource}{journalIssueID}> ' \
-                   '<{ontology}#containsPublication> {doc_iri} .\n'\
-                .format(journalIssueID=journal_id,
-                        doc_iri=doc_iri,
-                        ontology=ONTOLOGY,
-                        journal_resource=GRAPH+'/journal_issue/')
-        else:
-            ttl += '''<{journal_resource}{journalIssueID}> a <{ontology}#JournalIssue> .
-       <{journal_resource}{journalIssueID}> <{ontology}#hasTitle> "{title}"^^xsd:string .
-       <{journal_resource}{journalIssueID}> <{ontology}#hasVolume> "{volume}"^^xsd:string .
-       <{journal_resource}{journalIssueID}> <{ontology}#hasYear> "{year}"^^xsd:string .
-       <{journal_resource}{journalIssueID}> <{ontology}#containsPublication> {doc_iri} .
+        ttl += '''<{journal_resource}{journalIssueID}> a <{ontology}#JournalIssue> .
+<{journal_resource}{journalIssueID}> <{ontology}#hasTitle> "{title}"^^xsd:string .
+<{journal_resource}{journalIssueID}> <{ontology}#hasVolume> "{volume}"^^xsd:string .
+<{journal_resource}{journalIssueID}> <{ontology}#hasYear> "{year}"^^xsd:string .
+<{journal_resource}{journalIssueID}> <{ontology}#containsPublication> {doc_iri} .
        '''.format(journalIssueID=journal_id, title=item.get('title'), volume=item.get('volume'),
                   year=item.get('year'), doc_iri=doc_iri, journal_resource=GRAPH+'/journal_issue/',
                   ontology=ONTOLOGY)
     return ttl
-
-def sparql_query(query, base_url, output_format="application/sparql-results+json"):
-    """
-    Execute SPARQL requests with urllib2 library
-    :param query:
-    :param base_url:
-    :param output_format:
-    :return:
-    """
-    params = {
-        "query": query,
-        "format": output_format
-    }
-    querypart = urllib.urlencode(params)
-    try:
-        response = urllib.urlopen(base_url, querypart).read()
-    except urllib2.HTTPError as exception:
-        sys.stderr.write('The server couldn\'t fulfill the request.')
-        sys.stderr.write('Error code: '), exception.code
-    except urllib2.URLError as exception:
-        sys.stderr.write('We failed to reach a server.')
-        sys.stderr.write('Reason: '), exception.reason
-    else:
-        return json.loads(response)
-
-
-def has_results(results):
-    """
-    check if results in Virtuoso
-    :param results:
-    :return:
-    """
-    if isinstance(results.get('results').get('bindings'), list):
-        length = len(results.get('results').get('bindings'))
-    return True if length > 0 else False
-
-def get_journal_by_id(journal_id):
-    """
-    Search journal ID in Virtuoso DB
-    :param journal_id:
-    :return:
-    """
-    journal_query = '''WITH <{graph}> SELECT count(?journal)
-                    WHERE {{
-                        <{journal_resource}{journalIssueID}> <{rdf_prefix}#type> ?journal .
-                    }}'''.format(journalIssueID=journal_id, graph=GRAPH,
-                                 journal_resource=GRAPH+'/journal_issue/',
-                                 rdf_prefix='http://www.w3.org/1999/02/22-rdf-syntax-ns')
-    results = sparql_query(journal_query, SPARQL)
-    if has_results(results):
-        res = results.get('results').get('bindings')[0]['callret-0']['value']
-        return res != str('0')
-
 
 def fix_string(wrong_string):
     """
@@ -459,23 +398,6 @@ def fix_list_values(list_vals):
     for item in list_vals:
         item = fix_string(item)
     return list_vals
-
-def fix_dict_values(dict_vals, keys_to_fix):
-    """
-    Fixing dictionary values with wrong unicode symbols
-    :param dict_vals: initial dictionary
-    :param keys_to_fix: list of keys to fix
-    :return:
-    """
-    for key in keys_to_fix:
-        if key in dict_vals.keys():
-            if isinstance(dict_vals[key], str) or isinstance(dict_vals[key], unicode):
-                dict_vals[key] = fix_string(dict_vals[key])
-            elif isinstance(dict_vals[key], list):
-                dict_vals[key] = fix_string(str(dict_vals[key]))
-        else:
-            continue
-    return dict_vals
 
 def write_ttl2file(output, ttl_string):
     """
@@ -498,31 +420,6 @@ def write_ttl2file(output, ttl_string):
             ttl_file.close()
             sys.stderr.write("TTL file has written!")
 
-def convert_to_list(data):
-    """
-    convert mixed data (list and dicts) to list representation
-    :param data:
-    :return:
-    """
-    list_dicts = []
-    if isinstance(data, dict):
-        list_dicts.append(fix_dict_values(data, ['first_name',
-                                                 'last_name',
-                                                 'affiliation',
-                                                 'e-mail',
-                                                 'INSPIRE_Number',
-                                                 'control_number']))
-    elif isinstance(data, list):
-        for item in data:
-            list_dicts.append(fix_dict_values(item, ['first_name',
-                                                     'last_name',
-                                                     'affiliation',
-                                                     'e-mail',
-                                                     'INSPIRE_Number',
-                                                     'control_number']))
-    return list_dicts
-
-
 def main(argv):
     """
     Parsing command line arguments and processing JSON string from file or from stream
@@ -542,12 +439,6 @@ def main(argv):
                         const=ONTOLOGY,
                         metavar='ONT',
                         dest='ONTOLOGY')
-    processor.add_argument('-SPARQL', '--sparql', action='store', type=str, nargs='?',
-                        help='SPARQL Endpoint (default: %(default)s)',
-                        default=SPARQL,
-                        const=SPARQL,
-                        metavar='SPARQL',
-                        dest='SPARQL')
     processor.add_argument('-delim', '--delimiter', action='store', nargs='?',
                         help=u'EOP marker for Kafka mode (default: \0)',
                         default='',
@@ -561,6 +452,8 @@ def main(argv):
         paper_id = data.get('dkbID')
         doc_iri = get_document_iri(paper_id)
         doc_ttl = ""
+        doc_ttl += '{docIRI} a <{ontology}#Paper> .\n' \
+            .format(docIRI=doc_iri, ontology=ONTOLOGY)
         doc_ttl += document_glance(data.get('GLANCE'), doc_iri, PAPER_GLANCE_ATTRS)
         doc_ttl += document_cds(data.get('CDS'), doc_iri, PAPER_CDS_ATTRS)
 
@@ -570,6 +463,8 @@ def main(argv):
             for note in data.get('supporting_notes'):
                 note_id = note.get('dkbID')
                 note_iri = get_document_iri(note_id)
+                doc_ttl += '{noteIRI} a <{ontology}#SupportingDocument> .\n' \
+                    .format(noteIRI=note_iri, ontology=ONTOLOGY)
                 doc_ttl += document_glance(note.get('GLANCE'), note_iri, NOTE_GLANCE_ATTRS)
                 doc_ttl += document_cds(note.get('CDS'), note_iri, NOTE_CDS_ATTRS)
 
