@@ -1,3 +1,4 @@
 Elasticsearch installation and configuration scripts
 
 ./install.sh -- main installation script. It does all necessary operations. If you need to perform just specific operation - use ./install.sh operation1 operation2
+kibana.init.d -- kibana service file. It needed for installation from precompled binary archive.
