@@ -81,7 +81,77 @@ EOF
   service kibana start
 }
 
-LIST="es_rpms es_coinfig kibana_${KIBANA_MODE} kibana_config"
+nginx_rpms() {
+  yum install -y nginx
+  mv /etc/nginx/conf.d/ssl.conf{,.disabled}
+  rm -f /etc/nginx/conf.d/*.conf
+}
+
+nginx_config() {
+  ES_HTPASSWD='/etc/nginx/es.htpasswd'
+  KIBANA_HTPASSWD='/etc/nginx/kibana.htpasswd'
+  cat <<EOF >/etc/nginx/conf.d/es.conf
+server {
+  server_name  `hostname --fqdn`;
+  listen 	`hostname --fqdn`:9200;
+  location / {
+            access_log /var/log/nginx/es.access.log main;
+            error_log  /var/log/nginx/es.error.log  ;
+            auth_basic "Please provide ES user and password";
+            auth_basic_user_file $ES_HTPASSWD;
+            proxy_pass         http://127.0.0.1:9200;
+            proxy_set_header   Host               \$host;
+            proxy_set_header   X-Real-IP          \$remote_addr;
+            proxy_set_header   X-Forwarded-For    \$proxy_add_x_forwarded_for;
+            client_body_buffer_size     128k;
+
+            proxy_connect_timeout       90;
+            proxy_send_timeout          90;
+            proxy_read_timeout          90;
+
+            proxy_buffer_size           256k;
+            proxy_buffers               8 256k;
+            proxy_busy_buffers_size     512k;
+            proxy_temp_file_write_size  512k;
+        }
+}
+EOF
+
+  cat <<EOF >/etc/nginx/conf.d/kibana.conf
+server {
+  server_name  `hostname --fqdn`;
+  listen       `hostname --fqdn`:5601;
+  location / {
+            access_log /var/log/nginx/kibana.access.log main;
+            error_log  /var/log/nginx/kibana.error.log  ;
+            auth_basic "Please provide Kibana user and password";
+            auth_basic_user_file $KIBANA_HTPASSWD;
+            proxy_pass         http://127.0.0.1:5601;
+            proxy_set_header   Host               \$host;
+            proxy_set_header   X-Real-IP          \$remote_addr;
+            proxy_set_header   X-Forwarded-For    \$proxy_add_x_forwarded_for;
+            client_body_buffer_size     128k;
+
+            proxy_connect_timeout       90;
+            proxy_send_timeout          90;
+            proxy_read_timeout          90;
+
+            proxy_buffer_size           256k;
+            proxy_buffers               8 256k;
+            proxy_busy_buffers_size     512k;
+            proxy_temp_file_write_size  512k;
+        }
+}
+EOF
+
+  htpasswd -b -n esuser "`cat es.passwd`" | head -n1 > "$ES_HTPASSWD"
+  htpasswd -b -n kuser "`cat kibana.passwd`" | head -n1 > "$KIBANA_HTPASSWD"
+
+  chkconfig --levels 345 nginx on
+  service nginx status && service nginx reload || service nginx start
+}
+
+LIST="es_rpms es_coinfig kibana_${KIBANA_MODE} kibana_config nginx_rpms nginx_config"
 [ -n "$1" ] && LIST="$*"
 for action in $LIST; do
   $action
