@@ -5,6 +5,10 @@ KIBANA_MODE='rpms'
 
 #ES and kibana versions must be in sync.
 VERSION='5.4.1'
+KIBANA_HOST='127.0.0.1'
+KIBANA_PORT=5601
+ES_HOST='127.0.0.1'
+ES_PORT='9200'
 
 es_config() {
   CONFIG_FILE='/etc/elasticsearch/elasticsearch.yml'
@@ -16,8 +20,8 @@ cluster.name: dkb
 node.name: `hostname -s`
 path.data: ${DATA_DIR}
 path.logs: ${LOG_DIR}
-network.host: 127.0.0.1
-http.port: 9200
+network.host: ${ES_HOST}
+http.port: ${ES_PORT}
 EOF
   for d in $LOG_DIR $DATA_DIR; do
     mkdir -p "$d"
@@ -68,9 +72,9 @@ kibana_config() {
   mkdir -p `dirname $KIBANA_CONFIG`
   [ -f "$KIBANA_CONFIG.orig" ] && mv $KIBANA_CONFIG{,.orig}
   cat <<EOF >$KIBANA_CONFIG
-server.port: 5601
-server.host: 127.0.0.1
-elasticsearch.url: http://127.0.0.1:9200
+server.port: ${KIBANA_PORT}
+server.host: ${KIBANA_HOST}
+elasticsearch.url: http://${ES_HOST}:${ES_PORT}
 server.name: `hostname -s`
 EOF
   [ "$KIBANA_MODE" == 'bin' ] && \
@@ -93,13 +97,13 @@ nginx_config() {
   cat <<EOF >/etc/nginx/conf.d/es.conf
 server {
   server_name  `hostname --fqdn`;
-  listen 	`hostname --fqdn`:9200;
+  listen 	`hostname --fqdn`:${ES_PORT};
   location / {
             access_log /var/log/nginx/es.access.log main;
             error_log  /var/log/nginx/es.error.log  ;
             auth_basic "Please provide ES user and password";
             auth_basic_user_file $ES_HTPASSWD;
-            proxy_pass         http://127.0.0.1:9200;
+            proxy_pass         http://${ES_HOST}:${ES_PORT};
             proxy_set_header   Host               \$host;
             proxy_set_header   X-Real-IP          \$remote_addr;
             proxy_set_header   X-Forwarded-For    \$proxy_add_x_forwarded_for;
@@ -120,13 +124,13 @@ EOF
   cat <<EOF >/etc/nginx/conf.d/kibana.conf
 server {
   server_name  `hostname --fqdn`;
-  listen       `hostname --fqdn`:5601;
+  listen       `hostname --fqdn`:${KIBANA_PORT};
   location / {
             access_log /var/log/nginx/kibana.access.log main;
             error_log  /var/log/nginx/kibana.error.log  ;
             auth_basic "Please provide Kibana user and password";
             auth_basic_user_file $KIBANA_HTPASSWD;
-            proxy_pass         http://127.0.0.1:5601;
+            proxy_pass         http://${KIBANA_HOST}:${KIBANA_PORT};
             proxy_set_header   Host               \$host;
             proxy_set_header   X-Real-IP          \$remote_addr;
             proxy_set_header   X-Forwarded-For    \$proxy_add_x_forwarded_for;
