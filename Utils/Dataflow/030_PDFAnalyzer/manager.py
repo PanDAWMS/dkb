@@ -65,25 +65,6 @@ XML_DIR = "xml" # Name of the subdirectory with xml files in a paper's directory
 METADATA_FILE = "metadata.json" # Name of the file which holds the metadata extracted from a paper.
 
 
-# TO DO
-# Luminosity = x+-y fb-1
-# Categories editor
-# Parallel extraction
-# Manager hanging when extracting. Partially fixed - now status bar is updated correctly, manager still hangs otherwise but it's questionable if much can be done here.
-# Good run lists
-# Finding text blocks on each page, determining their type and processing them accordingly. This will help in solving problems like:
-## Table headers above table. PDF 2015-170 may be a good place to test this. Table 2 (which is not needed) has a figure above it, which must be accounted for.
-## Tables on several pages
-## Lines construction regarding Y-axis (see PDF 609)
-## Campaigns (and probably other things?) should NOT be searched in References.
-# Use list(list) where appropriate.
-# Additional independent module which will check json files and try to filter out wrong datasets and tables, or fix them.
-# * and % in dataset names.
-# "-" in dataset names instead of "_".
-# Rewrite xmltable.py
-# Verification
-# Window resizing and scrollbar activation
-
 class DatasetCategory:
     def __init__(self, name, string):
         self.name = name
