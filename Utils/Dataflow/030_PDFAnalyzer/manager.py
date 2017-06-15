@@ -335,7 +335,7 @@ def cmp_papernames(x, y):
 
 class Paper:
     # Represents a document which needs to be analyzed, as well as files and other things associated with it.
-    attributes_general = ["atlas_name", "campaigns", "energy", "luminosity", "collisions", "data taking year", "project_montecarlo", "project_realdata", "links"]
+    attributes_general = ["atlas_name", "campaigns", "energy", "luminosity", "collisions", "data taking year", "possible_project_montecarlo", "possible_project_realdata", "links"]
     attributes_to_determine = attributes_general + ["title", "datasets", "datatables"] # Paper attributes which are needed but cannot be determined precisely yet (unlike, for example, number of pages).
     attributes_metadata = attributes_to_determine + ["num_pages", "rotated_pages"] # Attributes which are saved / loaded to / from a file.
     def __init__(self, fname, dirname = False):
@@ -528,16 +528,16 @@ class Paper:
                     mcc = c
                     break
             if mcc:
-                attrs["project_montecarlo"] = mcc + "_" + attrs["energy"].replace(" ", "")
+                attrs["possible_project_montecarlo"] = mcc + "_" + attrs["energy"].replace(" ", "")
             else:
-                attrs["project_montecarlo"] = False
+                attrs["possible_project_montecarlo"] = False
         else:
-            attrs["project_montecarlo"] = False
+            attrs["possible_project_montecarlo"] = False
 
         if attrs["data taking year"] and attrs["energy"]:
-            attrs["project_realdata"] = "data" + attrs["data taking year"][2:4] + "_" + attrs["energy"].replace(" ", "")
+            attrs["possible_project_realdata"] = "data" + attrs["data taking year"][2:4] + "_" + attrs["energy"].replace(" ", "")
         else:
-            attrs["project_realdata"] = False
+            attrs["possible_project_realdata"] = False
 
         return attrs
     def find_datasets(self):
