@@ -199,6 +199,8 @@ class AbstractProcessorStage(AbstractStage):
     def run(self):
         """ Run process() for every input() message. """
         for msg in self.input():
+            if not msg:
+                continue
             out = self.process(msg)
             self.output(out)
 
@@ -213,12 +215,13 @@ class AbstractProcessorStage(AbstractStage):
         """ Verify and parse input message.
 
         Is called from input() method.
-        Throws ValueError.
         """
         messageClass = self.__input_message_class
         try:
-            return messageClass(input_message)
-        except ValueError, err:
+            msg = messageClass(input_message)
+            msg.decode()
+            return msg
+        except (ValueError, TypeError), err:
             sys.stderr.write("(WARN) Failed to read input message as %s.\n"
                              "Cause: %s\n" % (messageClass.typeName(), err))
             return None

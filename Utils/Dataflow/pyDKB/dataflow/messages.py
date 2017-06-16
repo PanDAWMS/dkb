@@ -3,6 +3,7 @@ Definition of abstract message class and specific message classes
 """
 
 from . import messageType
+from pyDKB.dataflow.types import codeType
 
 import json
 import sys
@@ -26,22 +27,35 @@ class AbstractMessage(object):
     """ Abstract message """
 
     msg_type = None
+    native_types = []
+
+    decoded = None
+    encoded = None
 
     def __init__(self, message=None):
+        """ Save initial message. """
         self.__orig = message
-        self.message = None
-        self.parse()
+        if type(message) in self.native_types:
+            self.decoded = message
 
     def getOriginal(self):
         """ Return original message. """
         return self.__orig
 
-    def parse(self):
-        """ Verify original string format and parse.
+
+    def decode(self, code):
+        """ Decode original from CODE to TYPE-specific format.
 
         Raises ValueError
         """
-        raise NotImplementedError("Method parse() is not implemented.")
+        raise NotImplementedError("Method decode() is not implemented.")
+
+    def encode(self, code):
+        """ Encode original message from TYPE-specific format to CODE.
+
+        Raises ValueError
+        """
+        raise NotImplementedError("Method encode() is not implemented.")
 
     @classmethod
     def typeName(cls):
@@ -50,24 +64,38 @@ class AbstractMessage(object):
 
     def content(self):
         """ Return message content. """
-        return self.message
+        return self.decode()
+
 
 class JSONMessage(AbstractMessage):
     """ Message in JSON format. """
     msg_type = messageType.JSON
+    native_types = [dict]
 
-    def parse(self):
-        """ Parse original string as JSON. """
-        if not self.message:
-            try:
-                orig = self.getOriginal()
-                if type(orig) == dict:
-                    self.message = orig
-                else:
-                    self.message = json.loads(orig)
-            except ValueError, e:
-                raise ValueError(e)
-        return self.message
+    def decode(self, code=codeType.STRING):
+        """ Decode original data as JSON. """
+        if not self.decoded:
+            orig = self.getOriginal()
+            if code == codeType.STRING:
+                self.decoded = json.loads(orig)
+            else:
+                sys.stderr.write("Unknown code type: %s\n"
+                                  % codeType.memberName(code))
+            self.encoded = orig
+        return self.decoded
+
+    def encode(self, code=codeType.STRING):
+        """ Encode JSON as CODE. """
+        if not self.encoded:
+            orig = self.getOriginal()
+            if code == codeType.STRING:
+                self.encoded = json.dumps(orig)
+            else:
+                sys.stderr.write("Unknown code type: %s\n"
+                                  % codeType.memberName(code))
+            self.decoded = orig
+        return self.encoded
+
 
 __message_class[messageType.JSON] = JSONMessage
 
@@ -77,15 +105,37 @@ class TTLMessage(AbstractMessage):
     Single message = single TTL statement
     """
     msg_type = messageType.TTL
+    try:
+        native_types = [str, unicode]
+    except NameError:
+        native_types = [str]
 
-    def parse(self):
-        """ Parse original string as TTL.
+    def decode(self, code=codeType.STRING):
+        """ Decode original data as TTL.
 
         Currently takes text as it is.
         TODO: check some formal matter to confirm the string is TTL.
         """
-        if not self.message:
-            self.message = self.getOriginal()
-        return self.message
+        if not self.decoded:
+            orig = self.getOriginal()
+            if code == codeType.STRING:
+                self.decoded = orig
+            else:
+                sys.stderr.write("Unknown code type: %s\n"
+                                  % codeType.memberName(code))
+            self.encoded = orig
+        return self.decoded
+
+    def encode(self, code=codeType.STRING):
+        """ Encode JSON as CODE. """
+        if not self.encoded:
+            orig = self.getOriginal()
+            if code == codeType.STRING:
+                self.encoded = str(orig)
+            else:
+                sys.stderr.write("Unknown code type: %s\n"
+                                  % codeType.memberName(code))
+            self.decoded = orig
+        return self.encoded
 
 __message_class[messageType.TTL] = TTLMessage
