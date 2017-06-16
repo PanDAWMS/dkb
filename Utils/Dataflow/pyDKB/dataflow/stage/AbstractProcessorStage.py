@@ -287,10 +287,10 @@ class AbstractProcessorStage(AbstractStage):
         """ Generator for file descriptors to read data from (local files). """
         filenames = self.ARGS.input_files
         for f in filenames:
-            name = f.split('/')[-1]
+            name = os.path.basename(f)
             self.__current_file = name
             if self.ARGS.input_dir:
-                f = self.ARGS.input_dir + "/" + f
+                f = os.path.join(self.ARGS.input_dir, f)
             self.__current_file_full = f
             with open(f, 'r') as infile:
                 yield infile
@@ -313,7 +313,7 @@ class AbstractProcessorStage(AbstractStage):
         for f in filenames:
             f = f.strip()
             if self.ARGS.input_dir:
-                f = self.ARGS.input_dir + "/" + f
+                f = os.path.join(self.ARGS.input_dir, f)
             if not f:
                 continue
             name = hdfs.getfile(f)

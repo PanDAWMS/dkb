@@ -9,7 +9,7 @@ import os
 
 from . import HDFSException
 
-DEVNULL = open("/dev/null", "w")
+DEVNULL = open(os.path.devnull, "w")
 
 def getfile(fname):
     """ Download file from HDFS.
@@ -19,7 +19,7 @@ def getfile(fname):
     Return value: file name (without directory)
     """
     cmd = ["hadoop", "fs", "-get", fname]
-    name = fname.split('/')[-1]
+    name = os.path.basename(fname)
     try:
         if os.access(name, os.F_OK):
             os.remove(name)
@@ -70,7 +70,7 @@ def listdir(dirname, mode='a'):
             continue
 
         # We need to return only the name of the file or subdir
-        line[7] = line[7][len(dirname)+1:]
+        line[7] = os.path.basename(line[7])
         if line[0][0] == 'd':
             subdirs.append(line[7])
         elif line[0][0] == '-':
