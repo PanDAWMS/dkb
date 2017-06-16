@@ -9,11 +9,12 @@ import sys
 
 __message_class = {}
 
-def Message(type):
+
+def Message(msg_type):
     """ Return class XXXMessage, where XXX is the passed type. """
-    if not messageType.hasMember(type):
+    if not messageType.hasMember(msg_type):
         raise ValueError("Message type must be a member of messageType")
-    cls = __message_class.get(type)
+    cls = __message_class.get(msg_type)
     if not cls:
         sys.stderr.write("(WARN) Message class for type %s is not implemented. "
                          "Using AbstractMessage instead.")
@@ -24,7 +25,7 @@ def Message(type):
 class AbstractMessage(object):
     """ Abstract message """
 
-    type = None
+    msg_type = None
 
     def __init__(self, message=None):
         self.__orig = message
@@ -45,7 +46,7 @@ class AbstractMessage(object):
     @classmethod
     def typeName(cls):
         """ Return message type name as string. """
-        return messageType.memberName(cls.type)
+        return messageType.memberName(cls.msg_type)
 
     def content(self):
         """ Return message content. """
@@ -53,7 +54,7 @@ class AbstractMessage(object):
 
 class JSONMessage(AbstractMessage):
     """ Message in JSON format. """
-    type = messageType.JSON
+    msg_type = messageType.JSON
 
     def parse(self):
         """ Parse original string as JSON. """
@@ -75,7 +76,7 @@ class TTLMessage(AbstractMessage):
 
     Single message = single TTL statement
     """
-    type = messageType.TTL
+    msg_type = messageType.TTL
 
     def parse(self):
         """ Parse original string as TTL.
