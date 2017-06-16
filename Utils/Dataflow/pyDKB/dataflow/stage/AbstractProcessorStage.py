@@ -268,6 +268,8 @@ class AbstractProcessorStage(AbstractStage):
     def __localDir(self):
         """ Call file descriptors generator for files in local dir. """
         dirname = self.ARGS.input_dir
+        if not dirname:
+            return []
         files = []
         try:
             for f in os.listdir(dirname):
