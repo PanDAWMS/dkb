@@ -1,10 +1,10 @@
 """
-Abstrac class for type definitions.
+Abstract class for type definitions.
 """
 
 class Type(object):
     """
-    Abstrac class for type definitions.
+    Abstract class for type definitions.
     Usage:
         myType = Type("Orange", "Apple")
 
