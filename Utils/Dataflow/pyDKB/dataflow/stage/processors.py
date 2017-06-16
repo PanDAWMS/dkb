@@ -33,6 +33,7 @@ class JSONProcessorStage(AbstractProcessorStage):
         except ValueError, err:
             sys.stderr.write("(WARN) failed to read input file %s as %s: %s.\n"
                        % (fd.name, self.input_message_class().typeName(), err))
+            yield None
 
 class TTLProcessorStage(AbstractProcessorStage):
     """ TTL2TTL Processor Stage
