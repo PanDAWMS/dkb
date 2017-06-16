@@ -177,14 +177,14 @@ class AbstractProcessorStage(AbstractStage):
         if   self.ARGS.source == 'h':
             if self.ARGS.input_files or self.ARGS.mode == 'm':
             # In MapReduce mode we`re going to get the list of files from STDIN
-                self.__input = self.__hdfsFiles()
+                self.__input = self.__hdfs_in_files()
             else:
-                self.__input = self.__hdfsDir()
+                self.__input = self.__hdfs_in_dir()
         elif self.ARGS.source == 'f':
             if self.ARGS.input_files:
-                self.__input = self.__localFiles()
+                self.__input = self.__local_in_files()
             else:
-                self.__input = self.__localDir()
+                self.__input = self.__local_in_dir()
         elif self.ARGS.source == 's':
             self.__input = [sys.stdin]
         else:
@@ -268,7 +268,7 @@ class AbstractProcessorStage(AbstractStage):
         print message.content()
 
 
-    def __localDir(self):
+    def __local_in_dir(self):
         """ Call file descriptors generator for files in local dir. """
         dirname = self.ARGS.input_dir
         if not dirname:
@@ -284,9 +284,9 @@ class AbstractProcessorStage(AbstractStage):
         if not files:
             return []
         self.ARGS.input_files = files
-        return self.__localFiles()
+        return self.__local_in_files()
 
-    def __localFiles(self):
+    def __local_in_files(self):
         """ Generator for file descriptors to read data from (local files). """
         filenames = self.ARGS.input_files
         for f in filenames:
@@ -299,16 +299,16 @@ class AbstractProcessorStage(AbstractStage):
                 yield infile
 
 
-    def __hdfsDir(self):
+    def __hdfs_in_dir(self):
         """ Call file descriptors generator for files in HDFS dir. """
         dirname = self.ARGS.input_dir
         files = hdfs.listdir(dirname, "f")
         self.ARGS.input_files = files
         if not files:
             return []
-        return self.__hdfsFiles()
+        return self.__hdfs_in_files()
 
-    def __hdfsFiles(self):
+    def __hdfs_in_files(self):
         """ Generator for file descriptors to read data from (HDFS files). """
         filenames = self.ARGS.input_files
         if not filenames:
