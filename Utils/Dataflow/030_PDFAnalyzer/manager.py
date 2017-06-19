@@ -1425,12 +1425,15 @@ class Manager:
             n = 1
             n_p = 0
             errors = {}
-            s = "document name,datasets"
+            s = "document name,mc datasets, real datasets, other datasets, dataset tables"
             for a in Paper.attributes_general:
                 s += ",%s" % a
             csv = [s + "\n"]
             attr = {}
-            attr["datasets"] = []
+            attr["mc_datasets"] = []
+            attr["real_datasets"] = []
+            attr["other_datasets"] = []
+            attr["dataset_tables"] = []
             for a in Paper.attributes_general:
                 attr[a] = []
             self.window.after(100, lambda: self.export_all(quick, n, n_p, errors, attr, csv))
@@ -1443,11 +1446,26 @@ class Manager:
                 if outp:
                     n_p += 1
                     s = "%s," % p.fname
-                    if outp["content"] and outp["content"].keys() != ["plain_text"]:
-                        attr["datasets"].append(p.fname)
+                    if "mc_datasets" in outp["content"]:
+                        attr["mc_datasets"].append(p.fname)
                         s += "1,"
                     else:
                         s += ","
+                    if "real_datasets" in outp["content"]:
+                        attr["real_datasets"].append(p.fname)
+                        s += "1,"
+                    else:
+                        s += ","
+                    other = ""
+                    tables = ""
+                    for c in outp["content"]:
+                        if not other and c.endswith("datasets") and not c.startswith("mc") and not c.startswith("real"):
+                            attr["other_datasets"].append(p.fname)
+                            other = "1"
+                        if not tables and c.startswith("table"):
+                            attr["dataset_tables"].append(p.fname)
+                            tables = "1"
+                    s += "%s,%s," % (other, tables)
                     for a in Paper.attributes_general:
                         if outp["content"]["plain_text"][a]:
                             attr[a].append(p.fname)
@@ -1474,8 +1492,8 @@ class Manager:
                         f.write(msg)
                 with open(STAT_FILE, "w") as f:
                     csv += "TOTAL\n"
-                    s = "%d,%d," % (n_p, len(attr["datasets"]))
-                    s_p = "100%%,%f%%," % (float(len(attr["datasets"])) / n_p * 100)
+                    s = "%d,%d,%d,%d,%d," % (n_p, len(attr["mc_datasets"]), len(attr["real_datasets"]), len(attr["other_datasets"]), len(attr["dataset_tables"]))
+                    s_p = "100%%,%f%%,%f%%,%f%%,%f%%," % (float(len(attr["mc_datasets"])) / n_p * 100, float(len(attr["real_datasets"])) / n_p * 100, float(len(attr["other_datasets"])) / n_p * 100, float(len(attr["dataset_tables"])) / n_p * 100)
                     for a in Paper.attributes_general:
                         s += "%d," % len(attr[a])
                         s_p += "%f%%," % (float(len(attr[a])) / n_p * 100)
