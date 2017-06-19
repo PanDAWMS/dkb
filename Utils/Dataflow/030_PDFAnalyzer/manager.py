@@ -56,8 +56,8 @@ if __name__ == "__main__":
 
     PAPERS_DIR = path_join(cfg["WORK_DIR"], "papers") # Directory for papers' directories.
     EXPORT_DIR = path_join(cfg["WORK_DIR"], "export") # Directory for exported files.
-    ATTRS_FILE = path_join(EXPORT_DIR, "stat.txt") # File for information about exported papers with attributes.
-    CSV_FILE = path_join(EXPORT_DIR, "stat.csv")
+    STAT_FILE = path_join(EXPORT_DIR, "stat.csv") # File for statistics about exported papers.
+    ERRORS_FILE = path_join(EXPORT_DIR, "errors.txt") # File for errors during export.
     HEADING_FONT = ("Times New Roman", 20) # Font used for headings in the program.
 
 TXT_DIR = "txt" # Name of the subdirectory with txt files in a paper's directory.
@@ -1470,15 +1470,9 @@ class Manager:
                     msg = "These papers were not exported for some reason:\n\n"
                     for e in errors:
                         msg += "%s : %s\n\n" % (e, errors[e])
-                with open(ATTRS_FILE, "w") as f:
-                    for a in attr:
-                        f.write("%s found: %d out of %d papers (%f%%) \n"%(a, len(attr[a]), n_p, float(len(attr[a])) / n_p * 100))
-                        for p in attr[a]:
-                            f.write(p + "\n")
-                        f.write("\n")
-                    if msg:
+                    with open(ERRORS_FILE, "w") as f:
                         f.write(msg)
-                with open(CSV_FILE, "w") as f:
+                with open(STAT_FILE, "w") as f:
                     csv += "TOTAL\n"
                     s = "%d,%d," % (n_p, len(attr["datasets"]))
                     s_p = "100%%,%f%%," % (float(len(attr["datasets"])) / n_p * 100)
