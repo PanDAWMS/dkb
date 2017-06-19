@@ -53,8 +53,9 @@ def listdir(dirname, mode='a'):
                 out.append(proc.stdout.readline().strip())
             elif proc.stderr in ready:
                 err = proc.stderr.readline()
-                proc.kill()
-                raise HDFSException(err)
+                if err:
+                    proc.kill()
+                    raise HDFSException(err)
         if proc.poll():
             raise subprocess.CalledProcessError(proc.returncode, cmd)
     except (subprocess.CalledProcessError, OSError, HDFSException), err:
