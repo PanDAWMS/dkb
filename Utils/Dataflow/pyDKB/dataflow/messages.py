@@ -29,6 +29,8 @@ class AbstractMessage(object):
     msg_type = None
     native_types = []
 
+    _ext = ".out"
+
     decoded = None
     encoded = None
 
@@ -66,11 +68,18 @@ class AbstractMessage(object):
         """ Return message content. """
         return self.decode()
 
+    @classmethod
+    def extension(cls):
+        """ Return file extension corresponding this message type. """
+        return cls._ext
+
 
 class JSONMessage(AbstractMessage):
     """ Message in JSON format. """
     msg_type = messageType.JSON
     native_types = [dict]
+
+    _ext = ".json"
 
     def decode(self, code=codeType.STRING):
         """ Decode original data as JSON. """
@@ -105,10 +114,13 @@ class TTLMessage(AbstractMessage):
     Single message = single TTL statement
     """
     msg_type = messageType.TTL
+
     try:
         native_types = [str, unicode]
     except NameError:
         native_types = [str]
+
+    _ext = ".ttl"
 
     def decode(self, code=codeType.STRING):
         """ Decode original data as TTL.

@@ -45,6 +45,7 @@ import sys
 from . import AbstractStage
 from . import messageType
 from . import Message
+from pyDKB.dataflow import DataflowException
 from pyDKB.common import hdfs
 
 class AbstractProcessorStage(AbstractStage):
@@ -57,12 +58,22 @@ class AbstractProcessorStage(AbstractStage):
         __current_file_full  -- full name with path
         __current_file           -- file name
 
-    * Iterable object for input data
+    * Iterable object for input data sources (file descriptors)
         __input
+
+    * Output messages buffer:
+        __output_buffer
+
+    * Generator object for output file descriptor
+      OR file descriptor (for (s)tream mode)
+        __output
     """
 
     __input_message_class = None
     __output_message_class = None
+
+    __stream_EOMessage = '\n'
+    __stream_EOProcess = '\0'
 
     def __init__(self, description="DKB Dataflow data processing stage."):
         """ Initialize the stage
@@ -75,6 +86,9 @@ class AbstractProcessorStage(AbstractStage):
         self.__current_file_full = None
         self.__current_file = None
         self.__input = []
+        self.__output_buffer = []
+        self.__EOMessage = '\n'
+        self.__EOProcess = '\n'
         super(AbstractProcessorStage, self).__init__(description)
 
     def _set_input_message_class(self, Type=None):
@@ -135,10 +149,8 @@ class AbstractProcessorStage(AbstractStage):
                           )
         self.add_argument('-o', '--output-dir', action='store', type=str,
                           nargs='?',
-                          help=u'Directory or file for output files '
-                                '(local or HDFS). '
-                                'If the directory doesn\'t exist, use "dir/" '
-                                'instead of "dir".',
+                          help=u'Directory for output files'
+                                '(local or HDFS). ',
                           default='',
                           const='output/',
                           metavar='DIR',
@@ -196,18 +208,40 @@ class AbstractProcessorStage(AbstractStage):
             sys.stderr.write("No input data sources specified.\n")
             self.print_usage(sys.stderr)
 
+        # Configure output
+        if   self.ARGS.dest == 'f':
+           self.__output = self.__local_out_files()
+        elif self.ARGS.dest == 'h':
+           self.__output = self.__hdfs_out_files()
+        elif self.ARGS.dest == 's':
+           ustdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+           self.__output = ustdout
+           self.__EOMessage = self.__stream_EOMessage
+           self.__EOProcess = self.__stream_EOProcess
+
+
     def run(self):
         """ Run process() for every input() message. """
         for msg in self.input():
-            if not msg:
-                continue
-            out = self.process(msg)
-            self.output(out)
+            try:
+                failed = True
+                if msg and self.process(self, msg):
+                    self.flush_buffer()
+            finally:
+                self.clear_buffer()
+                self.forward()
 
-    def process(self, input_message):
+    @staticmethod
+    def process(stage, input_message):
         """ Transform input_message -> output_message.
 
         To be implemented individually for every stage.
+        Takes the stage as first argument to allow calling output()
+          from inside the function.
+
+        Return value:
+            True  -- processing successfully finished
+            False -- processing failed (skip the input message)
         """
         raise NotImplementedError("Stage method process() is not implemented")
 
@@ -247,9 +281,13 @@ class AbstractProcessorStage(AbstractStage):
         Split stream into messages;
         Yield Message object.
         """
-        iterator = iter(fd.readline, "")
-        for line in iterator:
-            yield self.parseMessage(line)
+        if self.__EOMessage == '\n':
+            iterator = iter(fd.readline, "")
+            for line in iterator:
+                yield self.parseMessage(line)
+        else:
+	    raise NotImplementedError("Stream input is not implemented for"
+                                      " custom EOMessage marker.")
 
     def file_input(self, fd):
         """ Generator for input messages.
@@ -259,14 +297,55 @@ class AbstractProcessorStage(AbstractStage):
         """
         return self.stream_input(fd)
 
+
     def output(self, message):
-        """ Output given message (to the file, files or stdout)
+        """ Put the (list of) message(s) to the output buffer. """
+        if isinstance(message, self.__output_message_class):
+            self.__output_buffer.append(message)
+        elif type(message) == list:
+            for m in message:
+                self.output.message(m)
+        else:
+            raise TypeError("Stage.output() expects paramenet to be of type"
+                            " %s or %s (got %s)"
+                            % (self.__output_message_class, list,
+                               type(message))
+                           )
 
-        For now: STDOUT.
-        TODO: rewrite to act according to cmdline args.
+
+
+    def forward(self):
+        """ Send EOPMessage in the streaming output mode. """
+        if self.ARGS.dest == 's':
+            self.__output.write(self.__EOProcess)
+
+    def flush_buffer(self):
+        """ Flush message buffer to the output. """
+        if self.ARGS.dest == 's':
+            self.stream_flush()
+        else:
+            self.file_flush()
+
+    def stream_flush(self, fd=None):
+        """ Flush message buffer as a stream. """
+        if not fd:
+            fd = self.__output
+        for msg in self.__output_buffer:
+            fd.write(msg.encode())
+            fd.write(self.__EOMessage)
+
+    def file_flush(self):
+        """ Flush message buffer into a file.
+
+        By default writes to file as to a stream.
+        To be implemented individually if needed.
         """
-        print message.content()
+        fd = self.__output.next()
+        self.stream_flush(fd)
 
+    def clear_buffer(self):
+        """ Drop buffered output messages. """
+        self.__output_buffer = []
 
     def __local_in_dir(self):
         """ Call file descriptors generator for files in local dir. """
@@ -297,7 +376,36 @@ class AbstractProcessorStage(AbstractStage):
             self.__current_file_full = f
             with open(f, 'r') as infile:
                 yield infile
+            self.__current_file = None
+            self.__current_file_full = None
 
+    def __local_out_files(self):
+        """ Generator for file descriptors to write data to (local files). """
+        ext = self.output_message_class().extension()
+        fd = None
+        cf = None
+        while self.__current_file_full:
+            if cf == self.__current_file_full:
+                yield fd
+                continue
+            output_dir = self.ARGS.output_dir
+            if not output_dir:
+                 output_dir = os.path.dirname(self.__current_file_full)
+            filename = os.path.splitext(self.__current_file)[0] + ext
+            filename = os.path.join(output_dir, filename)
+            if os.path.exists(filename):
+                if fd and os.path.samefile(filename, fd.name):
+                    yield fd
+                    continue
+                else:
+                    raise DataflowException("File already exists: %s\n"
+                                             % filename)
+            if fd:
+                fd.close()
+            fd = open(filename, "w", 0)
+            yield fd
+        if fd:
+            fd.close()
 
     def __hdfs_in_dir(self):
         """ Call file descriptors generator for files in HDFS dir. """
@@ -331,3 +439,36 @@ class AbstractProcessorStage(AbstractStage):
                 sys.stderr.write("(WARN) Failed to remove uploaded file: %s\n"
                                                                         % name)
             self.__current_file = None
+            self.__current_file_full = None
+
+    def __hdfs_out_files(self):
+        """ Generator for file descriptors to write data to (HDFS files). """
+        ext = self.output_message_class().extension()
+        fd = None
+        cf = None
+        while self.__current_file_full:
+            if cf == self.__current_file_full:
+                yield fd
+                continue
+            output_dir = self.ARGS.output_dir
+            if not output_dir:
+                 output_dir = os.path.dirname(self.__current_file_full)
+            filename = os.path.splitext(self.__current_file)[0] + ext
+            if os.path.exists(filename):
+                if fd and os.path.samefile(filename, fd.name):
+                    yield fd
+                    continue
+                else:
+                    raise DataflowException("File already exists: %s\n"
+                                             % filename)
+            if fd:
+                fd.close()
+                hdfs.putfile(fd.name, output_dir)
+                os.remove(fd.name)
+            fd = open(filename, "w", 0)
+            yield fd
+        if fd:
+            fd.close()
+            hdfs.putfile(fd.name, output_dir)
+            os.remove(fd.name)
+
