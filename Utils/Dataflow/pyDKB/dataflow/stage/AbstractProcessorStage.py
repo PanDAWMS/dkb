@@ -41,6 +41,7 @@ Definition of an abstract class for Dataflow Data Processing Stages.
 import subprocess
 import os
 import sys
+import types
 
 from . import AbstractStage
 from . import messageType
@@ -67,6 +68,9 @@ class AbstractProcessorStage(AbstractStage):
     * Generator object for output file descriptor
       OR file descriptor (for (s)tream mode)
         __output
+
+    * List of objects to be "stopped"
+        __stoppable
     """
 
     __input_message_class = None
@@ -87,6 +91,7 @@ class AbstractProcessorStage(AbstractStage):
         self.__current_file = None
         self.__input = []
         self.__output_buffer = []
+        self.__stoppable = []
         self.__EOMessage = '\n'
         self.__EOProcess = '\n'
         super(AbstractProcessorStage, self).__init__(description)
@@ -208,6 +213,8 @@ class AbstractProcessorStage(AbstractStage):
             sys.stderr.write("No input data sources specified.\n")
             self.print_usage(sys.stderr)
 
+        self.__stoppable_append(self.__input, types.GeneratorType)
+
         # Configure output
         if   self.ARGS.dest == 'f':
            self.__output = self.__local_out_files()
@@ -218,6 +225,8 @@ class AbstractProcessorStage(AbstractStage):
            self.__output = ustdout
            self.__EOMessage = self.__stream_EOMessage
            self.__EOProcess = self.__stream_EOProcess
+
+        self.__stoppable_append(self.__output, types.GeneratorType)
 
 
     def run(self):
@@ -230,6 +239,22 @@ class AbstractProcessorStage(AbstractStage):
             finally:
                 self.clear_buffer()
                 self.forward()
+
+    def stop(self):
+        """ Finalize all the processes and prepare to exit. """
+        failures = []
+        for p in self.__stoppable:
+            try:
+                p.close()
+            except AttributeError, e:
+                sys.stderr.write("(WARN) Close method is not defined for"
+                                 " %s.\n" % p)
+            except Exception, e:
+                failures.append((p, e))
+        if failures:
+            for f in failures:
+                sys.stderr.write("(ERROR) Failed to stop %s: %s" % f)
+
 
     @staticmethod
     def process(stage, input_message):
@@ -384,28 +409,30 @@ class AbstractProcessorStage(AbstractStage):
         ext = self.output_message_class().extension()
         fd = None
         cf = None
-        while self.__current_file_full:
-            if cf == self.__current_file_full:
-                yield fd
-                continue
-            output_dir = self.ARGS.output_dir
-            if not output_dir:
-                 output_dir = os.path.dirname(self.__current_file_full)
-            filename = os.path.splitext(self.__current_file)[0] + ext
-            filename = os.path.join(output_dir, filename)
-            if os.path.exists(filename):
-                if fd and os.path.samefile(filename, fd.name):
+        try:
+            while self.__current_file_full:
+                if cf == self.__current_file_full:
                     yield fd
                     continue
-                else:
-                    raise DataflowException("File already exists: %s\n"
-                                             % filename)
+                output_dir = self.ARGS.output_dir
+                if not output_dir:
+                     output_dir = os.path.dirname(self.__current_file_full)
+                filename = os.path.splitext(self.__current_file)[0] + ext
+                filename = os.path.join(output_dir, filename)
+                if os.path.exists(filename):
+                    if fd and os.path.samefile(filename, fd.name):
+                        yield fd
+                        continue
+                    else:
+                        raise DataflowException("File already exists: %s\n"
+                                                 % filename)
+                if fd:
+                    fd.close()
+                fd = open(filename, "w", 0)
+                yield fd
+        finally:
             if fd:
                 fd.close()
-            fd = open(filename, "w", 0)
-            yield fd
-        if fd:
-            fd.close()
 
     def __hdfs_in_dir(self):
         """ Call file descriptors generator for files in HDFS dir. """
@@ -431,13 +458,15 @@ class AbstractProcessorStage(AbstractStage):
             self.__current_file_full = f
             self.__current_file = name
 
-            with open(name, 'r') as infile:
-                yield infile
             try:
-                os.remove(name)
-            except OSError:
-                sys.stderr.write("(WARN) Failed to remove uploaded file: %s\n"
-                                                                        % name)
+                with open(name, 'r') as infile:
+                    yield infile
+            finally:
+                try:
+                    os.remove(name)
+                except OSError:
+                    sys.stderr.write("(WARN) Failed to remove uploaded file:"
+                                     " %s\n" % name)
             self.__current_file = None
             self.__current_file_full = None
 
@@ -446,29 +475,35 @@ class AbstractProcessorStage(AbstractStage):
         ext = self.output_message_class().extension()
         fd = None
         cf = None
-        while self.__current_file_full:
-            if cf == self.__current_file_full:
-                yield fd
-                continue
-            output_dir = self.ARGS.output_dir
-            if not output_dir:
-                 output_dir = os.path.dirname(self.__current_file_full)
-            filename = os.path.splitext(self.__current_file)[0] + ext
-            if os.path.exists(filename):
-                if fd and os.path.samefile(filename, fd.name):
+        try:
+            while self.__current_file_full:
+                if cf == self.__current_file_full:
                     yield fd
                     continue
-                else:
-                    raise DataflowException("File already exists: %s\n"
-                                             % filename)
+                output_dir = self.ARGS.output_dir
+                if not output_dir:
+                     output_dir = os.path.dirname(self.__current_file_full)
+                filename = os.path.splitext(self.__current_file)[0] + ext
+                if os.path.exists(filename):
+                    if fd and os.path.samefile(filename, fd.name):
+                        yield fd
+                        continue
+                    else:
+                        raise DataflowException("File already exists: %s\n"
+                                                 % filename)
+                if fd:
+                    fd.close()
+                    hdfs.putfile(fd.name, output_dir)
+                    os.remove(fd.name)
+                fd = open(filename, "w", 0)
+                yield fd
+        finally:
             if fd:
                 fd.close()
                 hdfs.putfile(fd.name, output_dir)
                 os.remove(fd.name)
-            fd = open(filename, "w", 0)
-            yield fd
-        if fd:
-            fd.close()
-            hdfs.putfile(fd.name, output_dir)
-            os.remove(fd.name)
 
+    def __stoppable_append(self, obj, cls):
+        """ Appends OBJ (of type CLS) to the list of STOPPABLE. """
+        if isinstance(obj, cls):
+            self.__stoppable.append(obj)
