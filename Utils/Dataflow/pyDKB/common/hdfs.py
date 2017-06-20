@@ -40,8 +40,12 @@ def getfile(fname):
     try:
         if os.access(name, os.F_OK):
             os.remove(name)
-        subprocess.check_call(cmd, stderr=DEVNULL, stdout=DEVNULL)
-    except (subprocess.CalledProcessError, OSError), err:
+        proc = subprocess.Popen(cmd,
+                                stderr=subprocess.PIPE,
+                                stdout=DEVNULL)
+        if check_stderr(proc):
+            raise(subprocess.CalledProcessError(proc.returncode, cmd))
+    except (subprocess.CalledProcessError, OSError, HDFSException), err:
         raise RuntimeError("(ERROR) Failed to get file from HDFS: %s\n"
                            "Error message: %s\n" % (fname, err))
     return name
