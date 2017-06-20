@@ -11,6 +11,23 @@ from . import HDFSException
 
 DEVNULL = open(os.path.devnull, "w")
 
+def check_stderr(proc, timeout=None):
+    """ Check STDERR of the subprocess and kill it if there`s something.
+
+    If STDERR is closed, waits till the process ends.
+    """
+    if not isinstance(proc, subprocess.Popen):
+        raise TypeError("proc must be an instance of subprocess.Popen")
+    ready, _, _ = select.select((proc.stderr, ), (), (), timeout)
+    if ready:
+        err = proc.stderr.readline()
+        if err:
+            proc.kill()
+            raise HDFSException(err)
+    if not timeout:
+            proc.wait()
+    return proc.poll()
+
 def getfile(fname):
     """ Download file from HDFS.
 
@@ -48,14 +65,11 @@ def listdir(dirname, mode='a'):
                               stderr=subprocess.PIPE,
                               stdout=subprocess.PIPE)
         while proc.poll() == None:
-            ready, _, _ = select.select((proc.stdout, proc.stderr), (), (), .1)
-            if proc.stdout in ready:
+            timeout = 0.1
+            check_stderr(proc, timeout)
+            ready, _, _ = select.select((proc.stdout, ), (), (), timeout)
+            if ready:
                 out.append(proc.stdout.readline().strip())
-            elif proc.stderr in ready:
-                err = proc.stderr.readline()
-                if err:
-                    proc.kill()
-                    raise HDFSException(err)
         if proc.poll():
             raise subprocess.CalledProcessError(proc.returncode, cmd)
     except (subprocess.CalledProcessError, OSError, HDFSException), err:
