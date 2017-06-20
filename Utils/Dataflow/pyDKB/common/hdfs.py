@@ -41,6 +41,7 @@ def getfile(fname):
         if os.access(name, os.F_OK):
             os.remove(name)
         proc = subprocess.Popen(cmd,
+                                stdin =subprocess.PIPE,
                                 stderr=subprocess.PIPE,
                                 stdout=DEVNULL)
         if check_stderr(proc):
