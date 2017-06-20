@@ -24,6 +24,7 @@ def main(args):
 
   stage.parse_args(args)
   stage.run()
+  stage.stop()
 
 if __name__ == '__main__':
   main(sys.argv[1:])
