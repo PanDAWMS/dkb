@@ -9,13 +9,14 @@ sys.path.append("../../")
 
 import pyDKB
 
-def process(msg):
+def process(stage, msg):
   """
   Input message: JSON
   Output message: TTL
   """
   myMessage = pyDKB.dataflow.Message(pyDKB.dataflow.messageType.TTL)(msg.content())
-  return myMessage
+  stage.output(myMessage)
+  return True
 
 def main(args):
   stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()

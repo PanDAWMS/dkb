@@ -28,6 +28,20 @@ def check_stderr(proc, timeout=None):
             proc.wait()
     return proc.poll()
 
+def putfile(fname, dest):
+    """ Upload file to HDFS. """
+    cmd = ["hadoop", "fs", "-put", fname, dest]
+    try:
+        proc = subprocess.Popen(cmd,
+                                stdin =subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                stdout=DEVNULL)
+        if check_stderr(proc):
+            raise(subprocess.CalledProcessError(proc.returncode, cmd))
+    except (subprocess.CalledProcessError, OSError, HDFSException), err:
+        raise RuntimeError("(ERROR) Failed to put file to HDFS: %s\n"
+                           "Error message: %s\n" % (fname, err))
+
 def getfile(fname):
     """ Download file from HDFS.
 

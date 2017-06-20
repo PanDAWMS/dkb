@@ -8,11 +8,12 @@ pyDKB testing stage.
 
 Run as:
 
-  ./json2TTL.py -i input 2>&1 | less
-  ./json2TTL.py input/196.json 2>&1 | less
+  ./json2TTL.py -i input
+  ./json2TTL.py input/196.json
   cat << EOF | ./json2TTL.py -m s | less
   {"a": 1}
   {"b": 2}
   EOF
+  ./json2TTL.py --hdfs -i /my/test/input
 
 etc
