@@ -38,8 +38,6 @@ def getfile(fname):
     cmd = ["hadoop", "fs", "-get", fname]
     name = os.path.basename(fname)
     try:
-        if os.access(name, os.F_OK):
-            os.remove(name)
         proc = subprocess.Popen(cmd,
                                 stdin =subprocess.PIPE,
                                 stderr=subprocess.PIPE,
