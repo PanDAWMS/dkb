@@ -11,61 +11,64 @@ import sys
 import json
 
 class JSONProcessorStage(AbstractProcessorStage):
-  """
-  Input message: JSON
-  Output message: JSON
-  """
+    """ JSON2JSON Processor Stage
 
-  def __init__(self):
-    super(JSONProcessorStage, self).__init__()
-    self._set_input_message_class(messageType.JSON)
-    self._set_output_message_class(messageType.JSON)
+    Input message: JSON
+    Output message: JSON
+    """
 
-  def file_input(self, fd):
-    """Overrides AbstractProcessorStage.file_input"""
-    try:
-      data = json.load(fd)
-      if type(data) == dict:
-        data = [data]
-      for m in data:
-        yield self.parseMessage(m)
-    except ValueError,e:
-      sys.stderr.write("(WARN) failed to read input file %s as %s: %s.\n"
-                          % (fd.name, self.input_message_class().typeName(), e))
+    def __init__(self):
+        super(JSONProcessorStage, self).__init__()
+        self._set_input_message_class(messageType.JSON)
+        self._set_output_message_class(messageType.JSON)
+
+    def file_input(self, fd):
+        """Override AbstractProcessorStage.file_input"""
+        try:
+            data = json.load(fd)
+            if type(data) == dict:
+                data = [data]
+            for m in data:
+                yield self.parseMessage(m)
+        except ValueError, err:
+            sys.stderr.write("(WARN) failed to read input file %s as %s: %s.\n"
+                       % (fd.name, self.input_message_class().typeName(), err))
 
 class TTLProcessorStage(AbstractProcessorStage):
-  """
-  Input message: TTL
-  Output message: TTL
-  """
+    """ TTL2TTL Processor Stage
 
-  def __init__(self):
-    super(JSONProcessorStage, self).__init__()
-    self._set_input_message_class(messageType.JSON)
-    self._set_output_message_class(messageType.JSON)
+    Input message: TTL
+    Output message: TTL
+    """
 
-  # Override
-  def output(self, message):
-    pass
+    def __init__(self):
+        super(JSONProcessorStage, self).__init__()
+        self._set_input_message_class(messageType.JSON)
+        self._set_output_message_class(messageType.JSON)
 
-class JSON2TTLProcessorStage(JSONProcessorStage,TTLProcessorStage):
-  """
-  Input message: JSON
-  Output message: TTL
-  """
+    # Override
+    def output(self, message):
+        super(TTLProcessorStage, self).output(message)
 
-  def __init__(self):
-    # Get __init__ method of the last but one ancestor
-    super(JSON2TTLProcessorStage.__mro__[-3], self).__init__()
-    self._set_input_message_class(messageType.JSON)
-    self._set_output_message_class(messageType.TTL)
+class JSON2TTLProcessorStage(JSONProcessorStage, TTLProcessorStage):
+    """ JSON2TTL Procssor Stage
 
-  def input(self):
-    """Override: Falls back to JSONProcessorStage.input"""
-    # Pick the method of the first parent
-    return super(JSON2TTLProcessorStage,self).input()
+    Input message: JSON
+    Output message: TTL
+    """
 
-  def output(self,message):
-    """Override: Falls back to TTLProcessorStage.output"""
-    # Skip first parent, pick the second
-    super(JSONProcessorStage,self).output(message)
+    def __init__(self):
+        # Get __init__ method of the last but one ancestor
+        super(JSON2TTLProcessorStage.__mro__[-3], self).__init__()
+        self._set_input_message_class(messageType.JSON)
+        self._set_output_message_class(messageType.TTL)
+
+    def input(self):
+        """Override: Falls back to JSONProcessorStage.input"""
+        # Pick the method of the first parent
+        return super(JSON2TTLProcessorStage, self).input()
+
+    def output(self, message):
+        """Override: Falls back to TTLProcessorStage.output"""
+        # Skip first parent, pick the second
+        super(JSONProcessorStage, self).output(message)
