@@ -58,8 +58,8 @@ class JSON2TTLProcessorStage(JSONProcessorStage, TTLProcessorStage):
     """
 
     def __init__(self):
-        # Get __init__ method of the last but one ancestor
-        super(JSON2TTLProcessorStage.__mro__[-3], self).__init__()
+        # Skip direct ancestors (self, JSON, TTL)
+        super(JSON2TTLProcessorStage.__mro__[2], self).__init__()
         self._set_input_message_class(messageType.JSON)
         self._set_output_message_class(messageType.TTL)
 

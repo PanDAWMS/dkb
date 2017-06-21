@@ -268,6 +268,8 @@ class AbstractProcessorStage(AbstractStage):
     def __localDir(self):
         """ Call file descriptors generator for files in local dir. """
         dirname = self.ARGS.input_dir
+        if not dirname:
+            return []
         files = []
         try:
             for f in os.listdir(dirname):
@@ -285,10 +287,10 @@ class AbstractProcessorStage(AbstractStage):
         """ Generator for file descriptors to read data from (local files). """
         filenames = self.ARGS.input_files
         for f in filenames:
-            name = f.split('/')[-1]
+            name = os.path.basename(f)
             self.__current_file = name
             if self.ARGS.input_dir:
-                f = self.ARGS.input_dir + "/" + f
+                f = os.path.join(self.ARGS.input_dir, f)
             self.__current_file_full = f
             with open(f, 'r') as infile:
                 yield infile
@@ -308,25 +310,15 @@ class AbstractProcessorStage(AbstractStage):
         filenames = self.ARGS.input_files
         if not filenames:
             filenames = iter(sys.stdin.readline, "")
-        DEVNULL = open("/dev/null", "w")
         for f in filenames:
             f = f.strip()
-            name = f.split('/')[-1]
             if self.ARGS.input_dir:
-                f = self.ARGS.input_dir + "/" + f
+                f = os.path.join(self.ARGS.input_dir, f)
             if not f:
                 continue
+            name = hdfs.getfile(f)
             self.__current_file_full = f
             self.__current_file = name
-            cmd = "hadoop fs -get %s" % f
-            try:
-                if os.access(name, os.F_OK):
-                    os.remove(name)
-                subprocess.check_call(cmd, shell=True, stderr=DEVNULL,
-                                      stdout=DEVNULL)
-            except (subprocess.CalledProcessError, OSError), err:
-                raise RuntimeError("(ERROR) Failed to get file from HDFS: %s\n"
-                                   "Error message: %s\n" % (f, err))
 
             with open(name, 'r') as infile:
                 yield infile
