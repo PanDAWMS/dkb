@@ -1,0 +1,79 @@
+@prefix map: <#> .
+@prefix db: <> .
+@prefix vocab: <vocab/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix d2rq: <http://www.wiwiss.fu-berlin.de/suhl/bizer/D2RQ/0.1#> .
+@prefix jdbc: <http://d2rq.org/terms/jdbc/> .
+
+map:database a d2rq:Database;
+	d2rq:jdbcDriver "oracle.jdbc.OracleDriver";
+	d2rq:jdbcDSN "jdbc:oracle:thin:@//ADCR2-ADG-S.cern.ch:10121/ADCR.cern.ch";
+	d2rq:username "[USER]";
+	d2rq:password "[PASSWORD]";
+	.
+
+# Table T_PRODUCTION_DATASET
+map:T_PRODUCTION_DATASET a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "T_PRODUCTION_DATASET/@@T_PRODUCTION_DATASET.NAME@@";
+	d2rq:class vocab:T_PRODUCTION_DATASET;
+	d2rq:classDefinitionLabel "T_PRODUCTION_DATASET";	
+	
+map:T_PRODUCTION_DATASET__label a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:T_PRODUCTION_DATASET;
+	d2rq:property rdfs:label;
+	d2rq:pattern "DS_NAME #@@T_PRODUCTION_DATASET.NAME@@";
+	
+map:T_PRODUCTION_DATASET_LABEL a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:T_PRODUCTION_DATASET;
+	d2rq:property vocab:T_PRODUCTION_DATASET_NAME;
+	d2rq:propertyDefinitionLabel "T_PRODUCTION_DATASET_NAME";
+	d2rq:column "T_PRODUCTION_DATASET.NAME";
+	d2rq:datatype xsd:string;
+	.
+map:T_PRODUCTION_DATASET_PHYS_GROUP a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:T_PRODUCTION_DATASET;
+	d2rq:property vocab:T_PRODUCTION_DATASET_PHYS_GROUP;
+	d2rq:propertyDefinitionLabel "T_PRODUCTION_DATASET_PHYS_GROUP";
+	d2rq:column "T_PRODUCTION_DATASET.PHYS_GROUP";
+	.
+map:T_PRODUCTION_DATASET_TASKID a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:T_PRODUCTION_DATASET;
+	d2rq:property vocab:T_PRODUCTION_DATASET_TASKID;
+	d2rq:propertyDefinitionLabel "DATASET_TASKID";
+	d2rq:column "T_PRODUCTION_DATASET.TASKID";
+
+# Table ATLAS_DEFT.T_HASHTAG
+map:ATLAS_DEFT_T_HASHTAG a d2rq:ClassMap;
+	d2rq:dataStorage map:database;
+	d2rq:uriPattern "ATLAS_DEFT/T_HASHTAG/@@ATLAS_DEFT.T_HASHTAG.HT_ID@@";
+	d2rq:class vocab:ATLAS_DEFT_T_HASHTAG;
+	d2rq:classDefinitionLabel "ATLAS_DEFT.T_HASHTAG";
+	.
+map:ATLAS_DEFT_T_HASHTAG__label a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:ATLAS_DEFT_T_HASHTAG;
+	d2rq:property rdfs:label;
+	d2rq:pattern "T_HASHTAG #@@ATLAS_DEFT.T_HASHTAG.HT_ID@@";
+	.
+map:ATLAS_DEFT_T_HASHTAG_HT_ID a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:ATLAS_DEFT_T_HASHTAG;
+	d2rq:property vocab:ATLAS_DEFT_T_HASHTAG_HT_ID;
+	d2rq:propertyDefinitionLabel "T_HASHTAG HT_ID";
+	d2rq:column "ATLAS_DEFT.T_HASHTAG.HT_ID";
+	d2rq:datatype xsd:decimal;
+	.
+map:ATLAS_DEFT_T_HASHTAG_HASHTAG a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:ATLAS_DEFT_T_HASHTAG;
+	d2rq:property vocab:ATLAS_DEFT_T_HASHTAG_HASHTAG;
+	d2rq:propertyDefinitionLabel "T_HASHTAG HASHTAG";
+	d2rq:column "ATLAS_DEFT.T_HASHTAG.HASHTAG";
+	.
+map:ATLAS_DEFT_T_HASHTAG_TYPE a d2rq:PropertyBridge;
+	d2rq:belongsToClassMap map:ATLAS_DEFT_T_HASHTAG;
+	d2rq:property vocab:ATLAS_DEFT_T_HASHTAG_TYPE;
+	d2rq:propertyDefinitionLabel "T_HASHTAG TYPE";
+	d2rq:column "ATLAS_DEFT.T_HASHTAG.TYPE";
+	.
+

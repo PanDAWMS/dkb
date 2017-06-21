@@ -1,0 +1,16 @@
+1) Requirements:
+D2RQ needs Java 1.5 or later to run;
+
+2) Installing D2RQ:
+1. Download and extract the archive into a suitable location.
+2. Download the Oracle JDBC driver. The correct driver is ojdbc7.jar, it can be obtained from Oracle website after accepting licence agreement. Place the driver to /lib/db-drivers.
+
+3) Configuring the server:
+1. Generate a mapping file for your database schema using the generate-mapping tool. (Does not work for majority of CERN databases, generated mappinga are lacking about 90% tables)
+2. Edit mapping to reflect DB structure and desired ontology. This is extremely time consuming, 90% setup time is spent on the mapping editing. The syntax is described here: http://d2rq.org/d2rq-language
+
+4) Running the server:
+Start the server: d2r-server mapping.ttl
+The server is now ready to accept queries.
+
+
