@@ -15,7 +15,7 @@ Definition of an abstract class for Dataflow Data Processing Stages.
                                           be taken as the input.
 
          -d, --dest         {f|s|h}     - where to send data to:
-                                          local (f)iles, (s)tdin, (h)dfs
+                                          local (f)iles, (s)tdout, (h)dfs
 
          -o, --output-dir   DIR         - base directory for output files
                                           (for local and HDFS sources)
@@ -154,7 +154,7 @@ class AbstractProcessorStage(AbstractStage):
                           )
         self.add_argument('-o', '--output-dir', action='store', type=str,
                           nargs='?',
-                          help=u'Directory for output files'
+                          help=u'Directory for output files '
                                 '(local or HDFS). ',
                           default='',
                           const='output/',
