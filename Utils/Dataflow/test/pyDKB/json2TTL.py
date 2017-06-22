@@ -24,12 +24,18 @@ def main(args):
     stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
     stage.process = process
 
+    exit_code = 0
     try:
         stage.parse_args(args)
-    except pyDKB.dataflow.DataflowException, err:
-        exit(1)
-    stage.run()
-    stage.stop()
+        stage.run()
+    except (pyDKB.dataflow.DataflowException, RuntimeError), err:
+        if str(err):
+            sys.stderr.write("(ERROR) %s\n" % err)
+        exit_code=1
+    finally:
+        stage.stop()
+
+    exit(exit_code)
 
 if __name__ == '__main__':
     main(sys.argv[1:])
