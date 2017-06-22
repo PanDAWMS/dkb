@@ -22,7 +22,10 @@ def main(args):
   stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
   stage.process = process
 
-  stage.parse_args(args)
+  try:
+    stage.parse_args(args)
+  except pyDKB.dataflow.DataflowException:
+    exit(1)
   stage.run()
   stage.stop()
 

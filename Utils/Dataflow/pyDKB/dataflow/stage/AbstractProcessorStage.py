@@ -212,6 +212,7 @@ class AbstractProcessorStage(AbstractStage):
             and not (self.ARGS.input_files or self.ARGS.input_dir):
             sys.stderr.write("No input data sources specified.\n")
             self.print_usage(sys.stderr)
+            raise DataflowException
 
         self.__stoppable_append(self.__input, types.GeneratorType)
 
