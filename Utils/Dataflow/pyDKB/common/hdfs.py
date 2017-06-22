@@ -39,7 +39,7 @@ def makedirs(dirname):
         if check_stderr(proc):
             raise(subprocess.CalledProcessError(proc.returncode, cmd))
     except (subprocess.CalledProcessError, OSError, HDFSException), err:
-        raise RuntimeError("(ERROR) Failed to create HDFS directory: %s\n"
+        raise RuntimeError("Failed to create HDFS directory: %s\n"
                            "Error message: %s\n" % (fname, err))
 
 def putfile(fname, dest):
@@ -53,7 +53,7 @@ def putfile(fname, dest):
         if check_stderr(proc):
             raise(subprocess.CalledProcessError(proc.returncode, cmd))
     except (subprocess.CalledProcessError, OSError, HDFSException), err:
-        raise RuntimeError("(ERROR) Failed to put file to HDFS: %s\n"
+        raise RuntimeError("Failed to put file to HDFS: %s\n"
                            "Error message: %s\n" % (fname, err))
 
 def getfile(fname):
@@ -73,7 +73,7 @@ def getfile(fname):
         if check_stderr(proc):
             raise(subprocess.CalledProcessError(proc.returncode, cmd))
     except (subprocess.CalledProcessError, OSError, HDFSException), err:
-        raise RuntimeError("(ERROR) Failed to get file from HDFS: %s\n"
+        raise RuntimeError("Failed to get file from HDFS: %s\n"
                            "Error message: %s\n" % (fname, err))
     return name
 
