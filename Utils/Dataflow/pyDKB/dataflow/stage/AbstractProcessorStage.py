@@ -410,6 +410,14 @@ class AbstractProcessorStage(AbstractStage):
         ext = self.output_message_class().extension()
         fd = None
         cf = None
+        output_dir = self.ARGS.output_dir
+        if output_dir and not os.path.isdir(output_dir):
+            try:
+                os.makedirs(output_dir, 0770)
+            except OSError, err:
+                sys.stderr.write("(ERROR) Failed to create output directory\n"
+                                 "Error message: %s\n" % err)
+                raise DataflowException
         try:
             while self.__current_file_full:
                 if cf == self.__current_file_full:
@@ -474,6 +482,8 @@ class AbstractProcessorStage(AbstractStage):
     def __hdfs_out_files(self):
         """ Generator for file descriptors to write data to (HDFS files). """
         ext = self.output_message_class().extension()
+        output_dir = self.ARGS.output_dir
+        hdfs.makedirs(output_dir)
         fd = None
         cf = None
         try:

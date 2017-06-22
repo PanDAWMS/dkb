@@ -26,7 +26,7 @@ def main(args):
 
     try:
         stage.parse_args(args)
-    except pyDKB.dataflow.DataflowException:
+    except pyDKB.dataflow.DataflowException, err:
         exit(1)
     stage.run()
     stage.stop()

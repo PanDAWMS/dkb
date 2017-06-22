@@ -28,6 +28,20 @@ def check_stderr(proc, timeout=None):
             proc.wait()
     return proc.poll()
 
+def makedirs(dirname):
+    """ Try to create directory (with parents). """
+    cmd = ["hadoop", "fs", "-mkdir", "-p", dirname]
+    try:
+        proc = subprocess.Popen(cmd,
+                                stdin =subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                stdout=DEVNULL)
+        if check_stderr(proc):
+            raise(subprocess.CalledProcessError(proc.returncode, cmd))
+    except (subprocess.CalledProcessError, OSError, HDFSException), err:
+        raise RuntimeError("(ERROR) Failed to create HDFS directory: %s\n"
+                           "Error message: %s\n" % (fname, err))
+
 def putfile(fname, dest):
     """ Upload file to HDFS. """
     cmd = ["hadoop", "fs", "-put", fname, dest]
