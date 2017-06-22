@@ -10,24 +10,26 @@ sys.path.append("../../")
 import pyDKB
 
 def process(stage, msg):
-  """
-  Input message: JSON
-  Output message: TTL
-  """
-  myMessage = pyDKB.dataflow.Message(pyDKB.dataflow.messageType.TTL)(msg.content())
-  stage.output(myMessage)
-  return True
+    """
+    Input message: JSON
+    Output message: TTL
+    """
+    cls = pyDKB.dataflow.Message(pyDKB.dataflow.messageType.TTL)
+    myMessage = cls(msg.content())
+    stage.output(myMessage)
+    return True
 
 def main(args):
-  stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
-  stage.process = process
+    """ Main program loop. """
+    stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
+    stage.process = process
 
-  try:
-    stage.parse_args(args)
-  except pyDKB.dataflow.DataflowException:
-    exit(1)
-  stage.run()
-  stage.stop()
+    try:
+        stage.parse_args(args)
+    except pyDKB.dataflow.DataflowException:
+        exit(1)
+    stage.run()
+    stage.stop()
 
 if __name__ == '__main__':
-  main(sys.argv[1:])
+    main(sys.argv[1:])
