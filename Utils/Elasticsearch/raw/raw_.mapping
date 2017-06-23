@@ -1,0 +1,103 @@
+{
+  "template": "raw_current-*",
+  "settings": {
+    "number_of_shards": 4
+  },
+  "mappings" : {
+    "_default_" : {
+      "properties" : {
+        "campaing" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "sub_campaing" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "phys_group" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "project" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "taskname" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "step" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "events_requested" : {
+          "type" : "long"
+        },
+        "events_total" : {
+          "type" : "long"
+        },
+        "hashtag" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "extended_tags" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "physics_short" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "physics_short_full" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "physics_category" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "prod_tags" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "request" : {
+          "type" : "long"
+        },
+        "@timestamp" : {
+          "type" : "date",
+          "format" : "dd-MMM-yy HH.mm.ss.SSSSSS aa"
+        }
+      }
+    }
+  }
+}
