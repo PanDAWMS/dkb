@@ -218,9 +218,9 @@ class AbstractProcessorStage(AbstractStage):
 
         # Configure output
         if   self.ARGS.dest == 'f':
-           self.__output = self.__local_out_files()
+           self.__output = self.__out_files('l')
         elif self.ARGS.dest == 'h':
-           self.__output = self.__hdfs_out_files()
+           self.__output = self.__out_files('h')
         elif self.ARGS.dest == 's':
            ustdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
            self.__output = ustdout
@@ -405,19 +405,29 @@ class AbstractProcessorStage(AbstractStage):
             self.__current_file = None
             self.__current_file_full = None
 
-    def __local_out_files(self):
-        """ Generator for file descriptors to write data to (local files). """
+    def __out_files(self, t='l'):
+        """ Generator for file descriptors to write data to.
+
+        Parameters:
+            t {'l'|'h'} -- (l)ocal or (h)dfs
+        """
+        if t not in ('l', 'h'):
+            raise ValueError("parameter t acceptable values: 'l','h'"
+                             " (got '%s')" % t)
         ext = self.output_message_class().extension()
         fd = None
         cf = None
         output_dir = self.ARGS.output_dir
         if output_dir and not os.path.isdir(output_dir):
-            try:
-                os.makedirs(output_dir, 0770)
-            except OSError, err:
-                sys.stderr.write("(ERROR) Failed to create output directory\n"
-                                 "Error message: %s\n" % err)
-                raise DataflowException
+            if t == 'l':
+                try:
+                    os.makedirs(output_dir, 0770)
+                except OSError, err:
+                    sys.stderr.write("(ERROR) Failed to create output directory\n"
+                                     "Error message: %s\n" % err)
+                    raise DataflowException
+            else:
+                hdfs.makedirs(output_dir)
         try:
             while self.__current_file_full:
                 if cf == self.__current_file_full:
@@ -427,7 +437,8 @@ class AbstractProcessorStage(AbstractStage):
                 if not output_dir:
                      output_dir = os.path.dirname(self.__current_file_full)
                 filename = os.path.splitext(self.__current_file)[0] + ext
-                filename = os.path.join(output_dir, filename)
+                if t == 'l':
+                    filename = os.path.join(output_dir, filename)
                 if os.path.exists(filename):
                     if fd and os.path.samefile(filename, fd.name):
                         yield fd
@@ -437,11 +448,18 @@ class AbstractProcessorStage(AbstractStage):
                                                  % filename)
                 if fd:
                     fd.close()
+                    if t == 'h':
+                        hdfs.putfile(fd.name, output_dir)
+                        os.remove(fd.name)
                 fd = open(filename, "w", 0)
                 yield fd
         finally:
             if fd:
                 fd.close()
+                if t == 'h':
+                    hdfs.putfile(fd.name, output_dir)
+                    os.remove(fd.name)
+
 
     def __hdfs_in_dir(self):
         """ Call file descriptors generator for files in HDFS dir. """
@@ -479,40 +497,6 @@ class AbstractProcessorStage(AbstractStage):
             self.__current_file = None
             self.__current_file_full = None
 
-    def __hdfs_out_files(self):
-        """ Generator for file descriptors to write data to (HDFS files). """
-        ext = self.output_message_class().extension()
-        output_dir = self.ARGS.output_dir
-        hdfs.makedirs(output_dir)
-        fd = None
-        cf = None
-        try:
-            while self.__current_file_full:
-                if cf == self.__current_file_full:
-                    yield fd
-                    continue
-                output_dir = self.ARGS.output_dir
-                if not output_dir:
-                     output_dir = os.path.dirname(self.__current_file_full)
-                filename = os.path.splitext(self.__current_file)[0] + ext
-                if os.path.exists(filename):
-                    if fd and os.path.samefile(filename, fd.name):
-                        yield fd
-                        continue
-                    else:
-                        raise DataflowException("File already exists: %s\n"
-                                                 % filename)
-                if fd:
-                    fd.close()
-                    hdfs.putfile(fd.name, output_dir)
-                    os.remove(fd.name)
-                fd = open(filename, "w", 0)
-                yield fd
-        finally:
-            if fd:
-                fd.close()
-                hdfs.putfile(fd.name, output_dir)
-                os.remove(fd.name)
 
     def __stoppable_append(self, obj, cls):
         """ Appends OBJ (of type CLS) to the list of STOPPABLE. """
