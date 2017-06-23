@@ -1,0 +1,36 @@
+============
+* Stage 18 *
+============
+
+Description
+===========
+Get PDF documents from CDS and put them to HDFS.
+
+Input
+-----
+JSON (Stage 015/output):
+{{{
+{
+  "GLANCE": {<GLANCE info>},
+  "CDS":    {<CDS info>},
+  "dkbID":  <dkbID>
+  "supporting_notes": [
+    {
+       "GLANCE": {<GLANCE info>},
+       "CDS":    {<CDS info>},
+       "dkbID":  <dkbID>
+    },
+    ...
+  ]
+}
+}}}
+
+Output
+------
+JSON:
+{{{
+{
+   "dkbID": <dkbID>,
+   "PDF":   <PDF location>
+}
+}}}
