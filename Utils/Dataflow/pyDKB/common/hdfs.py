@@ -40,7 +40,7 @@ def makedirs(dirname):
             raise(subprocess.CalledProcessError(proc.returncode, cmd))
     except (subprocess.CalledProcessError, OSError, HDFSException), err:
         raise RuntimeError("Failed to create HDFS directory: %s\n"
-                           "Error message: %s\n" % (fname, err))
+                           "Error message: %s\n" % (dirname, err))
 
 def putfile(fname, dest):
     """ Upload file to HDFS. """
