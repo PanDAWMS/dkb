@@ -29,3 +29,4 @@
 <http://nosql.tpu.ru:8890/DAV/ATLAS/document/CDS_CERN-ATL-COM-DAPR-2012-003> <http://nosql.tpu.ru/ontology/ATLAS#hasAbstract> "Abstract to be written" .
 <http://nosql.tpu.ru:8890/DAV/ATLAS/document/CDS_CERN-ATL-COM-DAPR-2012-003> <http://nosql.tpu.ru/ontology/ATLAS#hasFullTitle> "Characterisation and mitigation of beam-induced backgrounds observed in the ATLAS detector during the 2011 proton-proton run" .
 <http://nosql.tpu.ru:8890/DAV/ATLAS/document/CDS_ATLAS-DAPR-2012-01-003> <http://nosql.tpu.ru/ontology/ATLAS#isBasedOn> <http://nosql.tpu.ru:8890/DAV/ATLAS/document/CDS_CERN-ATL-COM-DAPR-2012-003> .
+
