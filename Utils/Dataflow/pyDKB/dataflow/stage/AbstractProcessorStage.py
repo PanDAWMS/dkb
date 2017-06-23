@@ -42,6 +42,7 @@ import subprocess
 import os
 import sys
 import types
+import time
 
 from . import AbstractStage
 from . import messageType
@@ -204,6 +205,8 @@ class AbstractProcessorStage(AbstractStage):
                 self.__input = self.__local_in_dir()
         elif self.ARGS.source == 's':
             self.__input = [sys.stdin]
+            self.__current_file = sys.stdin.name
+            self.__current_file_full = sys.stdin.name
         else:
             raise ValueError("Unrecognized source type: %s" % self.ARGS.source)
 
@@ -436,7 +439,21 @@ class AbstractProcessorStage(AbstractStage):
                 output_dir = self.ARGS.output_dir
                 if not output_dir:
                      output_dir = os.path.dirname(self.__current_file_full)
-                filename = os.path.splitext(self.__current_file)[0] + ext
+                if not output_dir:
+                     if t == 'l':
+                         output_dir = os.getcwd()
+                     if t == 'h':
+                         output_dir = os.path.join(hdfs.DKB_HOME, "temp",
+                                                   str(int(time.time())))
+                         hdfs.makedirs(output_dir)
+                     self.ARGS.output_dir = output_dir
+                     sys.stderr.write("(INFO) Output dir set to: %s\n"
+                                      % output_dir)
+                if self.__current_file \
+                  and self.__current_file != sys.stdin.name:
+                    filename = os.path.splitext(self.__current_file)[0] + ext
+                else:
+                    filename = str(int(time.time())) + ext
                 if t == 'l':
                     filename = os.path.join(output_dir, filename)
                 if os.path.exists(filename):

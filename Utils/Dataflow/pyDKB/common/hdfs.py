@@ -10,6 +10,7 @@ import os
 from . import HDFSException
 
 DEVNULL = open(os.path.devnull, "w")
+DKB_HOME = "/user/DKB/"
 
 def check_stderr(proc, timeout=None):
     """ Check STDERR of the subprocess and kill it if there`s something.
