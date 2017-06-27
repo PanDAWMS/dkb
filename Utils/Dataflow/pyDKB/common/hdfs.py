@@ -107,7 +107,14 @@ def listdir(dirname, mode='a'):
                          "Error message: %s\n" % (dirname, err))
         return []
 
-    # Parse output of `ls`
+    # Parse output of `ls`:
+    # {{{
+    # Found 3 items
+    # -rwxrwx---   3 $user        $group 1114404 2016-09-28 16:11 /path/to/file1
+    # -rwxrwx---   3 $user        $group 1572867 2016-09-28 16:11 /path/to/file2
+    # drwxrwx---   - $user        $group       0 2017-05-22 14:07 /path/to/subdir
+    # }}}
+
     subdirs, files = [], []
     for line in out:
         line = line.split(None, 7)
@@ -115,11 +122,12 @@ def listdir(dirname, mode='a'):
             continue
 
         # We need to return only the name of the file or subdir
-        line[7] = os.path.basename(line[7])
+        filename = line[7]
+        filename = os.path.basename(filename)
         if line[0][0] == 'd':
-            subdirs.append(line[7])
+            subdirs.append(filename)
         elif line[0][0] == '-':
-            files.append(line[7])
+            files.append(filename)
 
     if mode == 'a':
         result = subdirs + files
