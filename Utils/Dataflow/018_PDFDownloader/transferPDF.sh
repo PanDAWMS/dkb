@@ -7,6 +7,8 @@
 
 PID=$$
 HDFS_DIR="/user/DKB/store/PDF"
+KRB_KIAE=~/.krb5/krb5cc_$UID.kiae
+KRB_CERN=~/.krb5/krb5cc_$UID.cern
 
 usage() {
     echo "
@@ -19,9 +21,28 @@ PARAMETERS:
 " >&2
 }
 
+switch_realm() {
+    # Switch Kerberos ticket to the given realm
+    [ -z "$1" ] && return 1
+    case $1 in
+        kiae)
+            TKT=$KRB_KIAE
+            ;;
+        cern)
+            TKT=$KRB_CERN
+            ;;
+        *)
+            echo "Unknown realm: $1" >&2
+            return 1
+            ;;
+    esac
+    export KRB5CCNAME="FILE:/$TKT"
+}
+
 upload() {
     # Upload file to HDFS
     [ -z "$1" ] && return 1
+    switch_realm kiae || return $?
     [ -z "$2" ] && hdfs_file=$HDFS_DIR/`basename $1` || hdfs_file=$HDFS_DIR/$2
     hadoop fs -put -f $1 $HDFS_DIR/$2
     echo $hdfs_file
@@ -31,6 +52,7 @@ upload() {
 download() {
     # Download file from the original location
     [ -z "$1" ] && return 1
+    switch_realm cern || return $?
     url=$1
     cookie=/tmp/cern-sso-cookie-$PID
     tmpf=`mktemp /tmp/XXXXXXX.pdf`
@@ -60,5 +82,7 @@ fi
 
 local_file=`download $1` \
   && upload $local_file $2 2>/dev/null
+
+switch_realm cern
 
 exit $?

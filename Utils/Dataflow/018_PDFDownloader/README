@@ -6,6 +6,8 @@ Description
 ===========
 Get PDF documents from CDS and put them to HDFS.
 
+Run ./kerberos_init.sh first, and then ./getPDFfromCDS.py as a regular stage.
+
 Input
 -----
 JSON (Stage 015/output):
@@ -37,6 +39,9 @@ JSON:
 
 Files
 =====
+./kerberos_init.sh  service script to organize multi-realm Kerberos access
+                      (for CERN.CH and HADOOP.NOSQL.KIAE.RU)
+
 ./transferPDF.sh    service script to download PDF from CDS
                       and upload it to HDFS.
 
