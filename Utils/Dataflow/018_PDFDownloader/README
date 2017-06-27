@@ -34,3 +34,10 @@ JSON:
    "PDF":   <PDF location>
 }
 }}}
+
+Files
+=====
+./transferPDF.sh    service script to download PDF from CDS
+                      and upload it to HDFS.
+
+./getPDFfromCDS.py  main stage script
