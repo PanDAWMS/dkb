@@ -1,29 +1,36 @@
 #!/usr/bin/env python
 
 """
-Stage 054: document content metadata to TTL & SPARQL
+Stage 054: document content metadata to TTL
 _____________________
 
-This is a test version for checking input.
+Tested on 25_modified.json and 26_modified.json otherwise there will be a 'Key Error' without 'dkbID'.
 """
 
 import sys
 sys.path.append("../")
 
 import pyDKB
+from pyDKB.dataflow import messages
 
 #default graph and ontology
 graph = "http://nosql.tpu.ru:8890/DAV/ATLAS"
 ontology = "http://nosql.tpu.ru/ontology/ATLAS"
 
-def process(msg):
+def process(stage, msg):
   """
   Input message: JSON
   Output message: TTL
   """
-  return pyDKB.dataflow.Message(pyDKB.dataflow.messageType.TTL)(msg.content())
+  input_data = msg.content()
+  result = doc_content_triples(input_data)
+  for i in result:
+	message = messages.TTLMessage(i)
+	output_message = pyDKB.dataflow.Message(pyDKB.dataflow.messageType.TTL)(message.content())
+	stage.output(output_message)
+  
+  return True
 
-#test function
 def doc_content_triples(data):
 	listDatasets = ['montecarlo_datasets', 'group_datasets',
 	'user_datasets', 'physcont_datasets', 'calibration_datasets', 'realdata_datasets', 'database_datasets']
@@ -39,8 +46,8 @@ def doc_content_triples(data):
 				'content_name' : item,
 				'document_ID' : dkbID
 			}
-			triples.append('''<{graph}/document/{document_ID}/{content_name}> a <{ontology}#DocumentContent> .\n'''.format(**DATASETS))
-			triples.append('''<{graph}/document/{document_ID}> <{ontology}#hasContent> <{graph}/document/{document_ID}/{content_name}> .\n'''.format(**DATASETS))
+			triples.append('''<{graph}/document/{document_ID}/{content_name}> a <{ontology}#DocumentContent> .'''.format(**DATASETS))
+			triples.append('''<{graph}/document/{document_ID}> <{ontology}#hasContent> <{graph}/document/{document_ID}/{content_name}> .'''.format(**DATASETS))
 			for j, ds_item in enumerate(data['content'][item]):
 				DATASAMPLES = {
 					'graph': graph,
@@ -52,8 +59,8 @@ def doc_content_triples(data):
 				#checking
 				#print(ds_item)
 				#print('{document_ID}_{content_name}'.format(**DATASAMPLES))
-				triples.append('''<{graph}/datasample/{data_sample}> a <{ontology}#DataSample> .\n'''.format(**DATASAMPLES))
-				triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsDataSample> <{graph}/datasample/{data_sample}> .\n'''.format(**DATASAMPLES))
+				triples.append('''<{graph}/datasample/{data_sample}> a <{ontology}#DataSample> .'''.format(**DATASAMPLES))
+				triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsDataSample> <{graph}/datasample/{data_sample}> .'''.format(**DATASAMPLES))
 		if item == 'plain_text':	
 			PLAINTEXT = {
 				'graph': graph,
@@ -64,22 +71,22 @@ def doc_content_triples(data):
 				'luminosity' : data['content'][item]['luminosity'].replace(' ','_'),
 				'energy' : data['content'][item]['energy'].lower().replace(' ','')
 			}
-			triples.append('''<{graph}/document/{document_ID}/{content_name}> a <{ontology}#DocumentContent> .\n'''.format(**PLAINTEXT))
-			triples.append('''<{graph}/document/{document_ID}> <{ontology}#hasContent> <{graph}/document/{document_ID}/{content_name}> .\n'''.format(**PLAINTEXT))
+			triples.append('''<{graph}/document/{document_ID}/{content_name}> a <{ontology}#DocumentContent> .'''.format(**PLAINTEXT))
+			triples.append('''<{graph}/document/{document_ID}> <{ontology}#hasContent> <{graph}/document/{document_ID}/{content_name}> .'''.format(**PLAINTEXT))
 			#data taking year
-			triples.append('''<{graph}/document_content/{document_ID}/{content_name}> <{ontology}#mentionsDataTakingYear> "{data_taking_year}" .\n'''.format(**PLAINTEXT))
+			triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsDataTakingYear> "{data_taking_year}" .'''.format(**PLAINTEXT))
 			#luminosity
-			triples.append('''<{graph}/luminosity/{luminosity}> a <{ontology}#Luminosity> .\n'''.format(**PLAINTEXT))
-			triples.append('''<{graph}/document/{document_ID}/{content_name}> <ONTOLOGY#mentionsLuminosity> <{graph}/luminosity/{luminosity}> .\n'''.format(**PLAINTEXT))
-			triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsEnergy> <{ontology}#{energy}> .\n'''.format(**PLAINTEXT))
+			triples.append('''<{graph}/luminosity/{luminosity}> a <{ontology}#Luminosity> .'''.format(**PLAINTEXT))
+			triples.append('''<{graph}/document/{document_ID}/{content_name}> <ONTOLOGY#mentionsLuminosity> <{graph}/luminosity/{luminosity}> .'''.format(**PLAINTEXT))
+			triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsEnergy> <{ontology}#{energy}> .'''.format(**PLAINTEXT))
 			#checking
 			#print('{data_taking_year}_{content_name}_{luminosity}'.format(**PLAINTEXT))
 			campaign = data['content'][item]['campaigns']
 			#print len(campaign)
 			if len(campaign) > 0:
 				for j, pt_item in enumerate(campaign):
-					triples.append('''<{graph}/campaign/%s> a <{ontology}#Campaign> .\n'''.format(**PLAINTEXT) % (pt_item))
-					triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsCampaign> <{graph}/campaign/%s> .\n'''.format(**PLAINTEXT) % (pt_item))
+					triples.append('''<{graph}/campaign/%s> a <{ontology}#Campaign> .'''.format(**PLAINTEXT) % (pt_item))
+					triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsCampaign> <{graph}/campaign/%s> .'''.format(**PLAINTEXT) % (pt_item))
 			
 			else:
 				print ("No campaigns in this file.")
@@ -94,20 +101,8 @@ def main(args):
 	stage.process = process
 
 	stage.parse_args(args)
-	#stage.run()
-	data_input = stage.input()
+	stage.run()
+	stage.stop()
 	
-	for f in data_input:
-		triples = doc_content_triples(f.content())
-		
-		#this code should be changed
-		output_data = open("doc_content.ttl", 'w')
-		
-		for i, item in enumerate(triples):
-			output_data.write(item)
-	
-		output_data.close()
-  
-
 if __name__ == '__main__':
   main(sys.argv[1:])
