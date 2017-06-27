@@ -60,8 +60,6 @@ def putfile(fname, dest):
 def getfile(fname):
     """ Download file from HDFS.
 
-    Check if there already is a local version of the file and remove it.
-
     Return value: file name (without directory)
     """
     cmd = ["hadoop", "fs", "-get", fname]
