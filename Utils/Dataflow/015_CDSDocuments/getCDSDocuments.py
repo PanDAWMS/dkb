@@ -248,8 +248,7 @@ def form_output_data(GLANCEdata, ppCDSdata, sdCDSdata):
     result["dkbID"] = dkbID(result, dataType.DOCUMENT)
 
     sd_results = []
-    sd_result = {}
-    result["supporting_notes"] = sd_result
+    result["supporting_notes"] = sd_results
 
     if type(sdGLANCEdata) != list:
         sys.stderr.write("(WARN) GLANCE info for supporting_notes supposed to"
@@ -258,6 +257,7 @@ def form_output_data(GLANCEdata, ppCDSdata, sdCDSdata):
         return result
 
     for glance_ind in range(len(sdGLANCEdata)):
+        sd_result = {}
         glance_item = sdGLANCEdata[glance_ind]
         sd_result["GLANCE"] = glance_item
 
@@ -276,7 +276,6 @@ def form_output_data(GLANCEdata, ppCDSdata, sdCDSdata):
         sd_result["dkbID"] = dkbID(sd_result, dataType.DOCUMENT)
         sd_results.append(sd_result)
 
-    result["supporting_notes"] = sd_results
     return result
 
 
