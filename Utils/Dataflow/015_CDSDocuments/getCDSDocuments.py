@@ -66,11 +66,11 @@ def collection_verification(collection):
     """ Check primary collection. """
     if len(collection) > 0 \
       and type(collection[0]) is dict \
-      and collection[0]['primary'] in ('ARTICLE', 'ATLAS_Papers'):
+      and collection[0]['primary'] in ("ARTICLE", "ATLAS_Papers"):
         return True
     elif type(collection) is list:
         try:
-            if collection[0]['primary'] in ('ARTICLE', 'ATLAS_Papers'):
+            if collection[0]['primary'] in ("ARTICLE", "ATLAS_Papers"):
                 return True
         except (IndexError, TypeError, ValueError):
             return False
@@ -114,13 +114,13 @@ def search_paper(cds, paper_info):
           cc - current collection (e.g. "ATLAS").  The collection the
                user started to search/browse from.
     """
-    sys.stderr.write(paper_info["id"]+"\n")
+    sys.stderr.write(paper_info['id']+"\n")
     #results = cds.search(cc="ATLAS", aas=1, m1="e", op1="a",
     #                     p1=paper_info["full_title"], f1="title", m2="a",
     #                     op2="a", p2="ARTICLE, ATLAS_Papers",
     #                     f2="collection", m3="a", p3=paper_info["ref_code"],
     #                     f3="report_number", of="recjson")
-    results = cds.search(cc="ATLAS", aas=1, m1="p", p1=paper_info["ref_code"],
+    results = cds.search(cc="ATLAS", aas=1, m1="p", p1=paper_info['ref_code'],
                          f1="reportnumber", m2="a", op2="a",
                          p2="ARTICLE, ATLAS_Papers", f2="collection",
                          of="recjson")
@@ -134,12 +134,12 @@ def search_paper(cds, paper_info):
                                  " list\n" % str(len(res)))
             r = None
             for item in res:
-                if collection_verification(item.get("collection")):
+                if collection_verification(item.get('collection')):
                     r = item
                     break
             res = r
         if type(res) == dict:
-            res['glance_id'] = paper_info["id"]
+            res['glance_id'] = paper_info['id']
         else:
             sys.stderr.write("(WARN) Paper search result is of wrong type"
                              " (expected %s, get %s)\n" % (dict, type(res)))
@@ -161,7 +161,7 @@ def search_notes(cds, notes):
         return None
     results = {}
     for note in notes:
-        results[note.get("id")] = search_note(cds, note)
+        results[note.get('id')] = search_note(cds, note)
 
     return results
 
@@ -174,19 +174,19 @@ def search_note(cds, note):
     global counter
     if type(note) != dict:
         return None
-    url = note.get("url", None)
+    url = note.get('url', None)
     if not url:
         return None
     url = url.replace('\\', '')
     parsed = urlparse(url)
-    if parsed.netloc == 'cds.cern.ch' or parsed.netloc == 'cdsweb.cern.ch':
+    if parsed.netloc == "cds.cern.ch" or parsed.netloc == "cdsweb.cern.ch":
         sys.stderr.write(parsed.path+"\n")
         if parsed.path[-1:] == '/':
             recid = parsed.path[:-1].split('/')[-1]
         else:
             recid = parsed.path.split('/')[-1]
         counter += 1
-        sys.stderr.write(str(counter) + ' : ' + str(recid) + "\n")
+        sys.stderr.write(str(counter) + " : " + str(recid) + "\n")
 
         # metadata from CDS Invenio in json format
         results = cds.search(recid=recid, of="recjson")
@@ -243,12 +243,12 @@ def form_output_data(GLANCEdata, ppCDSdata, sdCDSdata):
     else:
         sdGLANCEdata = []
 
-    result["GLANCE"] = ppGLANCEdata
-    result["CDS"] = ppCDSdata
-    result["dkbID"] = dkbID(result, dataType.DOCUMENT)
+    result['GLANCE'] = ppGLANCEdata
+    result['CDS'] = ppCDSdata
+    result['dkbID'] = dkbID(result, dataType.DOCUMENT)
 
     sd_results = []
-    result["supporting_notes"] = sd_results
+    result['supporting_notes'] = sd_results
 
     if type(sdGLANCEdata) != list:
         sys.stderr.write("(WARN) GLANCE info for supporting_notes supposed to"
@@ -259,21 +259,21 @@ def form_output_data(GLANCEdata, ppCDSdata, sdCDSdata):
     for glance_ind in range(len(sdGLANCEdata)):
         sd_result = {}
         glance_item = sdGLANCEdata[glance_ind]
-        sd_result["GLANCE"] = glance_item
+        sd_result['GLANCE'] = glance_item
 
-        cds_item = sdCDSdata.get(glance_item.get("id"))
+        cds_item = sdCDSdata.get(glance_item.get('id'))
         if not cds_item:
             sys.stderr.write("(WARN) No CDS data for GLANCE id: %s\n"
-                             % glance_item.get("id"))
+                             % glance_item.get('id'))
             continue
         if type(cds_item) != dict:
             sys.stderr.write("(WARN) CDS item for GLANCE id: %s is of wrong"
                              " type (expected '%s', get '%s')\n"
-                             % (glance_item.get("id"), dict, type(cds_item)))
+                             % (glance_item.get('id'), dict, type(cds_item)))
             continue
 
-        sd_result["CDS"] = cds_item
-        sd_result["dkbID"] = dkbID(sd_result, dataType.DOCUMENT)
+        sd_result['CDS'] = cds_item
+        sd_result['dkbID'] = dkbID(sd_result, dataType.DOCUMENT)
         sd_results.append(sd_result)
 
     return result
@@ -285,7 +285,7 @@ def input_json_handle(json_data, cds):
     Returns resulting JSON for output.
     Returns None if nothing was found in CDS.
     """
-    ds_results = search_notes(cds, json_data.get("supporting_notes", None))
+    ds_results = search_notes(cds, json_data.get('supporting_notes', None))
     pp_results = search_paper(cds, json_data)
     if type(ds_results) != dict:
         ds_results = {}
@@ -309,11 +309,11 @@ def input_file_handle(fname, cds, indent, out_dir="./"):
             data = json.load(data_file)
 
     for item in data:
-        sys.stderr.write(item["id"]+"\n")
+        sys.stderr.write(item['id']+"\n")
         result = input_json_handle(item, cds)
         if not result:
             continue
-        f = open(out_dir + "/%s.json" % item["id"], "w")
+        f = open(out_dir + "/%s.json" % item['id'], 'w')
         json.dump(result, f, indent=indent)
         f.close()
 
@@ -365,7 +365,7 @@ def main(argv):
         usage()
         sys.exit(2)
     for opt, arg in opts:
-        if opt == '-h':
+        if opt == "-h":
             usage()
             sys.exit()
         elif opt in ("-l", "--login"):
@@ -382,7 +382,7 @@ def main(argv):
             out_dir = arg
 
     if len(args) == 0:
-        infile = 'Input/list_of_papers.json'
+        infile = "Input/list_of_papers.json"
     elif len(args) == 1:
         infile = args[0]
     else:
@@ -410,10 +410,10 @@ def main(argv):
 
     with Connector(login, password) as cds:
 
-        if mode in ("f", "file"):
+        if mode in ('f', "file"):
             input_file_handle(infile, cds, indent, out_dir)
 
-        elif mode in ("s", "stream"):
+        elif mode in ('s', "stream"):
             input_stream_handle(sys.stdin, cds)
 
         else:
