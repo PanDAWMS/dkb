@@ -74,7 +74,12 @@ if __name__ == "__main__":
     stage = pyDKB.dataflow.stage.JSONProcessorStage()
     stage.process = process
 
-    stage.parse_args(sys.argv[1:])
-    stage.run()
-    stage.stop()
+    try:
+        stage.parse_args(sys.argv[1:])
+        stage.run()
+    except (pyDKB.dataflow.DataflowException, RuntimeError), e:
+        if str(e):
+            sys.stderr.write("Error while running stage 30: %s\n" % e)
+    finally:
+        stage.stop()
     
