@@ -12,10 +12,8 @@ Number
 ********************************************************************************************
 0.0              000_kafka                      Dataflow managing Kafka applications
 1.0		 010_glancePapers 		Get papers with links to supporting documents from GLANCE
---(1.3		 013_path2PDF			Get PDF URLs from CDS)--
 1.5              015_CDSDocuments               Get metadata for paper (and its supporting documents) from CDS
-++(1.8              018_PDFDownloader              Download PFD documents and upload them to HDFS)++
---(2.0		 020_PDFDownloader		Download Supporting Notes PDF papers from CDS)--
+1.8              018_PDFDownloader              Download PFD documents and upload them to HDFS
 3.0		 030_PDFAnalyzer		PDF Analyzer (search dataset in PDF Supporting Notes)
 4.0		 040_datasetMetadata		Get datasets metadata from Impala Storage
 --(5.0		 050_links2TTL			Convert papers and supporting document links to triples)--
@@ -55,9 +53,7 @@ Just for convenience.
 
 4. Turn all the processing stages into "Streaming" mode
    (see "2. Streaming Mode" below)
---((-) 013_path2PDF)--
 (+) 015_CDSPapers
---((-) 020_PDFDownloader)--
 (-) 030_PDFAnalyzer
 (-) 040_datasetMetadata
 (+) 053_datasets2TTL
@@ -72,9 +68,8 @@ Just for convenience.
 (+) Create main application
 ...and add stages:
 (+) 010_glancePapers
-(-) 013_path2PDF
 (-) 015_CDSDocuments
-(-) 020_PDFDownloader
+(-) 018_PDFDownloader
 (-) 030_PDFAnalyzer
 (-) 040_datasetMetadata
 (-) 053_datasets2TTL
@@ -85,7 +80,6 @@ Just for convenience.
    (move custom Connector classes from 012 to Dataflow/common and reuse in
    other stages)
 (+) 015_CDSDocuments
---((-) 013_path2PDF)--
 
 ==============
 * REFERENCES *
