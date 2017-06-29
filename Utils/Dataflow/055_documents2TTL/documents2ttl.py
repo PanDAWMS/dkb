@@ -56,7 +56,6 @@ import json
 sys.path.append("../")
 
 import pyDKB
-from pyDKB.dataflow import messages
 
 #defaults
 GRAPH = "http://nosql.tpu.ru:8890/DAV/ATLAS"
@@ -432,9 +431,8 @@ def process(stage, msg):
             doc_ttl += document_cds(note.get('CDS'), note_iri, NOTE_CDS_ATTRS)
 
     doc_ttl += documents_links(data)
-    ttl_message = messages.TTLMessage(doc_ttl)
-    output_message = pyDKB.dataflow.Message(pyDKB.dataflow.messageType.TTL)(ttl_message.content())
-    stage.output(output_message)
+    for item in doc_ttl.splitlines():
+        stage.output(pyDKB.dataflow.Message(pyDKB.dataflow.messageType.TTL)(item))
     return True
 
 def main(argv):
@@ -443,24 +441,33 @@ def main(argv):
     :param argv: arguments
     :return:
     """
+    exit_code = 0
     stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
-    stage.add_argument('-g', '--graph', action='store', type=str, nargs='?',
-                        help='Virtuoso DB graph name (default: %(default)s)',
-                        default=GRAPH,
-                        const=GRAPH,
-                        metavar='GRAPH',
-                        dest='GRAPH')
-    stage.add_argument('-O', '--ontology', action='store', type=str, nargs='?',
-                        help='Virtuoso ontology prefix (default: %(default)s)',
-                        default=ONTOLOGY,
-                        const=ONTOLOGY,
-                        metavar='ONT',
-                        dest='ONTOLOGY')
-    stage.parse_args(argv)
-    define_globals(stage.ARGS)
     stage.process = process
-    stage.run()
-    stage.stop()
+    try:
+        stage.add_argument('-g', '--graph', action='store', type=str, nargs='?',
+                            help='Virtuoso DB graph name (default: %(default)s)',
+                            default=GRAPH,
+                            const=GRAPH,
+                            metavar='GRAPH',
+                            dest='GRAPH')
+        stage.add_argument('-O', '--ontology', action='store', type=str, nargs='?',
+                            help='Virtuoso ontology prefix (default: %(default)s)',
+                            default=ONTOLOGY,
+                            const=ONTOLOGY,
+                            metavar='ONT',
+                            dest='ONTOLOGY')
+        stage.parse_args(argv)
+        define_globals(stage.ARGS)
+        stage.run()
+    except (pyDKB.dataflow.DataflowException, RuntimeError), err:
+        if str(err):
+            sys.stderr.write("(ERROR) %s\n" % err)
+        exit_code = 1
+    finally:
+        stage.stop()
+
+    exit(exit_code)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
