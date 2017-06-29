@@ -18,6 +18,7 @@ STAGES
   010GlancePapers -- Glance source for papers
   050Links2TTL -- Links to TTL transformation
   060VirtuosoSink -- TTL and SPARQL sinks to Virtuoso
+  010to055 -- data stream from 010 to 055
 "
 }
 
@@ -31,6 +32,9 @@ _command () {
       ;;
     050Links2TTL)
       cmd="./runStreamsApplication.sh $CONFIGS/050-application.properties $CONFIGS/050-topology.properties"
+      ;;
+    010to055)
+      cmd="./runStreamsApplication.sh $CONFIGS/010-015-055-application.properties $CONFIGS/010-015-055-topology.properties"
       ;;
     *)
       echo "Unknown command: $1" >&2
