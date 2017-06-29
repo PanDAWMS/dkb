@@ -10,6 +10,7 @@ import os
 from . import HDFSException
 
 DEVNULL = open(os.path.devnull, "w")
+DKB_HOME = "/user/DKB/"
 
 def check_stderr(proc, timeout=None):
     """ Check STDERR of the subprocess and kill it if there`s something.
@@ -28,6 +29,20 @@ def check_stderr(proc, timeout=None):
             proc.wait()
     return proc.poll()
 
+def makedirs(dirname):
+    """ Try to create directory (with parents). """
+    cmd = ["hadoop", "fs", "-mkdir", "-p", dirname]
+    try:
+        proc = subprocess.Popen(cmd,
+                                stdin =subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                stdout=DEVNULL)
+        if check_stderr(proc):
+            raise(subprocess.CalledProcessError(proc.returncode, cmd))
+    except (subprocess.CalledProcessError, OSError, HDFSException), err:
+        raise RuntimeError("Failed to create HDFS directory: %s\n"
+                           "Error message: %s\n" % (dirname, err))
+
 def putfile(fname, dest):
     """ Upload file to HDFS. """
     cmd = ["hadoop", "fs", "-put", fname, dest]
@@ -39,13 +54,11 @@ def putfile(fname, dest):
         if check_stderr(proc):
             raise(subprocess.CalledProcessError(proc.returncode, cmd))
     except (subprocess.CalledProcessError, OSError, HDFSException), err:
-        raise RuntimeError("(ERROR) Failed to put file to HDFS: %s\n"
+        raise RuntimeError("Failed to put file to HDFS: %s\n"
                            "Error message: %s\n" % (fname, err))
 
 def getfile(fname):
     """ Download file from HDFS.
-
-    Check if there already is a local version of the file and remove it.
 
     Return value: file name (without directory)
     """
@@ -59,7 +72,7 @@ def getfile(fname):
         if check_stderr(proc):
             raise(subprocess.CalledProcessError(proc.returncode, cmd))
     except (subprocess.CalledProcessError, OSError, HDFSException), err:
-        raise RuntimeError("(ERROR) Failed to get file from HDFS: %s\n"
+        raise RuntimeError("Failed to get file from HDFS: %s\n"
                            "Error message: %s\n" % (fname, err))
     return name
 
@@ -94,7 +107,14 @@ def listdir(dirname, mode='a'):
                          "Error message: %s\n" % (dirname, err))
         return []
 
-    # Parse output of `ls`
+    # Parse output of `ls`:
+    # {{{
+    # Found 3 items
+    # -rwxrwx---   3 $user        $group 1114404 2016-09-28 16:11 /path/to/file1
+    # -rwxrwx---   3 $user        $group 1572867 2016-09-28 16:11 /path/to/file2
+    # drwxrwx---   - $user        $group       0 2017-05-22 14:07 /path/to/subdir
+    # }}}
+
     subdirs, files = [], []
     for line in out:
         line = line.split(None, 7)
@@ -102,11 +122,12 @@ def listdir(dirname, mode='a'):
             continue
 
         # We need to return only the name of the file or subdir
-        line[7] = os.path.basename(line[7])
+        filename = line[7]
+        filename = os.path.basename(filename)
         if line[0][0] == 'd':
-            subdirs.append(line[7])
+            subdirs.append(filename)
         elif line[0][0] == '-':
-            files.append(line[7])
+            files.append(filename)
 
     if mode == 'a':
         result = subdirs + files

@@ -25,6 +25,34 @@ class JSONProcessorStage(AbstractProcessorStage):
     def file_input(self, fd):
         """Override AbstractProcessorStage.file_input"""
         try:
+            for m in self.file_nd_json(fd):
+                yield m
+        except ValueError:
+            sys.stderr.write("(WARN) failed to read input file %(f)s as"
+                             " Newline Delimeted %(t)s. Will try to read as"
+                             " true %(t)s file.\n" % {"f":fd.name,
+                             "t":self.input_message_class().typeName()})
+            fd.seek(0)
+            for m in self.file_true_json(fd):
+                yield m
+
+    def file_nd_json(self, fd):
+        """ Read file as NDJSON file.
+
+        Raises ValueError if can`t read the first line.
+        """
+        nd_ok = False
+        data = self.stream_input(fd)
+        m = data.next()
+        if not (m and m.content() and type(m.content()) != list):
+             raise ValueError
+        yield m
+        for m in data:
+            yield m
+
+    def file_true_json(self, fd):
+        """ Read file as true JSON file. """
+        try:
             data = json.load(fd)
             if type(data) == dict:
                 data = [data]
