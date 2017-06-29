@@ -70,10 +70,10 @@ def process(stage, msg):
     return True
 
 if __name__ == "__main__":
-  stage = pyDKB.dataflow.stage.JSONProcessorStage()
-  stage.process = process
+    stage = pyDKB.dataflow.stage.JSONProcessorStage()
+    stage.process = process
 
-  stage.parse_args(sys.argv[1:])
-  stage.run()
-  stage.stop()
+    stage.parse_args(sys.argv[1:])
+    stage.run()
+    stage.stop()
     
