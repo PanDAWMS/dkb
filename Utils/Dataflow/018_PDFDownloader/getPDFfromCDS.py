@@ -7,15 +7,12 @@ Stage 018: download PDF files from CDS and upload them to HDFS
 import sys
 from urlparse import urlparse
 import subprocess
-import warnings
-from requests.packages.urllib3.exceptions import InsecurePlatformWarning
 
 sys.path.append("../")
 
 import pyDKB
 from pyDKB.dataflow import DataflowException
 from pyDKB.dataflow.stage import JSONProcessorStage
-from pyDKB.dataflow import CDSInvenioConnector, KerberizedCDSInvenioConnector
 from pyDKB.common import hdfs, HDFSException
 
 def transfer(url, hdfs_name):
@@ -36,33 +33,21 @@ def transfer(url, hdfs_name):
                          % err)
         return None
 
-def get_recid(item):
-    """ Get CDS record ID. """
-    url = urlparse(item.get('url', ''))
-    if not url.netloc in ("cds.cern.ch", "cdsweb.cern.ch"):
-        return None
-    s = url.path.split('/')
-    if len(s) < 3 or not s[2].isdigit():
-        return None
-    return s[2]
-
-def get_url(item, cds):
-    """ Get URL of the document`s PDF from CDS. """
-    recid = get_recid(item)
-    if not recid:
-        return None
-    cds_results = cds.get_record(recid)
-    if not cds_results:
-        return None
-    # use ['8564_u'] instead of .get('8564_u') as it is a
-    # invenio_client.connector.Record and in list-dict terms the structure
-    # looks this way:
-    # { ..., "8564_": [{"y": ["Description", ...], "u": ["url", ...]}], ...}
-    urls = cds_results[0]['8564_u']
-    for url in urls:
-        if url.split('.')[-1].lower() == "pdf":
-            return url
-    return None
+def get_url(item):
+    """ Get URL of the document`s PDF from CDS data. """
+    result = None
+    for f in item.get('files', []):
+        url = f.get('url')
+        if not url:
+            continue
+        desc = f.get('description', '')
+        v = -1
+        if url.split('.')[-1].lower() == "pdf" \
+          and (desc == None or desc.lower().find("fulltext") >= 0):
+            if f.get('version') and f['version'] > v:
+                v = f['version']
+                result = url
+    return result
 
 def process(stage, msg):
     """ Message processing function.
@@ -72,11 +57,13 @@ def process(stage, msg):
     """
     data = msg.content()
     ARGS = stage.ARGS
+    urls = []
     for item in data.get('supporting_notes', []):
         dkbID = item.get('dkbID')
-        url = get_url(item.get('GLANCE', {}), ARGS.cds)
-        if not (dkbID and url):
+        url = get_url(item.get('CDS', {}))
+        if not (dkbID and url and url not in urls):
             continue
+        urls.append(url)
         hdfs_location = transfer(url, dkbID + ".pdf")
         if not hdfs_location:
             continue
@@ -88,49 +75,12 @@ def process(stage, msg):
 def main(args):
     """ Main function. """
     stage = JSONProcessorStage()
-
-    stage.add_argument("-l", "--login", action="store", type=str, nargs='?',
-                       help="CERN account login",
-                       default='',
-                       const='',
-                       metavar="LOGIN",
-                       dest='login'
-                      )
-    stage.add_argument("-p", "--password", action="store", type=str, nargs='?',
-                       help="CERN account password",
-                       default='',
-                       const='',
-                       metavar="PASSWD",
-                       dest='password'
-                      )
-    stage.add_argument("-k", "--kerberos", action="store", type=bool, nargs='?',
-                       help="Use Kerberos-based authentification",
-                       default=False,
-                       const=True,
-                       metavar="KERBEROS",
-                       dest='kerberos'
-                      )
     stage.process = process
 
     exit_code = 0
     try:
         stage.parse_args(args)
-
-        if not stage.ARGS.login and not stage.ARGS.kerberos:
-            sys.stderr.write("WARNING: no authentication method"
-                             " will be used.\n")
-
-        warnings.simplefilter("once", InsecurePlatformWarning)
-        ARGS = stage.ARGS
-
-        if ARGS.kerberos:
-            Connector = KerberizedCDSInvenioConnector
-        else:
-            Connector = CDSInvenioConnector
-
-        with Connector(ARGS.login, ARGS.password) as cds:
-            ARGS.cds = cds
-            stage.run()
+        stage.run()
     except (DataflowException, RuntimeError), err:
         if str(err):
             sys.stderr.write("(ERROR) %s\n" % err)
