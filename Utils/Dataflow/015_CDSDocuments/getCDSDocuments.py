@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 """
-author: Maria Grigorieva
-maria.grigorieva@cern.ch
-
-refactored by: Golosova Marina
-golosova.marina@gmail.com
+authors:
+ Maria Grigorieva (maria.grigorieva@cern.ch)
+ Marina Golosova (golosova.marina@gmail.com)
 
 Execute on local machine with installed invenio-client;
 invenio-client also requires phantomjs (>=1.9.8 due to default SSL protocol)
@@ -20,46 +18,19 @@ output metadata:
 
 import json
 from urlparse import urlparse
-import sys, getopt
+import sys
 import os
-
-sys.path.append("../")
-from pyDKB.dataflow import CDSInvenioConnector, KerberizedCDSInvenioConnector
-from pyDKB.dataflow import dkbID, dataType
 
 import warnings
 from requests.packages.urllib3.exceptions import InsecurePlatformWarning
 
+sys.path.append("../")
+from pyDKB.dataflow import CDSInvenioConnector, KerberizedCDSInvenioConnector
+from pyDKB.dataflow import dkbID, dataType
+from pyDKB.dataflow.stage import JSONProcessorStage
+from pyDKB.dataflow import DataflowException
 
 counter = 0
-
-def usage():
-    """ Output usage string. """
-    msg = """
-USAGE
-  ./getCDSPapers.py <options> [file]
-
-ARGUMENTS
-  file                      Input file name (default: Input/list_of_papers.json)
-
-OPTIONS
-  -l, --login       LOGIN   CERN account login
-  -p, --password    PASSWD  CERN account password
-  -k, --kerberos            Use kerberos authorization
-
-  -P, --pretty              Pretty print output
-
-  -m, --mode        MODE    operating mode:
-                            (f)ile  -- default mode: read from file,
-                                       output to files
-                            (s)tream -- stream mode: read from STDIN,
-                                        output to STDOUT
-
-  -o, --output-dir DIR      Output directory name
-
-  -h, --help                Show this message and exit
-"""
-    sys.stderr.write(msg)
 
 
 def collection_verification(collection):
@@ -296,130 +267,85 @@ def input_json_handle(json_data, cds):
     result = form_output_data(json_data, pp_results, ds_results)
     return result
 
+def process(stage, message):
+    """ Process input message. """
+    ARGS = stage.ARGS
 
-def input_file_handle(fname, cds, indent, out_dir="./"):
-    """ Process input file. """
-    try:
-        data_file = open(fname)
-    except IOError, e:
-        sys.stderr.write("ERROR: %s: %s\n" % (fname, e.strerror))
-        sys.exit(e.errno)
-    else:
-        with data_file:
-            data = json.load(data_file)
+    result = input_json_handle(message.content(), ARGS.cds)
 
-    for item in data:
-        sys.stderr.write(item['id']+"\n")
-        result = input_json_handle(item, cds)
-        if not result:
-            continue
-        f = open(out_dir + "/%s.json" % item['id'], 'w')
-        json.dump(result, f, indent=indent)
-        f.close()
-
-    sys.stderr.write("done!\n")
-
-def input_stream_handle(stream, cds):
-    """ Process input stream. """
-    if type(stream) != file:
-        sys.stderr.write("ERROR: input_stream_handle: expected <file>,"
-                         " got %s.\n" % type(stream))
-        return False
-    if stream.closed:
-        sys.stderr.write("ERROR: input_stream_handle:"
-                         " <file> is already closed.\n")
+    if not result:
         return False
 
-    instream = iter(stream.readline, '')
+    out_msg = stage.output_message_class()(result)
+    stage.output(out_msg)
 
-    for raw_item in instream:
-        try:
-            item = json.loads(raw_item)
-        except ValueError:
-            sys.stderr.write("WARNING: can't decode input line as JSON."
-                             " Skipping.\n")
-            continue
-
-        result = input_json_handle(item, cds)
-        if not result:
-            continue
-        sys.stdout.write(json.dumps(result)+"\n")
-
-        # Shell we mark the "end-of-processing" even when no data found?..
-        sys.stdout.write("\0")
-        sys.stdout.flush()
+    return True
 
 def main(argv):
     """ Program body. """
-    login = ''
-    password = ''
-    kerberos = False
-    mode = 'f'
-    indent = None
-    out_dir = "./"
+    stage = JSONProcessorStage()
+    stage.add_argument("-l", "--login", action="store", type=str, nargs='?',
+                       help="CERN account login",
+                       default='',
+                       const='',
+                       metavar="LOGIN",
+                       dest='login'
+                      )
+    stage.add_argument("-p", "--password", action="store", type=str, nargs='?',
+                       help="CERN account password",
+                       default='',
+                       const='',
+                       metavar="PASSWD",
+                       dest='password'
+                      )
+    stage.add_argument("-k", "--kerberos", action="store", type=bool, nargs='?',
+                       help="Use Kerberos-based authentification",
+                       default=False,
+                       const=True,
+                       metavar="KERBEROS",
+                       dest='kerberos'
+                      )
+#    --pretty argument is to be handled by ProcessorStages output methods.
+#    ---
+#    stage.add_argument("-P", "--pretty", action="store", type=int, nargs="?",
+#                       help="Use pretty-print option for output"
+#                            " (default indent: %(default)s)",
+#                       default=None,
+#                       const=2,
+#                       metavar="INDENT",
+#                       dest='indent'
+#                      )
+
+    exit_code = 0
     try:
-        opts, args = getopt.getopt(argv, "hl:p:km:Po:",
-             ["login=", "password=", "kerberos", "mode=", "pretty",
-              "output-dir"])
-    except getopt.GetoptError:
-        usage()
-        sys.exit(2)
-    for opt, arg in opts:
-        if opt == "-h":
-            usage()
-            sys.exit()
-        elif opt in ("-l", "--login"):
-            login = arg
-        elif opt in ("-p", "--password"):
-            password = arg
-        elif opt in ("-k", "--kerberos"):
-            kerberos = True
-        elif opt in ("-m", "--mode"):
-            mode = arg
-        elif opt in ("-P", "--pretty"):
-            indent = 2
-        elif opt in ("-o", "--output-dir"):
-            out_dir = arg
-
-    if len(args) == 0:
-        infile = "Input/list_of_papers.json"
-    elif len(args) == 1:
-        infile = args[0]
-    else:
-        usage()
-
-    if not os.path.isdir(out_dir):
-        sys.stderr.write("Creating output directory...\n")
-        try:
-            os.mkdir(out_dir)
-        except OSError, e:
-            sys.stderr.write("ERROR: Failed to create output directory: %s\n"
-                             % e)
-            sys.stderr.write("Output to the current dir instead.\n")
-            out_dir = "./"
-
-    if not login and not kerberos:
-        sys.stderr.write("WARNING: no authentication method will be used.\n")
-
-    warnings.simplefilter("once", InsecurePlatformWarning)
-
-    if kerberos:
-        Connector = KerberizedCDSInvenioConnector
-    else:
-        Connector = CDSInvenioConnector
-
-    with Connector(login, password) as cds:
-
-        if mode in ('f', "file"):
-            input_file_handle(infile, cds, indent, out_dir)
-
-        elif mode in ('s', "stream"):
-            input_stream_handle(sys.stdin, cds)
-
+        stage.parse_args(argv)
+        stage.process = process
+        # This part remains here, as not every JSON-to-JSON processor need
+        # any authentication method
+        # Maybe we need a ProcessorWithAuthorization?
+        if not stage.ARGS.login and not stage.ARGS.kerberos:
+            sys.stderr.write("WARNING: no authentication method will be used.\n")
+    
+        warnings.simplefilter("once", InsecurePlatformWarning)
+        ARGS=stage.ARGS
+    
+        if ARGS.kerberos:
+            Connector = KerberizedCDSInvenioConnector
         else:
-            sys.stderr.write("Wrong value for MODE parameter: %s\n" % mode)
-            usage()
-            exit(2)
+            Connector = CDSInvenioConnector
+    
+        with Connector(ARGS.login, ARGS.password) as cds:
+            ARGS.cds = cds
+            stage.run()
+    
+    except (DataflowException, RuntimeError), err:
+        if str(err):
+            sys.stderr.write("(ERROR) %s\n" % err)
+        exit_code = 1
+    finally:
+        stage.stop()
+
+    exit(exit_code)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
