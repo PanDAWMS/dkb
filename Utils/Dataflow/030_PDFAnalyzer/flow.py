@@ -49,7 +49,8 @@ def process(stage, msg):
                 shutil.copy(fname, dirname)
         except Exception as e:
             sys.stderr.write("Failed to copy file into temporary directory")
-            sys.stderr.write(str(command_list))
+            if hdfs:
+                sys.stderr.write("hdfs download command:" + str(command_list))
             sys.stderr.write(str(e))
             shutil.rmtree(dirname)
             return False
