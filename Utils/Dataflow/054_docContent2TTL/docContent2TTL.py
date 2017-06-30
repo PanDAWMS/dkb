@@ -28,14 +28,13 @@ def process(stage, msg):
     return True
 
 def doc_content_triples(data):
-	listDatasets = ['montecarlo_datasets', 'group_datasets',
-	'user_datasets', 'physcont_datasets', 'calibration_datasets', 'realdata_datasets', 'database_datasets']
+	dataset_suffix = "_datasets"
 
 	dkbID = data['dkbID']
 	triples = []
 	for i, item in enumerate(data['content']):
 		#for any type of dataset
-		if item in listDatasets:
+		if item.endswith(dataset_suffix):
 			DATASETS = {
 				'graph' : graph,
 				'ontology' : ontology,
