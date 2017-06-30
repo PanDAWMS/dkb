@@ -17,6 +17,8 @@ from pyDKB.dataflow import messages
 graph = "http://nosql.tpu.ru:8890/DAV/ATLAS"
 ontology = "http://nosql.tpu.ru/ontology/ATLAS"
 
+
+
 def process(stage, msg):
   """
   Input message: JSON
@@ -37,24 +39,21 @@ def doc_content_triples(data):
 	dkbID = data['dkbID']
 	triples = []
 	for i, item in enumerate(data['content']):
+		DEFAULT = {
+			'graph' : graph,
+			'ontology' : ontology,
+			'content_name' : item,
+			'document_ID' : dkbID
+		}
 		#for any type of dataset
 		if item.endswith(dataset_suffix):
-			DATASETS = {
-				'graph' : graph,
-				'ontology' : ontology,
-				'content_name' : item,
-				'document_ID' : dkbID
-			}
-			triples.append('''<{graph}/document/{document_ID}/{content_name}> a <{ontology}#DocumentContent> .'''.format(**DATASETS))
-			triples.append('''<{graph}/document/{document_ID}> <{ontology}#hasContent> <{graph}/document/{document_ID}/{content_name}> .'''.format(**DATASETS))
+			triples.append('''<{graph}/document/{document_ID}/{content_name}> a <{ontology}#DocumentContent> .'''.format(**DEFAULT))
+			triples.append('''<{graph}/document/{document_ID}> <{ontology}#hasContent> <{graph}/document/{document_ID}/{content_name}> .'''.format(**DEFAULT))
 			for j, ds_item in enumerate(data['content'][item]):
 				DATASAMPLES = {
-					'graph': graph,
-					'ontology': ontology,
-					'document_ID' : dkbID,
-					'content_name': item,
 					'data_sample' : ds_item
 				}
+				DATASAMPLES.update(DEFAULT)
 				#checking
 				#print(ds_item)
 				#print('{document_ID}_{content_name}'.format(**DATASAMPLES))
@@ -62,14 +61,11 @@ def doc_content_triples(data):
 				triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsDataSample> <{graph}/datasample/{data_sample}> .'''.format(**DATASAMPLES))
 		if item == 'plain_text':	
 			PLAINTEXT = {
-				'graph': graph,
-				'ontology': ontology,
-				'document_ID' : dkbID,
-				'content_name': item,
 				'data_taking_year' : data['content'][item]['data taking year'],
 				'luminosity' : data['content'][item]['luminosity'].replace(' ','_'),
 				'energy' : data['content'][item]['energy'].lower().replace(' ','')
 			}
+			PLAINTEXT.update(DEFAULT)
 			triples.append('''<{graph}/document/{document_ID}/{content_name}> a <{ontology}#DocumentContent> .'''.format(**PLAINTEXT))
 			triples.append('''<{graph}/document/{document_ID}> <{ontology}#hasContent> <{graph}/document/{document_ID}/{content_name}> .'''.format(**PLAINTEXT))
 			#data taking year
