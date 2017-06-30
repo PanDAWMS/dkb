@@ -54,7 +54,8 @@ import argparse
 import sys
 import json
 sys.path.append("../")
-from pyDKB.dataflow import stage
+
+import pyDKB
 
 #defaults
 GRAPH = "http://nosql.tpu.ru:8890/DAV/ATLAS"
@@ -374,10 +375,10 @@ def process_journals(data, doc_iri):
 <{journal_resource}{journalIssueID}> <{ontology}#hasTitle> "{title}"^^xsd:string .
 <{journal_resource}{journalIssueID}> <{ontology}#hasVolume> "{volume}"^^xsd:string .
 <{journal_resource}{journalIssueID}> <{ontology}#hasYear> "{year}"^^xsd:string .
-<{journal_resource}{journalIssueID}> <{ontology}#containsPublication> {doc_iri} .
-       '''.format(journalIssueID=journal_id, title=item.get('title'), volume=item.get('volume'),
-                  year=item.get('year'), doc_iri=doc_iri, journal_resource=GRAPH+'/journal_issue/',
-                  ontology=ONTOLOGY)
+<{journal_resource}{journalIssueID}> <{ontology}#containsPublication> {doc_iri} .\n'''\
+            .format(journalIssueID=journal_id, title=item.get('title'), volume=item.get('volume'),
+                    year=item.get('year'), doc_iri=doc_iri, journal_resource=GRAPH+'/journal_issue/',
+                    ontology=ONTOLOGY)
     return ttl
 
 def fix_string(wrong_string):
@@ -399,26 +400,40 @@ def fix_list_values(list_vals):
         item = fix_string(item)
     return list_vals
 
-def write_ttl2file(output, ttl_string):
+def process(stage, msg):
     """
-    write ttl string with document metadata to TTL file
-    :param output:
-    :param ttl_string:
+    Processing messages from JSON to TTL
+    :param stage: instance of JSON2TTLProcessorStage
+    :param msg: input JSON message
     :return:
     """
-    try:
-        ttl_file = open(output, "w+")
-    except IOError:
-        sys.stderr.write('cannot open file')
-    else:
-        try:
-            ttl_file.write(ttl_string)
-            ttl_file.write('\n\0')
-        except IOError:
-            sys.stderr.write('can\'t write to file')
-        else:
-            ttl_file.close()
-            sys.stderr.write("TTL file has written!")
+    data = msg.content()
+    paper_id = data.get('dkbID')
+
+    # papers processing
+
+    doc_iri = get_document_iri(paper_id)
+    doc_ttl = ""
+    doc_ttl += '{docIRI} a <{ontology}#Paper> .\n' \
+        .format(docIRI=doc_iri, ontology=ONTOLOGY)
+    doc_ttl += document_glance(data.get('GLANCE'), doc_iri, PAPER_GLANCE_ATTRS)
+    doc_ttl += document_cds(data.get('CDS'), doc_iri, PAPER_CDS_ATTRS)
+
+    # supporting documents processing
+
+    if "supporting_notes" in data:
+        for note in data.get('supporting_notes'):
+            note_id = note.get('dkbID')
+            note_iri = get_document_iri(note_id)
+            doc_ttl += '{noteIRI} a <{ontology}#SupportingDocument> .\n' \
+                .format(noteIRI=note_iri, ontology=ONTOLOGY)
+            doc_ttl += document_glance(note.get('GLANCE'), note_iri, NOTE_GLANCE_ATTRS)
+            doc_ttl += document_cds(note.get('CDS'), note_iri, NOTE_CDS_ATTRS)
+
+    doc_ttl += documents_links(data)
+    for item in doc_ttl.splitlines():
+        stage.output(pyDKB.dataflow.Message(pyDKB.dataflow.messageType.TTL)(item))
+    return True
 
 def main(argv):
     """
@@ -426,59 +441,33 @@ def main(argv):
     :param argv: arguments
     :return:
     """
-    processor = stage.JSONProcessorStage()
-    processor.add_argument('-g', '--graph', action='store', type=str, nargs='?',
-                        help='Virtuoso DB graph name (default: %(default)s)',
-                        default=GRAPH,
-                        const=GRAPH,
-                        metavar='GRAPH',
-                        dest='GRAPH')
-    processor.add_argument('-O', '--ontology', action='store', type=str, nargs='?',
-                        help='Virtuoso ontology prefix (default: %(default)s)',
-                        default=ONTOLOGY,
-                        const=ONTOLOGY,
-                        metavar='ONT',
-                        dest='ONTOLOGY')
-    processor.add_argument('-delim', '--delimiter', action='store', nargs='?',
-                        help=u'EOP marker for Kafka mode (default: \0)',
-                        default='',
-                        dest='EOPmarker')
-    processor.parse_args(argv)
-    define_globals(processor.ARGS)
-    gen = processor.input()
+    exit_code = 0
+    stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
+    stage.process = process
+    try:
+        stage.add_argument('-g', '--graph', action='store', type=str, nargs='?',
+                            help='Virtuoso DB graph name (default: %(default)s)',
+                            default=GRAPH,
+                            const=GRAPH,
+                            metavar='GRAPH',
+                            dest='GRAPH')
+        stage.add_argument('-O', '--ontology', action='store', type=str, nargs='?',
+                            help='Virtuoso ontology prefix (default: %(default)s)',
+                            default=ONTOLOGY,
+                            const=ONTOLOGY,
+                            metavar='ONT',
+                            dest='ONTOLOGY')
+        stage.parse_args(argv)
+        define_globals(stage.ARGS)
+        stage.run()
+    except (pyDKB.dataflow.DataflowException, RuntimeError), err:
+        if str(err):
+            sys.stderr.write("(ERROR) %s\n" % err)
+        exit_code = 1
+    finally:
+        stage.stop()
 
-    for f in gen:
-        data = f.content()
-        paper_id = data.get('dkbID')
-        doc_iri = get_document_iri(paper_id)
-        doc_ttl = ""
-        doc_ttl += '{docIRI} a <{ontology}#Paper> .\n' \
-            .format(docIRI=doc_iri, ontology=ONTOLOGY)
-        doc_ttl += document_glance(data.get('GLANCE'), doc_iri, PAPER_GLANCE_ATTRS)
-        doc_ttl += document_cds(data.get('CDS'), doc_iri, PAPER_CDS_ATTRS)
-
-        # supporting documents processing
-
-        if "supporting_notes" in data:
-            for note in data.get('supporting_notes'):
-                note_id = note.get('dkbID')
-                note_iri = get_document_iri(note_id)
-                doc_ttl += '{noteIRI} a <{ontology}#SupportingDocument> .\n' \
-                    .format(noteIRI=note_iri, ontology=ONTOLOGY)
-                doc_ttl += document_glance(note.get('GLANCE'), note_iri, NOTE_GLANCE_ATTRS)
-                doc_ttl += document_cds(note.get('CDS'), note_iri, NOTE_CDS_ATTRS)
-
-        doc_ttl += documents_links(data)
-
-        if processor.ARGS.mode == 'f':
-            if processor.ARGS.output_dir != '':
-                output = processor.ARGS.output_dir + '/' + paper_id + '.ttl'
-            else:
-                output = paper_id + '.ttl'
-            write_ttl2file(output, doc_ttl)
-        else:
-            sys.stdout.write(doc_ttl + processor.ARGS.EOPmarker)
-            sys.stdout.flush()
+    exit(exit_code)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
