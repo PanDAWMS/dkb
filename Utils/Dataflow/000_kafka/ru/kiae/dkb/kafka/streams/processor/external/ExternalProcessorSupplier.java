@@ -113,7 +113,7 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
                   this.externalProcessorSTDOUT = new BufferedReader(new InputStreamReader(externalProcessor.getInputStream()));
                 }
                 catch (IOException e){
-                  log.error("Can't start new process with command/parameters: {}", externalCommand.toString());
+                  log.error("Can't start new process with command: {}", externalCommand[0]);
                   throw new KafkaException(e);
                 }
             }
