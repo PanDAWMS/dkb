@@ -56,33 +56,14 @@ if __name__ == "__main__":
 
     PAPERS_DIR = path_join(cfg["WORK_DIR"], "papers") # Directory for papers' directories.
     EXPORT_DIR = path_join(cfg["WORK_DIR"], "export") # Directory for exported files.
-    ATTRS_FILE = path_join(EXPORT_DIR, "stat.txt") # File for information about exported papers with attributes.
-    CSV_FILE = path_join(EXPORT_DIR, "stat.csv")
+    STAT_FILE = path_join(EXPORT_DIR, "stat.csv") # File for statistics about exported papers.
+    ERRORS_FILE = path_join(EXPORT_DIR, "errors.txt") # File for errors during export.
     HEADING_FONT = ("Times New Roman", 20) # Font used for headings in the program.
 
 TXT_DIR = "txt" # Name of the subdirectory with txt files in a paper's directory.
 XML_DIR = "xml" # Name of the subdirectory with xml files in a paper's directory.
 METADATA_FILE = "metadata.json" # Name of the file which holds the metadata extracted from a paper.
 
-
-# TO DO
-# Luminosity = x+-y fb-1
-# Categories editor
-# Parallel extraction
-# Manager hanging when extracting. Partially fixed - now status bar is updated correctly, manager still hangs otherwise but it's questionable if much can be done here.
-# Good run lists
-# Finding text blocks on each page, determining their type and processing them accordingly. This will help in solving problems like:
-## Table headers above table. PDF 2015-170 may be a good place to test this. Table 2 (which is not needed) has a figure above it, which must be accounted for.
-## Tables on several pages
-## Lines construction regarding Y-axis (see PDF 609)
-## Campaigns (and probably other things?) should NOT be searched in References.
-# Use list(list) where appropriate.
-# Additional independent module which will check json files and try to filter out wrong datasets and tables, or fix them.
-# * and % in dataset names.
-# "-" in dataset names instead of "_".
-# Rewrite xmltable.py
-# Verification
-# Window resizing and scrollbar activation
 
 class DatasetCategory:
     def __init__(self, name, string):
@@ -226,6 +207,7 @@ re_dsid = re.compile("^\d{4,8}$")
 re_dsid_diap = re.compile("^\d{4,8}-\d{1,8}$")
 re_xml_symbol = re.compile("^<text[^>]+ size=\"([0-9.]+)\">(.+)</text>$")
 re_xml_empty_symbol = re.compile("^<text> </text>$")
+re_atlas_name = re.compile("[A-Z0-9-]+-20\d\d-[A-Z0-9-]+")
 re_campaign = re.compile(r"""(
                                 mc11(?![abc])
                                 |
@@ -353,7 +335,7 @@ def cmp_papernames(x, y):
 
 class Paper:
     # Represents a document which needs to be analyzed, as well as files and other things associated with it.
-    attributes_general = ["campaigns", "energy", "luminosity", "collisions", "data taking year", "project_montecarlo", "project_realdata", "links"]
+    attributes_general = ["atlas_name", "campaigns", "energy", "luminosity", "collisions", "data taking year", "possible_project_montecarlo", "possible_project_realdata", "links"]
     attributes_to_determine = attributes_general + ["title", "datasets", "datatables"] # Paper attributes which are needed but cannot be determined precisely yet (unlike, for example, number of pages).
     attributes_metadata = attributes_to_determine + ["num_pages", "rotated_pages"] # Attributes which are saved / loaded to / from a file.
     def __init__(self, fname, dirname = False):
@@ -518,6 +500,11 @@ class Paper:
         for (key, value) in links:
             attrs["links"][key] = value
 
+        attrs["atlas_name"] = False
+        tmp = re_atlas_name.search(pages)
+        if tmp:
+            attrs["atlas_name"] = tmp.group(0)
+
         pages = pages.lower()
 
         attrs["collisions"] = False
@@ -541,16 +528,16 @@ class Paper:
                     mcc = c
                     break
             if mcc:
-                attrs["project_montecarlo"] = mcc + "_" + attrs["energy"].replace(" ", "")
+                attrs["possible_project_montecarlo"] = mcc + "_" + attrs["energy"].replace(" ", "")
             else:
-                attrs["project_montecarlo"] = False
+                attrs["possible_project_montecarlo"] = False
         else:
-            attrs["project_montecarlo"] = False
+            attrs["possible_project_montecarlo"] = False
 
         if attrs["data taking year"] and attrs["energy"]:
-            attrs["project_realdata"] = "data" + attrs["data taking year"][2:4] + "_" + attrs["energy"].replace(" ", "")
+            attrs["possible_project_realdata"] = "data" + attrs["data taking year"][2:4] + "_" + attrs["energy"].replace(" ", "")
         else:
-            attrs["project_realdata"] = False
+            attrs["possible_project_realdata"] = False
 
         return attrs
     def find_datasets(self):
@@ -1438,12 +1425,15 @@ class Manager:
             n = 1
             n_p = 0
             errors = {}
-            s = "document name,datasets"
+            s = "document name,mc datasets, real datasets, other datasets, dataset tables"
             for a in Paper.attributes_general:
                 s += ",%s" % a
             csv = [s + "\n"]
             attr = {}
-            attr["datasets"] = []
+            attr["mc_datasets"] = []
+            attr["real_datasets"] = []
+            attr["other_datasets"] = []
+            attr["dataset_tables"] = []
             for a in Paper.attributes_general:
                 attr[a] = []
             self.window.after(100, lambda: self.export_all(quick, n, n_p, errors, attr, csv))
@@ -1456,15 +1446,33 @@ class Manager:
                 if outp:
                     n_p += 1
                     s = "%s," % p.fname
-                    if outp["content"] and outp["content"].keys() != ["plain_text"]:
-                        attr["datasets"].append(p.fname)
+                    if "mc_datasets" in outp["content"]:
+                        attr["mc_datasets"].append(p.fname)
                         s += "1,"
                     else:
                         s += ","
+                    if "real_datasets" in outp["content"]:
+                        attr["real_datasets"].append(p.fname)
+                        s += "1,"
+                    else:
+                        s += ","
+                    other = ""
+                    tables = ""
+                    for c in outp["content"]:
+                        if not other and c.endswith("datasets") and not c.startswith("mc") and not c.startswith("real"):
+                            attr["other_datasets"].append(p.fname)
+                            other = "1"
+                        if not tables and c.startswith("table"):
+                            attr["dataset_tables"].append(p.fname)
+                            tables = "1"
+                    s += "%s,%s," % (other, tables)
                     for a in Paper.attributes_general:
                         if outp["content"]["plain_text"][a]:
                             attr[a].append(p.fname)
-                            s += "1,"
+                            if a == "atlas_name":
+                                s += "%s," % (outp["content"]["plain_text"][a])
+                            else:
+                                s += "1,"
                         else:
                             s += ","
                     csv += s.rstrip(",") + "\n"
@@ -1480,18 +1488,12 @@ class Manager:
                     msg = "These papers were not exported for some reason:\n\n"
                     for e in errors:
                         msg += "%s : %s\n\n" % (e, errors[e])
-                with open(ATTRS_FILE, "w") as f:
-                    for a in attr:
-                        f.write("%s found: %d out of %d papers (%f%%) \n"%(a, len(attr[a]), n_p, float(len(attr[a])) / n_p * 100))
-                        for p in attr[a]:
-                            f.write(p + "\n")
-                        f.write("\n")
-                    if msg:
+                    with open(ERRORS_FILE, "w") as f:
                         f.write(msg)
-                with open(CSV_FILE, "w") as f:
+                with open(STAT_FILE, "w") as f:
                     csv += "TOTAL\n"
-                    s = "%d,%d," % (n_p, len(attr["datasets"]))
-                    s_p = "100%%,%f%%," % (float(len(attr["datasets"])) / n_p * 100)
+                    s = "%d,%d,%d,%d,%d," % (n_p, len(attr["mc_datasets"]), len(attr["real_datasets"]), len(attr["other_datasets"]), len(attr["dataset_tables"]))
+                    s_p = "100%%,%f%%,%f%%,%f%%,%f%%," % (float(len(attr["mc_datasets"])) / n_p * 100, float(len(attr["real_datasets"])) / n_p * 100, float(len(attr["other_datasets"])) / n_p * 100, float(len(attr["dataset_tables"])) / n_p * 100)
                     for a in Paper.attributes_general:
                         s += "%d," % len(attr[a])
                         s_p += "%f%%," % (float(len(attr[a])) / n_p * 100)
