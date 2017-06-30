@@ -77,6 +77,8 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
                 externalProcessorSTDIN.newLine();
                 externalProcessorSTDIN.flush();
                 outline = externalProcessorSTDOUT.readLine();
+                if (outline == null)
+                    throw new KafkaException("External process seems to be dead.");
                 if (EOPMarker != (char) '\n') {
                   while (outline != null) {
                     context.forward(dummy, outline);
