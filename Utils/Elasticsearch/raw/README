@@ -1,0 +1,8 @@
+get_data_from_oracle.php - get raw dta from oracle
+
+raw_.mapping - is mapping in json format for raw data from oracle for ES
+load_mapping.sh - used to upload mapping to ES
+
+oracle2es.php - convers data from get_data_from_oracle.php to NDJSON for one file
+load_raw_current.sh - do all necessarry steps to load data from oracle to ES
+drop_raw_current.sh - drops data in ES.
