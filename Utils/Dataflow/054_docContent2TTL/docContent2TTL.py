@@ -17,8 +17,6 @@ from pyDKB.dataflow import messages
 graph = "http://nosql.tpu.ru:8890/DAV/ATLAS"
 ontology = "http://nosql.tpu.ru/ontology/ATLAS"
 
-
-
 def process(stage, msg):
   """
   Input message: JSON
@@ -35,8 +33,13 @@ def process(stage, msg):
 
 def doc_content_triples(data):
 	dataset_suffix = "_datasets"
+	
+	try:
+		dkbID = data['dkbID']
+	except KeyError:
+		dkbID = None
+		pass
 
-	dkbID = data['dkbID']
 	triples = []
 	for i, item in enumerate(data['content']):
 		DEFAULT = {
@@ -59,33 +62,63 @@ def doc_content_triples(data):
 				#print('{document_ID}_{content_name}'.format(**DATASAMPLES))
 				triples.append('''<{graph}/datasample/{data_sample}> a <{ontology}#DataSample> .'''.format(**DATASAMPLES))
 				triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsDataSample> <{graph}/datasample/{data_sample}> .'''.format(**DATASAMPLES))
-		if item == 'plain_text':	
+		if item == 'plain_text':
+			
+			try:
+				data_taking_year = data['content'][item]['data taking year']
+			except KeyError:
+				data_taking_year = None
+				pass
+			
+			try:
+				luminosity = data['content'][item]['luminosity'].replace(' ','_')
+			except KeyError:
+				luminosity = None
+				pass
+			
+			try:
+				energy = data['content'][item]['energy'].lower().replace(' ','')
+			except KeyError:
+				energy = None
+				pass
+			
 			PLAINTEXT = {
-				'data_taking_year' : data['content'][item]['data taking year'],
-				'luminosity' : data['content'][item]['luminosity'].replace(' ','_'),
-				'energy' : data['content'][item]['energy'].lower().replace(' ','')
+				'data_taking_year' : data_taking_year,
+				'luminosity' : luminosity,
+				'energy' : energy
 			}
 			PLAINTEXT.update(DEFAULT)
 			triples.append('''<{graph}/document/{document_ID}/{content_name}> a <{ontology}#DocumentContent> .'''.format(**PLAINTEXT))
 			triples.append('''<{graph}/document/{document_ID}> <{ontology}#hasContent> <{graph}/document/{document_ID}/{content_name}> .'''.format(**PLAINTEXT))
-			#data taking year
-			triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsDataTakingYear> "{data_taking_year}" .'''.format(**PLAINTEXT))
-			#luminosity
-			triples.append('''<{graph}/luminosity/{luminosity}> a <{ontology}#Luminosity> .'''.format(**PLAINTEXT))
-			triples.append('''<{graph}/document/{document_ID}/{content_name}> <ONTOLOGY#mentionsLuminosity> <{graph}/luminosity/{luminosity}> .'''.format(**PLAINTEXT))
-			triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsEnergy> <{ontology}#{energy}> .'''.format(**PLAINTEXT))
+			
+			if data_taking_year:
+				#data taking year
+				triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsDataTakingYear> "{data_taking_year}" .'''.format(**PLAINTEXT))
+			
+			if luminosity:
+				#luminosity
+				triples.append('''<{graph}/luminosity/{luminosity}> a <{ontology}#Luminosity> .'''.format(**PLAINTEXT))
+				triples.append('''<{graph}/document/{document_ID}/{content_name}> <ONTOLOGY#mentionsLuminosity> <{graph}/luminosity/{luminosity}> .'''.format(**PLAINTEXT))
+			
+			if energy:
+				#energy
+				triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsEnergy> <{ontology}#{energy}> .'''.format(**PLAINTEXT))
+			
 			#checking
 			#print('{data_taking_year}_{content_name}_{luminosity}'.format(**PLAINTEXT))
-			campaign = data['content'][item]['campaigns']
-			#print len(campaign)
-			if len(campaign) > 0:
-				for j, pt_item in enumerate(campaign):
-					triples.append('''<{graph}/campaign/%s> a <{ontology}#Campaign> .'''.format(**PLAINTEXT) % (pt_item))
-					triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsCampaign> <{graph}/campaign/%s> .'''.format(**PLAINTEXT) % (pt_item))
-			
+			try:
+				campaign = data['content'][item]['campaigns']
+			except KeyError:
+				campaign = []
+				pass
 			else:
-				print ("No campaigns in this file.")
-				
+				#print len(campaign)
+				if len(campaign) > 0:
+					for j, pt_item in enumerate(campaign):
+						triples.append('''<{graph}/campaign/%s> a <{ontology}#Campaign> .'''.format(**PLAINTEXT) % (pt_item))
+						triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsCampaign> <{graph}/campaign/%s> .'''.format(**PLAINTEXT) % (pt_item))
+				else:
+					print ("No campaigns in this file.")
 	#for i, item in enumerate(triples):
 			#file.write(item)
 	return triples
