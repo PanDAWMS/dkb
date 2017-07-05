@@ -24,15 +24,13 @@ def process(stage, msg):
   """
   input_data = msg.content()
   result = doc_content_triples(input_data)
+  
   if result == False:
     return False
-  
   else:
     for i in result:
-	  message = messages.TTLMessage(i)
-	  output_message = pyDKB.dataflow.Message(pyDKB.dataflow.messageType.TTL)(message.content())
-	  stage.output(output_message)
-  
+		stage.output(pyDKB.dataflow.Message(pyDKB.dataflow.messageType.TTL)(i))
+
   return True
 
 def doc_content_triples(data):
@@ -130,9 +128,18 @@ def main(args):
 	stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
 	stage.process = process
 
-	stage.parse_args(args)
-	stage.run()
-	stage.stop()
+	exit_code = 0
+	try:
+		stage.parse_args(args)
+		stage.run()
+	except (pyDKB.dataflow.DataflowException, RuntimeError), err:
+		if str(err):
+			sys.stderr.write("(ERROR) %s\n" % err)
+		exit_code=1
+	finally:
+		stage.stop()
+
+	exit(exit_code)
 	
 if __name__ == '__main__':
   main(sys.argv[1:])
