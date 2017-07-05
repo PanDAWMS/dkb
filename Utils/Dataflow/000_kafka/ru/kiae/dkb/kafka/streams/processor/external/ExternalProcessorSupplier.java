@@ -23,6 +23,8 @@ import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.common.KafkaException;
 
+import ru.kiae.dkb.kafka.common.external.ExternalProcessLogger;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,11 +63,7 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
             private Process          externalProcessor;
             private BufferedWriter   externalProcessorSTDIN;
             private BufferedReader   externalProcessorSTDOUT;
-            private BufferedReader   externalProcessorSTDERR;
-
-            private Pattern          lmt_p = Pattern.compile(
-                                                    "\\(?(TRACE|DEBUG|INFO"
-                                                  + "|WARN(?:ING)?|ERROR)\\)?");
+            private ExternalProcessLogger externalProcessorLogger;
 
             @Override
             @SuppressWarnings("unchecked")
@@ -83,7 +81,6 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
                 externalProcessorSTDIN.write(line);
                 externalProcessorSTDIN.newLine();
                 externalProcessorSTDIN.flush();
-                read_external_stderr();
                 outline = externalProcessorSTDOUT.readLine();
                 if (EOPMarker != (char) '\n') {
                   while (outline != null) {
@@ -100,7 +97,6 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
               }
               catch (IOException e){
                 log.error("Failed to read data from external process.");
-                read_external_stderr();
                 throw new KafkaException(e);
               }
             }
@@ -112,7 +108,6 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
             @Override
             public void close() {
                 log.info("Destroying external process.");
-                read_external_stderr();
                 this.externalProcessor.destroy();
             }
 
@@ -121,54 +116,12 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
                   this.externalProcessor = new ProcessBuilder(externalCommand).start();
                   this.externalProcessorSTDIN  = new BufferedWriter(new OutputStreamWriter(externalProcessor.getOutputStream()));
                   this.externalProcessorSTDOUT = new BufferedReader(new InputStreamReader(externalProcessor.getInputStream()));
-                  this.externalProcessorSTDERR = new BufferedReader(new InputStreamReader(externalProcessor.getErrorStream()));
+                  this.externalProcessorLogger = new ExternalProcessLogger(externalProcessor, externalCommand[0]);
+                  (new Thread(this.externalProcessorLogger)).start();
                 }
                 catch (IOException e){
                   log.error("Can't start new process with command/parameters: {}", externalCommand.toString());
                   throw new KafkaException(e);
-                }
-            }
-
-            private void read_external_stderr() {
-                try {
-                    while (externalProcessorSTDERR.ready()) {
-                        String line = externalProcessorSTDERR.readLine();
-                        this.external_log(line);
-                    }
-                }
-                catch (IOException io) {
-                    throw new KafkaException(io);
-                }
-            }
-
-
-            private void external_log(String line) {
-                Matcher m = lmt_p.matcher(line);
-                String type = "TRACE";
-                if (m.lookingAt()) {
-                    type = m.group(1);
-                    line = line.replaceFirst("\\(?" + type + "\\)?", "");
-                }
-                line = "(EXTERNAL)" + line;
-                switch (type) {
-                    case "TRACE":
-                        log.trace(line);
-                        break;
-                    case "DEBUG":
-                        log.debug(line);
-                        break;
-                    case "INFO":
-                        log.info(line);
-                        break;
-                    case "WARN":
-                    case "WARNING":
-                        log.warn(line);
-                        break;
-                    case "ERROR":
-                        log.error(line);
-                        break;
-                    default:
-                        log.trace(line);
                 }
             }
         };
