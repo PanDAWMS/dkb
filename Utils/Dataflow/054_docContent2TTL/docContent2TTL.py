@@ -24,10 +24,14 @@ def process(stage, msg):
   """
   input_data = msg.content()
   result = doc_content_triples(input_data)
-  for i in result:
-	message = messages.TTLMessage(i)
-	output_message = pyDKB.dataflow.Message(pyDKB.dataflow.messageType.TTL)(message.content())
-	stage.output(output_message)
+  if result == False:
+    return False
+  
+  else:
+    for i in result:
+	  message = messages.TTLMessage(i)
+	  output_message = pyDKB.dataflow.Message(pyDKB.dataflow.messageType.TTL)(message.content())
+	  stage.output(output_message)
   
   return True
 
@@ -37,8 +41,8 @@ def doc_content_triples(data):
 	try:
 		dkbID = data['dkbID']
 	except KeyError:
-		dkbID = None
-		pass
+		sys.stderr.write("No dkbID.\n")
+		return False
 
 	triples = []
 	for i, item in enumerate(data['content']):
@@ -68,19 +72,16 @@ def doc_content_triples(data):
 				data_taking_year = data['content'][item]['data taking year']
 			except KeyError:
 				data_taking_year = None
-				pass
 			
 			try:
 				luminosity = data['content'][item]['luminosity'].replace(' ','_')
-			except KeyError:
+			except (KeyError, AttributeError):
 				luminosity = None
-				pass
 			
 			try:
 				energy = data['content'][item]['energy'].lower().replace(' ','')
-			except KeyError:
+			except (KeyError, AttributeError):
 				energy = None
-				pass
 			
 			PLAINTEXT = {
 				'data_taking_year' : data_taking_year,
@@ -108,17 +109,16 @@ def doc_content_triples(data):
 			#print('{data_taking_year}_{content_name}_{luminosity}'.format(**PLAINTEXT))
 			try:
 				campaign = data['content'][item]['campaigns']
-			except KeyError:
-				campaign = []
-				pass
-			else:
 				#print len(campaign)
 				if len(campaign) > 0:
 					for j, pt_item in enumerate(campaign):
 						triples.append('''<{graph}/campaign/%s> a <{ontology}#Campaign> .'''.format(**PLAINTEXT) % (pt_item))
 						triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsCampaign> <{graph}/campaign/%s> .'''.format(**PLAINTEXT) % (pt_item))
 				else:
-					print ("No campaigns in this file.")
+					sys.stderr.write("No campaigns in this file.\n")
+			except KeyError:
+				campaign = []
+				
 	#for i, item in enumerate(triples):
 			#file.write(item)
 	return triples
