@@ -23,6 +23,8 @@ import org.apache.kafka.streams.processor.ProcessorContext;
 import org.apache.kafka.streams.processor.ProcessorSupplier;
 import org.apache.kafka.common.KafkaException;
 
+import ru.kiae.dkb.kafka.common.external.ExternalProcessLogger;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,6 +35,8 @@ import java.io.BufferedWriter;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.IOException;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class ExternalProcessorSupplier implements ProcessorSupplier<String, String> {
 
@@ -40,6 +44,7 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
 
     private String[] externalCommand;
     private char EOPMarker;
+    private char EOMMarker;
     private final ExternalProcessorConfig config;
 
     public ExternalProcessorSupplier(Map<String, Object> props) {
@@ -50,6 +55,7 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
             this.config = config;
             this.externalCommand = config.externalCommand.split(" ");
             this.EOPMarker = config.EOPMarker;
+            this.EOMMarker = '\n';
     }
 
     @Override
@@ -59,6 +65,7 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
             private Process          externalProcessor;
             private BufferedWriter   externalProcessorSTDIN;
             private BufferedReader   externalProcessorSTDOUT;
+            private ExternalProcessLogger externalProcessorLogger;
 
             @Override
             @SuppressWarnings("unchecked")
@@ -76,23 +83,35 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
                 externalProcessorSTDIN.write(line);
                 externalProcessorSTDIN.newLine();
                 externalProcessorSTDIN.flush();
-                outline = externalProcessorSTDOUT.readLine();
-                if (EOPMarker != (char) '\n') {
-                  while (outline != null) {
-                    context.forward(dummy, outline);
-                    outcode = externalProcessorSTDOUT.read();
-                    if ((char) outcode == EOPMarker) break;
-                    else {
-                      outchar = (char) outcode;
-                      outline = String.valueOf(outchar)+externalProcessorSTDOUT.readLine();
+                while (! externalProcessorSTDOUT.ready())
+                   Thread.sleep(1000);
+                StringBuilder buf = new StringBuilder(256);
+                outcode = externalProcessorSTDOUT.read();
+                while (outcode != -1) {
+                    outchar = (char) outcode;
+                    if (outchar == EOPMarker || outchar == EOMMarker) {
+                        if (buf.length() > 0) {
+                            context.forward(dummy,buf.toString());
+                            buf.setLength(0);
+                            buf.trimToSize();
+                        }
+                        if (outchar == EOPMarker) break;
                     }
-                  }
+                    else
+                        buf.append(outchar);
+                    outcode = externalProcessorSTDOUT.read();
                 }
-                context.forward(dummy, outline);
+                if (outcode == -1)
+                    throw new KafkaException("External process seems to be dead.");
+                log.debug("Processing finished.");
               }
               catch (IOException e){
                 log.error("Failed to read data from external process.");
                 throw new KafkaException(e);
+              }
+              catch (InterruptedException int_e) {
+                log.error("Interrupted by user.");
+                throw new KafkaException(int_e);
               }
             }
 
@@ -111,9 +130,11 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
                   this.externalProcessor = new ProcessBuilder(externalCommand).start();
                   this.externalProcessorSTDIN  = new BufferedWriter(new OutputStreamWriter(externalProcessor.getOutputStream()));
                   this.externalProcessorSTDOUT = new BufferedReader(new InputStreamReader(externalProcessor.getInputStream()));
+                  this.externalProcessorLogger = new ExternalProcessLogger(externalProcessor, externalCommand[0]);
+                  (new Thread(this.externalProcessorLogger)).start();
                 }
                 catch (IOException e){
-                  log.error("Can't start new process with command/parameters: {}", externalCommand.toString());
+                  log.error("Can't start new process with command: {}", externalCommand[0]);
                   throw new KafkaException(e);
                 }
             }
