@@ -44,6 +44,7 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
 
     private String[] externalCommand;
     private char EOPMarker;
+    private char EOMMarker;
     private final ExternalProcessorConfig config;
 
     public ExternalProcessorSupplier(Map<String, Object> props) {
@@ -54,6 +55,7 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
             this.config = config;
             this.externalCommand = config.externalCommand.split(" ");
             this.EOPMarker = config.EOPMarker;
+            this.EOMMarker = '\n';
     }
 
     @Override
@@ -81,23 +83,35 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
                 externalProcessorSTDIN.write(line);
                 externalProcessorSTDIN.newLine();
                 externalProcessorSTDIN.flush();
-                outline = externalProcessorSTDOUT.readLine();
-                if (EOPMarker != (char) '\n') {
-                  while (outline != null) {
-                    context.forward(dummy, outline);
-                    outcode = externalProcessorSTDOUT.read();
-                    if ((char) outcode == EOPMarker) break;
-                    else {
-                      outchar = (char) outcode;
-                      outline = String.valueOf(outchar)+externalProcessorSTDOUT.readLine();
+                while (! externalProcessorSTDOUT.ready() && externalProcessor.isAlive())
+                   Thread.sleep(1000);
+                StringBuilder buf = new StringBuilder(256);
+                outcode = externalProcessorSTDOUT.read();
+                while (outcode != -1) {
+                    outchar = (char) outcode;
+                    if (outchar == EOPMarker || outchar == EOMMarker) {
+                        if (buf.length() > 0) {
+                            context.forward(dummy,buf.toString());
+                            buf.setLength(0);
+                            buf.trimToSize();
+                        }
+                        if (outchar == EOPMarker) break;
                     }
-                  }
+                    else
+                        buf.append(outchar);
+                    outcode = externalProcessorSTDOUT.read();
                 }
-                context.forward(dummy, outline);
+                if (outcode == -1)
+                    throw new KafkaException("External process seems to be dead.");
+                log.debug("Processing finished.");
               }
               catch (IOException e){
                 log.error("Failed to read data from external process.");
                 throw new KafkaException(e);
+              }
+              catch (InterruptedException int_e) {
+                log.error("Interrupted by user.");
+                throw new KafkaException(int_e);
               }
             }
 
