@@ -257,7 +257,7 @@ class AbstractProcessorStage(AbstractStage):
                 failures.append((p, e))
         if failures:
             for f in failures:
-                sys.stderr.write("(ERROR) Failed to stop %s: %s" % f)
+                sys.stderr.write("(ERROR) Failed to stop %s: %s\n" % f)
 
 
     @staticmethod
