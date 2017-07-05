@@ -112,8 +112,10 @@ def doc_content_triples(data):
 				#print len(campaign)
 				if len(campaign) > 0:
 					for j, pt_item in enumerate(campaign):
-						triples.append('''<{graph}/campaign/%s> a <{ontology}#Campaign> .'''.format(**PLAINTEXT) % (pt_item))
-						triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsCampaign> <{graph}/campaign/%s> .'''.format(**PLAINTEXT) % (pt_item))
+						PLAINTEXT["campaign"] = pt_item
+						triples.append('''<{graph}/campaign/{campaign}> a <{ontology}#Campaign> .'''.format(**PLAINTEXT))
+						triples.append('''<{graph}/document/{document_ID}/{content_name}> <{ontology}#mentionsCampaign> <{graph}/campaign/{campaign}> .'''.format(**PLAINTEXT))
+						del PLAINTEXT["campaign"]
 				else:
 					sys.stderr.write("No campaigns in this file.\n")
 			except KeyError:
