@@ -1,5 +1,9 @@
 #!/usr/bin/env python
 
+"""
+PDF Analyzer streaming interface
+"""
+
 import json
 import os
 import shutil
@@ -16,9 +20,13 @@ sys.path.append(os.path.dirname(base_dir))
 import pyDKB
 
 def process(stage, msg):
-    # Obtain the PDF name from the input. Input is expected to be a JSON containing a single dictionary with 2 items:
-    # PDF - name of the PDF.
-    # dkbID - must be passed forward.
+    """ Obtain the PDF name from the input.
+
+    Input is expected to be a JSON containing a single dictionary with
+    2 items:
+      PDF - name of the PDF.
+      dkbID - must be passed forward.
+    """
     inp = msg.content()
     if "PDF" not in inp:
         sys.stderr.write("Error: no PDF specified.\n")
@@ -45,8 +53,10 @@ def process(stage, msg):
         os.mkdir(dirname)
         try:
             if hdfs:
-                command_list = cfg["HDFS_DOWNLOAD_COMMAND"].split() + [fname, dirname]
-                subprocess.call(command_list, stderr = sys.stderr, stdout = sys.stderr)
+                command_list = cfg["HDFS_DOWNLOAD_COMMAND"].split() \
+                               + [fname, dirname]
+                subprocess.call(command_list, stderr=sys.stderr,
+                                stdout=sys.stderr)
             else:
                 shutil.copy(fname, dirname)
         except Exception as e:
@@ -60,7 +70,7 @@ def process(stage, msg):
         p = Paper(pdfname, dirname)
         outf = pdfname + ".json"
         p.mine_text()
-        p.export(quick = True, outf = outf)
+        p.export(quick=True, outf=outf)
         p.delete()
         with open(outf, "r") as f:
             outp = json.load(f)
@@ -74,15 +84,15 @@ def process(stage, msg):
     return True
 
 if __name__ == "__main__":
-    stage = pyDKB.dataflow.stage.JSONProcessorStage()
-    stage.process = process
+    analyzer_stage = pyDKB.dataflow.stage.JSONProcessorStage()
+    analyzer_stage.process = process
 
     try:
-        stage.parse_args(sys.argv[1:])
-        stage.run()
+        analyzer_stage.parse_args(sys.argv[1:])
+        analyzer_stage.run()
     except (pyDKB.dataflow.DataflowException, RuntimeError), e:
         if str(e):
             sys.stderr.write("Error while running stage 30: %s\n" % e)
     finally:
-        stage.stop()
-    
+        analyzer_stage.stop()
+
