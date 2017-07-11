@@ -21,7 +21,7 @@ def process(stage, msg):
     # dkbID - must be passed forward.
     inp = msg.content()
     if "PDF" not in inp:
-        sys.stderr.write("Error: no PDF specified.")
+        sys.stderr.write("Error: no PDF specified.\n")
         return False
     fname = inp["PDF"]
 
@@ -50,10 +50,11 @@ def process(stage, msg):
             else:
                 shutil.copy(fname, dirname)
         except Exception as e:
-            sys.stderr.write("Failed to copy file into temporary directory")
+            sys.stderr.write("Failed to copy file into temporary directory\n")
             if hdfs:
-                sys.stderr.write("hdfs download command:" + str(command_list))
-            sys.stderr.write(str(e))
+                sys.stderr.write("hdfs download command:" + str(command_list)
+                                 + "\n")
+            sys.stderr.write(str(e) + "\n")
             shutil.rmtree(dirname)
             return False
         p = Paper(pdfname, dirname)
