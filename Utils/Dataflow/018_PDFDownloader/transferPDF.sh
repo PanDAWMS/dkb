@@ -83,4 +83,6 @@ fi
 local_file=`download $1` \
   && upload $local_file $2 2>/dev/null
 
+[ -f "$local_file" ] && rm $local_file
+
 exit $?
