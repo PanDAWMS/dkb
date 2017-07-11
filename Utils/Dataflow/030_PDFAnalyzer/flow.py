@@ -11,6 +11,8 @@ from manager import path_join
 from manager import Paper
 from manager import re_pdfname
 
+base_dir = os.path.dirname(os.path.abspath(__file__))
+sys.path.append(os.path.dirname(base_dir))
 import pyDKB
 
 def process(stage, msg):
