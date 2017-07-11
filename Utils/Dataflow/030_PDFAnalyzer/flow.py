@@ -29,7 +29,7 @@ def process(stage, msg):
     """
     inp = msg.content()
     if "PDF" not in inp:
-        sys.stderr.write("Error: no PDF specified.\n")
+        sys.stderr.write("(ERROR) no PDF specified.\n")
         return False
     fname = inp["PDF"]
 
@@ -41,11 +41,12 @@ def process(stage, msg):
         hdfs = False
         fname = os.path.abspath(fname).replace("\\", "/")
         if not os.access(fname, os.F_OK):
-            sys.stderr.write("No such file or directory:" + fname + "\n")
+            sys.stderr.write("(ERROR) No such file or directory:"
+                             + fname + "\n")
             return False
     pdfname = re_pdfname.search(fname)
     if not pdfname:
-        sys.stderr.write("File " + fname + " is not a pdf file.\n")
+        sys.stderr.write("(ERROR) File " + fname + " is not a pdf file.\n")
         return False
     else:
         pdfname = pdfname.group(1)
@@ -60,11 +61,13 @@ def process(stage, msg):
             else:
                 shutil.copy(fname, dirname)
         except Exception as e:
-            sys.stderr.write("Failed to copy file into temporary directory\n")
+            sys.stderr.write("(ERROR) Failed to copy file into temporary"
+                             " directory\n")
             if hdfs:
-                sys.stderr.write("hdfs download command:" + str(command_list)
+                sys.stderr.write("(ERROR) hdfs download command:"
+                                 + str(command_list)
                                  + "\n")
-            sys.stderr.write(str(e) + "\n")
+            sys.stderr.write("(ERROR) " + str(e) + "\n")
             shutil.rmtree(dirname)
             return False
         p = Paper(pdfname, dirname)
@@ -92,7 +95,7 @@ if __name__ == "__main__":
         analyzer_stage.run()
     except (pyDKB.dataflow.DataflowException, RuntimeError), e:
         if str(e):
-            sys.stderr.write("Error while running stage 30: %s\n" % e)
+            sys.stderr.write("(ERROR) while running stage 30: %s\n" % e)
     finally:
         analyzer_stage.stop()
 
