@@ -35,17 +35,17 @@ counter = 0
 
 def collection_verification(collection):
     """ Check primary collection. """
+    if type(collection) == dict:
+        collection = [collection]
+    elif type(collection) != list:
+        sys.stderr.write("(WARN) Collection is expected to be of type"
+                         " '%s' or '%s' (get '%s')\n"
+                         % (list, dict, type(collection)))
+        return False
     if len(collection) > 0 \
       and type(collection[0]) is dict \
-      and collection[0]['primary'] in ("ARTICLE", "ATLAS_Papers"):
+      and collection[0].get('primary', '') in ("ARTICLE", "ATLAS_Papers"):
         return True
-    elif type(collection) is list:
-        try:
-            if collection[0]['primary'] in ("ARTICLE", "ATLAS_Papers"):
-                return True
-        except (IndexError, TypeError, ValueError):
-            return False
-
 
 def search_paper(cds, paper_info):
     """ Perform CDS search by given paper info.
