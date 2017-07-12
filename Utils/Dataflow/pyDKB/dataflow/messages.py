@@ -88,7 +88,7 @@ class JSONMessage(AbstractMessage):
             if code == codeType.STRING:
                 self.decoded = json.loads(orig)
             else:
-                sys.stderr.write("Unknown code type: %s\n"
+                sys.stderr.write("(ERROR) Unknown code type: %s\n"
                                   % codeType.memberName(code))
             self.encoded = orig
         return self.decoded
@@ -100,7 +100,7 @@ class JSONMessage(AbstractMessage):
             if code == codeType.STRING:
                 self.encoded = json.dumps(orig)
             else:
-                sys.stderr.write("Unknown code type: %s\n"
+                sys.stderr.write("(ERROR) Unknown code type: %s\n"
                                   % codeType.memberName(code))
             self.decoded = orig
         return self.encoded
@@ -133,7 +133,7 @@ class TTLMessage(AbstractMessage):
             if code == codeType.STRING:
                 self.decoded = orig
             else:
-                sys.stderr.write("Unknown code type: %s\n"
+                sys.stderr.write("(ERROR) Unknown code type: %s\n"
                                   % codeType.memberName(code))
             self.encoded = orig
         return self.decoded
@@ -145,7 +145,7 @@ class TTLMessage(AbstractMessage):
             if code == codeType.STRING:
                 self.encoded = str(orig)
             else:
-                sys.stderr.write("Unknown code type: %s\n"
+                sys.stderr.write("(ERROR) Unknown code type: %s\n"
                                   % codeType.memberName(code))
             self.decoded = orig
         return self.encoded

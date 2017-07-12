@@ -104,7 +104,7 @@ def listdir(dirname, mode='a'):
             raise subprocess.CalledProcessError(proc.returncode, cmd)
     except (subprocess.CalledProcessError, OSError, HDFSException), err:
         sys.stderr.write("(ERROR) Can not list the HDFS directory: %s\n"
-                         "Error message: %s\n" % (dirname, err))
+                         "(ERROR) Error message: %s\n" % (dirname, err))
         return []
 
     # Parse output of `ls`:

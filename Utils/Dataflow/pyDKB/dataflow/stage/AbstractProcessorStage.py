@@ -213,7 +213,7 @@ class AbstractProcessorStage(AbstractStage):
         # Check that data source is specified
         if self.ARGS.source == 'f' \
             and not (self.ARGS.input_files or self.ARGS.input_dir):
-            sys.stderr.write("No input data sources specified.\n")
+            sys.stderr.write("(ERROR) No input data sources specified.\n")
             self.print_usage(sys.stderr)
             raise DataflowException
 
@@ -286,7 +286,7 @@ class AbstractProcessorStage(AbstractStage):
             return msg
         except (ValueError, TypeError), err:
             sys.stderr.write("(WARN) Failed to read input message as %s.\n"
-                             "Cause: %s\n" % (messageClass.typeName(), err))
+                             "(WARN) Cause: %s\n" % (messageClass.typeName(), err))
             return None
 
     def input(self):
@@ -388,7 +388,7 @@ class AbstractProcessorStage(AbstractStage):
                     files.append(f)
         except OSError, err:
             sys.stderr.write("(ERROR) Failed to get list of files.\n"
-                             "Error message: %s\n" % err)
+                             "(ERROR) Error message: %s\n" % err)
         if not files:
             return []
         self.ARGS.input_files = files
@@ -427,7 +427,7 @@ class AbstractProcessorStage(AbstractStage):
                     os.makedirs(output_dir, 0770)
                 except OSError, err:
                     sys.stderr.write("(ERROR) Failed to create output directory\n"
-                                     "Error message: %s\n" % err)
+                                     "(ERROR) Error message: %s\n" % err)
                     raise DataflowException
             else:
                 hdfs.makedirs(output_dir)
