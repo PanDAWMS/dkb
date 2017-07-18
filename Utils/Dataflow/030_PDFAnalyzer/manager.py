@@ -1,9 +1,12 @@
 # -*- coding: utf-8 -*-
-import json, os, re, shutil, sys
-from shutil import rmtree
+import json
+import os
+import re
+import shutil
+import sys
 
-from pdfwork import *
-from xmltable import *
+import pdfwork
+import xmltable
 
 CONFIG_FILE = "config.json"
 default_cfg = {
@@ -47,7 +50,7 @@ def path_join(a, b):
 
 if __name__ == "__main__":
     try:
-        from Tkinter import *
+        import Tkinter
         from tkFileDialog import askdirectory, askopenfilename, askopenfilenames, asksaveasfile
         import tkMessageBox
     except Exception as e:
@@ -368,7 +371,7 @@ class Paper:
         # Fetch xml page of the paper. Extract xml page from PDF if not done yet. Result is either text(if text variable is True) or lines (if text variable is False).
         fname = path_join(self.xml_dir, "%d.xml" % (number))
         if not os.access(fname, os.F_OK):
-            [num_pages, rotated_pages] = mine_text(self.pdf, [number], "xml", self.rotated_pages, self.xml_dir)
+            [num_pages, rotated_pages] = pdfwork.mine_text(self.pdf, [number], "xml", self.rotated_pages, self.xml_dir)
         with open(fname, "r") as f:
             if text:
                 r = f.read()
@@ -379,7 +382,7 @@ class Paper:
         # Extract text from the PDF file.
         if not os.access(self.txt_dir, os.F_OK):
             os.mkdir(self.txt_dir)
-        [num_pages, self.rotated_pages] = mine_text(self.pdf, folder = self.txt_dir)
+        [num_pages, self.rotated_pages] = pdfwork.mine_text(self.pdf, folder = self.txt_dir)
         self.num_pages = num_pages
         if not os.access(self.xml_dir, os.F_OK):
             os.mkdir(self.xml_dir)
@@ -417,7 +420,7 @@ class Paper:
                 self.__dict__[key] = inp[key]
     def delete(self):
         # Delete all files associated with paper.
-        rmtree(self.dir)
+        shutil.rmtree(self.dir)
 ##    def find_title(self): # New title determining method, does not works ideally yet. Titles consisting of several lines are problematic to determine.
 ##        lines = self.get_xml_page(1)
 ##
@@ -575,7 +578,7 @@ class Paper:
         datatables = {}
         for n in pages_with_tables: # Extract all tables from selected pages.
             text = self.get_xml_page(n, True)
-            tables = get_tables_from_text(text)
+            tables = xmltable.get_tables_from_text(text)
             for table in tables: # Save headers and tables matching selected numbers and having dataset-related columns.
                 num = int(re_table_header_short.match(table.header).group(1))
                 if num in headers_data:
@@ -699,9 +702,9 @@ class Manager:
     def __init__(self, window):
         self.window = window
         self.window.title("Support notes manager")
-        main_menu = Menu(self.window)
-        papers_menu = Menu(main_menu, tearoff = 0)
-        export_menu = Menu(main_menu, tearoff = 0)
+        main_menu = Tkinter.Menu(self.window)
+        papers_menu = Tkinter.Menu(main_menu, tearoff = 0)
+        export_menu = Tkinter.Menu(main_menu, tearoff = 0)
         papers_menu.add_command(label = "Add...", command = self.add_papers)
         papers_menu.add_command(label = "Save all", command = self.save_paper)
         papers_menu.add_command(label = "Clear all", command = self.clear_paper)
@@ -727,15 +730,15 @@ class Manager:
         if not os.access(EXPORT_DIR, os.F_OK):
             os.mkdir(EXPORT_DIR)
 
-        self.cnvs = Canvas(self.window, width = 1200, height = 800)
+        self.cnvs = Tkinter.Canvas(self.window, width = 1200, height = 800)
         self.cnvs.grid(row = 1, column = 0)
-        self.frame = Frame(self.cnvs)
+        self.frame = Tkinter.Frame(self.cnvs)
         self.cnvs.create_window(0, 0, window = self.frame, anchor = 'nw')
-        scrlbr = Scrollbar(self.window, command = self.cnvs.yview)
+        scrlbr = Tkinter.Scrollbar(self.window, command = self.cnvs.yview)
         scrlbr.grid(row = 0, rowspan = 2, column = 1, sticky = 'ns')
         self.cnvs.configure(yscrollcommand = scrlbr.set)
 
-        self.status = Label(self.window, text = "", bd = 1, relief = SUNKEN)
+        self.status = Tkinter.Label(self.window, text = "", bd = 1, relief = Tkinter.SUNKEN)
         self.status.grid(row = 2,  sticky = 'we')
 
         self.window.protocol("WM_DELETE_WINDOW", self.finish) # Intercept closing the program via Alt + F4 or other methods to perform a clean exit.
@@ -772,11 +775,11 @@ class Manager:
                 t = p.fname + "*"
             else:
                 t = p.fname
-            b = Button(self.frame, text = t)
+            b = Tkinter.Button(self.frame, text = t)
             b.config(command = lambda paper = p: self.show_paper_info(False, paper))
             b.grid(row = r, column = 0)
             if p.title is not None:
-                l = Label(self.frame, text = p.title)
+                l = Tkinter.Label(self.frame, text = p.title)
                 l.grid(row = r, column = 1)
             r += 1
             
@@ -784,43 +787,43 @@ class Manager:
         self.cnvs.configure(scrollregion=(0, 0, self.frame.winfo_width(), self.frame.winfo_height()))
     def preferences(self):
         # Show preferences window.
-        w = Toplevel()
+        w = Tkinter.Toplevel()
         w.title("Preferences")
         w.transient(self.window)
         w.grab_set()
-        determine_title = BooleanVar()
+        determine_title = Tkinter.BooleanVar()
         determine_title.set(cfg["DETERMINE_TITLE"])
-        open_intervals_text = BooleanVar()
+        open_intervals_text = Tkinter.BooleanVar()
         open_intervals_text.set(cfg["OPEN_INTERVALS_TEXT"])
-        open_intervals_tables = BooleanVar()
+        open_intervals_tables = Tkinter.BooleanVar()
         open_intervals_tables.set(cfg["OPEN_INTERVALS_TABLES"])
-        work_dir = StringVar()
+        work_dir = Tkinter.StringVar()
         work_dir.set(cfg["WORK_DIR"])
 
-        frame = Frame(w)
+        frame = Tkinter.Frame(w)
 
-        l = Label(frame, text = "Working directory")
+        l = Tkinter.Label(frame, text = "Working directory")
         l.grid(row = 0, column = 0)
-        e = Entry(frame, width = 100, textvariable = work_dir)
+        e = Tkinter.Entry(frame, width = 100, textvariable = work_dir)
         e.grid(row = 0, column = 1)
 
-        l = Label(frame, text = "Determine papers' titles")
+        l = Tkinter.Label(frame, text = "Determine papers' titles")
         l.grid(row = 1, column = 0)
-        b = Checkbutton(frame, variable = determine_title)
+        b = Tkinter.Checkbutton(frame, variable = determine_title)
         b.grid(row = 1, column = 1)
         
-        l = Label(frame, text = "Open intervals in text")
+        l = Tkinter.Label(frame, text = "Open intervals in text")
         l.grid(row = 2, column = 0)
-        b = Checkbutton(frame, variable = open_intervals_text)
+        b = Tkinter.Checkbutton(frame, variable = open_intervals_text)
         b.grid(row = 2, column = 1)
 
-        l = Label(frame, text = "Open intervals in tables")
+        l = Tkinter.Label(frame, text = "Open intervals in tables")
         l.grid(row = 3, column = 0)
-        b = Checkbutton(frame, variable = open_intervals_tables)
+        b = Tkinter.Checkbutton(frame, variable = open_intervals_tables)
         b.grid(row = 3, column = 1)
 
         frame.grid(row = 0, column = 0)
-        b = Button(w, text = "Done", command = w.destroy)
+        b = Tkinter.Button(w, text = "Done", command = w.destroy)
         b.grid(row = 1, column = 0)
         self.window.wait_window(w)
 
@@ -874,7 +877,7 @@ class Manager:
                     except Exception as e:
                         errors[fname] = e
                         if os.access(paper_dir, os.F_OK):
-                            rmtree(paper_dir)                            
+                            shutil.rmtree(paper_dir)                            
             if n < len(fnames):
                 n += 1
                 self.window.after(100, lambda: self.add_papers(fnames, errors, n))
@@ -923,45 +926,45 @@ class Manager:
             self.determine_paper_title_step_1(window, paper)
             return 0
         if not window:
-            window = Toplevel()
+            window = Tkinter.Toplevel()
         else:
             for c in window.winfo_children():
                 c.destroy()
         window.title("Info: %s" % paper.fname)
-        l = Label(window, text = "File name: %s" % paper.fname)
+        l = Tkinter.Label(window, text = "File name: %s" % paper.fname)
         l.grid(row = 0, column = 1)
-        b = Button(window, text = "Save", command = lambda paper = paper: self.save_paper(paper))
+        b = Tkinter.Button(window, text = "Save", command = lambda paper = paper: self.save_paper(paper))
         b.grid(row = 0, column = 2)        
-        b = Button(window, text = "Export", command = lambda paper = paper: paper.export()) # Maybe this should ask for save before export...
+        b = Tkinter.Button(window, text = "Export", command = lambda paper = paper: paper.export()) # Maybe this should ask for save before export...
         b.grid(row = 0, column = 3)        
-        b = Button(window, text = "Clear", command = lambda window = window, paper = paper: self.clear_paper(window, paper))
+        b = Tkinter.Button(window, text = "Clear", command = lambda window = window, paper = paper: self.clear_paper(window, paper))
         b.grid(row = 0, column = 4)        
-        b = Button(window, text = "Delete", command = lambda window = window, paper = paper: self.delete_paper(window, paper))
+        b = Tkinter.Button(window, text = "Delete", command = lambda window = window, paper = paper: self.delete_paper(window, paper))
         b.grid(row = 0, column = 5)        
-        l = Label(window, text = "Title: %s" % paper.title)
+        l = Tkinter.Label(window, text = "Title: %s" % paper.title)
         l.grid(row = 1, columnspan = 5)
-        l = Label(window, text = "Pages: %d" % paper.num_pages)
+        l = Tkinter.Label(window, text = "Pages: %d" % paper.num_pages)
         l.grid(row = 2, columnspan = 5)
-        l = Label(window, text = "Rotated pages: %s" % str(paper.rotated_pages))
+        l = Tkinter.Label(window, text = "Rotated pages: %s" % str(paper.rotated_pages))
         l.grid(row = 3, columnspan = 5)
-        b = Button(window, text = "Attributes", command = lambda window = window, paper = paper: self.show_paper_attributes(window, paper))
+        b = Tkinter.Button(window, text = "Attributes", command = lambda window = window, paper = paper: self.show_paper_attributes(window, paper))
         b.grid(row = 4, columnspan = 5)        
-        b = Button(window, text = "Datasets", command = lambda window = window, paper = paper: self.show_paper_datasets(window, paper))
+        b = Tkinter.Button(window, text = "Datasets", command = lambda window = window, paper = paper: self.show_paper_datasets(window, paper))
         b.grid(row = 5, columnspan = 5)        
-        b = Button(window, text = "Dataset tables", command = lambda window = window, paper = paper: self.show_paper_datatables(window, paper))
+        b = Tkinter.Button(window, text = "Dataset tables", command = lambda window = window, paper = paper: self.show_paper_datatables(window, paper))
         b.grid(row = 6, columnspan = 5)
-        b = Button(window, text = "Tables", command = lambda window = window, paper = paper: self.show_paper_page_tables(window, paper))
+        b = Tkinter.Button(window, text = "Tables", command = lambda window = window, paper = paper: self.show_paper_page_tables(window, paper))
         b.grid(row = 7, columnspan = 5)
-        b = Button(window, text = "Visualize", command = lambda window = window, paper = paper: self.show_paper_visual(window, paper))
+        b = Tkinter.Button(window, text = "Visualize", command = lambda window = window, paper = paper: self.show_paper_visual(window, paper))
         b.grid(row = 8, columnspan = 5)
-        b = Button(window, text = "Export text", command = lambda paper = paper: self.export_paper_text(paper))
+        b = Tkinter.Button(window, text = "Export text", command = lambda paper = paper: self.export_paper_text(paper))
         b.grid(row = 9, columnspan = 5)
-        b = Button(window, text = "Close", command = window.destroy)
+        b = Tkinter.Button(window, text = "Close", command = window.destroy)
         b.grid(row = 10, columnspan = 5)        
     def determine_paper_title_step_1(self, window, paper):
         # Search the first page in xml format for a possible paper titles. Ask user to pick one.
         if not window:
-            window = Toplevel()
+            window = Tkinter.Toplevel()
         else:
             for c in window.winfo_children():
                 c.destroy()
@@ -983,10 +986,10 @@ class Manager:
             elif empty.match(l):
                 d[size] += " "
                 
-        l = Label(window, text = "Please, select a string which looks like a title of the paper", font = HEADING_FONT)
+        l = Tkinter.Label(window, text = "Please, select a string which looks like a title of the paper", font = HEADING_FONT)
         l.grid(row = 0, columnspan = 2)
         r = 1
-        selection = StringVar()
+        selection = Tkinter.StringVar()
         for key in d:
             if len(d[key]) > 10:
                 if len(d[key]) > 50:
@@ -995,12 +998,12 @@ class Manager:
                     bt = d[key]
                 if r == 1:
                     selection.set(d[key])
-                button = Radiobutton(window, text = d[key], variable = selection, value = d[key], wraplength = 800)
+                button = Tkinter.Radiobutton(window, text = d[key], variable = selection, value = d[key], wraplength = 800)
                 button.grid(row = r, columnspan = 2)
                 r += 1
-        button = Button(window, text = "Proceed", command = lambda window = window, paper = paper, ptv = selection: self.determine_paper_title_step_2(window, paper, ptv))
+        button = Tkinter.Button(window, text = "Proceed", command = lambda window = window, paper = paper, ptv = selection: self.determine_paper_title_step_2(window, paper, ptv))
         button.grid(row = r, column = 0)
-        button = Button(window, text = "Cancel", command = window.destroy)
+        button = Tkinter.Button(window, text = "Cancel", command = window.destroy)
         button.grid(row = r, column = 1)
     def determine_paper_title_step_2(self, window, paper, possible_title_variable):
         # Compare the title string selected by user with the first page in txt format to construct a paper title.
@@ -1027,14 +1030,14 @@ class Manager:
                 title += l.replace("\n", " ")
             elif title:
                 break
-        l = Label(window, text = "Please, correct the title, if needed.", font = HEADING_FONT)
+        l = Tkinter.Label(window, text = "Please, correct the title, if needed.", font = HEADING_FONT)
         l.grid(row = 0, columnspan = 2)
-        e = Entry(window, width = 150)
+        e = Tkinter.Entry(window, width = 150)
         e.insert(0, title)
         e.grid(row = 1, columnspan = 2)
-        button = Button(window, text = "Done", command = lambda window = window, paper = paper, value = e: self.update_paper_parameter(window, paper, "title", value))
+        button = Tkinter.Button(window, text = "Done", command = lambda window = window, paper = paper, value = e: self.update_paper_parameter(window, paper, "title", value))
         button.grid(row = 2, column = 0)
-        button = Button(window, text = "Back", command = lambda window = window, paper = paper: self.determine_paper_title_step_1(window, paper))
+        button = Tkinter.Button(window, text = "Back", command = lambda window = window, paper = paper: self.determine_paper_title_step_1(window, paper))
         button.grid(row = 2, column = 1)
     def update_paper_parameter(self, window, paper, param, value):
         # Update a part of paper metadata and proceed to corresponding window.
@@ -1088,13 +1091,13 @@ class Manager:
                                 msg += "?"
                         msg += "\n"
                     msg += "_______________________________\n"
-                nw = Toplevel()
+                nw = Tkinter.Toplevel()
                 nw.title("No year found")
-                t = Text(nw)
-                t.insert(END, msg)
-                t.config(state = DISABLED)
+                t = Tkinter.Text(nw)
+                t.insert(Tkinter.END, msg)
+                t.config(state = Tkinter.DISABLED)
                 t.grid(row = 0, column = 0)
-                b = Button(nw, text = "Close", command = nw.destroy)
+                b = Tkinter.Button(nw, text = "Close", command = nw.destroy)
                 b.grid(row = 1, column = 0)
                 del attrs["possible years"]
             self.update_paper_parameter(window, paper, "general", attrs)
@@ -1103,22 +1106,22 @@ class Manager:
             for a in paper.attributes_general:
                 if a == "links":
                     if paper.__dict__[a]:
-                        l = Label(window, text = "Links:")
+                        l = Tkinter.Label(window, text = "Links:")
                         l.grid(row = r, column = 0)
                         r += 1
                         for key in paper.__dict__[a]:
-                            l = Label(window, text = "%s %s" % (key, paper.__dict__[a][key]))
+                            l = Tkinter.Label(window, text = "%s %s" % (key, paper.__dict__[a][key]))
                             l.grid(row = r, column = 0)
                             r += 1                            
                     else:
-                        l = Label(window, text = "No links")
+                        l = Tkinter.Label(window, text = "No links")
                         l.grid(row = r, column = 0)
                         r += 1
                 else:
-                    l = Label(window, text = "%s:%s"%(a, str(paper.__dict__[a])))
+                    l = Tkinter.Label(window, text = "%s:%s"%(a, str(paper.__dict__[a])))
                     l.grid(row = r, column = 0)
                     r += 1
-            b = Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
+            b = Tkinter.Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
             b.grid(row = r, column = 0)            
     def show_paper_datasets(self, window, paper):
         # Determine / display paper datasets.
@@ -1129,81 +1132,81 @@ class Manager:
             (text, datasets) = paper.find_datasets()
 
             if datasets:
-                cnvs = Canvas(window, width = 1200, height = 800)
+                cnvs = Tkinter.Canvas(window, width = 1200, height = 800)
                 cnvs.grid(row = 0, column = 0, columnspan = 2)
 
-                frame = Frame(cnvs)
+                frame = Tkinter.Frame(cnvs)
                 cnvs.create_window(0, 0, window = frame, anchor = 'nw')
                 
                 r = 0
                 dataset_entries = {}
                 for c in datasets:
-                    l = Label(frame, text = c, font = HEADING_FONT)
+                    l = Tkinter.Label(frame, text = c, font = HEADING_FONT)
                     l.grid(row = r, column = 0, columnspan = 2)
-                    category_selected = IntVar()
+                    category_selected = Tkinter.IntVar()
                     category_selected.set(1)
-                    check_category_b = Checkbutton(frame, var = category_selected)
+                    check_category_b = Tkinter.Checkbutton(frame, var = category_selected)
                     check_category_b.grid(row = r, column = 3)
                     r += 1
                     dataset_entries[c] = []
                     selected_list = []
                     datasets[c].sort(key = lambda d: d[0])
                     for [name, special] in datasets[c]:
-                        l = Label(frame, text = special)
+                        l = Tkinter.Label(frame, text = special)
                         l.grid(row = r, column = 0)
-                        e = Entry(frame, width = 150)
+                        e = Tkinter.Entry(frame, width = 150)
                         e.insert(0, name)
                         e.grid(row = r, column = 1)
-                        selected = IntVar()
+                        selected = Tkinter.IntVar()
                         selected.set(1)
-                        b = Checkbutton(frame, var = selected) # TO DO: checkbuttons for "(un)select all". 
+                        b = Tkinter.Checkbutton(frame, var = selected) # TO DO: checkbuttons for "(un)select all". 
                         dataset_entries[c].append([e, special, selected])
                         selected_list.append(selected)
                         b.grid(row = r, column = 3, pady = 5)
                         r += 1
                     check_category_b.config(command = lambda v = category_selected, l = selected_list: check_all_button(v, l)) # This command is not called when individual checkbuttons are clicked - Therefore, global checkbox will not change its look.
 
-                scrlbr = Scrollbar(window, command = cnvs.yview)
+                scrlbr = Tkinter.Scrollbar(window, command = cnvs.yview)
                 scrlbr.grid(row = 0, column = 2, rowspan = 2, sticky = 'ns')
                 cnvs.configure(yscrollcommand = scrlbr.set)
                 frame.update_idletasks()
                 cnvs.configure(width = frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
                 
-                b = Button(window, text = "Done", command = lambda window = window, paper = paper, value = dataset_entries: self.update_paper_parameter(window, paper, "datasets", value))
+                b = Tkinter.Button(window, text = "Done", command = lambda window = window, paper = paper, value = dataset_entries: self.update_paper_parameter(window, paper, "datasets", value))
                 b.grid(row = 1, column = 0)
-                b = Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
+                b = Tkinter.Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
                 b.grid(row = 1, column = 1)
             else:
                 datasets = {}
                 self.update_paper_parameter(window, paper, "datasets", datasets)
         else:
             if not paper.datasets:
-                l = Label(window, text = "No datasets found", font = HEADING_FONT)
+                l = Tkinter.Label(window, text = "No datasets found", font = HEADING_FONT)
                 l.grid(row = 0)
             else:
-                cnvs = Canvas(window, width = 1200, height = 800)
+                cnvs = Tkinter.Canvas(window, width = 1200, height = 800)
                 cnvs.grid(row = 0, column = 0, columnspan = 2)
 
-                frame = Frame(cnvs)
+                frame = Tkinter.Frame(cnvs)
                 cnvs.create_window(0, 0, window = frame, anchor = 'nw')
 
                 r = 0
                 for k in paper.datasets:                
-                    l = Label(frame, text = k, font = HEADING_FONT)
+                    l = Tkinter.Label(frame, text = k, font = HEADING_FONT)
                     l.grid(row = r)
                     r += 1
 #                    for [d, special] in paper.datasets[k]:
                     for d in paper.datasets[k]:
-                        l = Label(frame, text = d)
+                        l = Tkinter.Label(frame, text = d)
                         l.grid(row = r)
                         r += 1
 
-                scrlbr = Scrollbar(window, command = cnvs.yview)
+                scrlbr = Tkinter.Scrollbar(window, command = cnvs.yview)
                 scrlbr.grid(row = 0, column = 2, rowspan = 2, sticky = 'ns')
                 cnvs.configure(yscrollcommand = scrlbr.set)
                 frame.update_idletasks()
                 cnvs.configure(width = frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
-            b = Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
+            b = Tkinter.Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
             b.grid(row = 1)
     def show_paper_datatables(self, window, paper):
         # Determine / display paper tables which may contain datasets.
@@ -1214,10 +1217,10 @@ class Manager:
             datatables = paper.find_datatables()
             if datatables:
 
-                cnvs = Canvas(window, width = 600, height = 800)
+                cnvs = Tkinter.Canvas(window, width = 600, height = 800)
                 cnvs.grid(row = 0, column = 0, columnspan = 2)
 
-                frame = Frame(cnvs)
+                frame = Tkinter.Frame(cnvs)
                 cnvs.create_window(0, 0, window = frame, anchor = 'nw')
 
                 num = 0
@@ -1226,52 +1229,52 @@ class Manager:
                 datatables_s = []
                 for k in keys:
                     (header, rows) = datatables[k]
-                    t_frame = Frame(frame)
-                    l = Label(t_frame, text = header, font = HEADING_FONT)
+                    t_frame = Tkinter.Frame(frame)
+                    l = Tkinter.Label(t_frame, text = header, font = HEADING_FONT)
                     l.grid(row = 0, column = 0, columnspan = len(rows[0]))
                     r = 1
                     for row in rows:
                         c = 0
                         for line in row:
-                            l = Label(t_frame, text = line)
+                            l = Tkinter.Label(t_frame, text = line)
                             l.grid(row = r, column = c)
                             c += 1
                         r += 1
                         if r == 50:
-                            l = Label(t_frame, text = "Table is too large, omitting remaining rows.")
+                            l = Tkinter.Label(t_frame, text = "Table is too large, omitting remaining rows.")
                             l.grid(row = r, columnspan = c)
                             break
                     t_frame.grid(row = num, column = 0)
-                    selected = IntVar()
+                    selected = Tkinter.IntVar()
                     selected.set(1)
-                    b = Checkbutton(t_frame, var = selected) # TO DO: checkbuttons for "(un)select all".
+                    b = Tkinter.Checkbutton(t_frame, var = selected) # TO DO: checkbuttons for "(un)select all".
                     b.grid(row = 0, column = len(rows[0]))
                     datatables_s.append([k, header, rows, selected])
                     num += 1
 
-                scrlbr = Scrollbar(window, command = cnvs.yview)
+                scrlbr = Tkinter.Scrollbar(window, command = cnvs.yview)
                 scrlbr.grid(row = 0, column = 2, rowspan = 2, sticky = 'ns')
                 cnvs.configure(yscrollcommand = scrlbr.set)
                 frame.update_idletasks()
                 cnvs.configure(width = frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
                 
-                b = Button(window, text = "Done", command = lambda window = window, paper = paper, value = datatables_s: self.update_paper_parameter(window, paper, "datatables", value))
+                b = Tkinter.Button(window, text = "Done", command = lambda window = window, paper = paper, value = datatables_s: self.update_paper_parameter(window, paper, "datatables", value))
                 b.grid(row = 1, column = 0)
-                b = Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
+                b = Tkinter.Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
                 b.grid(row = 1, column = 1)
             else:
                 datatables = {}
                 self.update_paper_parameter(window, paper, "datatables", datatables)
         else:
             if not paper.datatables:
-                l = Label(window, text = "No datatables found", font = HEADING_FONT)
+                l = Tkinter.Label(window, text = "No datatables found", font = HEADING_FONT)
                 l.grid(row = 0)
                 r = 1
             else:
-                cnvs = Canvas(window, width = 1200, height = 800)
+                cnvs = Tkinter.Canvas(window, width = 1200, height = 800)
                 cnvs.grid(row = 0, column = 0, columnspan = 2)
 
-                frame = Frame(cnvs)
+                frame = Tkinter.Frame(cnvs)
                 cnvs.create_window(0, 0, window = frame, anchor = 'nw')
 
                 num = 0
@@ -1279,30 +1282,30 @@ class Manager:
                 keys.sort()
                 for k in keys:
                     (header, rows) = paper.datatables[k]
-                    t_frame = Frame(frame)
-                    l = Label(t_frame, text = header, font = HEADING_FONT)
+                    t_frame = Tkinter.Frame(frame)
+                    l = Tkinter.Label(t_frame, text = header, font = HEADING_FONT)
                     l.grid(row = 0, column = 0, columnspan = len(rows[0]))
                     r = 1
                     for row in rows:
                         c = 0
                         for line in row:
-                            l = Label(t_frame, text = line)
+                            l = Tkinter.Label(t_frame, text = line)
                             l.grid(row = r, column = c)
                             c += 1
                         r += 1
                         if r == 50:
-                            l = Label(t_frame, text = "Table is too large, omitting remaining rows.")
+                            l = Tkinter.Label(t_frame, text = "Table is too large, omitting remaining rows.")
                             l.grid(row = r, columnspan = c)
                             break
                     t_frame.grid(row = num, column = 0)
                     num += 1
 
-                scrlbr = Scrollbar(window, command = cnvs.yview)
+                scrlbr = Tkinter.Scrollbar(window, command = cnvs.yview)
                 scrlbr.grid(row = 0, column = 2, rowspan = 2, sticky = 'ns')
                 cnvs.configure(yscrollcommand = scrlbr.set)
                 frame.update_idletasks()
                 cnvs.configure(width = frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
-            b = Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
+            b = Tkinter.Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
             b.grid(row = 1)
     def show_paper_page_tables(self, window, paper, e = False):
         # Extract tables from a page and display them. Debug function.
@@ -1310,14 +1313,14 @@ class Manager:
             for c in window.winfo_children():
                 c.destroy()
             window.title("Select page")
-            l = Label(window, text = "Page number(1 - %d):"%(paper.num_pages))
+            l = Tkinter.Label(window, text = "Page number(1 - %d):"%(paper.num_pages))
             l.grid(row = 0, column = 0)
-            e = Entry(window, width = 10)
+            e = Tkinter.Entry(window, width = 10)
             e.grid(row = 0, column = 1)
             e.focus_set()
-            b = Button(window, text = "Proceed", command = lambda window = window, paper = paper, e = e: self.show_paper_page_tables(window, paper, e))
+            b = Tkinter.Button(window, text = "Proceed", command = lambda window = window, paper = paper, e = e: self.show_paper_page_tables(window, paper, e))
             b.grid(row = 1, column = 0)
-            b = Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
+            b = Tkinter.Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
             b.grid(row = 1, column = 1)
         else:
             number = e.get()
@@ -1331,40 +1334,40 @@ class Manager:
                     c.destroy()
                 window.title("Tables")
                 text = paper.get_xml_page(number, True)
-                tables = get_tables_from_text(text)
+                tables = xmltable.get_tables_from_text(text)
                 for table_num in range(0, len(tables)):
-                    frame = Frame(window)
-                    l = Label(frame, text = "Table %d" % table_num)
+                    frame = Tkinter.Frame(window)
+                    l = Tkinter.Label(frame, text = "Table %d" % table_num)
                     l.grid(row = 0, column = 0, columnspan = len(tables[table_num].rows[0]))
                     r = 1
                     for row in tables[table_num].rows:
                         c = 0
                         for line in row:
-                            l = Label(frame, text = line.text)
+                            l = Tkinter.Label(frame, text = line.text)
                             l.grid(row = r, column = c)
                             c += 1
                         r += 1
                     frame.grid(row = table_num, column = 0)
                     table_num += 1
                 if not tables:
-                    l = Label(window, text = "No tables found on page %d" % (number))
+                    l = Tkinter.Label(window, text = "No tables found on page %d" % (number))
                     l.grid(row = 0, column = 0)
                     table_num = 1
-                b = Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
+                b = Tkinter.Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
                 b.grid(row = table_num, column = 0)
     def show_paper_visual(self, window, paper, e = False):
         if not e:
             for c in window.winfo_children():
                 c.destroy()
             window.title("Select page")
-            l = Label(window, text = "Page number(1 - %d):"%(paper.num_pages))
+            l = Tkinter.Label(window, text = "Page number(1 - %d):"%(paper.num_pages))
             l.grid(row = 0, column = 0)
-            e = Entry(window, width = 10)
+            e = Tkinter.Entry(window, width = 10)
             e.grid(row = 0, column = 1)
             e.focus_set()
-            b = Button(window, text = "Proceed", command = lambda window = window, paper = paper, e = e: self.show_paper_visual(window, paper, e))
+            b = Tkinter.Button(window, text = "Proceed", command = lambda window = window, paper = paper, e = e: self.show_paper_visual(window, paper, e))
             b.grid(row = 1, column = 0)
-            b = Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
+            b = Tkinter.Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
             b.grid(row = 1, column = 1)
         else:
             number = e.get()
@@ -1377,11 +1380,11 @@ class Manager:
                 for c in window.winfo_children():
                     c.destroy()
                 window.title("Visualization of %s (page %d)" % (paper.fname, number))
-                cnvs = Canvas(window, width = 1200, height = 800)
+                cnvs = Tkinter.Canvas(window, width = 1200, height = 800)
                 cnvs.grid(row = 0, column = 0, columnspan = 2)
 
                 text = paper.get_xml_page(number, True)
-                rows = analyze_page(text)
+                rows = xmltable.analyze_page(text)
                 max_width = max([row[-1].right - row[0].left for row in rows])
                 header_row = False
                 for row in rows:
@@ -1398,7 +1401,7 @@ class Manager:
                     for l in row:
                         cnvs.create_rectangle((l.left, l.top + 10, l.right, l.bottom + 10), outline = color)
                 
-                b = Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
+                b = Tkinter.Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
                 b.grid(row = 1, column = 0)
     def export_paper_text(self, paper):
         # Export full text of a paper into a file.
@@ -1505,5 +1508,5 @@ class Manager:
                     tkMessageBox.showwarning("Unable to export papers", msg)
 
 if __name__ == "__main__":
-    root = Tk()
+    root = Tkinter.Tk()
     mngr = Manager(root)

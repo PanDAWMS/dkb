@@ -1,7 +1,5 @@
 import re
 
-from pdfwork import *
-
 PAGE_SIZE = 1000 # TO DO: improve this.
 
 re_textline = re.compile("<textline bbox=\"[0-9.,]+\">.+?</textline>", re.DOTALL)
