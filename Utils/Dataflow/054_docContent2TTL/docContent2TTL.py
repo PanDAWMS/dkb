@@ -107,7 +107,7 @@ def doc_content_triples(data):
 			except KeyError:
 				campaign = []
 			if not campaign:
-				print("No campaigns in this file.\n")
+				sys.stderr.write("No campaigns in this file.\n")
 	#for i, item in enumerate(triples):
 			#file.write(item)
 	return triples
