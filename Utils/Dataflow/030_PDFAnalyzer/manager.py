@@ -24,7 +24,7 @@ def load_config(default_cfg):
         with open(CONFIG_FILE, "r") as f:
             loaded_cfg = json.load(f)
     except Exception as e:
-        sys.stderr.write("Exception while loading config: %s\n" % e)
+        sys.stderr.write("Exception while loading config: %s\n"%e)
         sys.stderr.write("No config file loaded, using default values\n")
         loaded_cfg = {}
     cfg = {}
@@ -38,7 +38,7 @@ def load_config(default_cfg):
 
 def save_config(cfg):
     with open(CONFIG_FILE, "w") as f:
-        json.dump(cfg, f, indent = 4)
+        json.dump(cfg, f, indent=4)
 
 cfg, save_needed = load_config(default_cfg)
 if save_needed:
@@ -57,23 +57,23 @@ if __name__ == "__main__":
         sys.stderr.write("Exception while loading Tkinter: %s\n" % e)
         sys.stderr.write("Tkinter and/or stuff related to it cannot be loaded, graphical interface will not work\n")
 
-    PAPERS_DIR = path_join(cfg["WORK_DIR"], "papers") # Directory for papers' directories.
-    EXPORT_DIR = path_join(cfg["WORK_DIR"], "export") # Directory for exported files.
-    STAT_FILE = path_join(EXPORT_DIR, "stat.csv") # File for statistics about exported papers.
-    ERRORS_FILE = path_join(EXPORT_DIR, "errors.txt") # File for errors during export.
-    HEADING_FONT = ("Times New Roman", 20) # Font used for headings in the program.
+    PAPERS_DIR = path_join(cfg["WORK_DIR"], "papers")# Directory for papers' directories.
+    EXPORT_DIR = path_join(cfg["WORK_DIR"], "export")# Directory for exported files.
+    STAT_FILE = path_join(EXPORT_DIR, "stat.csv")# File for statistics about exported papers.
+    ERRORS_FILE = path_join(EXPORT_DIR, "errors.txt")# File for errors during export.
+    HEADING_FONT = ("Times New Roman", 20)# Font used for headings in the program.
 
-TXT_DIR = "txt" # Name of the subdirectory with txt files in a paper's directory.
-XML_DIR = "xml" # Name of the subdirectory with xml files in a paper's directory.
-METADATA_FILE = "metadata.json" # Name of the file which holds the metadata extracted from a paper.
+TXT_DIR = "txt"# Name of the subdirectory with txt files in a paper's directory.
+XML_DIR = "xml"# Name of the subdirectory with xml files in a paper's directory.
+METADATA_FILE = "metadata.json"# Name of the file which holds the metadata extracted from a paper.
 
 
 class DatasetCategory:
     def __init__(self, name, string):
         self.name = name
-        self.reg = re.compile(string, re.X) # Standard regular expression for finding datasets.
-        self.reg_spaces = re.compile(string.replace("_", "\ ").replace("\w", "a-zA-Z0-9 "), re.X) # Same as self.reg, but with spaces instead of underscores. This is required because pdfminer sometimes reads underscores as spaces, especially in a document with small font size.
-##        self.reg_dashes = re.compile(string.replace("_", "\-").replace("\w", "a-zA-Z0-9-"), re.X) # This does not works, probably because "-" is a special character, and should be "-" or "\-" in different places of regular expressions. | Same as self.reg, but with dashes instead of underscores. This is required because at least one document lists datasets in such way.
+        self.reg = re.compile(string, re.X)# Standard regular expression for finding datasets.
+        self.reg_spaces = re.compile(string.replace("_", "\ ").replace("\w", "a-zA-Z0-9 "), re.X)# Same as self.reg, but with spaces instead of underscores. This is required because pdfminer sometimes reads underscores as spaces, especially in a document with small font size.
+##        self.reg_dashes = re.compile(string.replace("_", "\-").replace("\w", "a-zA-Z0-9-"), re.X)# This does not works, probably because "-" is a special character, and should be "-" or "\-" in different places of regular expressions. | Same as self.reg, but with dashes instead of underscores. This is required because at least one document lists datasets in such way.
     def find(self, text, intervals, datasets):
 #        print "INTERVALS", intervals
         strings = []
@@ -92,12 +92,12 @@ class DatasetCategory:
                     arr = []
                     for n in nums:
                         arr.append(len(intervals[int(n)]))
-                    size = min(arr) # TO DO: If some intervals are shorter then it should be raised as a warning somewhere...
+                    size = min(arr)# TO DO: If some intervals are shorter then it should be raised as a warning somewhere...
                     for i in range(0, size):
                         ns = s
                         for n in nums:
     #                        print intervals[int(n)]
-                            ns = re.sub("INTERVAL" + n + "!", intervals[int(n)][i], ns)
+                            ns = re.sub("INTERVAL"+n+"!", intervals[int(n)][i], ns)
     #                    print "NEW_STRING:", ns
                         if self.reg.match(ns):
                             datasets[self.name].append([ns, False])
@@ -112,7 +112,7 @@ class DatasetCategory:
                     elif self.reg_spaces.match(s):
                         res = 2
                     for i in range(0, len(intervals)):
-                        s = re.sub("INTERVAL%d!" % (i), intervals[i], s)
+                        s = re.sub("INTERVAL%d!"%(i), intervals[i], s)
                     if res == 1:
                         datasets[self.name].append([s, False])
                     elif res == 2:
@@ -154,8 +154,8 @@ montecarlo = DatasetCategory("montecarlo", r"""mc\d\d           # Project. Examp
                                            [\dINTERVAL!]+       # DataSet ID(DSID)
                                            (\n*[._]\n*[a-zA-Z\d\-:!]+)+
                                            (\n*_\n*[a-z]\d+)+   # AMITag or several
-                                           (_tid\d+(_\d\d)?)?   # Possible production system task and subtask numbers                                           
-                                           """)    
+                                           (_tid\d+(_\d\d)?)?   # Possible production system task and subtask numbers
+                                           """)
 physcont = DatasetCategory("physcont", r"""[a-zA-Z\d\-_\.:!]+
                                            \n*\.\n*             # Field separator
                                            PhysCont             # prodStep - it's always the same.
@@ -200,8 +200,8 @@ category_export_dict = {
 
 # Regular expressions
 #dataset_categories = [group, user, montecarlo, physcont, calibration, realdata, database]
-dataset_categories = [montecarlo, physcont, calibration, realdata, database] # We don't need group and user datasets for now.
-re_pdfname = re.compile("/([^./]+)\.pdf$") # Path must have / as separator, not \.
+dataset_categories = [montecarlo, physcont, calibration, realdata, database]# We don't need group and user datasets for now.
+re_pdfname = re.compile("/([^./]+)\.pdf$")# Path must have / as separator, not \.
 re_table_header = re.compile("Table \d+:.*?\n\n", re.DOTALL)
 re_table_header_short = re.compile("Table (\d+):")
 re_table_datasets = re.compile("(?:sample|dataset|run)")
@@ -244,11 +244,11 @@ re_campaign = re.compile(r"""(
                                 )"""
                          , re.X)
 re_energy = re.compile("(\d+\.?\d*) (G|T)eV")
-re_luminosity = re.compile("(\d+\.?\d*) ?(m|n|p|f)b(?:−|\(cid:0\))1") # WARNING: this "fb-1" is in UTF-8 coding and was copied from miner output. Simple "fb-1" does not works.
+re_luminosity = re.compile("(\d+\.?\d*) ?(m|n|p|f)b(?:−|\(cid:0\))1")# WARNING: this "fb-1" is in UTF-8 coding and was copied from miner output. Simple "fb-1" does not works.
 re_collisions = re.compile("(proton-proton|heavy-ion|pp) collisions")
 re_year = re.compile("(?:acquired|collected|measured|recorded).{0,100}(20\d\d)", re.DOTALL)
 re_year_general = re.compile(".{0,100} 20\d\d.{0,100}")
-re_interval = re.compile("\[(?:[0-9][\\/][0-9\\/\n]+|[0-9]+-[0-9]+)\]") # interval must contain at least two numbers, i.e. [1/2] or [3\4\5].
+re_interval = re.compile("\[(?:[0-9][\\/][0-9\\/\n]+|[0-9]+-[0-9]+)\]")# interval must contain at least two numbers, i.e. [1/2] or [3\4\5].
 re_link = re.compile("(.*)\n? ?(https?://cds\.cern\.ch/record/\d+)")
 
 def find_cut_reg(reg, text):
@@ -270,7 +270,7 @@ def mask_intervals(text):
     while m:
         m = re_interval.search(text)
         if m:
-            text = text.replace(m.group(0), "INTERVAL%d!" % i)
+            text = text.replace(m.group(0), "INTERVAL%d!"%i)
             intervals.append(m.group(0))
             i += 1
 #            print "Interval %d:%s"%(i, m.group(0).strip())
@@ -288,10 +288,10 @@ def organize_intervals(intervals):
                 e = s[:-len(e)] + e
                 if s <= e:
                     ni1 = []
-                    for i1 in range(int(s), int(e) + 1):
+                    for i1 in range(int(s), int(e)+1):
                         ni1.append(str(i1))
-                    maxlen = len(max(ni1, key = lambda num: len(num)))
-                    if len(min(ni1, key = lambda num: len(num))) != maxlen: # TO DO: improve this.
+                    maxlen = len(max(ni1, key=lambda num:len(num)))
+                    if len(min(ni1, key=lambda num:len(num))) != maxlen:# TO DO: improve this.
                         ni2 = []
                         for i1 in ni1:
                             add_zeros = maxlen - len(i1)
@@ -311,7 +311,7 @@ def process_diapason(d):
     if len(e) <= len(s):
         e = s[:-len(e)] + e
         if s <= e:
-            for i in range(int(s), int(e) + 1):
+            for i in range(int(s), int(e)+1):
                 values.append(str(i))
     return values
 
@@ -339,9 +339,9 @@ def cmp_papernames(x, y):
 class Paper:
     # Represents a document which needs to be analyzed, as well as files and other things associated with it.
     attributes_general = ["atlas_name", "campaigns", "energy", "luminosity", "collisions", "data taking year", "possible_project_montecarlo", "possible_project_realdata", "links"]
-    attributes_to_determine = attributes_general + ["title", "datasets", "datatables"] # Paper attributes which are needed but cannot be determined precisely yet (unlike, for example, number of pages).
-    attributes_metadata = attributes_to_determine + ["num_pages", "rotated_pages"] # Attributes which are saved / loaded to / from a file.
-    def __init__(self, fname, dirname = False):
+    attributes_to_determine = attributes_general + ["title", "datasets", "datatables"]# Paper attributes which are needed but cannot be determined precisely yet (unlike, for example, number of pages).
+    attributes_metadata = attributes_to_determine + ["num_pages", "rotated_pages"]# Attributes which are saved / loaded to / from a file.
+    def __init__(self, fname, dirname=False):
         self.fname = fname
         if not dirname:
             self.dir = path_join(PAPERS_DIR, self.fname)
@@ -351,25 +351,25 @@ class Paper:
         self.txt_dir = path_join(self.dir, TXT_DIR)
         self.xml_dir = path_join(self.dir, XML_DIR)
         self.metadata_file = path_join(self.dir, METADATA_FILE)
-        for a in self.attributes_to_determine: 
-            self.__dict__[a] = None # This indicates that attributes should be determined when need to display them arises for the first time. If nothing was found, their values would be set to False or [] or {}. 
+        for a in self.attributes_to_determine:
+            self.__dict__[a] = None# This indicates that attributes should be determined when need to display them arises for the first time. If nothing was found, their values would be set to False or [] or {}. 
 
-        self.num_pages = None # Number of pages in a paper.
-        self.rotated_pages = None # Numbers of pages which are rotated.
+        self.num_pages = None# Number of pages in a paper.
+        self.rotated_pages = None# Numbers of pages which are rotated.
 
-        self.changed = False # This flag is set to True when part of metadata is changed, but not yet saved to the metadata file.
-    def get_txt_page(self, number, text = False):
+        self.changed = False# This flag is set to True when part of metadata is changed, but not yet saved to the metadata file.
+    def get_txt_page(self, number, text=False):
         # Fetch txt page of the paper. Result is either text(if text variable is True) or lines (if text variable is False).
-        fname = path_join(self.txt_dir, "%d.txt" % (number))
+        fname = path_join(self.txt_dir, "%d.txt"%(number))
         with open(fname, "r") as f:
             if text:
                 r = f.read()
             else:
                 r = f.readlines()
         return r
-    def get_xml_page(self, number, text = False):
+    def get_xml_page(self, number, text=False):
         # Fetch xml page of the paper. Extract xml page from PDF if not done yet. Result is either text(if text variable is True) or lines (if text variable is False).
-        fname = path_join(self.xml_dir, "%d.xml" % (number))
+        fname = path_join(self.xml_dir, "%d.xml"%(number))
         if not os.access(fname, os.F_OK):
             [num_pages, rotated_pages] = pdfwork.mine_text(self.pdf, [number], "xml", self.rotated_pages, self.xml_dir)
         with open(fname, "r") as f:
@@ -382,7 +382,7 @@ class Paper:
         # Extract text from the PDF file.
         if not os.access(self.txt_dir, os.F_OK):
             os.mkdir(self.txt_dir)
-        [num_pages, self.rotated_pages] = pdfwork.mine_text(self.pdf, folder = self.txt_dir)
+        [num_pages, self.rotated_pages] = pdfwork.mine_text(self.pdf, folder=self.txt_dir)
         self.num_pages = num_pages
         if not os.access(self.xml_dir, os.F_OK):
             os.mkdir(self.xml_dir)
@@ -391,8 +391,8 @@ class Paper:
     def get_text(self):
         # Read and return mined text of the document.
         text = ""
-        for i in range(1, self.num_pages + 1):
-            with open(path_join(self.txt_dir, "%d.txt") % (i), "r") as f:
+        for i in range(1, self.num_pages+1):
+            with open(path_join(self.txt_dir, "%d.txt")%i, "r") as f:
                 text += f.read()
         return text
     def clear_metadata(self):
@@ -407,7 +407,7 @@ class Paper:
         for key in self.attributes_metadata:
             outp[key] = self.__dict__[key]
         with open(self.metadata_file, "w") as f:
-            json.dump(outp, f, indent = 4)
+            json.dump(outp, f, indent=4)
         self.changed = False
     def load_metadata(self):
         # Import metadata from a file.
@@ -421,7 +421,7 @@ class Paper:
     def delete(self):
         # Delete all files associated with paper.
         shutil.rmtree(self.dir)
-##    def find_title(self): # New title determining method, does not works ideally yet. Titles consisting of several lines are problematic to determine.
+##    def find_title(self):# New title determining method, does not works ideally yet. Titles consisting of several lines are problematic to determine.
 ##        lines = self.get_xml_page(1)
 ##
 ##        d = {}
@@ -464,7 +464,7 @@ class Paper:
 ##            i = 0
 ##            for w in words:
 ##                try:
-##                    w_in = w in xml_title # This throws exception sometimes, something about ascii codec unable to decode.
+##                    w_in = w in xml_title# This throws exception sometimes, something about ascii codec unable to decode.
 ##                except:
 ##                    w_in = False
 ##                if len(w) > 1 and w_in:
@@ -487,7 +487,7 @@ class Paper:
         attrs["campaigns"] = list(set(attrs["campaigns"]))
 
         pages = self.get_txt_page(1, True) + self.get_txt_page(2, True)
-        
+
         attrs["energy"] = False
         tmp = re_energy.search(pages)
         if tmp:
@@ -559,12 +559,12 @@ class Paper:
         pages_with_tables = []
         headers_data = {}
         n = 1
-        while n <= self.num_pages: # Find pages containing table headers.
+        while n <= self.num_pages:# Find pages containing table headers.
             text = self.get_txt_page(n, True)
 #            print n, re_table_header.findall(text.lower())
             page_headers = re_table_header.findall(text)
             page_headers_data = {}
-            for h in page_headers: # Among the headers find ones which may hint that their tables contain datasets. Store these headers, their numbers and their pages.
+            for h in page_headers:# Among the headers find ones which may hint that their tables contain datasets. Store these headers, their numbers and their pages.
                 if re_table_datasets.search(h.lower()):
                     num = int(re_table_header_short.match(h).group(1))
                     page_headers_data[num] = h
@@ -576,29 +576,29 @@ class Paper:
 #        print "PAGES WITH DATASETS TABLES", pages_with_tables
 
         datatables = {}
-        for n in pages_with_tables: # Extract all tables from selected pages.
+        for n in pages_with_tables:# Extract all tables from selected pages.
             text = self.get_xml_page(n, True)
             tables = xmltable.get_tables_from_text(text)
-            for table in tables: # Save headers and tables matching selected numbers and having dataset-related columns.
+            for table in tables:# Save headers and tables matching selected numbers and having dataset-related columns.
                 num = int(re_table_header_short.match(table.header).group(1))
                 if num in headers_data:
 #                    print "TABLE WITH HEADER", headers_data[num].strip(), "MAY CONTAIN DATASETS"
                     data_column = -1
                     skip_first = False
-                    for rnum in range(0, min(2, len(table.rows))): # Check first two rows. Sometimes there is an additional row above main row.
+                    for rnum in range(0, min(2, len(table.rows))):# Check first two rows. Sometimes there is an additional row above main row.
                         for i in range(0, len(table.rows[rnum])):
                             if re_column_with_datasets.match(table.rows[rnum][i].text.lower()):
 #                                print "COLUMN", table.rows[rnum][i].text.lower(), "IN TABLE", num, "HINTS THAT IT CONTAINS DATASETS"
                                 data_column = i
-                                if rnum == 1: # This means that first row contains some kind of header, or rubbish, or something else, and columns are defined in the second one. First one must be skipped in such case.
+                                if rnum == 1:# This means that first row contains some kind of header, or rubbish, or something else, and columns are defined in the second one. First one must be skipped in such case.
 #                                    print "SKIPPING FIRST ROW"
                                     skip_first = True
                                 break
                         if data_column >= 0:
                             break
-                    if data_column >= 0: # Here: insert check that dataset column contains mostly \d\d\d\d\d\d. Also: duplicate rows in case of diapasones.
+                    if data_column >= 0:# Here: insert check that dataset column contains mostly \d\d\d\d\d\d. Also: duplicate rows in case of diapasones.
                         rows = []
-                        rows_with_proper_id = 1 # Start at 1 instead of 0 because the first row (which defines columns) will not contain a proper dataset/run id.
+                        rows_with_proper_id = 1# Start at 1 instead of 0 because the first row (which defines columns) will not contain a proper dataset/run id.
                         diaps = False
                         for row in table.rows:
                             if skip_first:
@@ -633,7 +633,7 @@ class Paper:
 #                            print "COEFFICIENT IS LOWER THAN 0.7. SKIPPING TABLE", num
 
         return datatables
-    def export(self, quick = False, outf = False):
+    def export(self, quick=False, outf=False):
         # Export metadata into file in export directory. Quick export: if a part of metadata was never determined, the corresponding procedure would be used with all user interaction skipped.
 
 ##        print self.fname
@@ -657,16 +657,16 @@ class Paper:
 
         outp = {}
         if not outf:
-            outf = path_join(EXPORT_DIR, "%s.json" % (self.fname))
+            outf = path_join(EXPORT_DIR, "%s.json"%(self.fname))
             
-        outp["fname"] = self.fname # Some applications processing exported data may discard the filename but it must be preserved.
+        outp["fname"] = self.fname# Some applications processing exported data may discard the filename but it must be preserved.
 
         if self.title is not None:
             outp["title"] = self.title
 
         outp["content"] = {}
         outp["content"]["plain_text"] = {}
-        if self.campaigns is not None: # All general attributes are determined together, so we can check only one.
+        if self.campaigns is not None:# All general attributes are determined together, so we can check only one.
             for a in self.attributes_general:
                 outp["content"]["plain_text"][a] = self.__dict__[a]
         elif quick:
@@ -676,21 +676,21 @@ class Paper:
 
         if self.datasets is not None:
             for category in self.datasets:
-                outp["content"][category_export_dict[category] + "_datasets"] = self.datasets[category]
+                outp["content"][category_export_dict[category]+"_datasets"] = self.datasets[category]
         elif quick:
             (text, datasets) = self.find_datasets()
             for category in datasets:
                 d = []
                 for [name, special] in datasets[category]:
                     d.append(name)
-                outp["content"][category_export_dict[category] + "_datasets"] = d
+                outp["content"][category_export_dict[category]+"_datasets"] = d
         if self.datatables is not None:
             for num in self.datatables:
-                outp["content"]["table_" + str(num)] = self.datatables[num]
+                outp["content"]["table_"+str(num)] = self.datatables[num]
         elif quick:
             tables = self.find_datatables()
             for num in tables:
-                outp["content"]["table_" + str(num)] = tables[num]
+                outp["content"]["table_"+str(num)] = tables[num]
 
         if outp:
             with open(outf, "w") as f:
@@ -703,24 +703,24 @@ class Manager:
         self.window = window
         self.window.title("Support notes manager")
         main_menu = Tkinter.Menu(self.window)
-        papers_menu = Tkinter.Menu(main_menu, tearoff = 0)
-        export_menu = Tkinter.Menu(main_menu, tearoff = 0)
-        papers_menu.add_command(label = "Add...", command = self.add_papers)
-        papers_menu.add_command(label = "Save all", command = self.save_paper)
-        papers_menu.add_command(label = "Clear all", command = self.clear_paper)
-        papers_menu.add_command(label = "Exit", command = self.finish)
-        main_menu.add_cascade(label = "Papers", menu = papers_menu)
-        export_menu.add_command(label = "Quick export", command = lambda: self.export_all(quick = True))
-        export_menu.add_command(label = "Export", command = self.export_all)
-        export_menu.add_command(label = "Export texts", command = self.export_texts)
-        main_menu.add_cascade(label = "Export", menu = export_menu)
-        main_menu.add_command(label = "Preferences", command = self.preferences)
-        self.window.config(menu = main_menu)
+        papers_menu = Tkinter.Menu(main_menu, tearoff=0)
+        export_menu = Tkinter.Menu(main_menu, tearoff=0)
+        papers_menu.add_command(label="Add...", command=self.add_papers)
+        papers_menu.add_command(label="Save all", command=self.save_paper)
+        papers_menu.add_command(label="Clear all", command=self.clear_paper)
+        papers_menu.add_command(label="Exit", command=self.finish)
+        main_menu.add_cascade(label="Papers", menu=papers_menu)
+        export_menu.add_command(label="Quick export", command=lambda:self.export_all(quick=True))
+        export_menu.add_command(label="Export", command=self.export_all)
+        export_menu.add_command(label="Export texts", command=self.export_texts)
+        main_menu.add_cascade(label="Export", menu=export_menu)
+        main_menu.add_command(label="Preferences", command=self.preferences)
+        self.window.config(menu=main_menu)
 
         self.papers = []
         if not os.access(PAPERS_DIR, os.F_OK):
             os.mkdir(PAPERS_DIR)
-        objs = os.listdir(PAPERS_DIR) # Check papers directory and load papers from it.
+        objs = os.listdir(PAPERS_DIR)# Check papers directory and load papers from it.
         for o in objs:
             if os.path.isdir(path_join(PAPERS_DIR, o)):
                 p = Paper(o)
@@ -730,18 +730,18 @@ class Manager:
         if not os.access(EXPORT_DIR, os.F_OK):
             os.mkdir(EXPORT_DIR)
 
-        self.cnvs = Tkinter.Canvas(self.window, width = 1200, height = 800)
-        self.cnvs.grid(row = 1, column = 0)
+        self.cnvs = Tkinter.Canvas(self.window, width=1200, height=800)
+        self.cnvs.grid(row=1, column=0)
         self.frame = Tkinter.Frame(self.cnvs)
-        self.cnvs.create_window(0, 0, window = self.frame, anchor = 'nw')
-        scrlbr = Tkinter.Scrollbar(self.window, command = self.cnvs.yview)
-        scrlbr.grid(row = 0, rowspan = 2, column = 1, sticky = 'ns')
-        self.cnvs.configure(yscrollcommand = scrlbr.set)
+        self.cnvs.create_window(0, 0, window=self.frame, anchor='nw')
+        scrlbr = Tkinter.Scrollbar(self.window, command=self.cnvs.yview)
+        scrlbr.grid(row=0, rowspan=2, column=1, sticky='ns')
+        self.cnvs.configure(yscrollcommand=scrlbr.set)
 
-        self.status = Tkinter.Label(self.window, text = "", bd = 1, relief = Tkinter.SUNKEN)
-        self.status.grid(row = 2,  sticky = 'we')
+        self.status = Tkinter.Label(self.window, text="", bd=1, relief=Tkinter.SUNKEN)
+        self.status.grid(row=2,  sticky='we')
 
-        self.window.protocol("WM_DELETE_WINDOW", self.finish) # Intercept closing the program via Alt + F4 or other methods to perform a clean exit.
+        self.window.protocol("WM_DELETE_WINDOW", self.finish)# Intercept closing the program via Alt + F4 or other methods to perform a clean exit.
 
         self.redraw()
         self.window.mainloop()
@@ -759,15 +759,15 @@ class Manager:
             self.window.destroy()
         else:
             self.window.destroy()
-    def status_set(self, text = ""):
+    def status_set(self, text=""):
         # Update status bar.
-        self.status.configure(text = text)
+        self.status.configure(text=text)
     def redraw(self):
         # Redraw the main window.
         for c in self.frame.winfo_children():
             c.destroy()
 
-        self.papers.sort(cmp = cmp_papernames, key = lambda paper: paper.fname)
+        self.papers.sort(cmp=cmp_papernames, key=lambda paper:paper.fname)
         
         r = 0
         for p in self.papers:
@@ -775,12 +775,12 @@ class Manager:
                 t = p.fname + "*"
             else:
                 t = p.fname
-            b = Tkinter.Button(self.frame, text = t)
-            b.config(command = lambda paper = p: self.show_paper_info(False, paper))
-            b.grid(row = r, column = 0)
+            b = Tkinter.Button(self.frame, text=t)
+            b.config(command=lambda paper=p:self.show_paper_info(False, paper))
+            b.grid(row=r, column=0)
             if p.title is not None:
-                l = Tkinter.Label(self.frame, text = p.title)
-                l.grid(row = r, column = 1)
+                l = Tkinter.Label(self.frame, text=p.title)
+                l.grid(row=r, column=1)
             r += 1
             
         self.frame.update_idletasks()
@@ -802,29 +802,29 @@ class Manager:
 
         frame = Tkinter.Frame(w)
 
-        l = Tkinter.Label(frame, text = "Working directory")
-        l.grid(row = 0, column = 0)
-        e = Tkinter.Entry(frame, width = 100, textvariable = work_dir)
-        e.grid(row = 0, column = 1)
+        l = Tkinter.Label(frame, text="Working directory")
+        l.grid(row=0, column=0)
+        e = Tkinter.Entry(frame, width=100, textvariable=work_dir)
+        e.grid(row=0, column=1)
 
-        l = Tkinter.Label(frame, text = "Determine papers' titles")
-        l.grid(row = 1, column = 0)
-        b = Tkinter.Checkbutton(frame, variable = determine_title)
-        b.grid(row = 1, column = 1)
+        l = Tkinter.Label(frame, text="Determine papers' titles")
+        l.grid(row=1, column=0)
+        b = Tkinter.Checkbutton(frame, variable=determine_title)
+        b.grid(row=1, column=1)
         
-        l = Tkinter.Label(frame, text = "Open intervals in text")
-        l.grid(row = 2, column = 0)
-        b = Tkinter.Checkbutton(frame, variable = open_intervals_text)
-        b.grid(row = 2, column = 1)
+        l = Tkinter.Label(frame, text="Open intervals in text")
+        l.grid(row=2, column=0)
+        b = Tkinter.Checkbutton(frame, variable=open_intervals_text)
+        b.grid(row=2, column=1)
 
-        l = Tkinter.Label(frame, text = "Open intervals in tables")
-        l.grid(row = 3, column = 0)
-        b = Tkinter.Checkbutton(frame, variable = open_intervals_tables)
-        b.grid(row = 3, column = 1)
+        l = Tkinter.Label(frame, text="Open intervals in tables")
+        l.grid(row=3, column=0)
+        b = Tkinter.Checkbutton(frame, variable=open_intervals_tables)
+        b.grid(row=3, column=1)
 
-        frame.grid(row = 0, column = 0)
-        b = Tkinter.Button(w, text = "Done", command = w.destroy)
-        b.grid(row = 1, column = 0)
+        frame.grid(row=0, column=0)
+        b = Tkinter.Button(w, text="Done", command=w.destroy)
+        b.grid(row=1, column=0)
         self.window.wait_window(w)
 
         restart = False
@@ -847,13 +847,13 @@ class Manager:
         if restart:
             tkMessageBox.showwarning("Restart needed", "Program needs to be restarted to apply the changes.")
             self.finish()
-    def add_papers(self, fnames = None, errors = None, n = None):
+    def add_papers(self, fnames=None, errors=None, n=None):
         # Add new papers from PDF files.
         if fnames is None:
-            fnames = askopenfilenames(initialdir = cfg["WORK_DIR"], filetypes = [("PDF files", ".pdf")])
+            fnames = askopenfilenames(initialdir=cfg["WORK_DIR"], filetypes=[("PDF files", ".pdf")])
             errors = {}
             n = 1
-            self.window.after(100, lambda: self.add_papers(fnames, errors, n))
+            self.window.after(100, lambda:self.add_papers(fnames, errors, n))
         else:
             f = fnames[n - 1]
             m = re_pdfname.search(f)
@@ -862,7 +862,7 @@ class Manager:
                 for p in self.papers:
                     if p.fname == fname:
                         errors[p.fname] = "paper already exists."
-                        fname = False                        
+                        fname = False
                         break
                 if fname:
                     self.status_set("Extracting text %d/%d. Paper: %s. Please, wait..." % (n, len(fnames), fname))
@@ -877,20 +877,20 @@ class Manager:
                     except Exception as e:
                         errors[fname] = e
                         if os.access(paper_dir, os.F_OK):
-                            shutil.rmtree(paper_dir)                            
+                            shutil.rmtree(paper_dir)
             if n < len(fnames):
                 n += 1
-                self.window.after(100, lambda: self.add_papers(fnames, errors, n))
+                self.window.after(100, lambda:self.add_papers(fnames, errors, n))
             else:
                 self.status_set("")
                 self.window.update_idletasks()
                 if errors:
                     msg = "These papers were not added for some reason:\n\n"
                     for e in errors:
-                        msg += "%s : %s\n\n" % (e, errors[e])
+                        msg += "%s : %s\n\n"%(e, errors[e])
                     tkMessageBox.showwarning("Unable to add papers", msg)
                 self.redraw()
-    def clear_paper(self, window = False, paper = False):
+    def clear_paper(self, window=False, paper=False):
         # Clear a single or all papers' metadata.
         if paper:
             paper.clear_metadata()
@@ -901,7 +901,7 @@ class Manager:
         if window:
             window.destroy()
         self.redraw()
-    def save_paper(self, paper = False, finish = False):
+    def save_paper(self, paper=False, finish=False):
         # Save a single or all papers' metadata. Exit afterwards if finish is True.
         if paper:
             paper.save_metadata()
@@ -931,36 +931,36 @@ class Manager:
             for c in window.winfo_children():
                 c.destroy()
         window.title("Info: %s" % paper.fname)
-        l = Tkinter.Label(window, text = "File name: %s" % paper.fname)
-        l.grid(row = 0, column = 1)
-        b = Tkinter.Button(window, text = "Save", command = lambda paper = paper: self.save_paper(paper))
-        b.grid(row = 0, column = 2)        
-        b = Tkinter.Button(window, text = "Export", command = lambda paper = paper: paper.export()) # Maybe this should ask for save before export...
-        b.grid(row = 0, column = 3)        
-        b = Tkinter.Button(window, text = "Clear", command = lambda window = window, paper = paper: self.clear_paper(window, paper))
-        b.grid(row = 0, column = 4)        
-        b = Tkinter.Button(window, text = "Delete", command = lambda window = window, paper = paper: self.delete_paper(window, paper))
-        b.grid(row = 0, column = 5)        
-        l = Tkinter.Label(window, text = "Title: %s" % paper.title)
-        l.grid(row = 1, columnspan = 5)
-        l = Tkinter.Label(window, text = "Pages: %d" % paper.num_pages)
-        l.grid(row = 2, columnspan = 5)
-        l = Tkinter.Label(window, text = "Rotated pages: %s" % str(paper.rotated_pages))
-        l.grid(row = 3, columnspan = 5)
-        b = Tkinter.Button(window, text = "Attributes", command = lambda window = window, paper = paper: self.show_paper_attributes(window, paper))
-        b.grid(row = 4, columnspan = 5)        
-        b = Tkinter.Button(window, text = "Datasets", command = lambda window = window, paper = paper: self.show_paper_datasets(window, paper))
-        b.grid(row = 5, columnspan = 5)        
-        b = Tkinter.Button(window, text = "Dataset tables", command = lambda window = window, paper = paper: self.show_paper_datatables(window, paper))
-        b.grid(row = 6, columnspan = 5)
-        b = Tkinter.Button(window, text = "Tables", command = lambda window = window, paper = paper: self.show_paper_page_tables(window, paper))
-        b.grid(row = 7, columnspan = 5)
-        b = Tkinter.Button(window, text = "Visualize", command = lambda window = window, paper = paper: self.show_paper_visual(window, paper))
-        b.grid(row = 8, columnspan = 5)
-        b = Tkinter.Button(window, text = "Export text", command = lambda paper = paper: self.export_paper_text(paper))
-        b.grid(row = 9, columnspan = 5)
-        b = Tkinter.Button(window, text = "Close", command = window.destroy)
-        b.grid(row = 10, columnspan = 5)        
+        l = Tkinter.Label(window, text="File name: %s"%paper.fname)
+        l.grid(row=0, column=1)
+        b = Tkinter.Button(window, text="Save", command=lambda paper=paper:self.save_paper(paper))
+        b.grid(row=0, column=2)
+        b = Tkinter.Button(window, text="Export", command=lambda paper=paper:paper.export())# Maybe this should ask for save before export...
+        b.grid(row=0, column=3)
+        b = Tkinter.Button(window, text="Clear", command=lambda window=window, paper=paper:self.clear_paper(window, paper))
+        b.grid(row=0, column=4)
+        b = Tkinter.Button(window, text="Delete", command=lambda window=window, paper=paper:self.delete_paper(window, paper))
+        b.grid(row=0, column=5)
+        l = Tkinter.Label(window, text="Title: %s"%paper.title)
+        l.grid(row=1, columnspan=5)
+        l = Tkinter.Label(window, text="Pages: %d"%paper.num_pages)
+        l.grid(row=2, columnspan=5)
+        l = Tkinter.Label(window, text="Rotated pages: %s"%str(paper.rotated_pages))
+        l.grid(row=3, columnspan=5)
+        b = Tkinter.Button(window, text="Attributes", command=lambda window=window, paper=paper:self.show_paper_attributes(window, paper))
+        b.grid(row=4, columnspan=5)
+        b = Tkinter.Button(window, text="Datasets", command=lambda window=window, paper=paper:self.show_paper_datasets(window, paper))
+        b.grid(row=5, columnspan=5)
+        b = Tkinter.Button(window, text="Dataset tables", command=lambda window=window, paper=paper:self.show_paper_datatables(window, paper))
+        b.grid(row=6, columnspan=5)
+        b = Tkinter.Button(window, text="Tables", command=lambda window=window, paper=paper:self.show_paper_page_tables(window, paper))
+        b.grid(row=7, columnspan=5)
+        b = Tkinter.Button(window, text="Visualize", command=lambda window=window, paper=paper:self.show_paper_visual(window, paper))
+        b.grid(row=8, columnspan=5)
+        b = Tkinter.Button(window, text="Export text", command=lambda paper=paper:self.export_paper_text(paper))
+        b.grid(row=9, columnspan=5)
+        b = Tkinter.Button(window, text="Close", command=window.destroy)
+        b.grid(row=10, columnspan=5)
     def determine_paper_title_step_1(self, window, paper):
         # Search the first page in xml format for a possible paper titles. Ask user to pick one.
         if not window:
@@ -986,8 +986,8 @@ class Manager:
             elif empty.match(l):
                 d[size] += " "
                 
-        l = Tkinter.Label(window, text = "Please, select a string which looks like a title of the paper", font = HEADING_FONT)
-        l.grid(row = 0, columnspan = 2)
+        l = Tkinter.Label(window, text="Please, select a string which looks like a title of the paper", font=HEADING_FONT)
+        l.grid(row=0, columnspan=2)
         r = 1
         selection = Tkinter.StringVar()
         for key in d:
@@ -998,13 +998,13 @@ class Manager:
                     bt = d[key]
                 if r == 1:
                     selection.set(d[key])
-                button = Tkinter.Radiobutton(window, text = d[key], variable = selection, value = d[key], wraplength = 800)
-                button.grid(row = r, columnspan = 2)
+                button = Tkinter.Radiobutton(window, text=d[key], variable=selection, value=d[key], wraplength=800)
+                button.grid(row=r, columnspan=2)
                 r += 1
-        button = Tkinter.Button(window, text = "Proceed", command = lambda window = window, paper = paper, ptv = selection: self.determine_paper_title_step_2(window, paper, ptv))
-        button.grid(row = r, column = 0)
-        button = Tkinter.Button(window, text = "Cancel", command = window.destroy)
-        button.grid(row = r, column = 1)
+        button = Tkinter.Button(window, text="Proceed", command=lambda window=window, paper=paper, ptv=selection:self.determine_paper_title_step_2(window, paper, ptv))
+        button.grid(row=r, column=0)
+        button = Tkinter.Button(window, text="Cancel", command=window.destroy)
+        button.grid(row=r, column=1)
     def determine_paper_title_step_2(self, window, paper, possible_title_variable):
         # Compare the title string selected by user with the first page in txt format to construct a paper title.
         for c in window.winfo_children():
@@ -1021,24 +1021,24 @@ class Manager:
             i = 0
             for w in words:
                 try:
-                    w_in = w in possible_title # This throws exception sometimes, something about ascii codec unable to decode.
+                    w_in = w in possible_title# This throws exception sometimes, something about ascii codec unable to decode.
                 except:
                     w_in = False
                 if len(w) > 1 and w_in:
                     i += 1
-            if i > 1 or (len(words) == 1 and i == 1):
+            if i > 1 or (len(words)==1 and i==1):
                 title += l.replace("\n", " ")
             elif title:
                 break
-        l = Tkinter.Label(window, text = "Please, correct the title, if needed.", font = HEADING_FONT)
-        l.grid(row = 0, columnspan = 2)
-        e = Tkinter.Entry(window, width = 150)
+        l = Tkinter.Label(window, text="Please, correct the title, if needed.", font=HEADING_FONT)
+        l.grid(row=0, columnspan=2)
+        e = Tkinter.Entry(window, width=150)
         e.insert(0, title)
-        e.grid(row = 1, columnspan = 2)
-        button = Tkinter.Button(window, text = "Done", command = lambda window = window, paper = paper, value = e: self.update_paper_parameter(window, paper, "title", value))
-        button.grid(row = 2, column = 0)
-        button = Tkinter.Button(window, text = "Back", command = lambda window = window, paper = paper: self.determine_paper_title_step_1(window, paper))
-        button.grid(row = 2, column = 1)
+        e.grid(row=1, columnspan=2)
+        button = Tkinter.Button(window, text="Done", command=lambda window=window, paper=paper, value=e:self.update_paper_parameter(window, paper, "title", value))
+        button.grid(row=2, column=0)
+        button = Tkinter.Button(window, text="Back", command=lambda window=window, paper=paper:self.determine_paper_title_step_1(window, paper))
+        button.grid(row=2, column=1)
     def update_paper_parameter(self, window, paper, param, value):
         # Update a part of paper metadata and proceed to corresponding window.
         if param == "title":
@@ -1055,12 +1055,12 @@ class Manager:
                 for [entry, special, selected] in value[c]:
                     if selected.get():
 #                        datasets[c].append([entry.get(), special])
-                        datasets[c].append(entry.get()) # special is not needed. Maybe temporary.
+                        datasets[c].append(entry.get())# special is not needed. Maybe temporary.
                 if not datasets[c]:
                     del datasets[c]
             if datasets:
                 for c in datasets:
-                    datasets[c].sort(key = lambda d: d[0])
+                    datasets[c].sort(key=lambda d:d[0])
             paper.datasets = datasets
             self.show_paper_datasets(window, paper)
         elif param == "datatables":
@@ -1075,11 +1075,11 @@ class Manager:
         # Determine / display paper's general attributes.
         for c in window.winfo_children():
             c.destroy()
-        window.title("Attributes of %s" % paper.fname)
+        window.title("Attributes of %s"%paper.fname)
         if paper.campaigns is None:
             attrs = paper.find_attributes_general()
             if "possible years" in attrs:
-                msg = "No year was found in %s, possible years:\n\n" % (paper.fname)
+                msg = "No year was found in %s, possible years:\n\n"%(paper.fname)
                 for m in attrs["possible years"]:
                     try:
                         msg += m + "\n"
@@ -1096,9 +1096,9 @@ class Manager:
                 t = Tkinter.Text(nw)
                 t.insert(END, msg)
                 t.config(state = DISABLED)
-                t.grid(row = 0, column = 0)
-                b = Tkinter.Button(nw, text = "Close", command = nw.destroy)
-                b.grid(row = 1, column = 0)
+                t.grid(row=0, column=0)
+                b = Tkinter.Button(nw, text="Close", command=nw.destroy)
+                b.grid(row=1, column=0)
                 del attrs["possible years"]
             self.update_paper_parameter(window, paper, "general", attrs)
         else:
@@ -1106,122 +1106,122 @@ class Manager:
             for a in paper.attributes_general:
                 if a == "links":
                     if paper.__dict__[a]:
-                        l = Tkinter.Label(window, text = "Links:")
-                        l.grid(row = r, column = 0)
+                        l = Tkinter.Label(window, text="Links:")
+                        l.grid(row=r, column=0)
                         r += 1
                         for key in paper.__dict__[a]:
-                            l = Tkinter.Label(window, text = "%s %s" % (key, paper.__dict__[a][key]))
-                            l.grid(row = r, column = 0)
-                            r += 1                            
+                            l = Tkinter.Label(window, text="%s %s"%(key, paper.__dict__[a][key]))
+                            l.grid(row=r, column=0)
+                            r += 1
                     else:
-                        l = Tkinter.Label(window, text = "No links")
-                        l.grid(row = r, column = 0)
+                        l = Tkinter.Label(window, text="No links")
+                        l.grid(row=r, column=0)
                         r += 1
                 else:
-                    l = Tkinter.Label(window, text = "%s:%s"%(a, str(paper.__dict__[a])))
-                    l.grid(row = r, column = 0)
+                    l = Tkinter.Label(window, text="%s:%s"%(a, str(paper.__dict__[a])))
+                    l.grid(row=r, column=0)
                     r += 1
-            b = Tkinter.Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-            b.grid(row = r, column = 0)            
+            b = Tkinter.Button(window, text="Back", command=lambda window=window, paper=paper:self.show_paper_info(window, paper))
+            b.grid(row=r, column=0)
     def show_paper_datasets(self, window, paper):
         # Determine / display paper datasets.
         for c in window.winfo_children():
             c.destroy()
-        window.title("Datasets in %s" % paper.fname)
+        window.title("Datasets in %s"%paper.fname)
         if paper.datasets is None:
             (text, datasets) = paper.find_datasets()
 
             if datasets:
-                cnvs = Tkinter.Canvas(window, width = 1200, height = 800)
-                cnvs.grid(row = 0, column = 0, columnspan = 2)
+                cnvs = Tkinter.Canvas(window, width=1200, height=800)
+                cnvs.grid(row=0, column=0, columnspan=2)
 
                 frame = Tkinter.Frame(cnvs)
-                cnvs.create_window(0, 0, window = frame, anchor = 'nw')
+                cnvs.create_window(0, 0, window=frame, anchor='nw')
                 
                 r = 0
                 dataset_entries = {}
                 for c in datasets:
-                    l = Tkinter.Label(frame, text = c, font = HEADING_FONT)
-                    l.grid(row = r, column = 0, columnspan = 2)
+                    l = Tkinter.Label(frame, text=c, font=HEADING_FONT)
+                    l.grid(row=r, column=0, columnspan=2)
                     category_selected = Tkinter.IntVar()
                     category_selected.set(1)
-                    check_category_b = Tkinter.Checkbutton(frame, var = category_selected)
-                    check_category_b.grid(row = r, column = 3)
+                    check_category_b = Tkinter.Checkbutton(frame, var=category_selected)
+                    check_category_b.grid(row=r, column=3)
                     r += 1
                     dataset_entries[c] = []
                     selected_list = []
-                    datasets[c].sort(key = lambda d: d[0])
+                    datasets[c].sort(key=lambda d:d[0])
                     for [name, special] in datasets[c]:
-                        l = Tkinter.Label(frame, text = special)
-                        l.grid(row = r, column = 0)
-                        e = Tkinter.Entry(frame, width = 150)
+                        l = Tkinter.Label(frame, text=special)
+                        l.grid(row=r, column=0)
+                        e = Tkinter.Entry(frame, width=150)
                         e.insert(0, name)
-                        e.grid(row = r, column = 1)
+                        e.grid(row=r, column=1)
                         selected = Tkinter.IntVar()
                         selected.set(1)
-                        b = Tkinter.Checkbutton(frame, var = selected) # TO DO: checkbuttons for "(un)select all". 
+                        b = Tkinter.Checkbutton(frame, var=selected)# TO DO: checkbuttons for "(un)select all". 
                         dataset_entries[c].append([e, special, selected])
                         selected_list.append(selected)
-                        b.grid(row = r, column = 3, pady = 5)
+                        b.grid(row=r, column=3, pady=5)
                         r += 1
-                    check_category_b.config(command = lambda v = category_selected, l = selected_list: check_all_button(v, l)) # This command is not called when individual checkbuttons are clicked - Therefore, global checkbox will not change its look.
+                    check_category_b.config(command=lambda v=category_selected, l=selected_list:check_all_button(v, l))# This command is not called when individual checkbuttons are clicked - Therefore, global checkbox will not change its look.
 
-                scrlbr = Tkinter.Scrollbar(window, command = cnvs.yview)
-                scrlbr.grid(row = 0, column = 2, rowspan = 2, sticky = 'ns')
-                cnvs.configure(yscrollcommand = scrlbr.set)
+                scrlbr = Tkinter.Scrollbar(window, command=cnvs.yview)
+                scrlbr.grid(row=0, column=2, rowspan=2, sticky='ns')
+                cnvs.configure(yscrollcommand=scrlbr.set)
                 frame.update_idletasks()
-                cnvs.configure(width = frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
-                
-                b = Tkinter.Button(window, text = "Done", command = lambda window = window, paper = paper, value = dataset_entries: self.update_paper_parameter(window, paper, "datasets", value))
-                b.grid(row = 1, column = 0)
-                b = Tkinter.Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-                b.grid(row = 1, column = 1)
+                cnvs.configure(width=frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
+
+                b = Tkinter.Button(window, text="Done", command=lambda window=window, paper=paper, value=dataset_entries:self.update_paper_parameter(window, paper, "datasets", value))
+                b.grid(row=1, column=0)
+                b = Tkinter.Button(window, text="Cancel", command=lambda window=window, paper=paper:self.show_paper_info(window, paper))
+                b.grid(row=1, column=1)
             else:
                 datasets = {}
                 self.update_paper_parameter(window, paper, "datasets", datasets)
         else:
             if not paper.datasets:
-                l = Tkinter.Label(window, text = "No datasets found", font = HEADING_FONT)
-                l.grid(row = 0)
+                l = Tkinter.Label(window, text="No datasets found", font=HEADING_FONT)
+                l.grid(row=0)
             else:
-                cnvs = Tkinter.Canvas(window, width = 1200, height = 800)
-                cnvs.grid(row = 0, column = 0, columnspan = 2)
+                cnvs = Tkinter.Canvas(window, width=1200, height=800)
+                cnvs.grid(row=0, column=0, columnspan=2)
 
                 frame = Tkinter.Frame(cnvs)
-                cnvs.create_window(0, 0, window = frame, anchor = 'nw')
+                cnvs.create_window(0, 0, window=frame, anchor='nw')
 
                 r = 0
-                for k in paper.datasets:                
-                    l = Tkinter.Label(frame, text = k, font = HEADING_FONT)
-                    l.grid(row = r)
+                for k in paper.datasets:
+                    l = Tkinter.Label(frame, text=k, font=HEADING_FONT)
+                    l.grid(row=r)
                     r += 1
 #                    for [d, special] in paper.datasets[k]:
                     for d in paper.datasets[k]:
-                        l = Tkinter.Label(frame, text = d)
-                        l.grid(row = r)
+                        l = Tkinter.Label(frame, text=d)
+                        l.grid(row=r)
                         r += 1
 
-                scrlbr = Tkinter.Scrollbar(window, command = cnvs.yview)
-                scrlbr.grid(row = 0, column = 2, rowspan = 2, sticky = 'ns')
-                cnvs.configure(yscrollcommand = scrlbr.set)
+                scrlbr = Tkinter.Scrollbar(window, command=cnvs.yview)
+                scrlbr.grid(row=0, column=2, rowspan=2, sticky='ns')
+                cnvs.configure(yscrollcommand=scrlbr.set)
                 frame.update_idletasks()
-                cnvs.configure(width = frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
-            b = Tkinter.Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-            b.grid(row = 1)
+                cnvs.configure(width=frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
+            b = Tkinter.Button(window, text="Back", command=lambda window=window, paper=paper:self.show_paper_info(window, paper))
+            b.grid(row=1)
     def show_paper_datatables(self, window, paper):
         # Determine / display paper tables which may contain datasets.
         for c in window.winfo_children():
             c.destroy()
-        window.title("Tables with datasets in %s" % paper.fname)
+        window.title("Tables with datasets in %s"%paper.fname)
         if paper.datatables is None:
             datatables = paper.find_datatables()
             if datatables:
 
-                cnvs = Tkinter.Canvas(window, width = 600, height = 800)
-                cnvs.grid(row = 0, column = 0, columnspan = 2)
+                cnvs = Tkinter.Canvas(window, width=600, height=800)
+                cnvs.grid(row=0, column=0, columnspan=2)
 
                 frame = Tkinter.Frame(cnvs)
-                cnvs.create_window(0, 0, window = frame, anchor = 'nw')
+                cnvs.create_window(0, 0, window=frame, anchor='nw')
 
                 num = 0
                 keys = datatables.keys()
@@ -1230,52 +1230,52 @@ class Manager:
                 for k in keys:
                     (header, rows) = datatables[k]
                     t_frame = Tkinter.Frame(frame)
-                    l = Tkinter.Label(t_frame, text = header, font = HEADING_FONT)
-                    l.grid(row = 0, column = 0, columnspan = len(rows[0]))
+                    l = Tkinter.Label(t_frame, text=header, font=HEADING_FONT)
+                    l.grid(row=0, column=0, columnspan=len(rows[0]))
                     r = 1
                     for row in rows:
                         c = 0
                         for line in row:
-                            l = Tkinter.Label(t_frame, text = line)
-                            l.grid(row = r, column = c)
+                            l = Tkinter.Label(t_frame, text=line)
+                            l.grid(row=r, column=c)
                             c += 1
                         r += 1
                         if r == 50:
-                            l = Tkinter.Label(t_frame, text = "Table is too large, omitting remaining rows.")
-                            l.grid(row = r, columnspan = c)
+                            l = Tkinter.Label(t_frame, text="Table is too large, omitting remaining rows.")
+                            l.grid(row=r, columnspan=c)
                             break
-                    t_frame.grid(row = num, column = 0)
+                    t_frame.grid(row=num, column=0)
                     selected = Tkinter.IntVar()
                     selected.set(1)
-                    b = Tkinter.Checkbutton(t_frame, var = selected) # TO DO: checkbuttons for "(un)select all".
-                    b.grid(row = 0, column = len(rows[0]))
+                    b = Tkinter.Checkbutton(t_frame, var=selected)# TO DO: checkbuttons for "(un)select all".
+                    b.grid(row=0, column=len(rows[0]))
                     datatables_s.append([k, header, rows, selected])
                     num += 1
 
-                scrlbr = Tkinter.Scrollbar(window, command = cnvs.yview)
-                scrlbr.grid(row = 0, column = 2, rowspan = 2, sticky = 'ns')
-                cnvs.configure(yscrollcommand = scrlbr.set)
+                scrlbr = Tkinter.Scrollbar(window, command=cnvs.yview)
+                scrlbr.grid(row=0, column=2, rowspan=2, sticky='ns')
+                cnvs.configure(yscrollcommand=scrlbr.set)
                 frame.update_idletasks()
-                cnvs.configure(width = frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
+                cnvs.configure(width=frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
                 
-                b = Tkinter.Button(window, text = "Done", command = lambda window = window, paper = paper, value = datatables_s: self.update_paper_parameter(window, paper, "datatables", value))
-                b.grid(row = 1, column = 0)
-                b = Tkinter.Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-                b.grid(row = 1, column = 1)
+                b = Tkinter.Button(window, text="Done", command=lambda window=window, paper=paper, value=datatables_s:self.update_paper_parameter(window, paper, "datatables", value))
+                b.grid(row=1, column=0)
+                b = Tkinter.Button(window, text="Cancel", command=lambda window=window, paper=paper:self.show_paper_info(window, paper))
+                b.grid(row=1, column=1)
             else:
                 datatables = {}
                 self.update_paper_parameter(window, paper, "datatables", datatables)
         else:
             if not paper.datatables:
-                l = Tkinter.Label(window, text = "No datatables found", font = HEADING_FONT)
-                l.grid(row = 0)
+                l = Tkinter.Label(window, text="No datatables found", font=HEADING_FONT)
+                l.grid(row=0)
                 r = 1
             else:
-                cnvs = Tkinter.Canvas(window, width = 1200, height = 800)
-                cnvs.grid(row = 0, column = 0, columnspan = 2)
+                cnvs = Tkinter.Canvas(window, width=1200, height=800)
+                cnvs.grid(row=0, column=0, columnspan=2)
 
                 frame = Tkinter.Frame(cnvs)
-                cnvs.create_window(0, 0, window = frame, anchor = 'nw')
+                cnvs.create_window(0, 0, window=frame, anchor='nw')
 
                 num = 0
                 keys = paper.datatables.keys()
@@ -1283,45 +1283,45 @@ class Manager:
                 for k in keys:
                     (header, rows) = paper.datatables[k]
                     t_frame = Tkinter.Frame(frame)
-                    l = Tkinter.Label(t_frame, text = header, font = HEADING_FONT)
-                    l.grid(row = 0, column = 0, columnspan = len(rows[0]))
+                    l = Tkinter.Label(t_frame, text=header, font=HEADING_FONT)
+                    l.grid(row=0, column=0, columnspan=len(rows[0]))
                     r = 1
                     for row in rows:
                         c = 0
                         for line in row:
-                            l = Tkinter.Label(t_frame, text = line)
-                            l.grid(row = r, column = c)
+                            l = Tkinter.Label(t_frame, text=line)
+                            l.grid(row=r, column=c)
                             c += 1
                         r += 1
                         if r == 50:
-                            l = Tkinter.Label(t_frame, text = "Table is too large, omitting remaining rows.")
-                            l.grid(row = r, columnspan = c)
+                            l = Tkinter.Label(t_frame, text="Table is too large, omitting remaining rows.")
+                            l.grid(row=r, columnspan=c)
                             break
-                    t_frame.grid(row = num, column = 0)
+                    t_frame.grid(row=num, column=0)
                     num += 1
 
-                scrlbr = Tkinter.Scrollbar(window, command = cnvs.yview)
-                scrlbr.grid(row = 0, column = 2, rowspan = 2, sticky = 'ns')
-                cnvs.configure(yscrollcommand = scrlbr.set)
+                scrlbr = Tkinter.Scrollbar(window, command=cnvs.yview)
+                scrlbr.grid(row=0, column=2, rowspan=2, sticky='ns')
+                cnvs.configure(yscrollcommand=scrlbr.set)
                 frame.update_idletasks()
-                cnvs.configure(width = frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
-            b = Tkinter.Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-            b.grid(row = 1)
-    def show_paper_page_tables(self, window, paper, e = False):
+                cnvs.configure(width=frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
+            b = Tkinter.Button(window, text="Back", command=lambda window=window, paper=paper:self.show_paper_info(window, paper))
+            b.grid(row=1)
+    def show_paper_page_tables(self, window, paper, e=False):
         # Extract tables from a page and display them. Debug function.
         if not e:
             for c in window.winfo_children():
                 c.destroy()
             window.title("Select page")
-            l = Tkinter.Label(window, text = "Page number(1 - %d):"%(paper.num_pages))
-            l.grid(row = 0, column = 0)
-            e = Tkinter.Entry(window, width = 10)
-            e.grid(row = 0, column = 1)
+            l = Tkinter.Label(window, text="Page number(1 - %d):"%(paper.num_pages))
+            l.grid(row=0, column=0)
+            e = Tkinter.Entry(window, width=10)
+            e.grid(row=0, column=1)
             e.focus_set()
-            b = Tkinter.Button(window, text = "Proceed", command = lambda window = window, paper = paper, e = e: self.show_paper_page_tables(window, paper, e))
-            b.grid(row = 1, column = 0)
-            b = Tkinter.Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-            b.grid(row = 1, column = 1)
+            b = Tkinter.Button(window, text="Proceed", command=lambda window=window, paper=paper, e=e:self.show_paper_page_tables(window, paper, e))
+            b.grid(row=1, column=0)
+            b = Tkinter.Button(window, text="Cancel", command=lambda window=window, paper=paper:self.show_paper_info(window, paper))
+            b.grid(row=1, column=1)
         else:
             number = e.get()
             if not number.isdigit():
@@ -1337,38 +1337,38 @@ class Manager:
                 tables = xmltable.get_tables_from_text(text)
                 for table_num in range(0, len(tables)):
                     frame = Tkinter.Frame(window)
-                    l = Tkinter.Label(frame, text = "Table %d" % table_num)
-                    l.grid(row = 0, column = 0, columnspan = len(tables[table_num].rows[0]))
+                    l = Tkinter.Label(frame, text="Table %d"%table_num)
+                    l.grid(row=0, column=0, columnspan=len(tables[table_num].rows[0]))
                     r = 1
                     for row in tables[table_num].rows:
                         c = 0
                         for line in row:
-                            l = Tkinter.Label(frame, text = line.text)
-                            l.grid(row = r, column = c)
+                            l = Tkinter.Label(frame, text=line.text)
+                            l.grid(row=r, column=c)
                             c += 1
                         r += 1
-                    frame.grid(row = table_num, column = 0)
+                    frame.grid(row=table_num, column=0)
                     table_num += 1
                 if not tables:
-                    l = Tkinter.Label(window, text = "No tables found on page %d" % (number))
-                    l.grid(row = 0, column = 0)
+                    l = Tkinter.Label(window, text="No tables found on page %d"%(number))
+                    l.grid(row=0, column=0)
                     table_num = 1
-                b = Tkinter.Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-                b.grid(row = table_num, column = 0)
-    def show_paper_visual(self, window, paper, e = False):
+                b = Tkinter.Button(window, text="Back", command=lambda window=window, paper=paper:self.show_paper_info(window, paper))
+                b.grid(row=table_num, column=0)
+    def show_paper_visual(self, window, paper, e=False):
         if not e:
             for c in window.winfo_children():
                 c.destroy()
             window.title("Select page")
-            l = Tkinter.Label(window, text = "Page number(1 - %d):"%(paper.num_pages))
-            l.grid(row = 0, column = 0)
-            e = Tkinter.Entry(window, width = 10)
-            e.grid(row = 0, column = 1)
+            l = Tkinter.Label(window, text="Page number(1 - %d):"%(paper.num_pages))
+            l.grid(row=0, column=0)
+            e = Tkinter.Entry(window, width=10)
+            e.grid(row=0, column=1)
             e.focus_set()
-            b = Tkinter.Button(window, text = "Proceed", command = lambda window = window, paper = paper, e = e: self.show_paper_visual(window, paper, e))
-            b.grid(row = 1, column = 0)
-            b = Tkinter.Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-            b.grid(row = 1, column = 1)
+            b = Tkinter.Button(window, text="Proceed", command=lambda window=window, paper=paper, e=e:self.show_paper_visual(window, paper, e))
+            b.grid(row=1, column=0)
+            b = Tkinter.Button(window, text="Cancel", command=lambda window=window, paper=paper:self.show_paper_info(window, paper))
+            b.grid(row=1, column=1)
         else:
             number = e.get()
             if not number.isdigit():
@@ -1379,30 +1379,30 @@ class Manager:
                     return 0
                 for c in window.winfo_children():
                     c.destroy()
-                window.title("Visualization of %s (page %d)" % (paper.fname, number))
-                cnvs = Tkinter.Canvas(window, width = 1200, height = 800)
-                cnvs.grid(row = 0, column = 0, columnspan = 2)
+                window.title("Visualization of %s (page %d)"%(paper.fname, number))
+                cnvs = Tkinter.Canvas(window, width=1200, height=800)
+                cnvs.grid(row=0, column=0, columnspan=2)
 
                 text = paper.get_xml_page(number, True)
                 rows = xmltable.analyze_page(text)
-                max_width = max([row[-1].right - row[0].left for row in rows])
+                max_width = max([row[-1].right-row[0].left for row in rows])
                 header_row = False
                 for row in rows:
                     if len(row) == 1 and row[0].text.startswith("Table "):
                         header_row = row
                         color = "red"
-                    elif header_row and len(row) == 1 and abs(row[0].left - header_row[0].left) < 1.0:
+                    elif header_row and len(row) == 1 and abs(row[0].left-header_row[0].left) < 1.0:
                         color = "red"
-                    elif abs(row[-1].right - row[0].left - max_width) < 1.0:
+                    elif abs(row[-1].right-row[0].left-max_width) < 1.0:
                         color = "blue"
                     else:
                         header_row = False
                         color = "black"
                     for l in row:
-                        cnvs.create_rectangle((l.left, l.top + 10, l.right, l.bottom + 10), outline = color)
+                        cnvs.create_rectangle((l.left, l.top+10, l.right, l.bottom+10), outline=color)
                 
-                b = Tkinter.Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-                b.grid(row = 1, column = 0)
+                b = Tkinter.Button(window, text="Back", command=lambda window=window, paper=paper:self.show_paper_info(window, paper))
+                b.grid(row=1, column=0)
     def export_paper_text(self, paper):
         # Export full text of a paper into a file.
         with asksaveasfile() as f:
@@ -1414,9 +1414,9 @@ class Manager:
         d = askdirectory()
         for p in self.papers:
             text = p.get_text()
-            with open(path_join(d, "%s.txt" % (p.fname)), "w") as f:
+            with open(path_join(d, "%s.txt"%(p.fname)), "w") as f:
                 f.write(text)
-    def export_all(self, quick = False, n = None, n_p = None, errors = None, attr = None, csv = None):
+    def export_all(self, quick=False, n=None, n_p=None, errors=None, attr=None, csv=None):
         # Export all papers' metadata. Quick export: determine metadata first if none is available, skipping all user interaction.
         if n is None:
             if self.unsaved_papers():
@@ -1430,8 +1430,8 @@ class Manager:
             errors = {}
             s = "document name,mc datasets, real datasets, other datasets, dataset tables"
             for a in Paper.attributes_general:
-                s += ",%s" % a
-            csv = [s + "\n"]
+                s += ",%s"%a
+            csv = [s+"\n"]
             attr = {}
             attr["mc_datasets"] = []
             attr["real_datasets"] = []
@@ -1439,16 +1439,16 @@ class Manager:
             attr["dataset_tables"] = []
             for a in Paper.attributes_general:
                 attr[a] = []
-            self.window.after(100, lambda: self.export_all(quick, n, n_p, errors, attr, csv))
+            self.window.after(100, lambda:self.export_all(quick, n, n_p, errors, attr, csv))
         else:
-            p = self.papers[n - 1]
-            self.status_set("Performing export %d/%d. Paper: %s. Please, wait..." % (n, len(self.papers), p.fname))
+            p = self.papers[n-1]
+            self.status_set("Performing export %d/%d. Paper: %s. Please, wait..."%(n, len(self.papers), p.fname))
             self.window.update_idletasks()
             try:
                 outp = p.export(quick)
                 if outp:
                     n_p += 1
-                    s = "%s," % p.fname
+                    s = "%s,"%p.fname
                     if "mc_datasets" in outp["content"]:
                         attr["mc_datasets"].append(p.fname)
                         s += "1,"
@@ -1468,12 +1468,12 @@ class Manager:
                         if not tables and c.startswith("table"):
                             attr["dataset_tables"].append(p.fname)
                             tables = "1"
-                    s += "%s,%s," % (other, tables)
+                    s += "%s,%s,"%(other, tables)
                     for a in Paper.attributes_general:
                         if outp["content"]["plain_text"][a]:
                             attr[a].append(p.fname)
                             if a == "atlas_name":
-                                s += "%s," % (outp["content"]["plain_text"][a])
+                                s += "%s,"%(outp["content"]["plain_text"][a])
                             else:
                                 s += "1,"
                         else:
@@ -1484,22 +1484,22 @@ class Manager:
                 errors[p.fname] = e
             if n < len(self.papers):
                 n += 1
-                self.window.after(100, lambda: self.export_all(quick, n, n_p, errors, attr, csv))
+                self.window.after(100, lambda:self.export_all(quick, n, n_p, errors, attr, csv))
             else:
                 msg = False
                 if errors:
                     msg = "These papers were not exported for some reason:\n\n"
                     for e in errors:
-                        msg += "%s : %s\n\n" % (e, errors[e])
+                        msg += "%s : %s\n\n"%(e, errors[e])
                     with open(ERRORS_FILE, "w") as f:
                         f.write(msg)
                 with open(STAT_FILE, "w") as f:
                     csv += "TOTAL\n"
-                    s = "%d,%d,%d,%d,%d," % (n_p, len(attr["mc_datasets"]), len(attr["real_datasets"]), len(attr["other_datasets"]), len(attr["dataset_tables"]))
-                    s_p = "100%%,%f%%,%f%%,%f%%,%f%%," % (float(len(attr["mc_datasets"])) / n_p * 100, float(len(attr["real_datasets"])) / n_p * 100, float(len(attr["other_datasets"])) / n_p * 100, float(len(attr["dataset_tables"])) / n_p * 100)
+                    s = "%d,%d,%d,%d,%d,"%(n_p, len(attr["mc_datasets"]), len(attr["real_datasets"]), len(attr["other_datasets"]), len(attr["dataset_tables"]))
+                    s_p = "100%%,%f%%,%f%%,%f%%,%f%%,"%(float(len(attr["mc_datasets"]))/n_p*100, float(len(attr["real_datasets"]))/n_p*100, float(len(attr["other_datasets"]))/n_p*100, float(len(attr["dataset_tables"]))/n_p*100)
                     for a in Paper.attributes_general:
-                        s += "%d," % len(attr[a])
-                        s_p += "%f%%," % (float(len(attr[a])) / n_p * 100)
+                        s += "%d,"%len(attr[a])
+                        s_p += "%f%%,"%(float(len(attr[a]))/n_p*100)
                     csv += s.rstrip(",") + "\n"
                     csv += s_p.rstrip(",") + "\n"
                     f.writelines(csv)
