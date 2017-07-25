@@ -1,3 +1,7 @@
+"""
+PDF Analyzer script for processing tables
+"""
+
 import re
 
 PAGE_SIZE = 1000 # TO DO: improve this.
@@ -5,7 +9,9 @@ PAGE_SIZE = 1000 # TO DO: improve this.
 re_textline = re.compile("<textline bbox=\"[0-9.,]+\">.+?</textline>", re.DOTALL)
 
 class TextLine:
-    # Class which represents text lines. Each line has 4 coords, text and coordinates of spaces.
+    """ Class which represents text lines. Each line has 4 coords, text
+    and coordinates of spaces.
+    """
     re_bbox = re.compile("bbox=\"([0-9.,]+)\"")
     re_text_symbol = re.compile("<text font.+>([^ ]+)</text>")
     re_text_symbol_params = re.compile("<text font=\"(.+)\" bbox=\".+\" size=\"(.+)\">([^ ]+)</text>")
@@ -73,19 +79,24 @@ class TextLine:
 
             self.center = [(self.left+self.right)/2, (self.top+self.bottom)/2]
     def swap_y(self, top):
-        # Change Y-coords according to new Y-axis direction and position.
+        """ Change Y-coords according to new Y-axis direction and
+        position.
+        """
         self.top = top - self.top
         self.bottom = top - self.bottom
         self.center = [(self.left+self.right)/2, (self.top+self.bottom)/2]
     def same_row(self, line):
-        # Determine whether line and self belong to the same row or not via comparing y coord.
+        """ Determine whether line and self belong to the same row or
+        not via comparing y coord.
+        """
         if line.center[1] >= self.top and line.center[1] <= self.bottom:
 #        if abs(self.center[1] - line.center[1]) < (self.bottom - self.top) / 4:
             return True
         else:
             return False
     def split(self, space):
-        # Split self into two lines by breaking over the given space.
+        """ Split self into two lines by breaking over the given space.
+        """
         words = self.text.split()
         words1 = words[:self.spaces_coords.index(space)+1]
         words2 = words[self.spaces_coords.index(space)+1:]
@@ -101,7 +112,8 @@ class TextLine:
         nl2 = TextLine([left2, self.top, right2, self.bottom, text2, spaces2])
         return [nl1, nl2]
     def merge(self, line):
-        # Merge two overlapping lines
+        """ Merge two overlapping lines.
+        """
         left = min(self.left, line.left)
         top = min(self.top, line.top)
         right = max(self.right, line.right)
@@ -112,7 +124,8 @@ class TextLine:
         return nl
 
 def row_centery(row):
-    # Calculate average y-center in a row.
+    """ Calculate average y-center in a row.
+    """
     c = 0
     for l in row:
         c += l.center[1]
@@ -198,14 +211,18 @@ class Table:
 #                    print "MAXIMUM BREAKING ATTEMPTS REACHED"
                     break
     def construct_row(self, line, used_lines):
-        # Construct a row which contains given line. Do not use lines which were already used.
+        """ Construct a row which contains given line. Do not use lines
+        which were already used.
+        """
         row = [line]
         for l in self.lines:
             if l != line and l not in used_lines and line.same_row(l):
                 row.append(l)
         return row
     def row_text(self, num=None, row=False):
-        # Return a combined text of all row lines. Space between lines is replaced with "!".
+        """ Return a combined text of all row lines. Space between lines
+        is replaced with "!".
+        """
         if num is not None or num == 0:
             row = self.rows[num]
         text = ""
@@ -213,7 +230,8 @@ class Table:
             text += l.text + "!"
         return text
     def break_short_rows(self, max_elements):
-        # Attempt to break lines in rows which are too short.
+        """ Attempt to break lines in rows which are too short.
+        """
         normal_rows = []
         short_rows = []
 #        print "ROWS"
@@ -288,7 +306,8 @@ class Table:
         self.rows.sort(key = lambda row:row_centery(row))
         
 def get_tables_from_text(text):
-    # Get tables from a xml page text.
+    """ Get tables from a xml page text.
+    """
     re_textbox = re.compile("<textbox id=\"\d+\" bbox=\"([0-9.,]+)\">", re.DOTALL)
 #    re_textline = re.compile("<textline bbox=\"[0-9.,]+\">.+?</textline>", re.DOTALL)
     re_table_header = re.compile("Table \d+:")

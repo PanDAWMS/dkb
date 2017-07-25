@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Note: this is a copy of a tool from pdfminer. May be modified in the future.
+
+"""
+PDF Analyzer script for extracting text from PDF with PDF Miner
+"""
+
 import sys
 from tempfile import TemporaryFile
 
@@ -16,7 +20,9 @@ from pdfminer.layout import LAParams
 #from pdfminer.pdftypes import resolve1
 
 def remove_ligatures(text):
-    # Replaces ligatures (fancy symbols combining several letters) with letter combinations.
+    """ Replace ligatures (fancy symbols combining several letters) with
+    letter combinations.
+    """
     text = text.replace("ﬃ", "ffi")
     text = text.replace("ﬁ", "fi")
     text = text.replace("ﬀ", "ff")
@@ -24,10 +30,13 @@ def remove_ligatures(text):
     return text
 
 def get_page_text(interpreter, page, tmp, rotation=0):
-    # Extract text from a page with given rotation. These variables are required and must be setup in parent function:
-    # interpreter - interpreter used by PDFMiner.
-    # page - page object.
-    # tmp - temporary file use to get processed text. Stack Overflow advices to create a new tmp file each time, but it must be specified when creating PDFMiner device object, so i'm not sure if that's possible.
+    """ Extract text from a page with given rotation. These variables
+    are required and must be setup in parent function:
+    
+    interpreter - interpreter used by PDFMiner.
+    page - page object.
+    tmp - temporary file use to get processed text. Stack Overflow advices to create a new tmp file each time, but it must be specified when creating PDFMiner device object, so i'm not sure if that's possible.
+    """
     page.rotate = (page.rotate+rotation) % 360
     interpreter.process_page(page)
     tmp.seek(0)
@@ -40,8 +49,9 @@ def get_page_text(interpreter, page, tmp, rotation=0):
     return text
 
 def mine_text(infname, page_numbers=False, outtype="text", rotated_pages=[], folder=False):
-    # Mine text from a PDF files. Find rotated pages if txt, rotate pages according to respective variable if xml.
-#    inf = open(infname, "rb")
+    """ Mine text from a PDF files. Find rotated pages if txt, rotate
+    pages according to respective variable if xml.
+    """
     with open(infname, "rb") as inf:# By using "with" we ensure that file gets closed if something goes wrong in this block.
     
         rsrcmngr = PDFResourceManager()
