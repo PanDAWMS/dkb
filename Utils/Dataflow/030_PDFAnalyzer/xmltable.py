@@ -206,8 +206,8 @@ class Table:
                     new_row.append(line)
                     line = row[i]
                 else:
-                    print "LINES WITH TEXT", line.text, "AND",\
-                          row[i].text, "OVERLAP - MERGING"
+#                    print "LINES WITH TEXT", line.text, "AND",\
+#                          row[i].text, "OVERLAP - MERGING"
                     line = line.merge(row[i])
             new_row.append(line)
             rows.append(new_row)
