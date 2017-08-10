@@ -1,5 +1,44 @@
 <?php
-function getPhysCat(array $tags) {
+function convertIndexToLowerCase(&$a) {
+  $result = array();
+
+  foreach (array_keys($a) as $i) {
+    $result[strtolower($i)] = $t;
+  }
+
+  $a = $result;
+}
+
+function strlowerMapping($mapping) {
+  $result = array();
+
+  foreach ($mapping as $pc => $pcm) {
+    $pc = strtolower($pc);
+    $result[$pc] = array();
+    foreach ($pcm as $pctag) {
+      $result[$pc][] = strtolower($pctag);
+    }
+  }
+
+  return $result;
+}
+
+function getCategory($mapping, $tags) {
+  $result = array();
+
+  foreach ($tags as $tag) {
+    foreach ($mapping as $c=>$mappingTags) {
+      if (in_array(strtolower($tag), $mappingTags)) {
+        $result[] = $c;
+      }
+    }
+  }
+
+  return $result;
+}
+
+
+function getPhysCat(array $tags, $taskname) {
   $result = array();
   #https://github.com/PanDAWMS/panda-bigmon-atlas/blob/devel/atlas/prodtask/hashtag.py
   $PHYS_CATEGORIES_MAP = array(
@@ -27,24 +66,31 @@ function getPhysCat(array $tags) {
     "Wjets" => array("W", "w"),
     "Zjets" => array("Z", "z"),
   );
-  foreach ($PHYS_CATEGORIES_MAP as $pc => $pcm) {
-    unset($PHYS_CATEGORIES_MAP[$pc]);
-    $pc = strtolower($pc);
-    $PHYS_CATEGORIES_MAP[$pc] = array();
-    foreach ($pcm as $pctag) {
-      $PHYS_CATEGORIES_MAP[$pc][] = strtolower($pctag);
-    }
-  }
-  foreach ($tags as $tag) {
-    foreach ($PHYS_CATEGORIES_MAP as $pc=>$tctags) {
-      if (in_array(strtolower($tag), $tctags)) {
-        $result[] = $pc;
-      }
-    }
-  }
+
+  $PHYS_SHORT_MAP = array(
+    'BPhysics'  => array('upsilon'),
+    'Exotic'    => array('4topci'),
+    'Higgs'     => array('h125', 'xhh'),
+    'Multijet'  => array('jets'),
+    'SingleTop' => array('singletop', '_wt', '_wwbb'),
+    'SUSY'      => array('tanb'),
+    'TTbar'     => array('ttbar', '_tt_'),
+    'TTbarX'    => array('ttbb', 'ttgamma', '3top'),
+    'Wjets'     => array('_wenu_'),
+  );
+
+  $result = getCategory(strlowerMapping($PHYS_CATEGORIES_MAP), $tags);
+
   if (count($result) == 0 ) {
-    $result[] = 'unknown';
+    $t = explode('.',$taskname);
+    $phys_short = strtolower($t[2]);
+    $result = getCategory(strlowerMapping($PHYS_SHORT_MAP), array($phys_short));
   }
+
+  if (count($result) == 0 ) {
+    $result[] = 'Uncategorized';
+  }
+
   return $result;
 }
 
@@ -56,45 +102,18 @@ if (isset($argv[1])) {
 
 if ($h) {
   while (($line = fgets($h)) !== false) {
-    $row = json_decode(strtolower($line),true);
-    if (!isset($row['sub_campaing'])) {
-      $row['sub_campaing'] = $row['campaing'];
-    }
-    printf('{ "index" : {"_index":"raw_current-%s", "_type":"%s", "_id":"%d" } }'."\n", $row['step'], $row['status'], $row['task_id']);
-    $row['hashtag'] = explode(',', $row['hashtag_list']);
-    $row['physics_category'] = getPhysCat($row['hashtag']);
-    $row['extended_tags'] = $row['hashtag'];
-    $tn = explode('.', $row['taskname']);
-    if (isset($tn[2])) {
-      $row['physics_short_full'] = $tn[2];
-      $row['physics_short'] = explode('_', $row['physics_short_full']);
-    }
-    $row['prod_tags'] = explode('_', $tn[count($tn)-1]);
-    $additional_hashtags = array('campaing', 'sub_campaing', 'phys_group', 'prod_tags', 'physics_category');
+    $row = json_decode($line,true);
+    convertIndexToLowerCase($row);
 
+    $hashtag_list = $row['hashtag_list'];
+    $row['hashtag_list'] = array();
+    foreach( explode(',',$hashtag_list) as $tag) {
+      $row['hashtag_list'][] = trim($tag);
+    }
+    $row['physics_category'] = getPhysCat($row['hashtag_list'], $row['taskname']);
 
-    foreach ($additional_hashtags as $addon) {
-      if (isset($row[$addon])) {
-        if (is_array($row[$addon])) {
-          foreach($row[$addon] as $ra) {
-            if ($ra != '') {
-              $row['extended_tags'][] = $ra;
-            }
-          }
-        } else {
-          if ($row[$addon] != '') {
-            $row['extended_tags'][] = $row[$addon];
-          }
-        }
-      }
-    }
-    if (isset($row['physics_short'])) {
-      foreach( $row['physics_short'] as $ps) {
-        $row['extended_tags'][] = $ps;
-      }
-    }
-    $row['@timestamp'] = $row['t_stamp'];
-    unset($row['task_id'], $row['status'], $row['hashtag_list'], $row['t_stamp']);
+    printf('{ "index" : {"_index":"mc16", "_type":"event_summary", "_id":"%d" } }'."\n", $row['taskid']);
+     
     echo json_encode($row)."\n";
   }
 }
