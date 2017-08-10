@@ -715,9 +715,7 @@ class Paper:
                         for i in range(0, len(table.rows[rnum])):
                             txt = table.rows[rnum][i].text.lower()
                             if re_column_with_datasets.match(txt):
-##                                print "COLUMN",\
-##                                      table.rows[rnum][i].text.lower(),\
-##                                      "IN TABLE", num,\
+##                                print "COLUMN", txt, "IN TABLE", num,\
 ##                                      "HINTS THAT IT CONTAINS DATASETS"
                                 data_column = i
                                 if rnum == 1:
