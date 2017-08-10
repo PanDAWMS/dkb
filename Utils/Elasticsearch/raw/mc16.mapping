@@ -6,7 +6,7 @@
   "mappings" : {
     "_default_" : {
       "properties" : {
-        "campaing" : {
+        "campaign" : {
           "type" : "text",
           "fields" : {
             "keyword" : {
@@ -15,7 +15,7 @@
             }
           }
         },
-        "sub_campaing" : {
+        "sub_campaign" : {
           "type" : "text",
           "fields" : {
             "keyword" : {
