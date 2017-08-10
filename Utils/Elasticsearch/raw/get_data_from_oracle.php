@@ -28,6 +28,7 @@ oci_execute($stid);
 fwrite(STDERR, "Execution done!\n");
 
 while ($row = oci_fetch_array($stid, OCI_ASSOC)) {
+  unset($row['TAG_PARAMETERS']);
   try {
     echo json_encode($row)."\n";
   } catch (Exception $e) {
