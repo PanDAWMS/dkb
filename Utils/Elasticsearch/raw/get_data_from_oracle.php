@@ -1,4 +1,9 @@
 <?php
+function exception_error_handler($errno, $errstr, $errfile, $errline ) {
+   throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+}
+set_error_handler("exception_error_handler");
+
 fwrite(STDERR, "Password:\n");
 fscanf(STDIN, "%s\n", $p);
 
@@ -23,7 +28,14 @@ oci_execute($stid);
 fwrite(STDERR, "Execution done!\n");
 
 while ($row = oci_fetch_array($stid, OCI_ASSOC)) {
-  echo json_encode($row)."\n";
+  try {
+    echo json_encode($row)."\n";
+  } catch (Exception $e) {
+    fwrite(STDERR, "Bad row '".print_r($row,true)."'\n");
+    fwrite(STDERR, $e->getMessage()."\n");
+    die();
+  }
+
 }
 
 ?>
