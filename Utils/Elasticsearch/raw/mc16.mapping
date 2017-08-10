@@ -1,5 +1,5 @@
 {
-  "template": "raw_current-*",
+  "template": "mc16",
   "settings": {
     "number_of_shards": 4
   },
@@ -51,7 +51,7 @@
             }
           }
         },
-        "step" : {
+        "step_name" : {
           "type" : "text",
           "fields" : {
             "keyword" : {
@@ -60,25 +60,49 @@
             }
           }
         },
-        "events_requested" : {
+
+        "requested_events" : {
           "type" : "long"
         },
-        "events_total" : {
+        "processed_events" : {
           "type" : "long"
         },
-        "hashtag" : {
+        "hashtag_list" : {
           "type" : "keyword",
           "ignore_above" : 256
         },
-        "extended_tags" : {
+        "pr_id" : {
           "type" : "keyword",
           "ignore_above" : 256
         },
-        "physics_short" : {
+        "datasetname" : {
           "type" : "keyword",
           "ignore_above" : 256
         },
-        "physics_short_full" : {
+        "dataset_status" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "status" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "description" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "tag_name" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "trf_release" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "energy_gev" : {
+          "type" : "long"
+        },
+        "taskid":{
           "type" : "keyword",
           "ignore_above" : 256
         },
@@ -86,18 +110,20 @@
           "type" : "keyword",
           "ignore_above" : 256
         },
-        "prod_tags" : {
-          "type" : "keyword",
-          "ignore_above" : 256
-        },
-        "request" : {
-          "type" : "long"
-        },
-        "@timestamp" : {
+        "@task_timestamp" : {
           "type" : "date",
-          "format" : "dd-MMM-yy HH.mm.ss.SSSSSS aa"
+          "format" : "dd-mm-yy hh.mm.ss"
+        },
+        "@start_time" : {
+          "type" : "date",
+          "format" : "dd-mm-yy hh.mm.ss"
+        },
+        "@end_time" : {
+          "type" : "date",
+          "format" : "dd-mm-yy hh.mm.ss"
         }
       }
     }
   }
 }
+
