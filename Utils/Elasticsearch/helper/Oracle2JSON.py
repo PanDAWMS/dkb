@@ -1,102 +1,86 @@
-from elasticsearch import Elasticsearch
-from elasticsearch import ElasticsearchException
-import pprint
 import json
 import argparse
 import ConfigParser
-import datetime
 import DButils
 import time
 import re
+import os
 
 def main():
     """
-    --host <...> --port 9200 --user <...> --pwd <...>
+    --input <SQL file> --output <directory> --size 1000
     :return:
     """
     args = parsingArguments()
-    if (args.host):
-        global HOST
-        HOST = args.host
-    if (args.port):
-        global PORT
-        PORT = args.port
-    if (args.user and args.pwd):
-        global USER
-        USER = args.user
-        global PWD
-        PWD = args.pwd
-    if (args.user and args.pwd):
-        es = Elasticsearch([HOST+':'+PORT], http_auth=(USER, PWD))
+    if (args.input):
+        global INPUT
+        INPUT = args.input
+    if (args.output):
+        global OUTPUT
+        OUTPUT = args.output
+    global SIZE
+    if (args.size):
+        SIZE = args.size
     else:
-        es = Elasticsearch([HOST+':'+PORT])
-
+        SIZE = 500
     Config = ConfigParser.ConfigParser()
-    Config.read("settings.cfg")
+    Config.read("../settings.cfg")
     global dsn
     dsn = Config.get("oracle", "dsn")
+
     start = time.time()
 
-    indexing(es_instance=es,
-             index_name='mc16',
-             doc_type='event_summary',
-             sql_file='../../OracleProdSys2/mc16_campaign_for_ES.sql',
-             remove_old=True,
-             mapping_file=None,
-             keyfield='taskid')
-
+    oracle2json(INPUT, OUTPUT, SIZE)
     end = time.time()
     print(end - start)
 
-
-def indexing(es_instance, index_name, doc_type, sql_file, remove_old=True, mapping_file=None, keyfield=None):
+def oracle2json(sql_file, output, arraysize=500):
     """
-    Procedure, which executes SQL Request,
-    process it iteratively and put data into ElasticSearch index.
-
-    :param es_instance: Current instance of ElasticSearch
-    :param index_name: Name of index
-    :param doc_type: Document Type
-    :param sql_file: SQL File with Request
-    :param remove_old: Remove index from ElasticSearch? True = Yes, by default
-    :param mapping_file: Put mapping file (Auto-mapping by default)
-    :param keyfield: Define field, which could be used for IDs
+    Processing query row by row, with parsing LOB values.
+    :param sql_file: file with SQL query
+    :param output: output directory
+    :param arraysize: number of rows, processed at a time
     :return:
     """
-    # remove old index
-    if remove_old:
-        removeIndex(index_name, es_instance)
-        # recreate index
-        if mapping_file is not None:
-            if isinstance(mapping_file, str):
-                handler = open(mapping_file)
-                mapping = handler.read()
-                es_instance.indices.create(index=index_name,
-                                           body=mapping)
-        else:
-            es_instance.indices.create(index=index_name)
     conn, cursor = DButils.connectDEFT_DSN(dsn)
-    handler = open(sql_file)
-    result = DButils.ResultIter(conn, handler.read()[:-1], 100, True)
+    sql_handler = open(sql_file)
+    result = DButils.OneByOneIter(conn, sql_handler.read()[:-1], True)
+    counter = -1
+    if not os.path.exists(output):
+        os.makedirs(output)
+    json_handler = open('%s/%s_%d.json' % (output, output, 0), 'wb')
+    result_arr = []
 
-    # set current timestamp
-    curr_tstamp = datetime.datetime.now()
-    id_counter = 0
     for i in result:
         i["phys_category"] = get_category(i.get("hashtag_list"), i.get("taskname"))
         json_body = json.dumps(i, ensure_ascii=False)
-        try:
-            res = es_instance.index(index=index_name,
-                           doc_type=doc_type,
-                           id=i[keyfield] if keyfield is not None else id_counter+1,
-                           body=json_body,
-                           timestamp=curr_tstamp)
-            pprint.pprint(res)
-        except ElasticsearchException as e:
-            print json_body
-            print e
+        if (counter%int(arraysize) == 0):
+            json_handler = open('%s/%s_%d.json' % (output, output, counter), 'wb')
+            json_handler.write('[')
+        result_arr.append(json_body)
+        json_handler.write(json_body)
+        counter += 1
+        if (counter % int(arraysize) != 0):
+            json_handler.write(',')
+            json_handler.write('\n')
+        else:
+            json_handler.write(']')
+            json_handler.close()
+    if not json_handler.closed:
+        json_handler.seek(-1, os.SEEK_END)
+        json_handler.truncate()
+        json_handler.write(']')
+        json_handler.close()
 
 def get_category(hashtags, taskname):
+    """
+    Each task can be associated with a number of Physics Categories.
+    1) search category in hashtags list
+    2) if not found in hashtags, then search category in phys_short field of tasknames
+    :param hashtags: hashtag list from oracle request
+    :param taskname: taskname
+    :return:
+    """
     PHYS_CATEGORIES_MAP = {'BPhysics':['charmonium','jpsi','bs','bd','bminus','bplus','charm','bottom','bottomonium','b0'],
                             'BTag':['btagging'],
                             'Diboson':['diboson','zz', 'ww', 'wz', 'wwbb', 'wwll'],
@@ -148,17 +132,11 @@ def get_category(hashtags, taskname):
 
 def parsingArguments():
     parser = argparse.ArgumentParser(description='Process command line arguments.')
-    parser.add_argument('--host', help='ElasticSearch host')
-    parser.add_argument('--port', help='ElasticSearch port')
-    parser.add_argument('--user', help='ElasticSearch user')
-    parser.add_argument('--pwd', help='ElasticSearch password')
+    parser.add_argument('--input', help='SQL file path')
+    parser.add_argument('--output', help='Output directory')
+    parser.add_argument('--size', help='Number of lines, processed at a time')
     return parser.parse_args()
 
-
-def removeIndex(index, es):
-    try:
-        res = es.indices.delete(index=index, ignore=[400, 404])
-        print('Index ' + index + 'has beend removed from ElasticSearch')
-    except:
-        print('Index could not be deleted')
+if  __name__ =='__main__':
+    main()
 
