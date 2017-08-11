@@ -26,6 +26,13 @@ def connectDEFT(dbname, dbuser, pwd):
 
 
 def ResultIter(connection, query, arraysize=1000, rows_as_dict=False):
+    """
+    :param connection: Oracle connection
+    :param query: query string
+    :param arraysize: number of elements, processed at a time
+    :param rows_as_dict:
+    :return: return rows with headers as dicts (True), or as lists (False)
+    """
     cursor = connection.cursor()
     cursor.execute(query)
     colnames = [i[0].lower() for i in cursor.description]
@@ -35,12 +42,36 @@ def ResultIter(connection, query, arraysize=1000, rows_as_dict=False):
         if not results:
             break
         for row in results:
-            row = fix_lob(row)
             if rows_as_dict:
                 yield dict(zip(colnames, row))
             else:
                 yield row
 
+
+def OneByOneIter(connection, query, rows_as_dict=False):
+    """
+    We should remember that parsing LOB is a very heavy operation.
+    Using fix_lob() function it's better to use fetchone() to avoid
+    errors.
+    https://bitbucket.org/anthony_tuininga/cx_oracle/issues/49/lob-object-documentation-clarification
+    :param connection: Oracle connection
+    :param query: query steing
+    :param rows_as_dict: return rows with headers as dicts (True), or as lists (False)
+    :return:
+    """
+    cursor = connection.cursor()
+    cursor.execute(query)
+    colnames = [i[0].lower() for i in cursor.description]
+    row = cursor.fetchone()
+    while row:
+        row = cursor.fetchone()
+        if not row:
+            break
+        row = fix_lob(row)
+        if rows_as_dict:
+            yield dict(zip(colnames, row))
+        else:
+            yield row
 
 def fix_lob(row):
     """
