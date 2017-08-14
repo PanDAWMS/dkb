@@ -120,9 +120,3 @@ def mine_text(infname, page_numbers=False, outtype="text", rotated_pages=[],
     device.close()
     tmp.close()
     return [n - 1, rotated_pages]
-
-if __name__ == "__main__":
-    fname = "C:/Work/papers_analysis/ATL-COM-PHYS-2014-1357.pdf"
-    [pages, rotated_pages] = mine_text(fname, [201], "xml")
-    for p in pages:
-        print pages[p]
