@@ -440,12 +440,3 @@ def analyze_page(text):
 ##    for l in lines:
 ##        if max_key in l.symbols:
 ##            print l.text
-
-if __name__ == "__main__":
-    fname = "papers/ATL-COM-PHYS-2015-170/xml/9.xml"
-    f = open(fname, "r")
-    text = f.read()
-    f.close()
-    analyze_page(text)
-    sys.exit(0)
-
