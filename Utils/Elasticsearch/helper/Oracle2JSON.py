@@ -1,40 +1,45 @@
 import json
 import argparse
 import ConfigParser
-import DButils
 import time
 import re
 import os
+import cx_Oracle
+import sys
+
+try:
+    import cx_Oracle
+except:
+    print "****ERROR : DButils. Cannot import cx_Oracle"
+    pass
+
+def connectDEFT_DSN(dsn):
+    connect = cx_Oracle.connect(dsn)
+    cursor = connect.cursor()
+
+    return connect, cursor
 
 def main():
     """
-    --input <SQL file> --output <directory> --size 1000
+    --input <SQL file>
     :return:
     """
     args = parsingArguments()
     if (args.input):
         global INPUT
         INPUT = args.input
-    if (args.output):
-        global OUTPUT
-        OUTPUT = args.output
-    global SIZE
-    if (args.size):
-        SIZE = args.size
-    else:
-        SIZE = 500
     Config = ConfigParser.ConfigParser()
-    Config.read("../settings.cfg")
+    Config.read("settings.cfg")
     global dsn
     dsn = Config.get("oracle", "dsn")
 
     start = time.time()
 
-    oracle2json(INPUT, OUTPUT, SIZE)
+    oracle2json(INPUT)
     end = time.time()
     print(end - start)
 
-def oracle2json(sql_file, output, arraysize=500):
+def oracle2json(sql_file):
     """
     Processing query row by row, with parsing LOB values.
     :param sql_file: file with SQL query
@@ -42,35 +47,18 @@ def oracle2json(sql_file, output, arraysize=500):
     :param arraysize: number of rows, processed at a time
     :return:
     """
-    conn, cursor = DButils.connectDEFT_DSN(dsn)
+    conn, cursor = connectDEFT_DSN(dsn)
     sql_handler = open(sql_file)
-    result = DButils.OneByOneIter(conn, sql_handler.read()[:-1], True)
-    counter = -1
-    if not os.path.exists(output):
-        os.makedirs(output)
-    json_handler = open('%s/%s_%d.json' % (output, output, 0), 'wb')
-    result_arr = []
-
-    for i in result:
-        i["phys_category"] = get_category(i.get("hashtag_list"), i.get("taskname"))
-        json_body = json.dumps(i, ensure_ascii=False)
-        if (counter%int(arraysize) == 0):
-            json_handler = open('%s/%s_%d.json' % (output, output, counter), 'wb')
-            json_handler.write('[')
-        result_arr.append(json_body)
-        json_handler.write(json_body)
-        counter += 1
-        if (counter % int(arraysize) != 0):
-            json_handler.write(',')
-            json_handler.write('\n')
-        else:
-            json_handler.write(']')
-            json_handler.close()
-    if not json_handler.closed:
-        json_handler.seek(-1, os.SEEK_END)
-        json_handler.truncate()
-        json_handler.write(']')
-        json_handler.close()
+    cursor = conn.cursor()
+    cursor.execute(sql_handler.read()[:-1])
+    colnames = [i[0].lower() for i in cursor.description]
+    row = cursor.fetchone()
+    while row:
+        row = cursor.fetchone()
+        if not row:
+            break
+        row = fix_lob(row)
+        sys.stdout.write(json.dumps(dict(zip(colnames, row)),ensure_ascii=False) + '\n')
 
 def get_category(hashtags, taskname):
     """
@@ -136,6 +124,28 @@ def parsingArguments():
     parser.add_argument('--output', help='Output directory')
     parser.add_argument('--size', help='Number of lines, processed at a time')
     return parser.parse_args()
+
+def fix_lob(row):
+    """
+    This procedure is needed in case of using
+    tables with LOB's values.
+    AS usual LOB is JSON's.
+    And we need to process JSON string as it was
+    a set of columns.
+    :param row:
+    :return:
+    """
+    def convert(col):
+        if isinstance(col, cx_Oracle.LOB):
+            result = ''
+            try:
+                result = json.load(col)
+            except:
+                result = str(col)
+            return result
+        else:
+            return col
+    return [convert(c) for c in row]
 
 if  __name__ =='__main__':
     main()
