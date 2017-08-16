@@ -53,7 +53,7 @@ def oracle2json(sql_file):
     cursor = conn.cursor()
     cursor.execute(sql_handler.read()[:-1])
     colnames = [i[0].lower() for i in cursor.description]
-    row = cursor.fetchone()
+    row = True
     while row:
         row = cursor.fetchone()
         if not row:
