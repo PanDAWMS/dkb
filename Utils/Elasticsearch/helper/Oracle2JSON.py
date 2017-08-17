@@ -2,10 +2,8 @@
 import json
 import argparse
 import ConfigParser
-import time
 import re
-import os
-import cx_Oracle
+import DButils
 import sys
 
 try:
@@ -22,44 +20,28 @@ def connectDEFT_DSN(dsn):
 
 def main():
     """
-    --input <SQL file>
+    --input <SQL file> --size <page size>
     :return:
     """
     args = parsingArguments()
     if (args.input):
-        global INPUT
-        INPUT = args.input
+        input = args.input
+    if (args.size):
+        size = args.size
+    else:
+        size = 100
     Config = ConfigParser.ConfigParser()
     Config.read("settings.cfg")
     global dsn
     dsn = Config.get("oracle", "dsn")
-
-    start = time.time()
-
-    oracle2json(INPUT)
-    end = time.time()
-    print(end - start)
-
-def oracle2json(sql_file):
-    """
-    Processing query row by row, with parsing LOB values.
-    :param sql_file: file with SQL query
-    :param output: output directory
-    :param arraysize: number of rows, processed at a time
-    :return:
-    """
     conn, cursor = connectDEFT_DSN(dsn)
-    sql_handler = open(sql_file)
-    cursor = conn.cursor()
-    cursor.execute(sql_handler.read()[:-1])
-    colnames = [i[0].lower() for i in cursor.description]
-    row = True
-    while row:
-        row = cursor.fetchone()
-        if not row:
-            break
-        row = fix_lob(row)
-        sys.stdout.write(json.dumps(dict(zip(colnames, row)),ensure_ascii=False) + '\n')
+    try:
+        sql_handler = open(input)
+    except IOError:
+        sys.stderr.write('File open error. No such file.')
+    result = DButils.ResultIter(conn, sql_handler.read()[:-1], size, True)
+    for row in result:
+        sys.stdout.write(json.dumps(row) + '\n')
 
 def get_category(hashtags, taskname):
     """
@@ -125,28 +107,5 @@ def parsingArguments():
     parser.add_argument('--size', help='Number of lines, processed at a time')
     return parser.parse_args()
 
-def fix_lob(row):
-    """
-    This procedure is needed in case of using
-    tables with LOB's values.
-    AS usual LOB is JSON's.
-    And we need to process JSON string as it was
-    a set of columns.
-    :param row:
-    :return:
-    """
-    def convert(col):
-        if isinstance(col, cx_Oracle.LOB):
-            result = ''
-            try:
-                result = json.load(col)
-            except:
-                result = str(col)
-            return result
-        else:
-            return col
-    return [convert(c) for c in row]
-
 if  __name__ =='__main__':
     main()
-

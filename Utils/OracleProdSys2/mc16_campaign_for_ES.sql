@@ -101,7 +101,126 @@ with mc16_tasks as (
         jd.neventsused AS processed_events,
         tag.name as tag_name,
         tag.trf_release,
-        tag.tag_parameters
+    to_char(NVL(substr(
+      regexp_substr(tag_parameters, '"SWReleaseCache": "[a-zA-Z0-9_\.\-]+[^"]'),
+        regexp_instr(
+            regexp_substr(tag_parameters, '"SWReleaseCache": "[a-zA-Z0-9_\.\-]+[^"]'),
+            '(": ")+',
+            1,
+            1,
+            1
+        )
+      ), 'none')) as sw_release,
+    to_char(NVL(substr(
+      regexp_substr(tag_parameters, '"DBRelease": "[a-zA-Z0-9_\.\-]+[^"]'),
+        regexp_instr(
+            regexp_substr(tag_parameters, '"DBRelease": "[a-zA-Z0-9_\.\-]+[^"]'),
+            '(": ")+',
+            1,
+            1,
+            1
+        )
+      ), 'none')) as db_release,
+      to_char(NVL(substr(
+      regexp_substr(tag_parameters, '"JobConfig": "[a-zA-Z0-9_\.\-\:]+[^"]'),
+        regexp_instr(
+            regexp_substr(tag_parameters, '"JobConfig": "[a-zA-Z0-9_\.\-\:]+[^"]'),
+            '(": ")+',
+            1,
+            1,
+            1
+        )
+      ), 'none')) as job_config,
+      to_char(NVL(regexp_replace(substr(
+      regexp_substr(tag_parameters, '"(Geometry)|(geometryVersion)": "[a-zA-Z0-9_":\.\-]+[^"]'),
+        regexp_instr(
+            regexp_substr(tag_parameters, '"(Geometry)|(geometryVersion)": "[a-zA-Z0-9_":\.\-]+[^"]'),
+            '(": ")+',
+            1,
+            1,
+            1
+        )
+      ),'"|\\|,|default:',''), 'none')) as geometry,
+      to_char(NVL(substr(
+      regexp_substr(tag_parameters, '"(Transformation)|(transformation)": "[a-zA-Z0-9_\.\-]+[^"]'),
+        regexp_instr(
+            regexp_substr(tag_parameters, '"(Transformation)|(transformation)": "[a-zA-Z0-9_\.\-]+[^"]'),
+            '(": ")+',
+            1,
+            1,
+            1
+        )
+      ), 'none')) as transformation,
+      to_char(NVL(regexp_replace(substr(
+      regexp_substr(tag_parameters, '"(ConditionsTag)|(conditionsTag)": "[a-zA-Z0-9_":\.\-]+[^"]'),
+        regexp_instr(
+            regexp_substr(tag_parameters, '"(ConditionsTag)|(conditionsTag)": "[a-zA-Z0-9_":\.\-]+[^"]'),
+            '(": ")+',
+            1,
+            1,
+            1
+        )
+      ), '"|\\|,|default:','') , 'none')) as conditions_tag,
+      to_char(NVL(substr(
+      regexp_substr(tag_parameters, '"EvgenJobOpts": "[a-zA-Z0-9_\.\-]+[^"]'),
+        regexp_instr(
+            regexp_substr(tag_parameters, '"EvgenJobOpts": "[a-zA-Z0-9_\.\-]+[^"]'),
+            '(": ")+',
+            1,
+            1,
+            1
+        )
+      ), 'none')) as evgen_job_opts,
+      to_char(NVL(substr(
+      regexp_substr(tag_parameters, '"EcmEnergy": "[a-zA-Z0-9_\.\-]+[^"]'),
+        regexp_instr(
+            regexp_substr(tag_parameters, '"EcmEnergy": "[a-zA-Z0-9_\.\-]+[^"]'),
+            '(": ")+',
+            1,
+            1,
+            1
+        )
+      ), 'none')) as tag_ecm_energy,
+      to_char(NVL(substr(
+      regexp_substr(tag_parameters, '"PhysicsList": "[a-zA-Z0-9_\.\-]+[^"]'),
+        regexp_instr(
+            regexp_substr(tag_parameters, '"PhysicsList": "[a-zA-Z0-9_\.\-]+[^"]'),
+            '(": ")+',
+            1,
+            1,
+            1
+        )
+      ), 'none')) as physics_list,
+      to_char(NVL(substr(
+      regexp_substr(tag_parameters, '"description": "[a-zA-Z0-9_\.\-]+[^"]'),
+        regexp_instr(
+            regexp_substr(tag_parameters, '"description": "[a-zA-Z0-9_\.\-]+[^"]'),
+            '(": ")+',
+            1,
+            1,
+            1
+        )
+      ), 'none')) as tag_description,
+      to_char(NVL(substr(
+      regexp_substr(tag_parameters, '"DataRunNumber": "[0-9]+[^"]'),
+        regexp_instr(
+            regexp_substr(tag_parameters, '"DataRunNumber": "[0-9]+[^"]'),
+            '(": ")+',
+            1,
+            1,
+            1
+        )
+      ), 'none')) as data_run_number,
+      to_char(NVL(substr(
+      regexp_substr(tag_parameters, '"baseRelease": "[0-9\.]+[^"]'),
+        regexp_instr(
+            regexp_substr(tag_parameters, '"baseRelease": "[0-9\.]+[^"]'),
+            '(": ")+',
+            1,
+            1,
+            1
+        )
+      ), 'none')) as base_release
       FROM
         task_hashtags t,
         ATLAS_PANDA.jedi_datasets jd,
