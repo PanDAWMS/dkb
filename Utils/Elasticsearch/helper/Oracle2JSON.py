@@ -104,7 +104,6 @@ def get_category(hashtags, taskname):
 def parsingArguments():
     parser = argparse.ArgumentParser(description='Process command line arguments.')
     parser.add_argument('--input', help='SQL file path')
-    parser.add_argument('--output', help='Output directory')
     parser.add_argument('--size', help='Number of lines, processed at a time')
     return parser.parse_args()
 
