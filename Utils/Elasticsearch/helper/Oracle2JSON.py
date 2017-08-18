@@ -41,17 +41,19 @@ def main():
         sys.stderr.write('File open error. No such file.')
     result = DButils.ResultIter(conn, sql_handler.read()[:-1], size, True)
     for row in result:
+        row['phys_category'] = get_category(row)
         sys.stdout.write(json.dumps(row) + '\n')
 
-def get_category(hashtags, taskname):
+def get_category(row):
     """
     Each task can be associated with a number of Physics Categories.
     1) search category in hashtags list
     2) if not found in hashtags, then search category in phys_short field of tasknames
-    :param hashtags: hashtag list from oracle request
-    :param taskname: taskname
+    :param row
     :return:
     """
+    hashtags = row.get('hashtag_list')
+    taskname = row.get('taskname')
     PHYS_CATEGORIES_MAP = {'BPhysics':['charmonium','jpsi','bs','bd','bminus','bplus','charm','bottom','bottomonium','b0'],
                             'BTag':['btagging'],
                             'Diboson':['diboson','zz', 'ww', 'wz', 'wwbb', 'wwll'],
