@@ -20,8 +20,9 @@ from pdfminer.layout import LAParams
 #from pdfminer.pdftypes import resolve1
 
 def remove_ligatures(text):
-    """ Replace ligatures (fancy symbols combining several letters) with
-    letter combinations.
+    """ Replace ligatures with corresponding letter combinations.
+
+    Ligatures are fancy symbols combining several letters.
     """
     text = text.replace("ﬃ", "ffi")
     text = text.replace("ﬁ", "fi")
@@ -30,9 +31,9 @@ def remove_ligatures(text):
     return text
 
 def get_page_text(interpreter, page, tmp, rotation=0):
-    """ Extract text from a page with given rotation. These variables
-    are required and must be setup in parent function:
-    
+    """ Extract text from a page with given rotation.
+
+    These variables are required and must be setup in parent function:
     interpreter - interpreter used by PDFMiner.
     page - page object.
     tmp - temporary file use to get processed text. Stack Overflow
@@ -53,8 +54,10 @@ def get_page_text(interpreter, page, tmp, rotation=0):
 
 def mine_text(infname, page_numbers=False, outtype="text", rotated_pages=[],
               folder=False):
-    """ Mine text from a PDF files. Find rotated pages if txt, rotate
-    pages according to respective variable if xml.
+    """ Mine text from a PDF files.
+
+    Rotated pages are found if output is txt, otherwise pages are
+    rotated according to respective variable.
     """
     with open(infname, "rb") as inf:
     

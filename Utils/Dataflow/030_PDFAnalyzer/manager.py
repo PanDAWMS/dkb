@@ -51,7 +51,9 @@ if save_needed:
     save_config(cfg)
 
 def path_join(a, b):
-    """ Wrapper around os.path.join to account for possible different
+    """ Wrapper around os.path.join.
+
+    This wrapper is required to account for possible different
     separators in paths.
     """
     return os.path.join(a, b).replace("\\", "/")
@@ -88,9 +90,9 @@ METADATA_FILE = "metadata.json"
 
 
 class DatasetCategory:
-    """ Class representing a dataset category. Contains regular
-    expressions and function for finding datasets.
+    """ Class representing a dataset category.
 
+    Contains regular expressions and function for finding datasets.
     reg - Standard regular expression.
     reg_spaces - Same as self.reg, but with spaces instead of
     underscores. This is required because pdfminer sometimes reads
@@ -300,9 +302,7 @@ re_interval = re.compile("\[(?:[0-9][\\/][0-9\\/\n]+|[0-9]+-[0-9]+)\]")
 re_link = re.compile("(.*)\n? ?(https?://cds\.cern\.ch/record/\d+)")
 
 def find_cut_reg(reg, text):
-    """ Find patterns matching regular expression in text and cut them
-    out.
-    """
+    """ Find and remove patterns matching regular expression. """
     results = []
     f = True
     while f:
@@ -313,7 +313,9 @@ def find_cut_reg(reg, text):
     return (results, text)
 
 def mask_intervals(text):
-    """ Cut out all bracketed intervals [...] from the text which can
+    """ Handle bracketed intervals.
+
+    Cut out all bracketed intervals [...] from the text which can
     be present in the datasets names and replace them with
     INTERVALnumber! strings.
     """
@@ -330,7 +332,9 @@ def mask_intervals(text):
     return text, intervals
 
 def organize_intervals(intervals):
-    """ Organize the datasets. Currently two changes are made:
+    """ Organize the datasets.
+
+    Currently two changes are made:
     "[1/2/3]" string into ['1', '2', '3'] array
     "[9-12]" into ['09', '10', '11', '12'] array
     """
@@ -362,9 +366,10 @@ def organize_intervals(intervals):
     return ni
 
 def process_diapason(d):
-    """ Transform a diapason string "X-Y" into a list
-    [X, X+1, X+2, ..., Y-1, Y], or empty list if X > Y. Intended for
-    table processing.
+    """ Prepare diapasons for table processing.
+
+    Transform a diapason string "X-Y" into a list
+    [X, X+1, X+2, ..., Y-1, Y], or empty list if X > Y.
     """
     values = []
     (s, e) = d.split("-")
@@ -376,9 +381,9 @@ def process_diapason(d):
     return values
 
 def check_all_button(v, l):
-    """ Command for handling Tkinter global checkbuttons which should
-    (un)check all the checkbuttons in the list.
+    """ Command for handling Tkinter global checkbuttons.
 
+    Command (un)checks all the checkbuttons in the list
     v - a VarInt variable associated with the global checkbutton.
     l - a list of VarInt variables associated with checkbuttons in the
     list.
@@ -396,8 +401,10 @@ def check_all_button(v, l):
             i.set(1)
 
 def cmp_papernames(x, y):
-    """ Compare paper names. Default cmp function thinks that, for
-    example, "9" > "10" (it compares "9" and "1" first, and "9" > "1").
+    """ Compare paper names.
+
+    Default cmp function thinks that, for example, "9" > "10"
+    (it compares "9" and "1" first, and "9" > "1").
     """
     if x.isdigit() and y.isdigit():
         return int(x) - int(y)
@@ -405,9 +412,7 @@ def cmp_papernames(x, y):
         return cmp(x, y)
 
 class Paper:
-    """ Class represents a document which needs to be analyzed, as well
-    as files and other things associated with it.
-    """
+    """ Class represents a document which needs to be analyzed. """
     attributes_general = ["atlas_name", "campaigns", "energy", "luminosity",
                           "collisions", "data taking year",
                           "possible_project_montecarlo",
@@ -444,8 +449,10 @@ class Paper:
         # not yet saved to the metadata file.
         self.changed = False
     def get_txt_page(self, number, text=False):
-        """ Fetch txt page of the paper. Result is either text(if text
-        variable is True) or lines (if text variable is False).
+        """ Fetch txt page of the paper.
+
+        Result is either text(if text variable is True) or lines (if
+        text variable is False).
         """
         fname = path_join(self.txt_dir, "%d.txt"%(number))
         with open(fname, "r") as f:
@@ -455,8 +462,10 @@ class Paper:
                 r = f.readlines()
         return r
     def get_xml_page(self, number, text=False):
-        """ Fetch xml page of the paper. Extract xml page from PDF if
-        not done yet. Result is either text(if text variable is True) or
+        """ Fetch xml page of the paper.
+
+        Xml page is extract from PDF if it was not done yet.
+        Result is either text(if text variable is True) or
         lines (if text variable is False).
         """
         fname = path_join(self.xml_dir, "%d.xml"%(number))
@@ -472,8 +481,7 @@ class Paper:
                 r = f.readlines()
         return r
     def mine_text(self):
-        """ Extract text from the PDF file.
-        """
+        """ Extract text from the PDF file. """
         if not os.access(self.txt_dir, os.F_OK):
             os.mkdir(self.txt_dir)
         [num_pages, self.rotated_pages] = pdfwork.mine_text(self.pdf,
@@ -485,24 +493,20 @@ class Paper:
         self.get_xml_page(1)
         self.save_metadata()
     def get_text(self):
-        """ Read and return mined text of the document.
-        """
+        """ Read and return mined text of the document. """
         text = ""
         for i in range(1, self.num_pages+1):
             with open(path_join(self.txt_dir, "%d.txt")%i, "r") as f:
                 text += f.read()
         return text
     def clear_metadata(self):
-        """ Clear all non-precise document metadata and set them to None
-        to be determined again.
-        """
+        """ Clear all non-precise document metadata. """
         for a in self.attributes_to_determine:
             if self.__dict__[a] is not None:
                 self.changed = True
                 self.__dict__[a] = None
     def save_metadata(self):
-        """ Export metadata to a file.
-        """
+        """ Export metadata to a file. """
         outp = {}
         for key in self.attributes_metadata:
             outp[key] = self.__dict__[key]
@@ -510,8 +514,7 @@ class Paper:
             json.dump(outp, f, indent=4)
         self.changed = False
     def load_metadata(self):
-        """ Import metadata from a file.
-        """
+        """ Import metadata from a file. """
         if not os.access(self.metadata_file, os.R_OK):
             return 0
         with open(self.metadata_file, "r") as f:
@@ -520,8 +523,7 @@ class Paper:
             if key in inp:
                 self.__dict__[key] = inp[key]
     def delete(self):
-        """ Delete all files associated with paper.
-        """
+        """ Delete all files associated with paper. """
         shutil.rmtree(self.dir)
 ##    def find_title(self):
 ##        """ New title determining method, does not works ideally yet.
@@ -584,8 +586,7 @@ class Paper:
 ##                break
 ##        return title
     def find_attributes_general(self):
-        """ Find general attributes in a document.
-        """
+        """ Find general attributes in a document. """
         attrs = {}
 #        attrs["title"] = self.find_title()
         text = self.get_text()
@@ -658,8 +659,7 @@ class Paper:
 
         return attrs
     def find_datasets(self):
-        """ Find datasets in text of the document.
-        """
+        """ Find datasets in text of the document. """
         text = self.get_text()
         text, intervals = mask_intervals(text)
         if cfg["OPEN_INTERVALS_TEXT"]:
@@ -670,8 +670,7 @@ class Paper:
             (text, datasets) = c.find(text, intervals, datasets)
         return (text, datasets)
     def find_datatables(self):
-        """ Find tables in the document which may contain datasets.
-        """
+        """ Find tables in the document which may contain datasets. """
         pages_with_tables = []
         headers_data = {}
         n = 1
@@ -779,6 +778,7 @@ class Paper:
         return datatables
     def export(self, quick=False, outf=False):
         """ Export metadata into file in export directory.
+
         Quick export: if a part of metadata was never determined, the
         corresponding procedure would be used with all user interaction
         skipped.
@@ -855,8 +855,7 @@ class Paper:
         return outp
 
 class Manager:
-    """ Main class of the application, performs most of the work.
-    """
+    """ Main class of the application, performs most of the work. """
     def __init__(self, window):
         self.window = window
         self.window.title("Support notes manager")
@@ -910,16 +909,15 @@ class Manager:
         self.redraw()
         self.window.mainloop()
     def unsaved_papers(self):
-        """ Return True if at least one paper was changed but not yet
-        saved.
-        """
+        """ Check if at least one paper was changed but not saved. """
         for p in self.papers:
             if p.changed:
                 return True
         return False
     def finish(self):
-        """ Exit application. Ask about saving the changes first if any
-        are present.
+        """ Exit application.
+
+        Ask about saving the changes first if any are present.
         """
         msg = "Some papers were changed. Do you want to save these changes?"
         if self.unsaved_papers():
@@ -929,12 +927,10 @@ class Manager:
         else:
             self.window.destroy()
     def status_set(self, text=""):
-        """ Update status bar.
-        """
+        """ Update status bar. """
         self.status.configure(text=text)
     def redraw(self):
-        """ Redraw the main window.
-        """
+        """ Redraw the main window. """
         for c in self.frame.winfo_children():
             c.destroy()
 
@@ -958,8 +954,7 @@ class Manager:
         self.cnvs.configure(scrollregion=(0, 0, self.frame.winfo_width(),
                                           self.frame.winfo_height()))
     def preferences(self):
-        """ Show preferences window.
-        """
+        """ Show preferences window. """
         w = Tkinter.Toplevel()
         w.title("Preferences")
         w.transient(self.window)
@@ -1022,8 +1017,7 @@ class Manager:
             tkMessageBox.showwarning("Restart needed", msg)
             self.finish()
     def add_papers(self, fnames=None, errors=None, n=None):
-        """ Add new papers from PDF files.
-        """
+        """ Add new papers from PDF files. """
         if fnames is None:
             fnames = askopenfilenames(initialdir=cfg["WORK_DIR"],
                                       filetypes=[("PDF files", ".pdf")])
@@ -1070,8 +1064,7 @@ class Manager:
                     tkMessageBox.showwarning("Unable to add papers", msg)
                 self.redraw()
     def clear_paper(self, window=False, paper=False):
-        """ Clear a single or all papers' metadata.
-        """
+        """ Clear a single or all papers' metadata. """
         if paper:
             paper.clear_metadata()
         else:
@@ -1083,8 +1076,9 @@ class Manager:
             window.destroy()
         self.redraw()
     def save_paper(self, paper=False, finish=False):
-        """ Save a single or all papers' metadata. Exit afterwards if
-        finish is True.
+        """ Save a single or all papers' metadata.
+
+        Exit afterwards if finish is True.
         """
         if paper:
             paper.save_metadata()
@@ -1096,8 +1090,7 @@ class Manager:
         else:
             self.redraw()
     def delete_paper(self, window, paper):
-        """ Delete paper.
-        """
+        """ Delete paper. """
         if tkMessageBox.askyesno("Delete paper?",
                                  "Are you sure you want to delete paper %s?"\
                                  %(paper.fname)):
@@ -1107,8 +1100,9 @@ class Manager:
                 window.destroy()
             self.redraw()
     def show_paper_info(self, window, paper):
-        """ Display information about a paper and possible actions with
-        it.
+        """ Display information about a paper.
+
+        Possible actions are also displayed.
         """
         if paper.title is None and cfg["DETERMINE_TITLE"]:
             self.determine_paper_title_step_1(window, paper)
@@ -1171,9 +1165,9 @@ class Manager:
         b = Tkinter.Button(window, text="Close", command=window.destroy)
         b.grid(row=10, columnspan=5)
     def determine_paper_title_step_1(self, window, paper):
-        """ Search the first page in xml format for a possible paper
-        titles. Ask user to pick one.
-        """
+        """ Search the first xml page for a possible paper titles.
+
+        User is asked to pick one. """
         if not window:
             window = Tkinter.Toplevel()
         else:
@@ -1226,9 +1220,7 @@ class Manager:
         button.grid(row=r, column=1)
     def determine_paper_title_step_2(self, window, paper,
                                      possible_title_variable):
-        """ Compare the title string selected by user with the first
-        page in txt format to construct a paper title.
-        """
+        """ Construct a paper title from selected string. """
         for c in window.winfo_children():
             c.destroy()
         lines = paper.get_txt_page(1)
@@ -1275,9 +1267,7 @@ class Manager:
                                                                   paper))
         button.grid(row=2, column=1)
     def update_paper_parameter(self, window, paper, param, value):
-        """ Update a part of paper metadata and proceed to corresponding
-        window.
-        """
+        """ Update a part of paper metadata and display it. """
         if param == "title":
             paper.title = value.get()
             self.show_paper_info(window, paper)
@@ -1310,8 +1300,7 @@ class Manager:
         paper.changed = True
         self.redraw()
     def show_paper_attributes(self, window, paper):
-        """ Determine / display paper's general attributes.
-        """
+        """ Determine / display paper's general attributes. """
         for c in window.winfo_children():
             c.destroy()
         window.title("Attributes of %s"%paper.fname)
@@ -1368,8 +1357,7 @@ class Manager:
                                paper=paper:self.show_paper_info(window, paper))
             b.grid(row=r, column=0)
     def show_paper_datasets(self, window, paper):
-        """ Determine / display paper datasets.
-        """
+        """ Determine / display paper datasets. """
         for c in window.winfo_children():
             c.destroy()
         window.title("Datasets in %s"%paper.fname)
@@ -1475,8 +1463,7 @@ class Manager:
                                paper=paper:self.show_paper_info(window, paper))
             b.grid(row=1)
     def show_paper_datatables(self, window, paper):
-        """ Determine / display paper tables which may contain datasets.
-        """
+        """ Determine / display paper tables with datasets. """
         for c in window.winfo_children():
             c.destroy()
         window.title("Tables with datasets in %s"%paper.fname)
@@ -1594,7 +1581,9 @@ class Manager:
                                self.show_paper_info(window, paper))
             b.grid(row=1)
     def show_paper_page_tables(self, window, paper, e=False):
-        """ Extract tables from a page and display them. Debug function.
+        """ Extract tables from a page and display them.
+
+        Debug function.
         """
         if not e:
             for c in window.winfo_children():
@@ -1652,7 +1641,9 @@ class Manager:
                                    self.show_paper_info(window, paper))
                 b.grid(row=table_num, column=0)
     def show_paper_visual(self, window, paper, e=False):
-        """ Visualize a page. Debug function.
+        """ Visualize a page.
+
+        Debug function.
         """
         if not e:
             for c in window.winfo_children():
@@ -1712,15 +1703,15 @@ class Manager:
                                    self.show_paper_info(window, paper))
                 b.grid(row=1, column=0)
     def export_paper_text(self, paper):
-        """ Export full text of a paper into a file.
-        """
+        """ Export full text of a paper into a file. """
         with asksaveasfile() as f:
             if f:
                 text = paper.get_text()
                 f.write(text)
     def export_texts(self):
-        """ Export texts of all papers into a directory. Each text is
-        saved into a file named "papername.txt".
+        """ Export texts of all papers into a directory.
+
+        Each text is saved into a file named "papername.txt".
         """
         d = askdirectory()
         for p in self.papers:
@@ -1729,8 +1720,10 @@ class Manager:
                 f.write(text)
     def export_all(self, quick=False, n=None, n_p=None, errors=None, attr=None,
                    csv=None):
-        """ Export all papers' metadata. Quick export: determine
-        metadata first if none is available, skipping all user interaction.
+        """ Export all papers' metadata.
+
+        Quick export: determine metadata first if none is available,
+        skipping all user interaction.
         """
         if n is None:
             if self.unsaved_papers():
