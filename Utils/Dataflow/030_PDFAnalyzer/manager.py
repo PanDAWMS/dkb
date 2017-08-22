@@ -176,13 +176,13 @@ group              # Indicates group dataset.
 \n*\.\n*           # Field separator
 [a-zA-Z\d\-:]+     # Group name. Examples: phys-higgs, phys-beauty.
 (\n*[._]\n*[a-zA-Z\d\-:!]+)+
-                                     """)    
+                                     """)
 user = DatasetCategory("user", r"""
 user               # Indicates user dataset.
 \n*\.\n*           # Field separator
 [a-zA-Z\d\-:]+     # User name.
 (\n*[._]\n*[a-zA-Z\d\-:!]+)+
-                                   """)    
+                                   """)
 montecarlo = DatasetCategory("montecarlo", r"""
 mc\d\d             # Project. Examples: mc08, mc12.
 \n*_\n*            # Field part separator
