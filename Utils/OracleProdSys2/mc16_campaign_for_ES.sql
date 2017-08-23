@@ -6,9 +6,8 @@
 --    JOIN with ATLAS_PANDA.jedi_datasets to obtain events numbers
 --    nevents - number of input events
 --    neventsused - number of processed events
---    JOIN with ATLAS_DEFT.t_production_tag to obtain such parameters as:
+--    JOIN with t_task to obtain such parameters as:
 --    atlas geometry, conditions tags, software release
--- restrict query by GOOD dataset statuses
 with mc16_tasks as (
     select
       t.campaign,
@@ -30,7 +29,6 @@ with mc16_tasks as (
       ATLAS_DEFT.t_prodmanager_request r
     where
       lower(t.campaign) = 'mc16'
-      and t.status in ('done','finished','running','ready','prepared','registered','defined')
       and t.pr_id = r.pr_id
 ),
   task_hashtags as (
@@ -95,139 +93,133 @@ with mc16_tasks as (
         t.hashtag_list,
         t.description,
         t.energy_gev,
-        jd.datasetname,
-        jd.status as dataset_status,
-        jd.nevents AS requested_events,
-        jd.neventsused AS processed_events,
-        tag.name as tag_name,
-        tag.trf_release,
-    to_char(NVL(substr(
-      regexp_substr(tag_parameters, '"SWReleaseCache": "[a-zA-Z0-9_\.\-]+[^"]'),
-        regexp_instr(
-            regexp_substr(tag_parameters, '"SWReleaseCache": "[a-zA-Z0-9_\.\-]+[^"]'),
-            '(": ")+',
-            1,
-            1,
-            1
+  substr(regexp_substr(jedi_task_parameters, '"architecture": "(.[^",])+'),
+         regexp_instr(
+             regexp_substr(jedi_task_parameters, '"architecture": "(.[^",])+'),
+             '(": ")+',
+             1,
+             1,
+             1
+         )
+  ) as architecture,
+      substr(regexp_substr(jedi_task_parameters, '"coreCount": [0-9\.]+'),
+         regexp_instr(
+             regexp_substr(jedi_task_parameters, '"coreCount": [0-9\.]+'),
+             '(": )+',
+             1,
+             1,
+             1
+         )
+  ) as core_count,
+    substr(regexp_substr(jedi_task_parameters, '"\-\-conditionsTag \\"default:[a-zA-Z0-9_\-]+[^\""]'),
+         regexp_instr(
+             regexp_substr(jedi_task_parameters, '"\-\-conditionsTag \\"default:[a-zA-Z0-9_\-]+[^\""]'),
+             '(:)+',
+             1,
+             1,
+             1
         )
-      ), 'none')) as sw_release,
-    to_char(NVL(substr(
-      regexp_substr(tag_parameters, '"DBRelease": "[a-zA-Z0-9_\.\-]+[^"]'),
-        regexp_instr(
-            regexp_substr(tag_parameters, '"DBRelease": "[a-zA-Z0-9_\.\-]+[^"]'),
-            '(": ")+',
-            1,
-            1,
-            1
+ ) as conditions_tags,
+  substr(regexp_substr(jedi_task_parameters, '"\-\-geometryVersion=\\"default:[a-zA-Z0-9_\-]+[^\""]'),
+         regexp_instr(
+             regexp_substr(jedi_task_parameters, '"\-\-geometryVersion=\\"default:[a-zA-Z0-9_\-]+[^\""]'),
+             '(:)+',
+             1,
+             1,
+             1
         )
-      ), 'none')) as db_release,
-      to_char(NVL(substr(
-      regexp_substr(tag_parameters, '"JobConfig": "[a-zA-Z0-9_\.\-\:]+[^"]'),
-        regexp_instr(
-            regexp_substr(tag_parameters, '"JobConfig": "[a-zA-Z0-9_\.\-\:]+[^"]'),
-            '(": ")+',
-            1,
-            1,
-            1
-        )
-      ), 'none')) as job_config,
-      to_char(NVL(regexp_replace(substr(
-      regexp_substr(tag_parameters, '"(Geometry)|(geometryVersion)": "[a-zA-Z0-9_":\.\-]+[^"]'),
-        regexp_instr(
-            regexp_substr(tag_parameters, '"(Geometry)|(geometryVersion)": "[a-zA-Z0-9_":\.\-]+[^"]'),
-            '(": ")+',
-            1,
-            1,
-            1
-        )
-      ),'"|\\|,|default:',''), 'none')) as geometry,
-      to_char(NVL(substr(
-      regexp_substr(tag_parameters, '"(Transformation)|(transformation)": "[a-zA-Z0-9_\.\-]+[^"]'),
-        regexp_instr(
-            regexp_substr(tag_parameters, '"(Transformation)|(transformation)": "[a-zA-Z0-9_\.\-]+[^"]'),
-            '(": ")+',
-            1,
-            1,
-            1
-        )
-      ), 'none')) as transformation,
-      to_char(NVL(regexp_replace(substr(
-      regexp_substr(tag_parameters, '"(ConditionsTag)|(conditionsTag)": "[a-zA-Z0-9_":\.\-]+[^"]'),
-        regexp_instr(
-            regexp_substr(tag_parameters, '"(ConditionsTag)|(conditionsTag)": "[a-zA-Z0-9_":\.\-]+[^"]'),
-            '(": ")+',
-            1,
-            1,
-            1
-        )
-      ), '"|\\|,|default:','') , 'none')) as conditions_tag,
-      to_char(NVL(substr(
-      regexp_substr(tag_parameters, '"EvgenJobOpts": "[a-zA-Z0-9_\.\-]+[^"]'),
-        regexp_instr(
-            regexp_substr(tag_parameters, '"EvgenJobOpts": "[a-zA-Z0-9_\.\-]+[^"]'),
-            '(": ")+',
-            1,
-            1,
-            1
-        )
-      ), 'none')) as evgen_job_opts,
-      to_char(NVL(substr(
-      regexp_substr(tag_parameters, '"EcmEnergy": "[a-zA-Z0-9_\.\-]+[^"]'),
-        regexp_instr(
-            regexp_substr(tag_parameters, '"EcmEnergy": "[a-zA-Z0-9_\.\-]+[^"]'),
-            '(": ")+',
-            1,
-            1,
-            1
-        )
-      ), 'none')) as tag_ecm_energy,
-      to_char(NVL(substr(
-      regexp_substr(tag_parameters, '"PhysicsList": "[a-zA-Z0-9_\.\-]+[^"]'),
-        regexp_instr(
-            regexp_substr(tag_parameters, '"PhysicsList": "[a-zA-Z0-9_\.\-]+[^"]'),
-            '(": ")+',
-            1,
-            1,
-            1
-        )
-      ), 'none')) as physics_list,
-      to_char(NVL(substr(
-      regexp_substr(tag_parameters, '"description": "[a-zA-Z0-9_\.\-]+[^"]'),
-        regexp_instr(
-            regexp_substr(tag_parameters, '"description": "[a-zA-Z0-9_\.\-]+[^"]'),
-            '(": ")+',
-            1,
-            1,
-            1
-        )
-      ), 'none')) as tag_description,
-      to_char(NVL(substr(
-      regexp_substr(tag_parameters, '"DataRunNumber": "[0-9]+[^"]'),
-        regexp_instr(
-            regexp_substr(tag_parameters, '"DataRunNumber": "[0-9]+[^"]'),
-            '(": ")+',
-            1,
-            1,
-            1
-        )
-      ), 'none')) as data_run_number,
-      to_char(NVL(substr(
-      regexp_substr(tag_parameters, '"baseRelease": "[0-9\.]+[^"]'),
-        regexp_instr(
-            regexp_substr(tag_parameters, '"baseRelease": "[0-9\.]+[^"]'),
-            '(": ")+',
-            1,
-            1,
-            1
-        )
-      ), 'none')) as base_release
+ ) as geometry_version,
+    substr(regexp_substr(tt.jedi_task_parameters, '"ticketID": "(.[^",])+'),
+           regexp_instr(
+               regexp_substr(tt.jedi_task_parameters, '"ticketID": "(.[^",])+'),
+               '(": ")+',
+               1,
+               1,
+               1
+           )
+    )as ticket_id,
+     substr(regexp_substr(tt.jedi_task_parameters, '"transHome": "(.[^",])+'),
+            regexp_instr(
+                regexp_substr(tt.jedi_task_parameters, '"transHome": "(.[^",])+'),
+                '(": ")+',
+                1,
+                1,
+                1
+            )
+     )as trans_home,
+        substr(regexp_substr(tt.jedi_task_parameters, '"transPath": "(.[^",])+'),
+               regexp_instr(
+                   regexp_substr(tt.jedi_task_parameters, '"transPath": "(.[^",])+'),
+                   '(": ")+',
+                   1,
+                   1,
+                   1
+               )
+        )as trans_path,
+        substr(regexp_substr(tt.jedi_task_parameters, '"transUses": "(.[^",])+'),
+               regexp_instr(
+                   regexp_substr(tt.jedi_task_parameters, '"transUses": "(.[^",])+'),
+                   '(": ")+',
+                   1,
+                   1,
+                   1
+               )
+        )as trans_uses,
+        substr(regexp_substr(tt.jedi_task_parameters, '"userName": "(.[^",])+'),
+               regexp_instr(
+                   regexp_substr(tt.jedi_task_parameters, '"userName": "(.[^",])+'),
+                   '(": ")+',
+                   1,
+                   1,
+                   1
+               )
+        )as user_name,
+        substr(regexp_substr(tt.jedi_task_parameters, '"vo": "[a-zA-Z0-9_\-\.]+[^"]'),
+               regexp_instr(
+                   regexp_substr(tt.jedi_task_parameters, '"vo": "[a-zA-Z0-9_\-\.]+[^"]'),
+                   '(": ")+',
+                   1,
+                   1,
+                   1
+               )
+        )as vo,
+        substr(regexp_substr(tt.jedi_task_parameters, '"--runNumber=[0-9]+[^"]'),
+                   regexp_instr(
+                       regexp_substr(tt.jedi_task_parameters, '"--runNumber=[0-9]+[^"]'),
+                       '(=)+',
+                       1,
+                       1,
+                       1
+                   )
+            )as run_number,
+        substr(regexp_substr(tt.jedi_task_parameters, '"--triggerConfig=\\"(.[^\""])+'),
+                   regexp_instr(
+                       regexp_substr(tt.jedi_task_parameters, '"--triggerConfig=\\"(.[^\""])+'),
+                       '(=\\")+',
+                       1,
+                       1,
+                       1
+                   )
+        )as trigger_config,
+          (SELECT LISTAGG(jd.datasetname, ', ')
+           WITHIN GROUP (ORDER BY datasetname) "input_data"
+            from ATLAS_PANDA.jedi_datasets jd
+            where jd.jeditaskid = t.taskid
+          and type IN ('input')) as input_datasets,
+          (SELECT LISTAGG(jd.datasetname, ', ')
+           WITHIN GROUP (ORDER BY datasetname) "output_data"
+            from ATLAS_PANDA.jedi_datasets jd
+            where jd.jeditaskid = t.taskid
+          and type IN ('output')) as output_datasets,
+          (SELECT sum(jd.nevents)
+            from ATLAS_PANDA.jedi_datasets jd
+            where jd.jeditaskid = t.taskid
+          and type IN ('input')) as requested_events,
+          (SELECT sum(jd.neventsused)
+            from ATLAS_PANDA.jedi_datasets jd
+            where jd.jeditaskid = t.taskid
+          and type IN ('input')) as processed_events
       FROM
         task_hashtags t,
-        ATLAS_PANDA.jedi_datasets jd,
-        ATLAS_DEFT.t_production_tag tag
-      WHERE
-        t.taskid = jd.jeditaskid
-        AND jd.masterid IS NULL
-        AND jd.type IN ('input')
-        and jd.status in ('ready','done','finished')
-        and tag.name = trim(regexp_substr(trim(regexp_substr(t.taskname, '[^.]+',1,5)), '[^_]*$'));
+        t_task tt
+      WHERE t.taskid = tt.taskid;
