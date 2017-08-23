@@ -30,8 +30,8 @@ def load_config(default_cfg):
             loaded_cfg = json.load(f)
     except Exception as e:
         sys.stderr.write("Exception while loading config: %s\n"%e)
-        sys.stderr.write("No config file loaded, using default values\
-                         \n")
+        sys.stderr.write("No config file loaded, using default values"
+                         "\n")
         loaded_cfg = {}
     cfg = {}
     for p in default_cfg:
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     except Exception as e:
         sys.stderr.write("Exception while loading Tkinter: %s\n" % e)
         msg = "Tkinter and/or stuff related to it cannot be "\
-        + "loaded, graphical interface will not work\n"
+        "loaded, graphical interface will not work\n"
         sys.stderr.write(msg)
 
     # Directory for papers' directories.
@@ -249,9 +249,9 @@ re_pdfname = re.compile("/([^./]+)\.pdf$")
 re_table_header = re.compile("Table \d+:.*?\n\n", re.DOTALL)
 re_table_header_short = re.compile("Table (\d+):")
 re_table_datasets = re.compile("(?:sample|dataset|run)")
-re_column_with_datasets = re.compile("^(?:ds[-_ ]?|mc[-_ ]?|data ?|dataset ?\
-                                     |period|request ?|run ?|sample ?)(?:id\
-                                     |number|period|range|sample|set)")
+re_column_with_datasets = re.compile("^(?:ds[-_ ]?|mc[-_ ]?|data ?|dataset ?"
+                                     "|period|request ?|run ?|sample ?)(?:id"
+                                     "|number|period|range|sample|set)")
 re_dsid = re.compile("^\d{4,8}$")
 re_dsid_diap = re.compile("^\d{4,8}-\d{1,8}$")
 re_xml_symbol = re.compile("^<text[^>]+ size=\"([0-9.]+)\">(.+)</text>$")
@@ -294,8 +294,8 @@ re_energy = re.compile("(\d+\.?\d*) (G|T)eV")
 # output. Simple "fb-1" does not works.
 re_luminosity = re.compile("(\d+\.?\d*) ?(m|n|p|f)b(?:−|\(cid:0\))1")
 re_collisions = re.compile("(proton-proton|heavy-ion|pp) collisions")
-re_year = re.compile("(?:acquired|collected|measured|recorded).{0,100}\
-                     (20\d\d)", re.DOTALL)
+re_year = re.compile("(?:acquired|collected|measured|recorded).{0,100}"
+                     "(20\d\d)", re.DOTALL)
 re_year_general = re.compile(".{0,100} 20\d\d.{0,100}")
 # Interval must contain at least two numbers, i.e. [1/2] or [3\4\5].
 re_interval = re.compile("\[(?:[0-9][\\/][0-9\\/\n]+|[0-9]+-[0-9]+)\]")
@@ -1496,7 +1496,7 @@ class Manager:
                         r += 1
                         if r == 50:
                             msg = "Table is too large, "\
-                            + "omitting remaining rows."
+                            "omitting remaining rows."
                             l = Tkinter.Label(t_frame, text=msg)
                             l.grid(row=r, columnspan=c)
                             break
@@ -1563,7 +1563,7 @@ class Manager:
                         r += 1
                         if r == 50:
                             msg = "Table is too large, "\
-                            + "omitting remaining rows."
+                            "omitting remaining rows."
                             l = Tkinter.Label(t_frame, text=msg)
                             l.grid(row=r, columnspan=c)
                             break
@@ -1728,8 +1728,8 @@ class Manager:
         if n is None:
             if self.unsaved_papers():
                 msg = "Some papers were changed. "\
-                      + "These changes will be saved before "\
-                      + "export will be performed. Proceed?"
+                      "These changes will be saved before "\
+                      "export will be performed. Proceed?"
                 if tkMessageBox.askyesno("Export", msg):
                     self.save_paper()
                 else:
@@ -1739,7 +1739,7 @@ class Manager:
             n_p = 0
             errors = {}
             s = "document name,mc datasets, real datasets, other datasets, "\
-            + "dataset tables"
+            "dataset tables"
             for a in Paper.attributes_general:
                 s += ",%s"%a
             csv = [s+"\n"]

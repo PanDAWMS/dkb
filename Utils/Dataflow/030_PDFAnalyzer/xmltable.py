@@ -134,8 +134,8 @@ def row_centery(row):
     return c
 
 class Table:
-    re_month = re.compile("(january|february|march|april|may|june|july|august\
-                          |september|october|november|december)")
+    re_month = re.compile("(january|february|march|april|may|june|july|august"
+                          "|september|october|november|december)")
     def __init__(self, header, lines):
         self.header = header # table description
         self.lines = lines # table text lines
