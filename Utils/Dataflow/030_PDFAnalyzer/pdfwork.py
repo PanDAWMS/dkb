@@ -23,7 +23,7 @@ def remove_ligatures(text):
     text = text.replace("ﬂ", "fl")
     return text
 
-def get_page_text(interpreter, page, tmp, rotation = 0):
+def get_page_text(interpreter, page, tmp, rotation=0):
     # Extract text from a page with given rotation. These variables are required and must be setup in parent function:
     # interpreter - interpreter used by PDFMiner.
     # page - page object.
@@ -39,11 +39,11 @@ def get_page_text(interpreter, page, tmp, rotation = 0):
     tmp.truncate()
     return text
 
-def mine_text(infname, page_numbers = False, outtype = "text", rotated_pages = [], folder = False):
+def mine_text(infname, page_numbers=False, outtype="text", rotated_pages=[], folder=False):
     # Mine text from a PDF files. Find rotated pages if txt, rotate pages according to respective variable if xml.
 #    inf = open(infname, "rb")
-    with open(infname, "rb") as inf: # By using "with" we ensure that file gets closed if something goes wrong in this block.
-    
+    with open(infname, "rb") as inf:  # By using "with" we ensure that file gets closed if something goes wrong in this block.
+
         rsrcmngr = PDFResourceManager()
 
         tmp = TemporaryFile(mode="w+")
@@ -56,14 +56,14 @@ def mine_text(infname, page_numbers = False, outtype = "text", rotated_pages = [
 
         extension = False
         if outtype == "text":
-            device = TextConverter(rsrcmngr, tmp, codec='utf-8', laparams = laparams)
+            device = TextConverter(rsrcmngr, tmp, codec='utf-8', laparams=laparams)
             extension = "txt"
             rotated_pages = []
         elif outtype == "xml":
-            device = XMLConverter(rsrcmngr, tmp, codec='utf-8', laparams = laparams)
+            device = XMLConverter(rsrcmngr, tmp, codec='utf-8', laparams=laparams)
             extension = "xml"
         elif outtype == "html":
-            device = HTMLConverter(rsrcmngr, tmp, codec='utf-8', laparams = laparams)
+            device = HTMLConverter(rsrcmngr, tmp, codec='utf-8', laparams=laparams)
         interpreter = PDFPageInterpreter(rsrcmngr, device)
 
         n = 1
@@ -94,9 +94,9 @@ def mine_text(infname, page_numbers = False, outtype = "text", rotated_pages = [
                         text = get_page_text(interpreter, page, tmp, 90)
 #                pages[n] = text
                 if folder and extension:
-                    with open(folder + "/%d.%s"%(n, extension), "w") as outf:
+                    with open(folder + "/%d.%s" % (n, extension), "w") as outf:
                         outf.write(text)
-    #            outf.writelines(lines)            
+    #            outf.writelines(lines)
             n += 1
 #    inf.close()
     device.close()
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     [pages, rotated_pages] = mine_text("C:/Work/papers_analysis/ATL-COM-PHYS-2014-1357.pdf", [201], "xml")
     for p in pages:
         print pages[p]
-    
+
 ##    f = open("C:/Work/papers_analysis/ATL-COM-PHYS-2014-1430.pdf", "rb")
 ##
 ##    rsrcmngr = PDFResourceManager()
@@ -134,7 +134,7 @@ if __name__ == "__main__":
 ##            print "Page seems to be rotated"
 ##            lines = get_page_lines(interpreter, page, tmp, 90)
 ##            print lines
-##            
+##
 ##        n += 1
 ##        if n == 10:
 ##            break
