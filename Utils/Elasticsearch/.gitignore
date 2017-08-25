@@ -1,2 +1,4 @@
 config/settings.cfg
 config/es
+*.pyc
+*.swp
