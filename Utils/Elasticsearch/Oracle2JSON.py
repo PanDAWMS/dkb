@@ -20,7 +20,7 @@ def connectDEFT_DSN(dsn):
 
 def main():
     """
-    --input <SQL file> --size <page size>
+    --input <SQL file> --size <page size> --config <config file>
     :return:
     """
     args = parsingArguments()
@@ -31,7 +31,11 @@ def main():
     else:
         size = 100
     Config = ConfigParser.ConfigParser()
-    Config.read("settings.cfg")
+    try:
+        Config.read(args.config)
+    except IOError:
+        sys.stderr.write('Could not read config file %s' % args.config)
+   
     global dsn
     dsn = Config.get("oracle", "dsn")
     conn, cursor = connectDEFT_DSN(dsn)
@@ -106,6 +110,7 @@ def get_category(row):
 def parsingArguments():
     parser = argparse.ArgumentParser(description='Process command line arguments.')
     parser.add_argument('--input', help='SQL file path')
+    parser.add_argument('--config', help='Configuration file path')
     parser.add_argument('--size', help='Number of lines, processed at a time')
     return parser.parse_args()
 
