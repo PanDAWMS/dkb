@@ -115,7 +115,7 @@ def mine_text(infname, page_numbers=False, outtype="text", rotated_pages=[],
                         text = get_page_text(interpreter, page, tmp, 90)
 #                pages[n] = text
                 if folder and extension:
-                    with open(folder + "/%d.%s"%(n, extension), "w") as outf:
+                    with open(folder + "/%d.%s" % (n, extension), "w") as outf:
                         outf.write(text)
     #            outf.writelines(lines)
             n += 1

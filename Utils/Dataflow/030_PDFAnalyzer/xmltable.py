@@ -149,7 +149,7 @@ class Table:
                 row = self.construct_row(l, t)
                 rows.append(row)
                 t += row
-        rows.sort(key = lambda row:row_centery(row))
+        rows.sort(key=lambda row: row_centery(row))
 
         # Remove rows which contain date - this is used because
         # sometimes date stamped on a page gets caught while we are
@@ -162,7 +162,7 @@ class Table:
                     date_row = True
                     break
             if not date_row:
-                row.sort(key = lambda l:l.center[0])
+                row.sort(key=lambda l: l.center[0])
                 self.rows.append(row)
 
         r = len(self.rows) - 1
@@ -213,8 +213,8 @@ class Table:
         if self.rows:
             i = 0
             while True:
-                len_min = len(min(self.rows, key=lambda row:len(row)))
-                len_max = len(max(self.rows, key=lambda row:len(row)))
+                len_min = len(min(self.rows, key=lambda row: len(row)))
+                len_max = len(max(self.rows, key=lambda row: len(row)))
                 if len_min == len_max:
                     break
                 else:
@@ -269,10 +269,10 @@ class Table:
         for i in range(0, max_elements):
             # Most left point in a column.
             boundaries.append(min(normal_rows,
-                                  key=lambda row:row[i].left)[i].left)
+                                  key=lambda row: row[i].left)[i].left)
             # Most right point in a column.
             boundaries.append(max(normal_rows,
-                                  key=lambda row:row[i].right)[i].right)
+                                  key=lambda row: row[i].right)[i].right)
 #        print "BOUNDARIES", boundaries
         del boundaries[0]
         del boundaries[-1]
@@ -342,9 +342,9 @@ class Table:
                                        new_row[0].bottom, "EMPTY", []])
                         new_row.append(nl)
                         num_lines += 1
-                new_row.sort(key = lambda l:l.center[0])
+                new_row.sort(key=lambda l: l.center[0])
                 self.rows.append(new_row)
-        self.rows.sort(key = lambda row:row_centery(row))
+        self.rows.sort(key=lambda row: row_centery(row))
         
 def get_tables_from_text(text):
     """ Get tables from a xml page text. """
@@ -363,11 +363,11 @@ def get_tables_from_text(text):
 
     # Find the highest top coordinate possible and use it as a zero
     # point for new Y axis.
-    top = max(table_headers+lines, key=lambda l:l.top).top
+    top = max(table_headers+lines, key=lambda l: l.top).top
     for l in table_headers + lines:
         l.swap_y(top)
 
-    table_headers.sort(key=lambda x:x.center[1])
+    table_headers.sort(key=lambda x: x.center[1])
 
     table_lines = []
     tables = []
@@ -395,7 +395,7 @@ def analyze_page(text):
 
     # Find the highest top coordinate possible and use it as a zero
     # point for new Y axis.
-    top = max(lines, key = lambda l:l.top).top
+    top = max(lines, key=lambda l: l.top).top
     for l in lines:
         l.swap_y(top)
 
@@ -408,10 +408,10 @@ def analyze_page(text):
             for l in lines:
                 if l != line and l not in t and line.same_row(l):
                     row.append(l)
-            row.sort(key = lambda l:l.center[0])
+            row.sort(key=lambda l: l.center[0])
             rows.append(row)
             t += row
-    rows.sort(key = lambda row:row_centery(row))
+    rows.sort(key=lambda row: row_centery(row))
 
     return rows
 ##    for row in rows:
