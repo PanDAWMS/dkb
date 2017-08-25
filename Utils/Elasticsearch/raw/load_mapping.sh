@@ -1,2 +1,2 @@
 #!/bin/sh
-curl -H "Content-Type: application/x-ndjson" -XPUT 'http://localhost:9200/_template/mc16?pretty' --data-binary "@mc16.mapping"
+curl -H "Content-Type: application/x-ndjson" -XPUT "http://localhost:9200/_template/$1?pretty" --data-binary "@$1.mapping"
