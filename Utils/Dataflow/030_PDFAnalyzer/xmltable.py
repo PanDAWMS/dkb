@@ -4,7 +4,8 @@ PDF Analyzer script for processing tables
 
 import re
 
-PAGE_SIZE = 1000 # TO DO: improve this.
+# TO DO: improve this.
+PAGE_SIZE = 1000
 
 re_textline = re.compile("<textline bbox=\"[0-9.,]+\">.+?</textline>",
                          re.DOTALL)
@@ -146,14 +147,17 @@ class Table:
                           "|september|october|november|december)")
 
     def __init__(self, header, lines):
-        self.header = header # table description
-        self.lines = lines # table text lines
+        # table description
+        self.header = header
+        # table text lines
+        self.lines = lines
 
 #        print "\nTABLE WITH HEADER", header
 
         rows = []
         t = []
-        for l in self.lines:# Construct rows out of lines
+        # Construct rows out of lines
+        for l in self.lines:
             if l not in t:
                 row = self.construct_row(l, t)
                 rows.append(row)
@@ -262,7 +266,8 @@ class Table:
         normal_rows = []
         short_rows = []
 #        print "ROWS"
-        for row in self.rows:# Divide rows on short and normal.
+        # Divide rows on short and normal.
+        for row in self.rows:
 #            print "ROW"
 #            for l in row:
 #                print l.text, l.left, l.top, l.right, l.bottom
@@ -277,7 +282,8 @@ class Table:
         for l in main_row:
 #            print "MAIN CENTER", (l.left + l.right)/2
             main_centers.append((l.left+l.right)/2)
-        boundaries = []# Calculate x boundaries of each column.
+        # Calculate x boundaries of each column.
+        boundaries = []
         for i in range(0, max_elements):
             # Most left point in a column.
             boundaries.append(min(normal_rows,
@@ -325,7 +331,7 @@ class Table:
                                 l = None
                                 break
 #                            print "BREAKING ON SPACE", closest_space #min_x[0]
-                            [nl1, nl2] = l.split(cls)#min_x[0])
+                            [nl1, nl2] = l.split(cls)
                             new_row.append(nl1)
                             l = nl2
                 if l is not None:

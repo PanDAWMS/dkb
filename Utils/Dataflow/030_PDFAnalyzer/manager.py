@@ -244,8 +244,6 @@ category_export_dict = {
     }
 
 # Regular expressions
-#dataset_categories = [group, user, montecarlo, physcont, calibration,
-#realdata, database]
 # We don't need group and user datasets for now.
 dataset_categories = [montecarlo, physcont, calibration, realdata, database]
 # Path must have / as separator, not \.
