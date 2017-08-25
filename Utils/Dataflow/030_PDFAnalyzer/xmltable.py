@@ -316,7 +316,7 @@ class Table:
                             # Find the line space closest to column space.
                             cs2 = (cs[1]+cs[0])/2
                             cls = min(l.spaces_coords,
-                                      key=lambda space:\
+                                      key=lambda space:
                                       abs((space[1]+space[0])/2-cs2))
                             if abs((cls[1]+cls[0])/2-cs2) > 5000:
                                 # TO DO: fix this.

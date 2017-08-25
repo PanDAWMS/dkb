@@ -109,7 +109,7 @@ class DatasetCategory:
     def __init__(self, name, string):
         self.name = name
         self.reg = re.compile(string, re.X)
-        self.reg_spaces = re.compile(string.replace("_", "\ ")\
+        self.reg_spaces = re.compile(string.replace("_", "\ ")
                                      .replace("\w", "a-zA-Z0-9 "), re.X)
 ##        self.reg_dashes = re.compile(string.replace("_", "\-")\
 ##                                     .replace("\w", "a-zA-Z0-9-"),
@@ -1124,7 +1124,7 @@ class Manager:
     def delete_paper(self, window, paper):
         """ Delete paper. """
         if tkMessageBox.askyesno("Delete paper?",
-                                 "Are you sure you want to delete paper %s?"\
+                                 "Are you sure you want to delete paper %s?"
                                  % (paper.fname)):
             self.papers.remove(paper)
             paper.delete()
@@ -1192,7 +1192,7 @@ class Manager:
                            paper=paper: self.show_paper_visual(window, paper))
         b.grid(row=8, columnspan=5)
         b = Tkinter.Button(window, text="Export text",
-                           command=lambda paper=paper: \
+                           command=lambda paper=paper:
                            self.export_paper_text(paper))
         b.grid(row=9, columnspan=5)
         b = Tkinter.Button(window, text="Close", command=window.destroy)
@@ -1245,7 +1245,7 @@ class Manager:
                 r += 1
         button = Tkinter.Button(window, text="Proceed",
                                 command=lambda window=window, paper=paper,
-                                ptv=selection:\
+                                ptv=selection:
                                 self.determine_paper_title_step_2(window,
                                                                   paper,
                                                                   ptv))
@@ -1297,7 +1297,7 @@ class Manager:
         button.grid(row=2, column=0)
         button = Tkinter.Button(window, text="Back",
                                 command=lambda window=window,
-                                paper=paper:\
+                                paper=paper:
                                 self.determine_paper_title_step_1(window,
                                                                   paper))
         button.grid(row=2, column=1)
@@ -1441,7 +1441,7 @@ class Manager:
                     # checkbuttons are clicked - therefore, global
                     # checkbox will not change its look.
                     check_category_b.config(command=lambda v=c_s,
-                                            l=selected_list:\
+                                            l=selected_list:
                                             check_all_button(v, l))
 
                 scrlbr = Tkinter.Scrollbar(window, command=cnvs.yview)
@@ -1453,14 +1453,14 @@ class Manager:
 
                 b = Tkinter.Button(window, text="Done",
                                    command=lambda window=window, paper=paper,
-                                   value=dataset_entries:\
+                                   value=dataset_entries:
                                    self.update_paper_parameter(window, paper,
                                                                "datasets",
                                                                value))
                 b.grid(row=1, column=0)
                 b = Tkinter.Button(window, text="Cancel",
                                    command=lambda window=window,
-                                   paper=paper:\
+                                   paper=paper:
                                    self.show_paper_info(window, paper))
                 b.grid(row=1, column=1)
             else:
@@ -1558,7 +1558,7 @@ class Manager:
                 
                 b = Tkinter.Button(window, text="Done",
                                    command=lambda window=window, paper=paper,
-                                   value=datatables_s:\
+                                   value=datatables_s:
                                    self.update_paper_parameter(window, paper,
                                                                "datatables",
                                                                value))
@@ -1617,7 +1617,7 @@ class Manager:
                 rgn = (0, 0, frame.winfo_width(), frame.winfo_height())
                 cnvs.configure(width=frame.winfo_width(), scrollregion=rgn)
             b = Tkinter.Button(window, text="Back",
-                               command=lambda window=window, paper=paper:\
+                               command=lambda window=window, paper=paper:
                                self.show_paper_info(window, paper))
             b.grid(row=1)
 
@@ -1630,18 +1630,18 @@ class Manager:
             for c in window.winfo_children():
                 c.destroy()
             window.title("Select page")
-            l = Tkinter.Label(window, text="Page number(1 - %d):"\
+            l = Tkinter.Label(window, text="Page number(1 - %d):"
                               % (paper.num_pages))
             l.grid(row=0, column=0)
             e = Tkinter.Entry(window, width=10)
             e.grid(row=0, column=1)
             e.focus_set()
             b = Tkinter.Button(window, text="Proceed",
-                               command=lambda window=window, paper=paper, e=e:\
+                               command=lambda window=window, paper=paper, e=e:
                                self.show_paper_page_tables(window, paper, e))
             b.grid(row=1, column=0)
             b = Tkinter.Button(window, text="Cancel",
-                               command=lambda window=window, paper=paper:\
+                               command=lambda window=window, paper=paper:
                                self.show_paper_info(window, paper))
             b.grid(row=1, column=1)
         else:
@@ -1678,7 +1678,7 @@ class Manager:
                     l.grid(row=0, column=0)
                     table_num = 1
                 b = Tkinter.Button(window, text="Back",
-                                   command=lambda window=window, paper=paper:\
+                                   command=lambda window=window, paper=paper:
                                    self.show_paper_info(window, paper))
                 b.grid(row=table_num, column=0)
 
@@ -1691,18 +1691,18 @@ class Manager:
             for c in window.winfo_children():
                 c.destroy()
             window.title("Select page")
-            l = Tkinter.Label(window, text="Page number(1 - %d):"\
+            l = Tkinter.Label(window, text="Page number(1 - %d):"
                               % (paper.num_pages))
             l.grid(row=0, column=0)
             e = Tkinter.Entry(window, width=10)
             e.grid(row=0, column=1)
             e.focus_set()
             b = Tkinter.Button(window, text="Proceed",
-                               command=lambda window=window, paper=paper, e=e:\
+                               command=lambda window=window, paper=paper, e=e:
                                self.show_paper_visual(window, paper, e))
             b.grid(row=1, column=0)
             b = Tkinter.Button(window, text="Cancel",
-                               command=lambda window=window, paper=paper:\
+                               command=lambda window=window, paper=paper:
                                self.show_paper_info(window, paper))
             b.grid(row=1, column=1)
         else:
@@ -1741,7 +1741,7 @@ class Manager:
                                                l.bottom+10), outline=color)
                 
                 b = Tkinter.Button(window, text="Back",
-                                   command=lambda window=window, paper=paper:\
+                                   command=lambda window=window, paper=paper:
                                    self.show_paper_info(window, paper))
                 b.grid(row=1, column=0)
 
