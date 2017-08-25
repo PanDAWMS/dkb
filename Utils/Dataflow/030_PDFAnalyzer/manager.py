@@ -228,7 +228,7 @@ data\d\d           # Project tag. Examples: data09, data10.
 database = DatasetCategory("database", r"""
 ddo                # Project tag.
 \n*\.\n*           # Field separator
-[\dINTERVAL!]+     # 
+[\dINTERVAL!]+     #
 \n*\.\n*           # Field separator
 [a-zA-Z\d\-_\.:!]+ #
                                            """)
@@ -576,11 +576,11 @@ class Paper:
 ##                break
 ##            else:
 ##                del d[size]
-##                
+##
 ##        print xml_title
 ##        if not xml_title:
 ##            return False
-##        
+##
 ##        lines = self.get_txt_page(1)
 ##        title = ""
 ##        for l in lines:
@@ -805,7 +805,7 @@ class Paper:
         corresponding procedure would be used with all user interaction
         skipped.
         """
-        
+
 ##        print self.fname
 ##        paper_date = re.search("((?:january|february|march|april|may|june\
 ##                               |july|august|september|october|november\
@@ -961,7 +961,7 @@ class Manager:
             c.destroy()
 
         self.papers.sort(cmp=cmp_papernames, key=lambda paper: paper.fname)
-        
+
         r = 0
         for p in self.papers:
             if p.changed:
@@ -976,7 +976,7 @@ class Manager:
                 l = Tkinter.Label(self.frame, text=p.title)
                 l.grid(row=r, column=1)
             r += 1
-            
+
         self.frame.update_idletasks()
         self.cnvs.configure(scrollregion=(0, 0, self.frame.winfo_width(),
                                           self.frame.winfo_height()))
@@ -1007,7 +1007,7 @@ class Manager:
         l.grid(row=1, column=0)
         b = Tkinter.Checkbutton(frame, variable=determine_title)
         b.grid(row=1, column=1)
-        
+
         l = Tkinter.Label(frame, text="Open intervals in text")
         l.grid(row=2, column=0)
         b = Tkinter.Checkbutton(frame, variable=open_intervals_text)
@@ -1409,7 +1409,7 @@ class Manager:
 
                 frame = Tkinter.Frame(cnvs)
                 cnvs.create_window(0, 0, window=frame, anchor='nw')
-                
+
                 r = 0
                 dataset_entries = {}
                 for c in datasets:
@@ -1432,7 +1432,7 @@ class Manager:
                         selected = Tkinter.IntVar()
                         selected.set(1)
                         b = Tkinter.Checkbutton(frame, var=selected)
-                        # TO DO: checkbuttons for "(un)select all". 
+                        # TO DO: checkbuttons for "(un)select all".
                         dataset_entries[c].append([e, special, selected])
                         selected_list.append(selected)
                         b.grid(row=r, column=3, pady=5)
@@ -1555,7 +1555,7 @@ class Manager:
                 frame.update_idletasks()
                 rgn = (0, 0, frame.winfo_width(), frame.winfo_height())
                 cnvs.configure(width=frame.winfo_width(), scrollregion=rgn)
-                
+
                 b = Tkinter.Button(window, text="Done",
                                    command=lambda window=window, paper=paper,
                                    value=datatables_s:
@@ -1739,7 +1739,7 @@ class Manager:
                     for l in row:
                         cnvs.create_rectangle((l.left, l.top+10, l.right,
                                                l.bottom+10), outline=color)
-                
+
                 b = Tkinter.Button(window, text="Back",
                                    command=lambda window=window, paper=paper:
                                    self.show_paper_info(window, paper))

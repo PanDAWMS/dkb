@@ -357,7 +357,7 @@ class Table:
                 new_row.sort(key=lambda l: l.center[0])
                 self.rows.append(new_row)
         self.rows.sort(key=lambda row: row_centery(row))
-        
+
 
 def get_tables_from_text(text):
     """ Get tables from a xml page text. """
@@ -392,7 +392,7 @@ def get_tables_from_text(text):
                 table_lines.append(l)
             else:
                 remaining_lines.append(l)
-    
+
         table = Table(header.text, table_lines)
         if table.rows:
             tables.append(table)

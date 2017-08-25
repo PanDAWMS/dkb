@@ -63,7 +63,7 @@ def mine_text(infname, page_numbers=False, outtype="text", rotated_pages=[],
     rotated according to respective variable.
     """
     with open(infname, "rb") as inf:
-    
+
         rsrcmngr = PDFResourceManager()
 
         tmp = TemporaryFile(mode="w+")
