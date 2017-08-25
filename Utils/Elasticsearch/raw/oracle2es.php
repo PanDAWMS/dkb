@@ -96,7 +96,12 @@ function getPhysCat(array $tags, $taskname) {
   return $result;
 }
 
-$h = fopen($argv[1], "r");
+if (isset($argv[1])) {
+  $h = fopen($argv[1], "r");
+} else {
+  $h = fopen('php://stdin', 'r');
+}
+
 $now = time();
 if ($h) {
   while (($line = fgets($h)) !== false) {
