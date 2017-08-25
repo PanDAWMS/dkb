@@ -62,12 +62,12 @@ if __name__ == "__main__":
     try:
         import Tkinter
         from tkFileDialog import askdirectory, askopenfilename,\
-        askopenfilenames, asksaveasfile
+            askopenfilenames, asksaveasfile
         import tkMessageBox
     except Exception as e:
         sys.stderr.write("Exception while loading Tkinter: %s\n" % e)
         msg = "Tkinter and/or stuff related to it cannot be "\
-        "loaded, graphical interface will not work\n"
+            "loaded, graphical interface will not work\n"
         sys.stderr.write(msg)
 
     # Directory for papers' directories.
@@ -1496,7 +1496,7 @@ class Manager:
                         r += 1
                         if r == 50:
                             msg = "Table is too large, "\
-                            "omitting remaining rows."
+                                "omitting remaining rows."
                             l = Tkinter.Label(t_frame, text=msg)
                             l.grid(row=r, columnspan=c)
                             break
@@ -1563,7 +1563,7 @@ class Manager:
                         r += 1
                         if r == 50:
                             msg = "Table is too large, "\
-                            "omitting remaining rows."
+                                "omitting remaining rows."
                             l = Tkinter.Label(t_frame, text=msg)
                             l.grid(row=r, columnspan=c)
                             break
@@ -1687,7 +1687,7 @@ class Manager:
                         header_row = row
                         color = "red"
                     elif header_row and len(row) == 1 and\
-                    abs(row[0].left-header_row[0].left) < 1.0:
+                      abs(row[0].left-header_row[0].left) < 1.0:
                         color = "red"
                     elif abs(row[-1].right-row[0].left-max_width) < 1.0:
                         color = "blue"
@@ -1739,7 +1739,7 @@ class Manager:
             n_p = 0
             errors = {}
             s = "document name,mc datasets, real datasets, other datasets, "\
-            "dataset tables"
+                "dataset tables"
             for a in Paper.attributes_general:
                 s += ",%s"%a
             csv = [s+"\n"]
