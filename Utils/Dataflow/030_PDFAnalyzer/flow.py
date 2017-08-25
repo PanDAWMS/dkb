@@ -19,6 +19,7 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(base_dir))
 import pyDKB
 
+
 def process(stage, msg):
     """ Obtain the PDF name from the input.
 
@@ -98,4 +99,3 @@ if __name__ == "__main__":
             sys.stderr.write("(ERROR) while running stage 30: %s\n" % e)
     finally:
         analyzer_stage.stop()
-
