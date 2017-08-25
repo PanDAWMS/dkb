@@ -19,6 +19,7 @@ from pdfminer.layout import LAParams
 
 #from pdfminer.pdftypes import resolve1
 
+
 def remove_ligatures(text):
     """ Replace ligatures with corresponding letter combinations.
 
@@ -29,6 +30,7 @@ def remove_ligatures(text):
     text = text.replace("ﬀ", "ff")
     text = text.replace("ﬂ", "fl")
     return text
+
 
 def get_page_text(interpreter, page, tmp, rotation=0):
     """ Extract text from a page with given rotation.
@@ -51,6 +53,7 @@ def get_page_text(interpreter, page, tmp, rotation=0):
     tmp.seek(0)
     tmp.truncate()
     return text
+
 
 def mine_text(infname, page_numbers=False, outtype="text", rotated_pages=[],
               folder=False):
