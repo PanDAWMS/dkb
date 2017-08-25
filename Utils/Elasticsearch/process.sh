@@ -9,7 +9,7 @@ log() {
 getDataFromOracle() {
   #step 1 - get data from oracle
   log "Getting data from oracle"
-  ./Oracle2JSON.py --input query/mc16_campaign_for_ES.sql || exit 1
+  ./Oracle2JSON.py --config config/settings.cfg --input query/mc16_campaign_for_ES.sql || exit 1
 }
 convertDataToESFormat() {
   #step 2 - create data for ES
