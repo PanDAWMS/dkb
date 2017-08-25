@@ -93,114 +93,114 @@ with mc16_tasks as (
         t.hashtag_list,
         t.description,
         t.energy_gev,
-  substr(regexp_substr(jedi_task_parameters, '"architecture": "(.[^",])+'),
-         regexp_instr(
-             regexp_substr(jedi_task_parameters, '"architecture": "(.[^",])+'),
-             '(": ")+',
-             1,
-             1,
-             1
-         )
-  ) as architecture,
-      substr(regexp_substr(jedi_task_parameters, '"coreCount": [0-9\.]+'),
-         regexp_instr(
-             regexp_substr(jedi_task_parameters, '"coreCount": [0-9\.]+'),
-             '(": )+',
-             1,
-             1,
-             1
-         )
-  ) as core_count,
-    substr(regexp_substr(jedi_task_parameters, '"\-\-conditionsTag \\"default:[a-zA-Z0-9_\-]+[^\""]'),
-         regexp_instr(
-             regexp_substr(jedi_task_parameters, '"\-\-conditionsTag \\"default:[a-zA-Z0-9_\-]+[^\""]'),
-             '(:)+',
-             1,
-             1,
-             1
-        )
- ) as conditions_tags,
-  substr(regexp_substr(jedi_task_parameters, '"\-\-geometryVersion=\\"default:[a-zA-Z0-9_\-]+[^\""]'),
-         regexp_instr(
-             regexp_substr(jedi_task_parameters, '"\-\-geometryVersion=\\"default:[a-zA-Z0-9_\-]+[^\""]'),
-             '(:)+',
-             1,
-             1,
-             1
-        )
- ) as geometry_version,
-    substr(regexp_substr(tt.jedi_task_parameters, '"ticketID": "(.[^",])+'),
-           regexp_instr(
-               regexp_substr(tt.jedi_task_parameters, '"ticketID": "(.[^",])+'),
-               '(": ")+',
-               1,
-               1,
-               1
-           )
-    )as ticket_id,
-     substr(regexp_substr(tt.jedi_task_parameters, '"transHome": "(.[^",])+'),
-            regexp_instr(
-                regexp_substr(tt.jedi_task_parameters, '"transHome": "(.[^",])+'),
-                '(": ")+',
-                1,
-                1,
-                1
-            )
-     )as trans_home,
-        substr(regexp_substr(tt.jedi_task_parameters, '"transPath": "(.[^",])+'),
+        to_char(NVL(substr(regexp_substr(jedi_task_parameters, '"architecture": "(.[^",])+'),
                regexp_instr(
-                   regexp_substr(tt.jedi_task_parameters, '"transPath": "(.[^",])+'),
+                   regexp_substr(jedi_task_parameters, '"architecture": "(.[^",])+'),
                    '(": ")+',
                    1,
                    1,
                    1
                )
-        )as trans_path,
-        substr(regexp_substr(tt.jedi_task_parameters, '"transUses": "(.[^",])+'),
+        ),'')) as architecture,
+        to_char(NVL(substr(regexp_substr(jedi_task_parameters, '"coreCount": [0-9\.]+'),
                regexp_instr(
-                   regexp_substr(tt.jedi_task_parameters, '"transUses": "(.[^",])+'),
-                   '(": ")+',
+                   regexp_substr(jedi_task_parameters, '"coreCount": [0-9\.]+'),
+                   '(": )+',
                    1,
                    1,
                    1
                )
-        )as trans_uses,
-        substr(regexp_substr(tt.jedi_task_parameters, '"userName": "(.[^",])+'),
+        ),'')) as core_count,
+        to_char(NVL(substr(regexp_substr(jedi_task_parameters, '"\-\-conditionsTag \\"default:[a-zA-Z0-9_\-]+[^\""]'),
                regexp_instr(
-                   regexp_substr(tt.jedi_task_parameters, '"userName": "(.[^",])+'),
-                   '(": ")+',
+                   regexp_substr(jedi_task_parameters, '"\-\-conditionsTag \\"default:[a-zA-Z0-9_\-]+[^\""]'),
+                   '(:)+',
                    1,
                    1,
                    1
-               )
-        )as user_name,
-        substr(regexp_substr(tt.jedi_task_parameters, '"vo": "[a-zA-Z0-9_\-\.]+[^"]'),
+              )
+       ),'')) as conditions_tags,
+        to_char(NVL(substr(regexp_substr(jedi_task_parameters, '"\-\-geometryVersion=\\"default:[a-zA-Z0-9_\-]+[^\""]'),
                regexp_instr(
-                   regexp_substr(tt.jedi_task_parameters, '"vo": "[a-zA-Z0-9_\-\.]+[^"]'),
-                   '(": ")+',
+                   regexp_substr(jedi_task_parameters, '"\-\-geometryVersion=\\"default:[a-zA-Z0-9_\-]+[^\""]'),
+                   '(:)+',
                    1,
                    1,
                    1
-               )
-        )as vo,
-        substr(regexp_substr(tt.jedi_task_parameters, '"--runNumber=[0-9]+[^"]'),
-                   regexp_instr(
-                       regexp_substr(tt.jedi_task_parameters, '"--runNumber=[0-9]+[^"]'),
-                       '(=)+',
-                       1,
-                       1,
-                       1
-                   )
-            )as run_number,
-        substr(regexp_substr(tt.jedi_task_parameters, '"--triggerConfig=\\"(.[^\""])+'),
-                   regexp_instr(
-                       regexp_substr(tt.jedi_task_parameters, '"--triggerConfig=\\"(.[^\""])+'),
-                       '(=\\")+',
-                       1,
-                       1,
-                       1
-                   )
-        )as trigger_config,
+              )
+       ),'')) as geometry_version,
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"ticketID": "(.[^",])+'),
+                 regexp_instr(
+                     regexp_substr(tt.jedi_task_parameters, '"ticketID": "(.[^",])+'),
+                     '(": ")+',
+                     1,
+                     1,
+                     1
+                 )
+        ),'')) as ticket_id,
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"transHome": "(.[^",])+'),
+                  regexp_instr(
+                      regexp_substr(tt.jedi_task_parameters, '"transHome": "(.[^",])+'),
+                      '(": ")+',
+                      1,
+                      1,
+                      1
+                  )
+        ),'')) as trans_home,
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"transPath": "(.[^",])+'),
+                     regexp_instr(
+                         regexp_substr(tt.jedi_task_parameters, '"transPath": "(.[^",])+'),
+                         '(": ")+',
+                         1,
+                         1,
+                         1
+                     )
+        ),'')) as trans_path,
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"transUses": "(.[^",])+'),
+                     regexp_instr(
+                         regexp_substr(tt.jedi_task_parameters, '"transUses": "(.[^",])+'),
+                         '(": ")+',
+                         1,
+                         1,
+                         1
+                     )
+        ),'')) as trans_uses,
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"userName": "(.[^",])+'),
+                     regexp_instr(
+                         regexp_substr(tt.jedi_task_parameters, '"userName": "(.[^",])+'),
+                         '(": ")+',
+                         1,
+                         1,
+                         1
+                     )
+        ),'')) as user_name,
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"vo": "[a-zA-Z0-9_\-\.]+[^"]'),
+                     regexp_instr(
+                         regexp_substr(tt.jedi_task_parameters, '"vo": "[a-zA-Z0-9_\-\.]+[^"]'),
+                         '(": ")+',
+                         1,
+                         1,
+                         1
+                     )
+        ),'')) as vo,
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"--runNumber=[0-9]+[^"]'),
+                         regexp_instr(
+                             regexp_substr(tt.jedi_task_parameters, '"--runNumber=[0-9]+[^"]'),
+                             '(=)+',
+                             1,
+                             1,
+                             1
+                         )
+        ),'')) as run_number,
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"--triggerConfig=\\"(.[^\""])+'),
+                         regexp_instr(
+                             regexp_substr(tt.jedi_task_parameters, '"--triggerConfig=\\"(.[^\""])+'),
+                             '(=\\")+',
+                             1,
+                             1,
+                             1
+                         )
+        ),'')) as trigger_config,
           (SELECT LISTAGG(jd.datasetname, ', ')
            WITHIN GROUP (ORDER BY datasetname) "input_data"
             from ATLAS_PANDA.jedi_datasets jd
