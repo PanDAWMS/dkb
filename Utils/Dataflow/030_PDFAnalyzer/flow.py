@@ -19,6 +19,7 @@ base_dir = os.path.dirname(os.path.abspath(__file__))
 sys.path.append(os.path.dirname(base_dir))
 import pyDKB
 
+
 def process(stage, msg):
     """ Obtain the PDF name from the input.
 
@@ -42,15 +43,15 @@ def process(stage, msg):
         fname = os.path.abspath(fname).replace("\\", "/")
         if not os.access(fname, os.F_OK):
             sys.stderr.write("(ERROR) No such file or directory:"
-                             + fname + "\n")
+                             +fname+"\n")
             return False
     pdfname = re_pdfname.search(fname)
     if not pdfname:
-        sys.stderr.write("(ERROR) File " + fname + " is not a pdf file.\n")
+        sys.stderr.write("(ERROR) File "+fname+" is not a pdf file.\n")
         return False
     else:
         pdfname = pdfname.group(1)
-        dirname = path_join(cfg["WORK_DIR"], "%s_tmp" % (pdfname))
+        dirname = path_join(cfg["WORK_DIR"], "%s_tmp" % pdfname)
         os.mkdir(dirname)
         try:
             if hdfs:
@@ -65,9 +66,9 @@ def process(stage, msg):
                              " directory\n")
             if hdfs:
                 sys.stderr.write("(ERROR) hdfs download command:"
-                                 + str(command_list)
-                                 + "\n")
-            sys.stderr.write("(ERROR) " + str(e) + "\n")
+                                 +str(command_list)
+                                 +"\n")
+            sys.stderr.write("(ERROR) "+str(e)+"\n")
             shutil.rmtree(dirname)
             return False
         p = Paper(pdfname, dirname)
@@ -98,4 +99,3 @@ if __name__ == "__main__":
             sys.stderr.write("(ERROR) while running stage 30: %s\n" % e)
     finally:
         analyzer_stage.stop()
-
