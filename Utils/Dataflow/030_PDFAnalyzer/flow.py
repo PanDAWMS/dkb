@@ -51,7 +51,7 @@ def process(stage, msg):
         return False
     else:
         pdfname = pdfname.group(1)
-        dirname = path_join(cfg["WORK_DIR"], "%s_tmp" % (pdfname))
+        dirname = path_join(cfg["WORK_DIR"], "%s_tmp" % pdfname)
         os.mkdir(dirname)
         try:
             if hdfs:

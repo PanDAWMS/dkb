@@ -158,7 +158,7 @@ class DatasetCategory:
                     elif self.reg_spaces.match(s):
                         res = 2
                     for i in range(0, len(intervals)):
-                        s = re.sub("INTERVAL%d!" % (i), intervals[i], s)
+                        s = re.sub("INTERVAL%d!" % i, intervals[i], s)
                     if res == 1:
                         datasets[self.name].append([s, False])
                     elif res == 2:
@@ -439,7 +439,7 @@ class Paper:
             self.dir = path_join(PAPERS_DIR, self.fname)
         else:
             self.dir = dirname
-        self.pdf = path_join(self.dir, "%s.pdf" % (self.fname))
+        self.pdf = path_join(self.dir, "%s.pdf" % self.fname)
         self.txt_dir = path_join(self.dir, TXT_DIR)
         self.xml_dir = path_join(self.dir, XML_DIR)
         self.metadata_file = path_join(self.dir, METADATA_FILE)
@@ -464,7 +464,7 @@ class Paper:
         Result is either text(if text variable is True) or lines (if
         text variable is False).
         """
-        fname = path_join(self.txt_dir, "%d.txt" % (number))
+        fname = path_join(self.txt_dir, "%d.txt" % number)
         with open(fname, "r") as f:
             if text:
                 r = f.read()
@@ -479,7 +479,7 @@ class Paper:
         Result is either text(if text variable is True) or
         lines (if text variable is False).
         """
-        fname = path_join(self.xml_dir, "%d.xml" % (number))
+        fname = path_join(self.xml_dir, "%d.xml" % number)
         if not os.access(fname, os.F_OK):
             [num_pages, rotated_pages] = pdfwork.mine_text(self.pdf, [number],
                                                            "xml",
@@ -508,7 +508,7 @@ class Paper:
         """ Read and return mined text of the document. """
         text = ""
         for i in range(1, self.num_pages+1):
-            with open(path_join(self.txt_dir, "%d.txt") % (i), "r") as f:
+            with open(path_join(self.txt_dir, "%d.txt") % i, "r") as f:
                 text += f.read()
         return text
 
@@ -827,7 +827,7 @@ class Paper:
 
         outp = {}
         if not outf:
-            outf = path_join(EXPORT_DIR, "%s.json" % (self.fname))
+            outf = path_join(EXPORT_DIR, "%s.json" % self.fname)
 
         # Some applications processing exported data may discard the
         # filename but it must be preserved.
@@ -1123,7 +1123,7 @@ class Manager:
         """ Delete paper. """
         if tkMessageBox.askyesno("Delete paper?",
                                  "Are you sure you want to delete paper %s?"
-                                 % (paper.fname)):
+                                 % paper.fname):
             self.papers.remove(paper)
             paper.delete()
             if window:
@@ -1343,7 +1343,7 @@ class Manager:
             attrs = paper.find_attributes_general()
             if "possible years" in attrs:
                 msg = "No year was found in %s, possible years:\n\n"\
-                      % (paper.fname)
+                      % paper.fname
                 for m in attrs["possible years"]:
                     try:
                         msg += m + "\n"
@@ -1629,7 +1629,7 @@ class Manager:
                 c.destroy()
             window.title("Select page")
             l = Tkinter.Label(window, text="Page number(1 - %d):"
-                              % (paper.num_pages))
+                              % paper.num_pages)
             l.grid(row=0, column=0)
             e = Tkinter.Entry(window, width=10)
             e.grid(row=0, column=1)
@@ -1671,7 +1671,7 @@ class Manager:
                     frame.grid(row=table_num, column=0)
                     table_num += 1
                 if not tables:
-                    msg = "No tables found on page %d" % (number)
+                    msg = "No tables found on page %d" % number
                     l = Tkinter.Label(window, text=msg)
                     l.grid(row=0, column=0)
                     table_num = 1
@@ -1690,7 +1690,7 @@ class Manager:
                 c.destroy()
             window.title("Select page")
             l = Tkinter.Label(window, text="Page number(1 - %d):"
-                              % (paper.num_pages))
+                              % paper.num_pages)
             l.grid(row=0, column=0)
             e = Tkinter.Entry(window, width=10)
             e.grid(row=0, column=1)
@@ -1758,7 +1758,7 @@ class Manager:
         d = askdirectory()
         for p in self.papers:
             text = p.get_text()
-            with open(path_join(d, "%s.txt" % (p.fname)), "w") as f:
+            with open(path_join(d, "%s.txt" % p.fname), "w") as f:
                 f.write(text)
 
     def export_all(self, quick=False, n=None, n_p=None, errors=None, attr=None,
@@ -1831,7 +1831,7 @@ class Manager:
                         if outp["content"]["plain_text"][a]:
                             attr[a].append(p.fname)
                             if a == "atlas_name":
-                                s += "%s," % (outp["content"]["plain_text"][a])
+                                s += "%s," % outp["content"]["plain_text"][a]
                             else:
                                 s += "1,"
                         else:
@@ -1867,7 +1867,7 @@ class Manager:
                              float(len(attr["dataset_tables"]))/n_p*100)
                     for a in Paper.attributes_general:
                         s += "%d," % len(attr[a])
-                        s_p += "%f%%," % (float(len(attr[a]))/n_p*100)
+                        s_p += "%f%%," % float(len(attr[a]))/n_p*100
                     csv += s.rstrip(",") + "\n"
                     csv += s_p.rstrip(",") + "\n"
                     f.writelines(csv)
