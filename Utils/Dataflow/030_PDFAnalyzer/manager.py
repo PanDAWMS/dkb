@@ -297,7 +297,6 @@ re_luminosity = re.compile("(\d+\.?\d*) ?(m|n|p|f)b(?:−|\(cid:0\))1")
 re_collisions = re.compile("(proton-proton|heavy-ion|pp) collisions")
 re_year = re.compile("(?:acquired|collected|measured|recorded).{0,100}"
                      "(20\d\d)", re.DOTALL)
-re_year_general = re.compile(".{0,100} 20\d\d.{0,100}")
 # Interval must contain at least two numbers, i.e. [1/2] or [3\4\5].
 re_interval = re.compile("\[(?:[0-9][\\/][0-9\\/\n]+|[0-9]+-[0-9]+)\]")
 re_link = re.compile("(.*)\n? ?(https?://cds\.cern\.ch/record/\d+)")
@@ -650,8 +649,6 @@ class Paper:
         tmp = re_year.search(text)
         if tmp:
             attrs["data taking year"] = tmp.group(1)
-        else:
-            attrs["possible years"] = list(set(re_year_general.findall(text)))
 
         if attrs["campaigns"] and attrs["energy"]:
             mcc = False
@@ -1341,29 +1338,6 @@ class Manager:
         window.title("Attributes of %s" % paper.fname)
         if paper.campaigns is None:
             attrs = paper.find_attributes_general()
-            if "possible years" in attrs:
-                msg = "No year was found in %s, possible years:\n\n"\
-                      % paper.fname
-                for m in attrs["possible years"]:
-                    try:
-                        msg += m + "\n"
-                    except:
-                        for c in m:
-                            try:
-                                msg += c
-                            except:
-                                msg += "?"
-                        msg += "\n"
-                    msg += "_______________________________\n"
-                nw = Tkinter.Toplevel()
-                nw.title("No year found")
-                t = Tkinter.Text(nw)
-                t.insert(Tkinter.END, msg)
-                t.config(state=Tkinter.DISABLED)
-                t.grid(row=0, column=0)
-                b = Tkinter.Button(nw, text="Close", command=nw.destroy)
-                b.grid(row=1, column=0)
-                del attrs["possible years"]
             self.update_paper_parameter(window, paper, "general", attrs)
         else:
             r = 0
