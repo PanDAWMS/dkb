@@ -1894,7 +1894,7 @@ class Manager:
                              float(len(attr["dataset_tables"]))/n_p*100)
                     for a in Paper.attributes_general:
                         s += "%d," % len(attr[a])
-                        s_p += "%f%%," % float(len(attr[a]))/n_p*100
+                        s_p += "%f%%," % (float(len(attr[a]))/n_p*100)
                     csv += s.rstrip(",") + "\n"
                     csv += s_p.rstrip(",") + "\n"
                     f.writelines(csv)
