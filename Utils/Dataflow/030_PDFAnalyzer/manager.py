@@ -19,6 +19,7 @@ default_cfg = {
         "DETERMINE_TITLE":       False,
         "OPEN_INTERVALS_TEXT":   False,
         "OPEN_INTERVALS_TABLES": False,
+        "TABLES_IDS_ONLY":       False,
         "HDFS_PDF_DIR":          "",
         "HDFS_DOWNLOAD_COMMAND": "hadoop fs -get"
     }
@@ -786,7 +787,15 @@ class Paper:
                                     else:
                                         rows_new.append(row)
                                     rows = rows_new
-                            datatables[num] = (headers_data[num], rows)
+                            if cfg["TABLES_IDS_ONLY"]:
+                                ids = []
+                                for row in rows[1:]:
+                                    ids.append(int(row[data_column]))
+                                ids.sort()
+                                data = " ".join([str(i) for i in ids])
+                            else:
+                                data = rows
+                            datatables[num] = (headers_data[num], data)
 ##                        elif coef < 0.7:
 ##                            print "COEFFICIENT IS LOWER THAN 0.7.\
 ##                                  SKIPPING TABLE", num
@@ -859,12 +868,23 @@ class Paper:
                                 + "_datasets"] = d
         if self.datatables is not None:
             for num in self.datatables:
-                outp["content"]["table_"+str(num)] = self.datatables[num]
+                if isinstance(self.datatables[num][1], str)\
+                   or isinstance(self.datatables[num][1], unicode):
+                    header, ids = self.datatables[num]
+                    data = [header, [int(i) for i in ids.split()]]
+                else:
+                    data = self.datatables[num]
+                outp["content"]["table_"+str(num)] = data
         elif quick:
             tables = self.find_datatables()
             for num in tables:
-                outp["content"]["table_"+str(num)] = tables[num]
-
+                if isinstance(tables[num][1], str)\
+                   or isinstance(tables[num][1], unicode):
+                    header, ids = tables[num]
+                    data = [header, [int(i) for i in ids.split()]]
+                else:
+                    data = tables[num]
+                outp["content"]["table_"+str(num)] = data
         if outp:
             with open(outf, "w") as f:
                 json.dump(outp, f, indent=4)
@@ -988,6 +1008,8 @@ class Manager:
         open_intervals_text.set(cfg["OPEN_INTERVALS_TEXT"])
         open_intervals_tables = Tkinter.BooleanVar()
         open_intervals_tables.set(cfg["OPEN_INTERVALS_TABLES"])
+        tables_ids_only = Tkinter.BooleanVar()
+        tables_ids_only.set(cfg["TABLES_IDS_ONLY"])
         work_dir = Tkinter.StringVar()
         work_dir.set(cfg["WORK_DIR"])
 
@@ -1013,6 +1035,12 @@ class Manager:
         b = Tkinter.Checkbutton(frame, variable=open_intervals_tables)
         b.grid(row=3, column=1)
 
+        txt = "Extract dataset IDs instead of full tables"
+        l = Tkinter.Label(frame, text=txt)
+        l.grid(row=4, column=0)
+        b = Tkinter.Checkbutton(frame, variable=tables_ids_only)
+        b.grid(row=4, column=1)
+
         frame.grid(row=0, column=0)
         b = Tkinter.Button(w, text="Done", command=w.destroy)
         b.grid(row=1, column=0)
@@ -1034,6 +1062,10 @@ class Manager:
             cfg["OPEN_INTERVALS_TABLES"] = True
         else:
             cfg["OPEN_INTERVALS_TABLES"] = False
+        if tables_ids_only.get():
+            cfg["TABLES_IDS_ONLY"] = True
+        else:
+            cfg["TABLES_IDS_ONLY"] = False
         save_config(cfg)
         if restart:
             msg = "Program needs to be restarted to apply the changes."
@@ -1324,9 +1356,14 @@ class Manager:
             self.show_paper_datasets(window, paper)
         elif param == "datatables":
             paper.datatables = {}
-            for [num, header, rows, selected] in value:
+            for [num, header, data, selected] in value:
                 if selected.get():
-                    paper.datatables[num] = (header, rows)
+                    if isinstance(data, list):
+                        paper.datatables[num] = (header, data)
+                    else:
+                        paper.datatables[num] = (header,
+                                                 data.get("0.0",
+                                                          "end").strip())
             self.show_paper_datatables(window, paper)
         paper.changed = True
         self.redraw()
@@ -1494,31 +1531,41 @@ class Manager:
                 keys.sort()
                 datatables_s = []
                 for k in keys:
-                    (header, rows) = datatables[k]
+                    (header, data) = datatables[k]
                     t_frame = Tkinter.Frame(frame)
-                    l = Tkinter.Label(t_frame, text=header, font=HEADING_FONT)
-                    l.grid(row=0, column=0, columnspan=len(rows[0]))
-                    r = 1
-                    for row in rows:
-                        c = 0
-                        for line in row:
-                            l = Tkinter.Label(t_frame, text=line)
-                            l.grid(row=r, column=c)
-                            c += 1
-                        r += 1
-                        if r == 50:
-                            msg = "Table is too large, "\
-                                "omitting remaining rows."
-                            l = Tkinter.Label(t_frame, text=msg)
-                            l.grid(row=r, columnspan=c)
-                            break
-                    t_frame.grid(row=num, column=0)
                     selected = Tkinter.IntVar()
                     selected.set(1)
+                    l = Tkinter.Label(t_frame, text=header, font=HEADING_FONT)
                     b = Tkinter.Checkbutton(t_frame, var=selected)
+                    if isinstance(data, str) or isinstance(data, unicode):
+                        l.grid(row=0, column=0)
+                        b.grid(row=0, column=1)
+                        t = Tkinter.Text(t_frame, width=(6+1)*5,
+                                         height=data.count(" ")//5+2)
+                        t.insert(Tkinter.END, data)
+                        t.grid(row=1, column=0)
+                        datatables_s.append([k, header, t, selected])
+                    else:
+                        rows = data
+                        l.grid(row=0, column=0, columnspan=len(rows[0]))
+                        b.grid(row=0, column=len(rows[0]))
+                        r = 1
+                        for row in rows:
+                            c = 0
+                            for line in row:
+                                l = Tkinter.Label(t_frame, text=line)
+                                l.grid(row=r, column=c)
+                                c += 1
+                            r += 1
+                            if r == 50:
+                                msg = "Table is too large, "\
+                                      "omitting remaining rows."
+                                l = Tkinter.Label(t_frame, text=msg)
+                                l.grid(row=r, columnspan=c)
+                                break
+                        datatables_s.append([k, header, rows, selected])
+                    t_frame.grid(row=num, column=0)
                     # TO DO: checkbuttons for "(un)select all".
-                    b.grid(row=0, column=len(rows[0]))
-                    datatables_s.append([k, header, rows, selected])
                     num += 1
 
                 scrlbr = Tkinter.Scrollbar(window, command=cnvs.yview)
@@ -1561,24 +1608,30 @@ class Manager:
                 keys = paper.datatables.keys()
                 keys.sort()
                 for k in keys:
-                    (header, rows) = paper.datatables[k]
+                    (header, data) = paper.datatables[k]
                     t_frame = Tkinter.Frame(frame)
                     l = Tkinter.Label(t_frame, text=header, font=HEADING_FONT)
-                    l.grid(row=0, column=0, columnspan=len(rows[0]))
-                    r = 1
-                    for row in rows:
-                        c = 0
-                        for line in row:
-                            l = Tkinter.Label(t_frame, text=line)
-                            l.grid(row=r, column=c)
-                            c += 1
-                        r += 1
-                        if r == 50:
-                            msg = "Table is too large, "\
-                                "omitting remaining rows."
-                            l = Tkinter.Label(t_frame, text=msg)
-                            l.grid(row=r, columnspan=c)
-                            break
+                    if isinstance(data, str) or isinstance(data, unicode):
+                        l.grid(row=0, column=0)
+                        l = Tkinter.Label(t_frame, text=data, wraplength=600)
+                        l.grid(row=1, column=0)
+                    else:
+                        rows = data
+                        l.grid(row=0, column=0, columnspan=len(rows[0]))
+                        r = 1
+                        for row in rows:
+                            c = 0
+                            for line in row:
+                                l = Tkinter.Label(t_frame, text=line)
+                                l.grid(row=r, column=c)
+                                c += 1
+                            r += 1
+                            if r == 50:
+                                msg = "Table is too large, "\
+                                      "omitting remaining rows."
+                                l = Tkinter.Label(t_frame, text=msg)
+                                l.grid(row=r, columnspan=c)
+                                break
                     t_frame.grid(row=num, column=0)
                     num += 1
 
