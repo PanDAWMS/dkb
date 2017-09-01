@@ -29,7 +29,7 @@ putDataToES() {
   [ -n "$ES_USER" -a "$ES_PASSWORD" ] && ES_AUTH="--user ${ES_USER}:${ES_PASSWORD}"
 
   log "Putting data to ES"
-  curl $ES_AUTH 'http://127.0.0.1:9200/_bulk?pretty' --data-binary @- || exit 3
+  curl $ES_AUTH "http://$ES_HOST:$ES_PORT/_bulk?pretty" --data-binary @- || exit 3
 }
 
 getDataFromOracle > $ORACLE_OUT 
