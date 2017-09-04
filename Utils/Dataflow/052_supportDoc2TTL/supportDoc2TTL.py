@@ -20,10 +20,10 @@ import getopt
 import re
 
 
-ontology_params = {'ontology'         : 'http://nosql.tpu.ru/ontology/ATLAS',
-                   'graph'            : 'http://nosql.tpu.ru:8890/DAV/ATLAS/new',
-                   'rdf_prefix'       : 'http://www.w3.org/1999/02/22-rdf-syntax-ns',
-                   'person_resource'  : 'http://nosql.tpu.ru:8890/DAV/ATLAS/person/',
+ontology_params = {'ontology': 'http://nosql.tpu.ru/ontology/ATLAS',
+                   'graph': 'http://nosql.tpu.ru:8890/DAV/ATLAS/new',
+                   'rdf_prefix': 'http://www.w3.org/1999/02/22-rdf-syntax-ns',
+                   'person_resource': 'http://nosql.tpu.ru:8890/DAV/ATLAS/person/',
                    'document_resource': 'http://nosql.tpu.ru:8890/DAV/ATLAS/document/'}
 
 SPARQL                = "http://nosql.tpu.ru:8890/sparql"
@@ -31,21 +31,21 @@ SPARQL                = "http://nosql.tpu.ru:8890/sparql"
 #-----------------------------------------------------------------------------------------------------------
 # Lists of dictionaries with parameters names for JSON documents and Ontology representation
 #-----------------------------------------------------------------------------------------------------------
-author_params_list = [{'CDS'   : 'INSPIRE_number',
+author_params_list = [{'CDS': 'INSPIRE_number',
                        'SPARQL': 'INSPIRE_number',
-                       'ONTO'  : 'hasINSPIRENumber',
+                       'ONTO': 'hasINSPIRENumber',
                        'unique': True},
-                      {'CDS'   : 'control_number',
+                      {'CDS': 'control_number',
                        'SPARQL': 'control_number',
-                       'ONTO'  : 'hasControlNumber',
+                       'ONTO': 'hasControlNumber',
                        'unique': True},
-                      {'CDS'   : 'e-mail',
+                      {'CDS': 'e-mail',
                        'SPARQL': 'email',
-                       'ONTO'  : 'hasEmail',
+                       'ONTO': 'hasEmail',
                        'unique': True},
-                      {'CDS'   : ('affiliation', 'first_name', 'last_name'),
+                      {'CDS': ('affiliation', 'first_name', 'last_name'),
                        'SPARQL': ('affiliation', 'first_name', 'last_name'),
-                       'ONTO'  : ['hasAffilation', 'hasFirstName, hasLastName'],
+                       'ONTO': ['hasAffilation', 'hasFirstName, hasLastName'],
                        'unique': True},
                       ]
 
@@ -353,7 +353,7 @@ def authors_processing(data):
                             for author in authors:
                                 if (author['first_name'] == d['first_name'] and
                                     author['last_name'] == d['last_name'] and
-                                    author['affiliation'] == d['affiliation']) :
+                                    author['affiliation'] == d['affiliation']):
                                     if 'guid' in author:
                                         author['potential_guids'].append(guid)
                                     else:

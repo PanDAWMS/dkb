@@ -30,38 +30,38 @@ CSV_HEADER=["datatype","glanceid","name","tid","chain_tid","phys_group","events"
 # Ordinary numeric/string properties: <dataset> <#property> Value
 OWL_PARAMS_NUMSTR={
     #numeric
-           'DSID'          :'hasDatasetID',
-           'events'        :'hasEvents',
-           'files'         :'hasFiles',
-           'datasetSize'   :'hasDatasetSize',  # hasFiles * hasFileSizeMB
-           'file_size_mb'  :'hasFileSizeMB',
+           'DSID':'hasDatasetID',
+           'events':'hasEvents',
+           'files':'hasFiles',
+           'datasetSize':'hasDatasetSize',  # hasFiles * hasFileSizeMB
+           'file_size_mb':'hasFileSizeMB',
     #string
-           'name'          :'hasDatasetName',
-           'timestamp'     :'hasTimestamp',
-           'AMItags'       :'hasAMITag',
-           'status'        :'hasStatus',
-           'physKeyword'   :'hasPhysKeyword'
+           'name':'hasDatasetName',
+           'timestamp':'hasTimestamp',
+           'AMItags':'hasAMITag',
+           'status':'hasStatus',
+           'physKeyword':'hasPhysKeyword'
 }
 
 # Only numeric properties
 OWL_PARAMS_NUM={
-    'DSID'          :'hasDatasetID',
-           'events'        :'hasEvents',
-           'files'         :'hasFiles',
-           'datasetSize'   :'hasDatasetSize',  # hasFiles * hasFileSizeMB
-           'file_size_mb'  :'hasFileSizeMB'
+    'DSID':'hasDatasetID',
+           'events':'hasEvents',
+           'files':'hasFiles',
+           'datasetSize':'hasDatasetSize',  # hasFiles * hasFileSizeMB
+           'file_size_mb':'hasFileSizeMB'
 }
 
 # Object properties: <dataset> <#property> <DBobject>
 OWL_PARAMS_OBJ={
-    'campaign'      :'hasCampaign',
-           'dataFormat'    :'hasDataSampleFormat',
-           'datatype'      :'hasDataSampleType', # #Container|#MC|#RealData
-           'generator'     :'hasGenerator',
-           'physGroup'     :'hasPhysGroup',
-           'prodStep'      :'hasProductionStep',
-           'project'       :'hasProject',
-           'usedIn'        :'usedIn'
+    'campaign':'hasCampaign',
+           'dataFormat':'hasDataSampleFormat',
+           'datatype':'hasDataSampleType', # #Container|#MC|#RealData
+           'generator':'hasGenerator',
+           'physGroup':'hasPhysGroup',
+           'prodStep':'hasProductionStep',
+           'project':'hasProject',
+           'usedIn':'usedIn'
 }
 # <--- ONTOLOGY
 
@@ -114,8 +114,8 @@ def check_synonyms(word, syns):
   # Checks if given word (words) have any default form, in which they are to
   # be processed further, and returns transformed (if needed) value.
 
-  if type(syns) != dict : return word
-  if type(word) != list :
+  if type(syns) != dict: return word
+  if type(word) != list:
     for t in syns:
       if word in syns[t]: return t
   else:

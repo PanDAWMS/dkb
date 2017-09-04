@@ -139,7 +139,7 @@ def linkTTL(doc, notes):
   for note in notes:
     noteUOID = getUOID(note)
     attrs = {'noteUOID': noteUOID,
-                 'docUOID' : docUOID,
+                 'docUOID': docUOID,
                  'ontology': ONTOLOGY
                   }
     isBasedOnTriplet = "{docUOID} <{ontology}#isBasedOn> {noteUOID} .\n".format(**attrs)

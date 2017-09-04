@@ -87,13 +87,13 @@ for i, item in enumerate(input_data):
 		DATAPERIODS = {
                     'graph': graph,
 			'ontology': ontology,
-			'dataPeriod' : dataPeriod,
+			'dataPeriod': dataPeriod,
 			'project_name': project,
-			'period' : input_data[i]['period'],
-			'periodLevel' : input_data[i]['periodLevel'],
-			'year' : year,
-			'description' : description,
-			'status' : input_data[i]['status']
+			'period': input_data[i]['period'],
+			'periodLevel': input_data[i]['periodLevel'],
+			'year': year,
+			'description': description,
+			'status': input_data[i]['status']
 		}
 		
 		if not input_data[i]['projectName'] in listProj:
