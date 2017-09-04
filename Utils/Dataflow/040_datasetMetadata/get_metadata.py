@@ -301,7 +301,7 @@ def checkExtra(key, val):
   checkParameters = {
       'glanceid': {
           'type':int
-    }
+          }
   }
   if key in checkParameters:
     p = checkParameters[key]
