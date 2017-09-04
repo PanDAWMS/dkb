@@ -34,7 +34,7 @@ def load_config(default_cfg):
 
 def save_config(cfg):
     with open(CONFIG_FILE, "w") as f:
-        json.dump(cfg, f, indent = 4)
+        json.dump(cfg, f, indent=4)
 
 cfg, save_needed = load_config(default_cfg)
 if save_needed:
@@ -291,8 +291,8 @@ def organize_intervals(intervals):
                     ni1 = []
                     for i1 in range(int(s), int(e) + 1):
                         ni1.append(str(i1))
-                    maxlen = len(max(ni1, key = lambda num: len(num)))
-                    if len(min(ni1, key = lambda num: len(num))) != maxlen: # TO DO: improve this.
+                    maxlen = len(max(ni1, key=lambda num: len(num)))
+                    if len(min(ni1, key=lambda num: len(num))) != maxlen: # TO DO: improve this.
                         ni2 = []
                         for i1 in ni1:
                             add_zeros = maxlen - len(i1)
@@ -342,7 +342,7 @@ class Paper:
     attributes_general = ["campaigns", "energy", "luminosity", "collisions", "data taking year"]
     attributes_to_determine = attributes_general + ["title", "datasets", "datatables"] # Paper attributes which are needed but cannot be determined precisely yet (unlike, for example, number of pages).
     attributes_metadata = attributes_to_determine + ["num_pages", "rotated_pages"] # Attributes which are saved / loaded to / from a file.
-    def __init__(self, fname, dirname = False):
+    def __init__(self, fname, dirname=False):
         self.fname = fname
         if not dirname:
             self.dir = path_join(PAPERS_DIR, self.fname)
@@ -359,7 +359,7 @@ class Paper:
         self.rotated_pages = None # Numbers of pages which are rotated.
 
         self.changed = False # This flag is set to True when part of metadata is changed, but not yet saved to the metadata file.
-    def get_txt_page(self, number, text = False):
+    def get_txt_page(self, number, text=False):
         # Fetch txt page of the paper. Result is either text(if text variable is True) or lines (if text variable is False).
         fname = path_join(self.txt_dir, "%d.txt" % (number))
         with open(fname, "r") as f:
@@ -368,7 +368,7 @@ class Paper:
             else:
                 r = f.readlines()
         return r
-    def get_xml_page(self, number, text = False):
+    def get_xml_page(self, number, text=False):
         # Fetch xml page of the paper. Extract xml page from PDF if not done yet. Result is either text(if text variable is True) or lines (if text variable is False).
         fname = path_join(self.xml_dir, "%d.xml" % (number))
         if not os.access(fname, os.F_OK):
@@ -383,7 +383,7 @@ class Paper:
         # Extract text from the PDF file.
         if not os.access(self.txt_dir, os.F_OK):
             os.mkdir(self.txt_dir)
-        [num_pages, self.rotated_pages] = mine_text(self.pdf, folder = self.txt_dir)
+        [num_pages, self.rotated_pages] = mine_text(self.pdf, folder=self.txt_dir)
         self.num_pages = num_pages
         if not os.access(self.xml_dir, os.F_OK):
             os.mkdir(self.xml_dir)
@@ -408,7 +408,7 @@ class Paper:
         for key in self.attributes_metadata:
             outp[key] = self.__dict__[key]
         with open(self.metadata_file, "w") as f:
-            json.dump(outp, f, indent = 4)
+            json.dump(outp, f, indent=4)
         self.changed = False
     def load_metadata(self):
         # Import metadata from a file.
@@ -606,7 +606,7 @@ class Paper:
 #                            print "COEFFICIENT IS LOWER THAN 0.7. SKIPPING TABLE", num
 
         return datatables
-    def export(self, quick = False, outf = False):
+    def export(self, quick=False, outf=False):
         # Export metadata into file in export directory. Quick export: if a part of metadata was never determined, the corresponding procedure would be used with all user interaction skipped.
 
 ##        print self.fname
@@ -658,7 +658,7 @@ class Paper:
             outp["datatables"] = self.find_datatables()
         if outp:
             with open(outf, "w") as f:
-                json.dump(outp, f, indent = 4)
+                json.dump(outp, f, indent=4)
         return outp
 
 class Manager:
@@ -667,19 +667,19 @@ class Manager:
         self.window = window
         self.window.title("Support notes manager")
         main_menu = Menu(self.window)
-        papers_menu = Menu(main_menu, tearoff = 0)
-        export_menu = Menu(main_menu, tearoff = 0)
-        papers_menu.add_command(label = "Add...", command = self.add_papers)
-        papers_menu.add_command(label = "Save all", command = self.save_paper)
-        papers_menu.add_command(label = "Clear all", command = self.clear_paper)
-        papers_menu.add_command(label = "Exit", command = self.finish)
-        main_menu.add_cascade(label = "Papers", menu = papers_menu)
-        export_menu.add_command(label = "Quick export", command = lambda: self.export_all(quick = True))
-        export_menu.add_command(label = "Export", command = self.export_all)
-        export_menu.add_command(label = "Export texts", command = self.export_texts)
-        main_menu.add_cascade(label = "Export", menu = export_menu)
-        main_menu.add_command(label = "Preferences", command = self.preferences)
-        self.window.config(menu = main_menu)
+        papers_menu = Menu(main_menu, tearoff=0)
+        export_menu = Menu(main_menu, tearoff=0)
+        papers_menu.add_command(label="Add...", command=self.add_papers)
+        papers_menu.add_command(label="Save all", command=self.save_paper)
+        papers_menu.add_command(label="Clear all", command=self.clear_paper)
+        papers_menu.add_command(label="Exit", command=self.finish)
+        main_menu.add_cascade(label="Papers", menu=papers_menu)
+        export_menu.add_command(label="Quick export", command=lambda: self.export_all(quick=True))
+        export_menu.add_command(label="Export", command=self.export_all)
+        export_menu.add_command(label="Export texts", command=self.export_texts)
+        main_menu.add_cascade(label="Export", menu=export_menu)
+        main_menu.add_command(label="Preferences", command=self.preferences)
+        self.window.config(menu=main_menu)
 
         self.papers = []
         if not os.access(PAPERS_DIR, os.F_OK):
@@ -694,16 +694,16 @@ class Manager:
         if not os.access(EXPORT_DIR, os.F_OK):
             os.mkdir(EXPORT_DIR)
 
-        self.cnvs = Canvas(self.window, width = 1200, height = 800)
-        self.cnvs.grid(row = 1, column = 0)
+        self.cnvs = Canvas(self.window, width=1200, height=800)
+        self.cnvs.grid(row=1, column=0)
         self.frame = Frame(self.cnvs)
-        self.cnvs.create_window(0, 0, window = self.frame, anchor = 'nw')
-        scrlbr = Scrollbar(self.window, command = self.cnvs.yview)
-        scrlbr.grid(row = 0, rowspan = 2, column = 1, sticky = 'ns')
-        self.cnvs.configure(yscrollcommand = scrlbr.set)
+        self.cnvs.create_window(0, 0, window=self.frame, anchor='nw')
+        scrlbr = Scrollbar(self.window, command=self.cnvs.yview)
+        scrlbr.grid(row=0, rowspan=2, column=1, sticky='ns')
+        self.cnvs.configure(yscrollcommand=scrlbr.set)
 
-        self.status = Label(self.window, text = "", bd = 1, relief = SUNKEN)
-        self.status.grid(row = 2,  sticky = 'we')
+        self.status = Label(self.window, text="", bd=1, relief=SUNKEN)
+        self.status.grid(row=2,  sticky='we')
 
         self.window.protocol("WM_DELETE_WINDOW", self.finish) # Intercept closing the program via Alt + F4 or other methods to perform a clean exit.
 
@@ -723,15 +723,15 @@ class Manager:
             self.window.destroy()
         else:
             self.window.destroy()
-    def status_set(self, text = ""):
+    def status_set(self, text=""):
         # Update status bar.
-        self.status.configure(text = text)
+        self.status.configure(text=text)
     def redraw(self):
         # Redraw the main window.
         for c in self.frame.winfo_children():
             c.destroy()
 
-        self.papers.sort(cmp = cmp_papernames, key = lambda paper: paper.fname)
+        self.papers.sort(cmp=cmp_papernames, key=lambda paper: paper.fname)
         
         r = 0
         for p in self.papers:
@@ -739,12 +739,12 @@ class Manager:
                 t = p.fname + "*"
             else:
                 t = p.fname
-            b = Button(self.frame, text = t)
-            b.config(command = lambda paper = p: self.show_paper_info(False, paper))
-            b.grid(row = r, column = 0)
+            b = Button(self.frame, text=t)
+            b.config(command=lambda paper=p: self.show_paper_info(False, paper))
+            b.grid(row=r, column=0)
             if p.title is not None:
-                l = Label(self.frame, text = p.title)
-                l.grid(row = r, column = 1)
+                l = Label(self.frame, text=p.title)
+                l.grid(row=r, column=1)
             r += 1
             
         self.frame.update_idletasks()
@@ -764,24 +764,24 @@ class Manager:
 
         frame = Frame(w)
 
-        l = Label(frame, text = "Working directory")
-        l.grid(row = 0, column = 0)
-        e = Entry(frame, width = 100, textvariable = work_dir)
-        e.grid(row = 0, column = 1)
+        l = Label(frame, text="Working directory")
+        l.grid(row=0, column=0)
+        e = Entry(frame, width=100, textvariable=work_dir)
+        e.grid(row=0, column=1)
 
-        l = Label(frame, text = "Determine papers' titles")
-        l.grid(row = 1, column = 0)
-        b = Checkbutton(frame, variable = determine_title)
-        b.grid(row = 1, column = 1)
+        l = Label(frame, text="Determine papers' titles")
+        l.grid(row=1, column=0)
+        b = Checkbutton(frame, variable=determine_title)
+        b.grid(row=1, column=1)
         
-        l = Label(frame, text = "Open intervals")
-        l.grid(row = 2, column = 0)
-        b = Checkbutton(frame, variable = open_intervals)
-        b.grid(row = 2, column = 1)
+        l = Label(frame, text="Open intervals")
+        l.grid(row=2, column=0)
+        b = Checkbutton(frame, variable=open_intervals)
+        b.grid(row=2, column=1)
 
-        frame.grid(row = 0, column = 0)
-        b = Button(w, text = "Done", command = w.destroy)
-        b.grid(row = 1, column = 0)
+        frame.grid(row=0, column=0)
+        b = Button(w, text="Done", command=w.destroy)
+        b.grid(row=1, column=0)
         self.window.wait_window(w)
 
         restart = False
@@ -800,10 +800,10 @@ class Manager:
         if restart:
             tkMessageBox.showwarning("Restart needed", "Program needs to be restarted to apply the changes.")
             self.finish()
-    def add_papers(self, fnames = None, errors = None, n = None):
+    def add_papers(self, fnames=None, errors=None, n=None):
         # Add new papers from PDF files.
         if fnames is None:
-            fnames = askopenfilenames(initialdir = cfg["WORK_DIR"], filetypes = [("PDF files", ".pdf")])
+            fnames = askopenfilenames(initialdir=cfg["WORK_DIR"], filetypes=[("PDF files", ".pdf")])
             errors = {}
             n = 1
             self.window.after(100, lambda: self.add_papers(fnames, errors, n))
@@ -843,7 +843,7 @@ class Manager:
                         msg += "%s : %s\n\n" % (e, errors[e])
                     tkMessageBox.showwarning("Unable to add papers", msg)
                 self.redraw()
-    def clear_paper(self, window = False, paper = False):
+    def clear_paper(self, window=False, paper=False):
         # Clear a single or all papers' metadata.
         if paper:
             paper.clear_metadata()
@@ -854,7 +854,7 @@ class Manager:
         if window:
             window.destroy()
         self.redraw()
-    def save_paper(self, paper = False, finish = False):
+    def save_paper(self, paper=False, finish=False):
         # Save a single or all papers' metadata. Exit afterwards if finish is True.
         if paper:
             paper.save_metadata()
@@ -884,36 +884,36 @@ class Manager:
             for c in window.winfo_children():
                 c.destroy()
         window.title("Info: %s" % paper.fname)
-        l = Label(window, text = "File name: %s" % paper.fname)
-        l.grid(row = 0, column = 1)
-        b = Button(window, text = "Save", command = lambda paper = paper: self.save_paper(paper))
-        b.grid(row = 0, column = 2)        
-        b = Button(window, text = "Export", command = lambda paper = paper: paper.export()) # Maybe this should ask for save before export...
-        b.grid(row = 0, column = 3)        
-        b = Button(window, text = "Clear", command = lambda window = window, paper = paper: self.clear_paper(window, paper))
-        b.grid(row = 0, column = 4)        
-        b = Button(window, text = "Delete", command = lambda window = window, paper = paper: self.delete_paper(window, paper))
-        b.grid(row = 0, column = 5)        
-        l = Label(window, text = "Title: %s" % paper.title)
-        l.grid(row = 1, columnspan = 5)
-        l = Label(window, text = "Pages: %d" % paper.num_pages)
-        l.grid(row = 2, columnspan = 5)
-        l = Label(window, text = "Rotated pages: %s" % str(paper.rotated_pages))
-        l.grid(row = 3, columnspan = 5)
-        b = Button(window, text = "Attributes", command = lambda window = window, paper = paper: self.show_paper_attributes(window, paper))
-        b.grid(row = 4, columnspan = 5)        
-        b = Button(window, text = "Datasets", command = lambda window = window, paper = paper: self.show_paper_datasets(window, paper))
-        b.grid(row = 5, columnspan = 5)        
-        b = Button(window, text = "Dataset tables", command = lambda window = window, paper = paper: self.show_paper_datatables(window, paper))
-        b.grid(row = 6, columnspan = 5)
-        b = Button(window, text = "Tables", command = lambda window = window, paper = paper: self.show_paper_page_tables(window, paper))
-        b.grid(row = 7, columnspan = 5)
-        b = Button(window, text = "Visualize", command = lambda window = window, paper = paper: self.show_paper_visual(window, paper))
-        b.grid(row = 8, columnspan = 5)
-        b = Button(window, text = "Export text", command = lambda paper = paper: self.export_paper_text(paper))
-        b.grid(row = 9, columnspan = 5)
-        b = Button(window, text = "Close", command = window.destroy)
-        b.grid(row = 10, columnspan = 5)        
+        l = Label(window, text="File name: %s" % paper.fname)
+        l.grid(row=0, column=1)
+        b = Button(window, text="Save", command=lambda paper=paper: self.save_paper(paper))
+        b.grid(row=0, column=2)        
+        b = Button(window, text="Export", command=lambda paper=paper: paper.export()) # Maybe this should ask for save before export...
+        b.grid(row=0, column=3)        
+        b = Button(window, text="Clear", command=lambda window=window, paper=paper: self.clear_paper(window, paper))
+        b.grid(row=0, column=4)        
+        b = Button(window, text="Delete", command=lambda window=window, paper=paper: self.delete_paper(window, paper))
+        b.grid(row=0, column=5)        
+        l = Label(window, text="Title: %s" % paper.title)
+        l.grid(row=1, columnspan=5)
+        l = Label(window, text="Pages: %d" % paper.num_pages)
+        l.grid(row=2, columnspan=5)
+        l = Label(window, text="Rotated pages: %s" % str(paper.rotated_pages))
+        l.grid(row=3, columnspan=5)
+        b = Button(window, text="Attributes", command=lambda window=window, paper=paper: self.show_paper_attributes(window, paper))
+        b.grid(row=4, columnspan=5)        
+        b = Button(window, text="Datasets", command=lambda window=window, paper=paper: self.show_paper_datasets(window, paper))
+        b.grid(row=5, columnspan=5)        
+        b = Button(window, text="Dataset tables", command=lambda window=window, paper=paper: self.show_paper_datatables(window, paper))
+        b.grid(row=6, columnspan=5)
+        b = Button(window, text="Tables", command=lambda window=window, paper=paper: self.show_paper_page_tables(window, paper))
+        b.grid(row=7, columnspan=5)
+        b = Button(window, text="Visualize", command=lambda window=window, paper=paper: self.show_paper_visual(window, paper))
+        b.grid(row=8, columnspan=5)
+        b = Button(window, text="Export text", command=lambda paper=paper: self.export_paper_text(paper))
+        b.grid(row=9, columnspan=5)
+        b = Button(window, text="Close", command=window.destroy)
+        b.grid(row=10, columnspan=5)        
     def determine_paper_title_step_1(self, window, paper):
         # Search the first page in xml format for a possible paper titles. Ask user to pick one.
         if not window:
@@ -939,8 +939,8 @@ class Manager:
             elif empty.match(l):
                 d[size] += " "
                 
-        l = Label(window, text = "Please, select a string which looks like a title of the paper", font = HEADING_FONT)
-        l.grid(row = 0, columnspan = 2)
+        l = Label(window, text="Please, select a string which looks like a title of the paper", font=HEADING_FONT)
+        l.grid(row=0, columnspan=2)
         r = 1
         selection = StringVar()
         for key in d:
@@ -951,13 +951,13 @@ class Manager:
                     bt = d[key]
                 if r == 1:
                     selection.set(d[key])
-                button = Radiobutton(window, text = d[key], variable = selection, value = d[key], wraplength = 800)
-                button.grid(row = r, columnspan = 2)
+                button = Radiobutton(window, text=d[key], variable=selection, value=d[key], wraplength=800)
+                button.grid(row=r, columnspan=2)
                 r += 1
-        button = Button(window, text = "Proceed", command = lambda window = window, paper = paper, ptv = selection: self.determine_paper_title_step_2(window, paper, ptv))
-        button.grid(row = r, column = 0)
-        button = Button(window, text = "Cancel", command = window.destroy)
-        button.grid(row = r, column = 1)
+        button = Button(window, text="Proceed", command=lambda window=window, paper=paper, ptv=selection: self.determine_paper_title_step_2(window, paper, ptv))
+        button.grid(row=r, column=0)
+        button = Button(window, text="Cancel", command=window.destroy)
+        button.grid(row=r, column=1)
     def determine_paper_title_step_2(self, window, paper, possible_title_variable):
         # Compare the title string selected by user with the first page in txt format to construct a paper title.
         for c in window.winfo_children():
@@ -983,15 +983,15 @@ class Manager:
                 title += l.replace("\n", " ")
             elif title:
                 break
-        l = Label(window, text = "Please, correct the title, if needed.", font = HEADING_FONT)
-        l.grid(row = 0, columnspan = 2)
-        e = Entry(window, width = 150)
+        l = Label(window, text="Please, correct the title, if needed.", font=HEADING_FONT)
+        l.grid(row=0, columnspan=2)
+        e = Entry(window, width=150)
         e.insert(0, title)
-        e.grid(row = 1, columnspan = 2)
-        button = Button(window, text = "Done", command = lambda window = window, paper = paper, value = e: self.update_paper_parameter(window, paper, "title", value))
-        button.grid(row = 2, column = 0)
-        button = Button(window, text = "Back", command = lambda window = window, paper = paper: self.determine_paper_title_step_1(window, paper))
-        button.grid(row = 2, column = 1)
+        e.grid(row=1, columnspan=2)
+        button = Button(window, text="Done", command=lambda window=window, paper=paper, value=e: self.update_paper_parameter(window, paper, "title", value))
+        button.grid(row=2, column=0)
+        button = Button(window, text="Back", command=lambda window=window, paper=paper: self.determine_paper_title_step_1(window, paper))
+        button.grid(row=2, column=1)
     def update_paper_parameter(self, window, paper, param, value):
         # Update a part of paper metadata and proceed to corresponding window.
         if param == "title":
@@ -1013,7 +1013,7 @@ class Manager:
                     del datasets[c]
             if datasets:
                 for c in datasets:
-                    datasets[c].sort(key = lambda d: d[0])
+                    datasets[c].sort(key=lambda d: d[0])
             paper.datasets = datasets
             self.show_paper_datasets(window, paper)
         elif param == "datatables":
@@ -1048,20 +1048,20 @@ class Manager:
                 nw.title("No year found")
                 t = Text(nw)
                 t.insert(END, msg)
-                t.config(state = DISABLED)
-                t.grid(row = 0, column = 0)
-                b = Button(nw, text = "Close", command = nw.destroy)
-                b.grid(row = 1, column = 0)
+                t.config(state=DISABLED)
+                t.grid(row=0, column=0)
+                b = Button(nw, text="Close", command=nw.destroy)
+                b.grid(row=1, column=0)
                 del attrs["possible years"]
             self.update_paper_parameter(window, paper, "general", attrs)
         else:
             r = 0
             for a in paper.attributes_general:
-                l = Label(window, text = "%s:%s" % (a, str(paper.__dict__[a])))
-                l.grid(row = r, column = 0)
+                l = Label(window, text="%s:%s" % (a, str(paper.__dict__[a])))
+                l.grid(row=r, column=0)
                 r += 1
-            b = Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-            b.grid(row = r, column = 0)            
+            b = Button(window, text="Back", command=lambda window=window, paper=paper: self.show_paper_info(window, paper))
+            b.grid(row=r, column=0)            
     def show_paper_datasets(self, window, paper):
         # Determine / display paper datasets.
         for c in window.winfo_children():
@@ -1071,82 +1071,82 @@ class Manager:
             (text, datasets) = paper.find_datasets()
 
             if datasets:
-                cnvs = Canvas(window, width = 1200, height = 800)
-                cnvs.grid(row = 0, column = 0, columnspan = 2)
+                cnvs = Canvas(window, width=1200, height=800)
+                cnvs.grid(row=0, column=0, columnspan=2)
 
                 frame = Frame(cnvs)
-                cnvs.create_window(0, 0, window = frame, anchor = 'nw')
+                cnvs.create_window(0, 0, window=frame, anchor='nw')
                 
                 r = 0
                 dataset_entries = {}
                 for c in datasets:
-                    l = Label(frame, text = c, font = HEADING_FONT)
-                    l.grid(row = r, column = 0, columnspan = 2)
+                    l = Label(frame, text=c, font=HEADING_FONT)
+                    l.grid(row=r, column=0, columnspan=2)
                     category_selected = IntVar()
                     category_selected.set(1)
-                    check_category_b = Checkbutton(frame, var = category_selected)
-                    check_category_b.grid(row = r, column = 3)
+                    check_category_b = Checkbutton(frame, var=category_selected)
+                    check_category_b.grid(row=r, column=3)
                     r += 1
                     dataset_entries[c] = []
                     selected_list = []
-                    datasets[c].sort(key = lambda d: d[0])
+                    datasets[c].sort(key=lambda d: d[0])
                     for [name, special] in datasets[c]:
-                        l = Label(frame, text = special)
-                        l.grid(row = r, column = 0)
-                        e = Entry(frame, width = 150)
+                        l = Label(frame, text=special)
+                        l.grid(row=r, column=0)
+                        e = Entry(frame, width=150)
                         e.insert(0, name)
-                        e.grid(row = r, column = 1)
+                        e.grid(row=r, column=1)
                         selected = IntVar()
                         selected.set(1)
-                        b = Checkbutton(frame, var = selected) # TO DO: checkbuttons for "(un)select all". 
+                        b = Checkbutton(frame, var=selected) # TO DO: checkbuttons for "(un)select all". 
                         dataset_entries[c].append([e, special, selected])
                         selected_list.append(selected)
-                        b.grid(row = r, column = 3, pady = 5)
+                        b.grid(row=r, column=3, pady=5)
                         r += 1
-                    check_category_b.config(command = lambda v = category_selected, l = selected_list: check_all_button(v, l)) # This command is not called when individual checkbuttons are clicked - Therefore, global checkbox will not change its look.
+                    check_category_b.config(command=lambda v=category_selected, l=selected_list: check_all_button(v, l)) # This command is not called when individual checkbuttons are clicked - Therefore, global checkbox will not change its look.
 
-                scrlbr = Scrollbar(window, command = cnvs.yview)
-                scrlbr.grid(row = 0, column = 2, rowspan = 2, sticky = 'ns')
-                cnvs.configure(yscrollcommand = scrlbr.set)
+                scrlbr = Scrollbar(window, command=cnvs.yview)
+                scrlbr.grid(row=0, column=2, rowspan=2, sticky='ns')
+                cnvs.configure(yscrollcommand=scrlbr.set)
                 frame.update_idletasks()
-                cnvs.configure(width = frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
+                cnvs.configure(width=frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
                 
-                b = Button(window, text = "Done", command = lambda window = window, paper = paper, value = dataset_entries: self.update_paper_parameter(window, paper, "datasets", value))
-                b.grid(row = 1, column = 0)
-                b = Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-                b.grid(row = 1, column = 1)
+                b = Button(window, text="Done", command=lambda window=window, paper=paper, value=dataset_entries: self.update_paper_parameter(window, paper, "datasets", value))
+                b.grid(row=1, column=0)
+                b = Button(window, text="Cancel", command=lambda window=window, paper=paper: self.show_paper_info(window, paper))
+                b.grid(row=1, column=1)
             else:
                 datasets = {}
                 self.update_paper_parameter(window, paper, "datasets", datasets)
         else:
             if not paper.datasets:
-                l = Label(window, text = "No datasets found", font = HEADING_FONT)
-                l.grid(row = 0)
+                l = Label(window, text="No datasets found", font=HEADING_FONT)
+                l.grid(row=0)
             else:
-                cnvs = Canvas(window, width = 1200, height = 800)
-                cnvs.grid(row = 0, column = 0, columnspan = 2)
+                cnvs = Canvas(window, width=1200, height=800)
+                cnvs.grid(row=0, column=0, columnspan=2)
 
                 frame = Frame(cnvs)
-                cnvs.create_window(0, 0, window = frame, anchor = 'nw')
+                cnvs.create_window(0, 0, window=frame, anchor='nw')
 
                 r = 0
                 for k in paper.datasets:                
-                    l = Label(frame, text = k, font = HEADING_FONT)
-                    l.grid(row = r)
+                    l = Label(frame, text=k, font=HEADING_FONT)
+                    l.grid(row=r)
                     r += 1
 #                    for [d, special] in paper.datasets[k]:
                     for d in paper.datasets[k]:
-                        l = Label(frame, text = d)
-                        l.grid(row = r)
+                        l = Label(frame, text=d)
+                        l.grid(row=r)
                         r += 1
 
-                scrlbr = Scrollbar(window, command = cnvs.yview)
-                scrlbr.grid(row = 0, column = 2, rowspan = 2, sticky = 'ns')
-                cnvs.configure(yscrollcommand = scrlbr.set)
+                scrlbr = Scrollbar(window, command=cnvs.yview)
+                scrlbr.grid(row=0, column=2, rowspan=2, sticky='ns')
+                cnvs.configure(yscrollcommand=scrlbr.set)
                 frame.update_idletasks()
-                cnvs.configure(width = frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
-            b = Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-            b.grid(row = 1)
+                cnvs.configure(width=frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
+            b = Button(window, text="Back", command=lambda window=window, paper=paper: self.show_paper_info(window, paper))
+            b.grid(row=1)
     def show_paper_datatables(self, window, paper):
         # Determine / display paper tables which may contain datasets.
         for c in window.winfo_children():
@@ -1156,11 +1156,11 @@ class Manager:
             datatables = paper.find_datatables()
             if datatables:
 
-                cnvs = Canvas(window, width = 600, height = 800)
-                cnvs.grid(row = 0, column = 0, columnspan = 2)
+                cnvs = Canvas(window, width=600, height=800)
+                cnvs.grid(row=0, column=0, columnspan=2)
 
                 frame = Frame(cnvs)
-                cnvs.create_window(0, 0, window = frame, anchor = 'nw')
+                cnvs.create_window(0, 0, window=frame, anchor='nw')
 
                 num = 0
                 keys = datatables.keys()
@@ -1169,52 +1169,52 @@ class Manager:
                 for k in keys:
                     (header, rows) = datatables[k]
                     t_frame = Frame(frame)
-                    l = Label(t_frame, text = header, font = HEADING_FONT)
-                    l.grid(row = 0, column = 0, columnspan = len(rows[0]))
+                    l = Label(t_frame, text=header, font=HEADING_FONT)
+                    l.grid(row=0, column=0, columnspan=len(rows[0]))
                     r = 1
                     for row in rows:
                         c = 0
                         for line in row:
-                            l = Label(t_frame, text = line)
-                            l.grid(row = r, column = c)
+                            l = Label(t_frame, text=line)
+                            l.grid(row=r, column=c)
                             c += 1
                         r += 1
                         if r == 50:
-                            l = Label(t_frame, text = "Table is too large, omitting remaining rows.")
-                            l.grid(row = r, columnspan = c)
+                            l = Label(t_frame, text="Table is too large, omitting remaining rows.")
+                            l.grid(row=r, columnspan=c)
                             break
-                    t_frame.grid(row = num, column = 0)
+                    t_frame.grid(row=num, column=0)
                     selected = IntVar()
                     selected.set(1)
-                    b = Checkbutton(t_frame, var = selected) # TO DO: checkbuttons for "(un)select all".
-                    b.grid(row = 0, column = len(rows[0]))
+                    b = Checkbutton(t_frame, var=selected) # TO DO: checkbuttons for "(un)select all".
+                    b.grid(row=0, column=len(rows[0]))
                     datatables_s.append([k, header, rows, selected])
                     num += 1
 
-                scrlbr = Scrollbar(window, command = cnvs.yview)
-                scrlbr.grid(row = 0, column = 2, rowspan = 2, sticky = 'ns')
-                cnvs.configure(yscrollcommand = scrlbr.set)
+                scrlbr = Scrollbar(window, command=cnvs.yview)
+                scrlbr.grid(row=0, column=2, rowspan=2, sticky='ns')
+                cnvs.configure(yscrollcommand=scrlbr.set)
                 frame.update_idletasks()
-                cnvs.configure(width = frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
+                cnvs.configure(width=frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
                 
-                b = Button(window, text = "Done", command = lambda window = window, paper = paper, value = datatables_s: self.update_paper_parameter(window, paper, "datatables", value))
-                b.grid(row = 1, column = 0)
-                b = Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-                b.grid(row = 1, column = 1)
+                b = Button(window, text="Done", command=lambda window=window, paper=paper, value=datatables_s: self.update_paper_parameter(window, paper, "datatables", value))
+                b.grid(row=1, column=0)
+                b = Button(window, text="Cancel", command=lambda window=window, paper=paper: self.show_paper_info(window, paper))
+                b.grid(row=1, column=1)
             else:
                 datatables = {}
                 self.update_paper_parameter(window, paper, "datatables", datatables)
         else:
             if not paper.datatables:
-                l = Label(window, text = "No datatables found", font = HEADING_FONT)
-                l.grid(row = 0)
+                l = Label(window, text="No datatables found", font=HEADING_FONT)
+                l.grid(row=0)
                 r = 1
             else:
-                cnvs = Canvas(window, width = 1200, height = 800)
-                cnvs.grid(row = 0, column = 0, columnspan = 2)
+                cnvs = Canvas(window, width=1200, height=800)
+                cnvs.grid(row=0, column=0, columnspan=2)
 
                 frame = Frame(cnvs)
-                cnvs.create_window(0, 0, window = frame, anchor = 'nw')
+                cnvs.create_window(0, 0, window=frame, anchor='nw')
 
                 num = 0
                 keys = paper.datatables.keys()
@@ -1222,45 +1222,45 @@ class Manager:
                 for k in keys:
                     (header, rows) = paper.datatables[k]
                     t_frame = Frame(frame)
-                    l = Label(t_frame, text = header, font = HEADING_FONT)
-                    l.grid(row = 0, column = 0, columnspan = len(rows[0]))
+                    l = Label(t_frame, text=header, font=HEADING_FONT)
+                    l.grid(row=0, column=0, columnspan=len(rows[0]))
                     r = 1
                     for row in rows:
                         c = 0
                         for line in row:
-                            l = Label(t_frame, text = line)
-                            l.grid(row = r, column = c)
+                            l = Label(t_frame, text=line)
+                            l.grid(row=r, column=c)
                             c += 1
                         r += 1
                         if r == 50:
-                            l = Label(t_frame, text = "Table is too large, omitting remaining rows.")
-                            l.grid(row = r, columnspan = c)
+                            l = Label(t_frame, text="Table is too large, omitting remaining rows.")
+                            l.grid(row=r, columnspan=c)
                             break
-                    t_frame.grid(row = num, column = 0)
+                    t_frame.grid(row=num, column=0)
                     num += 1
 
-                scrlbr = Scrollbar(window, command = cnvs.yview)
-                scrlbr.grid(row = 0, column = 2, rowspan = 2, sticky = 'ns')
-                cnvs.configure(yscrollcommand = scrlbr.set)
+                scrlbr = Scrollbar(window, command=cnvs.yview)
+                scrlbr.grid(row=0, column=2, rowspan=2, sticky='ns')
+                cnvs.configure(yscrollcommand=scrlbr.set)
                 frame.update_idletasks()
-                cnvs.configure(width = frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
-            b = Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-            b.grid(row = 1)
-    def show_paper_page_tables(self, window, paper, e = False):
+                cnvs.configure(width=frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
+            b = Button(window, text="Back", command=lambda window=window, paper=paper: self.show_paper_info(window, paper))
+            b.grid(row=1)
+    def show_paper_page_tables(self, window, paper, e=False):
         # Extract tables from a page and display them. Debug function.
         if not e:
             for c in window.winfo_children():
                 c.destroy()
             window.title("Select page")
-            l = Label(window, text = "Page number(1 - %d):" % (paper.num_pages))
-            l.grid(row = 0, column = 0)
-            e = Entry(window, width = 10)
-            e.grid(row = 0, column = 1)
+            l = Label(window, text="Page number(1 - %d):" % (paper.num_pages))
+            l.grid(row=0, column=0)
+            e = Entry(window, width=10)
+            e.grid(row=0, column=1)
             e.focus_set()
-            b = Button(window, text = "Proceed", command = lambda window = window, paper = paper, e = e: self.show_paper_page_tables(window, paper, e))
-            b.grid(row = 1, column = 0)
-            b = Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-            b.grid(row = 1, column = 1)
+            b = Button(window, text="Proceed", command=lambda window=window, paper=paper, e=e: self.show_paper_page_tables(window, paper, e))
+            b.grid(row=1, column=0)
+            b = Button(window, text="Cancel", command=lambda window=window, paper=paper: self.show_paper_info(window, paper))
+            b.grid(row=1, column=1)
         else:
             number = e.get()
             if not number.isdigit():
@@ -1276,38 +1276,38 @@ class Manager:
                 tables = get_tables_from_text(text)
                 for table_num in range(0, len(tables)):
                     frame = Frame(window)
-                    l = Label(frame, text = "Table %d" % table_num)
-                    l.grid(row = 0, column = 0, columnspan = len(tables[table_num].rows[0]))
+                    l = Label(frame, text="Table %d" % table_num)
+                    l.grid(row=0, column=0, columnspan=len(tables[table_num].rows[0]))
                     r = 1
                     for row in tables[table_num].rows:
                         c = 0
                         for line in row:
-                            l = Label(frame, text = line.text)
-                            l.grid(row = r, column = c)
+                            l = Label(frame, text=line.text)
+                            l.grid(row=r, column=c)
                             c += 1
                         r += 1
-                    frame.grid(row = table_num, column = 0)
+                    frame.grid(row=table_num, column=0)
                     table_num += 1
                 if not tables:
-                    l = Label(window, text = "No tables found on page %d" % (number))
-                    l.grid(row = 0, column = 0)
+                    l = Label(window, text="No tables found on page %d" % (number))
+                    l.grid(row=0, column=0)
                     table_num = 1
-                b = Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-                b.grid(row = table_num, column = 0)
-    def show_paper_visual(self, window, paper, e = False):
+                b = Button(window, text="Back", command=lambda window=window, paper=paper: self.show_paper_info(window, paper))
+                b.grid(row=table_num, column=0)
+    def show_paper_visual(self, window, paper, e=False):
         if not e:
             for c in window.winfo_children():
                 c.destroy()
             window.title("Select page")
-            l = Label(window, text = "Page number(1 - %d):" % (paper.num_pages))
-            l.grid(row = 0, column = 0)
-            e = Entry(window, width = 10)
-            e.grid(row = 0, column = 1)
+            l = Label(window, text="Page number(1 - %d):" % (paper.num_pages))
+            l.grid(row=0, column=0)
+            e = Entry(window, width=10)
+            e.grid(row=0, column=1)
             e.focus_set()
-            b = Button(window, text = "Proceed", command = lambda window = window, paper = paper, e = e: self.show_paper_visual(window, paper, e))
-            b.grid(row = 1, column = 0)
-            b = Button(window, text = "Cancel", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-            b.grid(row = 1, column = 1)
+            b = Button(window, text="Proceed", command=lambda window=window, paper=paper, e=e: self.show_paper_visual(window, paper, e))
+            b.grid(row=1, column=0)
+            b = Button(window, text="Cancel", command=lambda window=window, paper=paper: self.show_paper_info(window, paper))
+            b.grid(row=1, column=1)
         else:
             number = e.get()
             if not number.isdigit():
@@ -1319,8 +1319,8 @@ class Manager:
                 for c in window.winfo_children():
                     c.destroy()
                 window.title("Visualization of %s (page %d)" % (paper.fname, number))
-                cnvs = Canvas(window, width = 1200, height = 800)
-                cnvs.grid(row = 0, column = 0, columnspan = 2)
+                cnvs = Canvas(window, width=1200, height=800)
+                cnvs.grid(row=0, column=0, columnspan=2)
 
                 text = paper.get_xml_page(number, True)
                 rows = analyze_page(text)
@@ -1338,10 +1338,10 @@ class Manager:
                         header_row = False
                         color = "black"
                     for l in row:
-                        cnvs.create_rectangle((l.left, l.top + 10, l.right, l.bottom + 10), outline = color)
+                        cnvs.create_rectangle((l.left, l.top + 10, l.right, l.bottom + 10), outline=color)
                 
-                b = Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
-                b.grid(row = 1, column = 0)
+                b = Button(window, text="Back", command=lambda window=window, paper=paper: self.show_paper_info(window, paper))
+                b.grid(row=1, column=0)
     def export_paper_text(self, paper):
         # Export full text of a paper into a file.
         with asksaveasfile() as f:
@@ -1355,7 +1355,7 @@ class Manager:
             text = p.get_text()
             with open(path_join(d, "%s.txt" % (p.fname)), "w") as f:
                 f.write(text)
-    def export_all(self, quick = False, n = None, n_p = None, errors = None, no_attr = None):
+    def export_all(self, quick=False, n=None, n_p=None, errors=None, no_attr=None):
         # Export all papers' metadata. Quick export: determine metadata first if none is available, skipping all user interaction.
         if n is None:
             if self.unsaved_papers():

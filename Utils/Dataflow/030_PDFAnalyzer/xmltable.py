@@ -15,7 +15,7 @@ class TextLine:
     re_text_symbol = re.compile("<text font.+>([^ ]+)</text>")
     re_text_symbol_params = re.compile("<text font=\"(.+)\" bbox=\".+\" size=\"(.+)\">([^ ]+)</text>")
     re_text_space = re.compile("<text> </text>")
-    def __init__(self, params = False, text_symbols = None):
+    def __init__(self, params=False, text_symbols=None):
         if isinstance(params, str) or isinstance(params, unicode): # Definition by xml text.
             lines = params.split("\n")
 
@@ -139,7 +139,7 @@ class Table:
                 row = self.construct_row(l, t)
                 rows.append(row)
                 t += row
-        rows.sort(key = lambda row: row_centery(row))
+        rows.sort(key=lambda row: row_centery(row))
 
         self.rows = [] # Remove rows which contain date - this is used because sometimes date stamped on a page gets caught while we are searching for table lines.
         for row in rows:
@@ -149,7 +149,7 @@ class Table:
                     date_row = True
                     break
             if not date_row:
-                row.sort(key = lambda l: l.center[0])
+                row.sort(key=lambda l: l.center[0])
                 self.rows.append(row)
 
         r = len(self.rows) - 1 
@@ -191,8 +191,8 @@ class Table:
         if self.rows: # If not all rows have same length, attempt to break short rows.
             i = 0
             while True:
-                len_min = len(min(self.rows, key = lambda row: len(row)))
-                len_max = len(max(self.rows, key = lambda row: len(row)))
+                len_min = len(min(self.rows, key=lambda row: len(row)))
+                len_max = len(max(self.rows, key=lambda row: len(row)))
                 if len_min == len_max:
                     break
                 else:
@@ -209,7 +209,7 @@ class Table:
             if l != line and l not in used_lines and line.same_row(l):
                 row.append(l)
         return row
-    def row_text(self, num = None, row = False):
+    def row_text(self, num=None, row=False):
         # Return a combined text of all row lines. Space between lines is replaced with "!".
         if num is not None or num == 0:
             row = self.rows[num]
@@ -237,8 +237,8 @@ class Table:
             main_centers.append((l.left + l.right) / 2)
         boundaries = [] # Calculate x boundaries of each column.
         for i in range(0, max_elements):
-            boundaries.append(min(normal_rows, key = lambda row: row[i].left)[i].left) # Most left point in a column.
-            boundaries.append(max(normal_rows, key = lambda row: row[i].right)[i].right) # Most right point in a column.
+            boundaries.append(min(normal_rows, key=lambda row: row[i].left)[i].left) # Most left point in a column.
+            boundaries.append(max(normal_rows, key=lambda row: row[i].right)[i].right) # Most right point in a column.
 #        print "BOUNDARIES", boundaries
         del boundaries[0]
         del boundaries[-1]
@@ -260,7 +260,7 @@ class Table:
                             l = None
                             break
                         else:
-                            closest_space = min(l.spaces_coords, key = lambda space: abs((space[1] + space[0]) / 2 - (cs[1] + cs[0]) / 2)) # Find the line space closest to column space.
+                            closest_space = min(l.spaces_coords, key=lambda space: abs((space[1] + space[0]) / 2 - (cs[1] + cs[0]) / 2)) # Find the line space closest to column space.
                             if abs((closest_space[1] + closest_space[0]) / 2 - (cs[1] + cs[0]) / 2) > 5000: # TO DO: fix this.
 #                                print "LINE ONLY HAS SPACES TOO FAR FROM COLUMN BOUNDARIES, REMOVING"
                                 l = None
@@ -288,9 +288,9 @@ class Table:
                         nl = TextLine([c - 1, new_row[0].top, c + 1, new_row[0].bottom, "EMPTY", []])
                         new_row.append(nl)
                         num_lines += 1
-                new_row.sort(key = lambda l: l.center[0])
+                new_row.sort(key=lambda l: l.center[0])
                 self.rows.append(new_row)
-        self.rows.sort(key = lambda row: row_centery(row))
+        self.rows.sort(key=lambda row: row_centery(row))
         
 def get_tables_from_text(text):
     # Get tables from a xml page text.
@@ -307,11 +307,11 @@ def get_tables_from_text(text):
         else:
             lines.append(tl)
 
-    top = max(table_headers + lines, key = lambda l: l.top).top # Find the highest top coordinate possible and use it as a zero point for new Y axis.
+    top = max(table_headers + lines, key=lambda l: l.top).top # Find the highest top coordinate possible and use it as a zero point for new Y axis.
     for l in table_headers + lines:
         l.swap_y(top)
 
-    table_headers.sort(key = lambda x: x.center[1])
+    table_headers.sort(key=lambda x: x.center[1])
 
     table_lines = []
     tables = []
@@ -337,7 +337,7 @@ def analyze_page(text):
         tl = TextLine(l)
         lines.append(tl)
 
-    top = max(lines, key = lambda l: l.top).top # Find the highest top coordinate possible and use it as a zero point for new Y axis.
+    top = max(lines, key=lambda l: l.top).top # Find the highest top coordinate possible and use it as a zero point for new Y axis.
     for l in lines:
         l.swap_y(top)
 
@@ -349,10 +349,10 @@ def analyze_page(text):
             for l in lines:
                 if l != line and l not in t and line.same_row(l):
                     row.append(l)
-            row.sort(key = lambda l: l.center[0])
+            row.sort(key=lambda l: l.center[0])
             rows.append(row)
             t += row
-    rows.sort(key = lambda row: row_centery(row))
+    rows.sort(key=lambda row: row_centery(row))
 
     return rows
 ##    for row in rows:
