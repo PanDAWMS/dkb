@@ -443,9 +443,9 @@ def json2TTL(glance_id, data):
     else:
         docGUID = generateNewGUID(ontology_params['document_resource'])
         ttl += '<{docGUID}> a <{ontology}#SupportingDocument> .\n'.format(docGUID=docGUID,
-                                                                      **ontology_params)
+                                                                          **ontology_params)
         ttl += '<{docGUID}> <{ontology}#hasGLANCE_ID> {value} .\n'.format(docGUID=docGUID, value=glance_id,
-                                                                      **ontology_params)
+                                                                          **ontology_params)
     report_numbers_processing(data['report_number'], data)
     if 'abstract' in data:              data['abstract']    = fixString(data['abstract']['summary'])
     if 'title' in data:                 data['title']       = fixString(data['title']['title'])
@@ -455,7 +455,7 @@ def json2TTL(glance_id, data):
         curr_value = data[item['CDS']]
         if type(curr_value) is str:
             ttl += '<{docGUID}> <{ontology}#{ONTO}> "{value}" .\n'.format(docGUID=docGUID,
-                                                                        ONTO=item['ONTO'], value=curr_value,
+                                                                          ONTO=item['ONTO'], value=curr_value,
                                                                           **ontology_params)
         elif type(curr_value) is int:
             ttl += '<{docGUID}> <{ontology}#{ONTO}> {value} .\n'.format(docGUID=docGUID,

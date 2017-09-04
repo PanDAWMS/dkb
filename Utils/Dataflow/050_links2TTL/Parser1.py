@@ -171,7 +171,7 @@ def notes2TTL(notes):
                  'graph': GRAPH,
                  'id': note["id"],
                  'label': TTL_escape(note["label"]),
-#                 'label': note["label"].translate(str.maketrans({"'":  r"\'"})),
+                 #                 'label': note["label"].translate(str.maketrans({"'":  r"\'"})),
                  'url': note["url"]
                 }
     noteTriplet = "{noteSubject} a <{ontology}#SupportingDocument> .\n".format(**noteAttrs)
@@ -201,8 +201,8 @@ def doc2TTL(item):
                'id': item["id"],
                'short_title': TTL_escape(item["short_title"]),
                'full_title': TTL_escape(item["full_title"]),
-#               'short_title': item["short_title"].translate(str.maketrans({"\\": r"\\", "'":  r"\'"})),
-#               'full_title': item["full_title"].translate(str.maketrans({"\\": r"\\", "'":  r"\'"})),
+               #               'short_title': item["short_title"].translate(str.maketrans({"\\": r"\\", "'":  r"\'"})),
+               #               'full_title': item["full_title"].translate(str.maketrans({"\\": r"\\", "'":  r"\'"})),
                'ref_code': item["ref_code"]
               }
   triplet = "{docSubject} a <{ontology}#Paper> .\n".format(**OWLPARAMS)
@@ -295,40 +295,40 @@ def main(argv):
   # Parsing command-line arguments
   parser = argparse.ArgumentParser(description=u'Converts Paper and SupportingDocuments basic metadata from JSON format to TTL.')
   parser.add_argument('infiles', metavar=u'JSON-FILE', type=argparse.FileType('r'), nargs='*',
-                     help=u'Source JSON file.')
+                      help=u'Source JSON file.')
   parser.add_argument('-g', '--graph', action='store', type=str, nargs='?',
-                     help='Virtuoso DB graph name (default: %(default)s)',
-                     default=GRAPH,
-                     const=GRAPH,
-                     metavar='GRAPH',
-                     dest='GRAPH'
+                      help='Virtuoso DB graph name (default: %(default)s)',
+                      default=GRAPH,
+                      const=GRAPH,
+                      metavar='GRAPH',
+                      dest='GRAPH'
                      )
   parser.add_argument('-O', '--ontology', action='store', type=str, nargs='?',
-                     help='Virtuoso ontology prefix (default: %(default)s)',
-                     default=ONTOLOGY,
-                     const=ONTOLOGY,
-                     metavar='ONT',
-                     dest='ONTOLOGY'
+                      help='Virtuoso ontology prefix (default: %(default)s)',
+                      default=ONTOLOGY,
+                      const=ONTOLOGY,
+                      metavar='ONT',
+                      dest='ONTOLOGY'
                      )
   parser.add_argument('-o', '--output', action='store', type=argparse.FileType('w'), nargs='?',
-                     help=u'Name of the file to store triples (default: <CSV-FILE without CSV>.ttl).',
-                     metavar='OUTFILE',
-                     dest='outfile'
+                      help=u'Name of the file to store triples (default: <CSV-FILE without CSV>.ttl).',
+                      metavar='OUTFILE',
+                      dest='outfile'
                      )
   parser.add_argument('-m', '--mode', action='store', nargs='?',
-                     help=u'''VALUES:
+                      help=u'''VALUES:
 f -- works with files (default)
 s -- run in a Kafka Streams mode (as processor).
 Ignore options: -o|--output (use STDOUT)
 ''',
-                     default='f',
-                     dest='processing_mode',
-                     choices=['f','s']
+                      default='f',
+                      dest='processing_mode',
+                      choices=['f','s']
                      )
   parser.add_argument('-d', '--delimiter', action='store', nargs='?',
-                     help=u'EOP marker for Kafka mode (default: \0)',
-                     default='',
-                     dest='EOPmarker'
+                      help=u'EOP marker for Kafka mode (default: \0)',
+                      default='',
+                      dest='EOPmarker'
                      )
   parser.add_argument('-l', '--guid-log', action='store', type=argparse.FileType('w+'), nargs='?',
                       help=u'File to store already assigned GUID for documents.',

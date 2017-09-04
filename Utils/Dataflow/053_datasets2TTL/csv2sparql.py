@@ -67,22 +67,22 @@ OWL_PARAMS_OBJ = {
 
 # Known generator names
 GENERATORS = ['acermc','alpgen',
-            'charybdis','comphep',
-            'evtgen',                  # <--- There might also be smth like 'EG'
-            'gg2vv',                        ## but how do we supposed to know
-            'herwig','herwig\+\+','hijing', ## if it is 'EG' or 'powhEG', or any
-            'isajet',                       ## other word?
-            'jimmy',
-            'pythia8','pythia6','pythiab','pythia','py8',
-            'madgraph5','madgraph','mcatnlo','mc@nlo',
-            'photos','powheg',
-            'sherpa',
-            'tauola'
+              'charybdis','comphep',
+              'evtgen',                  # <--- There might also be smth like 'EG'
+              'gg2vv',                        ## but how do we supposed to know
+              'herwig','herwig\+\+','hijing', ## if it is 'EG' or 'powhEG', or any
+              'isajet',                       ## other word?
+              'jimmy',
+              'pythia8','pythia6','pythiab','pythia','py8',
+              'madgraph5','madgraph','mcatnlo','mc@nlo',
+              'photos','powheg',
+              'sherpa',
+              'tauola'
            ]
 # Known synonyms from the list above.
 # Basic name is a key, and value is a list of synonyms.
 GEN_SYN = { 'mc@nlo':['mcatnlo'],
-           'pythia8':['py8']
+            'pythia8':['py8']
          }
 
 # Regular expressions to handle dataset name
@@ -394,57 +394,57 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
 def main(argv):
   parser = argparse.ArgumentParser(description=u'Reads CSV-file with information about datasets and produces files with triples and Dataset-Document linking statements.')
   parser.add_argument('csv', metavar=u'CSV-FILE', type=argparse.FileType('r'), nargs='*',
-                     help=u'Source CSV-file.')
+                      help=u'Source CSV-file.')
   parser.add_argument('-g', '--graph', action='store', type=str, nargs='?',
-                     help='Virtuoso DB graph name (default: %(default)s)',
-                     default='http://nosql.tpu.ru:8890/DAV/ATLAS',
-                     const='http://nosql.tpu.ru:8890/DAV/ATLAS',
-                     metavar='GRAPH',
-                     dest='graph'
+                      help='Virtuoso DB graph name (default: %(default)s)',
+                      default='http://nosql.tpu.ru:8890/DAV/ATLAS',
+                      const='http://nosql.tpu.ru:8890/DAV/ATLAS',
+                      metavar='GRAPH',
+                      dest='graph'
                      )
   parser.add_argument('-O', '--ontology', action='store', type=str, nargs='?',
-                     help='Virtuoso ontology prefix (default: %(default)s)',
-                     default='http://nosql.tpu.ru/ontology/ATLAS',
-                     const='http://nosql.tpu.ru/ontology/ATLAS',
-                     metavar='ONT',
-                     dest='ontology'
+                      help='Virtuoso ontology prefix (default: %(default)s)',
+                      default='http://nosql.tpu.ru/ontology/ATLAS',
+                      const='http://nosql.tpu.ru/ontology/ATLAS',
+                      metavar='ONT',
+                      dest='ontology'
                      )
   parser.add_argument('-l', '--link-file', action='store', type=argparse.FileType('w'), nargs='?',
-                     help=u'Name of the file to store Dataset-Document linking statements (default: <CSV-FILE without CSV>.sparql). WARNING: please use custom names with ".sparql" extention.',
-                     metavar='FILE',
-                     dest='linkfile'
+                      help=u'Name of the file to store Dataset-Document linking statements (default: <CSV-FILE without CSV>.sparql). WARNING: please use custom names with ".sparql" extention.',
+                      metavar='FILE',
+                      dest='linkfile'
                      )
   parser.add_argument('-N', '--link-number', action='store', type=int, nargs='?',
-                     help=u'Maximum number of links in one link query file.',
-                     const='6000',
-                     default=6000,
-                     dest='N'
+                      help=u'Maximum number of links in one link query file.',
+                      const='6000',
+                      default=6000,
+                      dest='N'
                      )
   parser.add_argument('-o', '--output', action='store', type=argparse.FileType('w'), nargs='?',
-                     help=u'Name of the file to store triples (default: <CSV-FILE without CSV>.ttl).',
-                     metavar='FILE',
-                     dest='outfile'
+                      help=u'Name of the file to store triples (default: <CSV-FILE without CSV>.ttl).',
+                      metavar='FILE',
+                      dest='outfile'
                      )
   parser.add_argument('-m', '--mode', action='store', nargs='?',
-                     help=u'''VALUES: m -- run in Hadoop MapReduce mode (as mapper).
+                      help=u'''VALUES: m -- run in Hadoop MapReduce mode (as mapper).
 s -- run in a Kafka Streams mode (as processor).
 Ignore options: -o|--output (stdout), -l|--link-file (stdout) , -N|--link-number (1);
 Default mode (-T|-L): TTL.''',
-                     default=None,
-                     dest='processing_mode',
-                     choices=['m','s',None]
+                      default=None,
+                      dest='processing_mode',
+                      choices=['m','s',None]
                      )
   parser.add_argument('-T', '--ttl', action='store_const',
-                     help=u'Generate TTL file only.',
-                     const='ttl',
-                     default=None,
-                     dest='mode'
+                      help=u'Generate TTL file only.',
+                      const='ttl',
+                      default=None,
+                      dest='mode'
                      )
   parser.add_argument('-L', '--link', action='store_const',
-                     help=u'Generate link (SPARQL) file only.',
-                     const='link',
-                     default=None,
-                     dest='mode'
+                      help=u'Generate link (SPARQL) file only.',
+                      const='link',
+                      default=None,
+                      dest='mode'
                      )
 
 

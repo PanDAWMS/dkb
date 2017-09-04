@@ -432,7 +432,7 @@ def json2TTL(data):
             curr_value = data[item['CDS']]
             if type(curr_value) is str:
                 ttl += '<{docGUID}> <{ontology}#{ONTO}> "{value}" .\n'.format(docGUID=docGUID,
-                                                                            ONTO=item['ONTO'], value=curr_value,
+                                                                              ONTO=item['ONTO'], value=curr_value,
                                                                               **ontology_params)
             elif type(curr_value) is int:
                 ttl += '<{docGUID}> <{ontology}#{ONTO}> {value} .\n'.format(docGUID=docGUID,
@@ -509,7 +509,7 @@ def process_journals(data, docGUID):
         id = generateJournalIssueID(item)
         if getjournalIssueIDByID(id) == True:
             return _ttl_journal2paper.format(journalIssueID=id,
-                                            docGUID=docGUID, **ontology_params)
+                                             docGUID=docGUID, **ontology_params)
         else:
             return _ttl_new_journalIssue.format(journalIssueID=id, title=item['title'], volume=item['volume'],
                                                 year=item['year'], docGUID=docGUID, **ontology_params)
