@@ -45,7 +45,7 @@ OWL_PARAMS_NUMSTR={
 
 # Only numeric properties
 OWL_PARAMS_NUM={
-           'DSID'          :'hasDatasetID',
+    'DSID'          :'hasDatasetID',
            'events'        :'hasEvents',
            'files'         :'hasFiles',
            'datasetSize'   :'hasDatasetSize',  # hasFiles * hasFileSizeMB
@@ -54,7 +54,7 @@ OWL_PARAMS_NUM={
 
 # Object properties: <dataset> <#property> <DBobject>
 OWL_PARAMS_OBJ={
-           'campaign'      :'hasCampaign',
+    'campaign'      :'hasCampaign',
            'dataFormat'    :'hasDataSampleFormat',
            'datatype'      :'hasDataSampleType', # #Container|#MC|#RealData
            'generator'     :'hasGenerator',

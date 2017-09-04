@@ -7,12 +7,12 @@ from xmltable import *
 
 CONFIG_FILE = "config.json"
 default_cfg = {
-        "WORK_DIR":             os.getcwd(),
+    "WORK_DIR":             os.getcwd(),
         "DETERMINE_TITLE":      False,
         "OPEN_INTERVALS":       False,
         "HDFS_PDF_DIR":         "",
         "HDFS_DOWNLOAD_COMMAND":"hadoop fs -get"
-        }
+    }
 
 def load_config(default_cfg):
     save_needed = False

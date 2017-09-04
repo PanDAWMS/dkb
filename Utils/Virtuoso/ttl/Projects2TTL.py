@@ -56,7 +56,7 @@ for i in lines:
 	if not i.startswith("#"):
 		project = "<%s/project/%s>" % (graph,i.rstrip('\n'))
 		PROJECTS = {
-			'graph': graph,
+                    'graph': graph,
 			'ontology': ontology,
 			'project_name': project
 		}

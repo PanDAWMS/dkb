@@ -85,7 +85,7 @@ for i, item in enumerate(input_data):
 		#deleting of newline symbol from description
 		description = input_data[i]['description'].replace("\n"," ")
 		DATAPERIODS = {
-			'graph': graph,
+                    'graph': graph,
 			'ontology': ontology,
 			'dataPeriod' : dataPeriod,
 			'project_name': project,
