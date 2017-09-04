@@ -867,7 +867,7 @@ class Manager:
             self.redraw()
     def delete_paper(self, window, paper):
         # Delete paper.
-        if tkMessageBox.askyesno("Delete paper?", "Are you sure you want to delete paper %s?"%(paper.fname)):
+        if tkMessageBox.askyesno("Delete paper?", "Are you sure you want to delete paper %s?" % (paper.fname)):
             self.papers.remove(paper)
             paper.delete()
             if window:
@@ -1057,7 +1057,7 @@ class Manager:
         else:
             r = 0
             for a in paper.attributes_general:
-                l = Label(window, text = "%s:%s"%(a, str(paper.__dict__[a])))
+                l = Label(window, text = "%s:%s" % (a, str(paper.__dict__[a])))
                 l.grid(row = r, column = 0)
                 r += 1
             b = Button(window, text = "Back", command = lambda window = window, paper = paper: self.show_paper_info(window, paper))
@@ -1252,7 +1252,7 @@ class Manager:
             for c in window.winfo_children():
                 c.destroy()
             window.title("Select page")
-            l = Label(window, text = "Page number(1 - %d):"%(paper.num_pages))
+            l = Label(window, text = "Page number(1 - %d):" % (paper.num_pages))
             l.grid(row = 0, column = 0)
             e = Entry(window, width = 10)
             e.grid(row = 0, column = 1)
@@ -1299,7 +1299,7 @@ class Manager:
             for c in window.winfo_children():
                 c.destroy()
             window.title("Select page")
-            l = Label(window, text = "Page number(1 - %d):"%(paper.num_pages))
+            l = Label(window, text = "Page number(1 - %d):" % (paper.num_pages))
             l.grid(row = 0, column = 0)
             e = Entry(window, width = 10)
             e.grid(row = 0, column = 1)
@@ -1399,7 +1399,7 @@ class Manager:
                         msg += "%s : %s\n\n" % (e, errors[e])
                 with open(NO_ATTRS_FILE, "w") as f:
                     for a in no_attr:
-                        f.write("No %s: %d out of %d papers (%f%%) \n"%(a, len(no_attr[a]), n_p, float(len(no_attr[a])) / n_p * 100))
+                        f.write("No %s: %d out of %d papers (%f%%) \n" % (a, len(no_attr[a]), n_p, float(len(no_attr[a])) / n_p * 100))
                         for p in no_attr[a]:
                             f.write(p + "\n")
                         f.write("\n")

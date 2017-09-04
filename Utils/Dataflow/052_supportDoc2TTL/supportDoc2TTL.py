@@ -106,7 +106,7 @@ _ttl_keyword = '''<{docGUID}> <{ontology}#hasKeyword> "{keyword}" .
 invalid_escape = re.compile(r'\\[0-7]{1,3}')  # up to 3 digits for byte values up to FF
 
 def usage():
-  msg='''
+  msg = '''
 USAGE
   ./getCDSPapers.py <options>
 
@@ -190,7 +190,7 @@ def main(argv):
     elif mode in ('t', 'test'):
         dir_name = os.path.dirname(input)
         for filename in os.listdir(dir_name):
-            with open(dir_name +"/"+ filename, 'r') as data_file:
+            with open(dir_name + "/" + filename, 'r') as data_file:
                 sys.stderr.write("Reading file " + str(filename))
                 content = data_file.read()
                 jsons = fix_improper_JSON_content(content)

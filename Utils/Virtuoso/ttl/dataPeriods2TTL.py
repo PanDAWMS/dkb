@@ -50,23 +50,23 @@ print("Current graph: " + graph + "\n")
 graph_answer = input("Would you like to choose another one? [Y/N] ")
 if graph_answer.lower() in ['y', 'yes']:
 	graph = input("Please, insert a graph: ")
-print("\nCurrent graph: " + graph +"\n")    
+print("\nCurrent graph: " + graph + "\n")    
 
 #choose ontology
-print("Current ontology: " + ontology +"\n")
+print("Current ontology: " + ontology + "\n")
 ontology_answer = input("Would you like to choose another one? [Y/N] ")
 if ontology_answer.lower() in ['y', 'yes']:
 	ontology = input("Please, insert an ontology: ")
-print("\nCurrent ontology: " + ontology +"\n")
+print("\nCurrent ontology: " + ontology + "\n")
 
 #path
 chosen_path = os.path.normpath(askopenfilename())
 
 #year
-year = '20'+ chosen_path.rstrip('.json')[len(chosen_path.rstrip('.json'))-2:len(chosen_path.rstrip('.json'))]
+year = '20' + chosen_path.rstrip('.json')[len(chosen_path.rstrip('.json')) - 2:len(chosen_path.rstrip('.json'))]
 
 #a ttl document with default name
-output_data = open("data_periods"+ year +".ttl", 'w')
+output_data = open("data_periods" + year + ".ttl", 'w')
 
 #input
 with open(chosen_path) as data_file:    

@@ -28,7 +28,7 @@ def main(argv):
 
    for item in data:
       os.system('cern-get-sso-cookie --krb -r -u %s -o %s' % (item['url'], cookie_path))
-      os.system('curl -k -L --cookie %s --cookie-jar %s %s -o %s' % (cookie_path, cookie_path, item['url'], 'InternalNotesPDF/'+item['id']+'.pdf'))
+      os.system('curl -k -L --cookie %s --cookie-jar %s %s -o %s' % (cookie_path, cookie_path, item['url'], 'InternalNotesPDF/' + item['id'] + '.pdf'))
 
 if __name__ == "__main__":
    main(sys.argv[1:])

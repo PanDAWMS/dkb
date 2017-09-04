@@ -24,7 +24,7 @@ import uuid
 import os
 
 def usage():
-  msg='''
+  msg = '''
 USAGE
   ./getCDSPapers.py <options>
 
@@ -78,12 +78,12 @@ def search_paper(cds, paper_info):
         cc - current collection (e.g. "ATLAS").  The collection the
                      user started to search/browse from.
    '''
-   sys.stderr.write(paper_info["id"]+"\n")
+   sys.stderr.write(paper_info["id"] + "\n")
    #results = cds.search(cc="ATLAS", aas=1, m1="e", op1="a", p1=paper_info["full_title"], f1="title", m2="a", op2="a", p2="ARTICLE, ATLAS_Papers", f2="collection", m3="a", p3=paper_info["ref_code"], f3="report_number", of="recjson")
    results = cds.search(cc="ATLAS", aas=1, m1="p", p1=paper_info["ref_code"], f1="reportnumber", m2="a", op2="a", p2="ARTICLE, ATLAS_Papers", f2="collection", of="recjson")
    try:
       res = json.loads(results)
-      sys.stderr.write("count = " + str(len(res))+"\n")
+      sys.stderr.write("count = " + str(len(res)) + "\n")
       for item in res:
          item['glance_id'] = paper_info["id"]
       return res
@@ -134,7 +134,7 @@ def main(argv):
       with open('list_of_papers_formatted.json') as data_file:
          data = json.load(data_file)
          for item in data:
-            results=search_paper(cds, item)
+            results = search_paper(cds, item)
             if not results: continue
             for res in results:
                if (collection_verification(res['collection']) == True):

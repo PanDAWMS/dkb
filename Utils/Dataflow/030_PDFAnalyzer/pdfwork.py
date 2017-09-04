@@ -28,7 +28,7 @@ def get_page_text(interpreter, page, tmp, rotation = 0):
     # interpreter - interpreter used by PDFMiner.
     # page - page object.
     # tmp - temporary file use to get processed text. Stack Overflow advices to create a new tmp file each time, but it must be specified when creating PDFMiner device object, so i'm not sure if that's possible.
-    page.rotate = (page.rotate+rotation) % 360
+    page.rotate = (page.rotate + rotation) % 360
     interpreter.process_page(page)
     tmp.seek(0)
     text = remove_ligatures(tmp.read())
@@ -94,7 +94,7 @@ def mine_text(infname, page_numbers = False, outtype = "text", rotated_pages = [
                         text = get_page_text(interpreter, page, tmp, 90)
 #                pages[n] = text
                 if folder and extension:
-                    with open(folder + "/%d.%s"%(n, extension), "w") as outf:
+                    with open(folder + "/%d.%s" % (n, extension), "w") as outf:
                         outf.write(text)
     #            outf.writelines(lines)            
             n += 1

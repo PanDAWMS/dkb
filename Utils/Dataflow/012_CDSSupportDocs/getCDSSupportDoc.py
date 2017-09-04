@@ -31,7 +31,7 @@ from requests.packages.urllib3.exceptions import InsecurePlatformWarning
 counter = 0
 
 def usage():
-   msg='''
+   msg = '''
 USAGE
   ./getCDSPapers.py <options>
 
@@ -97,14 +97,14 @@ class KerberizedCDSInvenioConnector(MyCDSInvenioConnector):
         kerberos.authGSSClientStep(vc,"")
         token = kerberos.authGSSClientResponse(vc)
 
-        headers = {'Authorization': 'Negotiate '+token}
+        headers = {'Authorization': 'Negotiate ' + token}
 
         self.browser = splinter.Browser('phantomjs',custom_headers=headers)
         self.browser.visit(self.server_url)
         self.browser.find_link_by_partial_text("Sign in").click()
 
       except kerberos.GSSError, e:
-        sys.stderr.write(str(e)+"\n")
+        sys.stderr.write(str(e) + "\n")
         sys.exit(3)
 
 def search_notes(cds, notes):
@@ -114,7 +114,7 @@ def search_notes(cds, notes):
    '''
    if notes == None: return {}
    if type(notes) != list: return None
-   results={}
+   results = {}
    for note in notes:
       results[note.get("id")] = search_note(cds,note)
 
@@ -132,7 +132,7 @@ def search_note(cds, note):
    url = url.replace('\\','')
    parsed = urlparse(url)
    if (parsed.netloc == 'cds.cern.ch' or parsed.netloc == 'cdsweb.cern.ch'):
-      sys.stderr.write(parsed.path+"\n")
+      sys.stderr.write(parsed.path + "\n")
       if (parsed.path[-1:] == '/'):
          recid = parsed.path[:-1].split('/')[-1]
       else:
@@ -152,7 +152,7 @@ def search_note(cds, note):
             sys.stderr.write("This Supporting Document is not available for unauthenticated user. Specify login/password or use Kerberos authentication.\n")
          else:
             sys.stderr.write("JSON decoding failed.\n")
-         results=None
+         results = None
 
    else:
       results = None
@@ -174,7 +174,7 @@ def input_file_handle(filename, cds):
          data = json.load(data_file)
 
    for item in data:
-      sys.stderr.write(item["id"]+"\n")
+      sys.stderr.write(item["id"] + "\n")
       results = search_notes(cds, item.get("supporting_notes",None))
       if not results: continue
       if type(results) != dict: continue
@@ -210,7 +210,7 @@ def input_stream_handle(stream,cds):
       if not results: continue
       for note_id in results:
          if results[note_id]:
-           sys.stdout.write(results[note_id]+"\n")
+           sys.stdout.write(results[note_id] + "\n")
 
       # Shell we mark the "end-of-processing" even when no data found?..
       sys.stdout.write("\0")
@@ -244,8 +244,8 @@ def main(argv):
 
    warnings.simplefilter("once",InsecurePlatformWarning)
 
-   if kerberos: Connector=KerberizedCDSInvenioConnector
-   else:        Connector=MyCDSInvenioConnector
+   if kerberos: Connector = KerberizedCDSInvenioConnector
+   else:        Connector = MyCDSInvenioConnector
 
    with Connector(login,password) as cds:
 

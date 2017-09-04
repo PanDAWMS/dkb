@@ -76,12 +76,12 @@ class TextLine:
             [self.left, self.top, self.right, self.bottom, self.text, self.spaces_coords] = params
 #        print self.text
 
-            self.center = [(self.left + self.right)/2, (self.top + self.bottom)/2]
+            self.center = [(self.left + self.right) / 2, (self.top + self.bottom) / 2]
     def swap_y(self, top):
         # Change Y-coords according to new Y-axis direction and position.
         self.top = top - self.top
         self.bottom = top - self.bottom
-        self.center = [(self.left + self.right)/2, (self.top + self.bottom)/2]
+        self.center = [(self.left + self.right) / 2, (self.top + self.bottom) / 2]
     def same_row(self, line):
         # Determine whether line and self belong to the same row or not via comparing y coord.
         if line.center[1] >= self.top and line.center[1] <= self.bottom:
@@ -234,7 +234,7 @@ class Table:
         main_centers = [] # Calculate x coord for centers of each column in first normal row.
         for l in main_row: 
 #            print "MAIN CENTER", (l.left + l.right)/2
-            main_centers.append((l.left + l.right)/2)
+            main_centers.append((l.left + l.right) / 2)
         boundaries = [] # Calculate x boundaries of each column.
         for i in range(0, max_elements):
             boundaries.append(min(normal_rows, key = lambda row: row[i].left)[i].left) # Most left point in a column.
@@ -244,7 +244,7 @@ class Table:
         del boundaries[-1]
         column_spaces = [] # Transform boundaries into spaces between columns.
         for i in range(0, len(boundaries) / 2):
-            column_spaces.append([boundaries[2 * i], boundaries[2 * i+1]])
+            column_spaces.append([boundaries[2 * i], boundaries[2 * i + 1]])
 #        for cs in column_spaces:
 #            print "COLUMN SPACE", column_spaces.index(cs), cs
         self.rows = normal_rows
@@ -260,8 +260,8 @@ class Table:
                             l = None
                             break
                         else:
-                            closest_space = min(l.spaces_coords, key = lambda space: abs((space[1] + space[0])/2 - (cs[1] + cs[0])/2)) # Find the line space closest to column space.
-                            if abs((closest_space[1] + closest_space[0])/2 - (cs[1] + cs[0])/2) > 5000: # TO DO: fix this.
+                            closest_space = min(l.spaces_coords, key = lambda space: abs((space[1] + space[0]) / 2 - (cs[1] + cs[0]) / 2)) # Find the line space closest to column space.
+                            if abs((closest_space[1] + closest_space[0]) / 2 - (cs[1] + cs[0]) / 2) > 5000: # TO DO: fix this.
 #                                print "LINE ONLY HAS SPACES TOO FAR FROM COLUMN BOUNDARIES, REMOVING"
                                 l = None
                                 break

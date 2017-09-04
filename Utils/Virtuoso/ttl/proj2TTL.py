@@ -51,14 +51,14 @@ print("Current graph: " + graph + "\n")
 graph_answer = input("Would you like to choose another one? [Y/N] ")
 if graph_answer.lower() in ['y', 'yes']:
 	graph = input("Please, insert a graph: ")
-print("\nCurrent graph: " + graph +"\n")    
+print("\nCurrent graph: " + graph + "\n")    
 
 #choose ontology
-print("Current ontology: " + ontology +"\n")
+print("Current ontology: " + ontology + "\n")
 ontology_answer = input("Would you like to choose another one? [Y/N] ")
 if ontology_answer.lower() in ['y', 'yes']:
 	ontology = input("Please, insert an ontology: ")
-print("\nCurrent ontology: " + ontology +"\n")
+print("\nCurrent ontology: " + ontology + "\n")
 
 #path
 chosen_path = os.path.normpath(askopenfilename())

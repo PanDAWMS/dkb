@@ -133,7 +133,7 @@ def linkTTL(doc, notes):
   if not notes:
     return None
   if type(notes) != list:
-    raise ValueError("linkTTL() expects 2nd parameter to be of type %s, got %s" %(list, type(notes)))
+    raise ValueError("linkTTL() expects 2nd parameter to be of type %s, got %s" % (list, type(notes)))
   result = ""
   docUOID = getUOID(doc)
   for note in notes:
@@ -232,7 +232,7 @@ def get_items(fds):
     sys.stderr.write("No input file descriptors specified. Exiting.\n")
     return
   if type(fds) != list:
-    sys.stderr.write("(ERROR) get_items(): expected patameter of type %s, get %s.\n" %(list, type(fds)))
+    sys.stderr.write("(ERROR) get_items(): expected patameter of type %s, get %s.\n" % (list, type(fds)))
     return
 
   for data_file in fds:
@@ -262,7 +262,7 @@ def outputTTL(fd, *TTL):
   Outputs produced TTL statements to a given file descriptor.
   """
   if type(fd) != file:
-    raise ValueError("outputTTL() expects 1st parameter to be of type %s, got %s" %(file, type(fd)))
+    raise ValueError("outputTTL() expects 1st parameter to be of type %s, got %s" % (file, type(fd)))
   try:
     for ttl in TTL:
       if ttl:
@@ -338,7 +338,7 @@ Ignore options: -o|--output (use STDOUT)
                       const=None
                      )
 
-  args=parser.parse_args(argv)
+  args = parser.parse_args(argv)
   if args.processing_mode == 'f':
     if not args.infiles:
       sys.stderr.write('(INFO) No input JSON file presented. Switching to streaming mode.\n')
