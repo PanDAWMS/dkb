@@ -299,8 +299,8 @@ def extra_string(extra={}):
 
 def checkExtra(key, val):
   checkParameters = {
-    'glanceid': {
-      'type':int
+      'glanceid': {
+          'type':int
     }
   }
   if key in checkParameters:

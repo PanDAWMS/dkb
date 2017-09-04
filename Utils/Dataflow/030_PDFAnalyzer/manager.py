@@ -12,7 +12,7 @@ default_cfg = {
         "OPEN_INTERVALS":       False,
         "HDFS_PDF_DIR":         "",
         "HDFS_DOWNLOAD_COMMAND":"hadoop fs -get"
-    }
+        }
 
 def load_config(default_cfg):
     save_needed = False
