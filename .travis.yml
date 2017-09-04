@@ -1,0 +1,21 @@
+language: python
+python:
+    - 2.7
+
+notifications:
+    email: false
+
+before_install:
+    - pip install pep8
+
+script:
+    - errors=`find . -name "*.py" -exec pep8 --select E121,E122,E126,E128,E203,E225,E226,E228,E231,E251,E261,E262,E265,W291,W293,E502 {} \; `
+    - num_errors=`echo -n "$errors" | wc -l`
+    - |
+        if [ $num_errors -eq 0 ]; then
+          true 
+        else
+          echo "$errors"
+          false 
+        fi
+
