@@ -56,7 +56,7 @@ OWL_PARAMS_NUM = {
 OWL_PARAMS_OBJ = {
     'campaign': 'hasCampaign',
            'dataFormat': 'hasDataSampleFormat',
-           'datatype': 'hasDataSampleType', # #Container|#MC|#RealData
+           'datatype': 'hasDataSampleType',  # Container|#MC|#RealData
            'generator': 'hasGenerator',
            'physGroup': 'hasPhysGroup',
            'prodStep': 'hasProductionStep',
@@ -70,7 +70,7 @@ GENERATORS = ['acermc', 'alpgen',
               'charybdis', 'comphep',
               'evtgen',                  # <--- There might also be smth like 'EG'
               'gg2vv',                        ## but how do we supposed to know
-              'herwig', 'herwig\+\+', 'hijing', ## if it is 'EG' or 'powhEG', or any
+              'herwig', 'herwig\+\+', 'hijing',  # if it is 'EG' or 'powhEG', or any
               'isajet',                       ## other word?
               'jimmy',
               'pythia8', 'pythia6', 'pythiab', 'pythia', 'py8',
@@ -190,7 +190,7 @@ def add_ttl(line, outfile, triple_map):
     if p in OWL_PARAMS_NUMSTR.keys():
       val = str(val).strip('[]')  # "'a', 'b', 'c'" 4strings OR "1, 2, 3" 4ints
       if p in OWL_PARAMS_NUM.keys():
-        val = val.replace("'", '') # As numeric values could be read as strings
+        val = val.replace("'", '')  # As numeric values could be read as strings
       prop = OWL_PARAMS_NUMSTR[p]
     elif p in OWL_PARAMS_OBJ.keys():
       prop += OWL_PARAMS_OBJ[p]
@@ -200,7 +200,7 @@ def add_ttl(line, outfile, triple_map):
         # TODO: CHECK, if such an object exists!
         v = v.lower() if type(v) == str else v
         v1 += ['<{ontology}#' + str(v) + '>']
-      val = str(v1).strip('[]').replace("'", '') # "<ont#val>, <ont#val>"
+      val = str(v1).strip('[]').replace("'", '')  # "<ont#val>, <ont#val>"
       value = val
     else:
       warnings.warn('Skipping unknown dataset property: {p}'.format(p=p), Warning)
@@ -357,11 +357,11 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
       triples_flag |= add_ttl(line, outfile, triple_map)
       triple_map = {'graph': args.graph, 'ontology': args.ontology}
       if args.processing_mode == 's':
-        outfile.write("\0") # the mark saying current string is fully processed
+        outfile.write("\0")  # the mark saying current string is fully processed
     if args.mode in ('link', None):
       linkquery_flag += add_sparql(line, linkfile, triple_map)
       if args.processing_mode != 's':
-        linkfile.write("\n") # having thousands of query pieces in one line
+        linkfile.write("\n")  # having thousands of query pieces in one line
                              # is just not beautiful
       triple_map = {'graph': args.graph, 'ontology': args.ontology}
 

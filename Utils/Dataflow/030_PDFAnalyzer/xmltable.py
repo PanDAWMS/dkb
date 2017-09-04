@@ -5,7 +5,7 @@ from tkFileDialog import askopenfilename
 
 from pdfwork import *
 
-PAGE_SIZE = 1000 # TO DO: improve this.
+PAGE_SIZE = 1000  # TO DO: improve this.
 
 re_textline = re.compile("<textline bbox=\"[0-9.,]+\">.+?</textline>", re.DOTALL)
 
@@ -16,7 +16,7 @@ class TextLine:
     re_text_symbol_params = re.compile("<text font=\"(.+)\" bbox=\".+\" size=\"(.+)\">([^ ]+)</text>")
     re_text_space = re.compile("<text> </text>")
     def __init__(self, params=False, text_symbols=None):
-        if isinstance(params, str) or isinstance(params, unicode): # Definition by xml text.
+        if isinstance(params, str) or isinstance(params, unicode):  # Definition by xml text.
             lines = params.split("\n")
 
             self.text = ""
@@ -46,7 +46,7 @@ class TextLine:
             first = lines.pop(0)
             coords = self.re_bbox.search(first).group(1)
 ##            [self.left, self.top, self.right, self.bottom] = coords.split(",")
-            [self.left, self.bottom, self.right, self.top] = coords.split(",") # Pdf miner has Y-axis pointed upwards, which does not suits us for several reasons.
+            [self.left, self.bottom, self.right, self.top] = coords.split(",")  # Pdf miner has Y-axis pointed upwards, which does not suits us for several reasons.
             self.left = float(self.left)
             self.right = float(self.right)
             self.top = float(self.top)
@@ -72,7 +72,7 @@ class TextLine:
                     self.spaces_coords.append([float(r0), 0])
                     after_space = True
 
-        elif isinstance(params, list): # Definition by explicit statement of parameters. Used when new lines are created from existing ones by splitting or merging.
+        elif isinstance(params, list):  # Definition by explicit statement of parameters. Used when new lines are created from existing ones by splitting or merging.
             [self.left, self.top, self.right, self.bottom, self.text, self.spaces_coords] = params
 #        print self.text
 
@@ -127,21 +127,21 @@ def row_centery(row):
 class Table:
     re_month = re.compile("(january|february|march|april|may|june|july|august|september|october|november|december)")
     def __init__(self, header, lines):
-        self.header = header # table description
-        self.lines = lines # table text lines
+        self.header = header  # table description
+        self.lines = lines  # table text lines
 
 #        print "\nTABLE WITH HEADER", header
 
         rows = []
         t = []
-        for l in self.lines: # Construct rows out of lines
+        for l in self.lines:  # Construct rows out of lines
             if l not in t:
                 row = self.construct_row(l, t)
                 rows.append(row)
                 t += row
         rows.sort(key=lambda row: row_centery(row))
 
-        self.rows = [] # Remove rows which contain date - this is used because sometimes date stamped on a page gets caught while we are searching for table lines.
+        self.rows = []  # Remove rows which contain date - this is used because sometimes date stamped on a page gets caught while we are searching for table lines.
         for row in rows:
             date_row = False
             for l in row:
@@ -153,7 +153,7 @@ class Table:
                 self.rows.append(row)
 
         r = len(self.rows) - 1 
-        max_diff = False # Separate table lines from text above table. This is done by looking for a space between rows which is too large.
+        max_diff = False  # Separate table lines from text above table. This is done by looking for a space between rows which is too large.
         n = 1
         while r > 0:
             if not max_diff:
@@ -170,7 +170,7 @@ class Table:
             r -= 1
 
 #        print "ROWS"
-        rows = [] # Find overlapping (by X coordinate) lines and merge them. So far this was required to deal with rows where several lines are above each other. No additional spaces are added.
+        rows = []  # Find overlapping (by X coordinate) lines and merge them. So far this was required to deal with rows where several lines are above each other. No additional spaces are added.
         for row in self.rows:
 #            print "ROW"
 #            for l in row:
@@ -188,7 +188,7 @@ class Table:
             rows.append(new_row)
         self.rows = rows
 
-        if self.rows: # If not all rows have same length, attempt to break short rows.
+        if self.rows:  # If not all rows have same length, attempt to break short rows.
             i = 0
             while True:
                 len_min = len(min(self.rows, key=lambda row: len(row)))
@@ -222,7 +222,7 @@ class Table:
         normal_rows = []
         short_rows = []
 #        print "ROWS"
-        for row in self.rows: # Divide rows on short and normal.
+        for row in self.rows:  # Divide rows on short and normal.
 #            print "ROW"
 #            for l in row:
 #                print l.text, l.left, l.top, l.right, l.bottom
@@ -231,51 +231,51 @@ class Table:
             else:
                 short_rows.append(row)
         main_row = normal_rows[0]
-        main_centers = [] # Calculate x coord for centers of each column in first normal row.
+        main_centers = []  # Calculate x coord for centers of each column in first normal row.
         for l in main_row: 
 #            print "MAIN CENTER", (l.left + l.right)/2
             main_centers.append((l.left + l.right) / 2)
-        boundaries = [] # Calculate x boundaries of each column.
+        boundaries = []  # Calculate x boundaries of each column.
         for i in range(0, max_elements):
-            boundaries.append(min(normal_rows, key=lambda row: row[i].left)[i].left) # Most left point in a column.
-            boundaries.append(max(normal_rows, key=lambda row: row[i].right)[i].right) # Most right point in a column.
+            boundaries.append(min(normal_rows, key=lambda row: row[i].left)[i].left)  # Most left point in a column.
+            boundaries.append(max(normal_rows, key=lambda row: row[i].right)[i].right)  # Most right point in a column.
 #        print "BOUNDARIES", boundaries
         del boundaries[0]
         del boundaries[-1]
-        column_spaces = [] # Transform boundaries into spaces between columns.
+        column_spaces = []  # Transform boundaries into spaces between columns.
         for i in range(0, len(boundaries) / 2):
             column_spaces.append([boundaries[2 * i], boundaries[2 * i + 1]])
 #        for cs in column_spaces:
 #            print "COLUMN SPACE", column_spaces.index(cs), cs
         self.rows = normal_rows
-        for row in short_rows: # Attempt to break some of the lines in short rows.
+        for row in short_rows:  # Attempt to break some of the lines in short rows.
             new_row = []
 #            print "SHORT ROW", self.row_text(row = row)
             for l in row:
                 for cs in column_spaces:
-                    if l.left < cs[0] and l.right > cs[1]: # If line crosses the space entirely, attempt to break it on one of the spaces in it.
+                    if l.left < cs[0] and l.right > cs[1]:  # If line crosses the space entirely, attempt to break it on one of the spaces in it.
 #                        print "LINE OVER BOUNDARIES", l.text, l.left, l.right, l.spaces_coords, cs
-                        if not l.spaces_coords: # We cannot break a line if there are no spaces. This means that line is, most likely, not needed.
+                        if not l.spaces_coords:  # We cannot break a line if there are no spaces. This means that line is, most likely, not needed.
 #                            print "LINE HAS NO SPACES TO BREAK ON, REMOVING"
                             l = None
                             break
                         else:
-                            closest_space = min(l.spaces_coords, key=lambda space: abs((space[1] + space[0]) / 2 - (cs[1] + cs[0]) / 2)) # Find the line space closest to column space.
-                            if abs((closest_space[1] + closest_space[0]) / 2 - (cs[1] + cs[0]) / 2) > 5000: # TO DO: fix this.
+                            closest_space = min(l.spaces_coords, key=lambda space: abs((space[1] + space[0]) / 2 - (cs[1] + cs[0]) / 2))  # Find the line space closest to column space.
+                            if abs((closest_space[1] + closest_space[0]) / 2 - (cs[1] + cs[0]) / 2) > 5000:  # TO DO: fix this.
 #                                print "LINE ONLY HAS SPACES TOO FAR FROM COLUMN BOUNDARIES, REMOVING"
                                 l = None
                                 break
 #                            print "BREAKING ON SPACE", closest_space #min_x[0]
-                            [nl1, nl2] = l.split(closest_space)#min_x[0])
+                            [nl1, nl2] = l.split(closest_space)  # min_x[0])
                             new_row.append(nl1)
                             l = nl2
                 if l is not None:
                     new_row.append(l)
-            if new_row: # Make sure that new row has enough members.
+            if new_row:  # Make sure that new row has enough members.
 #                print "NEW_ROW", self.row_text(row = new_row)
                 num_lines = len(new_row)
-                for c in main_centers: # Try to find a line corresponding each main center.
-                    if num_lines >= max_elements: # Row is long enough.
+                for c in main_centers:  # Try to find a line corresponding each main center.
+                    if num_lines >= max_elements:  # Row is long enough.
                         break
                     i = 0
                     existing_column = False
@@ -283,7 +283,7 @@ class Table:
                         if l.left <= c and l.right >= c:
                             existing_column = True
                             break
-                    if not existing_column: # If there is no line corresponding a center, add an "EMPTY" line to row.
+                    if not existing_column:  # If there is no line corresponding a center, add an "EMPTY" line to row.
 #                        print "ADDING EMPTY LINE", c - 1, new_row[0].top, c + 1, new_row[0].bottom
                         nl = TextLine([c - 1, new_row[0].top, c + 1, new_row[0].bottom, "EMPTY", []])
                         new_row.append(nl)
@@ -307,7 +307,7 @@ def get_tables_from_text(text):
         else:
             lines.append(tl)
 
-    top = max(table_headers + lines, key=lambda l: l.top).top # Find the highest top coordinate possible and use it as a zero point for new Y axis.
+    top = max(table_headers + lines, key=lambda l: l.top).top  # Find the highest top coordinate possible and use it as a zero point for new Y axis.
     for l in table_headers + lines:
         l.swap_y(top)
 
@@ -337,13 +337,13 @@ def analyze_page(text):
         tl = TextLine(l)
         lines.append(tl)
 
-    top = max(lines, key=lambda l: l.top).top # Find the highest top coordinate possible and use it as a zero point for new Y axis.
+    top = max(lines, key=lambda l: l.top).top  # Find the highest top coordinate possible and use it as a zero point for new Y axis.
     for l in lines:
         l.swap_y(top)
 
     t = []
     rows = []
-    for line in lines: # Construct rows out of lines
+    for line in lines:  # Construct rows out of lines
         if line not in t:
             row = [line]
             for l in lines:

@@ -53,14 +53,14 @@ if __name__ == "__main__":
         sys.stderr.write("Exception while loading Tkinter: %s\n" % e)
         sys.stderr.write("Tkinter and/or stuff related to it cannot be loaded, graphical interface will not work\n")
 
-    PAPERS_DIR = path_join(cfg["WORK_DIR"], "papers") # Directory for papers' directories.
-    EXPORT_DIR = path_join(cfg["WORK_DIR"], "export") # Directory for exported files.
-    NO_ATTRS_FILE = path_join(EXPORT_DIR, "stat.txt") # File for information about exported papers with missing attributes.
-    HEADING_FONT = ("Times New Roman", 20) # Font used for headings in the program.
+    PAPERS_DIR = path_join(cfg["WORK_DIR"], "papers")  # Directory for papers' directories.
+    EXPORT_DIR = path_join(cfg["WORK_DIR"], "export")  # Directory for exported files.
+    NO_ATTRS_FILE = path_join(EXPORT_DIR, "stat.txt")  # File for information about exported papers with missing attributes.
+    HEADING_FONT = ("Times New Roman", 20)  # Font used for headings in the program.
 
-TXT_DIR = "txt" # Name of the subdirectory with txt files in a paper's directory.
-XML_DIR = "xml" # Name of the subdirectory with xml files in a paper's directory.
-METADATA_FILE = "metadata.json" # Name of the file which holds the metadata extracted from a paper.
+TXT_DIR = "txt"  # Name of the subdirectory with txt files in a paper's directory.
+XML_DIR = "xml"  # Name of the subdirectory with xml files in a paper's directory.
+METADATA_FILE = "metadata.json"  # Name of the file which holds the metadata extracted from a paper.
 
 
 # TO DO
@@ -85,8 +85,8 @@ METADATA_FILE = "metadata.json" # Name of the file which holds the metadata extr
 class DatasetCategory:
     def __init__(self, name, string):
         self.name = name
-        self.reg = re.compile(string, re.X) # Standard regular expression for finding datasets.
-        self.reg_spaces = re.compile(string.replace("_", "\ ").replace("\w", "a-zA-Z0-9 "), re.X) # Same as self.reg, but with spaces instead of underscores. This is required because pdfminer sometimes reads underscores as spaces, especially in a document with small font size.
+        self.reg = re.compile(string, re.X)  # Standard regular expression for finding datasets.
+        self.reg_spaces = re.compile(string.replace("_", "\ ").replace("\w", "a-zA-Z0-9 "), re.X)  # Same as self.reg, but with spaces instead of underscores. This is required because pdfminer sometimes reads underscores as spaces, especially in a document with small font size.
 ##        self.reg_dashes = re.compile(string.replace("_", "\-").replace("\w", "a-zA-Z0-9-"), re.X) # This does not works, probably because "-" is a special character, and should be "-" or "\-" in different places of regular expressions. | Same as self.reg, but with dashes instead of underscores. This is required because at least one document lists datasets in such way.
     def find(self, text, intervals, datasets):
 #        print "INTERVALS", intervals
@@ -106,7 +106,7 @@ class DatasetCategory:
                     arr = []
                     for n in nums:
                         arr.append(len(intervals[int(n)]))
-                    size = min(arr) # TO DO: If some intervals are shorter then it should be raised as a warning somewhere...
+                    size = min(arr)  # TO DO: If some intervals are shorter then it should be raised as a warning somewhere...
                     for i in range(0, size):
                         ns = s
                         for n in nums:
@@ -204,8 +204,8 @@ database = DatasetCategory("database", r"""ddo                  # Project tag.
 
 # Regular expressions
 #dataset_categories = [group, user, montecarlo, physcont, calibration, realdata, database]
-dataset_categories = [montecarlo, physcont, calibration, realdata, database] # We don't need group and user datasets for now.
-re_pdfname = re.compile("/([^./]+)\.pdf$") # Path must have / as separator, not \.
+dataset_categories = [montecarlo, physcont, calibration, realdata, database]  # We don't need group and user datasets for now.
+re_pdfname = re.compile("/([^./]+)\.pdf$")  # Path must have / as separator, not \.
 re_table_header = re.compile("Table \d+:.*?\n\n", re.DOTALL)
 re_table_header_short = re.compile("Table (\d+):")
 re_table_datasets = re.compile("(?:sample|dataset|run)")
@@ -246,11 +246,11 @@ re_campaign = re.compile(r"""(
                         t0proc03_v1
                         )""", re.X)
 re_energy = re.compile("(\d+\.?\d*) (G|T)eV")
-re_luminosity = re.compile("(\d+\.?\d*) ?(m|n|p|f)b(?:−|\(cid:0\))1") # WARNING: this "fb-1" is in UTF-8 coding and was copied from miner output. Simple "fb-1" does not works.
+re_luminosity = re.compile("(\d+\.?\d*) ?(m|n|p|f)b(?:−|\(cid:0\))1")  # WARNING: this "fb-1" is in UTF-8 coding and was copied from miner output. Simple "fb-1" does not works.
 re_collisions = re.compile("(proton-proton|heavy-ion|pp) collisions")
 re_year = re.compile("(?:acquired|collected|measured|recorded).{0,100}(20\d\d)", re.DOTALL)
 re_year_general = re.compile(".{0,100} 20\d\d.{0,100}")
-re_interval = re.compile("\[(?:[0-9][\\/][0-9\\/\n]+|[0-9]+-[0-9]+)\]") # interval must contain at least two numbers, i.e. [1/2] or [3\4\5].
+re_interval = re.compile("\[(?:[0-9][\\/][0-9\\/\n]+|[0-9]+-[0-9]+)\]")  # interval must contain at least two numbers, i.e. [1/2] or [3\4\5].
 
 def find_cut_reg(reg, text):
     # Find patterns matching regular expression in text and cut them out.
@@ -292,7 +292,7 @@ def organize_intervals(intervals):
                     for i1 in range(int(s), int(e) + 1):
                         ni1.append(str(i1))
                     maxlen = len(max(ni1, key=lambda num: len(num)))
-                    if len(min(ni1, key=lambda num: len(num))) != maxlen: # TO DO: improve this.
+                    if len(min(ni1, key=lambda num: len(num))) != maxlen:  # TO DO: improve this.
                         ni2 = []
                         for i1 in ni1:
                             add_zeros = maxlen - len(i1)
@@ -340,8 +340,8 @@ def cmp_papernames(x, y):
 class Paper:
     # Represents a document which needs to be analyzed, as well as files and other things associated with it.
     attributes_general = ["campaigns", "energy", "luminosity", "collisions", "data taking year"]
-    attributes_to_determine = attributes_general + ["title", "datasets", "datatables"] # Paper attributes which are needed but cannot be determined precisely yet (unlike, for example, number of pages).
-    attributes_metadata = attributes_to_determine + ["num_pages", "rotated_pages"] # Attributes which are saved / loaded to / from a file.
+    attributes_to_determine = attributes_general + ["title", "datasets", "datatables"]  # Paper attributes which are needed but cannot be determined precisely yet (unlike, for example, number of pages).
+    attributes_metadata = attributes_to_determine + ["num_pages", "rotated_pages"]  # Attributes which are saved / loaded to / from a file.
     def __init__(self, fname, dirname=False):
         self.fname = fname
         if not dirname:
@@ -353,12 +353,12 @@ class Paper:
         self.xml_dir = path_join(self.dir, XML_DIR)
         self.metadata_file = path_join(self.dir, METADATA_FILE)
         for a in self.attributes_to_determine: 
-            self.__dict__[a] = None # This indicates that attributes should be determined when need to display them arises for the first time. If nothing was found, their values would be set to False or [] or {}. 
+            self.__dict__[a] = None  # This indicates that attributes should be determined when need to display them arises for the first time. If nothing was found, their values would be set to False or [] or {}. 
 
-        self.num_pages = None # Number of pages in a paper.
-        self.rotated_pages = None # Numbers of pages which are rotated.
+        self.num_pages = None  # Number of pages in a paper.
+        self.rotated_pages = None  # Numbers of pages which are rotated.
 
-        self.changed = False # This flag is set to True when part of metadata is changed, but not yet saved to the metadata file.
+        self.changed = False  # This flag is set to True when part of metadata is changed, but not yet saved to the metadata file.
     def get_txt_page(self, number, text=False):
         # Fetch txt page of the paper. Result is either text(if text variable is True) or lines (if text variable is False).
         fname = path_join(self.txt_dir, "%d.txt" % (number))
@@ -532,12 +532,12 @@ class Paper:
         pages_with_tables = []
         headers_data = {}
         n = 1
-        while n <= self.num_pages: # Find pages containing table headers.
+        while n <= self.num_pages:  # Find pages containing table headers.
             text = self.get_txt_page(n, True)
 #            print n, re_table_header.findall(text.lower())
             page_headers = re_table_header.findall(text)
             page_headers_data = {}
-            for h in page_headers: # Among the headers find ones which may hint that their tables contain datasets. Store these headers, their numbers and their pages.
+            for h in page_headers:  # Among the headers find ones which may hint that their tables contain datasets. Store these headers, their numbers and their pages.
                 if re_table_datasets.search(h.lower()):
                     num = int(re_table_header_short.match(h).group(1))
                     page_headers_data[num] = h
@@ -549,29 +549,29 @@ class Paper:
 #        print "PAGES WITH DATASETS TABLES", pages_with_tables
 
         datatables = {}
-        for n in pages_with_tables: # Extract all tables from selected pages.
+        for n in pages_with_tables:  # Extract all tables from selected pages.
             text = self.get_xml_page(n, True)
             tables = get_tables_from_text(text)
-            for table in tables: # Save headers and tables matching selected numbers and having dataset-related columns.
+            for table in tables:  # Save headers and tables matching selected numbers and having dataset-related columns.
                 num = int(re_table_header_short.match(table.header).group(1))
                 if num in headers_data:
 #                    print "TABLE WITH HEADER", headers_data[num].strip(), "MAY CONTAIN DATASETS"
                     data_column = -1
                     skip_first = False
-                    for rnum in range(0, min(2, len(table.rows))): # Check first two rows. Sometimes there is an additional row above main row.
+                    for rnum in range(0, min(2, len(table.rows))):  # Check first two rows. Sometimes there is an additional row above main row.
                         for i in range(0, len(table.rows[rnum])):
                             if re_column_with_datasets.match(table.rows[rnum][i].text.lower()):
 #                                print "COLUMN", table.rows[rnum][i].text.lower(), "IN TABLE", num, "HINTS THAT IT CONTAINS DATASETS"
                                 data_column = i
-                                if rnum == 1: # This means that first row contains some kind of header, or rubbish, or something else, and columns are defined in the second one. First one must be skipped in such case.
+                                if rnum == 1:  # This means that first row contains some kind of header, or rubbish, or something else, and columns are defined in the second one. First one must be skipped in such case.
 #                                    print "SKIPPING FIRST ROW"
                                     skip_first = True
                                 break
                         if data_column >= 0:
                             break
-                    if data_column >= 0: # Here: insert check that dataset column contains mostly \d\d\d\d\d\d. Also: duplicate rows in case of diapasones.
+                    if data_column >= 0:  # Here: insert check that dataset column contains mostly \d\d\d\d\d\d. Also: duplicate rows in case of diapasones.
                         rows = []
-                        rows_with_proper_id = 1 # Start at 1 instead of 0 because the first row (which defines columns) will not contain a proper dataset/run id.
+                        rows_with_proper_id = 1  # Start at 1 instead of 0 because the first row (which defines columns) will not contain a proper dataset/run id.
                         diaps = False
                         for row in table.rows:
                             if skip_first:
@@ -632,10 +632,10 @@ class Paper:
         if not outf:
             outf = path_join(EXPORT_DIR, "%s.json" % (self.fname))
             
-        outp["fname"] = self.fname # Some applications processing exported data may discard the filename but it must be preserved.
+        outp["fname"] = self.fname  # Some applications processing exported data may discard the filename but it must be preserved.
         if self.title is not None:
             outp["title"] = self.title
-        if self.campaigns is not None: # All general attributes are determined together, so we can check only one.
+        if self.campaigns is not None:  # All general attributes are determined together, so we can check only one.
             for a in self.attributes_general:
                 outp[a] = self.__dict__[a]
         elif quick:
@@ -684,7 +684,7 @@ class Manager:
         self.papers = []
         if not os.access(PAPERS_DIR, os.F_OK):
             os.mkdir(PAPERS_DIR)
-        objs = os.listdir(PAPERS_DIR) # Check papers directory and load papers from it.
+        objs = os.listdir(PAPERS_DIR)  # Check papers directory and load papers from it.
         for o in objs:
             if os.path.isdir(path_join(PAPERS_DIR, o)):
                 p = Paper(o)
@@ -705,7 +705,7 @@ class Manager:
         self.status = Label(self.window, text="", bd=1, relief=SUNKEN)
         self.status.grid(row=2,  sticky='we')
 
-        self.window.protocol("WM_DELETE_WINDOW", self.finish) # Intercept closing the program via Alt + F4 or other methods to perform a clean exit.
+        self.window.protocol("WM_DELETE_WINDOW", self.finish)  # Intercept closing the program via Alt + F4 or other methods to perform a clean exit.
 
         self.redraw()
         self.window.mainloop()
@@ -888,7 +888,7 @@ class Manager:
         l.grid(row=0, column=1)
         b = Button(window, text="Save", command=lambda paper=paper: self.save_paper(paper))
         b.grid(row=0, column=2)        
-        b = Button(window, text="Export", command=lambda paper=paper: paper.export()) # Maybe this should ask for save before export...
+        b = Button(window, text="Export", command=lambda paper=paper: paper.export())  # Maybe this should ask for save before export...
         b.grid(row=0, column=3)        
         b = Button(window, text="Clear", command=lambda window=window, paper=paper: self.clear_paper(window, paper))
         b.grid(row=0, column=4)        
@@ -974,7 +974,7 @@ class Manager:
             i = 0
             for w in words:
                 try:
-                    w_in = w in possible_title # This throws exception sometimes, something about ascii codec unable to decode.
+                    w_in = w in possible_title  # This throws exception sometimes, something about ascii codec unable to decode.
                 except:
                     w_in = False
                 if len(w) > 1 and w_in:
@@ -1008,7 +1008,7 @@ class Manager:
                 for [entry, special, selected] in value[c]:
                     if selected.get():
 #                        datasets[c].append([entry.get(), special])
-                        datasets[c].append(entry.get()) # special is not needed. Maybe temporary.
+                        datasets[c].append(entry.get())  # special is not needed. Maybe temporary.
                 if not datasets[c]:
                     del datasets[c]
             if datasets:
@@ -1098,12 +1098,12 @@ class Manager:
                         e.grid(row=r, column=1)
                         selected = IntVar()
                         selected.set(1)
-                        b = Checkbutton(frame, var=selected) # TO DO: checkbuttons for "(un)select all". 
+                        b = Checkbutton(frame, var=selected)  # TO DO: checkbuttons for "(un)select all". 
                         dataset_entries[c].append([e, special, selected])
                         selected_list.append(selected)
                         b.grid(row=r, column=3, pady=5)
                         r += 1
-                    check_category_b.config(command=lambda v=category_selected, l=selected_list: check_all_button(v, l)) # This command is not called when individual checkbuttons are clicked - Therefore, global checkbox will not change its look.
+                    check_category_b.config(command=lambda v=category_selected, l=selected_list: check_all_button(v, l))  # This command is not called when individual checkbuttons are clicked - Therefore, global checkbox will not change its look.
 
                 scrlbr = Scrollbar(window, command=cnvs.yview)
                 scrlbr.grid(row=0, column=2, rowspan=2, sticky='ns')
@@ -1186,7 +1186,7 @@ class Manager:
                     t_frame.grid(row=num, column=0)
                     selected = IntVar()
                     selected.set(1)
-                    b = Checkbutton(t_frame, var=selected) # TO DO: checkbuttons for "(un)select all".
+                    b = Checkbutton(t_frame, var=selected)  # TO DO: checkbuttons for "(un)select all".
                     b.grid(row=0, column=len(rows[0]))
                     datatables_s.append([k, header, rows, selected])
                     num += 1

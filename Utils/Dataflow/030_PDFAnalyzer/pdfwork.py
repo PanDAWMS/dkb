@@ -7,7 +7,7 @@ from tempfile import TemporaryFile
 from pdfminer.pdfdocument import PDFDocument
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
-from pdfminer.pdfdevice import PDFDevice#, TagExtractor
+from pdfminer.pdfdevice import PDFDevice  # , TagExtractor
 from pdfminer.pdfpage import PDFPage
 from pdfminer.pdfpage import PDFTextExtractionNotAllowed
 from pdfminer.converter import XMLConverter, HTMLConverter, TextConverter
@@ -42,7 +42,7 @@ def get_page_text(interpreter, page, tmp, rotation=0):
 def mine_text(infname, page_numbers=False, outtype="text", rotated_pages=[], folder=False):
     # Mine text from a PDF files. Find rotated pages if txt, rotate pages according to respective variable if xml.
 #    inf = open(infname, "rb")
-    with open(infname, "rb") as inf: # By using "with" we ensure that file gets closed if something goes wrong in this block.
+    with open(infname, "rb") as inf:  # By using "with" we ensure that file gets closed if something goes wrong in this block.
     
         rsrcmngr = PDFResourceManager()
 
