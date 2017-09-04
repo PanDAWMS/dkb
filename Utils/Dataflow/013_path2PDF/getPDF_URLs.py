@@ -10,7 +10,7 @@
 
   output metadata:
     - list of urls in JSON-format
-    
+
 '''
 import sys, getopt
 import json
@@ -37,14 +37,14 @@ def main(argv):
          login = arg
       elif opt in ("-p", "--password"):
          password = arg
-   
+
 
    cookie_path = '/data/atlswing-home/ssocookie.txt'
    cds = CDSInvenioConnector(login, password)
-   
+
    with open('Input/list_of_papers.json') as data_file:
        data = json.load(data_file)
-   
+
    js_list = []
 
    with open('SupportingDocumentsURLS.json', 'w') as outfile:
@@ -84,6 +84,6 @@ def main(argv):
 
    # with open('SupportingDocumentsURLS.json', 'w') as outfile:
    #    json.dump(js_list, outfile)
-   
+
 if __name__ == "__main__":
    main(sys.argv[1:])

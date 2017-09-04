@@ -43,7 +43,7 @@ def mine_text(infname, page_numbers=False, outtype="text", rotated_pages=[], fol
     # Mine text from a PDF files. Find rotated pages if txt, rotate pages according to respective variable if xml.
 #    inf = open(infname, "rb")
     with open(infname, "rb") as inf:  # By using "with" we ensure that file gets closed if something goes wrong in this block.
-    
+
         rsrcmngr = PDFResourceManager()
 
         tmp = TemporaryFile(mode="w+")
@@ -107,7 +107,7 @@ if __name__ == "__main__":
     [pages, rotated_pages] = mine_text("C:/Work/papers_analysis/ATL-COM-PHYS-2014-1357.pdf", [201], "xml")
     for p in pages:
         print pages[p]
-    
+
 ##    f = open("C:/Work/papers_analysis/ATL-COM-PHYS-2014-1430.pdf", "rb")
 ##
 ##    rsrcmngr = PDFResourceManager()

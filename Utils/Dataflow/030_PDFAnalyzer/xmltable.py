@@ -291,7 +291,7 @@ class Table:
                 new_row.sort(key=lambda l: l.center[0])
                 self.rows.append(new_row)
         self.rows.sort(key=lambda row: row_centery(row))
-        
+
 def get_tables_from_text(text):
     # Get tables from a xml page text.
     re_textbox = re.compile("<textbox id=\"\d+\" bbox=\"([0-9.,]+)\">", re.DOTALL)
@@ -323,7 +323,7 @@ def get_tables_from_text(text):
                 table_lines.append(l)
             else:
                 remaining_lines.append(l)
-    
+
         table = Table(header.text, table_lines)
         if table.rows:
             tables.append(table)
@@ -388,4 +388,4 @@ if __name__ == "__main__":
     f.close()
     analyze_page(text)
     sys.exit(0)
-    
+

@@ -488,7 +488,7 @@ class Paper:
         attrs["campaigns"] = list(set(attrs["campaigns"]))
 
         pages = self.get_txt_page(1, True) + self.get_txt_page(2, True)
-        
+
         attrs["energy"] = False
         tmp = re_energy.search(pages)
         if tmp:
@@ -631,7 +631,7 @@ class Paper:
         outp = {}
         if not outf:
             outf = path_join(EXPORT_DIR, "%s.json" % (self.fname))
-            
+
         outp["fname"] = self.fname  # Some applications processing exported data may discard the filename but it must be preserved.
         if self.title is not None:
             outp["title"] = self.title
@@ -732,7 +732,7 @@ class Manager:
             c.destroy()
 
         self.papers.sort(cmp=cmp_papernames, key=lambda paper: paper.fname)
-        
+
         r = 0
         for p in self.papers:
             if p.changed:
@@ -746,7 +746,7 @@ class Manager:
                 l = Label(self.frame, text=p.title)
                 l.grid(row=r, column=1)
             r += 1
-            
+
         self.frame.update_idletasks()
         self.cnvs.configure(scrollregion=(0, 0, self.frame.winfo_width(), self.frame.winfo_height()))
     def preferences(self):
@@ -773,7 +773,7 @@ class Manager:
         l.grid(row=1, column=0)
         b = Checkbutton(frame, variable=determine_title)
         b.grid(row=1, column=1)
-        
+
         l = Label(frame, text="Open intervals")
         l.grid(row=2, column=0)
         b = Checkbutton(frame, variable=open_intervals)
@@ -938,7 +938,7 @@ class Manager:
                     d[size] = text
             elif empty.match(l):
                 d[size] += " "
-                
+
         l = Label(window, text="Please, select a string which looks like a title of the paper", font=HEADING_FONT)
         l.grid(row=0, columnspan=2)
         r = 1
@@ -1076,7 +1076,7 @@ class Manager:
 
                 frame = Frame(cnvs)
                 cnvs.create_window(0, 0, window=frame, anchor='nw')
-                
+
                 r = 0
                 dataset_entries = {}
                 for c in datasets:
@@ -1110,7 +1110,7 @@ class Manager:
                 cnvs.configure(yscrollcommand=scrlbr.set)
                 frame.update_idletasks()
                 cnvs.configure(width=frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
-                
+
                 b = Button(window, text="Done", command=lambda window=window, paper=paper, value=dataset_entries: self.update_paper_parameter(window, paper, "datasets", value))
                 b.grid(row=1, column=0)
                 b = Button(window, text="Cancel", command=lambda window=window, paper=paper: self.show_paper_info(window, paper))
@@ -1196,7 +1196,7 @@ class Manager:
                 cnvs.configure(yscrollcommand=scrlbr.set)
                 frame.update_idletasks()
                 cnvs.configure(width=frame.winfo_width(), scrollregion=(0, 0, frame.winfo_width(), frame.winfo_height()))
-                
+
                 b = Button(window, text="Done", command=lambda window=window, paper=paper, value=datatables_s: self.update_paper_parameter(window, paper, "datatables", value))
                 b.grid(row=1, column=0)
                 b = Button(window, text="Cancel", command=lambda window=window, paper=paper: self.show_paper_info(window, paper))
@@ -1339,7 +1339,7 @@ class Manager:
                         color = "black"
                     for l in row:
                         cnvs.create_rectangle((l.left, l.top + 10, l.right, l.bottom + 10), outline=color)
-                
+
                 b = Button(window, text="Back", command=lambda window=window, paper=paper: self.show_paper_info(window, paper))
                 b.grid(row=1, column=0)
     def export_paper_text(self, paper):
