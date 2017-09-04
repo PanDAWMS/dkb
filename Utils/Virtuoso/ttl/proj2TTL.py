@@ -77,13 +77,13 @@ with open(chosen_path) as data_file:
 listProj = []
 for i, item in enumerate(input_data):
 		year = "20" + str(re.findall(r'\d+', input_data[i]['projectName'])[0])
-		dataPeriod = "<%s/dataperiod/%s_%s_%s>" % (graph,year,input_data[i]['period'],input_data[i]['periodLevel'])
+		dataPeriod = "<%s/dataperiod/%s_%s_%s>" % (graph, year, input_data[i]['period'], input_data[i]['periodLevel'])
 		#project name
 		projectName = input_data[i]['projectName']
 		#a subject in ontology
-		project = "<%s/project/%s>" % (graph,input_data[i]['projectName'])
+		project = "<%s/project/%s>" % (graph, input_data[i]['projectName'])
 		#deleting of newline symbol from description
-		description = input_data[i]['description'].replace("\n"," ")
+		description = input_data[i]['description'].replace("\n", " ")
 		DATAPERIODS = {
                     'graph': graph,
 			'ontology': ontology,

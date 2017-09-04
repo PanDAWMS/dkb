@@ -67,7 +67,7 @@ SELECT = """ifnull(PS1.name, PS2.name) as `name`,
   T_PRODUCTION_DATASET as PS2
   ON PS2.name = PS1.name"""
 
-dataType = {'montecarlo':'MC','realdata':'RealData'}
+dataType = {'montecarlo': 'MC', 'realdata': 'RealData'}
 
 IGNORE_PROJECTS = ('evind', 'valid', 'user', 'group')
 
@@ -121,14 +121,14 @@ def main(argv):
                        default='f',
                        const='m',
                        metavar='MODE',
-                       choices=['f','m'],
+                       choices=['f', 'm'],
                        dest='mode'
                        )
   parser.add_argument('-O', '--output', action='store', type=str, nargs='?',
                        help=u'Where to output results: (f)iles, (i)mpala tables, (s)tdout, (h)dfs (with --hdfs option only)',
                        default='f',
                        const='f',
-                       choices=['f','i','s', 'h'],
+                       choices=['f', 'i', 's', 'h'],
                        dest='out'
                        )
   
@@ -158,7 +158,7 @@ def main(argv):
     except ValueError, e:
       stderr.write("(ERROR) Failed to read JSON from %s: %s\n" % (infile.name, e.message))
       continue
-    if ARGS.out in ('f','h'):
+    if ARGS.out in ('f', 'h'):
       outname = infile.name[:infile.name.rfind('.')] + '.csv'
     elif ARGS.out == 's':
       outname = sys.stdout
@@ -166,7 +166,7 @@ def main(argv):
       outname = None
     GlanceID = os.path.basename(infile.name)
     GlanceID = GlanceID[:GlanceID.find('.')]
-    loadMetadata(DocData,outname,DKB,{'glanceid':GlanceID, 'datatype':None},headers)
+    loadMetadata(DocData, outname, DKB, {'glanceid': GlanceID, 'datatype': None}, headers)
     # As we are writing all output to one stream,
     # we don't need to repeat headers
     if ARGS.out == 's':
@@ -185,32 +185,32 @@ def hdfsFiles(filenames, upload=False):
     os.remove(name)
     if upload:
       hdfspath = f[:f.rfind('/')]
-      csvname = name.replace('.json','.csv')
+      csvname = name.replace('.json', '.csv')
       if not os.path.isfile(csvname): continue
       cmd = "hadoop fs -put -f %s %s" % (csvname, hdfspath)
       os.system(cmd)
       os.remove(csvname)
 
 
-def loadMetadata(data,outfile,db,extra={},headers=True):
+def loadMetadata(data, outfile, db, extra={}, headers=True):
   global ARGS
   if not ( data.get('datasets') or ( data.get('datasetIDs') and data.get('campaigns') )):
     stderr.write("No dataset names or IDs found.\n")
     return 0
 
   if data.get('datasets'):
-    loadByNames(data['datasets'],outfile,db,extra,headers)
+    loadByNames(data['datasets'], outfile, db, extra, headers)
   if data.get('datasetIDs') and data.get('campaigns'):
-    projects = campaign2project(data['campaigns'],db)
+    projects = campaign2project(data['campaigns'], db)
     dsids = []
     for tab in data['datasetIDs']:
       dsids += data['datasetIDs'][tab].split()
-    loadByDSIDs(projects,dsids,outfile,db,extra,headers)
+    loadByDSIDs(projects, dsids, outfile, db, extra, headers)
 
-def loadByNames(datasets,outfile,db,extra={},headers=True):
+def loadByNames(datasets, outfile, db, extra={}, headers=True):
   global ARGS
   for t in dataType:
-    if not datasets.get(t,None): continue
+    if not datasets.get(t, None): continue
     extra['datatype'] = t
     s = 'SELECT distinct '
     s += extra_string(extra)
@@ -219,7 +219,7 @@ def loadByNames(datasets,outfile,db,extra={},headers=True):
     query = '{select} {where}'.format(select=s, where=w)
     loadQuery(query, outfile, ARGS, db, headers)
 
-def loadByDSIDs(projects,datasets,outfile,db,extra={},headers=True):
+def loadByDSIDs(projects, datasets, outfile, db, extra={}, headers=True):
   global ARGS
 
   s = 'SELECT distinct '
@@ -229,7 +229,7 @@ def loadByDSIDs(projects,datasets,outfile,db,extra={},headers=True):
   dsnames = []
   for p in projects:
     for i in datasets:
-      dsnames += ['^{project}\.0*?{DSID}\..*$'.format(project=p,DSID=i)]
+      dsnames += ['^{project}\.0*?{DSID}\..*$'.format(project=p, DSID=i)]
 
   w = 'WHERE isnull(PS1.name,PS2.name) RLIKE "' + '" OR isnull(PS1.name,PS2.name) RLIKE "'.join(dsnames) + '"' if dsnames else ''
   query = '{select} {where}'.format(select=s, where=w)
@@ -245,7 +245,7 @@ def loadQuery2File(query, outfile, ARGS, headers=True):
   with open('query.sql', 'w') as qfile:
     qfile.write(query)
     qfile.close()
-    m = {'host':ARGS.host, 'db':ARGS.db}
+    m = {'host': ARGS.host, 'db': ARGS.db}
     if outfile == sys.stdout: m['output'] = ''
     else: m['output'] = '-o ' + outfile
     m['headers'] = "--print_header" if headers else ""
@@ -255,7 +255,7 @@ def loadQuery2File(query, outfile, ARGS, headers=True):
     except subprocess.CalledProcessError, e:
       stderr.write("(ERROR) Failed to execute Impala request (return code: %d).\nCommand: %s\n" % (e.returncode, e.cmd))
 
-def loadQuery2DB(query,db):
+def loadQuery2DB(query, db):
     q = 'INSERT INTO dkb_temp.datasets {query}'.format(query=query)
     db.execute(q)
 
@@ -282,12 +282,12 @@ def extra_string(extra={}):
   s = ''
   for e in keys:
     val = extra[e]
-    if not checkExtra(e,val):
+    if not checkExtra(e, val):
       stderr.write("(WARN) Replace unacceptable value with NULL.\n")
       val = None
 
     try: val = int(val)
-    except (ValueError,TypeError): pass
+    except (ValueError, TypeError): pass
 
     if type(val) == str: val = '"{val}"'.format(val=val)
     elif type(val) == int: val = '{val}'.format(val=val)
@@ -300,14 +300,14 @@ def extra_string(extra={}):
 def checkExtra(key, val):
   checkParameters = {
       'glanceid': {
-          'type':int
+          'type': int
           }
   }
   if key in checkParameters:
     p = checkParameters[key]
     try: p['type'](val)
     except ValueError:
-      stderr.write("(WARN) Unacceptable value for key '%s': '%s' (expected type: %s).\n" % (key,val, p['type']))
+      stderr.write("(WARN) Unacceptable value for key '%s': '%s' (expected type: %s).\n" % (key, val, p['type']))
       return False
   return True
 

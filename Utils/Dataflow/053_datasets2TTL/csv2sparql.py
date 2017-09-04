@@ -18,7 +18,7 @@ from datetime import datetime
 ### DEFAULTS AND CONFIGURATIONS ###
 
 # Default CSV header
-CSV_HEADER = ["datatype","glanceid","name","tid","chain_tid","phys_group","events","files","status","timestamp","pr_id","campaign","ddm_erase_timestamp","vuid","grid_exec","se","file_size_mb"]
+CSV_HEADER = ["datatype", "glanceid", "name", "tid", "chain_tid", "phys_group", "events", "files", "status", "timestamp", "pr_id", "campaign", "ddm_erase_timestamp", "vuid", "grid_exec", "se", "file_size_mb"]
 
 # ONTOLOGY --->
 # TODO: make things more friendly, perhaps dict of 
@@ -30,59 +30,59 @@ CSV_HEADER = ["datatype","glanceid","name","tid","chain_tid","phys_group","event
 # Ordinary numeric/string properties: <dataset> <#property> Value
 OWL_PARAMS_NUMSTR = {
     #numeric
-           'DSID':'hasDatasetID',
-           'events':'hasEvents',
-           'files':'hasFiles',
-           'datasetSize':'hasDatasetSize',  # hasFiles * hasFileSizeMB
-           'file_size_mb':'hasFileSizeMB',
+           'DSID': 'hasDatasetID',
+           'events': 'hasEvents',
+           'files': 'hasFiles',
+           'datasetSize': 'hasDatasetSize',  # hasFiles * hasFileSizeMB
+           'file_size_mb': 'hasFileSizeMB',
     #string
-           'name':'hasDatasetName',
-           'timestamp':'hasTimestamp',
-           'AMItags':'hasAMITag',
-           'status':'hasStatus',
-           'physKeyword':'hasPhysKeyword'
+           'name': 'hasDatasetName',
+           'timestamp': 'hasTimestamp',
+           'AMItags': 'hasAMITag',
+           'status': 'hasStatus',
+           'physKeyword': 'hasPhysKeyword'
 }
 
 # Only numeric properties
 OWL_PARAMS_NUM = {
-    'DSID':'hasDatasetID',
-           'events':'hasEvents',
-           'files':'hasFiles',
-           'datasetSize':'hasDatasetSize',  # hasFiles * hasFileSizeMB
-           'file_size_mb':'hasFileSizeMB'
+    'DSID': 'hasDatasetID',
+           'events': 'hasEvents',
+           'files': 'hasFiles',
+           'datasetSize': 'hasDatasetSize',  # hasFiles * hasFileSizeMB
+           'file_size_mb': 'hasFileSizeMB'
 }
 
 # Object properties: <dataset> <#property> <DBobject>
 OWL_PARAMS_OBJ = {
-    'campaign':'hasCampaign',
-           'dataFormat':'hasDataSampleFormat',
-           'datatype':'hasDataSampleType', # #Container|#MC|#RealData
-           'generator':'hasGenerator',
-           'physGroup':'hasPhysGroup',
-           'prodStep':'hasProductionStep',
-           'project':'hasProject',
-           'usedIn':'usedIn'
+    'campaign': 'hasCampaign',
+           'dataFormat': 'hasDataSampleFormat',
+           'datatype': 'hasDataSampleType', # #Container|#MC|#RealData
+           'generator': 'hasGenerator',
+           'physGroup': 'hasPhysGroup',
+           'prodStep': 'hasProductionStep',
+           'project': 'hasProject',
+           'usedIn': 'usedIn'
 }
 # <--- ONTOLOGY
 
 # Known generator names
-GENERATORS = ['acermc','alpgen',
-              'charybdis','comphep',
+GENERATORS = ['acermc', 'alpgen',
+              'charybdis', 'comphep',
               'evtgen',                  # <--- There might also be smth like 'EG'
               'gg2vv',                        ## but how do we supposed to know
-              'herwig','herwig\+\+','hijing', ## if it is 'EG' or 'powhEG', or any
+              'herwig', 'herwig\+\+', 'hijing', ## if it is 'EG' or 'powhEG', or any
               'isajet',                       ## other word?
               'jimmy',
-              'pythia8','pythia6','pythiab','pythia','py8',
-              'madgraph5','madgraph','mcatnlo','mc@nlo',
-              'photos','powheg',
+              'pythia8', 'pythia6', 'pythiab', 'pythia', 'py8',
+              'madgraph5', 'madgraph', 'mcatnlo', 'mc@nlo',
+              'photos', 'powheg',
               'sherpa',
               'tauola'
            ]
 # Known synonyms from the list above.
 # Basic name is a key, and value is a list of synonyms.
-GEN_SYN = { 'mc@nlo':['mcatnlo'],
-            'pythia8':['py8']
+GEN_SYN = { 'mc@nlo': ['mcatnlo'],
+            'pythia8': ['py8']
          }
 
 # Regular expressions to handle dataset name
@@ -93,7 +93,7 @@ DSNAME_mc = re.compile('^(?P<project>mc[0-9_a-zA-Z]*)\.(?P<DSID>[0-9]*)\.(?P<phy
 class CloseFileException(Exception):
   pass
 
-def add_sparql(line,linkfile,triple_map):
+def add_sparql(line, linkfile, triple_map):
   # Adds part of linking query, to link dataset, mentioned in this CSV line,
   # and its document.
 
@@ -119,13 +119,13 @@ def check_synonyms(word, syns):
     for t in syns:
       if word in syns[t]: return t
   else:
-    for i in range(0,len(word)):
+    for i in range(0, len(word)):
       for t in syns:
         if word[i] in syns[t]: word[i] = t
   return word
 
 
-def add_ttl(line,outfile,triple_map):
+def add_ttl(line, outfile, triple_map):
   # Transforms single CSV line to a set of triples, writing them to file.
   # Transformation rules are basically defined by global variables,
   # but also have some specifics in the code itself.
@@ -137,11 +137,11 @@ def add_ttl(line,outfile,triple_map):
     sys.stderr.write('Can`t find dataset name in CSV file\n')
     return False
 
-  m = re.match(DSNAME_data,name)
+  m = re.match(DSNAME_data, name)
   if m:
     line['datatype'] = 'RealData'
   else:
-    m = re.match(DSNAME_mc,name)
+    m = re.match(DSNAME_mc, name)
     if m:
       line['datatype'] = 'MC'
 
@@ -162,7 +162,7 @@ def add_ttl(line,outfile,triple_map):
       line['generator'] = re.findall(GENERATOR, m.group('phys_short').lower())
       line['generator'] = check_synonyms(line['generator'], GEN_SYN)
 
-      kwds = m.group('phys_short').replace('_','__').replace('no__filter','no_filter').split('__')
+      kwds = m.group('phys_short').replace('_', '__').replace('no__filter', 'no_filter').split('__')
       line['physKeyword'] = []
       for kw in kwds:
         if re.match(GENERATOR, kw): continue
@@ -172,7 +172,7 @@ def add_ttl(line,outfile,triple_map):
 
 
   # Refine timestamp
-  t = None if (line['timestamp'] in ('NULL','\N', None)) else int(line['timestamp']) / 100
+  t = None if (line['timestamp'] in ('NULL', '\N', None)) else int(line['timestamp']) / 100
   if t:
     line['timestamp'] = datetime.fromtimestamp(t).strftime("%Y-%m-%dT%H:%M:%S")
 
@@ -190,7 +190,7 @@ def add_ttl(line,outfile,triple_map):
     if p in OWL_PARAMS_NUMSTR.keys():
       val = str(val).strip('[]')  # "'a', 'b', 'c'" 4strings OR "1, 2, 3" 4ints
       if p in OWL_PARAMS_NUM.keys():
-        val = val.replace("'",'') # As numeric values could be read as strings
+        val = val.replace("'", '') # As numeric values could be read as strings
       prop = OWL_PARAMS_NUMSTR[p]
     elif p in OWL_PARAMS_OBJ.keys():
       prop += OWL_PARAMS_OBJ[p]
@@ -200,10 +200,10 @@ def add_ttl(line,outfile,triple_map):
         # TODO: CHECK, if such an object exists!
         v = v.lower() if type(v) == str else v
         v1 += ['<{ontology}#' + str(v) + '>']
-      val = str(v1).strip('[]').replace("'",'') # "<ont#val>, <ont#val>"
+      val = str(v1).strip('[]').replace("'", '') # "<ont#val>, <ont#val>"
       value = val
     else:
-      warnings.warn('Skipping unknown dataset property: {p}'.format(p=p),Warning)
+      warnings.warn('Skipping unknown dataset property: {p}'.format(p=p), Warning)
       continue
 
     triple = "<{graph}/{obj}> <{ontology}#{property}> " + value + " .\n"
@@ -231,7 +231,7 @@ def LinkFiles(basename, ext='', beg='', end=''):
       n = basename[-2]
       try:
         n = int(n)
-        dot = f.name.rfind('.',0,-len(ext))
+        dot = f.name.rfind('.', 0, -len(ext))
         basename = f.name[: dot if dot > 0 else None]
       except ValueError, TypeError:
         n = 0
@@ -260,7 +260,7 @@ def LinkFiles(basename, ext='', beg='', end=''):
     sys.stderr.write("(INFO) LinkFiles: another call ({nn})".format(nn=new_name))
     n += 1
     try:
-      f = open(new_name,'w',0)
+      f = open(new_name, 'w', 0)
       f.write(beg)
     except IOError as e:
       sys.stderr.write("I/O error({0}): {1}\n".format(e.errno, e.strerror))
@@ -283,7 +283,7 @@ def LinkFiles(basename, ext='', beg='', end=''):
   yield None
 
 
-def csv2ttl(csvfile,outfile,linkfile,args=None):
+def csv2ttl(csvfile, outfile, linkfile, args=None):
   # Converts single CSV file to TTL and SPARQL files
 
   spamreader = csv.reader(iter(csvfile.readline, ''), delimiter=',')
@@ -302,7 +302,7 @@ def csv2ttl(csvfile,outfile,linkfile,args=None):
       headers = CSV_HEADER
       warnings.warn("{0}: Can`t find header in CSV file. Use default header.".format(csvfile.name), Warning)
 
-  triple_map = {'graph':args.graph, 'ontology':args.ontology}
+  triple_map = {'graph': args.graph, 'ontology': args.ontology}
 
   if args.mode in ('link', None):
     # To create links we need opening/close statements
@@ -323,15 +323,15 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
     # For stream processing we want to put the whole query in one string
     # and mark the end of line (with last '\n')
     #                 and the end of input string processing (with '\0')
-      linkquery_beg = linkquery_beg.replace("\n"," ")
-      linkquery_end = linkquery_end.replace("\n"," ") + "\n\0"
+      linkquery_beg = linkquery_beg.replace("\n", " ")
+      linkquery_end = linkquery_end.replace("\n", " ") + "\n\0"
 
     close_link = False
-    if args.processing_mode in ('m','s'):
+    if args.processing_mode in ('m', 's'):
       linkfile = '/dev/stdout'    # not <stdout>, as it can be closed acsidentally
     if not linkfile: linkfile = fname
     if type(linkfile) != file: close_link = True
-    linkfiles = LinkFiles(linkfile,'.sparql',linkquery_beg,linkquery_end)
+    linkfiles = LinkFiles(linkfile, '.sparql', linkquery_beg, linkquery_end)
     linkfile = linkfiles.next()
 
     linkquery_flag = False
@@ -341,11 +341,11 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
 
     # There's no real need to use LinkFiles here,
     # but as it handles extention and file opening -- why not?
-    if args.processing_mode in ('m','s'):
+    if args.processing_mode in ('m', 's'):
       outfile = '/dev/stdout'    # not <stdout>, as it can be closed acsidentally
     if not outfile: outfile = fname
     if type(outfile) != file: close_out = True
-    outfiles = LinkFiles(outfile,'.ttl')
+    outfiles = LinkFiles(outfile, '.ttl')
     outfile = outfiles.next()
 
     triples_flag = False
@@ -354,16 +354,16 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
   for csvstr in spamreader:
     line = dict(zip(headers, csvstr))
     if args.mode in ('ttl', None): 
-      triples_flag |= add_ttl(line,outfile,triple_map)
-      triple_map = {'graph':args.graph, 'ontology':args.ontology}
+      triples_flag |= add_ttl(line, outfile, triple_map)
+      triple_map = {'graph': args.graph, 'ontology': args.ontology}
       if args.processing_mode == 's':
         outfile.write("\0") # the mark saying current string is fully processed
     if args.mode in ('link', None):
-      linkquery_flag += add_sparql(line,linkfile,triple_map)
+      linkquery_flag += add_sparql(line, linkfile, triple_map)
       if args.processing_mode != 's':
         linkfile.write("\n") # having thousands of query pieces in one line
                              # is just not beautiful
-      triple_map = {'graph':args.graph, 'ontology':args.ontology}
+      triple_map = {'graph': args.graph, 'ontology': args.ontology}
 
       # We need to finalize the linking query every ~ 6000 link objects
       # to keep query files within ~1M (which was good enough for uploading)
@@ -432,7 +432,7 @@ Ignore options: -o|--output (stdout), -l|--link-file (stdout) , -N|--link-number
 Default mode (-T|-L): TTL.''',
                       default=None,
                       dest='processing_mode',
-                      choices=['m','s',None]
+                      choices=['m', 's', None]
                      )
   parser.add_argument('-T', '--ttl', action='store_const',
                       help=u'Generate TTL file only.',
@@ -451,20 +451,20 @@ Default mode (-T|-L): TTL.''',
   args = parser.parse_args(argv)
   linkfile = args.linkfile
   if not args.csv:
-    if args.processing_mode in ('m','s'):
+    if args.processing_mode in ('m', 's'):
       args.csv = [sys.stdin]
     else:
       sys.stderr.write('(ERROR) No input CSV file presented.')
       exit(1)
 
-  if args.processing_mode in ('m','s') and not args.mode:
+  if args.processing_mode in ('m', 's') and not args.mode:
     args.mode = 'ttl'
 
   if args.processing_mode == 's':
     args.N = 1
 
   for infile in args.csv:
-    linkfile = csv2ttl(infile,args.outfile,linkfile,args)
+    linkfile = csv2ttl(infile, args.outfile, linkfile, args)
     infile.close()
 
 if __name__ == '__main__':

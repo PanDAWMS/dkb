@@ -6,7 +6,7 @@ import json
 import uuid
 
 GUIDlog = None
-GUIDdict = {"p":{}, "s":{}}
+GUIDdict = {"p": {}, "s": {}}
 
 GRAPH = "http://nosql.tpu.ru:8890/DAV/ATLAS"
 ONTOLOGY = "http://nosql.tpu.ru/ontology/ATLAS"
@@ -237,13 +237,13 @@ def get_items(fds):
 
   for data_file in fds:
     if type(data_file) != file:
-      sys.stderr.write("(ERROR) get_items(): expected list of %s, get %s: %s\nSkipping file.\n" % (file,type(data_file)))
+      sys.stderr.write("(ERROR) get_items(): expected list of %s, get %s: %s\nSkipping file.\n" % (file, type(data_file)))
       continue
     if data_file != sys.stdin:
       try:
         data = json.load(data_file)
       except ValueError as e:
-        sys.stderr.write("Failed to parse JSON (%s): %s\nSkipping file.\n" % (data_file.name,e.message))
+        sys.stderr.write("Failed to parse JSON (%s): %s\nSkipping file.\n" % (data_file.name, e.message))
         continue
     else:
       data = iter(data_file.readline, '')
@@ -323,7 +323,7 @@ Ignore options: -o|--output (use STDOUT)
 ''',
                       default='f',
                       dest='processing_mode',
-                      choices=['f','s']
+                      choices=['f', 's']
                      )
   parser.add_argument('-d', '--delimiter', action='store', nargs='?',
                       help=u'EOP marker for Kafka mode (default: \0)',

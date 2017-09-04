@@ -109,7 +109,7 @@ def main(argv):
    password = ''
 
    try:
-      opts, args = getopt.getopt(argv, "hl:p:m:",["login=","password=","mode="])
+      opts, args = getopt.getopt(argv, "hl:p:m:", ["login=", "password=", "mode="])
    except getopt.GetoptError:
       usage()
       sys.exit(2)
@@ -130,7 +130,7 @@ def main(argv):
 
    cds = CDSInvenioConnector(login, password)
 
-   if mode in ('f','file'):
+   if mode in ('f', 'file'):
       with open('list_of_papers_formatted.json') as data_file:
          data = json.load(data_file)
          for item in data:
@@ -147,7 +147,7 @@ def main(argv):
                   file.close()
             sys.stderr.write("done!\n")
 
-   elif mode in ('s','stream'):
+   elif mode in ('s', 'stream'):
       instream = iter(sys.stdin.readline, '')
       for data_str in instream:
          data = json.loads(data_str)

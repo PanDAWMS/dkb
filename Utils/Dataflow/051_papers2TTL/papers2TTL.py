@@ -58,7 +58,7 @@ paper_attrs = [{'CDS': 'creation_date',         'SPARQL': 'creation_date',      
                {'CDS': 'CDSInternal',           'SPARQL': 'CDSInternal',        'ONTO': 'hasCDSInternal'},
                {'CDS': 'CDS_ID',                'SPARQL': 'CDS_ID',             'ONTO': 'hasCDS_ID'},
                {'CDS': 'abstract',              'SPARQL': 'abstract',           'ONTO': 'hasAbstract'},
-               {'CDS': 'primary_report_number', 'SPARQL': 'arXivCode',          'ONTO': 'hasArXivCode'},]
+               {'CDS': 'primary_report_number', 'SPARQL': 'arXivCode',          'ONTO': 'hasArXivCode'}, ]
 
 #-----------------------------------------------------------------------------------------------------------
 # SPARQL Queries
@@ -255,14 +255,14 @@ def sparqlQuery(query, baseURL, format="application/sparql-results+json"):
         return json.loads(response)
 
 def getAuthorsByParameter(param_name, ONTO, params_list):
-    query = sparql_query.format(param_name=param_name,ONTO=ONTO,params_list=params_list, **ontology_params)
+    query = sparql_query.format(param_name=param_name, ONTO=ONTO, params_list=params_list, **ontology_params)
     results = sparqlQuery(query, SPARQL)['results']['bindings']
     # print "results length = " + str(len(results))
     return results
 
 def getAuthorsByFLA(first_name, last_name, first_letter, affiliation):
-    query = _sparql_authors.format(first_name=first_name,last_name=last_name,
-                                   first_letter=first_letter,affiliation=affiliation, **ontology_params)
+    query = _sparql_authors.format(first_name=first_name, last_name=last_name,
+                                   first_letter=first_letter, affiliation=affiliation, **ontology_params)
     return sparqlQuery(query, SPARQL)['results']['bindings']
 
 # check if Virtuoso

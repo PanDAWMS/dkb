@@ -11,7 +11,7 @@ default_cfg = {
         "DETERMINE_TITLE":      False,
         "OPEN_INTERVALS":       False,
         "HDFS_PDF_DIR":         "",
-        "HDFS_DOWNLOAD_COMMAND":"hadoop fs -get"
+        "HDFS_DOWNLOAD_COMMAND": "hadoop fs -get"
     }
 
 def load_config(default_cfg):
@@ -497,7 +497,7 @@ class Paper:
         attrs["luminosity"] = False
         tmp = re_luminosity.search(pages)
         if tmp:
-            attrs["luminosity"] = tmp.group(0).replace("−","-").replace("(cid:0)", "-")
+            attrs["luminosity"] = tmp.group(0).replace("−", "-").replace("(cid:0)", "-")
 
         pages = pages.lower()
 

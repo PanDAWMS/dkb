@@ -25,7 +25,7 @@ def main(argv):
    login = ''
    password = ''
    try:
-      opts, args = getopt.getopt(argv, "hl:p:",["login=","password="])
+      opts, args = getopt.getopt(argv, "hl:p:", ["login=", "password="])
    except getopt.GetoptError:
       print '-l <login> -p <password>'
       sys.exit(2)

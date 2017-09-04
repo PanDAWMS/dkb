@@ -73,7 +73,7 @@ class KerberizedCDSInvenioConnector(MyCDSInvenioConnector):
    Represents same CDSInvenioConnector, but this one is aware about SPNEGO:
    Simple and Protected GSSAPI Negotiation Mechanism
    '''
-   def __init__(self,login="user",password="password"):
+   def __init__(self, login="user", password="password"):
       '''
       Run parent's constructor with fake login/password to make it run
       _init_browser().
@@ -86,7 +86,7 @@ class KerberizedCDSInvenioConnector(MyCDSInvenioConnector):
                           "       Can't proceed with Kerberos authorization.\n")
          sys.exit(4)
 
-      super(KerberizedCDSInvenioConnector,self).__init__("user","password")
+      super(KerberizedCDSInvenioConnector, self).__init__("user", "password")
 
    def _init_browser(self):
       '''
@@ -94,12 +94,12 @@ class KerberizedCDSInvenioConnector(MyCDSInvenioConnector):
       '''
       try:
         (_, vc) = kerberos.authGSSClientInit("HTTP@login.cern.ch")
-        kerberos.authGSSClientStep(vc,"")
+        kerberos.authGSSClientStep(vc, "")
         token = kerberos.authGSSClientResponse(vc)
 
         headers = {'Authorization': 'Negotiate ' + token}
 
-        self.browser = splinter.Browser('phantomjs',custom_headers=headers)
+        self.browser = splinter.Browser('phantomjs', custom_headers=headers)
         self.browser.visit(self.server_url)
         self.browser.find_link_by_partial_text("Sign in").click()
 
@@ -116,7 +116,7 @@ def search_notes(cds, notes):
    if type(notes) != list: return None
    results = {}
    for note in notes:
-      results[note.get("id")] = search_note(cds,note)
+      results[note.get("id")] = search_note(cds, note)
 
    return results
 
@@ -127,9 +127,9 @@ def search_note(cds, note):
    '''
    global counter
    if type(note) != dict: return None
-   url = note.get("url",None)
+   url = note.get("url", None)
    if not url: return None
-   url = url.replace('\\','')
+   url = url.replace('\\', '')
    parsed = urlparse(url)
    if (parsed.netloc == 'cds.cern.ch' or parsed.netloc == 'cdsweb.cern.ch'):
       sys.stderr.write(parsed.path + "\n")
@@ -175,7 +175,7 @@ def input_file_handle(filename, cds):
 
    for item in data:
       sys.stderr.write(item["id"] + "\n")
-      results = search_notes(cds, item.get("supporting_notes",None))
+      results = search_notes(cds, item.get("supporting_notes", None))
       if not results: continue
       if type(results) != dict: continue
       for note_id in results:
@@ -186,7 +186,7 @@ def input_file_handle(filename, cds):
 
    sys.stderr.write("done!\n")
 
-def input_stream_handle(stream,cds):
+def input_stream_handle(stream, cds):
    '''
    Handles input stream.
    '''
@@ -206,7 +206,7 @@ def input_stream_handle(stream,cds):
          sys.stderr.write("WARNING: can't decode input line as JSON. Skipping.\n")
          continue
 
-      results = search_notes(cds, item.get("supporting_notes",None))
+      results = search_notes(cds, item.get("supporting_notes", None))
       if not results: continue
       for note_id in results:
          if results[note_id]:
@@ -222,7 +222,7 @@ def main(argv):
    kerberos = False
    mode = 'f'
    try:
-      opts, args = getopt.getopt(argv, "hl:p:km:",["login=","password=","kerberos","mode="])
+      opts, args = getopt.getopt(argv, "hl:p:km:", ["login=", "password=", "kerberos", "mode="])
    except getopt.GetoptError:
       usage()
       sys.exit(2)
@@ -242,18 +242,18 @@ def main(argv):
    if not login and not kerberos:
       sys.stderr.write("WARNING: no authentication method will be used.\n")
 
-   warnings.simplefilter("once",InsecurePlatformWarning)
+   warnings.simplefilter("once", InsecurePlatformWarning)
 
    if kerberos: Connector = KerberizedCDSInvenioConnector
    else:        Connector = MyCDSInvenioConnector
 
-   with Connector(login,password) as cds:
+   with Connector(login, password) as cds:
 
-      if mode in ("f","file"):
-         input_file_handle('Input/list_of_papers.json',cds)
+      if mode in ("f", "file"):
+         input_file_handle('Input/list_of_papers.json', cds)
 
       elif mode in ("s", "stream"):
-         input_stream_handle(sys.stdin,cds)
+         input_stream_handle(sys.stdin, cds)
 
       else:
          sys.stderr.write("Wrong value for MODE parameter: %s\n" % mode)

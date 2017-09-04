@@ -54,7 +54,7 @@ file_object = open(chosen_path, "r")
 lines = file_object.readlines()
 for i in lines:
 	if not i.startswith("#"):
-		project = "<%s/project/%s>" % (graph,i.rstrip('\n'))
+		project = "<%s/project/%s>" % (graph, i.rstrip('\n'))
 		PROJECTS = {
                     'graph': graph,
 			'ontology': ontology,

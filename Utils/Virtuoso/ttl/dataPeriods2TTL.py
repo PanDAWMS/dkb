@@ -75,10 +75,10 @@ with open(chosen_path) as data_file:
 	
 listProj = []
 for i, item in enumerate(input_data):
-		dataPeriod = "<%s/dataperiod/%s_%s_%s>" % (graph,year,input_data[i]['period'],input_data[i]['periodLevel'])
-		project = "<%s/project/%s>" % (graph,input_data[i]['projectName'])
+		dataPeriod = "<%s/dataperiod/%s_%s_%s>" % (graph, year, input_data[i]['period'], input_data[i]['periodLevel'])
+		project = "<%s/project/%s>" % (graph, input_data[i]['projectName'])
 		#deleting of newline symbol from description
-		description = input_data[i]['description'].replace("\n"," ")
+		description = input_data[i]['description'].replace("\n", " ")
 		DATAPERIODS = {
                     'graph': graph,
 			'ontology': ontology,

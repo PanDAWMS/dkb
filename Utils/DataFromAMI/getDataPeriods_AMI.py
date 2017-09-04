@@ -29,7 +29,7 @@ periods_file = "periods.json"
 f = open(periods_file, 'w')
 tmp = []
 for year in range(year_start, year_end):
-    for level in range(1,4):
+    for level in range(1, 4):
         try:
             result =  AtlasAPI.list_dataperiods(client, level=level, year=year)
             tmp.append(",".join(str(json.dumps(item, indent=4)) for item in result))
