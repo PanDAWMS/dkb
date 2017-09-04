@@ -42,34 +42,34 @@ import os
 import re
 from tkinter.filedialog import askopenfilename
 
-#default graph and ontology
+# default graph and ontology
 graph = "http://nosql.tpu.ru:8890/DAV/ATLAS"
 ontology = "http://nosql.tpu.ru/ontology/ATLAS"
 
-#choose graph
+# choose graph
 print("Current graph: " + graph + "\n")
 graph_answer = input("Would you like to choose another one? [Y/N] ")
 if graph_answer.lower() in ['y', 'yes']:
 	graph = input("Please, insert a graph: ")
 print("\nCurrent graph: " + graph + "\n")    
 
-#choose ontology
+# choose ontology
 print("Current ontology: " + ontology + "\n")
 ontology_answer = input("Would you like to choose another one? [Y/N] ")
 if ontology_answer.lower() in ['y', 'yes']:
 	ontology = input("Please, insert an ontology: ")
 print("\nCurrent ontology: " + ontology + "\n")
 
-#path
+# path
 chosen_path = os.path.normpath(askopenfilename())
 
-#year
-#year = '20'+ chosen_path.rstrip('.json')[len(chosen_path.rstrip('.json'))-2:len(chosen_path.rstrip('.json'))]
+# year
+# year = '20'+ chosen_path.rstrip('.json')[len(chosen_path.rstrip('.json'))-2:len(chosen_path.rstrip('.json'))]
 
-#a ttl document with default name
+# a ttl document with default name
 output_data = open("data_periods.ttl", 'w')
 
-#input
+# input
 with open(chosen_path) as data_file:    
     input_data = json.load(data_file)
 		
@@ -78,11 +78,11 @@ listProj = []
 for i, item in enumerate(input_data):
 		year = "20" + str(re.findall(r'\d+', input_data[i]['projectName'])[0])
 		dataPeriod = "<%s/dataperiod/%s_%s_%s>" % (graph, year, input_data[i]['period'], input_data[i]['periodLevel'])
-		#project name
+		# project name
 		projectName = input_data[i]['projectName']
-		#a subject in ontology
+		# a subject in ontology
 		project = "<%s/project/%s>" % (graph, input_data[i]['projectName'])
-		#deleting of newline symbol from description
+		# deleting of newline symbol from description
 		description = input_data[i]['description'].replace("\n", " ")
 		DATAPERIODS = {
                     'graph': graph,

@@ -70,10 +70,10 @@ METADATA_FILE = "metadata.json"  # Name of the file which holds the metadata ext
 # Manager hanging when extracting. Partially fixed - now status bar is updated correctly, manager still hangs otherwise but it's questionable if much can be done here.
 # Good run lists
 # Finding text blocks on each page, determining their type and processing them accordingly. This will help in solving problems like:
-## Table headers above table. PDF 2015-170 may be a good place to test this. Table 2 (which is not needed) has a figure above it, which must be accounted for.
-## Tables on several pages
-## Lines construction regarding Y-axis (see PDF 609)
-## Campaigns (and probably other things?) should NOT be searched in References.
+# Table headers above table. PDF 2015-170 may be a good place to test this. Table 2 (which is not needed) has a figure above it, which must be accounted for.
+# Tables on several pages
+# Lines construction regarding Y-axis (see PDF 609)
+# Campaigns (and probably other things?) should NOT be searched in References.
 # Use list(list) where appropriate.
 # Additional independent module which will check json files and try to filter out wrong datasets and tables, or fix them.
 # * and % in dataset names.
@@ -87,7 +87,7 @@ class DatasetCategory:
         self.name = name
         self.reg = re.compile(string, re.X)  # Standard regular expression for finding datasets.
         self.reg_spaces = re.compile(string.replace("_", "\ ").replace("\w", "a-zA-Z0-9 "), re.X)  # Same as self.reg, but with spaces instead of underscores. This is required because pdfminer sometimes reads underscores as spaces, especially in a document with small font size.
-##        self.reg_dashes = re.compile(string.replace("_", "\-").replace("\w", "a-zA-Z0-9-"), re.X) # This does not works, probably because "-" is a special character, and should be "-" or "\-" in different places of regular expressions. | Same as self.reg, but with dashes instead of underscores. This is required because at least one document lists datasets in such way.
+# self.reg_dashes = re.compile(string.replace("_", "\-").replace("\w", "a-zA-Z0-9-"), re.X) # This does not works, probably because "-" is a special character, and should be "-" or "\-" in different places of regular expressions. | Same as self.reg, but with dashes instead of underscores. This is required because at least one document lists datasets in such way.
     def find(self, text, intervals, datasets):
 #        print "INTERVALS", intervals
         strings = []
@@ -117,7 +117,7 @@ class DatasetCategory:
                             datasets[self.name].append([ns, False])
                         elif self.reg_spaces.match(ns):
                             datasets[self.name].append([ns.replace(" ", "_"), "spaces"])
-    ##                    elif self.reg_dashes.match(ns):
+    # elif self.reg_dashes.match(ns):
     ##                        datasets[self.name].append([ns.replace("-", "_"), "dashes"])
                 else:
                     res = 0
@@ -136,18 +136,18 @@ class DatasetCategory:
                     datasets[self.name].append([s, False])
                 elif self.reg_spaces.match(s):
                     datasets[self.name].append([s.replace(" ", "_"), "spaces"])
-##                elif self.reg_dashes.match(s):
+# elif self.reg_dashes.match(s):
 ##                    datasets[self.name].append([s.replace("-", "_"), "dashes"])
         return (text, datasets)
 
 # This does not works, probably because of differences between "" and r"""""" (re module throws exception).
-##f = open(CATEGORIES_FILE, "r")
-##categories = json.load(f)
-##f.close()
-##dataset_categories = []
-##for c in categories:
+## f = open(CATEGORIES_FILE, "r")
+## categories = json.load(f)
+# f.close()
+## dataset_categories = []
+# for c in categories:
 ##    regular = ""
-##    for [r, comment] in c["regular"]:
+# for [r, comment] in c["regular"]:
 ##        regular += r
 ##    dataset_categories.append(DatasetCategory(c["name"], regular))
 
@@ -203,7 +203,7 @@ database = DatasetCategory("database", r"""ddo                  # Project tag.
                                            """)
 
 # Regular expressions
-#dataset_categories = [group, user, montecarlo, physcont, calibration, realdata, database]
+# dataset_categories = [group, user, montecarlo, physcont, calibration, realdata, database]
 dataset_categories = [montecarlo, physcont, calibration, realdata, database]  # We don't need group and user datasets for now.
 re_pdfname = re.compile("/([^./]+)\.pdf$")  # Path must have / as separator, not \.
 re_table_header = re.compile("Table \d+:.*?\n\n", re.DOTALL)
@@ -422,59 +422,59 @@ class Paper:
     def delete(self):
         # Delete all files associated with paper.
         rmtree(self.dir)
-##    def find_title(self): # New title determining method, does not works ideally yet. Titles consisting of several lines are problematic to determine.
+# def find_title(self): # New title determining method, does not works ideally yet. Titles consisting of several lines are problematic to determine.
 ##        lines = self.get_xml_page(1)
 ##
 ##        d = {}
-##        for l in lines:
+# for l in lines:
 ##            m = re_xml_symbol.match(l)
-##            if m:
+# if m:
 ##                size = float(m.group(1))
 ##                text = m.group(2)
-##                if size in d.keys():
+# if size in d.keys():
 ##                    d[size] += text
-##                else:
+# else:
 ##                    d[size] = text
-##            elif re_xml_empty_symbol.match(l):
+# elif re_xml_empty_symbol.match(l):
 ##                d[size] += " "
 ##        xml_title = False
-##        print d
-##        while True:
+# print d
+# while True:
 ##            size = max(d.keys())
 ##            valid = True
-##            try:
-##                d[size].decode()
-##            except:
+# try:
+# d[size].decode()
+# except:
 ##                valid = False
-##            if not "atlas note" in d[size].lower() and valid:
+# if not "atlas note" in d[size].lower() and valid:
 ##                xml_title = d[size]
-##                break
-##            else:
+# break
+# else:
 ##                del d[size]
 ##                
-##        print xml_title
-##        if not xml_title:
-##            return False
+# print xml_title
+# if not xml_title:
+# return False
 ##        
 ##        lines = self.get_txt_page(1)
 ##        title = ""
-##        for l in lines:
-##            if len(l) <= 4 or l.startswith("Supporting Note") or l.startswith("ATLAS NOTE"):
-##                continue
+# for l in lines:
+# if len(l) <= 4 or l.startswith("Supporting Note") or l.startswith("ATLAS NOTE"):
+# continue
 ##            words = l.split()
 ##            i = 0
-##            for w in words:
-##                try:
-##                    w_in = w in xml_title # This throws exception sometimes, something about ascii codec unable to decode.
-##                except:
+# for w in words:
+# try:
+# w_in = w in xml_title # This throws exception sometimes, something about ascii codec unable to decode.
+# except:
 ##                    w_in = False
-##                if len(w) > 1 and w_in:
+# if len(w) > 1 and w_in:
 ##                    i += 1
-##            if i > 1 or (len(words) == 1 and i == 1):
+# if i > 1 or (len(words) == 1 and i == 1):
 ##                title += l.replace("\n", " ")
-##            elif title:
-##                break
-##        return title
+# elif title:
+# break
+# return title
     def find_attributes_general(self):
         # Find general attributes in a document.
         attrs = {}
@@ -609,23 +609,23 @@ class Paper:
     def export(self, quick=False, outf=False):
         # Export metadata into file in export directory. Quick export: if a part of metadata was never determined, the corresponding procedure would be used with all user interaction skipped.
 
-##        print self.fname
+# print self.fname
 ##        paper_date = re.search("((?:january|february|march|april|may|june|july|august|september|october|november|december).*20\d\d)", self.get_txt_page(1, True).lower())
-##        if paper_date:
+# if paper_date:
 ##             d = paper_date.group(1)
-##             print "date:", d
+# print "date:", d
 ##
 ##        text = self.get_text()
 ##        m = re_year.findall(text)
-##        if m:
-##            print m
-####            for t in m:
-####                if d not in t.lower():
-####                    print t
-##        else:
-##            print "None"
-##        print "\n"
-##        return True
+# if m:
+# print m
+# for t in m:
+# if d not in t.lower():
+# print t
+# else:
+# print "None"
+# print "\n"
+# return True
 
 
         outp = {}

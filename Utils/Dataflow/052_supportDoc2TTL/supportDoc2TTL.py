@@ -28,9 +28,9 @@ ontology_params = {'ontology': 'http://nosql.tpu.ru/ontology/ATLAS',
 
 SPARQL                = "http://nosql.tpu.ru:8890/sparql"
 
-#-----------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------
 # Lists of dictionaries with parameters names for JSON documents and Ontology representation
-#-----------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------
 author_params_list = [{'CDS': 'INSPIRE_number',
                        'SPARQL': 'INSPIRE_number',
                        'ONTO': 'hasINSPIRENumber',
@@ -59,15 +59,15 @@ author_attrs = [{'CDS': 'INSPIRE_number',  'SPARQL': 'INSPIRE_number',    'ONTO'
 
 
 paper_attrs = [{'CDS': 'creation_date',         'SPARQL': 'creation_date',      'ONTO': 'hasCreationDate'},
-               #{'CDS': 'CDS_ReportNumber',      'SPARQL': 'CDS_ReportNumber',   'ONTO': 'hasCDSReportNumber'},
+               # {'CDS': 'CDS_ReportNumber',      'SPARQL': 'CDS_ReportNumber',   'ONTO': 'hasCDSReportNumber'},
                {'CDS': 'CDSInternal',           'SPARQL': 'CDSInternal',        'ONTO': 'hasCDSInternal'},
                {'CDS': 'CDS_ID',                'SPARQL': 'CDS_ID',             'ONTO': 'hasCDS_ID'},
                {'CDS': 'abstract',              'SPARQL': 'abstract',           'ONTO': 'hasAbstract'},
                {'CDS': 'title',                 'SPARQL': 'title',              'ONTO': 'hasFullTitle'}, ]
 
-#-----------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------
 # SPARQL Queries
-#-----------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------
 
 sparql_query = '''
                 WITH <{graph}> SELECT ?guid, ?{param_name}
@@ -96,9 +96,9 @@ _sparql_authors  = '''WITH <{graph}> SELECT ?guid, ?first_name, ?last_name, ?aff
                      }}'''
 
 
-#-----------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------
 # TTL Strings for Virtuoso
-#-----------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------
 
 _ttl_keyword = '''<{docGUID}> <{ontology}#hasKeyword> "{keyword}" .
 '''
@@ -226,7 +226,7 @@ def json_processing(glance_id, data, output):
     if (isSupportingDocument(data[0])):
         print "Support Document!\n"
 
-        #authors_processing(data[0])
+        # authors_processing(data[0])
         # print "Authors processed"
         ttl_string = json2TTL(glance_id, data[0])
         print "TTL_STRING "
@@ -238,9 +238,9 @@ def json_processing(glance_id, data, output):
                 sys.stdout.write(ttl_string + "\n\0")
                 sys.stdout.flush()
 
-#--------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------
 # DATABASE FUNCTIONS
-#--------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------
 # execute SPARQL requests with urllib2 library
 def sparqlQuery(query, baseURL, format="application/sparql-results+json"):
     params = {
@@ -425,13 +425,13 @@ def authorTTL(authors, docGUID):
             ttl += newAuthorTTL(item, docGUID)
         else:
             ttl += author2paperTTL(item['guid'], docGUID)
-    #print ttl
+    # print ttl
     return ttl
 
 
-#--------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------
 # CONVERTING JSON TO TTL
-#--------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------
 # read JSON document with supporting document metadata and generating TTL
 def json2TTL(glance_id, data):
     # search documentGUID in VIRTUOSO
@@ -496,12 +496,12 @@ def report_numbers_processing(report_number, data):
         if 'report_number' in report_number:
             CDS_ReportNumber = report_number['report_number']
     data['CDSInternal'] = CDSInternal
-    #data['CDS_ReportNumber'] = CDS_ReportNumber
+    # data['CDS_ReportNumber'] = CDS_ReportNumber
 
 
 # -------------------------------------------------------------------------------------------------------------------
 # HELPER FUNCTIONS
-#--------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------
 # fix escape sequences in strings
 def fixString(s):
     return s.encode('ascii', 'ignore').replace("'", "\\'").replace("\n", "\\n").replace("\\", r"\\").replace('\"', '')
@@ -513,7 +513,7 @@ def fixDictValues(dict, keys_to_fix):
                 dict[key] = fixString(dict[key])
             elif type(dict[key]) is list:
                 dict[key] = fixString(str(dict[key]))
-            #print dict[key]
+            # print dict[key]
         else:
             continue
     return dict

@@ -73,7 +73,7 @@ def main(argv):
                             js["recid"] = recid
                             js["url"]   = url
                             js["id"]    = note["id"]
-                            #js_list.append(js)
+                            # js_list.append(js)
                             json.dump(js, outfile)
                             if i != last:
                               outfile.write(",")

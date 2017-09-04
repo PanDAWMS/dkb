@@ -355,32 +355,32 @@ def analyze_page(text):
     rows.sort(key=lambda row: row_centery(row))
 
     return rows
-##    for row in rows:
-##        if row[0].text.isdigit():
-##            print "NUM ROW"
-##        else:
-##            print "OTHER ROW"
-##        for l in row:
-##            print l.text
-##            if row.index(l) == 0:
-##                print "ROW LEFT:", l.left
-##            elif row.index(l) == len(row):
-##                print "ROW RIGHT:", l.right
+# for row in rows:
+# if row[0].text.isdigit():
+# print "NUM ROW"
+# else:
+# print "OTHER ROW"
+# for l in row:
+# print l.text
+# if row.index(l) == 0:
+# print "ROW LEFT:", l.left
+# elif row.index(l) == len(row):
+# print "ROW RIGHT:", l.right
 
 ##    symbols = {}
 ##    lines = []
-##    for l in tlines:
+# for l in tlines:
 ##        lines.append(TextLine(l, symbols))
 ##
 ##    max_s = max(symbols.values())
-##    for key in symbols:
-##        if symbols[key] == max_s:
+# for key in symbols:
+# if symbols[key] == max_s:
 ##            max_key = key
-##            break
-##    print "KEY", max_key
-##    for l in lines:
-##        if max_key in l.symbols:
-##            print l.text
+# break
+# print "KEY", max_key
+# for l in lines:
+# if max_key in l.symbols:
+# print l.text
 
 if __name__ == "__main__":
     f = open("C:/Work/papers_analysis/manager/papers/ATL-COM-PHYS-2015-170/xml/9.xml", "r")

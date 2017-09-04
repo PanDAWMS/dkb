@@ -79,7 +79,7 @@ def search_paper(cds, paper_info):
                      user started to search/browse from.
    '''
    sys.stderr.write(paper_info["id"] + "\n")
-   #results = cds.search(cc="ATLAS", aas=1, m1="e", op1="a", p1=paper_info["full_title"], f1="title", m2="a", op2="a", p2="ARTICLE, ATLAS_Papers", f2="collection", m3="a", p3=paper_info["ref_code"], f3="report_number", of="recjson")
+   # results = cds.search(cc="ATLAS", aas=1, m1="e", op1="a", p1=paper_info["full_title"], f1="title", m2="a", op2="a", p2="ARTICLE, ATLAS_Papers", f2="collection", m3="a", p3=paper_info["ref_code"], f3="report_number", of="recjson")
    results = cds.search(cc="ATLAS", aas=1, m1="p", p1=paper_info["ref_code"], f1="reportnumber", m2="a", op2="a", p2="ARTICLE, ATLAS_Papers", f2="collection", of="recjson")
    try:
       res = json.loads(results)

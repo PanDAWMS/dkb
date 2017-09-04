@@ -13,7 +13,7 @@ from pdfminer.pdfpage import PDFTextExtractionNotAllowed
 from pdfminer.converter import XMLConverter, HTMLConverter, TextConverter
 from pdfminer.layout import LAParams
 
-#from pdfminer.pdftypes import resolve1
+# from pdfminer.pdftypes import resolve1
 
 def remove_ligatures(text):
     # Replaces ligatures (fancy symbols combining several letters) with letter combinations.
@@ -118,27 +118,27 @@ if __name__ == "__main__":
 ##    interpreter = PDFPageInterpreter(rsrcmngr, device)
 ##
 ##    n = 1
-##    for page in PDFPage.get_pages(f):
+# for page in PDFPage.get_pages(f):
 ##        lines = get_page_lines(interpreter, page, tmp)
 ##        single = 0
 ##        normal = 0
-##        for l in lines:
-##            if not l.isspace():
+# for l in lines:
+# if not l.isspace():
 ##                l = l.strip()
-##                if len(l) == 1:
+# if len(l) == 1:
 ##                    single += 1
 ##                normal += 1
 ##        coef = float(single) / normal
-##        print "Page %d: %d/%d = %f lines contain a single character" % (n, single, normal, coef)
-##        if coef > 0.9:
-##            print "Page seems to be rotated"
+# print "Page %d: %d/%d = %f lines contain a single character" % (n, single, normal, coef)
+# if coef > 0.9:
+# print "Page seems to be rotated"
 ##            lines = get_page_lines(interpreter, page, tmp, 90)
-##            print lines
+# print lines
 ##            
 ##        n += 1
-##        if n == 10:
-##            break
-##    print n
-##    f.close()
-##    device.close()
-##    tmp.close()
+# if n == 10:
+# break
+# print n
+# f.close()
+# device.close()
+# tmp.close()
