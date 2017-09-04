@@ -69,9 +69,9 @@ OWL_PARAMS_OBJ = {
 GENERATORS = ['acermc', 'alpgen',
               'charybdis', 'comphep',
               'evtgen',                  # <--- There might also be smth like 'EG'
-              'gg2vv',                        ## but how do we supposed to know
+              'gg2vv',  # but how do we supposed to know
               'herwig', 'herwig\+\+', 'hijing',  # if it is 'EG' or 'powhEG', or any
-              'isajet',                       ## other word?
+              'isajet',  # other word?
               'jimmy',
               'pythia8', 'pythia6', 'pythiab', 'pythia', 'py8',
               'madgraph5', 'madgraph', 'mcatnlo', 'mc@nlo',
