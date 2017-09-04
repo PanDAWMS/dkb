@@ -26,7 +26,7 @@ This script just get all data from file despite the data in Virtuoso.
 ------------------------------------------------------------------------------
 This script remove newline symbols in 'description'.
 Triples:
- {project_name} <{ontology}#hasDescription> '{description}' 
+ {project_name} <{ontology}#hasDescription> '{description}'
  {project_name} <{ontology}#hasStatus> '{status}'
  might be non-unique.
  -----------------------------------------------------------------------------
@@ -51,7 +51,7 @@ print("Current graph: " + graph + "\n")
 graph_answer = input("Would you like to choose another one? [Y/N] ")
 if graph_answer.lower() in ['y', 'yes']:
 	graph = input("Please, insert a graph: ")
-print("\nCurrent graph: " + graph + "\n")    
+print("\nCurrent graph: " + graph + "\n")
 
 # choose ontology
 print("Current ontology: " + ontology + "\n")
@@ -70,7 +70,7 @@ chosen_path = os.path.normpath(askopenfilename())
 output_data = open("data_periods.ttl", 'w')
 
 # input
-with open(chosen_path) as data_file:    
+with open(chosen_path) as data_file:
     input_data = json.load(data_file)
 		
 	

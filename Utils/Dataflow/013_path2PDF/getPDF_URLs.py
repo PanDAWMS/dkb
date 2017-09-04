@@ -58,13 +58,13 @@ def main(argv):
          if "supporting_notes" in item:
             for note in item["supporting_notes"]:
                 parsed = urlparse(note["url"])
-                if (parsed.netloc == 'cds.cern.ch' or 
+                if (parsed.netloc == 'cds.cern.ch' or
                     parsed.netloc == 'cdsweb.cern.ch'):
                    recid = parsed.path.split('/')[2]
                    print recid
                    results = cds.get_record(recid)
                    if len(results) > 0:
-                        try: 
+                        try:
                             urls = results[0]["8564_u"]
                             for item in urls:
                                 if (item.split('.')[-1] == 'pdf'):
@@ -78,7 +78,7 @@ def main(argv):
                             if i != last:
                               outfile.write(",")
                             elif i == last:
-                              outfile.write("]") 
+                              outfile.write("]")
                         except Exception:
                           print "broken mark record..."
 

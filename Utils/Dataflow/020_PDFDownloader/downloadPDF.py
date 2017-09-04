@@ -5,7 +5,7 @@
   Get Internal Notes full-text PDF, using SSO authentication
   Execiuted on mgrigori@lxplus.cern.ch
 
-  User must be registered in Kerberos 
+  User must be registered in Kerberos
   kinit
 
   input metadata:

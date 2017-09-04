@@ -152,7 +152,7 @@ class Table:
                 row.sort(key=lambda l: l.center[0])
                 self.rows.append(row)
 
-        r = len(self.rows) - 1 
+        r = len(self.rows) - 1
         max_diff = False  # Separate table lines from text above table. This is done by looking for a space between rows which is too large.
         n = 1
         while r > 0:
@@ -232,7 +232,7 @@ class Table:
                 short_rows.append(row)
         main_row = normal_rows[0]
         main_centers = []  # Calculate x coord for centers of each column in first normal row.
-        for l in main_row: 
+        for l in main_row:
 #            print "MAIN CENTER", (l.left + l.right)/2
             main_centers.append((l.left + l.right) / 2)
         boundaries = []  # Calculate x boundaries of each column.

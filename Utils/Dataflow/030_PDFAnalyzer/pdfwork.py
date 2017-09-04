@@ -96,7 +96,7 @@ def mine_text(infname, page_numbers=False, outtype="text", rotated_pages=[], fol
                 if folder and extension:
                     with open(folder + "/%d.%s" % (n, extension), "w") as outf:
                         outf.write(text)
-    #            outf.writelines(lines)            
+    #            outf.writelines(lines)
             n += 1
 #    inf.close()
     device.close()
@@ -134,7 +134,7 @@ if __name__ == "__main__":
 # print "Page seems to be rotated"
 ##            lines = get_page_lines(interpreter, page, tmp, 90)
 # print lines
-##            
+##
 ##        n += 1
 # if n == 10:
 # break

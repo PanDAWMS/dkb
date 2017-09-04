@@ -155,12 +155,12 @@ group = DatasetCategory("group", r"""group                      # Indicates grou
                                            \n*\.\n*             # Field separator
                                            [a-zA-Z\d\-:]+       # Group name. Examples: phys-higgs, phys-beauty.
                                            (\n*[._]\n*[a-zA-Z\d\-:!]+)+
-                                           """)    
+                                           """)
 user = DatasetCategory("user", r"""user                         # Indicates user dataset.
                                            \n*\.\n*             # Field separator
                                            [a-zA-Z\d\-:]+       # User name.
                                            (\n*[._]\n*[a-zA-Z\d\-:!]+)+
-                                           """)    
+                                           """)
 montecarlo = DatasetCategory("montecarlo", r"""mc\d\d           # Project. Examples: mc08, mc12.
                                            \n*_\n*              # Field part separator
                                            [a-zA-Z\d!]+         # Project sub tag. Examples: 7TeV, 1beam, cos.
@@ -168,8 +168,8 @@ montecarlo = DatasetCategory("montecarlo", r"""mc\d\d           # Project. Examp
                                            [\dINTERVAL!]+       # DataSet ID(DSID)
                                            (\n*[._]\n*[a-zA-Z\d\-:!]+)+
                                            (\n*_\n*[a-z]\d+)+   # AMITag or several
-                                           (_tid\d+(_\d\d)?)?   # Possible production system task and subtask numbers                                           
-                                           """)    
+                                           (_tid\d+(_\d\d)?)?   # Possible production system task and subtask numbers
+                                           """)
 physcont = DatasetCategory("physics container", r"""[a-zA-Z\d\-_\.:!]+
                                            \n*\.\n*             # Field separator
                                            PhysCont             # prodStep - it's always the same.
@@ -197,7 +197,7 @@ realdata = DatasetCategory("realdata", r"""data\d\d             # Project tag. E
                                            """)
 database = DatasetCategory("database", r"""ddo                  # Project tag.
                                            \n*\.\n*             # Field separator
-                                           [\dINTERVAL!]+       # 
+                                           [\dINTERVAL!]+       #
                                            \n*\.\n*             # Field separator
                                            [a-zA-Z\d\-_\.:!]+   #
                                            """)
@@ -352,8 +352,8 @@ class Paper:
         self.txt_dir = path_join(self.dir, TXT_DIR)
         self.xml_dir = path_join(self.dir, XML_DIR)
         self.metadata_file = path_join(self.dir, METADATA_FILE)
-        for a in self.attributes_to_determine: 
-            self.__dict__[a] = None  # This indicates that attributes should be determined when need to display them arises for the first time. If nothing was found, their values would be set to False or [] or {}. 
+        for a in self.attributes_to_determine:
+            self.__dict__[a] = None  # This indicates that attributes should be determined when need to display them arises for the first time. If nothing was found, their values would be set to False or [] or {}.
 
         self.num_pages = None  # Number of pages in a paper.
         self.rotated_pages = None  # Numbers of pages which are rotated.
@@ -451,11 +451,11 @@ class Paper:
 # break
 # else:
 ##                del d[size]
-##                
+##
 # print xml_title
 # if not xml_title:
 # return False
-##        
+##
 ##        lines = self.get_txt_page(1)
 ##        title = ""
 # for l in lines:
@@ -815,7 +815,7 @@ class Manager:
                 for p in self.papers:
                     if p.fname == fname:
                         errors[p.fname] = "paper already exists."
-                        fname = False                        
+                        fname = False
                         break
                 if fname:
                     self.status_set("Extracting text %d/%d. Paper: %s. Please, wait..." % (n, len(fnames), fname))
@@ -830,7 +830,7 @@ class Manager:
                     except Exception as e:
                         errors[fname] = e
                         if os.access(paper_dir, os.F_OK):
-                            rmtree(paper_dir)                            
+                            rmtree(paper_dir)
             if n < len(fnames):
                 n += 1
                 self.window.after(100, lambda: self.add_papers(fnames, errors, n))
@@ -887,13 +887,13 @@ class Manager:
         l = Label(window, text="File name: %s" % paper.fname)
         l.grid(row=0, column=1)
         b = Button(window, text="Save", command=lambda paper=paper: self.save_paper(paper))
-        b.grid(row=0, column=2)        
+        b.grid(row=0, column=2)
         b = Button(window, text="Export", command=lambda paper=paper: paper.export())  # Maybe this should ask for save before export...
-        b.grid(row=0, column=3)        
+        b.grid(row=0, column=3)
         b = Button(window, text="Clear", command=lambda window=window, paper=paper: self.clear_paper(window, paper))
-        b.grid(row=0, column=4)        
+        b.grid(row=0, column=4)
         b = Button(window, text="Delete", command=lambda window=window, paper=paper: self.delete_paper(window, paper))
-        b.grid(row=0, column=5)        
+        b.grid(row=0, column=5)
         l = Label(window, text="Title: %s" % paper.title)
         l.grid(row=1, columnspan=5)
         l = Label(window, text="Pages: %d" % paper.num_pages)
@@ -901,9 +901,9 @@ class Manager:
         l = Label(window, text="Rotated pages: %s" % str(paper.rotated_pages))
         l.grid(row=3, columnspan=5)
         b = Button(window, text="Attributes", command=lambda window=window, paper=paper: self.show_paper_attributes(window, paper))
-        b.grid(row=4, columnspan=5)        
+        b.grid(row=4, columnspan=5)
         b = Button(window, text="Datasets", command=lambda window=window, paper=paper: self.show_paper_datasets(window, paper))
-        b.grid(row=5, columnspan=5)        
+        b.grid(row=5, columnspan=5)
         b = Button(window, text="Dataset tables", command=lambda window=window, paper=paper: self.show_paper_datatables(window, paper))
         b.grid(row=6, columnspan=5)
         b = Button(window, text="Tables", command=lambda window=window, paper=paper: self.show_paper_page_tables(window, paper))
@@ -913,7 +913,7 @@ class Manager:
         b = Button(window, text="Export text", command=lambda paper=paper: self.export_paper_text(paper))
         b.grid(row=9, columnspan=5)
         b = Button(window, text="Close", command=window.destroy)
-        b.grid(row=10, columnspan=5)        
+        b.grid(row=10, columnspan=5)
     def determine_paper_title_step_1(self, window, paper):
         # Search the first page in xml format for a possible paper titles. Ask user to pick one.
         if not window:
@@ -1061,7 +1061,7 @@ class Manager:
                 l.grid(row=r, column=0)
                 r += 1
             b = Button(window, text="Back", command=lambda window=window, paper=paper: self.show_paper_info(window, paper))
-            b.grid(row=r, column=0)            
+            b.grid(row=r, column=0)
     def show_paper_datasets(self, window, paper):
         # Determine / display paper datasets.
         for c in window.winfo_children():
@@ -1098,7 +1098,7 @@ class Manager:
                         e.grid(row=r, column=1)
                         selected = IntVar()
                         selected.set(1)
-                        b = Checkbutton(frame, var=selected)  # TO DO: checkbuttons for "(un)select all". 
+                        b = Checkbutton(frame, var=selected)  # TO DO: checkbuttons for "(un)select all".
                         dataset_entries[c].append([e, special, selected])
                         selected_list.append(selected)
                         b.grid(row=r, column=3, pady=5)
@@ -1130,7 +1130,7 @@ class Manager:
                 cnvs.create_window(0, 0, window=frame, anchor='nw')
 
                 r = 0
-                for k in paper.datasets:                
+                for k in paper.datasets:
                     l = Label(frame, text=k, font=HEADING_FONT)
                     l.grid(row=r)
                     r += 1

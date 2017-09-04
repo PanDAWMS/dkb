@@ -9,8 +9,8 @@ golosova.marina@gmail.com
 Execute on local machine with installed invenio-client;
 invenio-client also requires phantomjs (>=1.9.8 due to default SSL protocol)
 
-input metadata: 
-  - list of papers & supporting documents [JSON] from GLANCE API  
+input metadata:
+  - list of papers & supporting documents [JSON] from GLANCE API
 
 output metadata:
   1) CDS Records in JSON format
