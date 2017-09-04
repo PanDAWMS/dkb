@@ -15,7 +15,7 @@ import argparse, warnings
 import sys, csv, re
 from datetime import datetime
 
-### DEFAULTS AND CONFIGURATIONS ###
+# DEFAULTS AND CONFIGURATIONS ###
 
 # Default CSV header
 CSV_HEADER = ["datatype", "glanceid", "name", "tid", "chain_tid", "phys_group", "events", "files", "status", "timestamp", "pr_id", "campaign", "ddm_erase_timestamp", "vuid", "grid_exec", "se", "file_size_mb"]

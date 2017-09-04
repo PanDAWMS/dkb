@@ -108,34 +108,34 @@ if __name__ == "__main__":
     for p in pages:
         print pages[p]
 
-##    f = open("C:/Work/papers_analysis/ATL-COM-PHYS-2014-1430.pdf", "rb")
-##
-##    rsrcmngr = PDFResourceManager()
-##
-##    tmp = TemporaryFile(mode="w+")
-##    laparams = LAParams()
-##    device = TextConverter(rsrcmngr, tmp, codec='utf-8', laparams = laparams)
-##    interpreter = PDFPageInterpreter(rsrcmngr, device)
-##
-##    n = 1
+#    f = open("C:/Work/papers_analysis/ATL-COM-PHYS-2014-1430.pdf", "rb")
+#
+#    rsrcmngr = PDFResourceManager()
+#
+#    tmp = TemporaryFile(mode="w+")
+#    laparams = LAParams()
+#    device = TextConverter(rsrcmngr, tmp, codec='utf-8', laparams = laparams)
+#    interpreter = PDFPageInterpreter(rsrcmngr, device)
+#
+#    n = 1
 # for page in PDFPage.get_pages(f):
-##        lines = get_page_lines(interpreter, page, tmp)
-##        single = 0
-##        normal = 0
+#        lines = get_page_lines(interpreter, page, tmp)
+#        single = 0
+#        normal = 0
 # for l in lines:
 # if not l.isspace():
-##                l = l.strip()
+#                l = l.strip()
 # if len(l) == 1:
-##                    single += 1
-##                normal += 1
-##        coef = float(single) / normal
+#                    single += 1
+#                normal += 1
+#        coef = float(single) / normal
 # print "Page %d: %d/%d = %f lines contain a single character" % (n, single, normal, coef)
 # if coef > 0.9:
 # print "Page seems to be rotated"
-##            lines = get_page_lines(interpreter, page, tmp, 90)
+#            lines = get_page_lines(interpreter, page, tmp, 90)
 # print lines
-##
-##        n += 1
+#
+#        n += 1
 # if n == 10:
 # break
 # print n

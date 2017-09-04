@@ -118,7 +118,7 @@ class DatasetCategory:
                         elif self.reg_spaces.match(ns):
                             datasets[self.name].append([ns.replace(" ", "_"), "spaces"])
     # elif self.reg_dashes.match(ns):
-    ##                        datasets[self.name].append([ns.replace("-", "_"), "dashes"])
+    #                        datasets[self.name].append([ns.replace("-", "_"), "dashes"])
                 else:
                     res = 0
                     if self.reg.match(s):
@@ -137,19 +137,19 @@ class DatasetCategory:
                 elif self.reg_spaces.match(s):
                     datasets[self.name].append([s.replace(" ", "_"), "spaces"])
 # elif self.reg_dashes.match(s):
-##                    datasets[self.name].append([s.replace("-", "_"), "dashes"])
+#                    datasets[self.name].append([s.replace("-", "_"), "dashes"])
         return (text, datasets)
 
 # This does not works, probably because of differences between "" and r"""""" (re module throws exception).
-## f = open(CATEGORIES_FILE, "r")
-## categories = json.load(f)
+# f = open(CATEGORIES_FILE, "r")
+# categories = json.load(f)
 # f.close()
-## dataset_categories = []
+# dataset_categories = []
 # for c in categories:
-##    regular = ""
+#    regular = ""
 # for [r, comment] in c["regular"]:
-##        regular += r
-##    dataset_categories.append(DatasetCategory(c["name"], regular))
+#        regular += r
+#    dataset_categories.append(DatasetCategory(c["name"], regular))
 
 group = DatasetCategory("group", r"""group                      # Indicates group dataset.
                                            \n*\.\n*             # Field separator
@@ -423,55 +423,55 @@ class Paper:
         # Delete all files associated with paper.
         rmtree(self.dir)
 # def find_title(self): # New title determining method, does not works ideally yet. Titles consisting of several lines are problematic to determine.
-##        lines = self.get_xml_page(1)
-##
-##        d = {}
+#        lines = self.get_xml_page(1)
+#
+#        d = {}
 # for l in lines:
-##            m = re_xml_symbol.match(l)
+#            m = re_xml_symbol.match(l)
 # if m:
-##                size = float(m.group(1))
-##                text = m.group(2)
+#                size = float(m.group(1))
+#                text = m.group(2)
 # if size in d.keys():
-##                    d[size] += text
+#                    d[size] += text
 # else:
-##                    d[size] = text
+#                    d[size] = text
 # elif re_xml_empty_symbol.match(l):
-##                d[size] += " "
-##        xml_title = False
+#                d[size] += " "
+#        xml_title = False
 # print d
 # while True:
-##            size = max(d.keys())
-##            valid = True
+#            size = max(d.keys())
+#            valid = True
 # try:
 # d[size].decode()
 # except:
-##                valid = False
+#                valid = False
 # if not "atlas note" in d[size].lower() and valid:
-##                xml_title = d[size]
+#                xml_title = d[size]
 # break
 # else:
-##                del d[size]
-##
+#                del d[size]
+#
 # print xml_title
 # if not xml_title:
 # return False
-##
-##        lines = self.get_txt_page(1)
-##        title = ""
+#
+#        lines = self.get_txt_page(1)
+#        title = ""
 # for l in lines:
 # if len(l) <= 4 or l.startswith("Supporting Note") or l.startswith("ATLAS NOTE"):
 # continue
-##            words = l.split()
-##            i = 0
+#            words = l.split()
+#            i = 0
 # for w in words:
 # try:
 # w_in = w in xml_title # This throws exception sometimes, something about ascii codec unable to decode.
 # except:
-##                    w_in = False
+#                    w_in = False
 # if len(w) > 1 and w_in:
-##                    i += 1
+#                    i += 1
 # if i > 1 or (len(words) == 1 and i == 1):
-##                title += l.replace("\n", " ")
+#                title += l.replace("\n", " ")
 # elif title:
 # break
 # return title
@@ -610,13 +610,13 @@ class Paper:
         # Export metadata into file in export directory. Quick export: if a part of metadata was never determined, the corresponding procedure would be used with all user interaction skipped.
 
 # print self.fname
-##        paper_date = re.search("((?:january|february|march|april|may|june|july|august|september|october|november|december).*20\d\d)", self.get_txt_page(1, True).lower())
+#        paper_date = re.search("((?:january|february|march|april|may|june|july|august|september|october|november|december).*20\d\d)", self.get_txt_page(1, True).lower())
 # if paper_date:
-##             d = paper_date.group(1)
+#             d = paper_date.group(1)
 # print "date:", d
-##
-##        text = self.get_text()
-##        m = re_year.findall(text)
+#
+#        text = self.get_text()
+#        m = re_year.findall(text)
 # if m:
 # print m
 # for t in m:

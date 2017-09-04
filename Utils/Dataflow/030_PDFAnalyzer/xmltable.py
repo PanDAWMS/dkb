@@ -45,15 +45,15 @@ class TextLine:
             after_space = False
             first = lines.pop(0)
             coords = self.re_bbox.search(first).group(1)
-##            [self.left, self.top, self.right, self.bottom] = coords.split(",")
+#            [self.left, self.top, self.right, self.bottom] = coords.split(",")
             [self.left, self.bottom, self.right, self.top] = coords.split(",")  # Pdf miner has Y-axis pointed upwards, which does not suits us for several reasons.
             self.left = float(self.left)
             self.right = float(self.right)
             self.top = float(self.top)
             self.bottom = float(self.bottom)
-##            self.top = PAGE_SIZE - float(self.top)
-##            self.bottom = PAGE_SIZE - float(self.bottom)
-##            [self.top, self.bottom] = [self.bottom, self.top]
+#            self.top = PAGE_SIZE - float(self.top)
+#            self.bottom = PAGE_SIZE - float(self.bottom)
+#            [self.top, self.bottom] = [self.bottom, self.top]
 
             for l in lines:
                 f = self.re_text_symbol.match(l)
@@ -367,15 +367,15 @@ def analyze_page(text):
 # elif row.index(l) == len(row):
 # print "ROW RIGHT:", l.right
 
-##    symbols = {}
-##    lines = []
+#    symbols = {}
+#    lines = []
 # for l in tlines:
-##        lines.append(TextLine(l, symbols))
-##
-##    max_s = max(symbols.values())
+#        lines.append(TextLine(l, symbols))
+#
+#    max_s = max(symbols.values())
 # for key in symbols:
 # if symbols[key] == max_s:
-##            max_key = key
+#            max_key = key
 # break
 # print "KEY", max_key
 # for l in lines:
