@@ -6,7 +6,7 @@ import json
 import uuid
 
 GUIDlog = None
-GUIDdict = {"p":{}, "s":{}}
+GUIDdict = {"p": {}, "s": {}}
 
 GRAPH = "http://nosql.tpu.ru:8890/DAV/ATLAS"
 ONTOLOGY = "http://nosql.tpu.ru/ontology/ATLAS"
@@ -133,13 +133,13 @@ def linkTTL(doc, notes):
   if not notes:
     return None
   if type(notes) != list:
-    raise ValueError("linkTTL() expects 2nd parameter to be of type %s, got %s" %(list, type(notes)))
+    raise ValueError("linkTTL() expects 2nd parameter to be of type %s, got %s" % (list, type(notes)))
   result = ""
   docUOID = getUOID(doc)
   for note in notes:
     noteUOID = getUOID(note)
     attrs = {'noteUOID': noteUOID,
-                 'docUOID' : docUOID,
+                 'docUOID': docUOID,
                  'ontology': ONTOLOGY
                   }
     isBasedOnTriplet = "{docUOID} <{ontology}#isBasedOn> {noteUOID} .\n".format(**attrs)
@@ -171,7 +171,7 @@ def notes2TTL(notes):
                  'graph': GRAPH,
                  'id': note["id"],
                  'label': TTL_escape(note["label"]),
-#                 'label': note["label"].translate(str.maketrans({"'":  r"\'"})),
+                 #                 'label': note["label"].translate(str.maketrans({"'":  r"\'"})),
                  'url': note["url"]
                 }
     noteTriplet = "{noteSubject} a <{ontology}#SupportingDocument> .\n".format(**noteAttrs)
@@ -201,8 +201,8 @@ def doc2TTL(item):
                'id': item["id"],
                'short_title': TTL_escape(item["short_title"]),
                'full_title': TTL_escape(item["full_title"]),
-#               'short_title': item["short_title"].translate(str.maketrans({"\\": r"\\", "'":  r"\'"})),
-#               'full_title': item["full_title"].translate(str.maketrans({"\\": r"\\", "'":  r"\'"})),
+               #               'short_title': item["short_title"].translate(str.maketrans({"\\": r"\\", "'":  r"\'"})),
+               #               'full_title': item["full_title"].translate(str.maketrans({"\\": r"\\", "'":  r"\'"})),
                'ref_code': item["ref_code"]
               }
   triplet = "{docSubject} a <{ontology}#Paper> .\n".format(**OWLPARAMS)
@@ -232,18 +232,18 @@ def get_items(fds):
     sys.stderr.write("No input file descriptors specified. Exiting.\n")
     return
   if type(fds) != list:
-    sys.stderr.write("(ERROR) get_items(): expected patameter of type %s, get %s.\n" %(list, type(fds)))
+    sys.stderr.write("(ERROR) get_items(): expected patameter of type %s, get %s.\n" % (list, type(fds)))
     return
 
   for data_file in fds:
     if type(data_file) != file:
-      sys.stderr.write("(ERROR) get_items(): expected list of %s, get %s: %s\nSkipping file.\n" % (file,type(data_file)))
+      sys.stderr.write("(ERROR) get_items(): expected list of %s, get %s: %s\nSkipping file.\n" % (file, type(data_file)))
       continue
     if data_file != sys.stdin:
       try:
         data = json.load(data_file)
       except ValueError as e:
-        sys.stderr.write("Failed to parse JSON (%s): %s\nSkipping file.\n" % (data_file.name,e.message))
+        sys.stderr.write("Failed to parse JSON (%s): %s\nSkipping file.\n" % (data_file.name, e.message))
         continue
     else:
       data = iter(data_file.readline, '')
@@ -262,7 +262,7 @@ def outputTTL(fd, *TTL):
   Outputs produced TTL statements to a given file descriptor.
   """
   if type(fd) != file:
-    raise ValueError("outputTTL() expects 1st parameter to be of type %s, got %s" %(file, type(fd)))
+    raise ValueError("outputTTL() expects 1st parameter to be of type %s, got %s" % (file, type(fd)))
   try:
     for ttl in TTL:
       if ttl:
@@ -295,40 +295,40 @@ def main(argv):
   # Parsing command-line arguments
   parser = argparse.ArgumentParser(description=u'Converts Paper and SupportingDocuments basic metadata from JSON format to TTL.')
   parser.add_argument('infiles', metavar=u'JSON-FILE', type=argparse.FileType('r'), nargs='*',
-                     help=u'Source JSON file.')
+                      help=u'Source JSON file.')
   parser.add_argument('-g', '--graph', action='store', type=str, nargs='?',
-                     help='Virtuoso DB graph name (default: %(default)s)',
-                     default=GRAPH,
-                     const=GRAPH,
-                     metavar='GRAPH',
-                     dest='GRAPH'
+                      help='Virtuoso DB graph name (default: %(default)s)',
+                      default=GRAPH,
+                      const=GRAPH,
+                      metavar='GRAPH',
+                      dest='GRAPH'
                      )
   parser.add_argument('-O', '--ontology', action='store', type=str, nargs='?',
-                     help='Virtuoso ontology prefix (default: %(default)s)',
-                     default=ONTOLOGY,
-                     const=ONTOLOGY,
-                     metavar='ONT',
-                     dest='ONTOLOGY'
+                      help='Virtuoso ontology prefix (default: %(default)s)',
+                      default=ONTOLOGY,
+                      const=ONTOLOGY,
+                      metavar='ONT',
+                      dest='ONTOLOGY'
                      )
   parser.add_argument('-o', '--output', action='store', type=argparse.FileType('w'), nargs='?',
-                     help=u'Name of the file to store triples (default: <CSV-FILE without CSV>.ttl).',
-                     metavar='OUTFILE',
-                     dest='outfile'
+                      help=u'Name of the file to store triples (default: <CSV-FILE without CSV>.ttl).',
+                      metavar='OUTFILE',
+                      dest='outfile'
                      )
   parser.add_argument('-m', '--mode', action='store', nargs='?',
-                     help=u'''VALUES:
+                      help=u'''VALUES:
 f -- works with files (default)
 s -- run in a Kafka Streams mode (as processor).
 Ignore options: -o|--output (use STDOUT)
 ''',
-                     default='f',
-                     dest='processing_mode',
-                     choices=['f','s']
+                      default='f',
+                      dest='processing_mode',
+                      choices=['f', 's']
                      )
   parser.add_argument('-d', '--delimiter', action='store', nargs='?',
-                     help=u'EOP marker for Kafka mode (default: \0)',
-                     default='',
-                     dest='EOPmarker'
+                      help=u'EOP marker for Kafka mode (default: \0)',
+                      default='',
+                      dest='EOPmarker'
                      )
   parser.add_argument('-l', '--guid-log', action='store', type=argparse.FileType('w+'), nargs='?',
                       help=u'File to store already assigned GUID for documents.',
@@ -338,7 +338,7 @@ Ignore options: -o|--output (use STDOUT)
                       const=None
                      )
 
-  args=parser.parse_args(argv)
+  args = parser.parse_args(argv)
   if args.processing_mode == 'f':
     if not args.infiles:
       sys.stderr.write('(INFO) No input JSON file presented. Switching to streaming mode.\n')

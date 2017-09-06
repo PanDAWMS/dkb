@@ -10,7 +10,7 @@
 
   output metadata:
     - list of urls in JSON-format
-    
+
 '''
 import sys, getopt
 import json
@@ -25,7 +25,7 @@ def main(argv):
    login = ''
    password = ''
    try:
-      opts, args = getopt.getopt(argv, "hl:p:",["login=","password="])
+      opts, args = getopt.getopt(argv, "hl:p:", ["login=", "password="])
    except getopt.GetoptError:
       print '-l <login> -p <password>'
       sys.exit(2)
@@ -37,14 +37,14 @@ def main(argv):
          login = arg
       elif opt in ("-p", "--password"):
          password = arg
-   
+
 
    cookie_path = '/data/atlswing-home/ssocookie.txt'
    cds = CDSInvenioConnector(login, password)
-   
+
    with open('Input/list_of_papers.json') as data_file:
        data = json.load(data_file)
-   
+
    js_list = []
 
    with open('SupportingDocumentsURLS.json', 'w') as outfile:
@@ -58,13 +58,13 @@ def main(argv):
          if "supporting_notes" in item:
             for note in item["supporting_notes"]:
                 parsed = urlparse(note["url"])
-                if (parsed.netloc == 'cds.cern.ch' or 
+                if (parsed.netloc == 'cds.cern.ch' or
                     parsed.netloc == 'cdsweb.cern.ch'):
                    recid = parsed.path.split('/')[2]
                    print recid
                    results = cds.get_record(recid)
                    if len(results) > 0:
-                        try: 
+                        try:
                             urls = results[0]["8564_u"]
                             for item in urls:
                                 if (item.split('.')[-1] == 'pdf'):
@@ -73,17 +73,17 @@ def main(argv):
                             js["recid"] = recid
                             js["url"]   = url
                             js["id"]    = note["id"]
-                            #js_list.append(js)
+                            # js_list.append(js)
                             json.dump(js, outfile)
                             if i != last:
                               outfile.write(",")
                             elif i == last:
-                              outfile.write("]") 
+                              outfile.write("]")
                         except Exception:
                           print "broken mark record..."
 
    # with open('SupportingDocumentsURLS.json', 'w') as outfile:
    #    json.dump(js_list, outfile)
-   
+
 if __name__ == "__main__":
    main(sys.argv[1:])

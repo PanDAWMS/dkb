@@ -26,7 +26,7 @@ This script just get all data from file despite the data in Virtuoso.
 ------------------------------------------------------------------------------
 This script remove newline symbols in 'description'.
 Triples:
- {project_name} <{ontology}#hasDescription> '{description}' 
+ {project_name} <{ontology}#hasDescription> '{description}'
  {project_name} <{ontology}#hasStatus> '{status}'
  might be non-unique.
  -----------------------------------------------------------------------------
@@ -41,61 +41,61 @@ import json
 import os
 from tkinter.filedialog import askopenfilename
 
-#default graph and ontology
+# default graph and ontology
 graph = "http://nosql.tpu.ru:8890/DAV/ATLAS"
 ontology = "http://nosql.tpu.ru/ontology/ATLAS"
 
-#choose graph
+# choose graph
 print("Current graph: " + graph + "\n")
 graph_answer = input("Would you like to choose another one? [Y/N] ")
 if graph_answer.lower() in ['y', 'yes']:
 	graph = input("Please, insert a graph: ")
-print("\nCurrent graph: " + graph +"\n")    
+print("\nCurrent graph: " + graph + "\n")
 
-#choose ontology
-print("Current ontology: " + ontology +"\n")
+# choose ontology
+print("Current ontology: " + ontology + "\n")
 ontology_answer = input("Would you like to choose another one? [Y/N] ")
 if ontology_answer.lower() in ['y', 'yes']:
 	ontology = input("Please, insert an ontology: ")
-print("\nCurrent ontology: " + ontology +"\n")
+print("\nCurrent ontology: " + ontology + "\n")
 
-#path
+# path
 chosen_path = os.path.normpath(askopenfilename())
 
-#year
-year = '20'+ chosen_path.rstrip('.json')[len(chosen_path.rstrip('.json'))-2:len(chosen_path.rstrip('.json'))]
+# year
+year = '20' + chosen_path.rstrip('.json')[len(chosen_path.rstrip('.json')) - 2:len(chosen_path.rstrip('.json'))]
 
-#a ttl document with default name
-output_data = open("data_periods"+ year +".ttl", 'w')
+# a ttl document with default name
+output_data = open("data_periods" + year + ".ttl", 'w')
 
-#input
-with open(chosen_path) as data_file:    
+# input
+with open(chosen_path) as data_file:
     input_data = json.load(data_file)
-		
-	
+
+
 listProj = []
 for i, item in enumerate(input_data):
-		dataPeriod = "<%s/dataperiod/%s_%s_%s>" % (graph,year,input_data[i]['period'],input_data[i]['periodLevel'])
-		project = "<%s/project/%s>" % (graph,input_data[i]['projectName'])
-		#deleting of newline symbol from description
-		description = input_data[i]['description'].replace("\n"," ")
+		dataPeriod = "<%s/dataperiod/%s_%s_%s>" % (graph, year, input_data[i]['period'], input_data[i]['periodLevel'])
+		project = "<%s/project/%s>" % (graph, input_data[i]['projectName'])
+		# deleting of newline symbol from description
+		description = input_data[i]['description'].replace("\n", " ")
 		DATAPERIODS = {
-			'graph': graph,
+                    'graph': graph,
 			'ontology': ontology,
-			'dataPeriod' : dataPeriod,
+			'dataPeriod': dataPeriod,
 			'project_name': project,
-			'period' : input_data[i]['period'],
-			'periodLevel' : input_data[i]['periodLevel'],
-			'year' : year,
-			'description' : description,
-			'status' : input_data[i]['status']
+			'period': input_data[i]['period'],
+			'periodLevel': input_data[i]['periodLevel'],
+			'year': year,
+			'description': description,
+			'status': input_data[i]['status']
 		}
-		
+
 		if not input_data[i]['projectName'] in listProj:
 			tripleProject = '''{project_name} a <{ontology}#Project> .\n'''.format(**DATAPERIODS)
 			listProj.append(input_data[i]['projectName'])
 			output_data.write(tripleProject)
-		
+
 		tripleDescription = '''{project_name} <{ontology}#hasDescription> '{description}' .\n'''.format(**DATAPERIODS)
 		output_data.write(tripleDescription)
 		tripleStatus = '''{project_name} <{ontology}#hasStatus> '{status}' .\n'''.format(**DATAPERIODS)
@@ -110,5 +110,5 @@ for i, item in enumerate(input_data):
 		output_data.write(tripleAttrLevel)
 		mapping = '''{project_name} <{ontology}#hasDataTakingPeriod> {dataPeriod} .\n'''.format(**DATAPERIODS)
 		output_data.write(mapping)
-		
+
 output_data.close()
