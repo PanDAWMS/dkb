@@ -45,7 +45,7 @@ class JSONProcessorStage(AbstractProcessorStage):
         data = self.stream_input(fd)
         m = data.next()
         if not (m and m.content() and type(m.content()) != list):
-             raise ValueError
+            raise ValueError
         yield m
         for m in data:
             yield m

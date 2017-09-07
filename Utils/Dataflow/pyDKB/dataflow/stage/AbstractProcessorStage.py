@@ -221,14 +221,14 @@ class AbstractProcessorStage(AbstractStage):
 
         # Configure output
         if self.ARGS.dest == 'f':
-           self.__output = self.__out_files('l')
+            self.__output = self.__out_files('l')
         elif self.ARGS.dest == 'h':
-           self.__output = self.__out_files('h')
+            self.__output = self.__out_files('h')
         elif self.ARGS.dest == 's':
-           ustdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
-           self.__output = ustdout
-           self.__EOMessage = self.__stream_EOMessage
-           self.__EOProcess = self.__stream_EOProcess
+            ustdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
+            self.__output = ustdout
+            self.__EOMessage = self.__stream_EOMessage
+            self.__EOProcess = self.__stream_EOProcess
 
         self.__stoppable_append(self.__output, types.GeneratorType)
 
@@ -315,7 +315,7 @@ class AbstractProcessorStage(AbstractStage):
             for line in iterator:
                 yield self.parseMessage(line)
         else:
-	    raise NotImplementedError("Stream input is not implemented for"
+            raise NotImplementedError("Stream input is not implemented for"
                                       " custom EOMessage marker.")
 
     def file_input(self, fd):
@@ -438,17 +438,17 @@ class AbstractProcessorStage(AbstractStage):
                     continue
                 output_dir = self.ARGS.output_dir
                 if not output_dir:
-                     output_dir = os.path.dirname(self.__current_file_full)
+                    output_dir = os.path.dirname(self.__current_file_full)
                 if not output_dir:
-                     if t == 'l':
-                         output_dir = os.getcwd()
-                     if t == 'h':
-                         output_dir = os.path.join(hdfs.DKB_HOME, "temp",
-                                                   str(int(time.time())))
-                         hdfs.makedirs(output_dir)
-                     self.ARGS.output_dir = output_dir
-                     sys.stderr.write("(INFO) Output dir set to: %s\n"
-                                      % output_dir)
+                    if t == 'l':
+                        output_dir = os.getcwd()
+                    if t == 'h':
+                        output_dir = os.path.join(hdfs.DKB_HOME, "temp",
+                                                  str(int(time.time())))
+                        hdfs.makedirs(output_dir)
+                    self.ARGS.output_dir = output_dir
+                    sys.stderr.write("(INFO) Output dir set to: %s\n"
+                                     % output_dir)
                 if self.__current_file \
                   and self.__current_file != sys.stdin.name:
                     filename = os.path.splitext(self.__current_file)[0] + ext

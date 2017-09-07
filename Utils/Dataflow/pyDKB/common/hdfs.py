@@ -26,7 +26,7 @@ def check_stderr(proc, timeout=None):
             proc.kill()
             raise HDFSException(err)
     if not timeout:
-            proc.wait()
+        proc.wait()
     return proc.poll()
 
 def makedirs(dirname):

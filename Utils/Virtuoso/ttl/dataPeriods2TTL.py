@@ -49,14 +49,14 @@ ontology = "http://nosql.tpu.ru/ontology/ATLAS"
 print("Current graph: " + graph + "\n")
 graph_answer = input("Would you like to choose another one? [Y/N] ")
 if graph_answer.lower() in ['y', 'yes']:
-	graph = input("Please, insert a graph: ")
+    graph = input("Please, insert a graph: ")
 print("\nCurrent graph: " + graph + "\n")
 
 # choose ontology
 print("Current ontology: " + ontology + "\n")
 ontology_answer = input("Would you like to choose another one? [Y/N] ")
 if ontology_answer.lower() in ['y', 'yes']:
-	ontology = input("Please, insert an ontology: ")
+    ontology = input("Please, insert an ontology: ")
 print("\nCurrent ontology: " + ontology + "\n")
 
 # path
@@ -75,40 +75,40 @@ with open(chosen_path) as data_file:
 
 listProj = []
 for i, item in enumerate(input_data):
-		dataPeriod = "<%s/dataperiod/%s_%s_%s>" % (graph, year, input_data[i]['period'], input_data[i]['periodLevel'])
-		project = "<%s/project/%s>" % (graph, input_data[i]['projectName'])
-		# deleting of newline symbol from description
-		description = input_data[i]['description'].replace("\n", " ")
-		DATAPERIODS = {
-			'graph': graph,
-			'ontology': ontology,
-			'dataPeriod': dataPeriod,
-			'project_name': project,
-			'period': input_data[i]['period'],
-			'periodLevel': input_data[i]['periodLevel'],
-			'year': year,
-			'description': description,
-			'status': input_data[i]['status']
-		}
+    dataPeriod = "<%s/dataperiod/%s_%s_%s>" % (graph, year, input_data[i]['period'], input_data[i]['periodLevel'])
+    project = "<%s/project/%s>" % (graph, input_data[i]['projectName'])
+    # deleting of newline symbol from description
+    description = input_data[i]['description'].replace("\n", " ")
+    DATAPERIODS = {
+            'graph': graph,
+            'ontology': ontology,
+            'dataPeriod': dataPeriod,
+            'project_name': project,
+            'period': input_data[i]['period'],
+            'periodLevel': input_data[i]['periodLevel'],
+            'year': year,
+            'description': description,
+            'status': input_data[i]['status']
+    }
 
-		if not input_data[i]['projectName'] in listProj:
-			tripleProject = '''{project_name} a <{ontology}#Project> .\n'''.format(**DATAPERIODS)
-			listProj.append(input_data[i]['projectName'])
-			output_data.write(tripleProject)
+    if not input_data[i]['projectName'] in listProj:
+        tripleProject = '''{project_name} a <{ontology}#Project> .\n'''.format(**DATAPERIODS)
+        listProj.append(input_data[i]['projectName'])
+        output_data.write(tripleProject)
 
-		tripleDescription = '''{project_name} <{ontology}#hasDescription> '{description}' .\n'''.format(**DATAPERIODS)
-		output_data.write(tripleDescription)
-		tripleStatus = '''{project_name} <{ontology}#hasStatus> '{status}' .\n'''.format(**DATAPERIODS)
-		output_data.write(tripleStatus)
-		tripleData = '''{dataPeriod} a <{ontology}#DataTakingPeriod> .\n'''.format(**DATAPERIODS)
-		output_data.write(tripleData)
-		tripleAttrYear = '''{dataPeriod} <{ontology}#hasYear> <{ontology}#{year}> .\n'''.format(**DATAPERIODS)
-		output_data.write(tripleAttrYear)
-		tripleAttrPeriod = '''{dataPeriod} <{ontology}#hasPeriod> <{ontology}#{period}> .\n'''.format(**DATAPERIODS)
-		output_data.write(tripleAttrPeriod)
-		tripleAttrLevel = '''{project_name} <{ontology}#hasLevel> <{ontology}#Level{periodLevel}> .\n'''.format(**DATAPERIODS)
-		output_data.write(tripleAttrLevel)
-		mapping = '''{project_name} <{ontology}#hasDataTakingPeriod> {dataPeriod} .\n'''.format(**DATAPERIODS)
-		output_data.write(mapping)
+    tripleDescription = '''{project_name} <{ontology}#hasDescription> '{description}' .\n'''.format(**DATAPERIODS)
+    output_data.write(tripleDescription)
+    tripleStatus = '''{project_name} <{ontology}#hasStatus> '{status}' .\n'''.format(**DATAPERIODS)
+    output_data.write(tripleStatus)
+    tripleData = '''{dataPeriod} a <{ontology}#DataTakingPeriod> .\n'''.format(**DATAPERIODS)
+    output_data.write(tripleData)
+    tripleAttrYear = '''{dataPeriod} <{ontology}#hasYear> <{ontology}#{year}> .\n'''.format(**DATAPERIODS)
+    output_data.write(tripleAttrYear)
+    tripleAttrPeriod = '''{dataPeriod} <{ontology}#hasPeriod> <{ontology}#{period}> .\n'''.format(**DATAPERIODS)
+    output_data.write(tripleAttrPeriod)
+    tripleAttrLevel = '''{project_name} <{ontology}#hasLevel> <{ontology}#Level{periodLevel}> .\n'''.format(**DATAPERIODS)
+    output_data.write(tripleAttrLevel)
+    mapping = '''{project_name} <{ontology}#hasDataTakingPeriod> {dataPeriod} .\n'''.format(**DATAPERIODS)
+    output_data.write(mapping)
 
 output_data.close()
