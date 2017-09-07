@@ -88,6 +88,7 @@ def process(stage, msg):
     stage.output(outMessage)
     return True
 
+
 if __name__ == "__main__":
     analyzer_stage = pyDKB.dataflow.stage.JSONProcessorStage()
     analyzer_stage.process = process

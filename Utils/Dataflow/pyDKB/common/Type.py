@@ -2,6 +2,7 @@
 Abstract class for type definitions.
 """
 
+
 class Type(object):
     """
     Abstract class for type definitions.

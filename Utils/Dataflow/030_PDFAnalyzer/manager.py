@@ -49,6 +49,7 @@ def save_config(cfg):
     with open(CONFIG_FILE, "w") as f:
         json.dump(cfg, f, indent=4)
 
+
 cfg, save_needed = load_config(default_cfg)
 if save_needed:
     save_config(cfg)
@@ -61,6 +62,7 @@ def path_join(a, b):
     separators in paths.
     """
     return os.path.join(a, b).replace("\\", "/")
+
 
 if __name__ == "__main__":
     try:
@@ -107,6 +109,7 @@ class DatasetCategory:
     character, and should be "-" or "\-" in different places of regular
     expressions.
     """
+
     def __init__(self, name, string):
         self.name = name
         self.reg = re.compile(string, re.X)
@@ -175,6 +178,7 @@ class DatasetCategory:
 # datasets[self.name].append([s.replace("-", "_"),
 # "dashes"])
         return (text, datasets)
+
 
 group = DatasetCategory("group", r"""
 group              # Indicates group dataset.
@@ -893,6 +897,7 @@ class Paper:
 
 class Manager:
     """ Main class of the application, performs most of the work. """
+
     def __init__(self, window):
         self.window = window
         self.window.title("Support notes manager")
@@ -1901,6 +1906,7 @@ class Manager:
                 self.status_set("")
                 if msg:
                     tkMessageBox.showwarning("Unable to export papers", msg)
+
 
 if __name__ == "__main__":
     root = Tkinter.Tk()

@@ -23,6 +23,7 @@ def Message(msg_type):
 
     return cls
 
+
 class AbstractMessage(object):
     """ Abstract message """
 
@@ -43,7 +44,6 @@ class AbstractMessage(object):
     def getOriginal(self):
         """ Return original message. """
         return self.__orig
-
 
     def decode(self, code):
         """ Decode original from CODE to TYPE-specific format.
@@ -108,6 +108,7 @@ class JSONMessage(AbstractMessage):
 
 __message_class[messageType.JSON] = JSONMessage
 
+
 class TTLMessage(AbstractMessage):
     """ Messages in TTL format
 
@@ -149,5 +150,6 @@ class TTLMessage(AbstractMessage):
                                  % codeType.memberName(code))
             self.decoded = orig
         return self.encoded
+
 
 __message_class[messageType.TTL] = TTLMessage

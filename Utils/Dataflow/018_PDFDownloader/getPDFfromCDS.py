@@ -21,6 +21,7 @@ from pyDKB.common import hdfs, HDFSException
 _fails_in_row = 0
 _fails_max = 3
 
+
 def transfer(url, hdfs_name):
     """ Download file from given URL and upload to HDFS. """
     base_dir = os.path.dirname(__file__)
@@ -40,6 +41,7 @@ def transfer(url, hdfs_name):
                          " %s\n" % err)
         return None
 
+
 def get_url(item):
     """ Get URL of the document`s PDF from CDS data. """
     result = None
@@ -56,6 +58,7 @@ def get_url(item):
                 v = f.get('version', v)
                 result = url
     return result
+
 
 def process(stage, msg):
     """ Message processing function.
@@ -87,6 +90,7 @@ def process(stage, msg):
                                 % (_fails_in_row, _fails_max))
     return True
 
+
 def main(args):
     """ Main function. """
     stage = JSONProcessorStage()
@@ -115,6 +119,7 @@ def main(args):
             sys.stderr.write("(ERROR) %s" % line)
 
     exit(exit_code)
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])

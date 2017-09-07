@@ -50,6 +50,7 @@ from . import Message
 from pyDKB.dataflow import DataflowException
 from pyDKB.common import hdfs
 
+
 class AbstractProcessorStage(AbstractStage):
     """ Abstract class to implement Processor stages
 
@@ -174,7 +175,6 @@ class AbstractProcessorStage(AbstractStage):
                           dest='hdfs'
                           )
 
-
     def parse_args(self, args):
         """ Parse arguments and set dependant arguments if neeeded. """
         super(AbstractProcessorStage, self).parse_args(args)
@@ -232,7 +232,6 @@ class AbstractProcessorStage(AbstractStage):
 
         self.__stoppable_append(self.__output, types.GeneratorType)
 
-
     def run(self):
         """ Run process() for every input() message. """
         for msg in self.input():
@@ -258,7 +257,6 @@ class AbstractProcessorStage(AbstractStage):
         if failures:
             for f in failures:
                 sys.stderr.write("(ERROR) Failed to stop %s: %s" % f)
-
 
     @staticmethod
     def process(stage, input_message):
@@ -326,7 +324,6 @@ class AbstractProcessorStage(AbstractStage):
         """
         return self.stream_input(fd)
 
-
     def output(self, message):
         """ Put the (list of) message(s) to the output buffer. """
         if isinstance(message, self.__output_message_class):
@@ -340,8 +337,6 @@ class AbstractProcessorStage(AbstractStage):
                             % (self.__output_message_class, list,
                                type(message))
                             )
-
-
 
     def forward(self):
         """ Send EOPMessage in the streaming output mode. """
@@ -477,7 +472,6 @@ class AbstractProcessorStage(AbstractStage):
                     hdfs.putfile(fd.name, output_dir)
                     os.remove(fd.name)
 
-
     def __hdfs_in_dir(self):
         """ Call file descriptors generator for files in HDFS dir. """
         dirname = self.ARGS.input_dir
@@ -513,7 +507,6 @@ class AbstractProcessorStage(AbstractStage):
                                      " %s\n" % name)
             self.__current_file = None
             self.__current_file_full = None
-
 
     def __stoppable_append(self, obj, cls):
         """ Appends OBJ (of type CLS) to the list of STOPPABLE. """

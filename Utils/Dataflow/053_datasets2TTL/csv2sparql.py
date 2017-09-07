@@ -90,8 +90,10 @@ GENERATOR = re.compile('(?P<generator>' + '|'.join(GENERATORS) + ')', flags=re.I
 DSNAME_data = re.compile('^(?P<project>data[0-9_a-zA-Z]*)\.(?P<DSID>[0-9]*)\.(?P<streamName>[^.]*)\.(?P<prodStep>[^.]*)\.(?P<datatype>[^.]*)\.(?P<AMItag>[^./]*)(?P<container>/)?$')
 DSNAME_mc = re.compile('^(?P<project>mc[0-9_a-zA-Z]*)\.(?P<DSID>[0-9]*)\.(?P<phys_short>[^.]*)\.(?P<prodStep>[^.]*)\.(?P<datatype>[^.]*)\.(?P<AMItag>[^./]*)(?P<container>/)?$')
 
+
 class CloseFileException(Exception):
     pass
+
 
 def add_sparql(line, linkfile, triple_map):
     # Adds part of linking query, to link dataset, mentioned in this CSV line,
@@ -107,7 +109,6 @@ def add_sparql(line, linkfile, triple_map):
     linkquery = '''( <{graph}/{obj}> {GlanceID} )'''.format(**triple_map)
     linkfile.write(linkquery)
     return True
-
 
 
 def check_synonyms(word, syns):
@@ -169,7 +170,6 @@ def add_ttl(line, outfile, triple_map):
                 line['physKeyword'] += [kw]
     except IndexError:
         pass
-
 
     # Refine timestamp
     t = None if (line['timestamp'] in ('NULL', '\N', None)) else int(line['timestamp']) / 100
@@ -391,6 +391,7 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
 
     return linkfile
 
+
 def main(argv):
     parser = argparse.ArgumentParser(description=u'Reads CSV-file with information about datasets and produces files with triples and Dataset-Document linking statements.')
     parser.add_argument('csv', metavar=u'CSV-FILE', type=argparse.FileType('r'), nargs='*',
@@ -447,7 +448,6 @@ Default mode (-T|-L): TTL.''',
                         dest='mode'
                         )
 
-
     args = parser.parse_args(argv)
     linkfile = args.linkfile
     if not args.csv:
@@ -466,6 +466,7 @@ Default mode (-T|-L): TTL.''',
     for infile in args.csv:
         linkfile = csv2ttl(infile, args.outfile, linkfile, args)
         infile.close()
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

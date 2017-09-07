@@ -10,6 +10,7 @@ except ImportError, e:
     sys.stderr.write("Please install 'argparse' package.\n")
     raise e
 
+
 class AbstractStage(object):
 
     """

@@ -2,6 +2,7 @@
 Utils to work with JSON (dict) objects.
 """
 
+
 def valueByKey(json_data, key):
     """ Return value by a chain (list) of nested keys.
 
@@ -24,6 +25,7 @@ def valueByKey(json_data, key):
         if type(val) != dict and i < len(nested_keys) - 1:
             return None
     return val
+
 
 def nestedKeys(key):
     """ Transform STRING with nested keys into LIST.

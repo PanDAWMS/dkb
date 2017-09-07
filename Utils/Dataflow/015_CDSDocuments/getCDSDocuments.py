@@ -47,6 +47,7 @@ def collection_verification(collection):
             and collection[0].get('primary', '') in ("ARTICLE", "ATLAS_Papers"):
         return True
 
+
 def search_paper(cds, paper_info):
     """ Perform CDS search by given paper info.
 
@@ -120,6 +121,7 @@ def search_paper(cds, paper_info):
         sys.stderr.write("Decoding JSON has failed\n")
         return None
 
+
 def search_notes(cds, notes):
     """ Get NOTES metadata from CDS.
 
@@ -135,6 +137,7 @@ def search_notes(cds, notes):
         results[note.get('id')] = search_note(cds, note)
 
     return results
+
 
 def search_note(cds, note):
     """ Get NOTE metadata from CDS.
@@ -192,6 +195,7 @@ def search_note(cds, note):
         results = None
 
     return results
+
 
 def form_output_data(GLANCEdata, ppCDSdata, sdCDSdata):
     """ Combine input and found metadata; generate and add dkbID.
@@ -267,6 +271,7 @@ def input_json_handle(json_data, cds):
     result = form_output_data(json_data, pp_results, ds_results)
     return result
 
+
 def process(stage, message):
     """ Process input message. """
     ARGS = stage.ARGS
@@ -280,6 +285,7 @@ def process(stage, message):
     stage.output(out_msg)
 
     return True
+
 
 def main(argv):
     """ Program body. """
@@ -346,6 +352,7 @@ def main(argv):
         stage.stop()
 
     exit(exit_code)
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])

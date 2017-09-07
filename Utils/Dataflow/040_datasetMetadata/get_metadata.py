@@ -73,6 +73,7 @@ IGNORE_PROJECTS = ('evind', 'valid', 'user', 'group')
 
 ARGS = ''
 
+
 def main(argv):
     global ARGS
     parser = argparse.ArgumentParser(description=u'Reads JSON-file with information about papers and look for metadata for mentioned datasets in Impala.')
@@ -172,6 +173,7 @@ def main(argv):
         if ARGS.out == 's':
             headers = False
 
+
 def hdfsFiles(filenames, upload=False):
     if not filenames: filenames = sys.stdin
     for f in filenames:
@@ -207,6 +209,7 @@ def loadMetadata(data, outfile, db, extra={}, headers=True):
             dsids += data['datasetIDs'][tab].split()
         loadByDSIDs(projects, dsids, outfile, db, extra, headers)
 
+
 def loadByNames(datasets, outfile, db, extra={}, headers=True):
     global ARGS
     for t in dataType:
@@ -218,6 +221,7 @@ def loadByNames(datasets, outfile, db, extra={}, headers=True):
         w = 'WHERE isnull(PS1.name,PS2.name) LIKE "' + '%" OR isnull(PS1.name,PS2.name) LIKE "'.join(datasets[t]) + '%"' if datasets[t] else ''
         query = '{select} {where}'.format(select=s, where=w)
         loadQuery(query, outfile, ARGS, db, headers)
+
 
 def loadByDSIDs(projects, datasets, outfile, db, extra={}, headers=True):
     global ARGS
@@ -235,11 +239,13 @@ def loadByDSIDs(projects, datasets, outfile, db, extra={}, headers=True):
     query = '{select} {where}'.format(select=s, where=w)
     loadQuery(query, outfile, ARGS, db)
 
+
 def loadQuery(query, outfile, ARGS, db, headers=True):
     if outfile:
         loadQuery2File(query, outfile, ARGS, headers)
     else:
         loadQuery2DB(query, db)
+
 
 def loadQuery2File(query, outfile, ARGS, headers=True):
     with open('query.sql', 'w') as qfile:
@@ -255,9 +261,11 @@ def loadQuery2File(query, outfile, ARGS, headers=True):
         except subprocess.CalledProcessError, e:
             stderr.write("(ERROR) Failed to execute Impala request (return code: %d).\nCommand: %s\n" % (e.returncode, e.cmd))
 
+
 def loadQuery2DB(query, db):
     q = 'INSERT INTO dkb_temp.datasets {query}'.format(query=query)
     db.execute(q)
+
 
 def campaign2project(campaigns, db):
     # Get projects from Impala for given campaigns
@@ -275,6 +283,7 @@ or lower(`subcampaign`) in ('{campaign_in}'))
     for row in db.fetchall():
         r += [row[0]]
     return r
+
 
 def extra_string(extra={}):
     keys = extra.keys()
@@ -297,6 +306,7 @@ def extra_string(extra={}):
 '''.format(val=val, name=e)
     return s
 
+
 def checkExtra(key, val):
     checkParameters = {
         'glanceid': {
@@ -310,6 +320,7 @@ def checkExtra(key, val):
             stderr.write("(WARN) Unacceptable value for key '%s': '%s' (expected type: %s).\n" % (key, val, p['type']))
             return False
     return True
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

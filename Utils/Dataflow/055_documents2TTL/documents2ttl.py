@@ -88,12 +88,14 @@ NOTE_CDS_ATTRS = [{'CDS': 'creation_date', 'ONTO': 'hasCreationDate', 'TYPE': '^
                   {'CDS': 'abstract', 'ONTO': 'hasAbstract', 'TYPE': ''},
                   {'CDS': 'title', 'ONTO': 'hasFullTitle', 'TYPE': ''}, ]
 
+
 def define_globals(args):
     global GRAPH
     GRAPH = args.GRAPH
 
     global ONTOLOGY
     ONTOLOGY = args.ONTOLOGY
+
 
 def get_document_iri(doc_id):
     """
@@ -102,6 +104,7 @@ def get_document_iri(doc_id):
     """
     obj = "document/%s" % doc_id
     return "<%s/%s>" % (GRAPH, obj)
+
 
 def document_glance(data, doc_iri, glance_attrs):
     """
@@ -123,6 +126,7 @@ def document_glance(data, doc_iri, glance_attrs):
                     value=curr_value, xsdType=item.get('TYPE'))
     return ttl
 
+
 def documents_links(data):
     """
     Convert documents links to TTL
@@ -137,6 +141,7 @@ def documents_links(data):
         ttl += '{paperIRI} <{ontology}#isBasedOn> {noteIRI} .\n'\
             .format(paperIRI=paper_iri, ontology=ONTOLOGY, noteIRI=note_iri)
     return ttl
+
 
 def document_cds(data, doc_iri, cds_attrs):
     """
@@ -165,6 +170,7 @@ def document_cds(data, doc_iri, cds_attrs):
     sys.stderr.write("done!\n")
     return ttl
 
+
 def doi2ttl(doi, doc_iri):
     """
     Converting DOI parameter to TTL
@@ -182,6 +188,7 @@ def doi2ttl(doi, doc_iri):
         ttl += '{docIRI} <{ontology}#hasDOI> "{doi}" .\n'\
             .format(docIRI=doc_iri, doi=item, ontology=ONTOLOGY)
     return ttl
+
 
 def keywords2ttl(keywords, doc_iri):
     """
@@ -207,6 +214,7 @@ def keywords2ttl(keywords, doc_iri):
             .format(docIRI=doc_iri, keyword=item, ontology=ONTOLOGY)
     return ttl
 
+
 def cds_internal_extraction(data):
     """
     Extracting cds internal report number parameter from JSON string
@@ -225,6 +233,7 @@ def cds_internal_extraction(data):
             elif 'internal' not in report_number:
                 if 'primary_report_number' in report_number:
                     return report_number.get('primary_report_number')
+
 
 def report_number_extraction(data):
     """
@@ -263,6 +272,7 @@ def glance_parameter_extraction(param_name, json_data):
     elif param_name == 'url':
         return fix_string(json_data.get('url'))
 
+
 def cds_parameter_extraction(param_name, json_data):
     """
     Extracting parameters from json string with CDS parameters
@@ -285,6 +295,7 @@ def cds_parameter_extraction(param_name, json_data):
     if param_name == 'CDS_ReportNumber':
         return report_number_extraction(json_data)
 
+
 def abstract_extraction(data):
     """
     Extracting abstract from json string
@@ -305,6 +316,7 @@ def abstract_extraction(data):
         sys.stderr.write("(WARN) Failed to extract abstract summary.")
     return fix_string(result)
 
+
 def title_extraction(data):
     """
     Extracting title from json string
@@ -313,6 +325,7 @@ def title_extraction(data):
     """
     if 'title' in data:
         return fix_string(data.get('title').get('title'))
+
 
 def cds_id_extraction(data):
     """
@@ -323,6 +336,7 @@ def cds_id_extraction(data):
     if 'recid' in data:
         return int(data.get('recid'))
 
+
 def creation_date_extraction(data):
     """
     Extracting creation date from json string
@@ -331,6 +345,7 @@ def creation_date_extraction(data):
     """
     if 'creation_date' in data:
         return fix_string(data.get('creation_date'))
+
 
 def arxiv_extraction(data):
     """
@@ -368,6 +383,7 @@ def generate_journal_id(journal_dict):
         journal_id += '_' + journal_dict.get('year').replace(" ", "")
     return journal_id
 
+
 def process_journals(data, doc_iri):
     """
     Convert journal data from json string to TTL
@@ -393,6 +409,7 @@ def process_journals(data, doc_iri):
                     ontology=ONTOLOGY)
     return ttl
 
+
 def fix_string(wrong_string):
     """
     fix escape sequences in strings
@@ -404,6 +421,7 @@ def fix_string(wrong_string):
     return wrong_string.encode('ascii', 'ignore').replace("'", "\\'")\
         .replace("\n", "\\n").replace("\\", r"\\").replace('\"', '')
 
+
 def fix_list_values(list_vals):
     """
     Fixing list values with fix_string
@@ -413,6 +431,7 @@ def fix_list_values(list_vals):
     for item in list_vals:
         item = fix_string(item)
     return list_vals
+
 
 def process(stage, msg):
     """
@@ -448,6 +467,7 @@ def process(stage, msg):
     for item in doc_ttl.splitlines():
         stage.output(pyDKB.dataflow.Message(pyDKB.dataflow.messageType.TTL)(item))
     return True
+
 
 def main(argv):
     """
@@ -493,6 +513,7 @@ def main(argv):
             sys.stderr.write("(ERROR) %s" % line)
 
     exit(exit_code)
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])

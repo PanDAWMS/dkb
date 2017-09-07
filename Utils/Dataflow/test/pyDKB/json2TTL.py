@@ -9,6 +9,7 @@ sys.path.append("../../")
 
 import pyDKB
 
+
 def process(stage, msg):
     """
     Input message: JSON
@@ -18,6 +19,7 @@ def process(stage, msg):
     myMessage = cls(msg.content())
     stage.output(myMessage)
     return True
+
 
 def main(args):
     """ Main program loop. """
@@ -36,6 +38,7 @@ def main(args):
         stage.stop()
 
     exit(exit_code)
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

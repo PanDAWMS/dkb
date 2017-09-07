@@ -13,6 +13,7 @@ from pyDKB.dataflow import messages
 graph = "http://nosql.tpu.ru:8890/DAV/ATLAS"
 ontology = "http://nosql.tpu.ru/ontology/ATLAS"
 
+
 def process(stage, msg):
     """Handling input data (triples) from doc_content_triples()
     Input message: JSON
@@ -26,6 +27,7 @@ def process(stage, msg):
     for i in result:
         stage.output(pyDKB.dataflow.messages.TTLMessage(i))
     return True
+
 
 def doc_content_triples(data):
     """Forming data into triples"""
@@ -139,6 +141,7 @@ def doc_content_triples(data):
                 sys.stderr.write("No campaigns in this file.\n")
     return ttl
 
+
 def main(args):
     """Parsing command line arguments and processing JSON
     string from file or from stream
@@ -158,6 +161,7 @@ def main(args):
         stage.stop()
 
     exit(exit_code)
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])

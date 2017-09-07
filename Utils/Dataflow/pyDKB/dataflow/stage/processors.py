@@ -10,6 +10,7 @@ from . import messageType
 import sys
 import json
 
+
 class JSONProcessorStage(AbstractProcessorStage):
     """ JSON2JSON Processor Stage
 
@@ -63,6 +64,7 @@ class JSONProcessorStage(AbstractProcessorStage):
                              % (fd.name, self.input_message_class().typeName(), err))
             yield None
 
+
 class TTLProcessorStage(AbstractProcessorStage):
     """ TTL2TTL Processor Stage
 
@@ -78,6 +80,7 @@ class TTLProcessorStage(AbstractProcessorStage):
     # Override
     def output(self, message):
         super(TTLProcessorStage, self).output(message)
+
 
 class JSON2TTLProcessorStage(JSONProcessorStage, TTLProcessorStage):
     """ JSON2TTL Procssor Stage

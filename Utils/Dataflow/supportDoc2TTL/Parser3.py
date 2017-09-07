@@ -3,6 +3,7 @@ import hashlib
 import json
 import uuid
 
+
 def getSupportDocID(dictSupportDocs, documentid):
     docGUID = 'None'
     if documentid in dictSupportDocs.values():
@@ -18,6 +19,7 @@ def getSupportDocID(dictSupportDocs, documentid):
     fDocumentID.close()
     return docGUID
 
+
 def getAuthorID(dictAuthors, authorid):
     authorGUID = 'None'
     if authorid in dictAuthors.values():
@@ -32,6 +34,7 @@ def getAuthorID(dictAuthors, authorid):
         fAuthorID.write(str(authorGUID) + " " + str(authorid) + "\n")
     fAuthorID.close()
     return authorGUID
+
 
 dictAuthorSupportDocs = {}
 fAuthorSDID = open("authorsSupportDoc.txt", "r")

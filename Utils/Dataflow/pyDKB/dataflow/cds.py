@@ -13,8 +13,10 @@ try:
 except ImportError:
     pass
 
+
 class CDSInvenioConnector(cds.CDSInvenioConnector):
     """ CDSInvenioConnector which closes the browser in most cases. """
+
     def __enter__(self):
         return self
 
@@ -25,11 +27,13 @@ class CDSInvenioConnector(cds.CDSInvenioConnector):
             return True
         return False
 
+
 class KerberizedCDSInvenioConnector(CDSInvenioConnector):
     """
     Represents same CDSInvenioConnector, but this one is aware about SPNEGO:
     Simple and Protected GSSAPI Negotiation Mechanism
     """
+
     def __init__(self, login="user", password="password"):
         """ Run parent's constructor with fake login/password
 

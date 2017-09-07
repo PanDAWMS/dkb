@@ -12,6 +12,7 @@ from . import HDFSException
 DEVNULL = open(os.path.devnull, "w")
 DKB_HOME = "/user/DKB/"
 
+
 def check_stderr(proc, timeout=None):
     """ Check STDERR of the subprocess and kill it if there`s something.
 
@@ -29,6 +30,7 @@ def check_stderr(proc, timeout=None):
         proc.wait()
     return proc.poll()
 
+
 def makedirs(dirname):
     """ Try to create directory (with parents). """
     cmd = ["hadoop", "fs", "-mkdir", "-p", dirname]
@@ -43,6 +45,7 @@ def makedirs(dirname):
         raise RuntimeError("Failed to create HDFS directory: %s\n"
                            "Error message: %s\n" % (dirname, err))
 
+
 def putfile(fname, dest):
     """ Upload file to HDFS. """
     cmd = ["hadoop", "fs", "-put", fname, dest]
@@ -56,6 +59,7 @@ def putfile(fname, dest):
     except (subprocess.CalledProcessError, OSError, HDFSException), err:
         raise RuntimeError("Failed to put file to HDFS: %s\n"
                            "Error message: %s\n" % (fname, err))
+
 
 def getfile(fname):
     """ Download file from HDFS.
@@ -75,6 +79,7 @@ def getfile(fname):
         raise RuntimeError("Failed to get file from HDFS: %s\n"
                            "Error message: %s\n" % (fname, err))
     return name
+
 
 def listdir(dirname, mode='a'):
     """ List files and/or subdirectories of HDFS directory.

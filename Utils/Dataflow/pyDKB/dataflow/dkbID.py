@@ -24,6 +24,7 @@ except ValueError, err:
 except KeyError, err:
     raise DataflowException("dkbID misconfigured: \"%s\" is not defined." % err)
 
+
 def firstValue(nestedList):
     """ Return first not None value from nested lists. """
     if type(nestedList) != list:
@@ -34,6 +35,7 @@ def firstValue(nestedList):
         if val:
             break
     return val
+
 
 def docID(json_data):
     """ Return unique identifier for Document DKB object.
@@ -60,7 +62,10 @@ def docID(json_data):
 
     return val
 
+
 import uuid
+
+
 def authorID(json_data):
     """ Return unique identifier for Author DKB object.
 
@@ -70,10 +75,12 @@ def authorID(json_data):
 
 # ----- #
 
+
 __dataTypeFunc = {
     dataType.DOCUMENT: docID,
     dataType.AUTHOR: authorID
 }
+
 
 def dkbID(json_data, data_type):
     """ Return unique identifier for object of TYPE based on DATA. """
