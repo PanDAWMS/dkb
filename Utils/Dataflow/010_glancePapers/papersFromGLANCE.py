@@ -12,7 +12,8 @@
     - json-document
 '''
 
-import sys, getopt
+import sys
+import getopt
 import json
 import requests
 import os

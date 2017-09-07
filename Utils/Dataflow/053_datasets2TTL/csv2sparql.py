@@ -10,9 +10,12 @@
 # -L, --link-file   Where to store linking queries
 # -O, --output      Where to store prepared triples
 
-import argparse, warnings
+import argparse
+import warnings
 
-import sys, csv, re
+import sys
+import csv
+import re
 from datetime import datetime
 
 ### DEFAULTS AND CONFIGURATIONS ###
