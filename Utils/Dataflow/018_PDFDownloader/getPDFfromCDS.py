@@ -27,8 +27,8 @@ def transfer(url, hdfs_name):
     cmd = [os.path.join(base_dir, "transferPDF.sh"), url, hdfs_name]
     try:
         sp = subprocess.Popen(cmd, stdin=subprocess.PIPE,
-                                   stderr=subprocess.PIPE,
-                                   stdout=subprocess.PIPE)
+                              stderr=subprocess.PIPE,
+                              stdout=subprocess.PIPE)
         if hdfs.check_stderr(sp):
             raise subprocess.CalledProcessError(sp.returncode, cmd)
         out = sp.stdout.readline()
@@ -50,9 +50,9 @@ def get_url(item):
         desc = f.get('description', None)
         v = -1
         if url.split('.')[-1].lower() == "pdf" \
-          and (desc == None or desc.lower().find("fulltext") >= 0):
+                and (desc == None or desc.lower().find("fulltext") >= 0):
             if f.get('version', None) != None and f['version'] > v \
-              or v < 0:
+                    or v < 0:
                 v = f.get('version', v)
                 result = url
     return result

@@ -45,28 +45,28 @@ def doc_content_triples(data):
         }
         if item.endswith(dataset_suffix):
             ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \
-                " a <{ontology}#DocumentContent> ."
-                .format(**DEFAULT)
-            )
+                       " a <{ontology}#DocumentContent> ."
+                       .format(**DEFAULT)
+                       )
             ttl.append("<{graph}/document/{doc_ID}>" \
-                " <{ontology}#hasContent>" \
-                " <{graph}/document/{doc_ID}/{c_name}> ."
-                .format(**DEFAULT)
-            )
+                       " <{ontology}#hasContent>" \
+                       " <{graph}/document/{doc_ID}/{c_name}> ."
+                       .format(**DEFAULT)
+                       )
             for j, ds_item in enumerate(data['content'][item]):
                 DATASAMPLES = {
                     'data_sample': ds_item
                 }
                 DATASAMPLES.update(DEFAULT)
                 ttl.append("<{graph}/datasample/{data_sample}>" \
-                    " a <{ontology}#DataSample> ."
-                    .format(**DATASAMPLES)
-                )
+                           " a <{ontology}#DataSample> ."
+                           .format(**DATASAMPLES)
+                           )
                 ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \
-                    " <{ontology}#mentionsDataSample>" \
-                    " <{graph}/datasample/{data_sample}> ."
-                    .format(**DATASAMPLES)
-                )
+                           " <{ontology}#mentionsDataSample>" \
+                           " <{graph}/datasample/{data_sample}> ."
+                           .format(**DATASAMPLES)
+                           )
         if item == 'plain_text':
             try:
                 data_taking_year = data['content'][item]['data taking year']
@@ -74,12 +74,12 @@ def doc_content_triples(data):
                 data_taking_year = None
             try:
                 luminosity = data['content'][item]['luminosity'] \
-                .replace(' ', '_')
+                    .replace(' ', '_')
             except (KeyError, AttributeError):
                 luminosity = None
             try:
                 energy = data['content'][item]['energy'] \
-                .lower().replace(' ', '')
+                    .lower().replace(' ', '')
             except (KeyError, AttributeError):
                 energy = None
             PLAINTEXT = {
@@ -89,49 +89,49 @@ def doc_content_triples(data):
             }
             PLAINTEXT.update(DEFAULT)
             ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \
-                " a <{ontology}#DocumentContent> ."
-                .format(**PLAINTEXT)
-            )
+                       " a <{ontology}#DocumentContent> ."
+                       .format(**PLAINTEXT)
+                       )
             ttl.append("<{graph}/document/{doc_ID}>" \
-                " <{ontology}#hasContent>" \
-                " <{graph}/document/{doc_ID}/{c_name}> ."
-                .format(**PLAINTEXT)
-            )
+                       " <{ontology}#hasContent>" \
+                       " <{graph}/document/{doc_ID}/{c_name}> ."
+                       .format(**PLAINTEXT)
+                       )
             if data_taking_year:
                 ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \
-                    " <{ontology}#mentionsDataTakingYear>" \
-                    " \"{data_taking_year}\" ."
-                    .format(**PLAINTEXT)
-                )
+                           " <{ontology}#mentionsDataTakingYear>" \
+                           " \"{data_taking_year}\" ."
+                           .format(**PLAINTEXT)
+                           )
             if luminosity:
                 ttl.append("<{graph}/luminosity/{luminosity}>" \
-                    " a <{ontology}#Luminosity> ."
-                    .format(**PLAINTEXT)
-                )
+                           " a <{ontology}#Luminosity> ."
+                           .format(**PLAINTEXT)
+                           )
                 ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \
-                    " <{ontology}#mentionsLuminosity>" \
-                    " <{graph}/luminosity/{luminosity}> ."
-                    .format(**PLAINTEXT)
-                )
+                           " <{ontology}#mentionsLuminosity>" \
+                           " <{graph}/luminosity/{luminosity}> ."
+                           .format(**PLAINTEXT)
+                           )
             if energy:
                 ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \
-                    " <{ontology}#mentionsEnergy>" \
-                    " <{ontology}#{energy}> ."
-                    .format(**PLAINTEXT)
-                )
+                           " <{ontology}#mentionsEnergy>" \
+                           " <{ontology}#{energy}> ."
+                           .format(**PLAINTEXT)
+                           )
             try:
                 campaign = data['content'][item]['campaigns']
                 for j, pt_item in enumerate(campaign):
                     PLAINTEXT["campaign"] = pt_item
                     ttl.append("<{graph}/campaign/{campaign}>" \
-                        " a <{ontology}#Campaign> ."
-                        .format(**PLAINTEXT)
-                    )
+                               " a <{ontology}#Campaign> ."
+                               .format(**PLAINTEXT)
+                               )
                     ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \
-                        " <{ontology}#mentionsCampaign>" \
-                        " <{graph}/campaign/{campaign}> ."
-                        .format(**PLAINTEXT)
-                    )
+                               " <{ontology}#mentionsCampaign>" \
+                               " <{graph}/campaign/{campaign}> ."
+                               .format(**PLAINTEXT)
+                               )
                     del PLAINTEXT["campaign"]
             except KeyError:
                 campaign = []

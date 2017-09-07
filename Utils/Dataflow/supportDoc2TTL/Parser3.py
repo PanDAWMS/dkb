@@ -70,14 +70,14 @@ for item in data:
     if "URL_Fulltext" in item:
         URL_Fulltext = item["URL_Fulltext"]
     attrsSupportDoc = {
-            'docSubject': docSubject,
-            'graph': graph,
-            'ontology': ontology,
-            'CDS_ID': CDSID,
-            'Abstract': Abstract.translate(str.maketrans({"\\": r"\\", "'": r"\'", "\n": r"\\n"})),
-            'CDSInternal': CDSInternal,
-            'publicationYear': PublicationYear,
-            'URL_Fulltext': URL_Fulltext
+        'docSubject': docSubject,
+        'graph': graph,
+        'ontology': ontology,
+        'CDS_ID': CDSID,
+        'Abstract': Abstract.translate(str.maketrans({"\\": r"\\", "'": r"\'", "\n": r"\\n"})),
+        'CDSInternal': CDSInternal,
+        'publicationYear': PublicationYear,
+        'URL_Fulltext': URL_Fulltext
     }
     tripletsDocument = '''{docSubject} a <{ontology}#SupportingDocument> .\n'''.format(**attrsSupportDoc)
     outfile.write(tripletsDocument)
@@ -101,10 +101,10 @@ for item in data:
         Keywords = item["keywords"]
         for keyword in Keywords:
             attrKeyword = {
-                    'docSubject': docSubject,
-                    'graph': graph,
-                    'ontology': ontology,
-                    'Keyword': keyword
+                'docSubject': docSubject,
+                'graph': graph,
+                'ontology': ontology,
+                'Keyword': keyword
             }
             tripletKeyword = '''{docSubject} <{ontology}#hasKeyword> '{Keyword}' .\n'''.format(**attrKeyword)
             outfile.write(tripletKeyword)
@@ -131,27 +131,27 @@ for item in data:
             if "affiliation" in author:
                 affiliation = author["affiliation"]
             attrrsAuthor = {
-                    'docSubject': docSubject,
-                    'authorUID': authorUID,
-                    'authorSubject': authorSubject,
-                    'graphURL': graph,
-                    'affiliation': affiliation,
-                    'email': email,
-                    'full_name': full_name
+                'docSubject': docSubject,
+                'authorUID': authorUID,
+                'authorSubject': authorSubject,
+                'graphURL': graph,
+                'affiliation': affiliation,
+                'email': email,
+                'full_name': full_name
             }
             tripletsAuthor = '''{authorSubject} a <{ontology}#Person> . \n'''.format(**attrrsAuthor)
             outfile.write(tripletsAuthor)
             if full_name != '':
                 triplethasFullName = '''{authorSubject} <{ontology}#hasFullName> '{full_name}' .\n'''.format(
-                        **attrrsAuthor)
+                    **attrrsAuthor)
                 outfile.write(triplethasFullName)
             if email != '':
                 triplethasEmail = '''{authorSubject} <{ontology}#hasEmail> '{email}' .\n'''.format(
-                        **attrrsAuthor)
+                    **attrrsAuthor)
                 outfile.write(triplethasEmail)
             if affiliation != '':
                 triplethasAffiliation = '''{authorSubject} <{ontology}#hasAffiliation> '{affiliation}' .\n'''.format(
-                        **attrrsAuthor)
+                    **attrrsAuthor)
                 outfile.write(triplethasAffiliation)
             hasAuthorTriplet = "{docSubject} <{ontology}#hasAuthor> {authorSubject} .\n".format(**attrrsAuthor)
             outfile.write(hasAuthorTriplet)

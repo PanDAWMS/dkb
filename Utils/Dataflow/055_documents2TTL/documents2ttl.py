@@ -461,17 +461,17 @@ def main(argv):
     stage.process = process
     try:
         stage.add_argument('-g', '--graph', action='store', type=str, nargs='?',
-                            help='Virtuoso DB graph name (default: %(default)s)',
-                            default=GRAPH,
-                            const=GRAPH,
-                            metavar='GRAPH',
-                            dest='GRAPH')
+                           help='Virtuoso DB graph name (default: %(default)s)',
+                           default=GRAPH,
+                           const=GRAPH,
+                           metavar='GRAPH',
+                           dest='GRAPH')
         stage.add_argument('-O', '--ontology', action='store', type=str, nargs='?',
-                            help='Virtuoso ontology prefix (default: %(default)s)',
-                            default=ONTOLOGY,
-                            const=ONTOLOGY,
-                            metavar='ONT',
-                            dest='ONTOLOGY')
+                           help='Virtuoso ontology prefix (default: %(default)s)',
+                           default=ONTOLOGY,
+                           const=ONTOLOGY,
+                           metavar='ONT',
+                           dest='ONTOLOGY')
         stage.parse_args(argv)
         define_globals(stage.ARGS)
         stage.run()

@@ -56,9 +56,9 @@ for i in lines:
     if not i.startswith("#"):
         project = "<%s/project/%s>" % (graph, i.rstrip('\n'))
         PROJECTS = {
-                'graph': graph,
-                'ontology': ontology,
-                'project_name': project
+            'graph': graph,
+            'ontology': ontology,
+            'project_name': project
         }
         triple = '''{project_name} a <{ontology}#Project> .\n'''.format(**PROJECTS)
         output_object.write(triple)

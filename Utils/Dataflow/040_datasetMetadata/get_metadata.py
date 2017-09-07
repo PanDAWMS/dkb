@@ -77,60 +77,60 @@ def main(argv):
     global ARGS
     parser = argparse.ArgumentParser(description=u'Reads JSON-file with information about papers and look for metadata for mentioned datasets in Impala.')
     parser.add_argument('input', metavar=u'JSON-FILE', type=argparse.FileType('r'), nargs='*',
-                         help=u'Source JSON-file.')
+                        help=u'Source JSON-file.')
     parser.add_argument('-t', '--source-type', action='store', type=str, nargs='?',
-                         help='''Source document (from which the datasets are taken) naming type.
+                        help='''Source document (from which the datasets are taken) naming type.
   Possible values:
     GID - GlanceID (default)''',
-                         default='GID',
-                         const='GID',
-                         metavar='TYPE',
-                         choices=['GID'],
-                         dest='type')
+                        default='GID',
+                        const='GID',
+                        metavar='TYPE',
+                        choices=['GID'],
+                        dest='type')
 
     parser.add_argument('--hdfs', action='store', type=bool, nargs='?',
-                          help=u'Source files are stored in HDFS; if no JSON-FILE specified, filenames will come to STDIN',
-                          default=False,
-                          const=True,
-                          metavar='HDFS',
-                          dest='hdfs'
-                          )
+                        help=u'Source files are stored in HDFS; if no JSON-FILE specified, filenames will come to STDIN',
+                        default=False,
+                        const=True,
+                        metavar='HDFS',
+                        dest='hdfs'
+                        )
     parser.add_argument('-H', '--host', action='store', type=str, nargs='?',
-                         help=u'Impala host name.',
-                         default='nosql-three.zoo.computing.kiae.ru',
-                         const='nosql-three.zoo.computing.kiae.ru',
-                         metavar='HOST',
-                         dest='host'
-                         )
+                        help=u'Impala host name.',
+                        default='nosql-three.zoo.computing.kiae.ru',
+                        const='nosql-three.zoo.computing.kiae.ru',
+                        metavar='HOST',
+                        dest='host'
+                        )
     parser.add_argument('-P', '--port', action='store', type=str, nargs='?',
-                         help=u'Impala port number.',
-                         default='21050',
-                         const='21050',
-                         metavar='PORT',
-                         dest='port'
-                         )
+                        help=u'Impala port number.',
+                        default='21050',
+                        const='21050',
+                        metavar='PORT',
+                        dest='port'
+                        )
     parser.add_argument('-d', '--database', action='store', type=str, nargs='?',
-                         help=u'Impala database name.',
-                         default='dkb',
-                         const='dkb',
-                         metavar='DB',
-                         dest='db'
-                         )
+                        help=u'Impala database name.',
+                        default='dkb',
+                        const='dkb',
+                        metavar='DB',
+                        dest='db'
+                        )
     parser.add_argument('-m', '--mode', action='store', type=str, nargs='?',
-                         help=u'Processing mode: (f)ile or (m)ap-reduce.',
-                         default='f',
-                         const='m',
-                         metavar='MODE',
-                         choices=['f', 'm'],
-                         dest='mode'
-                         )
+                        help=u'Processing mode: (f)ile or (m)ap-reduce.',
+                        default='f',
+                        const='m',
+                        metavar='MODE',
+                        choices=['f', 'm'],
+                        dest='mode'
+                        )
     parser.add_argument('-O', '--output', action='store', type=str, nargs='?',
-                         help=u'Where to output results: (f)iles, (i)mpala tables, (s)tdout, (h)dfs (with --hdfs option only)',
-                         default='f',
-                         const='f',
-                         choices=['f', 'i', 's', 'h'],
-                         dest='out'
-                         )
+                        help=u'Where to output results: (f)iles, (i)mpala tables, (s)tdout, (h)dfs (with --hdfs option only)',
+                        default='f',
+                        const='f',
+                        choices=['f', 'i', 's', 'h'],
+                        dest='out'
+                        )
 
     ARGS = parser.parse_args(argv)
 
@@ -260,7 +260,7 @@ def loadQuery2DB(query, db):
     db.execute(q)
 
 def campaign2project(campaigns, db):
-# Get projects from Impala for given campaigns
+    # Get projects from Impala for given campaigns
     if not campaigns:
         return []
 
@@ -299,9 +299,9 @@ def extra_string(extra={}):
 
 def checkExtra(key, val):
     checkParameters = {
-      'glanceid': {
-        'type': int
-      }
+        'glanceid': {
+            'type': int
+        }
     }
     if key in checkParameters:
         p = checkParameters[key]

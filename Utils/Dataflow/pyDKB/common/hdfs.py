@@ -91,9 +91,9 @@ def listdir(dirname, mode='a'):
         # Use PIPE for all the std* to avoid catching and/or blocking
         # current process std*
         proc = subprocess.Popen(cmd,
-                              stdin=subprocess.PIPE,
-                              stderr=subprocess.PIPE,
-                              stdout=subprocess.PIPE)
+                                stdin=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                stdout=subprocess.PIPE)
         while proc.poll() == None:
             timeout = 0.1
             check_stderr(proc, timeout)

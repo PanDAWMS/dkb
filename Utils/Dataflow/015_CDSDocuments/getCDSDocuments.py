@@ -43,8 +43,8 @@ def collection_verification(collection):
                          % (list, dict, type(collection)))
         return False
     if len(collection) > 0 \
-      and type(collection[0]) is dict \
-      and collection[0].get('primary', '') in ("ARTICLE", "ATLAS_Papers"):
+            and type(collection[0]) is dict \
+            and collection[0].get('primary', '') in ("ARTICLE", "ATLAS_Papers"):
         return True
 
 def search_paper(cds, paper_info):
@@ -186,7 +186,7 @@ def search_note(cds, note):
             sys.stderr.write("(WARN) Supporting document search returned more"
                              " than one result (%s)\n"
                              "(WARN) Will be taken the first of the list\n"
-                              % str(len(results)))
+                             % str(len(results)))
         results = results[0]
     if type(results) != dict:
         results = None
@@ -205,7 +205,7 @@ def form_output_data(GLANCEdata, ppCDSdata, sdCDSdata):
     if type(ppCDSdata) != type(GLANCEdata) != type(sdCDSdata) != dict:
         sys.stderr.write("(ERROR) form_output_data() expected parameters of"
                          " type %s (get %s, %s, %s)\n" % (dict,
-                         type(GLANCEdata), type(ppCDSdata), type(sdCDSdata)))
+                                                          type(GLANCEdata), type(ppCDSdata), type(sdCDSdata)))
     result = {}
 
     ppGLANCEdata = GLANCEdata.copy()
@@ -290,21 +290,21 @@ def main(argv):
                        const='',
                        metavar="LOGIN",
                        dest='login'
-                      )
+                       )
     stage.add_argument("-p", "--password", action="store", type=str, nargs='?',
                        help="CERN account password",
                        default='',
                        const='',
                        metavar="PASSWD",
                        dest='password'
-                      )
+                       )
     stage.add_argument("-k", "--kerberos", action="store", type=bool, nargs='?',
                        help="Use Kerberos-based authentification",
                        default=False,
                        const=True,
                        metavar="KERBEROS",
                        dest='kerberos'
-                      )
+                       )
 #    --pretty argument is to be handled by ProcessorStages output methods.
 #    ---
 #    stage.add_argument("-P", "--pretty", action="store", type=int, nargs="?",

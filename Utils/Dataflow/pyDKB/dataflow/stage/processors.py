@@ -31,7 +31,7 @@ class JSONProcessorStage(AbstractProcessorStage):
             sys.stderr.write("(WARN) failed to read input file %(f)s as"
                              " Newline Delimeted %(t)s. Will try to read as"
                              " true %(t)s file.\n" % {"f": fd.name,
-                             "t": self.input_message_class().typeName()})
+                                                      "t": self.input_message_class().typeName()})
             fd.seek(0)
             for m in self.file_true_json(fd):
                 yield m
@@ -60,7 +60,7 @@ class JSONProcessorStage(AbstractProcessorStage):
                 yield self.parseMessage(m)
         except ValueError, err:
             sys.stderr.write("(WARN) failed to read input file %s as %s: %s.\n"
-                       % (fd.name, self.input_message_class().typeName(), err))
+                             % (fd.name, self.input_message_class().typeName(), err))
             yield None
 
 class TTLProcessorStage(AbstractProcessorStage):

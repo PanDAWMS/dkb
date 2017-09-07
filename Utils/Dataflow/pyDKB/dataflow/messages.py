@@ -89,7 +89,7 @@ class JSONMessage(AbstractMessage):
                 self.decoded = json.loads(orig)
             else:
                 sys.stderr.write("Unknown code type: %s\n"
-                                  % codeType.memberName(code))
+                                 % codeType.memberName(code))
             self.encoded = orig
         return self.decoded
 
@@ -101,7 +101,7 @@ class JSONMessage(AbstractMessage):
                 self.encoded = json.dumps(orig)
             else:
                 sys.stderr.write("Unknown code type: %s\n"
-                                  % codeType.memberName(code))
+                                 % codeType.memberName(code))
             self.decoded = orig
         return self.encoded
 
@@ -134,7 +134,7 @@ class TTLMessage(AbstractMessage):
                 self.decoded = orig
             else:
                 sys.stderr.write("Unknown code type: %s\n"
-                                  % codeType.memberName(code))
+                                 % codeType.memberName(code))
             self.encoded = orig
         return self.decoded
 
@@ -146,7 +146,7 @@ class TTLMessage(AbstractMessage):
                 self.encoded = str(orig)
             else:
                 sys.stderr.write("Unknown code type: %s\n"
-                                  % codeType.memberName(code))
+                                 % codeType.memberName(code))
             self.decoded = orig
         return self.encoded
 

@@ -123,7 +123,7 @@ class AbstractProcessorStage(AbstractStage):
         self.add_argument('input_files', type=str, nargs='*',
                           help=u'Source data file.',
                           metavar=u'FILE'
-                         )
+                          )
         self.add_argument('-s', '--source', action='store', type=str, nargs='?',
                           help=u'Where to get data from: '
                                 'local (f)iles, (s)tdin, '
@@ -164,10 +164,10 @@ class AbstractProcessorStage(AbstractStage):
                           )
         self.add_argument('--hdfs', action='store', type=bool, nargs='?',
                           help=u'Source files are stored in HDFS; '
-                                'if no input FILE specified, filenames will '
-                                'come to stdin. '
-                                'This option is equivalent to '
-                                '"--source h --dest h"',
+                          'if no input FILE specified, filenames will '
+                          'come to stdin. '
+                          'This option is equivalent to '
+                          '"--source h --dest h"',
                           default=False,
                           const=True,
                           metavar='HDFS',
@@ -194,7 +194,7 @@ class AbstractProcessorStage(AbstractStage):
 
         if self.ARGS.source == 'h':
             if self.ARGS.input_files or self.ARGS.mode == 'm':
-            # In MapReduce mode we`re going to get the list of files from STDIN
+                # In MapReduce mode we`re going to get the list of files from STDIN
                 self.__input = self.__hdfs_in_files()
             else:
                 self.__input = self.__hdfs_in_dir()
@@ -212,7 +212,7 @@ class AbstractProcessorStage(AbstractStage):
 
         # Check that data source is specified
         if self.ARGS.source == 'f' \
-            and not (self.ARGS.input_files or self.ARGS.input_dir):
+                and not (self.ARGS.input_files or self.ARGS.input_dir):
             sys.stderr.write("No input data sources specified.\n")
             self.print_usage(sys.stderr)
             raise DataflowException
@@ -339,7 +339,7 @@ class AbstractProcessorStage(AbstractStage):
                             " %s or %s (got %s)"
                             % (self.__output_message_class, list,
                                type(message))
-                           )
+                            )
 
 
 
@@ -450,7 +450,7 @@ class AbstractProcessorStage(AbstractStage):
                     sys.stderr.write("(INFO) Output dir set to: %s\n"
                                      % output_dir)
                 if self.__current_file \
-                  and self.__current_file != sys.stdin.name:
+                        and self.__current_file != sys.stdin.name:
                     filename = os.path.splitext(self.__current_file)[0] + ext
                 else:
                     filename = str(int(time.time())) + ext
@@ -462,7 +462,7 @@ class AbstractProcessorStage(AbstractStage):
                         continue
                     else:
                         raise DataflowException("File already exists: %s\n"
-                                                 % filename)
+                                                % filename)
                 if fd:
                     fd.close()
                     if t == 'h':

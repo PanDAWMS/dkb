@@ -15,14 +15,14 @@ import xmltable
 
 CONFIG_FILE = "config.json"
 default_cfg = {
-        "WORK_DIR": os.getcwd(),
-        "DETERMINE_TITLE": False,
-        "OPEN_INTERVALS_TEXT": False,
-        "OPEN_INTERVALS_TABLES": False,
-        "TABLES_IDS_ONLY": False,
-        "HDFS_PDF_DIR": "",
-        "HDFS_DOWNLOAD_COMMAND": "hadoop fs -get"
-    }
+    "WORK_DIR": os.getcwd(),
+    "DETERMINE_TITLE": False,
+    "OPEN_INTERVALS_TEXT": False,
+    "OPEN_INTERVALS_TABLES": False,
+    "TABLES_IDS_ONLY": False,
+    "HDFS_PDF_DIR": "",
+    "HDFS_DOWNLOAD_COMMAND": "hadoop fs -get"
+}
 
 
 def load_config(default_cfg):
@@ -117,7 +117,7 @@ class DatasetCategory:
 # re.X)
 
     def find(self, text, intervals, datasets):
-#        print "INTERVALS", intervals
+        #        print "INTERVALS", intervals
         strings = []
         (results, text) = find_cut_reg(self.reg, text)
         strings += results
@@ -129,7 +129,7 @@ class DatasetCategory:
             s = s.strip()
             if "INTERVAL" in s:
                 if cfg["OPEN_INTERVALS_TEXT"]:
-    #                print "STRING WITH INTERVALS:", s
+                    #                print "STRING WITH INTERVALS:", s
                     nums = re.findall("INTERVAL(\d+)!", s)
                     arr = []
                     for n in nums:
@@ -140,7 +140,7 @@ class DatasetCategory:
                     for i in range(0, size):
                         ns = s
                         for n in nums:
-    #                        print intervals[int(n)]
+                            #                        print intervals[int(n)]
                             ns = re.sub("INTERVAL" + n + "!",
                                         intervals[int(n)][i], ns)
     #                    print "NEW_STRING:", ns
@@ -235,14 +235,14 @@ ddo                # Project tag.
                                            """)
 
 category_export_dict = {
-        "group": "group",
-        "user": "user",
-        "montecarlo": "mc",
-        "physcont": "cont",
-        "calibration": "calib",
-        "realdata": "real",
-        "database": "db"
-    }
+    "group": "group",
+    "user": "user",
+    "montecarlo": "mc",
+    "physcont": "cont",
+    "calibration": "calib",
+    "realdata": "real",
+    "database": "db"
+}
 
 # Regular expressions
 # We don't need group and user datasets for now.
@@ -625,7 +625,7 @@ class Paper:
         tmp = re_luminosity.search(pages)
         if tmp:
             attrs["luminosity"] = tmp.group(0).replace("−", "-").\
-                                  replace("(cid:0)", "-")
+                replace("(cid:0)", "-")
 
         links = re_link.findall(pages)
         attrs["links"] = {}
@@ -721,8 +721,8 @@ class Paper:
             for table in tables:
                 num = int(re_table_header_short.match(table.header).group(1))
                 if num in headers_data:
-# print "TABLE WITH HEADER", headers_data[num].strip(),\
-##                          "MAY CONTAIN DATASETS"
+                    # print "TABLE WITH HEADER", headers_data[num].strip(),\
+                    ##                          "MAY CONTAIN DATASETS"
                     data_column = -1
                     skip_first = False
                     # Save headers and tables matching selected numbers
@@ -731,8 +731,8 @@ class Paper:
                         for i in range(0, len(table.rows[rnum])):
                             txt = table.rows[rnum][i].text.lower()
                             if re_column_with_datasets.match(txt):
-# print "COLUMN", txt, "IN TABLE", num,\
-##                                      "HINTS THAT IT CONTAINS DATASETS"
+                                # print "COLUMN", txt, "IN TABLE", num,\
+                                ##                                      "HINTS THAT IT CONTAINS DATASETS"
                                 data_column = i
                                 if rnum == 1:
                                     # This means that first row contains
@@ -740,7 +740,7 @@ class Paper:
                                     # or something else, and columns are
                                     # defined in the second one. First
                                     # one must be skipped in such case.
-#                                    print "SKIPPING FIRST ROW"
+                                    #                                    print "SKIPPING FIRST ROW"
                                     skip_first = True
                                 break
                         if data_column >= 0:
@@ -773,8 +773,8 @@ class Paper:
 # coef
                         if coef >= 0.7 and coef <= 1:
                             if cfg["OPEN_INTERVALS_TABLES"] and diaps:
-# print "TABLE CONTAINS DATASET DIAPASONS,\
-# PROCESSING THEM AND MULTIPLYING ROWS"
+                                # print "TABLE CONTAINS DATASET DIAPASONS,\
+                                # PROCESSING THEM AND MULTIPLYING ROWS"
                                 rows_new = []
                                 for row in rows:
                                     r_dc = row[data_column]
@@ -1344,7 +1344,7 @@ class Manager:
                 datasets[c] = []
                 for [entry, special, selected] in value[c]:
                     if selected.get():
-#                        datasets[c].append([entry.get(), special])
+                        #                        datasets[c].append([entry.get(), special])
                         # special is not needed. Maybe temporary.
                         datasets[c].append(entry.get())
                 if not datasets[c]:
@@ -1754,7 +1754,7 @@ class Manager:
                         header_row = row
                         color = "red"
                     elif header_row and len(row) == 1 and\
-                      abs(row[0].left - header_row[0].left) < 1.0:
+                            abs(row[0].left - header_row[0].left) < 1.0:
                         color = "red"
                     elif abs(row[-1].right - row[0].left - max_width) < 1.0:
                         color = "blue"

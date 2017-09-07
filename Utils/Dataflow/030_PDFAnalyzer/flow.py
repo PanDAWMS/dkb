@@ -57,9 +57,9 @@ def process(stage, msg):
         try:
             if hdfs:
                 command_list = cfg["HDFS_DOWNLOAD_COMMAND"].split() \
-                               + [fname, dirname]
+                    + [fname, dirname]
                 subprocess.check_call(command_list, stderr=sys.stderr,
-                                stdout=sys.stderr)
+                                      stdout=sys.stderr)
             else:
                 shutil.copy(fname, dirname)
         except Exception as e:

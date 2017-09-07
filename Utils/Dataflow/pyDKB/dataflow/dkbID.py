@@ -71,8 +71,8 @@ def authorID(json_data):
 # ----- #
 
 __dataTypeFunc = {
-        dataType.DOCUMENT: docID,
-        dataType.AUTHOR: authorID
+    dataType.DOCUMENT: docID,
+    dataType.AUTHOR: authorID
 }
 
 def dkbID(json_data, data_type):
