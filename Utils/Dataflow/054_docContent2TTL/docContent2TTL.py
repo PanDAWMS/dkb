@@ -46,12 +46,12 @@ def doc_content_triples(data):
             'doc_ID': dkbID
         }
         if item.endswith(dataset_suffix):
-            ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \
+            ttl.append("<{graph}/document/{doc_ID}/{c_name}>"
                        " a <{ontology}#DocumentContent> ."
                        .format(**DEFAULT)
                        )
-            ttl.append("<{graph}/document/{doc_ID}>" \
-                       " <{ontology}#hasContent>" \
+            ttl.append("<{graph}/document/{doc_ID}>"
+                       " <{ontology}#hasContent>"
                        " <{graph}/document/{doc_ID}/{c_name}> ."
                        .format(**DEFAULT)
                        )
@@ -60,12 +60,12 @@ def doc_content_triples(data):
                     'data_sample': ds_item
                 }
                 DATASAMPLES.update(DEFAULT)
-                ttl.append("<{graph}/datasample/{data_sample}>" \
+                ttl.append("<{graph}/datasample/{data_sample}>"
                            " a <{ontology}#DataSample> ."
                            .format(**DATASAMPLES)
                            )
-                ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \
-                           " <{ontology}#mentionsDataSample>" \
+                ttl.append("<{graph}/document/{doc_ID}/{c_name}>"
+                           " <{ontology}#mentionsDataSample>"
                            " <{graph}/datasample/{data_sample}> ."
                            .format(**DATASAMPLES)
                            )
@@ -90,34 +90,34 @@ def doc_content_triples(data):
                 'energy': energy
             }
             PLAINTEXT.update(DEFAULT)
-            ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \
+            ttl.append("<{graph}/document/{doc_ID}/{c_name}>"
                        " a <{ontology}#DocumentContent> ."
                        .format(**PLAINTEXT)
                        )
-            ttl.append("<{graph}/document/{doc_ID}>" \
-                       " <{ontology}#hasContent>" \
+            ttl.append("<{graph}/document/{doc_ID}>"
+                       " <{ontology}#hasContent>"
                        " <{graph}/document/{doc_ID}/{c_name}> ."
                        .format(**PLAINTEXT)
                        )
             if data_taking_year:
-                ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \
-                           " <{ontology}#mentionsDataTakingYear>" \
+                ttl.append("<{graph}/document/{doc_ID}/{c_name}>"
+                           " <{ontology}#mentionsDataTakingYear>"
                            " \"{data_taking_year}\" ."
                            .format(**PLAINTEXT)
                            )
             if luminosity:
-                ttl.append("<{graph}/luminosity/{luminosity}>" \
+                ttl.append("<{graph}/luminosity/{luminosity}>"
                            " a <{ontology}#Luminosity> ."
                            .format(**PLAINTEXT)
                            )
-                ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \
-                           " <{ontology}#mentionsLuminosity>" \
+                ttl.append("<{graph}/document/{doc_ID}/{c_name}>"
+                           " <{ontology}#mentionsLuminosity>"
                            " <{graph}/luminosity/{luminosity}> ."
                            .format(**PLAINTEXT)
                            )
             if energy:
-                ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \
-                           " <{ontology}#mentionsEnergy>" \
+                ttl.append("<{graph}/document/{doc_ID}/{c_name}>"
+                           " <{ontology}#mentionsEnergy>"
                            " <{ontology}#{energy}> ."
                            .format(**PLAINTEXT)
                            )
@@ -125,12 +125,12 @@ def doc_content_triples(data):
                 campaign = data['content'][item]['campaigns']
                 for j, pt_item in enumerate(campaign):
                     PLAINTEXT["campaign"] = pt_item
-                    ttl.append("<{graph}/campaign/{campaign}>" \
+                    ttl.append("<{graph}/campaign/{campaign}>"
                                " a <{ontology}#Campaign> ."
                                .format(**PLAINTEXT)
                                )
-                    ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \
-                               " <{ontology}#mentionsCampaign>" \
+                    ttl.append("<{graph}/document/{doc_ID}/{c_name}>"
+                               " <{ontology}#mentionsCampaign>"
                                " <{graph}/campaign/{campaign}> ."
                                .format(**PLAINTEXT)
                                )

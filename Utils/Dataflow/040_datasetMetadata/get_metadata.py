@@ -213,7 +213,7 @@ def hdfsFiles(filenames, upload=False):
 
 def loadMetadata(data, outfile, db, extra={}, headers=True):
     global ARGS
-    if not (data.get('datasets') or (data.get('datasetIDs')\
+    if not (data.get('datasets') or (data.get('datasetIDs')
                                      and data.get('campaigns'))):
         stderr.write("No dataset names or IDs found.\n")
         return 0
