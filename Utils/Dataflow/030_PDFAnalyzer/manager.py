@@ -15,12 +15,12 @@ import xmltable
 
 CONFIG_FILE = "config.json"
 default_cfg = {
-        "WORK_DIR":              os.getcwd(),
-        "DETERMINE_TITLE":       False,
-        "OPEN_INTERVALS_TEXT":   False,
+        "WORK_DIR": os.getcwd(),
+        "DETERMINE_TITLE": False,
+        "OPEN_INTERVALS_TEXT": False,
         "OPEN_INTERVALS_TABLES": False,
-        "TABLES_IDS_ONLY":       False,
-        "HDFS_PDF_DIR":          "",
+        "TABLES_IDS_ONLY": False,
+        "HDFS_PDF_DIR": "",
         "HDFS_DOWNLOAD_COMMAND": "hadoop fs -get"
     }
 
@@ -141,7 +141,7 @@ class DatasetCategory:
                         ns = s
                         for n in nums:
     #                        print intervals[int(n)]
-                            ns = re.sub("INTERVAL"+n+"!",
+                            ns = re.sub("INTERVAL" + n + "!",
                                         intervals[int(n)][i], ns)
     #                    print "NEW_STRING:", ns
                         if self.reg.match(ns):
@@ -352,7 +352,7 @@ def organize_intervals(intervals):
                 e = s[:-len(e)] + e
                 if s <= e:
                     ni1 = []
-                    for i1 in range(int(s), int(e)+1):
+                    for i1 in range(int(s), int(e) + 1):
                         ni1.append(str(i1))
                     maxlen = len(max(ni1, key=lambda num: len(num)))
                     if len(min(ni1, key=lambda num: len(num))) != maxlen:
@@ -381,7 +381,7 @@ def process_diapason(d):
     if len(e) <= len(s):
         e = s[:-len(e)] + e
         if s <= e:
-            for i in range(int(s), int(e)+1):
+            for i in range(int(s), int(e) + 1):
                 values.append(str(i))
     return values
 
@@ -507,7 +507,7 @@ class Paper:
     def get_text(self):
         """ Read and return mined text of the document. """
         text = ""
-        for i in range(1, self.num_pages+1):
+        for i in range(1, self.num_pages + 1):
             with open(path_join(self.txt_dir, "%d.txt") % i, "r") as f:
                 text += f.read()
         return text
@@ -874,7 +874,7 @@ class Paper:
                     data = [header, [int(i) for i in ids.split()]]
                 else:
                     data = self.datatables[num]
-                outp["content"]["table_"+str(num)] = data
+                outp["content"]["table_" + str(num)] = data
         elif quick:
             tables = self.find_datatables()
             for num in tables:
@@ -884,7 +884,7 @@ class Paper:
                     data = [header, [int(i) for i in ids.split()]]
                 else:
                     data = tables[num]
-                outp["content"]["table_"+str(num)] = data
+                outp["content"]["table_" + str(num)] = data
         if outp:
             with open(outf, "w") as f:
                 json.dump(outp, f, indent=4)
@@ -937,7 +937,7 @@ class Manager:
 
         self.status = Tkinter.Label(self.window, text="", bd=1,
                                     relief=Tkinter.SUNKEN)
-        self.status.grid(row=2,  sticky='we')
+        self.status.grid(row=2, sticky='we')
 
         # Intercept closing the program via Alt + F4 or other methods to
         # perform a clean exit.
@@ -1540,8 +1540,8 @@ class Manager:
                     if isinstance(data, str) or isinstance(data, unicode):
                         l.grid(row=0, column=0)
                         b.grid(row=0, column=1)
-                        t = Tkinter.Text(t_frame, width=(6+1)*5,
-                                         height=data.count(" ")//5+2)
+                        t = Tkinter.Text(t_frame, width=(6 + 1) * 5,
+                                         height=data.count(" ") // 5 + 2)
                         t.insert(Tkinter.END, data)
                         t.grid(row=1, column=0)
                         datatables_s.append([k, header, t, selected])
@@ -1747,23 +1747,23 @@ class Manager:
 
                 text = paper.get_xml_page(number, True)
                 rows = xmltable.analyze_page(text)
-                max_width = max([row[-1].right-row[0].left for row in rows])
+                max_width = max([row[-1].right - row[0].left for row in rows])
                 header_row = False
                 for row in rows:
                     if len(row) == 1 and row[0].text.startswith("Table "):
                         header_row = row
                         color = "red"
                     elif header_row and len(row) == 1 and\
-                      abs(row[0].left-header_row[0].left) < 1.0:
+                      abs(row[0].left - header_row[0].left) < 1.0:
                         color = "red"
-                    elif abs(row[-1].right-row[0].left-max_width) < 1.0:
+                    elif abs(row[-1].right - row[0].left - max_width) < 1.0:
                         color = "blue"
                     else:
                         header_row = False
                         color = "black"
                     for l in row:
-                        cnvs.create_rectangle((l.left, l.top+10, l.right,
-                                               l.bottom+10), outline=color)
+                        cnvs.create_rectangle((l.left, l.top + 10, l.right,
+                                               l.bottom + 10), outline=color)
 
                 b = Tkinter.Button(window, text="Back",
                                    command=lambda window=window, paper=paper:
@@ -1812,7 +1812,7 @@ class Manager:
                 "dataset tables"
             for a in Paper.attributes_general:
                 s += ",%s" % a
-            csv = [s+"\n"]
+            csv = [s + "\n"]
             attr = {}
             attr["mc_datasets"] = []
             attr["real_datasets"] = []
@@ -1823,7 +1823,7 @@ class Manager:
             self.window.after(100, lambda: self.export_all(quick, n, n_p,
                                                            errors, attr, csv))
         else:
-            p = self.papers[n-1]
+            p = self.papers[n - 1]
             msg = "Performing export %d/%d. Paper: %s. Please, wait..."\
                   % (n, len(self.papers), p.fname)
             self.status_set(msg)
@@ -1888,13 +1888,13 @@ class Manager:
                                              len(attr["other_datasets"]),
                                              len(attr["dataset_tables"]))
                     s_p = "100%%,%f%%,%f%%,%f%%,%f%%,"\
-                          % (float(len(attr["mc_datasets"]))/n_p*100,
-                             float(len(attr["real_datasets"]))/n_p*100,
-                             float(len(attr["other_datasets"]))/n_p*100,
-                             float(len(attr["dataset_tables"]))/n_p*100)
+                          % (float(len(attr["mc_datasets"])) / n_p * 100,
+                             float(len(attr["real_datasets"])) / n_p * 100,
+                             float(len(attr["other_datasets"])) / n_p * 100,
+                             float(len(attr["dataset_tables"])) / n_p * 100)
                     for a in Paper.attributes_general:
                         s += "%d," % len(attr[a])
-                        s_p += "%f%%," % (float(len(attr[a]))/n_p*100)
+                        s_p += "%f%%," % (float(len(attr[a])) / n_p * 100)
                     csv += s.rstrip(",") + "\n"
                     csv += s_p.rstrip(",") + "\n"
                     f.writelines(csv)

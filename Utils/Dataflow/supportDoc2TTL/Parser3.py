@@ -74,7 +74,7 @@ for item in data:
 		'graph': graph,
 		'ontology': ontology,
 		'CDS_ID': CDSID,
-		'Abstract': Abstract.translate(str.maketrans({"\\": r"\\", "'":  r"\'", "\n": r"\\n"})),
+		'Abstract': Abstract.translate(str.maketrans({"\\": r"\\", "'": r"\'", "\n": r"\\n"})),
 		'CDSInternal': CDSInternal,
 		'publicationYear': PublicationYear,
 		'URL_Fulltext': URL_Fulltext

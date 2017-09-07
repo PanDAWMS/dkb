@@ -18,7 +18,7 @@ import json
 from collections import OrderedDict
 
 year_start = 2010
-year_end   = 2017
+year_end = 2017
 
 client = pyAMI.client.Client('atlas')
 
@@ -29,9 +29,9 @@ periods_file = "periods.json"
 f = open(periods_file, 'w')
 tmp = []
 for year in range(year_start, year_end):
-    for level in range(1,4):
+    for level in range(1, 4):
         try:
-            result =  AtlasAPI.list_dataperiods(client, level=level, year=year)
+            result = AtlasAPI.list_dataperiods(client, level=level, year=year)
             tmp.append(",".join(str(json.dumps(item, indent=4)) for item in result))
         except:
             print "No periods found!"

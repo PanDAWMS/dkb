@@ -46,7 +46,7 @@ import subprocess
 from impala.dbapi import connect
 from thrift.transport.TTransport import TTransportException
 
-SELECT="""ifnull(PS1.name, PS2.name) as `name`,
+SELECT = """ifnull(PS1.name, PS2.name) as `name`,
        ifnull(PS1.task_id, PS2.taskid) as `tid`,
        ifnull(PS1.task_pid, PS2.parent_tid) as `chain_tid`,
        ifnull(PS1.phys_group, PS2.phys_group) as `phys_group`,
@@ -67,11 +67,11 @@ SELECT="""ifnull(PS1.name, PS2.name) as `name`,
   T_PRODUCTION_DATASET as PS2
   ON PS2.name = PS1.name"""
 
-dataType={'montecarlo':'MC','realdata':'RealData'}
+dataType = {'montecarlo': 'MC', 'realdata': 'RealData'}
 
-IGNORE_PROJECTS=('evind', 'valid', 'user', 'group')
+IGNORE_PROJECTS = ('evind', 'valid', 'user', 'group')
 
-ARGS=''
+ARGS = ''
 
 def main(argv):
   global ARGS
@@ -121,29 +121,29 @@ def main(argv):
                        default='f',
                        const='m',
                        metavar='MODE',
-                       choices=['f','m'],
+                       choices=['f', 'm'],
                        dest='mode'
                        )
   parser.add_argument('-O', '--output', action='store', type=str, nargs='?',
                        help=u'Where to output results: (f)iles, (i)mpala tables, (s)tdout, (h)dfs (with --hdfs option only)',
                        default='f',
                        const='f',
-                       choices=['f','i','s', 'h'],
+                       choices=['f', 'i', 's', 'h'],
                        dest='out'
                        )
   
-  ARGS=parser.parse_args(argv)
+  ARGS = parser.parse_args(argv)
 
   try:
-    impala=connect(host=ARGS.host, port=ARGS.port, database=ARGS.db, auth_mechanism="GSSAPI")
-    DKB=impala.cursor()
+    impala = connect(host=ARGS.host, port=ARGS.port, database=ARGS.db, auth_mechanism="GSSAPI")
+    DKB = impala.cursor()
   except TTransportException, e:
     stderr.write("Can not connect to Impala. Error message:")
     stderr.write(e.message + "\n")
     exit(1)
 
   if ARGS.hdfs:
-    ARGS.input = hdfsFiles(ARGS.input, ARGS.out=='h')
+    ARGS.input = hdfsFiles(ARGS.input, ARGS.out == 'h')
   elif ARGS.mode == 'm':
     ARGS.input = hdfsFiles(ARGS.input, False)
     ARGS.out = 's'
@@ -154,84 +154,84 @@ def main(argv):
     if os.stat(infile.name).st_size == 0: continue
     stderr.write('FILE: {0}\n'.format(infile.name))
     try:
-      DocData=json.load(infile)
+      DocData = json.load(infile)
     except ValueError, e:
       stderr.write("(ERROR) Failed to read JSON from %s: %s\n" % (infile.name, e.message))
       continue
-    if ARGS.out in ('f','h'):
-      outname=infile.name[:infile.name.rfind('.')]+'.csv'
+    if ARGS.out in ('f', 'h'):
+      outname = infile.name[:infile.name.rfind('.')] + '.csv'
     elif ARGS.out == 's':
-      outname=sys.stdout
+      outname = sys.stdout
     else:
-      outname=None
-    GlanceID=os.path.basename(infile.name)
-    GlanceID=GlanceID[:GlanceID.find('.')]
-    loadMetadata(DocData,outname,DKB,{'glanceid':GlanceID, 'datatype':None},headers)
+      outname = None
+    GlanceID = os.path.basename(infile.name)
+    GlanceID = GlanceID[:GlanceID.find('.')]
+    loadMetadata(DocData, outname, DKB, {'glanceid': GlanceID, 'datatype': None}, headers)
     # As we are writing all output to one stream,
     # we don't need to repeat headers
     if ARGS.out == 's':
-      headers=False
+      headers = False
 
 def hdfsFiles(filenames, upload=False):
   if not filenames: filenames = sys.stdin
   for f in filenames:
     f = f.strip()
     if not f: continue
-    cmd="hadoop fs -get %s " %f
+    cmd = "hadoop fs -get %s " % f
     os.system(cmd)
-    name=f.split('/')[-1]
+    name = f.split('/')[-1]
     with open(name, 'r') as infile:
       yield infile
     os.remove(name)
     if upload:
       hdfspath = f[:f.rfind('/')]
-      csvname = name.replace('.json','.csv')
+      csvname = name.replace('.json', '.csv')
       if not os.path.isfile(csvname): continue
       cmd = "hadoop fs -put -f %s %s" % (csvname, hdfspath)
       os.system(cmd)
       os.remove(csvname)
 
 
-def loadMetadata(data,outfile,db,extra={},headers=True):
+def loadMetadata(data, outfile, db, extra={}, headers=True):
   global ARGS
-  if not ( data.get('datasets') or ( data.get('datasetIDs') and data.get('campaigns') )):
+  if not (data.get('datasets') or (data.get('datasetIDs') and data.get('campaigns'))):
     stderr.write("No dataset names or IDs found.\n")
     return 0
 
   if data.get('datasets'):
-    loadByNames(data['datasets'],outfile,db,extra,headers)
+    loadByNames(data['datasets'], outfile, db, extra, headers)
   if data.get('datasetIDs') and data.get('campaigns'):
-    projects=campaign2project(data['campaigns'],db)
-    dsids=[]
+    projects = campaign2project(data['campaigns'], db)
+    dsids = []
     for tab in data['datasetIDs']:
-      dsids+=data['datasetIDs'][tab].split()
-    loadByDSIDs(projects,dsids,outfile,db,extra,headers)
+      dsids += data['datasetIDs'][tab].split()
+    loadByDSIDs(projects, dsids, outfile, db, extra, headers)
 
-def loadByNames(datasets,outfile,db,extra={},headers=True):
+def loadByNames(datasets, outfile, db, extra={}, headers=True):
   global ARGS
   for t in dataType:
-    if not datasets.get(t,None): continue
-    extra['datatype'] =t
-    s='SELECT distinct '
-    s+=extra_string(extra)
-    s+= SELECT
-    w='WHERE isnull(PS1.name,PS2.name) LIKE "'+'%" OR isnull(PS1.name,PS2.name) LIKE "'.join(datasets[t]) + '%"' if datasets[t] else ''
+    if not datasets.get(t, None): continue
+    extra['datatype'] = t
+    s = 'SELECT distinct '
+    s += extra_string(extra)
+    s += SELECT
+    w = 'WHERE isnull(PS1.name,PS2.name) LIKE "' + '%" OR isnull(PS1.name,PS2.name) LIKE "'.join(datasets[t]) + '%"' if datasets[t] else ''
     query = '{select} {where}'.format(select=s, where=w)
     loadQuery(query, outfile, ARGS, db, headers)
 
-def loadByDSIDs(projects,datasets,outfile,db,extra={},headers=True):
+def loadByDSIDs(projects, datasets, outfile, db, extra={}, headers=True):
   global ARGS
 
-  s='SELECT distinct '
-  s+=extra_string(extra)
-  s+= SELECT
+  s = 'SELECT distinct '
+  s += extra_string(extra)
+  s += SELECT
 
-  dsnames=[]
+  dsnames = []
   for p in projects:
     for i in datasets:
-      dsnames+=['^{project}\.0*?{DSID}\..*$'.format(project=p,DSID=i)]
+      dsnames += ['^{project}\.0*?{DSID}\..*$'.format(project=p, DSID=i)]
 
-  w='WHERE isnull(PS1.name,PS2.name) RLIKE "'+'" OR isnull(PS1.name,PS2.name) RLIKE "'.join(dsnames) + '"' if dsnames else ''
+  w = 'WHERE isnull(PS1.name,PS2.name) RLIKE "' + '" OR isnull(PS1.name,PS2.name) RLIKE "'.join(dsnames) + '"' if dsnames else ''
   query = '{select} {where}'.format(select=s, where=w)
   loadQuery(query, outfile, ARGS, db)
 
@@ -245,18 +245,18 @@ def loadQuery2File(query, outfile, ARGS, headers=True):
   with open('query.sql', 'w') as qfile:
     qfile.write(query)
     qfile.close()
-    m={'host':ARGS.host, 'db':ARGS.db}
+    m = {'host': ARGS.host, 'db': ARGS.db}
     if outfile == sys.stdout: m['output'] = ''
-    else: m['output'] = '-o '+outfile
+    else: m['output'] = '-o ' + outfile
     m['headers'] = "--print_header" if headers else ""
-    run='PYTHON_EGG_CACHE=/tmp/.python-eggs impala-shell -k -i {host} -d {db} -B -f query.sql --output_delimiter="," {headers} {output}'.format(**m)
+    run = 'PYTHON_EGG_CACHE=/tmp/.python-eggs impala-shell -k -i {host} -d {db} -B -f query.sql --output_delimiter="," {headers} {output}'.format(**m)
     try:
       subprocess.check_call(run, shell=True)
     except subprocess.CalledProcessError, e:
       stderr.write("(ERROR) Failed to execute Impala request (return code: %d).\nCommand: %s\n" % (e.returncode, e.cmd))
 
-def loadQuery2DB(query,db):
-    q='INSERT INTO dkb_temp.datasets {query}'.format(query=query)
+def loadQuery2DB(query, db):
+    q = 'INSERT INTO dkb_temp.datasets {query}'.format(query=query)
     db.execute(q)
 
 def campaign2project(campaigns, db):
@@ -264,50 +264,50 @@ def campaign2project(campaigns, db):
   if not campaigns:
     return []
 
-  not_like='AND lower(`project`) NOT LIKE "%'+'%" AND lower(`project`) NOT LIKE "%'.join(IGNORE_PROJECTS)+ '%"'  if IGNORE_PROJECTS else ''
-  campaign_in= "','".join(campaigns).lower()
-  query='''SELECT DISTINCT project FROM T_PRODUCTION_TASK
+  not_like = 'AND lower(`project`) NOT LIKE "%' + '%" AND lower(`project`) NOT LIKE "%'.join(IGNORE_PROJECTS) + '%"' if IGNORE_PROJECTS else ''
+  campaign_in = "','".join(campaigns).lower()
+  query = '''SELECT DISTINCT project FROM T_PRODUCTION_TASK
 where (lower(`campaign`) in ('{campaign_in}')
 or lower(`subcampaign`) in ('{campaign_in}'))
 {not_like}'''.format(campaign_in=campaign_in, not_like=not_like)
   db.execute(query)
-  r=[]
+  r = []
   for row in db.fetchall():
-    r+=[row[0]]
+    r += [row[0]]
   return r
 
 def extra_string(extra={}):
-  keys=extra.keys()
+  keys = extra.keys()
   keys.sort()
-  s=''
+  s = ''
   for e in keys:
-    val=extra[e]
-    if not checkExtra(e,val):
+    val = extra[e]
+    if not checkExtra(e, val):
       stderr.write("(WARN) Replace unacceptable value with NULL.\n")
       val = None
 
-    try: val=int(val)
-    except (ValueError,TypeError): pass
+    try: val = int(val)
+    except (ValueError, TypeError): pass
 
-    if type(val) == str: val='"{val}"'.format(val=val)
-    elif type(val) == int: val='{val}'.format(val=val)
-    elif val == None: val='NULL'
+    if type(val) == str: val = '"{val}"'.format(val=val)
+    elif type(val) == int: val = '{val}'.format(val=val)
+    elif val == None: val = 'NULL'
 
-    s+='''{val} as `{name}`,
+    s += '''{val} as `{name}`,
 '''.format(val=val, name=e)
   return s
 
 def checkExtra(key, val):
   checkParameters = {
     'glanceid': {
-      'type':int
+      'type': int
     }
   }
   if key in checkParameters:
     p = checkParameters[key]
     try: p['type'](val)
     except ValueError:
-      stderr.write("(WARN) Unacceptable value for key '%s': '%s' (expected type: %s).\n" % (key,val, p['type']))
+      stderr.write("(WARN) Unacceptable value for key '%s': '%s' (expected type: %s).\n" % (key, val, p['type']))
       return False
   return True
 

@@ -44,11 +44,11 @@ def process(stage, msg):
         fname = os.path.abspath(fname).replace("\\", "/")
         if not os.access(fname, os.F_OK):
             sys.stderr.write("(ERROR) No such file or directory:"
-                             +fname+"\n")
+                             + fname + "\n")
             return False
     pdfname = re_pdfname.search(fname)
     if not pdfname:
-        sys.stderr.write("(ERROR) File "+fname+" is not a pdf file.\n")
+        sys.stderr.write("(ERROR) File " + fname + " is not a pdf file.\n")
         return False
     else:
         pdfname = pdfname.group(1)
@@ -67,9 +67,9 @@ def process(stage, msg):
                              " directory\n")
             if hdfs:
                 sys.stderr.write("(ERROR) hdfs download command:"
-                                 +str(command_list)
-                                 +"\n")
-            sys.stderr.write("(ERROR) "+str(e)+"\n")
+                                 + str(command_list)
+                                 + "\n")
+            sys.stderr.write("(ERROR) " + str(e) + "\n")
             shutil.rmtree(dirname)
             return False
         p = Paper(pdfname, dirname)
@@ -93,7 +93,7 @@ if __name__ == "__main__":
     analyzer_stage.process = process
 
     exit_code = 0
-    exc_info= None
+    exc_info = None
     try:
         analyzer_stage.parse_args(sys.argv[1:])
         analyzer_stage.run()

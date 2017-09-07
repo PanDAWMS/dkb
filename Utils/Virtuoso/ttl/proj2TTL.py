@@ -51,14 +51,14 @@ print("Current graph: " + graph + "\n")
 graph_answer = input("Would you like to choose another one? [Y/N] ")
 if graph_answer.lower() in ['y', 'yes']:
 	graph = input("Please, insert a graph: ")
-print("\nCurrent graph: " + graph +"\n")    
+print("\nCurrent graph: " + graph + "\n")    
 
 #choose ontology
-print("Current ontology: " + ontology +"\n")
+print("Current ontology: " + ontology + "\n")
 ontology_answer = input("Would you like to choose another one? [Y/N] ")
 if ontology_answer.lower() in ['y', 'yes']:
 	ontology = input("Please, insert an ontology: ")
-print("\nCurrent ontology: " + ontology +"\n")
+print("\nCurrent ontology: " + ontology + "\n")
 
 #path
 chosen_path = os.path.normpath(askopenfilename())
@@ -77,23 +77,23 @@ with open(chosen_path) as data_file:
 listProj = []
 for i, item in enumerate(input_data):
 		year = "20" + str(re.findall(r'\d+', input_data[i]['projectName'])[0])
-		dataPeriod = "<%s/dataperiod/%s_%s_%s>" % (graph,year,input_data[i]['period'],input_data[i]['periodLevel'])
+		dataPeriod = "<%s/dataperiod/%s_%s_%s>" % (graph, year, input_data[i]['period'], input_data[i]['periodLevel'])
 		#project name
 		projectName = input_data[i]['projectName']
 		#a subject in ontology
-		project = "<%s/project/%s>" % (graph,input_data[i]['projectName'])
+		project = "<%s/project/%s>" % (graph, input_data[i]['projectName'])
 		#deleting of newline symbol from description
-		description = input_data[i]['description'].replace("\n"," ")
+		description = input_data[i]['description'].replace("\n", " ")
 		DATAPERIODS = {
 			'graph': graph,
 			'ontology': ontology,
-			'dataPeriod' : dataPeriod,
+			'dataPeriod': dataPeriod,
 			'project_name': project,
-			'period' : input_data[i]['period'],
-			'periodLevel' : input_data[i]['periodLevel'],
-			'year' : year,
-			'description' : description,
-			'status' : input_data[i]['status']
+			'period': input_data[i]['period'],
+			'periodLevel': input_data[i]['periodLevel'],
+			'year': year,
+			'description': description,
+			'status': input_data[i]['status']
 		}
 		
 		if not input_data[i]['projectName'] in listProj:

@@ -34,7 +34,7 @@ def makedirs(dirname):
     cmd = ["hadoop", "fs", "-mkdir", "-p", dirname]
     try:
         proc = subprocess.Popen(cmd,
-                                stdin =subprocess.PIPE,
+                                stdin=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
                                 stdout=DEVNULL)
         if check_stderr(proc):
@@ -48,7 +48,7 @@ def putfile(fname, dest):
     cmd = ["hadoop", "fs", "-put", fname, dest]
     try:
         proc = subprocess.Popen(cmd,
-                                stdin =subprocess.PIPE,
+                                stdin=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
                                 stdout=DEVNULL)
         if check_stderr(proc):
@@ -66,7 +66,7 @@ def getfile(fname):
     name = os.path.basename(fname)
     try:
         proc = subprocess.Popen(cmd,
-                                stdin =subprocess.PIPE,
+                                stdin=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
                                 stdout=DEVNULL)
         if check_stderr(proc):
@@ -91,7 +91,7 @@ def listdir(dirname, mode='a'):
         # Use PIPE for all the std* to avoid catching and/or blocking
         # current process std*
         proc = subprocess.Popen(cmd,
-                              stdin =subprocess.PIPE,
+                              stdin=subprocess.PIPE,
                               stderr=subprocess.PIPE,
                               stdout=subprocess.PIPE)
         while proc.poll() == None:

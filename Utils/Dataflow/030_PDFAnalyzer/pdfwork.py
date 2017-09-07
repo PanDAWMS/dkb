@@ -41,7 +41,7 @@ def get_page_text(interpreter, page, tmp, rotation=0):
     when creating PDFMiner device object, so i'm not sure if that's
     possible in this case.
     """
-    page.rotate = (page.rotate+rotation) % 360
+    page.rotate = (page.rotate + rotation) % 360
     interpreter.process_page(page)
     tmp.seek(0)
     text = remove_ligatures(tmp.read())

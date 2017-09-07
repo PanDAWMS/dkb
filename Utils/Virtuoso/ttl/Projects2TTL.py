@@ -35,14 +35,14 @@ print("Current graph: " + graph + "\n")
 graph_answer = input("Would you like to choose another one? [Y/N] ")
 if graph_answer.lower() in ['y', 'yes']:
 	graph = input("Please, insert a graph: ")
-print("\nCurrent graph: " + graph +"\n")    
+print("\nCurrent graph: " + graph + "\n")    
 
 #choose ontology
-print("Current ontology: " + ontology +"\n")
+print("Current ontology: " + ontology + "\n")
 ontology_answer = input("Would you like to choose another one? [Y/N] ")
 if ontology_answer.lower() in ['y', 'yes']:
 	ontology = input("Please, insert an ontology: ")
-print("\nCurrent ontology: " + ontology +"\n")
+print("\nCurrent ontology: " + ontology + "\n")
 
 #a ttl document with default name
 output_object = open("projects.ttl", 'w')
@@ -54,7 +54,7 @@ file_object = open(chosen_path, "r")
 lines = file_object.readlines()
 for i in lines:
 	if not i.startswith("#"):
-		project = "<%s/project/%s>" % (graph,i.rstrip('\n'))
+		project = "<%s/project/%s>" % (graph, i.rstrip('\n'))
 		PROJECTS = {
 			'graph': graph,
 			'ontology': ontology,

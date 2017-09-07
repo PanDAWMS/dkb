@@ -31,7 +31,7 @@ def main(args):
     except (pyDKB.dataflow.DataflowException, RuntimeError), err:
         if str(err):
             sys.stderr.write("(ERROR) %s\n" % err)
-        exit_code=1
+        exit_code = 1
     finally:
         stage.stop()
 

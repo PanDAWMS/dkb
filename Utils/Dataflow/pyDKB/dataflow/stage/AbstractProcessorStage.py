@@ -182,7 +182,7 @@ class AbstractProcessorStage(AbstractStage):
         # HDFS: HDFS file -> local file -> processor -> local file -> HDFS file
         if self.ARGS.hdfs:
             self.ARGS.source = 'h'
-            self.ARGS.dest   = 'h'
+            self.ARGS.dest = 'h'
 
         # Stream (Kafka) and MapReduce mode: STDIN -> processor -> STDOUT
         # If data source is specified as HDFS, files will be taken from HDFS
@@ -192,7 +192,7 @@ class AbstractProcessorStage(AbstractStage):
                 self.ARGS.source = 's'
             self.ARGS.dest = 's'
 
-        if   self.ARGS.source == 'h':
+        if self.ARGS.source == 'h':
             if self.ARGS.input_files or self.ARGS.mode == 'm':
             # In MapReduce mode we`re going to get the list of files from STDIN
                 self.__input = self.__hdfs_in_files()
@@ -220,7 +220,7 @@ class AbstractProcessorStage(AbstractStage):
         self.__stoppable_append(self.__input, types.GeneratorType)
 
         # Configure output
-        if   self.ARGS.dest == 'f':
+        if self.ARGS.dest == 'f':
            self.__output = self.__out_files('l')
         elif self.ARGS.dest == 'h':
            self.__output = self.__out_files('h')

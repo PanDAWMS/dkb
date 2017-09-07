@@ -38,10 +38,10 @@ def doc_content_triples(data):
     ttl = []
     for i, item in enumerate(data['content']):
         DEFAULT = {
-            'graph' : graph,
-            'ontology' : ontology,
-            'c_name' : item,
-            'doc_ID' : dkbID
+            'graph': graph,
+            'ontology': ontology,
+            'c_name': item,
+            'doc_ID': dkbID
         }
         if item.endswith(dataset_suffix):
             ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \
@@ -55,7 +55,7 @@ def doc_content_triples(data):
             )
             for j, ds_item in enumerate(data['content'][item]):
                 DATASAMPLES = {
-                    'data_sample' : ds_item
+                    'data_sample': ds_item
                 }
                 DATASAMPLES.update(DEFAULT)
                 ttl.append("<{graph}/datasample/{data_sample}>" \
@@ -74,18 +74,18 @@ def doc_content_triples(data):
                 data_taking_year = None
             try:
                 luminosity = data['content'][item]['luminosity'] \
-                .replace(' ','_')
+                .replace(' ', '_')
             except (KeyError, AttributeError):
                 luminosity = None
             try:
                 energy = data['content'][item]['energy'] \
-                .lower().replace(' ','')
+                .lower().replace(' ', '')
             except (KeyError, AttributeError):
                 energy = None
             PLAINTEXT = {
-                'data_taking_year' : data_taking_year,
-                'luminosity' : luminosity,
-                'energy' : energy
+                'data_taking_year': data_taking_year,
+                'luminosity': luminosity,
+                'energy': energy
             }
             PLAINTEXT.update(DEFAULT)
             ttl.append("<{graph}/document/{doc_ID}/{c_name}>" \

@@ -19,9 +19,9 @@ def valueByKey(json_data, key):
         if type(val) == list:
             values = []
             for j in range(len(val)):
-                values.append(valueByKey(val[j], nested_keys[i+1:]))
+                values.append(valueByKey(val[j], nested_keys[i + 1:]))
             return values
-        if type(val) != dict and i < len(nested_keys)-1:
+        if type(val) != dict and i < len(nested_keys) - 1:
             return None
     return val
 

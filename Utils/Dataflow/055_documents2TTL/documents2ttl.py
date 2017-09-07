@@ -67,26 +67,26 @@ ONTOLOGY = "http://nosql.tpu.ru/ontology/ATLAS"
 PAPER_GLANCE_ATTRS = [{'GLANCE': 'id', 'ONTO': 'hasGLANCE_ID', 'TYPE': '^^xsd:int'},
                       {'GLANCE': 'short_title', 'ONTO': 'hasShortTitle', 'TYPE': ''},
                       {'GLANCE': 'full_title', 'ONTO': 'hasFullTitle', 'TYPE': ''},
-                      {'GLANCE': 'ref_code', 'ONTO': 'hasRefCode', 'TYPE': ''},]
+                      {'GLANCE': 'ref_code', 'ONTO': 'hasRefCode', 'TYPE': ''}, ]
 
 NOTE_GLANCE_ATTRS = [{'GLANCE': 'id', 'ONTO': 'hasGLANCE_ID', 'TYPE': '^^xsd:int'},
                      {'GLANCE': 'label', 'ONTO': 'hasLabel', 'TYPE': ''},
-                     {'GLANCE': 'url', 'ONTO': 'hasURL', 'TYPE': ''},]
+                     {'GLANCE': 'url', 'ONTO': 'hasURL', 'TYPE': ''}, ]
 
 PAPER_CDS_ATTRS = [{'CDS': 'creation_date', 'ONTO': 'hasCreationDate', 'TYPE': '^^xsd:dateTime'},
-                   {'CDS': 'CDS_ReportNumber', 'ONTO': 'hasCDSReportNumber', 'TYPE' : ''},
+                   {'CDS': 'CDS_ReportNumber', 'ONTO': 'hasCDSReportNumber', 'TYPE': ''},
                    {'CDS': 'CDSInternal', 'ONTO': 'hasCDSInternal', 'TYPE': ''},
                    {'CDS': 'CDS_ID', 'ONTO': 'hasCDS_ID', 'TYPE': '^^xsd:integer'},
                    {'CDS': 'abstract', 'ONTO': 'hasAbstract', 'TYPE': ''},
                    {'CDS': 'primary_report_number', 'ONTO': 'hasArXivCode', 'TYPE': ''},
-                   {'CDS': 'title', 'ONTO': 'hasFullTitle', 'TYPE': ''},]
+                   {'CDS': 'title', 'ONTO': 'hasFullTitle', 'TYPE': ''}, ]
 
 
 NOTE_CDS_ATTRS = [{'CDS': 'creation_date', 'ONTO': 'hasCreationDate', 'TYPE': '^^xsd:dateTime'},
                   {'CDS': 'CDSInternal', 'ONTO': 'hasCDSInternal', 'TYPE': ''},
                   {'CDS': 'CDS_ID', 'ONTO': 'hasCDS_ID', 'TYPE': '^^xsd:integer'},
                   {'CDS': 'abstract', 'ONTO': 'hasAbstract', 'TYPE': ''},
-                  {'CDS': 'title', 'ONTO': 'hasFullTitle', 'TYPE': ''},]
+                  {'CDS': 'title', 'ONTO': 'hasFullTitle', 'TYPE': ''}, ]
 
 def define_globals(args):
     global GRAPH
@@ -378,7 +378,7 @@ def process_journals(data, doc_iri):
     journals = []
     if isinstance(data, list):
         journals = data
-    elif isinstance(data,dict):
+    elif isinstance(data, dict):
         journals.append(data)
     ttl = ''
     for item in journals:
@@ -389,7 +389,7 @@ def process_journals(data, doc_iri):
 <{journal_resource}{journalIssueID}> <{ontology}#hasYear> "{year}"^^xsd:string .
 <{journal_resource}{journalIssueID}> <{ontology}#containsPublication> {doc_iri} .\n'''\
             .format(journalIssueID=journal_id, title=item.get('title'), volume=item.get('volume'),
-                    year=item.get('year'), doc_iri=doc_iri, journal_resource=GRAPH+'/journal_issue/',
+                    year=item.get('year'), doc_iri=doc_iri, journal_resource=GRAPH + '/journal_issue/',
                     ontology=ONTOLOGY)
     return ttl
 

@@ -85,7 +85,7 @@ def search_paper(cds, paper_info):
           cc - current collection (e.g. "ATLAS").  The collection the
                user started to search/browse from.
     """
-    sys.stderr.write(paper_info['id']+"\n")
+    sys.stderr.write(paper_info['id'] + "\n")
     #results = cds.search(cc="ATLAS", aas=1, m1="e", op1="a",
     #                     p1=paper_info["full_title"], f1="title", m2="a",
     #                     op2="a", p2="ARTICLE, ATLAS_Papers",
@@ -151,7 +151,7 @@ def search_note(cds, note):
     url = url.replace('\\', '')
     parsed = urlparse(url)
     if parsed.netloc == "cds.cern.ch" or parsed.netloc == "cdsweb.cern.ch":
-        sys.stderr.write(parsed.path+"\n")
+        sys.stderr.write(parsed.path + "\n")
         if parsed.path[-1:] == '/':
             recid = parsed.path[:-1].split('/')[-1]
         else:
@@ -327,7 +327,7 @@ def main(argv):
             sys.stderr.write("WARNING: no authentication method will be used.\n")
     
         warnings.simplefilter("once", InsecurePlatformWarning)
-        ARGS=stage.ARGS
+        ARGS = stage.ARGS
     
         if ARGS.kerberos:
             Connector = KerberizedCDSInvenioConnector
