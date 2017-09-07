@@ -45,7 +45,7 @@ def collection_verification(collection):
     if len(collection) > 0 \
             and type(collection[0]) is dict \
             and collection[0].get('primary', '')\
-                in ("ARTICLE", "ATLAS_Papers"):
+            in ("ARTICLE", "ATLAS_Papers"):
         return True
 
 

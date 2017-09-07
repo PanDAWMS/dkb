@@ -81,8 +81,8 @@ def main(argv):
     global ARGS
     parser = argparse.ArgumentParser(
         description=u'Reads JSON-file with information about papers'
-                     ' and look for metadata for mentioned datasets'
-                     ' in Impala.')
+        ' and look for metadata for mentioned datasets'
+        ' in Impala.')
     parser.add_argument('input', metavar=u'JSON-FILE',
                         type=argparse.FileType('r'), nargs='*',
                         help=u'Source JSON-file.')
@@ -100,8 +100,8 @@ def main(argv):
 
     parser.add_argument('--hdfs', action='store', type=bool, nargs='?',
                         help=u'Source files are stored in HDFS;'
-                              ' if no JSON-FILE specified, filenames'
-                              ' will come to STDIN',
+                        ' if no JSON-FILE specified, filenames'
+                        ' will come to STDIN',
                         default=False,
                         const=True,
                         metavar='HDFS',
@@ -214,7 +214,7 @@ def hdfsFiles(filenames, upload=False):
 def loadMetadata(data, outfile, db, extra={}, headers=True):
     global ARGS
     if not (data.get('datasets') or (data.get('datasetIDs')\
-      and data.get('campaigns'))):
+                                     and data.get('campaigns'))):
         stderr.write("No dataset names or IDs found.\n")
         return 0
 
@@ -237,8 +237,8 @@ def loadByNames(datasets, outfile, db, extra={}, headers=True):
         s += extra_string(extra)
         s += SELECT
         w = 'WHERE isnull(PS1.name,PS2.name) LIKE "' + \
-                          '%" OR isnull(PS1.name,PS2.name) LIKE "'.join(
-                              datasets[t]) + '%"' if datasets[t] else ''
+            '%" OR isnull(PS1.name,PS2.name) LIKE "'.join(
+                datasets[t]) + '%"' if datasets[t] else ''
         query = '{select} {where}'.format(select=s, where=w)
         loadQuery(query, outfile, ARGS, db, headers)
 
@@ -256,8 +256,8 @@ def loadByDSIDs(projects, datasets, outfile, db, extra={}, headers=True):
             dsnames += ['^{project}\.0*?{DSID}\..*$'.format(project=p, DSID=i)]
 
     w = 'WHERE isnull(PS1.name,PS2.name) RLIKE "' + \
-                      '" OR isnull(PS1.name,PS2.name) RLIKE "'.join(
-                          dsnames) + '"' if dsnames else ''
+        '" OR isnull(PS1.name,PS2.name) RLIKE "'.join(
+            dsnames) + '"' if dsnames else ''
     query = '{select} {where}'.format(select=s, where=w)
     loadQuery(query, outfile, ARGS, db)
 

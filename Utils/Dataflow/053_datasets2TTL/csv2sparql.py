@@ -169,7 +169,7 @@ def add_ttl(line, outfile, triple_map):
     line['project'] = 'project:' + \
         m.group('project').split(':')[0] if m.group('project') else None
     line['prodStep'] = m.group('prodStep').lower(
-        ) if m.group('prodStep') else None
+    ) if m.group('prodStep') else None
     line['AMItag'] = m.group('AMItag')
     try:
         if m.group('phys_short'):
@@ -188,7 +188,7 @@ def add_ttl(line, outfile, triple_map):
 
     # Refine timestamp
     t = None if (line['timestamp'] in ('NULL', '\N', None)) \
-            else int(line['timestamp']) / 100
+        else int(line['timestamp']) / 100
     if t:
         line['timestamp'] = datetime.fromtimestamp(
             t).strftime("%Y-%m-%dT%H:%M:%S")
@@ -434,8 +434,8 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
 def main(argv):
     parser = argparse.ArgumentParser(
         description=u'Reads CSV-file with information about datasets'
-                     ' and produces files with triples and Dataset-Document'
-                     ' linking statements.')
+        ' and produces files with triples and Dataset-Document'
+        ' linking statements.')
     parser.add_argument('csv', metavar=u'CSV-FILE',
                         type=argparse.FileType('r'), nargs='*',
                         help=u'Source CSV-file.')
@@ -465,7 +465,7 @@ def main(argv):
                         dest='linkfile'
                         )
     parser.add_argument('-N', '--link-number', action='store', type=int,
-                         nargs='?',
+                        nargs='?',
                         help=u'Maximum number of links in one link query'
                               ' file.',
                         const='6000',

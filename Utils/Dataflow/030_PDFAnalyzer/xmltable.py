@@ -87,14 +87,14 @@ class TextLine:
 #        print self.text
 
             self.center = [(self.left + self.right) / 2,
-                            (self.top + self.bottom) / 2]
+                           (self.top + self.bottom) / 2]
 
     def swap_y(self, top):
         """ Change Y-coords according to new Y-axis. """
         self.top = top - self.top
         self.bottom = top - self.bottom
         self.center = [(self.left + self.right) / 2,
-                        (self.top + self.bottom) / 2]
+                       (self.top + self.bottom) / 2]
 
     def same_row(self, line):
         """ Determine whether line and self belong to the same row.
@@ -191,7 +191,7 @@ class Table:
                     - row_centery(self.rows[r - 1])
             else:
                 diff = row_centery(self.rows[r]) - \
-                                   row_centery(self.rows[r - 1])
+                    row_centery(self.rows[r - 1])
 #                print "DIFF BETWEEN", self.row_text(num = r), "AND",\
 #                      self.row_text(num = r - 1), ":", diff
                 if diff > 1.4 * max_diff:

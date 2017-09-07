@@ -27,7 +27,7 @@ for item in json_content:
         result = AtlasAPI.list_runs(
             client, year=int(year), data_periods=period)
         tmp.append(",".join(str(json.dumps(item, indent=4))
-                   for item in result))
+                            for item in result))
     except:
         print "Cannot find results for period = " + str(period)
 

@@ -27,7 +27,7 @@ def main(argv):
     # --url https://glance-stage.cern.ch/api/atlas/analysis/papers \
     # --outfile ./glance.cookie
     os.system('cern-get-sso-cookie --nocertverify --krb --url %s --outfile %s'
-        % (GLANCE_API_HTTP_REQUEST, cookie_path))
+              % (GLANCE_API_HTTP_REQUEST, cookie_path))
     # curl -k -L --cookie ./glance.cookie --cookie-jar \
     # ./glance.cookie https://glance-stage.cern.ch/api/atlas/analysis/papers \
     # -o papers.json
