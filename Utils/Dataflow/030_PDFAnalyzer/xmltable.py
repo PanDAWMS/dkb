@@ -326,8 +326,8 @@ class Table:
                                       abs((space[1] + space[0]) / 2 - cs2))
                             if abs((cls[1] + cls[0]) / 2 - cs2) > 5000:
                                 # TO DO: fix this.
-##                                print "LINE ONLY HAS SPACES TOO FAR\
-##                                FROM COLUMN BOUNDARIES, REMOVING"
+# print "LINE ONLY HAS SPACES TOO FAR\
+# FROM COLUMN BOUNDARIES, REMOVING"
                                 l = None
                                 break
 #                            print "BREAKING ON SPACE", closest_space  # min_x[0]
@@ -434,29 +434,29 @@ def analyze_page(text):
     rows.sort(key=lambda row: row_centery(row))
 
     return rows
-##    for row in rows:
-##        if row[0].text.isdigit():
-##            print "NUM ROW"
-##        else:
-##            print "OTHER ROW"
-##        for l in row:
-##            print l.text
-##            if row.index(l) == 0:
-##                print "ROW LEFT:", l.left
-##            elif row.index(l) == len(row):
-##                print "ROW RIGHT:", l.right
+# for row in rows:
+# if row[0].text.isdigit():
+# print "NUM ROW"
+# else:
+# print "OTHER ROW"
+# for l in row:
+# print l.text
+# if row.index(l) == 0:
+# print "ROW LEFT:", l.left
+# elif row.index(l) == len(row):
+# print "ROW RIGHT:", l.right
 
 ##    symbols = {}
 ##    lines = []
-##    for l in tlines:
+# for l in tlines:
 ##        lines.append(TextLine(l, symbols))
 ##
 ##    max_s = max(symbols.values())
-##    for key in symbols:
-##        if symbols[key] == max_s:
+# for key in symbols:
+# if symbols[key] == max_s:
 ##            max_key = key
-##            break
-##    print "KEY", max_key
-##    for l in lines:
-##        if max_key in l.symbols:
-##            print l.text
+# break
+# print "KEY", max_key
+# for l in lines:
+# if max_key in l.symbols:
+# print l.text

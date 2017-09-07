@@ -112,9 +112,9 @@ class DatasetCategory:
         self.reg = re.compile(string, re.X)
         self.reg_spaces = re.compile(string.replace("_", "\ ")
                                      .replace("\w", "a-zA-Z0-9 "), re.X)
-##        self.reg_dashes = re.compile(string.replace("_", "\-")\
-##                                     .replace("\w", "a-zA-Z0-9-"),
-##                                     re.X)
+# self.reg_dashes = re.compile(string.replace("_", "\-")\
+# .replace("\w", "a-zA-Z0-9-"),
+# re.X)
 
     def find(self, text, intervals, datasets):
 #        print "INTERVALS", intervals
@@ -149,9 +149,9 @@ class DatasetCategory:
                         elif self.reg_spaces.match(ns):
                             datasets[self.name].append([ns.replace(" ", "_"),
                                                         "spaces"])
-    ##                    elif self.reg_dashes.match(ns):
-    ##                        datasets[self.name].append([ns.replace("-", "_"),
-    ##                                                    "dashes"])
+    # elif self.reg_dashes.match(ns):
+    # datasets[self.name].append([ns.replace("-", "_"),
+    # "dashes"])
                 else:
                     res = 0
                     if self.reg.match(s):
@@ -171,9 +171,9 @@ class DatasetCategory:
                 elif self.reg_spaces.match(s):
                     datasets[self.name].append([s.replace(" ", "_"),
                                                 "spaces"])
-##                elif self.reg_dashes.match(s):
-##                    datasets[self.name].append([s.replace("-", "_"),
-##                                                "dashes"])
+# elif self.reg_dashes.match(s):
+# datasets[self.name].append([s.replace("-", "_"),
+# "dashes"])
         return (text, datasets)
 
 group = DatasetCategory("group", r"""
@@ -541,66 +541,66 @@ class Paper:
     def delete(self):
         """ Delete all files associated with paper. """
         shutil.rmtree(self.dir)
-##    def find_title(self):
-##        """ New title determining method, does not works ideally yet.
-##        Titles consisting of several lines are problematic to
-##        determine.
-##        """
+# def find_title(self):
+# """ New title determining method, does not works ideally yet.
+# Titles consisting of several lines are problematic to
+# determine.
+# """
 ##        lines = self.get_xml_page(1)
 ##
 ##        d = {}
-##        for l in lines:
+# for l in lines:
 ##            m = re_xml_symbol.match(l)
-##            if m:
+# if m:
 ##                size = float(m.group(1))
 ##                text = m.group(2)
-##                if size in d.keys():
+# if size in d.keys():
 ##                    d[size] += text
-##                else:
+# else:
 ##                    d[size] = text
-##            elif re_xml_empty_symbol.match(l):
+# elif re_xml_empty_symbol.match(l):
 ##                d[size] += " "
 ##        xml_title = False
-##        print d
-##        while True:
+# print d
+# while True:
 ##            size = max(d.keys())
 ##            valid = True
-##            try:
-##                d[size].decode()
-##            except:
+# try:
+# d[size].decode()
+# except:
 ##                valid = False
-##            if not "atlas note" in d[size].lower() and valid:
+# if not "atlas note" in d[size].lower() and valid:
 ##                xml_title = d[size]
-##                break
-##            else:
+# break
+# else:
 ##                del d[size]
 ##
-##        print xml_title
-##        if not xml_title:
-##            return False
+# print xml_title
+# if not xml_title:
+# return False
 ##
 ##        lines = self.get_txt_page(1)
 ##        title = ""
-##        for l in lines:
-##            if len(l) <= 4 or l.startswith("Supporting Note")\
-##               or l.startswith("ATLAS NOTE"):
-##                continue
+# for l in lines:
+# if len(l) <= 4 or l.startswith("Supporting Note")\
+# or l.startswith("ATLAS NOTE"):
+# continue
 ##            words = l.split()
 ##            i = 0
-##            for w in words:
-##                try:
-##                    # This throws exception sometimes, something about
-##                    # ascii codec unable to decode.
+# for w in words:
+# try:
+# This throws exception sometimes, something about
+# ascii codec unable to decode.
 ##                    w_in = w in xml_title
-##                except:
+# except:
 ##                    w_in = False
-##                if len(w) > 1 and w_in:
+# if len(w) > 1 and w_in:
 ##                    i += 1
-##            if i > 1 or (len(words) == 1 and i == 1):
+# if i > 1 or (len(words) == 1 and i == 1):
 ##                title += l.replace("\n", " ")
-##            elif title:
-##                break
-##        return title
+# elif title:
+# break
+# return title
 
     def find_attributes_general(self):
         """ Find general attributes in a document. """
@@ -721,7 +721,7 @@ class Paper:
             for table in tables:
                 num = int(re_table_header_short.match(table.header).group(1))
                 if num in headers_data:
-##                    print "TABLE WITH HEADER", headers_data[num].strip(),\
+# print "TABLE WITH HEADER", headers_data[num].strip(),\
 ##                          "MAY CONTAIN DATASETS"
                     data_column = -1
                     skip_first = False
@@ -731,7 +731,7 @@ class Paper:
                         for i in range(0, len(table.rows[rnum])):
                             txt = table.rows[rnum][i].text.lower()
                             if re_column_with_datasets.match(txt):
-##                                print "COLUMN", txt, "IN TABLE", num,\
+# print "COLUMN", txt, "IN TABLE", num,\
 ##                                      "HINTS THAT IT CONTAINS DATASETS"
                                 data_column = i
                                 if rnum == 1:
@@ -768,13 +768,13 @@ class Paper:
                                 diaps = True
                             rows.append(row)
                         coef = float(rows_with_proper_id) / len(rows)
-##                        print rows_with_proper_id, "OUT OF", len(rows),\
+# print rows_with_proper_id, "OUT OF", len(rows),\
 ##                              "ROWS HAVE PROPER DATASET ID. COEFFICIENT:",\
-##                              coef
+# coef
                         if coef >= 0.7 and coef <= 1:
                             if cfg["OPEN_INTERVALS_TABLES"] and diaps:
-##                                print "TABLE CONTAINS DATASET DIAPASONS,\
-##                                      PROCESSING THEM AND MULTIPLYING ROWS"
+# print "TABLE CONTAINS DATASET DIAPASONS,\
+# PROCESSING THEM AND MULTIPLYING ROWS"
                                 rows_new = []
                                 for row in rows:
                                     r_dc = row[data_column]
@@ -796,9 +796,9 @@ class Paper:
                             else:
                                 data = rows
                             datatables[num] = (headers_data[num], data)
-##                        elif coef < 0.7:
-##                            print "COEFFICIENT IS LOWER THAN 0.7.\
-##                                  SKIPPING TABLE", num
+# elif coef < 0.7:
+# print "COEFFICIENT IS LOWER THAN 0.7.\
+# SKIPPING TABLE", num
 
         return datatables
 
@@ -810,26 +810,26 @@ class Paper:
         skipped.
         """
 
-##        print self.fname
-##        paper_date = re.search("((?:january|february|march|april|may|june\
-##                               |july|august|september|october|november\
-##                               |december).*20\d\d)",
-##                               self.get_txt_page(1, True).lower())
-##        if paper_date:
+# print self.fname
+# paper_date = re.search("((?:january|february|march|april|may|june\
+# |july|august|september|october|november\
+# |december).*20\d\d)",
+# self.get_txt_page(1, True).lower())
+# if paper_date:
 ##             d = paper_date.group(1)
-##             print "date:", d
+# print "date:", d
 ##
 ##        text = self.get_text()
 ##        m = re_year.findall(text)
-##        if m:
-##            print m
-####            for t in m:
-####                if d not in t.lower():
-####                    print t
-##        else:
-##            print "None"
-##        print "\n"
-##        return True
+# if m:
+# print m
+# for t in m:
+# if d not in t.lower():
+# print t
+# else:
+# print "None"
+# print "\n"
+# return True
 
         outp = {}
         if not outf:

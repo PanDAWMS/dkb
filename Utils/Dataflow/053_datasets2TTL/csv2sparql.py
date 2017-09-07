@@ -29,13 +29,13 @@ CSV_HEADER = ["datatype", "glanceid", "name", "tid", "chain_tid", "phys_group", 
 # Dataset properties
 # Ordinary numeric/string properties: <dataset> <#property> Value
 OWL_PARAMS_NUMSTR = {
-#numeric
+# numeric
            'DSID': 'hasDatasetID',
            'events': 'hasEvents',
            'files': 'hasFiles',
            'datasetSize': 'hasDatasetSize',  # hasFiles * hasFileSizeMB
            'file_size_mb': 'hasFileSizeMB',
-#string
+# string
            'name': 'hasDatasetName',
            'timestamp': 'hasTimestamp',
            'AMItags': 'hasAMITag',

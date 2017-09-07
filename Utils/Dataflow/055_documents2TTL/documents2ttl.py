@@ -58,7 +58,7 @@ sys.path.append("../")
 
 import pyDKB
 
-#defaults
+# defaults
 GRAPH = "http://nosql.tpu.ru:8890/DAV/ATLAS"
 ONTOLOGY = "http://nosql.tpu.ru/ontology/ATLAS"
 
