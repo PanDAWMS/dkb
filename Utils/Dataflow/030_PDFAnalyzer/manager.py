@@ -19,6 +19,7 @@ default_cfg = {
         "DETERMINE_TITLE":       False,
         "OPEN_INTERVALS_TEXT":   False,
         "OPEN_INTERVALS_TABLES": False,
+        "TABLES_IDS_ONLY":       False,
         "HDFS_PDF_DIR":          "",
         "HDFS_DOWNLOAD_COMMAND": "hadoop fs -get"
     }
@@ -297,7 +298,6 @@ re_luminosity = re.compile("(\d+\.?\d*) ?(m|n|p|f)b(?:−|\(cid:0\))1")
 re_collisions = re.compile("(proton-proton|heavy-ion|pp) collisions")
 re_year = re.compile("(?:acquired|collected|measured|recorded).{0,100}"
                      "(20\d\d)", re.DOTALL)
-re_year_general = re.compile(".{0,100} 20\d\d.{0,100}")
 # Interval must contain at least two numbers, i.e. [1/2] or [3\4\5].
 re_interval = re.compile("\[(?:[0-9][\\/][0-9\\/\n]+|[0-9]+-[0-9]+)\]")
 re_link = re.compile("(.*)\n? ?(https?://cds\.cern\.ch/record/\d+)")
@@ -650,8 +650,6 @@ class Paper:
         tmp = re_year.search(text)
         if tmp:
             attrs["data taking year"] = tmp.group(1)
-        else:
-            attrs["possible years"] = list(set(re_year_general.findall(text)))
 
         if attrs["campaigns"] and attrs["energy"]:
             mcc = False
@@ -789,7 +787,15 @@ class Paper:
                                     else:
                                         rows_new.append(row)
                                     rows = rows_new
-                            datatables[num] = (headers_data[num], rows)
+                            if cfg["TABLES_IDS_ONLY"]:
+                                ids = []
+                                for row in rows[1:]:
+                                    ids.append(int(row[data_column]))
+                                ids.sort()
+                                data = " ".join([str(i) for i in ids])
+                            else:
+                                data = rows
+                            datatables[num] = (headers_data[num], data)
 ##                        elif coef < 0.7:
 ##                            print "COEFFICIENT IS LOWER THAN 0.7.\
 ##                                  SKIPPING TABLE", num
@@ -862,12 +868,23 @@ class Paper:
                                 + "_datasets"] = d
         if self.datatables is not None:
             for num in self.datatables:
-                outp["content"]["table_"+str(num)] = self.datatables[num]
+                if isinstance(self.datatables[num][1], str)\
+                   or isinstance(self.datatables[num][1], unicode):
+                    header, ids = self.datatables[num]
+                    data = [header, [int(i) for i in ids.split()]]
+                else:
+                    data = self.datatables[num]
+                outp["content"]["table_"+str(num)] = data
         elif quick:
             tables = self.find_datatables()
             for num in tables:
-                outp["content"]["table_"+str(num)] = tables[num]
-
+                if isinstance(tables[num][1], str)\
+                   or isinstance(tables[num][1], unicode):
+                    header, ids = tables[num]
+                    data = [header, [int(i) for i in ids.split()]]
+                else:
+                    data = tables[num]
+                outp["content"]["table_"+str(num)] = data
         if outp:
             with open(outf, "w") as f:
                 json.dump(outp, f, indent=4)
@@ -991,6 +1008,8 @@ class Manager:
         open_intervals_text.set(cfg["OPEN_INTERVALS_TEXT"])
         open_intervals_tables = Tkinter.BooleanVar()
         open_intervals_tables.set(cfg["OPEN_INTERVALS_TABLES"])
+        tables_ids_only = Tkinter.BooleanVar()
+        tables_ids_only.set(cfg["TABLES_IDS_ONLY"])
         work_dir = Tkinter.StringVar()
         work_dir.set(cfg["WORK_DIR"])
 
@@ -1016,6 +1035,12 @@ class Manager:
         b = Tkinter.Checkbutton(frame, variable=open_intervals_tables)
         b.grid(row=3, column=1)
 
+        txt = "Extract dataset IDs instead of full tables"
+        l = Tkinter.Label(frame, text=txt)
+        l.grid(row=4, column=0)
+        b = Tkinter.Checkbutton(frame, variable=tables_ids_only)
+        b.grid(row=4, column=1)
+
         frame.grid(row=0, column=0)
         b = Tkinter.Button(w, text="Done", command=w.destroy)
         b.grid(row=1, column=0)
@@ -1037,6 +1062,10 @@ class Manager:
             cfg["OPEN_INTERVALS_TABLES"] = True
         else:
             cfg["OPEN_INTERVALS_TABLES"] = False
+        if tables_ids_only.get():
+            cfg["TABLES_IDS_ONLY"] = True
+        else:
+            cfg["TABLES_IDS_ONLY"] = False
         save_config(cfg)
         if restart:
             msg = "Program needs to be restarted to apply the changes."
@@ -1327,9 +1356,14 @@ class Manager:
             self.show_paper_datasets(window, paper)
         elif param == "datatables":
             paper.datatables = {}
-            for [num, header, rows, selected] in value:
+            for [num, header, data, selected] in value:
                 if selected.get():
-                    paper.datatables[num] = (header, rows)
+                    if isinstance(data, list):
+                        paper.datatables[num] = (header, data)
+                    else:
+                        paper.datatables[num] = (header,
+                                                 data.get("0.0",
+                                                          "end").strip())
             self.show_paper_datatables(window, paper)
         paper.changed = True
         self.redraw()
@@ -1341,29 +1375,6 @@ class Manager:
         window.title("Attributes of %s" % paper.fname)
         if paper.campaigns is None:
             attrs = paper.find_attributes_general()
-            if "possible years" in attrs:
-                msg = "No year was found in %s, possible years:\n\n"\
-                      % paper.fname
-                for m in attrs["possible years"]:
-                    try:
-                        msg += m + "\n"
-                    except:
-                        for c in m:
-                            try:
-                                msg += c
-                            except:
-                                msg += "?"
-                        msg += "\n"
-                    msg += "_______________________________\n"
-                nw = Tkinter.Toplevel()
-                nw.title("No year found")
-                t = Tkinter.Text(nw)
-                t.insert(Tkinter.END, msg)
-                t.config(state=Tkinter.DISABLED)
-                t.grid(row=0, column=0)
-                b = Tkinter.Button(nw, text="Close", command=nw.destroy)
-                b.grid(row=1, column=0)
-                del attrs["possible years"]
             self.update_paper_parameter(window, paper, "general", attrs)
         else:
             r = 0
@@ -1520,31 +1531,41 @@ class Manager:
                 keys.sort()
                 datatables_s = []
                 for k in keys:
-                    (header, rows) = datatables[k]
+                    (header, data) = datatables[k]
                     t_frame = Tkinter.Frame(frame)
-                    l = Tkinter.Label(t_frame, text=header, font=HEADING_FONT)
-                    l.grid(row=0, column=0, columnspan=len(rows[0]))
-                    r = 1
-                    for row in rows:
-                        c = 0
-                        for line in row:
-                            l = Tkinter.Label(t_frame, text=line)
-                            l.grid(row=r, column=c)
-                            c += 1
-                        r += 1
-                        if r == 50:
-                            msg = "Table is too large, "\
-                                "omitting remaining rows."
-                            l = Tkinter.Label(t_frame, text=msg)
-                            l.grid(row=r, columnspan=c)
-                            break
-                    t_frame.grid(row=num, column=0)
                     selected = Tkinter.IntVar()
                     selected.set(1)
+                    l = Tkinter.Label(t_frame, text=header, font=HEADING_FONT)
                     b = Tkinter.Checkbutton(t_frame, var=selected)
+                    if isinstance(data, str) or isinstance(data, unicode):
+                        l.grid(row=0, column=0)
+                        b.grid(row=0, column=1)
+                        t = Tkinter.Text(t_frame, width=(6+1)*5,
+                                         height=data.count(" ")//5+2)
+                        t.insert(Tkinter.END, data)
+                        t.grid(row=1, column=0)
+                        datatables_s.append([k, header, t, selected])
+                    else:
+                        rows = data
+                        l.grid(row=0, column=0, columnspan=len(rows[0]))
+                        b.grid(row=0, column=len(rows[0]))
+                        r = 1
+                        for row in rows:
+                            c = 0
+                            for line in row:
+                                l = Tkinter.Label(t_frame, text=line)
+                                l.grid(row=r, column=c)
+                                c += 1
+                            r += 1
+                            if r == 50:
+                                msg = "Table is too large, "\
+                                      "omitting remaining rows."
+                                l = Tkinter.Label(t_frame, text=msg)
+                                l.grid(row=r, columnspan=c)
+                                break
+                        datatables_s.append([k, header, rows, selected])
+                    t_frame.grid(row=num, column=0)
                     # TO DO: checkbuttons for "(un)select all".
-                    b.grid(row=0, column=len(rows[0]))
-                    datatables_s.append([k, header, rows, selected])
                     num += 1
 
                 scrlbr = Tkinter.Scrollbar(window, command=cnvs.yview)
@@ -1587,24 +1608,30 @@ class Manager:
                 keys = paper.datatables.keys()
                 keys.sort()
                 for k in keys:
-                    (header, rows) = paper.datatables[k]
+                    (header, data) = paper.datatables[k]
                     t_frame = Tkinter.Frame(frame)
                     l = Tkinter.Label(t_frame, text=header, font=HEADING_FONT)
-                    l.grid(row=0, column=0, columnspan=len(rows[0]))
-                    r = 1
-                    for row in rows:
-                        c = 0
-                        for line in row:
-                            l = Tkinter.Label(t_frame, text=line)
-                            l.grid(row=r, column=c)
-                            c += 1
-                        r += 1
-                        if r == 50:
-                            msg = "Table is too large, "\
-                                "omitting remaining rows."
-                            l = Tkinter.Label(t_frame, text=msg)
-                            l.grid(row=r, columnspan=c)
-                            break
+                    if isinstance(data, str) or isinstance(data, unicode):
+                        l.grid(row=0, column=0)
+                        l = Tkinter.Label(t_frame, text=data, wraplength=600)
+                        l.grid(row=1, column=0)
+                    else:
+                        rows = data
+                        l.grid(row=0, column=0, columnspan=len(rows[0]))
+                        r = 1
+                        for row in rows:
+                            c = 0
+                            for line in row:
+                                l = Tkinter.Label(t_frame, text=line)
+                                l.grid(row=r, column=c)
+                                c += 1
+                            r += 1
+                            if r == 50:
+                                msg = "Table is too large, "\
+                                      "omitting remaining rows."
+                                l = Tkinter.Label(t_frame, text=msg)
+                                l.grid(row=r, columnspan=c)
+                                break
                     t_frame.grid(row=num, column=0)
                     num += 1
 
@@ -1867,7 +1894,7 @@ class Manager:
                              float(len(attr["dataset_tables"]))/n_p*100)
                     for a in Paper.attributes_general:
                         s += "%d," % len(attr[a])
-                        s_p += "%f%%," % float(len(attr[a]))/n_p*100
+                        s_p += "%f%%," % (float(len(attr[a]))/n_p*100)
                     csv += s.rstrip(",") + "\n"
                     csv += s_p.rstrip(",") + "\n"
                     f.writelines(csv)
