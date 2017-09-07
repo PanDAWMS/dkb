@@ -87,7 +87,7 @@ def main(argv):
                        metavar='TYPE',
                        choices=['GID'],
                        dest='type')
-  
+
   parser.add_argument('--hdfs', action='store', type=bool, nargs='?',
                         help=u'Source files are stored in HDFS; if no JSON-FILE specified, filenames will come to STDIN',
                         default=False,
@@ -131,7 +131,7 @@ def main(argv):
                        choices=['f', 'i', 's', 'h'],
                        dest='out'
                        )
-  
+
   ARGS = parser.parse_args(argv)
 
   try:

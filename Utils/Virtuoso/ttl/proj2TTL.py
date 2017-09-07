@@ -51,7 +51,7 @@ print("Current graph: " + graph + "\n")
 graph_answer = input("Would you like to choose another one? [Y/N] ")
 if graph_answer.lower() in ['y', 'yes']:
 	graph = input("Please, insert a graph: ")
-print("\nCurrent graph: " + graph + "\n")    
+print("\nCurrent graph: " + graph + "\n")
 
 #choose ontology
 print("Current ontology: " + ontology + "\n")
@@ -70,10 +70,10 @@ chosen_path = os.path.normpath(askopenfilename())
 output_data = open("data_periods.ttl", 'w')
 
 #input
-with open(chosen_path) as data_file:    
+with open(chosen_path) as data_file:
     input_data = json.load(data_file)
-		
-	
+
+
 listProj = []
 for i, item in enumerate(input_data):
 		year = "20" + str(re.findall(r'\d+', input_data[i]['projectName'])[0])
@@ -95,12 +95,12 @@ for i, item in enumerate(input_data):
 			'description': description,
 			'status': input_data[i]['status']
 		}
-		
+
 		if not input_data[i]['projectName'] in listProj:
 			tripleProject = '''{project_name} a <{ontology}#Project> .\n'''.format(**DATAPERIODS)
 			listProj.append(input_data[i]['projectName'])
 			output_data.write(tripleProject)
-		
+
 		tripleDescription = '''{project_name} <{ontology}#hasDescription> '{description}' .\n'''.format(**DATAPERIODS)
 		output_data.write(tripleDescription)
 		tripleStatus = '''{project_name} <{ontology}#hasStatus> '{status}' .\n'''.format(**DATAPERIODS)
@@ -115,5 +115,5 @@ for i, item in enumerate(input_data):
 		output_data.write(tripleAttrLevel)
 		mapping = '''{project_name} <{ontology}#hasDataTakingPeriod> {dataPeriod} .\n'''.format(**DATAPERIODS)
 		output_data.write(mapping)
-		
+
 output_data.close()

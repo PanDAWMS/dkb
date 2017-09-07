@@ -136,7 +136,7 @@ def doc_content_triples(data):
             except KeyError:
                 campaign = []
             if not campaign:
-                sys.stderr.write("No campaigns in this file.\n")				
+                sys.stderr.write("No campaigns in this file.\n")
     return ttl
 
 def main(args):

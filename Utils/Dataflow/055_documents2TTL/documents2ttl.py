@@ -245,8 +245,8 @@ def report_number_extraction(data):
 
 def glance_parameter_extraction(param_name, json_data):
     """
-    Extracting single value parameters from GLANCE json 
-    :param param_name: 
+    Extracting single value parameters from GLANCE json
+    :param param_name:
     :param json_data: JSON with GLANCE metadata
     :return:
     """
@@ -268,7 +268,7 @@ def cds_parameter_extraction(param_name, json_data):
     Extracting parameters from json string with CDS parameters
     :param param_name: name of parameter, defined in *_CDS_ATTRS dict
     :param json_data: json string with CDS parameters
-    :return: 
+    :return:
     """
     if param_name == 'abstract':
         return abstract_extraction(json_data)

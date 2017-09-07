@@ -325,19 +325,19 @@ def main(argv):
         # Maybe we need a ProcessorWithAuthorization?
         if not stage.ARGS.login and not stage.ARGS.kerberos:
             sys.stderr.write("WARNING: no authentication method will be used.\n")
-    
+
         warnings.simplefilter("once", InsecurePlatformWarning)
         ARGS = stage.ARGS
-    
+
         if ARGS.kerberos:
             Connector = KerberizedCDSInvenioConnector
         else:
             Connector = CDSInvenioConnector
-    
+
         with Connector(ARGS.login, ARGS.password) as cds:
             ARGS.cds = cds
             stage.run()
-    
+
     except (DataflowException, RuntimeError), err:
         if str(err):
             sys.stderr.write("(ERROR) %s\n" % err)

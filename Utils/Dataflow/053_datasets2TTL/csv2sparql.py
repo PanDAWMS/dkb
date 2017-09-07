@@ -2,7 +2,7 @@
 
 # Prepares CSV data for upload to Virtuoso
 
-# csv2sparql.py <options> <filename> 
+# csv2sparql.py <options> <filename>
 #
 # -t, --type        Source type: GID|...
 # -g, --graph       Virtuoso DB graph name
@@ -21,9 +21,9 @@ from datetime import datetime
 CSV_HEADER = ["datatype", "glanceid", "name", "tid", "chain_tid", "phys_group", "events", "files", "status", "timestamp", "pr_id", "campaign", "ddm_erase_timestamp", "vuid", "grid_exec", "se", "file_size_mb"]
 
 # ONTOLOGY --->
-# TODO: make things more friendly, perhaps dict of 
+# TODO: make things more friendly, perhaps dict of
 #       { <codename>: {'prop': <property>, 'type': <type>}}
-# TODO: And maybe one day we'll teach it reading the *.owl files. 
+# TODO: And maybe one day we'll teach it reading the *.owl files.
 #       THAT would be really nice.
 
 # Dataset properties
@@ -353,7 +353,7 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
   nlfiles = 1
   for csvstr in spamreader:
     line = dict(zip(headers, csvstr))
-    if args.mode in ('ttl', None): 
+    if args.mode in ('ttl', None):
       triples_flag |= add_ttl(line, outfile, triple_map)
       triple_map = {'graph': args.graph, 'ontology': args.ontology}
       if args.processing_mode == 's':
