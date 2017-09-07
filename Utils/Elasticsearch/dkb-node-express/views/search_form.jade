@@ -1,0 +1,12 @@
+extends layout
+
+block content
+	div.container
+	h2 Search form
+	form(action="/dataset_search", name="search_datasets", method="post")
+		div.input
+			p.label Keywords
+			br
+			textarea(type="textarea", name="keywords")
+		div.actions
+			input(type="submit", value="Search")
