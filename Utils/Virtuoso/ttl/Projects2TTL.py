@@ -8,12 +8,18 @@ OUTPUT:
 TTL file - projects.ttl
 
 The fragment of data sample:
-<http://nosql.tpu.ru:8890/DAV/ATLAS/project/cmccond> a <http://nosql.tpu.ru/ontology/ATLAS#Project> .
-<http://nosql.tpu.ru:8890/DAV/ATLAS/project/cond09> a <http://nosql.tpu.ru/ontology/ATLAS#Project> .
-<http://nosql.tpu.ru:8890/DAV/ATLAS/project/cond09_data> a <http://nosql.tpu.ru/ontology/ATLAS#Project> .
-<http://nosql.tpu.ru:8890/DAV/ATLAS/project/cond09_mc> a <http://nosql.tpu.ru/ontology/ATLAS#Project> .
-<http://nosql.tpu.ru:8890/DAV/ATLAS/project/cond09_test> a <http://nosql.tpu.ru/ontology/ATLAS#Project> .
-<http://nosql.tpu.ru:8890/DAV/ATLAS/project/cond10> a <http://nosql.tpu.ru/ontology/ATLAS#Project> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/project/cmccond>
+  a <http://nosql.tpu.ru/ontology/ATLAS#Project> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/project/cond09>
+  a <http://nosql.tpu.ru/ontology/ATLAS#Project> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/project/cond09_data>
+  a <http://nosql.tpu.ru/ontology/ATLAS#Project> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/project/cond09_mc>
+  a <http://nosql.tpu.ru/ontology/ATLAS#Project> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/project/cond09_test>
+  a <http://nosql.tpu.ru/ontology/ATLAS#Project> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/project/cond10>
+  a <http://nosql.tpu.ru/ontology/ATLAS#Project> .
 etc.
 ----------------------------------------------------------
  1. Run

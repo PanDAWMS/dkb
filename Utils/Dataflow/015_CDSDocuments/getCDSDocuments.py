@@ -44,7 +44,8 @@ def collection_verification(collection):
         return False
     if len(collection) > 0 \
             and type(collection[0]) is dict \
-            and collection[0].get('primary', '') in ("ARTICLE", "ATLAS_Papers"):
+            and collection[0].get('primary', '')\
+                in ("ARTICLE", "ATLAS_Papers"):
         return True
 
 
@@ -207,9 +208,10 @@ def form_output_data(GLANCEdata, ppCDSdata, sdCDSdata):
                     { $sdGlanceID : [ ... ], ... }
     """
     if type(ppCDSdata) != type(GLANCEdata) != type(sdCDSdata) != dict:
-        sys.stderr.write("(ERROR) form_output_data() expected parameters of"
-                         " type %s (get %s, %s, %s)\n" % (dict,
-                                                          type(GLANCEdata), type(ppCDSdata), type(sdCDSdata)))
+        sys.stderr.write(
+            "(ERROR) form_output_data() expected parameters of"
+            " type %s (get %s, %s, %s)\n" % (
+                dict, type(GLANCEdata), type(ppCDSdata), type(sdCDSdata)))
     result = {}
 
     ppGLANCEdata = GLANCEdata.copy()
@@ -304,7 +306,8 @@ def main(argv):
                        metavar="PASSWD",
                        dest='password'
                        )
-    stage.add_argument("-k", "--kerberos", action="store", type=bool, nargs='?',
+    stage.add_argument("-k", "--kerberos", action="store", type=bool,
+                       nargs='?',
                        help="Use Kerberos-based authentification",
                        default=False,
                        const=True,

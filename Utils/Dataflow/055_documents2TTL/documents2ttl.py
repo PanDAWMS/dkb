@@ -48,7 +48,8 @@ Module document2ttl.py
             SUPPORTING_DOCUMENT atlas:hasKeyword __ .
             PAPER atlas:isBasedOn SUPPORTING_DOCUMENT .
 
-TODO: This module doesn't convert authors metadata. This task is still under consideration.
+TODO: This module doesn't convert authors metadata.
+      This task is still under consideration.
 """
 import argparse
 import sys
@@ -62,33 +63,44 @@ import pyDKB
 GRAPH = "http://nosql.tpu.ru:8890/DAV/ATLAS"
 ONTOLOGY = "http://nosql.tpu.ru/ontology/ATLAS"
 
-# Lists of dictionaries with parameters names for JSON documents and Ontology representation
+# Lists of dictionaries with parameters names for JSON documents
+# and Ontology representation
 
-PAPER_GLANCE_ATTRS = [{'GLANCE': 'id', 'ONTO': 'hasGLANCE_ID', 'TYPE': '^^xsd:int'},
-                      {'GLANCE': 'short_title', 'ONTO': 'hasShortTitle', 'TYPE': ''},
-                      {'GLANCE': 'full_title', 'ONTO': 'hasFullTitle', 'TYPE': ''},
-                      {'GLANCE': 'ref_code', 'ONTO': 'hasRefCode', 'TYPE': ''}, ]
+PAPER_GLANCE_ATTRS = [
+    {'GLANCE': 'id', 'ONTO': 'hasGLANCE_ID', 'TYPE': '^^xsd:int'},
+    {'GLANCE': 'short_title', 'ONTO': 'hasShortTitle', 'TYPE': ''},
+    {'GLANCE': 'full_title', 'ONTO': 'hasFullTitle', 'TYPE': ''},
+    {'GLANCE': 'ref_code', 'ONTO': 'hasRefCode', 'TYPE': ''},
+]
 
-NOTE_GLANCE_ATTRS = [{'GLANCE': 'id', 'ONTO': 'hasGLANCE_ID', 'TYPE': '^^xsd:int'},
-                     {'GLANCE': 'label', 'ONTO': 'hasLabel', 'TYPE': ''},
-                     {'GLANCE': 'url', 'ONTO': 'hasURL', 'TYPE': ''}, ]
+NOTE_GLANCE_ATTRS = [
+    {'GLANCE': 'id', 'ONTO': 'hasGLANCE_ID', 'TYPE': '^^xsd:int'},
+    {'GLANCE': 'label', 'ONTO': 'hasLabel', 'TYPE': ''},
+    {'GLANCE': 'url', 'ONTO': 'hasURL', 'TYPE': ''},
+]
 
-PAPER_CDS_ATTRS = [{'CDS': 'creation_date', 'ONTO': 'hasCreationDate', 'TYPE': '^^xsd:dateTime'},
-                   {'CDS': 'CDS_ReportNumber',
-                       'ONTO': 'hasCDSReportNumber', 'TYPE': ''},
-                   {'CDS': 'CDSInternal', 'ONTO': 'hasCDSInternal', 'TYPE': ''},
-                   {'CDS': 'CDS_ID', 'ONTO': 'hasCDS_ID', 'TYPE': '^^xsd:integer'},
-                   {'CDS': 'abstract', 'ONTO': 'hasAbstract', 'TYPE': ''},
-                   {'CDS': 'primary_report_number',
-                       'ONTO': 'hasArXivCode', 'TYPE': ''},
-                   {'CDS': 'title', 'ONTO': 'hasFullTitle', 'TYPE': ''}, ]
+PAPER_CDS_ATTRS = [
+    {'CDS': 'creation_date',
+     'ONTO': 'hasCreationDate', 'TYPE': '^^xsd:dateTime'},
+    {'CDS': 'CDS_ReportNumber',
+     'ONTO': 'hasCDSReportNumber', 'TYPE': ''},
+    {'CDS': 'CDSInternal', 'ONTO': 'hasCDSInternal', 'TYPE': ''},
+    {'CDS': 'CDS_ID', 'ONTO': 'hasCDS_ID', 'TYPE': '^^xsd:integer'},
+    {'CDS': 'abstract', 'ONTO': 'hasAbstract', 'TYPE': ''},
+    {'CDS': 'primary_report_number',
+     'ONTO': 'hasArXivCode', 'TYPE': ''},
+    {'CDS': 'title', 'ONTO': 'hasFullTitle', 'TYPE': ''},
+]
 
 
-NOTE_CDS_ATTRS = [{'CDS': 'creation_date', 'ONTO': 'hasCreationDate', 'TYPE': '^^xsd:dateTime'},
-                  {'CDS': 'CDSInternal', 'ONTO': 'hasCDSInternal', 'TYPE': ''},
-                  {'CDS': 'CDS_ID', 'ONTO': 'hasCDS_ID', 'TYPE': '^^xsd:integer'},
-                  {'CDS': 'abstract', 'ONTO': 'hasAbstract', 'TYPE': ''},
-                  {'CDS': 'title', 'ONTO': 'hasFullTitle', 'TYPE': ''}, ]
+NOTE_CDS_ATTRS = [
+    {'CDS': 'creation_date',
+     'ONTO': 'hasCreationDate', 'TYPE': '^^xsd:dateTime'},
+    {'CDS': 'CDSInternal', 'ONTO': 'hasCDSInternal', 'TYPE': ''},
+    {'CDS': 'CDS_ID', 'ONTO': 'hasCDS_ID', 'TYPE': '^^xsd:integer'},
+    {'CDS': 'abstract', 'ONTO': 'hasAbstract', 'TYPE': ''},
+    {'CDS': 'title', 'ONTO': 'hasFullTitle', 'TYPE': ''},
+]
 
 
 def define_globals(args):
@@ -117,7 +129,8 @@ def document_glance(data, doc_iri, glance_attrs):
     :return ttl string with GLANCE metadata:
     """
     # if isinstance(data, dict):
-    #     raise ValueError("expected parameter of type %s, got %s\n" % (dict, type(data)))
+    #     raise ValueError("expected parameter of type %s,"
+    #                      " got %s\n" % (dict, type(data)))
     ttl = ""
     for param in glance_attrs:
         data[param.get('GLANCE')] = glance_parameter_extraction(
@@ -162,8 +175,9 @@ def document_cds(data, doc_iri, cds_attrs):
         curr_value = data[item.get('CDS')]
         if curr_value is not None:
             ttl += '{docIRI} <{ontology}#{ONTO}> "{value}"{xsdType} .\n' \
-                .format(docIRI=doc_iri, ontology=ONTOLOGY, ONTO=item.get('ONTO'),
-                        value=curr_value, xsdType=item.get('TYPE'))
+                .format(docIRI=doc_iri, ontology=ONTOLOGY,
+                        ONTO=item.get('ONTO'), value=curr_value,
+                        xsdType=item.get('TYPE'))
     # processing multivalue parameters
     if 'doi' in data:
         ttl += doi2ttl(data.get('doi'), doc_iri)
@@ -403,13 +417,20 @@ def process_journals(data, doc_iri):
     ttl = ''
     for item in journals:
         journal_id = generate_journal_id(item)
-        ttl += '''<{journal_resource}{journalIssueID}> a <{ontology}#JournalIssue> .
-<{journal_resource}{journalIssueID}> <{ontology}#hasTitle> "{title}"^^xsd:string .
-<{journal_resource}{journalIssueID}> <{ontology}#hasVolume> "{volume}"^^xsd:string .
-<{journal_resource}{journalIssueID}> <{ontology}#hasYear> "{year}"^^xsd:string .
-<{journal_resource}{journalIssueID}> <{ontology}#containsPublication> {doc_iri} .\n'''\
-            .format(journalIssueID=journal_id, title=item.get('title'), volume=item.get('volume'),
-                    year=item.get('year'), doc_iri=doc_iri, journal_resource=GRAPH + '/journal_issue/',
+        ttl += '<{journal_resource}{journalIssueID}>'\
+            ' a <{ontology}#JournalIssue> .\n' \
+            '<{journal_resource}{journalIssueID}>'\
+            ' <{ontology}#hasTitle> "{title}"^^xsd:string .\n'\
+            '<{journal_resource}{journalIssueID}>'\
+            ' <{ontology}#hasVolume> "{volume}"^^xsd:string .\n'\
+            '<{journal_resource}{journalIssueID}>'\
+            ' <{ontology}#hasYear> "{year}"^^xsd:string .\n'\
+            '<{journal_resource}{journalIssueID}>'\
+            ' <{ontology}#containsPublication> {doc_iri} .\n'\
+            .format(journalIssueID=journal_id, title=item.get('title'),
+                    volume=item.get('volume'), year=item.get('year'),
+                    doc_iri=doc_iri,
+                    journal_resource=GRAPH + '/journal_issue/',
                     ontology=ONTOLOGY)
     return ttl
 
@@ -477,7 +498,9 @@ def process(stage, msg):
 
 def main(argv):
     """
-    Parsing command line arguments and processing JSON string from file or from stream
+    Parsing command line arguments and processing JSON string
+    from file or from stream
+
     :param argv: arguments
     :return:
     """
@@ -486,14 +509,18 @@ def main(argv):
     stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
     stage.process = process
     try:
-        stage.add_argument('-g', '--graph', action='store', type=str, nargs='?',
-                           help='Virtuoso DB graph name (default: %(default)s)',
+        stage.add_argument('-g', '--graph', action='store', type=str,
+                           nargs='?',
+                           help='Virtuoso DB graph name (default:'
+                                ' %(default)s)',
                            default=GRAPH,
                            const=GRAPH,
                            metavar='GRAPH',
                            dest='GRAPH')
-        stage.add_argument('-O', '--ontology', action='store', type=str, nargs='?',
-                           help='Virtuoso ontology prefix (default: %(default)s)',
+        stage.add_argument('-O', '--ontology', action='store', type=str,
+                           nargs='?',
+                           help='Virtuoso ontology prefix (default:'
+                                ' %(default)s)',
                            default=ONTOLOGY,
                            const=ONTOLOGY,
                            metavar='ONT',

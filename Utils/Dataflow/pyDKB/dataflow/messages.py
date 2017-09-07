@@ -17,8 +17,9 @@ def Message(msg_type):
         raise ValueError("Message type must be a member of messageType")
     cls = __message_class.get(msg_type)
     if not cls:
-        sys.stderr.write("(WARN) Message class for type %s is not implemented. "
-                         "Using AbstractMessage instead.")
+        sys.stderr.write(
+            "(WARN) Message class for type %s is not implemented. "
+            "Using AbstractMessage instead.")
         cls = AbstractMessage
 
     return cls

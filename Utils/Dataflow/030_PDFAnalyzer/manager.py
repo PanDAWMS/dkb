@@ -736,7 +736,7 @@ class Paper:
                             txt = table.rows[rnum][i].text.lower()
                             if re_column_with_datasets.match(txt):
                                 # print "COLUMN", txt, "IN TABLE", num,\
-                                ##                                      "HINTS THAT IT CONTAINS DATASETS"
+                                ##     "HINTS THAT IT CONTAINS DATASETS"
                                 data_column = i
                                 if rnum == 1:
                                     # This means that first row contains
@@ -744,7 +744,7 @@ class Paper:
                                     # or something else, and columns are
                                     # defined in the second one. First
                                     # one must be skipped in such case.
-                                    #                                    print "SKIPPING FIRST ROW"
+                                    # print "SKIPPING FIRST ROW"
                                     skip_first = True
                                 break
                         if data_column >= 0:
@@ -1349,7 +1349,7 @@ class Manager:
                 datasets[c] = []
                 for [entry, special, selected] in value[c]:
                     if selected.get():
-                        #                        datasets[c].append([entry.get(), special])
+                        # datasets[c].append([entry.get(), special])
                         # special is not needed. Maybe temporary.
                         datasets[c].append(entry.get())
                 if not datasets[c]:

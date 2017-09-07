@@ -25,7 +25,8 @@
 #  -d [DB], --database [DB]
 #                        Impala database name.
 #  -m [MODE], --mode [MODE]
-#                        Processing mode. Possible values: f (file), m (map-reduce)
+#                        Processing mode. Possible values:
+#                            f (file), m (map-reduce)
 #  --hdfs                Take input files from HDFS.
 #  -O [{f,i}], --output [{f,i}]
 #                        Where to store results:
@@ -51,9 +52,11 @@ SELECT = """ifnull(PS1.name, PS2.name) as `name`,
        ifnull(PS1.task_pid, PS2.parent_tid) as `chain_tid`,
        ifnull(PS1.phys_group, PS2.phys_group) as `phys_group`,
        ifnull(PS1.events, PS2.events) as `events`,
-       if(PS1.`files` is not NULL and PS1.`files`=0, PS2.`files`, PS1.`files`) as `files`,
+       if(PS1.`files` is not NULL and PS1.`files`=0,
+          PS2.`files`, PS1.`files`) as `files`,
        ifnull(PS1.status, PS2.status) as `status`,
-       if(PS2.`timestamp` is not NULL and PS1.`timestamp` < PS2.`timestamp`, PS1.`timestamp`, PS2.`timestamp`) as `timestamp`,
+       if(PS2.`timestamp` is not NULL and PS1.`timestamp` < PS2.`timestamp`,
+          PS1.`timestamp`, PS2.`timestamp`) as `timestamp`,
        PS2.pr_id as `pr_id`,
        PS2.campaign as `campaign`,
        PS2.ddm_erase_timestamp as `ddm_erase_timestamp`,
@@ -77,13 +80,18 @@ ARGS = ''
 def main(argv):
     global ARGS
     parser = argparse.ArgumentParser(
-        description=u'Reads JSON-file with information about papers and look for metadata for mentioned datasets in Impala.')
-    parser.add_argument('input', metavar=u'JSON-FILE', type=argparse.FileType('r'), nargs='*',
+        description=u'Reads JSON-file with information about papers'
+                     ' and look for metadata for mentioned datasets'
+                     ' in Impala.')
+    parser.add_argument('input', metavar=u'JSON-FILE',
+                        type=argparse.FileType('r'), nargs='*',
                         help=u'Source JSON-file.')
-    parser.add_argument('-t', '--source-type', action='store', type=str, nargs='?',
-                        help='''Source document (from which the datasets are taken) naming type.
-  Possible values:
-    GID - GlanceID (default)''',
+    parser.add_argument('-t', '--source-type', action='store', type=str,
+                        nargs='?',
+                        help='Source document (from which the datasets are'
+                             ' taken) naming type.\n'
+                             '  Possible values:\n'
+                             '    GID - GlanceID (default)''',
                         default='GID',
                         const='GID',
                         metavar='TYPE',
@@ -91,7 +99,9 @@ def main(argv):
                         dest='type')
 
     parser.add_argument('--hdfs', action='store', type=bool, nargs='?',
-                        help=u'Source files are stored in HDFS; if no JSON-FILE specified, filenames will come to STDIN',
+                        help=u'Source files are stored in HDFS;'
+                              ' if no JSON-FILE specified, filenames'
+                              ' will come to STDIN',
                         default=False,
                         const=True,
                         metavar='HDFS',
@@ -111,7 +121,8 @@ def main(argv):
                         metavar='PORT',
                         dest='port'
                         )
-    parser.add_argument('-d', '--database', action='store', type=str, nargs='?',
+    parser.add_argument('-d', '--database', action='store', type=str,
+                        nargs='?',
                         help=u'Impala database name.',
                         default='dkb',
                         const='dkb',
@@ -127,7 +138,9 @@ def main(argv):
                         dest='mode'
                         )
     parser.add_argument('-O', '--output', action='store', type=str, nargs='?',
-                        help=u'Where to output results: (f)iles, (i)mpala tables, (s)tdout, (h)dfs (with --hdfs option only)',
+                        help=u'Where to output results: (f)iles,'
+                              ' (i)mpala tables, (s)tdout, (h)dfs'
+                              ' (with --hdfs option only)',
                         default='f',
                         const='f',
                         choices=['f', 'i', 's', 'h'],
@@ -200,7 +213,8 @@ def hdfsFiles(filenames, upload=False):
 
 def loadMetadata(data, outfile, db, extra={}, headers=True):
     global ARGS
-    if not (data.get('datasets') or (data.get('datasetIDs') and data.get('campaigns'))):
+    if not (data.get('datasets') or (data.get('datasetIDs')\
+      and data.get('campaigns'))):
         stderr.write("No dataset names or IDs found.\n")
         return 0
 
@@ -263,13 +277,14 @@ def loadQuery2File(query, outfile, ARGS, headers=True):
         if outfile == sys.stdout: m['output'] = ''
         else: m['output'] = '-o ' + outfile
         m['headers'] = "--print_header" if headers else ""
-        run = 'PYTHON_EGG_CACHE=/tmp/.python-eggs impala-shell -k -i {host} -d {db} -B -f query.sql --output_delimiter="," {headers} {output}'.format(
-            **m)
+        run = 'PYTHON_EGG_CACHE=/tmp/.python-eggs impala-shell -k -i {host}'\
+              ' -d {db} -B -f query.sql --output_delimiter="," {headers}'\
+              ' {output}'.format(**m)
         try:
             subprocess.check_call(run, shell=True)
         except subprocess.CalledProcessError, e:
-            stderr.write("(ERROR) Failed to execute Impala request (return code: %d).\nCommand: %s\n" % (
-                e.returncode, e.cmd))
+            stderr.write("(ERROR) Failed to execute Impala request (return"
+                         " code: %d).\nCommand: %s\n" % (e.returncode, e.cmd))
 
 
 def loadQuery2DB(query, db):
@@ -282,8 +297,9 @@ def campaign2project(campaigns, db):
     if not campaigns:
         return []
 
-    not_like = 'AND lower(`project`) NOT LIKE "%' + '%" AND lower(`project`) NOT LIKE "%'.join(
-        IGNORE_PROJECTS) + '%"' if IGNORE_PROJECTS else ''
+    not_like = 'AND lower(`project`) NOT LIKE "%' \
+        + '%" AND lower(`project`) NOT LIKE "%'.join(
+            IGNORE_PROJECTS) + '%"' if IGNORE_PROJECTS else ''
     campaign_in = "','".join(campaigns).lower()
     query = '''SELECT DISTINCT project FROM T_PRODUCTION_TASK
 where (lower(`campaign`) in ('{campaign_in}')
@@ -328,8 +344,8 @@ def checkExtra(key, val):
         p = checkParameters[key]
         try: p['type'](val)
         except ValueError:
-            stderr.write("(WARN) Unacceptable value for key '%s': '%s' (expected type: %s).\n" % (
-                key, val, p['type']))
+            stderr.write("(WARN) Unacceptable value for key '%s': '%s'"
+                         " (expected type: %s).\n" % (key, val, p['type']))
             return False
     return True
 

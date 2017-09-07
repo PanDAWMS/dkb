@@ -115,9 +115,9 @@ def listdir(dirname, mode='a'):
     # Parse output of `ls`:
     # {{{
     # Found 3 items
-    # -rwxrwx---   3 $user        $group 1114404 2016-09-28 16:11 /path/to/file1
-    # -rwxrwx---   3 $user        $group 1572867 2016-09-28 16:11 /path/to/file2
-    # drwxrwx---   - $user        $group       0 2017-05-22 14:07 /path/to/subdir
+    # -rwxrwx---   3 $user      $group 1114404 2016-09-28 16:11 /path/to/file1
+    # -rwxrwx---   3 $user      $group 1572867 2016-09-28 16:11 /path/to/file2
+    # drwxrwx---   - $user      $group       0 2017-05-22 14:07 /path/to/subdir
     # }}}
 
     subdirs, files = [], []

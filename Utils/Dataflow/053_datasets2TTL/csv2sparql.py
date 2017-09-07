@@ -18,8 +18,9 @@ from datetime import datetime
 ### DEFAULTS AND CONFIGURATIONS ###
 
 # Default CSV header
-CSV_HEADER = ["datatype", "glanceid", "name", "tid", "chain_tid", "phys_group", "events", "files", "status",
-    "timestamp", "pr_id", "campaign", "ddm_erase_timestamp", "vuid", "grid_exec", "se", "file_size_mb"]
+CSV_HEADER = ["datatype", "glanceid", "name", "tid", "chain_tid", "phys_group",
+              "events", "files", "status", "timestamp", "pr_id", "campaign",
+              "ddm_erase_timestamp", "vuid", "grid_exec", "se", "file_size_mb"]
 
 # ONTOLOGY --->
 # TODO: make things more friendly, perhaps dict of
@@ -69,10 +70,10 @@ OWL_PARAMS_OBJ = {
 # Known generator names
 GENERATORS = ['acermc', 'alpgen',
               'charybdis', 'comphep',
-              'evtgen',                  # <--- There might also be smth like 'EG'
+              'evtgen', # <--- There might also be smth like 'EG'
               'gg2vv',  # but how do we supposed to know
-              'herwig', 'herwig\+\+', 'hijing',  # if it is 'EG' or 'powhEG', or any
-              'isajet',  # other word?
+              'herwig', 'herwig\+\+', 'hijing',  # if it is 'EG' or 'powhEG',
+              'isajet',  # or any other word?
               'jimmy',
               'pythia8', 'pythia6', 'pythiab', 'pythia', 'py8',
               'madgraph5', 'madgraph', 'mcatnlo', 'mc@nlo',
@@ -90,9 +91,13 @@ GEN_SYN = {'mc@nlo': ['mcatnlo'],
 GENERATOR = re.compile(
     '(?P<generator>' + '|'.join(GENERATORS) + ')', flags=re.I)
 DSNAME_data = re.compile(
-    '^(?P<project>data[0-9_a-zA-Z]*)\.(?P<DSID>[0-9]*)\.(?P<streamName>[^.]*)\.(?P<prodStep>[^.]*)\.(?P<datatype>[^.]*)\.(?P<AMItag>[^./]*)(?P<container>/)?$')
+    '^(?P<project>data[0-9_a-zA-Z]*)\.(?P<DSID>[0-9]*)\.(?P<streamName>[^.]*)'
+    '\.(?P<prodStep>[^.]*)\.(?P<datatype>[^.]*)\.(?P<AMItag>[^./]*)'
+    '(?P<container>/)?$')
 DSNAME_mc = re.compile(
-    '^(?P<project>mc[0-9_a-zA-Z]*)\.(?P<DSID>[0-9]*)\.(?P<phys_short>[^.]*)\.(?P<prodStep>[^.]*)\.(?P<datatype>[^.]*)\.(?P<AMItag>[^./]*)(?P<container>/)?$')
+    '^(?P<project>mc[0-9_a-zA-Z]*)\.(?P<DSID>[0-9]*)\.(?P<phys_short>[^.]*)'
+    '\.(?P<prodStep>[^.]*)\.(?P<datatype>[^.]*)\.(?P<AMItag>[^./]*)'
+    '(?P<container>/)?$')
 
 
 class CloseFileException(Exception):
@@ -182,7 +187,8 @@ def add_ttl(line, outfile, triple_map):
         pass
 
     # Refine timestamp
-    t = None if (line['timestamp'] in ('NULL', '\N', None)) else int(line['timestamp']) / 100
+    t = None if (line['timestamp'] in ('NULL', '\N', None)) \
+            else int(line['timestamp']) / 100
     if t:
         line['timestamp'] = datetime.fromtimestamp(
             t).strftime("%Y-%m-%dT%H:%M:%S")
@@ -320,8 +326,9 @@ def csv2ttl(csvfile, outfile, linkfile, args=None):
            'glanceid' not in headers:
             csvfile.seek(0)
             headers = CSV_HEADER
-            warnings.warn("{0}: Can`t find header in CSV file. Use default header.".format(
-                csvfile.name), Warning)
+            warnings.warn("{0}: Can`t find header in CSV file."
+                          " Use default header.".format(csvfile.name),
+                          Warning)
 
     triple_map = {'graph': args.graph, 'ontology': args.ontology}
 
@@ -341,15 +348,16 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
 '''.format(**triple_map)
 
         if args.processing_mode == 's':
-            # For stream processing we want to put the whole query in one string
-            # and mark the end of line (with last '\n')
-            #                 and the end of input string processing (with '\0')
+            # For stream processing we want to put the whole query
+            # in one string and mark the end of line (with last '\n')
+            # and the end of input string processing (with '\0')
             linkquery_beg = linkquery_beg.replace("\n", " ")
             linkquery_end = linkquery_end.replace("\n", " ") + "\n\0"
 
         close_link = False
         if args.processing_mode in ('m', 's'):
-            linkfile = '/dev/stdout'    # not <stdout>, as it can be closed acsidentally
+            # not <stdout>, as it can be closed acsidentally
+            linkfile = '/dev/stdout'
         if not linkfile: linkfile = fname
         if type(linkfile) != file: close_link = True
         linkfiles = LinkFiles(linkfile, '.sparql',
@@ -364,7 +372,8 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
         # There's no real need to use LinkFiles here,
         # but as it handles extention and file opening -- why not?
         if args.processing_mode in ('m', 's'):
-            outfile = '/dev/stdout'    # not <stdout>, as it can be closed acsidentally
+            # not <stdout>, as it can be closed acsidentally
+            outfile = '/dev/stdout'
         if not outfile: outfile = fname
         if type(outfile) != file: close_out = True
         outfiles = LinkFiles(outfile, '.ttl')
@@ -390,20 +399,23 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
             triple_map = {'graph': args.graph, 'ontology': args.ontology}
 
             # We need to finalize the linking query every ~ 6000 link objects
-            # to keep query files within ~1M (which was good enough for uploading)
+            # to keep query files within ~1M (it was good enough for uploading)
             # TODO: define exact treshold. I believe it depends actually on
             #       the number of objects, not filesize.
             if linkquery_flag >= args.N * nlfiles:
                 linkfile = linkfiles.next()
                 nlfiles += 1
-                warnings.warn('Link query is too long. Continue in a new file: {0}'.format(
-                    linkfile.name), Warning)
+                warnings.warn('Link query is too long.'
+                              ' Continue in a new file: {0}'.format(
+                                  linkfile.name),
+                              Warning)
 
     if args.mode in ('ttl', None):
         if not triples_flag:
             outfile.truncate()
         if close_out:
-            outfile.close()     # As it was opened in this function for this CSV file
+            # As it was opened in this function for this CSV file
+            outfile.close()
 
     if args.mode in ('link', None):
         if not linkquery_flag:
@@ -411,7 +423,8 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
         if close_link:
             # So that linkfiles can properly finalize file
             linkfiles.throw(CloseFileException)
-            linkfile = None       # As it was passed as None, it should be returned as None
+            # As it was passed as None, it should be returned as None
+            linkfile = None
 
         linkfiles.close()
 
@@ -420,8 +433,11 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
 
 def main(argv):
     parser = argparse.ArgumentParser(
-        description=u'Reads CSV-file with information about datasets and produces files with triples and Dataset-Document linking statements.')
-    parser.add_argument('csv', metavar=u'CSV-FILE', type=argparse.FileType('r'), nargs='*',
+        description=u'Reads CSV-file with information about datasets'
+                     ' and produces files with triples and Dataset-Document'
+                     ' linking statements.')
+    parser.add_argument('csv', metavar=u'CSV-FILE',
+                        type=argparse.FileType('r'), nargs='*',
                         help=u'Source CSV-file.')
     parser.add_argument('-g', '--graph', action='store', type=str, nargs='?',
                         help='Virtuoso DB graph name (default: %(default)s)',
@@ -430,34 +446,48 @@ def main(argv):
                         metavar='GRAPH',
                         dest='graph'
                         )
-    parser.add_argument('-O', '--ontology', action='store', type=str, nargs='?',
+    parser.add_argument('-O', '--ontology', action='store', type=str,
+                        nargs='?',
                         help='Virtuoso ontology prefix (default: %(default)s)',
                         default='http://nosql.tpu.ru/ontology/ATLAS',
                         const='http://nosql.tpu.ru/ontology/ATLAS',
                         metavar='ONT',
                         dest='ontology'
                         )
-    parser.add_argument('-l', '--link-file', action='store', type=argparse.FileType('w'), nargs='?',
-                        help=u'Name of the file to store Dataset-Document linking statements (default: <CSV-FILE without CSV>.sparql). WARNING: please use custom names with ".sparql" extention.',
+    parser.add_argument('-l', '--link-file', action='store',
+                        type=argparse.FileType('w'), nargs='?',
+                        help=u'Name of the file to store Dataset-Document'
+                              ' linking statements'
+                              ' (default: <CSV-FILE without CSV>.sparql).'
+                              ' WARNING: please use custom names with'
+                              ' ".sparql" extention.',
                         metavar='FILE',
                         dest='linkfile'
                         )
-    parser.add_argument('-N', '--link-number', action='store', type=int, nargs='?',
-                        help=u'Maximum number of links in one link query file.',
+    parser.add_argument('-N', '--link-number', action='store', type=int,
+                         nargs='?',
+                        help=u'Maximum number of links in one link query'
+                              ' file.',
                         const='6000',
                         default=6000,
                         dest='N'
                         )
-    parser.add_argument('-o', '--output', action='store', type=argparse.FileType('w'), nargs='?',
-                        help=u'Name of the file to store triples (default: <CSV-FILE without CSV>.ttl).',
+    parser.add_argument('-o', '--output', action='store',
+                        type=argparse.FileType('w'), nargs='?',
+                        help=u'Name of the file to store triples (default:'
+                              ' <CSV-FILE without CSV>.ttl).',
                         metavar='FILE',
                         dest='outfile'
                         )
     parser.add_argument('-m', '--mode', action='store', nargs='?',
-                        help=u'''VALUES: m -- run in Hadoop MapReduce mode (as mapper).
-s -- run in a Kafka Streams mode (as processor).
-Ignore options: -o|--output (stdout), -l|--link-file (stdout) , -N|--link-number (1);
-Default mode (-T|-L): TTL.''',
+                        help=u'VALUES: m -- run in Hadoop MapReduce mode'
+                              ' (as mapper).\n'
+                              's -- run in a Kafka Streams mode'
+                              ' (as processor).\n'
+                              'Ignore options: -o|--output (stdout),'
+                              ' -l|--link-file (stdout) ,'
+                              ' -N|--link-number (1);\n'
+                              'Default mode (-T|-L): TTL.',
                         default=None,
                         dest='processing_mode',
                         choices=['m', 's', None]

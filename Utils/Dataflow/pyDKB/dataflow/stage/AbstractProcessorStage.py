@@ -125,7 +125,8 @@ class AbstractProcessorStage(AbstractStage):
                           help=u'Source data file.',
                           metavar=u'FILE'
                           )
-        self.add_argument('-s', '--source', action='store', type=str, nargs='?',
+        self.add_argument('-s', '--source', action='store', type=str,
+                          nargs='?',
                           help=u'Where to get data from: '
                                 'local (f)iles, (s)tdin, '
                                 '(h)dfs (same as --hdfs).',
@@ -194,7 +195,8 @@ class AbstractProcessorStage(AbstractStage):
 
         if self.ARGS.source == 'h':
             if self.ARGS.input_files or self.ARGS.mode == 'm':
-                # In MapReduce mode we`re going to get the list of files from STDIN
+                # In MapReduce mode
+                # we`re going to get the list of files from STDIN
                 self.__input = self.__hdfs_in_files()
             else:
                 self.__input = self.__hdfs_in_dir()
@@ -421,8 +423,9 @@ class AbstractProcessorStage(AbstractStage):
                 try:
                     os.makedirs(output_dir, 0770)
                 except OSError, err:
-                    sys.stderr.write("(ERROR) Failed to create output directory\n"
-                                     "Error message: %s\n" % err)
+                    sys.stderr.write(
+                        "(ERROR) Failed to create output directory\n"
+                        "Error message: %s\n" % err)
                     raise DataflowException
             else:
                 hdfs.makedirs(output_dir)

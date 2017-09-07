@@ -34,7 +34,7 @@ class AbstractStage(object):
         self.defaultArguments()
 
     def defaultArguments(self):
-        """ Configure argument parser with parameters common for all stages. """
+        """ Config argument parser with parameters common for all stages. """
         self.add_argument('-m', '--mode', action='store', type=str, nargs='?',
                           help=u'Processing mode: (f)ile, (s)tream'
                                 ' or (m)ap-reduce (default: %(default)s).',

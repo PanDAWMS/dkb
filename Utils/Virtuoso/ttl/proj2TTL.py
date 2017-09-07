@@ -8,18 +8,33 @@ OUTPUT:
 TTL file - dataperiods.ttl
 
 The fragment of data sample:
-<http://nosql.tpu.ru:8890/DAV/ATLAS/project/data10_7TeV> a <http://nosql.tpu.ru/ontology/ATLAS#Project> .
-<http://nosql.tpu.ru:8890/DAV/ATLAS/project/data10_7TeV> <http://nosql.tpu.ru/ontology/ATLAS#hasDescription> 'unsqueezed stable beam data (beta*=10m): typical beam spot width in x and y is 50-60 microns.' .
-<http://nosql.tpu.ru:8890/DAV/ATLAS/project/data10_7TeV> <http://nosql.tpu.ru/ontology/ATLAS#hasStatus> 'locked' .
-<http://nosql.tpu.ru:8890/DAV/ATLAS/dataperiod/2010_A_2> a <http://nosql.tpu.ru/ontology/ATLAS#DataTakingPeriod> .
-<http://nosql.tpu.ru:8890/DAV/ATLAS/dataperiod/2010_A_2> <http://nosql.tpu.ru/ontology/ATLAS#hasYear> <http://nosql.tpu.ru/ontology/ATLAS#2010> .
-<http://nosql.tpu.ru:8890/DAV/ATLAS/dataperiod/2010_A_2> <http://nosql.tpu.ru/ontology/ATLAS#hasPeriod> <http://nosql.tpu.ru/ontology/ATLAS#A> .
-<http://nosql.tpu.ru:8890/DAV/ATLAS/project/data10_7TeV> <http://nosql.tpu.ru/ontology/ATLAS#hasLevel> <http://nosql.tpu.ru/ontology/ATLAS#Level2> .
-<http://nosql.tpu.ru:8890/DAV/ATLAS/project/data10_7TeV> <http://nosql.tpu.ru/ontology/ATLAS#hasDataTakingPeriod> <http://nosql.tpu.ru:8890/DAV/ATLAS/dataperiod/2010_A_2> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/project/data10_7TeV>
+  a <http://nosql.tpu.ru/ontology/ATLAS#Project> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/project/data10_7TeV>
+  <http://nosql.tpu.ru/ontology/ATLAS#hasDescription>
+  'unsqueezed stable beam data (beta*=10m): typical beam 
+    spot width in x and y is 50-60 microns.' .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/project/data10_7TeV>
+  <http://nosql.tpu.ru/ontology/ATLAS#hasStatus> 'locked' .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/dataperiod/2010_A_2>
+  a <http://nosql.tpu.ru/ontology/ATLAS#DataTakingPeriod> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/dataperiod/2010_A_2>
+  <http://nosql.tpu.ru/ontology/ATLAS#hasYear>
+  <http://nosql.tpu.ru/ontology/ATLAS#2010> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/dataperiod/2010_A_2>
+  <http://nosql.tpu.ru/ontology/ATLAS#hasPeriod>
+  <http://nosql.tpu.ru/ontology/ATLAS#A> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/project/data10_7TeV>
+  <http://nosql.tpu.ru/ontology/ATLAS#hasLevel>
+  <http://nosql.tpu.ru/ontology/ATLAS#Level2> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/project/data10_7TeV>
+  <http://nosql.tpu.ru/ontology/ATLAS#hasDataTakingPeriod>
+  <http://nosql.tpu.ru:8890/DAV/ATLAS/dataperiod/2010_A_2> .
 etc.
 
 NOTICE:
-According to the task, any project name should be checked for the presence in the database.
+According to the task, any project name should be checked for the presence
+  in the database.
 This task requires an access to data in Virtuoso.
 
 This script just get all data from file despite the data in Virtuoso.
@@ -64,7 +79,8 @@ print("\nCurrent ontology: " + ontology + "\n")
 chosen_path = os.path.normpath(askopenfilename())
 
 # year
-#year = '20'+ chosen_path.rstrip('.json')[len(chosen_path.rstrip('.json'))-2:len(chosen_path.rstrip('.json'))]
+#year = '20'+ chosen_path.rstrip('.json')[len(
+#    chosen_path.rstrip('.json'))-2:len(chosen_path.rstrip('.json'))]
 
 # a ttl document with default name
 output_data = open("data_periods.ttl", 'w')
@@ -98,31 +114,31 @@ for i, item in enumerate(input_data):
     }
 
     if not input_data[i]['projectName'] in listProj:
-        tripleProject = '''{project_name} a <{ontology}#Project> .\n'''.format(
+        tripleProject = "{project_name} a <{ontology}#Project> .\n".format(
             **DATAPERIODS)
         listProj.append(input_data[i]['projectName'])
         output_data.write(tripleProject)
 
-    tripleDescription = '''{project_name} <{ontology}#hasDescription> '{description}' .\n'''.format(
-        **DATAPERIODS)
+    tripleDescription = "{project_name} <{ontology}#hasDescription>"\
+        " '{description}' .\n".format(**DATAPERIODS)
     output_data.write(tripleDescription)
-    tripleStatus = '''{project_name} <{ontology}#hasStatus> '{status}' .\n'''.format(
-        **DATAPERIODS)
+    tripleStatus = "{project_name} <{ontology}#hasStatus> '{status}' .\n"\
+        .format(**DATAPERIODS)
     output_data.write(tripleStatus)
-    tripleData = '''{dataPeriod} a <{ontology}#DataTakingPeriod> .\n'''.format(
+    tripleData = "{dataPeriod} a <{ontology}#DataTakingPeriod> .\n".format(
         **DATAPERIODS)
     output_data.write(tripleData)
-    tripleAttrYear = '''{dataPeriod} <{ontology}#hasYear> <{ontology}#{year}> .\n'''.format(
-        **DATAPERIODS)
+    tripleAttrYear = "{dataPeriod} <{ontology}#hasYear>"\
+        " <{ontology}#{year}> .\n".format(**DATAPERIODS)
     output_data.write(tripleAttrYear)
-    tripleAttrPeriod = '''{dataPeriod} <{ontology}#hasPeriod> <{ontology}#{period}> .\n'''.format(
-        **DATAPERIODS)
+    tripleAttrPeriod = "{dataPeriod} <{ontology}#hasPeriod>"\
+        " <{ontology}#{period}> .\n".format(**DATAPERIODS)
     output_data.write(tripleAttrPeriod)
-    tripleAttrLevel = '''{project_name} <{ontology}#hasLevel> <{ontology}#Level{periodLevel}> .\n'''.format(
-        **DATAPERIODS)
+    tripleAttrLevel = "{project_name} <{ontology}#hasLevel>"\
+        " <{ontology}#Level{periodLevel}> .\n".format(**DATAPERIODS)
     output_data.write(tripleAttrLevel)
-    mapping = '''{project_name} <{ontology}#hasDataTakingPeriod> {dataPeriod} .\n'''.format(
-        **DATAPERIODS)
+    mapping = "{project_name} <{ontology}#hasDataTakingPeriod>"\
+        " {dataPeriod} .\n".format(**DATAPERIODS)
     output_data.write(mapping)
 
 output_data.close()
