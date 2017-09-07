@@ -76,7 +76,8 @@ ARGS = ''
 
 def main(argv):
     global ARGS
-    parser = argparse.ArgumentParser(description=u'Reads JSON-file with information about papers and look for metadata for mentioned datasets in Impala.')
+    parser = argparse.ArgumentParser(
+        description=u'Reads JSON-file with information about papers and look for metadata for mentioned datasets in Impala.')
     parser.add_argument('input', metavar=u'JSON-FILE', type=argparse.FileType('r'), nargs='*',
                         help=u'Source JSON-file.')
     parser.add_argument('-t', '--source-type', action='store', type=str, nargs='?',
@@ -136,7 +137,8 @@ def main(argv):
     ARGS = parser.parse_args(argv)
 
     try:
-        impala = connect(host=ARGS.host, port=ARGS.port, database=ARGS.db, auth_mechanism="GSSAPI")
+        impala = connect(host=ARGS.host, port=ARGS.port,
+                         database=ARGS.db, auth_mechanism="GSSAPI")
         DKB = impala.cursor()
     except TTransportException, e:
         stderr.write("Can not connect to Impala. Error message:")
@@ -157,7 +159,8 @@ def main(argv):
         try:
             DocData = json.load(infile)
         except ValueError, e:
-            stderr.write("(ERROR) Failed to read JSON from %s: %s\n" % (infile.name, e.message))
+            stderr.write("(ERROR) Failed to read JSON from %s: %s\n" %
+                         (infile.name, e.message))
             continue
         if ARGS.out in ('f', 'h'):
             outname = infile.name[:infile.name.rfind('.')] + '.csv'
@@ -167,7 +170,8 @@ def main(argv):
             outname = None
         GlanceID = os.path.basename(infile.name)
         GlanceID = GlanceID[:GlanceID.find('.')]
-        loadMetadata(DocData, outname, DKB, {'glanceid': GlanceID, 'datatype': None}, headers)
+        loadMetadata(DocData, outname, DKB, {
+                     'glanceid': GlanceID, 'datatype': None}, headers)
         # As we are writing all output to one stream,
         # we don't need to repeat headers
         if ARGS.out == 's':
@@ -218,7 +222,9 @@ def loadByNames(datasets, outfile, db, extra={}, headers=True):
         s = 'SELECT distinct '
         s += extra_string(extra)
         s += SELECT
-        w = 'WHERE isnull(PS1.name,PS2.name) LIKE "' + '%" OR isnull(PS1.name,PS2.name) LIKE "'.join(datasets[t]) + '%"' if datasets[t] else ''
+        w = 'WHERE isnull(PS1.name,PS2.name) LIKE "' + \
+                          '%" OR isnull(PS1.name,PS2.name) LIKE "'.join(
+                              datasets[t]) + '%"' if datasets[t] else ''
         query = '{select} {where}'.format(select=s, where=w)
         loadQuery(query, outfile, ARGS, db, headers)
 
@@ -235,7 +241,9 @@ def loadByDSIDs(projects, datasets, outfile, db, extra={}, headers=True):
         for i in datasets:
             dsnames += ['^{project}\.0*?{DSID}\..*$'.format(project=p, DSID=i)]
 
-    w = 'WHERE isnull(PS1.name,PS2.name) RLIKE "' + '" OR isnull(PS1.name,PS2.name) RLIKE "'.join(dsnames) + '"' if dsnames else ''
+    w = 'WHERE isnull(PS1.name,PS2.name) RLIKE "' + \
+                      '" OR isnull(PS1.name,PS2.name) RLIKE "'.join(
+                          dsnames) + '"' if dsnames else ''
     query = '{select} {where}'.format(select=s, where=w)
     loadQuery(query, outfile, ARGS, db)
 
@@ -255,11 +263,13 @@ def loadQuery2File(query, outfile, ARGS, headers=True):
         if outfile == sys.stdout: m['output'] = ''
         else: m['output'] = '-o ' + outfile
         m['headers'] = "--print_header" if headers else ""
-        run = 'PYTHON_EGG_CACHE=/tmp/.python-eggs impala-shell -k -i {host} -d {db} -B -f query.sql --output_delimiter="," {headers} {output}'.format(**m)
+        run = 'PYTHON_EGG_CACHE=/tmp/.python-eggs impala-shell -k -i {host} -d {db} -B -f query.sql --output_delimiter="," {headers} {output}'.format(
+            **m)
         try:
             subprocess.check_call(run, shell=True)
         except subprocess.CalledProcessError, e:
-            stderr.write("(ERROR) Failed to execute Impala request (return code: %d).\nCommand: %s\n" % (e.returncode, e.cmd))
+            stderr.write("(ERROR) Failed to execute Impala request (return code: %d).\nCommand: %s\n" % (
+                e.returncode, e.cmd))
 
 
 def loadQuery2DB(query, db):
@@ -272,7 +282,8 @@ def campaign2project(campaigns, db):
     if not campaigns:
         return []
 
-    not_like = 'AND lower(`project`) NOT LIKE "%' + '%" AND lower(`project`) NOT LIKE "%'.join(IGNORE_PROJECTS) + '%"' if IGNORE_PROJECTS else ''
+    not_like = 'AND lower(`project`) NOT LIKE "%' + '%" AND lower(`project`) NOT LIKE "%'.join(
+        IGNORE_PROJECTS) + '%"' if IGNORE_PROJECTS else ''
     campaign_in = "','".join(campaigns).lower()
     query = '''SELECT DISTINCT project FROM T_PRODUCTION_TASK
 where (lower(`campaign`) in ('{campaign_in}')
@@ -317,7 +328,8 @@ def checkExtra(key, val):
         p = checkParameters[key]
         try: p['type'](val)
         except ValueError:
-            stderr.write("(WARN) Unacceptable value for key '%s': '%s' (expected type: %s).\n" % (key, val, p['type']))
+            stderr.write("(WARN) Unacceptable value for key '%s': '%s' (expected type: %s).\n" % (
+                key, val, p['type']))
             return False
     return True
 

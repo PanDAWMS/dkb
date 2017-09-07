@@ -18,7 +18,8 @@ from datetime import datetime
 ### DEFAULTS AND CONFIGURATIONS ###
 
 # Default CSV header
-CSV_HEADER = ["datatype", "glanceid", "name", "tid", "chain_tid", "phys_group", "events", "files", "status", "timestamp", "pr_id", "campaign", "ddm_erase_timestamp", "vuid", "grid_exec", "se", "file_size_mb"]
+CSV_HEADER = ["datatype", "glanceid", "name", "tid", "chain_tid", "phys_group", "events", "files", "status",
+    "timestamp", "pr_id", "campaign", "ddm_erase_timestamp", "vuid", "grid_exec", "se", "file_size_mb"]
 
 # ONTOLOGY --->
 # TODO: make things more friendly, perhaps dict of
@@ -86,9 +87,12 @@ GEN_SYN = {'mc@nlo': ['mcatnlo'],
            }
 
 # Regular expressions to handle dataset name
-GENERATOR = re.compile('(?P<generator>' + '|'.join(GENERATORS) + ')', flags=re.I)
-DSNAME_data = re.compile('^(?P<project>data[0-9_a-zA-Z]*)\.(?P<DSID>[0-9]*)\.(?P<streamName>[^.]*)\.(?P<prodStep>[^.]*)\.(?P<datatype>[^.]*)\.(?P<AMItag>[^./]*)(?P<container>/)?$')
-DSNAME_mc = re.compile('^(?P<project>mc[0-9_a-zA-Z]*)\.(?P<DSID>[0-9]*)\.(?P<phys_short>[^.]*)\.(?P<prodStep>[^.]*)\.(?P<datatype>[^.]*)\.(?P<AMItag>[^./]*)(?P<container>/)?$')
+GENERATOR = re.compile(
+    '(?P<generator>' + '|'.join(GENERATORS) + ')', flags=re.I)
+DSNAME_data = re.compile(
+    '^(?P<project>data[0-9_a-zA-Z]*)\.(?P<DSID>[0-9]*)\.(?P<streamName>[^.]*)\.(?P<prodStep>[^.]*)\.(?P<datatype>[^.]*)\.(?P<AMItag>[^./]*)(?P<container>/)?$')
+DSNAME_mc = re.compile(
+    '^(?P<project>mc[0-9_a-zA-Z]*)\.(?P<DSID>[0-9]*)\.(?P<phys_short>[^.]*)\.(?P<prodStep>[^.]*)\.(?P<datatype>[^.]*)\.(?P<AMItag>[^./]*)(?P<container>/)?$')
 
 
 class CloseFileException(Exception):
@@ -150,20 +154,26 @@ def add_ttl(line, outfile, triple_map):
         if m.group('container'):
             line['datatype'] = 'Container'
     else:
-        sys.stderr.write('Can`t analyze dataset name: {name}\n'.format(name=name))
+        sys.stderr.write(
+            'Can`t analyze dataset name: {name}\n'.format(name=name))
         return False
 
     line['DSID'] = m.group('DSID')
-    line['dataFormat'] = m.group('datatype').split('_')[0].upper() if m.group('datatype') else None
-    line['project'] = 'project:' + m.group('project').split(':')[0] if m.group('project') else None
-    line['prodStep'] = m.group('prodStep').lower() if m.group('prodStep') else None
+    line['dataFormat'] = m.group('datatype').split(
+        '_')[0].upper() if m.group('datatype') else None
+    line['project'] = 'project:' + \
+        m.group('project').split(':')[0] if m.group('project') else None
+    line['prodStep'] = m.group('prodStep').lower(
+        ) if m.group('prodStep') else None
     line['AMItag'] = m.group('AMItag')
     try:
         if m.group('phys_short'):
-            line['generator'] = re.findall(GENERATOR, m.group('phys_short').lower())
+            line['generator'] = re.findall(
+                GENERATOR, m.group('phys_short').lower())
             line['generator'] = check_synonyms(line['generator'], GEN_SYN)
 
-            kwds = m.group('phys_short').replace('_', '__').replace('no__filter', 'no_filter').split('__')
+            kwds = m.group('phys_short').replace('_', '__').replace(
+                'no__filter', 'no_filter').split('__')
             line['physKeyword'] = []
             for kw in kwds:
                 if re.match(GENERATOR, kw): continue
@@ -174,12 +184,14 @@ def add_ttl(line, outfile, triple_map):
     # Refine timestamp
     t = None if (line['timestamp'] in ('NULL', '\N', None)) else int(line['timestamp']) / 100
     if t:
-        line['timestamp'] = datetime.fromtimestamp(t).strftime("%Y-%m-%dT%H:%M:%S")
+        line['timestamp'] = datetime.fromtimestamp(
+            t).strftime("%Y-%m-%dT%H:%M:%S")
 
     # Prepare triples
     # Add object...
     triple_map['obj'] = "datasets/" + line['name']
-    triple = "<{graph}/{obj}> a <{ontology}#DataSample> .\n".format(**triple_map)
+    triple = "<{graph}/{obj}> a <{ontology}#DataSample> .\n".format(
+        **triple_map)
     outfile.write(triple)
     # ...and its roperties
     for p in line:
@@ -188,9 +200,11 @@ def add_ttl(line, outfile, triple_map):
         val = line[p]; prop = ''
         if type(val) != list: val = [val]
         if p in OWL_PARAMS_NUMSTR.keys():
-            val = str(val).strip('[]')  # "'a', 'b', 'c'" 4strings OR "1, 2, 3" 4ints
+            # "'a', 'b', 'c'" 4strings OR "1, 2, 3" 4ints
+            val = str(val).strip('[]')
             if p in OWL_PARAMS_NUM.keys():
-                val = val.replace("'", '')  # As numeric values could be read as strings
+                # As numeric values could be read as strings
+                val = val.replace("'", '')
             prop = OWL_PARAMS_NUMSTR[p]
         elif p in OWL_PARAMS_OBJ.keys():
             prop += OWL_PARAMS_OBJ[p]
@@ -200,10 +214,12 @@ def add_ttl(line, outfile, triple_map):
                 # TODO: CHECK, if such an object exists!
                 v = v.lower() if type(v) == str else v
                 v1 += ['<{ontology}#' + str(v) + '>']
-            val = str(v1).strip('[]').replace("'", '')  # "<ont#val>, <ont#val>"
+            val = str(v1).strip('[]').replace(
+                "'", '')  # "<ont#val>, <ont#val>"
             value = val
         else:
-            warnings.warn('Skipping unknown dataset property: {p}'.format(p=p), Warning)
+            warnings.warn(
+                'Skipping unknown dataset property: {p}'.format(p=p), Warning)
             continue
 
         triple = "<{graph}/{obj}> <{ontology}#{property}> " + value + " .\n"
@@ -256,20 +272,24 @@ def LinkFiles(basename, ext='', beg='', end=''):
         if basename == '/dev/stdout':
             new_name = basename
         else:
-            new_name = '{basename}{n}{ext}'.format(basename=basename, n='.' + str(n) if n > 0 else '', ext=ext)
-        sys.stderr.write("(INFO) LinkFiles: another call ({nn})".format(nn=new_name))
+            new_name = '{basename}{n}{ext}'.format(
+                basename=basename, n='.' + str(n) if n > 0 else '', ext=ext)
+        sys.stderr.write(
+            "(INFO) LinkFiles: another call ({nn})".format(nn=new_name))
         n += 1
         try:
             f = open(new_name, 'w', 0)
             f.write(beg)
         except IOError as e:
-            sys.stderr.write("I/O error({0}): {1}\n".format(e.errno, e.strerror))
+            sys.stderr.write(
+                "I/O error({0}): {1}\n".format(e.errno, e.strerror))
             break
         except GeneratorExit as e:
             sys.stderr.write("Generator Exit")
             raise
         except:
-            sys.stderr.write("Unexpected error: {0}\n".format(sys.exc_info()[0]))
+            sys.stderr.write(
+                "Unexpected error: {0}\n".format(sys.exc_info()[0]))
             raise
 
         try:
@@ -300,7 +320,8 @@ def csv2ttl(csvfile, outfile, linkfile, args=None):
            'glanceid' not in headers:
             csvfile.seek(0)
             headers = CSV_HEADER
-            warnings.warn("{0}: Can`t find header in CSV file. Use default header.".format(csvfile.name), Warning)
+            warnings.warn("{0}: Can`t find header in CSV file. Use default header.".format(
+                csvfile.name), Warning)
 
     triple_map = {'graph': args.graph, 'ontology': args.ontology}
 
@@ -331,7 +352,8 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
             linkfile = '/dev/stdout'    # not <stdout>, as it can be closed acsidentally
         if not linkfile: linkfile = fname
         if type(linkfile) != file: close_link = True
-        linkfiles = LinkFiles(linkfile, '.sparql', linkquery_beg, linkquery_end)
+        linkfiles = LinkFiles(linkfile, '.sparql',
+                              linkquery_beg, linkquery_end)
         linkfile = linkfiles.next()
 
         linkquery_flag = False
@@ -357,11 +379,13 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
             triples_flag |= add_ttl(line, outfile, triple_map)
             triple_map = {'graph': args.graph, 'ontology': args.ontology}
             if args.processing_mode == 's':
-                outfile.write("\0")  # the mark saying current string is fully processed
+                # the mark saying current string is fully processed
+                outfile.write("\0")
         if args.mode in ('link', None):
             linkquery_flag += add_sparql(line, linkfile, triple_map)
             if args.processing_mode != 's':
-                linkfile.write("\n")  # having thousands of query pieces in one line
+                # having thousands of query pieces in one line
+                linkfile.write("\n")
                 # is just not beautiful
             triple_map = {'graph': args.graph, 'ontology': args.ontology}
 
@@ -372,7 +396,8 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
             if linkquery_flag >= args.N * nlfiles:
                 linkfile = linkfiles.next()
                 nlfiles += 1
-                warnings.warn('Link query is too long. Continue in a new file: {0}'.format(linkfile.name), Warning)
+                warnings.warn('Link query is too long. Continue in a new file: {0}'.format(
+                    linkfile.name), Warning)
 
     if args.mode in ('ttl', None):
         if not triples_flag:
@@ -384,7 +409,8 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
         if not linkquery_flag:
             linkfile.truncate()
         if close_link:
-            linkfiles.throw(CloseFileException)    # So that linkfiles can properly finalize file
+            # So that linkfiles can properly finalize file
+            linkfiles.throw(CloseFileException)
             linkfile = None       # As it was passed as None, it should be returned as None
 
         linkfiles.close()
@@ -393,7 +419,8 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
 
 
 def main(argv):
-    parser = argparse.ArgumentParser(description=u'Reads CSV-file with information about datasets and produces files with triples and Dataset-Document linking statements.')
+    parser = argparse.ArgumentParser(
+        description=u'Reads CSV-file with information about datasets and produces files with triples and Dataset-Document linking statements.')
     parser.add_argument('csv', metavar=u'CSV-FILE', type=argparse.FileType('r'), nargs='*',
                         help=u'Source CSV-file.')
     parser.add_argument('-g', '--graph', action='store', type=str, nargs='?',

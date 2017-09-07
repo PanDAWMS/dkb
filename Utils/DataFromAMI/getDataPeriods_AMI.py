@@ -32,7 +32,8 @@ for year in range(year_start, year_end):
     for level in range(1, 4):
         try:
             result = AtlasAPI.list_dataperiods(client, level=level, year=year)
-            tmp.append(",".join(str(json.dumps(item, indent=4)) for item in result))
+            tmp.append(",".join(str(json.dumps(item, indent=4))
+                       for item in result))
         except:
             print "No periods found!"
 f.write("[" + ",".join(str(x) for x in tmp) + "]")

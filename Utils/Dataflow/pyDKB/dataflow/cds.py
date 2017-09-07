@@ -62,7 +62,8 @@ class KerberizedCDSInvenioConnector(CDSInvenioConnector):
 
             headers = {'Authorization': 'Negotiate ' + token}
 
-            self.browser = splinter.Browser('phantomjs', custom_headers=headers)
+            self.browser = splinter.Browser(
+                'phantomjs', custom_headers=headers)
             self.browser.visit(self.server_url)
             self.browser.find_link_by_partial_text("Sign in").click()
 

@@ -22,7 +22,8 @@ except IOError, err:
 except ValueError, err:
     raise DataflowException("dkbID misconfigured: %s" % err)
 except KeyError, err:
-    raise DataflowException("dkbID misconfigured: \"%s\" is not defined." % err)
+    raise DataflowException(
+        "dkbID misconfigured: \"%s\" is not defined." % err)
 
 
 def firstValue(nestedList):

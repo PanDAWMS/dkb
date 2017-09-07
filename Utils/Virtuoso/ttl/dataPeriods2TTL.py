@@ -63,7 +63,8 @@ print("\nCurrent ontology: " + ontology + "\n")
 chosen_path = os.path.normpath(askopenfilename())
 
 # year
-year = '20' + chosen_path.rstrip('.json')[len(chosen_path.rstrip('.json')) - 2:len(chosen_path.rstrip('.json'))]
+year = '20' + chosen_path.rstrip('.json')[len(
+    chosen_path.rstrip('.json')) - 2:len(chosen_path.rstrip('.json'))]
 
 # a ttl document with default name
 output_data = open("data_periods" + year + ".ttl", 'w')
@@ -75,7 +76,8 @@ with open(chosen_path) as data_file:
 
 listProj = []
 for i, item in enumerate(input_data):
-    dataPeriod = "<%s/dataperiod/%s_%s_%s>" % (graph, year, input_data[i]['period'], input_data[i]['periodLevel'])
+    dataPeriod = "<%s/dataperiod/%s_%s_%s>" % (
+        graph, year, input_data[i]['period'], input_data[i]['periodLevel'])
     project = "<%s/project/%s>" % (graph, input_data[i]['projectName'])
     # deleting of newline symbol from description
     description = input_data[i]['description'].replace("\n", " ")
@@ -92,23 +94,31 @@ for i, item in enumerate(input_data):
     }
 
     if not input_data[i]['projectName'] in listProj:
-        tripleProject = '''{project_name} a <{ontology}#Project> .\n'''.format(**DATAPERIODS)
+        tripleProject = '''{project_name} a <{ontology}#Project> .\n'''.format(
+            **DATAPERIODS)
         listProj.append(input_data[i]['projectName'])
         output_data.write(tripleProject)
 
-    tripleDescription = '''{project_name} <{ontology}#hasDescription> '{description}' .\n'''.format(**DATAPERIODS)
+    tripleDescription = '''{project_name} <{ontology}#hasDescription> '{description}' .\n'''.format(
+        **DATAPERIODS)
     output_data.write(tripleDescription)
-    tripleStatus = '''{project_name} <{ontology}#hasStatus> '{status}' .\n'''.format(**DATAPERIODS)
+    tripleStatus = '''{project_name} <{ontology}#hasStatus> '{status}' .\n'''.format(
+        **DATAPERIODS)
     output_data.write(tripleStatus)
-    tripleData = '''{dataPeriod} a <{ontology}#DataTakingPeriod> .\n'''.format(**DATAPERIODS)
+    tripleData = '''{dataPeriod} a <{ontology}#DataTakingPeriod> .\n'''.format(
+        **DATAPERIODS)
     output_data.write(tripleData)
-    tripleAttrYear = '''{dataPeriod} <{ontology}#hasYear> <{ontology}#{year}> .\n'''.format(**DATAPERIODS)
+    tripleAttrYear = '''{dataPeriod} <{ontology}#hasYear> <{ontology}#{year}> .\n'''.format(
+        **DATAPERIODS)
     output_data.write(tripleAttrYear)
-    tripleAttrPeriod = '''{dataPeriod} <{ontology}#hasPeriod> <{ontology}#{period}> .\n'''.format(**DATAPERIODS)
+    tripleAttrPeriod = '''{dataPeriod} <{ontology}#hasPeriod> <{ontology}#{period}> .\n'''.format(
+        **DATAPERIODS)
     output_data.write(tripleAttrPeriod)
-    tripleAttrLevel = '''{project_name} <{ontology}#hasLevel> <{ontology}#Level{periodLevel}> .\n'''.format(**DATAPERIODS)
+    tripleAttrLevel = '''{project_name} <{ontology}#hasLevel> <{ontology}#Level{periodLevel}> .\n'''.format(
+        **DATAPERIODS)
     output_data.write(tripleAttrLevel)
-    mapping = '''{project_name} <{ontology}#hasDataTakingPeriod> {dataPeriod} .\n'''.format(**DATAPERIODS)
+    mapping = '''{project_name} <{ontology}#hasDataTakingPeriod> {dataPeriod} .\n'''.format(
+        **DATAPERIODS)
     output_data.write(mapping)
 
 output_data.close()

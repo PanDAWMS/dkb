@@ -77,7 +77,8 @@ with open(chosen_path) as data_file:
 listProj = []
 for i, item in enumerate(input_data):
     year = "20" + str(re.findall(r'\d+', input_data[i]['projectName'])[0])
-    dataPeriod = "<%s/dataperiod/%s_%s_%s>" % (graph, year, input_data[i]['period'], input_data[i]['periodLevel'])
+    dataPeriod = "<%s/dataperiod/%s_%s_%s>" % (
+        graph, year, input_data[i]['period'], input_data[i]['periodLevel'])
     # project name
     projectName = input_data[i]['projectName']
     # a subject in ontology
@@ -97,23 +98,31 @@ for i, item in enumerate(input_data):
     }
 
     if not input_data[i]['projectName'] in listProj:
-        tripleProject = '''{project_name} a <{ontology}#Project> .\n'''.format(**DATAPERIODS)
+        tripleProject = '''{project_name} a <{ontology}#Project> .\n'''.format(
+            **DATAPERIODS)
         listProj.append(input_data[i]['projectName'])
         output_data.write(tripleProject)
 
-    tripleDescription = '''{project_name} <{ontology}#hasDescription> '{description}' .\n'''.format(**DATAPERIODS)
+    tripleDescription = '''{project_name} <{ontology}#hasDescription> '{description}' .\n'''.format(
+        **DATAPERIODS)
     output_data.write(tripleDescription)
-    tripleStatus = '''{project_name} <{ontology}#hasStatus> '{status}' .\n'''.format(**DATAPERIODS)
+    tripleStatus = '''{project_name} <{ontology}#hasStatus> '{status}' .\n'''.format(
+        **DATAPERIODS)
     output_data.write(tripleStatus)
-    tripleData = '''{dataPeriod} a <{ontology}#DataTakingPeriod> .\n'''.format(**DATAPERIODS)
+    tripleData = '''{dataPeriod} a <{ontology}#DataTakingPeriod> .\n'''.format(
+        **DATAPERIODS)
     output_data.write(tripleData)
-    tripleAttrYear = '''{dataPeriod} <{ontology}#hasYear> <{ontology}#{year}> .\n'''.format(**DATAPERIODS)
+    tripleAttrYear = '''{dataPeriod} <{ontology}#hasYear> <{ontology}#{year}> .\n'''.format(
+        **DATAPERIODS)
     output_data.write(tripleAttrYear)
-    tripleAttrPeriod = '''{dataPeriod} <{ontology}#hasPeriod> <{ontology}#{period}> .\n'''.format(**DATAPERIODS)
+    tripleAttrPeriod = '''{dataPeriod} <{ontology}#hasPeriod> <{ontology}#{period}> .\n'''.format(
+        **DATAPERIODS)
     output_data.write(tripleAttrPeriod)
-    tripleAttrLevel = '''{project_name} <{ontology}#hasLevel> <{ontology}#Level{periodLevel}> .\n'''.format(**DATAPERIODS)
+    tripleAttrLevel = '''{project_name} <{ontology}#hasLevel> <{ontology}#Level{periodLevel}> .\n'''.format(
+        **DATAPERIODS)
     output_data.write(tripleAttrLevel)
-    mapping = '''{project_name} <{ontology}#hasDataTakingPeriod> {dataPeriod} .\n'''.format(**DATAPERIODS)
+    mapping = '''{project_name} <{ontology}#hasDataTakingPeriod> {dataPeriod} .\n'''.format(
+        **DATAPERIODS)
     output_data.write(mapping)
 
 output_data.close()

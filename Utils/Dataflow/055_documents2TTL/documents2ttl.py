@@ -74,11 +74,13 @@ NOTE_GLANCE_ATTRS = [{'GLANCE': 'id', 'ONTO': 'hasGLANCE_ID', 'TYPE': '^^xsd:int
                      {'GLANCE': 'url', 'ONTO': 'hasURL', 'TYPE': ''}, ]
 
 PAPER_CDS_ATTRS = [{'CDS': 'creation_date', 'ONTO': 'hasCreationDate', 'TYPE': '^^xsd:dateTime'},
-                   {'CDS': 'CDS_ReportNumber', 'ONTO': 'hasCDSReportNumber', 'TYPE': ''},
+                   {'CDS': 'CDS_ReportNumber',
+                       'ONTO': 'hasCDSReportNumber', 'TYPE': ''},
                    {'CDS': 'CDSInternal', 'ONTO': 'hasCDSInternal', 'TYPE': ''},
                    {'CDS': 'CDS_ID', 'ONTO': 'hasCDS_ID', 'TYPE': '^^xsd:integer'},
                    {'CDS': 'abstract', 'ONTO': 'hasAbstract', 'TYPE': ''},
-                   {'CDS': 'primary_report_number', 'ONTO': 'hasArXivCode', 'TYPE': ''},
+                   {'CDS': 'primary_report_number',
+                       'ONTO': 'hasArXivCode', 'TYPE': ''},
                    {'CDS': 'title', 'ONTO': 'hasFullTitle', 'TYPE': ''}, ]
 
 
@@ -118,7 +120,8 @@ def document_glance(data, doc_iri, glance_attrs):
     #     raise ValueError("expected parameter of type %s, got %s\n" % (dict, type(data)))
     ttl = ""
     for param in glance_attrs:
-        data[param.get('GLANCE')] = glance_parameter_extraction(param.get('GLANCE'), data)
+        data[param.get('GLANCE')] = glance_parameter_extraction(
+            param.get('GLANCE'), data)
     for item in glance_attrs:
         curr_value = data[item.get('GLANCE')]
         ttl += '{docIRI} <{ontology}#{ONTO}> "{value}"{xsdType} .\n' \
@@ -153,7 +156,8 @@ def document_cds(data, doc_iri, cds_attrs):
     """
     ttl = ''
     for param in cds_attrs:
-        data[param.get('CDS')] = cds_parameter_extraction(param.get('CDS'), data)
+        data[param.get('CDS')] = cds_parameter_extraction(
+            param.get('CDS'), data)
     for item in cds_attrs:
         curr_value = data[item.get('CDS')]
         if curr_value is not None:
@@ -460,12 +464,14 @@ def process(stage, msg):
             note_iri = get_document_iri(note_id)
             doc_ttl += '{noteIRI} a <{ontology}#SupportingDocument> .\n' \
                 .format(noteIRI=note_iri, ontology=ONTOLOGY)
-            doc_ttl += document_glance(note.get('GLANCE'), note_iri, NOTE_GLANCE_ATTRS)
+            doc_ttl += document_glance(note.get('GLANCE'),
+                                       note_iri, NOTE_GLANCE_ATTRS)
             doc_ttl += document_cds(note.get('CDS'), note_iri, NOTE_CDS_ATTRS)
 
     doc_ttl += documents_links(data)
     for item in doc_ttl.splitlines():
-        stage.output(pyDKB.dataflow.Message(pyDKB.dataflow.messageType.TTL)(item))
+        stage.output(pyDKB.dataflow.Message(
+            pyDKB.dataflow.messageType.TTL)(item))
     return True
 
 

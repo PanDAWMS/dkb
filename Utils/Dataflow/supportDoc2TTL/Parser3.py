@@ -54,7 +54,8 @@ graph = "http://nosql.tpu.ru:8890/DAV/ATLAS"
 ontology = "http://nosql.tpu.ru/ontology/ATLAS"
 
 for item in data:
-    docObj = "SupportingDocument/%s" % getSupportDocID(dictSupportDocs, item["GLANCE_ID"])
+    docObj = "SupportingDocument/%s" % getSupportDocID(
+        dictSupportDocs, item["GLANCE_ID"])
     docSubject = "%s/%s" % (graph, docObj)
     CDSID = ""
     CDSInternal = ""
@@ -82,22 +83,28 @@ for item in data:
         'publicationYear': PublicationYear,
         'URL_Fulltext': URL_Fulltext
     }
-    tripletsDocument = '''{docSubject} a <{ontology}#SupportingDocument> .\n'''.format(**attrsSupportDoc)
+    tripletsDocument = '''{docSubject} a <{ontology}#SupportingDocument> .\n'''.format(
+        **attrsSupportDoc)
     outfile.write(tripletsDocument)
     if CDSID != '':
-        triplethasCDSID = '''{docSubject} <{ontology}#hasCDS_ID> '{CDS_ID}' .\n'''.format(**attrsSupportDoc)
+        triplethasCDSID = '''{docSubject} <{ontology}#hasCDS_ID> '{CDS_ID}' .\n'''.format(
+            **attrsSupportDoc)
         outfile.write(triplethasCDSID)
     if CDSInternal != '':
-        triplethasCDSInternal = '''{docSubject} <{ontology}#hasCDSInternal> '{CDSInternal}' .\n'''.format(**attrsSupportDoc)
+        triplethasCDSInternal = '''{docSubject} <{ontology}#hasCDSInternal> '{CDSInternal}' .\n'''.format(
+            **attrsSupportDoc)
         outfile.write(triplethasCDSInternal)
     if PublicationYear != '':
-        triplethasPublicationYear = '''{docSubject} <{ontology}#hasPublicationYear> {publicationYear} .\n'''.format(**attrsSupportDoc)
+        triplethasPublicationYear = '''{docSubject} <{ontology}#hasPublicationYear> {publicationYear} .\n'''.format(
+            **attrsSupportDoc)
         outfile.write(triplethasPublicationYear)
     if URL_Fulltext != '':
-        triplethasURLFulltext = '''{docSubject} <{ontology}#hasURLFulltext> '{URL_Fulltext}' .\n'''.format(**attrsSupportDoc)
+        triplethasURLFulltext = '''{docSubject} <{ontology}#hasURLFulltext> '{URL_Fulltext}' .\n'''.format(
+            **attrsSupportDoc)
         outfile.write(triplethasURLFulltext)
     if Abstract != '':
-        triplethasAbstract = '''{docSubject} <{ontology}#hasAbstract> '{Abstract}' .\n'''.format(**attrsSupportDoc)
+        triplethasAbstract = '''{docSubject} <{ontology}#hasAbstract> '{Abstract}' .\n'''.format(
+            **attrsSupportDoc)
         outfile.write(triplethasAbstract)
 
     if "keywords" in item:
@@ -109,7 +116,8 @@ for item in data:
                 'ontology': ontology,
                 'Keyword': keyword
             }
-            tripletKeyword = '''{docSubject} <{ontology}#hasKeyword> '{Keyword}' .\n'''.format(**attrKeyword)
+            tripletKeyword = '''{docSubject} <{ontology}#hasKeyword> '{Keyword}' .\n'''.format(
+                **attrKeyword)
             outfile.write(tripletKeyword)
 
     if "authors" in item:
@@ -142,7 +150,8 @@ for item in data:
                 'email': email,
                 'full_name': full_name
             }
-            tripletsAuthor = '''{authorSubject} a <{ontology}#Person> . \n'''.format(**attrrsAuthor)
+            tripletsAuthor = '''{authorSubject} a <{ontology}#Person> . \n'''.format(
+                **attrrsAuthor)
             outfile.write(tripletsAuthor)
             if full_name != '':
                 triplethasFullName = '''{authorSubject} <{ontology}#hasFullName> '{full_name}' .\n'''.format(
@@ -156,7 +165,8 @@ for item in data:
                 triplethasAffiliation = '''{authorSubject} <{ontology}#hasAffiliation> '{affiliation}' .\n'''.format(
                     **attrrsAuthor)
                 outfile.write(triplethasAffiliation)
-            hasAuthorTriplet = "{docSubject} <{ontology}#hasAuthor> {authorSubject} .\n".format(**attrrsAuthor)
+            hasAuthorTriplet = "{docSubject} <{ontology}#hasAuthor> {authorSubject} .\n".format(
+                **attrrsAuthor)
             outfile.write(hasAuthorTriplet)
 
 outfile.close()

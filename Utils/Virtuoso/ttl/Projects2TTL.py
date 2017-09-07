@@ -60,7 +60,8 @@ for i in lines:
             'ontology': ontology,
             'project_name': project
         }
-        triple = '''{project_name} a <{ontology}#Project> .\n'''.format(**PROJECTS)
+        triple = '''{project_name} a <{ontology}#Project> .\n'''.format(
+            **PROJECTS)
         output_object.write(triple)
 
 output_object.close()
