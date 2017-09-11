@@ -5,7 +5,7 @@
   Get papers with links to Supporting documents
   from GLANCE api
 
-  request: 
+  request:
   https://glance-stage.cern.ch/api/atlas/analysis/papers
 
   output data:

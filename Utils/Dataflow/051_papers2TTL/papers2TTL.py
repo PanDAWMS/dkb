@@ -14,33 +14,33 @@ from os.path import dirname
 
 # WORKDIR = "/Users/Maria/MegaPanDA/DKC/METADATA/PapersMetadata/"
 
-ontology_params = {'ontology'         : 'http://nosql.tpu.ru/ontology/ATLAS',
-                   'graph'            : 'http://nosql.tpu.ru:8890/DAV/ATLAS',
-                   'rdf_prefix'       : 'http://www.w3.org/1999/02/22-rdf-syntax-ns',
-                   'person_resource'  : 'http://nosql.tpu.ru:8890/DAV/ATLAS/person/',
+ontology_params = {'ontology': 'http://nosql.tpu.ru/ontology/ATLAS',
+                   'graph': 'http://nosql.tpu.ru:8890/DAV/ATLAS',
+                   'rdf_prefix': 'http://www.w3.org/1999/02/22-rdf-syntax-ns',
+                   'person_resource': 'http://nosql.tpu.ru:8890/DAV/ATLAS/person/',
                    'document_resource': 'http://nosql.tpu.ru:8890/DAV/ATLAS/document/',
-                   'journal_resource' : 'http://nosql.tpu.ru:8890/DAV/ATLAS/journal_issue/'}
+                   'journal_resource': 'http://nosql.tpu.ru:8890/DAV/ATLAS/journal_issue/'}
 
 SPARQL                = "http://nosql.tpu.ru:8890/sparql"
 
-#-----------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------
 # Lists of dictionaries with parameters names for JSON documents and Ontology representation
-#-----------------------------------------------------------------------------------------------------------
-author_params_list = [{'CDS'   : 'INSPIRE_number',
+# -----------------------------------------------------------------------------------------------------------
+author_params_list = [{'CDS': 'INSPIRE_number',
                        'SPARQL': 'INSPIRE_number',
-                       'ONTO'  : 'hasINSPIRENumber',
+                       'ONTO': 'hasINSPIRENumber',
                        'unique': True},
-                      {'CDS'   : 'control_number',
+                      {'CDS': 'control_number',
                        'SPARQL': 'control_number',
-                       'ONTO'  : 'hasControlNumber',
+                       'ONTO': 'hasControlNumber',
                        'unique': True},
-                      {'CDS'   : 'e-mail',
+                      {'CDS': 'e-mail',
                        'SPARQL': 'email',
-                       'ONTO'  : 'hasEmail',
+                       'ONTO': 'hasEmail',
                        'unique': True},
-                      {'CDS'   : ('affiliation', 'first_name', 'last_name'),
+                      {'CDS': ('affiliation', 'first_name', 'last_name'),
                        'SPARQL': ('affiliation', 'first_name', 'last_name'),
-                       'ONTO'  : ['hasAffilation', 'hasFirstName, hasLastName'],
+                       'ONTO': ['hasAffilation', 'hasFirstName, hasLastName'],
                        'unique': True},
                       ]
 
@@ -58,11 +58,11 @@ paper_attrs = [{'CDS': 'creation_date',         'SPARQL': 'creation_date',      
                {'CDS': 'CDSInternal',           'SPARQL': 'CDSInternal',        'ONTO': 'hasCDSInternal'},
                {'CDS': 'CDS_ID',                'SPARQL': 'CDS_ID',             'ONTO': 'hasCDS_ID'},
                {'CDS': 'abstract',              'SPARQL': 'abstract',           'ONTO': 'hasAbstract'},
-               {'CDS': 'primary_report_number', 'SPARQL': 'arXivCode',          'ONTO': 'hasArXivCode'},]
+               {'CDS': 'primary_report_number', 'SPARQL': 'arXivCode',          'ONTO': 'hasArXivCode'}, ]
 
-#-----------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------
 # SPARQL Queries
-#-----------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------
 
 sparql_query = '''
                 WITH <{graph}> SELECT ?guid, ?{param_name}
@@ -96,9 +96,9 @@ _sparql_journal_issue  = '''WITH <{graph}> SELECT count(?journal)
                          }}'''
 
 
-#-----------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------
 # TTL Strings for Virtuoso
-#-----------------------------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------------------------
 
 _ttl_keyword = '''<{docGUID}> <{ontology}#hasKeyword> "{keyword}" .
 '''
@@ -119,7 +119,7 @@ _ttl_journal2paper = '''
 invalid_escape = re.compile(r'\\[0-7]{1,3}')  # up to 3 digits for byte values up to FF
 
 def usage():
-  msg='''
+  msg = '''
 USAGE
   ./getCDSPapers.py <options>
 
@@ -196,7 +196,7 @@ def main(argv):
     elif mode in ('t', 'test'):
         dir_name = os.path.dirname(input)
         for filename in os.listdir(dir_name):
-            with open(dir_name +"/"+ filename, 'r') as data_file:
+            with open(dir_name + "/" + filename, 'r') as data_file:
                 sys.stderr.write("Reading file " + str(filename))
                 content = data_file.read()[:-2]
                 json_processing(json.loads(content), output + os.path.splitext(filename)[0] + '.ttl')
@@ -233,9 +233,9 @@ def json_processing(data, output):
             sys.stdout.write(ttl_string + "\n\0")
             sys.stdout.flush()
 
-#--------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------
 # DATABASE FUNCTIONS
-#--------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------
 # execute SPARQL requests with urllib2 library
 def sparqlQuery(query, baseURL, format="application/sparql-results+json"):
     params = {
@@ -255,14 +255,14 @@ def sparqlQuery(query, baseURL, format="application/sparql-results+json"):
         return json.loads(response)
 
 def getAuthorsByParameter(param_name, ONTO, params_list):
-    query = sparql_query.format(param_name=param_name,ONTO=ONTO,params_list=params_list, **ontology_params)
+    query = sparql_query.format(param_name=param_name, ONTO=ONTO, params_list=params_list, **ontology_params)
     results = sparqlQuery(query, SPARQL)['results']['bindings']
     # print "results length = " + str(len(results))
     return results
 
 def getAuthorsByFLA(first_name, last_name, first_letter, affiliation):
-    query = _sparql_authors.format(first_name=first_name,last_name=last_name,
-                                   first_letter=first_letter,affiliation=affiliation, **ontology_params)
+    query = _sparql_authors.format(first_name=first_name, last_name=last_name,
+                                   first_letter=first_letter, affiliation=affiliation, **ontology_params)
     return sparqlQuery(query, SPARQL)['results']['bindings']
 
 # check if Virtuoso
@@ -338,7 +338,7 @@ def authors_processing(authors):
                             for author in authors:
                                 if (author['first_name'] == d['first_name'] and
                                     author['last_name'] == d['last_name'] and
-                                    author['affiliation'] == d['affiliation']) :
+                                    author['affiliation'] == d['affiliation']):
                                     if 'guid' in author:
                                         author['potential_guids'].append(guid)
                                     else:
@@ -410,13 +410,13 @@ def authorTTL(authors, docGUID):
             ttl += newAuthorTTL(item, docGUID)
         else:
             ttl += author2paperTTL(item['guid'], docGUID)
-    #print ttl
+    # print ttl
     return ttl
 
 
-#--------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------
 # CONVERTING JSON TO TTL
-#--------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------
 # read JSON document with supporting document metadata and generating TTL
 def json2TTL(data):
     # search documentGUID in VIRTUOSO
@@ -432,7 +432,7 @@ def json2TTL(data):
             curr_value = data[item['CDS']]
             if type(curr_value) is str:
                 ttl += '<{docGUID}> <{ontology}#{ONTO}> "{value}" .\n'.format(docGUID=docGUID,
-                                                                            ONTO=item['ONTO'], value=curr_value,
+                                                                              ONTO=item['ONTO'], value=curr_value,
                                                                               **ontology_params)
             elif type(curr_value) is int:
                 ttl += '<{docGUID}> <{ontology}#{ONTO}> {value} .\n'.format(docGUID=docGUID,
@@ -489,9 +489,9 @@ def report_numbers_processing(report_number, data):
     data['CDSInternal'] = CDSInternal
     data['CDS_ReportNumber'] = CDS_ReportNumber
 
-#--------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------
 # JOURNAL ISSUE PROCESSING
-#--------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------
 
 def generateJournalIssueID(dict):
     id = ''
@@ -509,14 +509,14 @@ def process_journals(data, docGUID):
         id = generateJournalIssueID(item)
         if getjournalIssueIDByID(id) == True:
             return _ttl_journal2paper.format(journalIssueID=id,
-                                            docGUID=docGUID, **ontology_params)
+                                             docGUID=docGUID, **ontology_params)
         else:
             return _ttl_new_journalIssue.format(journalIssueID=id, title=item['title'], volume=item['volume'],
                                                 year=item['year'], docGUID=docGUID, **ontology_params)
 
 # -------------------------------------------------------------------------------------------------------------------
 # HELPER FUNCTIONS
-#--------------------------------------------------------------------------------------------------------------------
+# --------------------------------------------------------------------------------------------------------------------
 # fix escape sequences in strings
 def fixString(s):
     return s.encode('ascii', 'ignore').replace("'", "\\'").replace("\n", "\\n").replace("\\", r"\\").replace('\"', '')
@@ -528,7 +528,7 @@ def fixDictValues(dict, keys_to_fix):
                 dict[key] = fixString(dict[key])
             elif type(dict[key]) is list:
                 dict[key] = fixString(str(dict[key]))
-            #print dict[key]
+            # print dict[key]
         else:
             continue
     return dict

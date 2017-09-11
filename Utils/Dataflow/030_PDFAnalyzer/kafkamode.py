@@ -30,7 +30,7 @@ if __name__ == "__main__":
             try:
                 if hdfs:
                     command_list = cfg["HDFS_DOWNLOAD_COMMAND"].split() + [fname, dirname]
-                    subprocess.call(command_list, stderr = sys.stderr, stdout = sys.stderr)
+                    subprocess.call(command_list, stderr=sys.stderr, stdout=sys.stderr)
                 else:
                     shutil.copy(fname, dirname)
             except Exception as e:
@@ -42,7 +42,7 @@ if __name__ == "__main__":
             p = Paper(pdfname, dirname)
             outf = pdfname + ".json"
             p.mine_text()
-            p.export(quick = True, outf = outf)
+            p.export(quick=True, outf=outf)
             p.delete()
             with open(outf, "r") as f:
                 text = f.read() + "\0"
