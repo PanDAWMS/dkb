@@ -10,3 +10,9 @@ block content
 			textarea(type="textarea", name="keywords")
 		div.actions
 			input(type="submit", value="Search")
+
+	h2 Search by parameters
+	form(action="/parameter_search", name="parameter_search", method="post")
+		select(class="form-control")
+			for item in keys
+				option= item
