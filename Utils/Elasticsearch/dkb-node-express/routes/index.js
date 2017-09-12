@@ -2,9 +2,14 @@ var express = require('express');
 var router = express.Router();
 var elasticsearch = require('elasticsearch');
 
+// var client = new elasticsearch.Client({
+// 	host: 'HOST',
+// 	httpAuth: 'USER:PASSWORD',
+// 	log: 'trace'
+// });
 var client = new elasticsearch.Client({
-	host: 'HOST',
-	httpAuth: 'USER:PASSWORD',
+	host: 'http://144.206.234.84:9200',
+	httpAuth: 'esuser:on5xo3voo0aethoe4taY',
 	log: 'trace'
 });
 // var client = new elasticsearch.Client({
