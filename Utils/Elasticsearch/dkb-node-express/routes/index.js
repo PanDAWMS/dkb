@@ -1,7 +1,6 @@
 var express = require('express');
 var router = express.Router();
 var elasticsearch = require('elasticsearch');
-const moment = require('moment');
 
 var client = new elasticsearch.Client({
 	host: 'HOST',
