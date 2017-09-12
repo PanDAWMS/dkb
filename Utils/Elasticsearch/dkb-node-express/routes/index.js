@@ -14,7 +14,14 @@ var client = new elasticsearch.Client({
 // });
 
 router.get('/search_form', function(req, res, next) {
-	res.render('search_form', { title: 'Express'});
+	// get ElasticSearch mapping to retrieve all search fields
+	client.indices.getMapping({
+					index: "prodsys",
+					type: "MC16"
+				}, function(err, resp, respcode) {
+		var keys = Object.keys(resp.prodsys.mappings.MC16.properties);
+		res.render('search_form', { title: 'Express', keys: keys});
+	});
 });
 
 router.post('/dataset_search', function(req, res, next) {
