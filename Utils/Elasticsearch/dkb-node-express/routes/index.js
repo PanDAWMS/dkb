@@ -12,6 +12,7 @@ var client = new elasticsearch.Client({
 	httpAuth: 'esuser:on5xo3voo0aethoe4taY',
 	log: 'trace'
 });
+
 // var client = new elasticsearch.Client({
 // 	host: 'http://localhost:9200',
 // 	log: 'trace'
