@@ -79,7 +79,7 @@ print("\nCurrent ontology: " + ontology + "\n")
 chosen_path = os.path.normpath(askopenfilename())
 
 # year
-#year = '20'+ chosen_path.rstrip('.json')[len(
+# year = '20'+ chosen_path.rstrip('.json')[len(
 #    chosen_path.rstrip('.json'))-2:len(chosen_path.rstrip('.json'))]
 
 # a ttl document with default name

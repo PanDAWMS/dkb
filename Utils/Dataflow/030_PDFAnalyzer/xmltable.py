@@ -450,15 +450,15 @@ def analyze_page(text):
 # elif row.index(l) == len(row):
 # print "ROW RIGHT:", l.right
 
-##    symbols = {}
-##    lines = []
+#    symbols = {}
+#    lines = []
 # for l in tlines:
-##        lines.append(TextLine(l, symbols))
-##
-##    max_s = max(symbols.values())
+#        lines.append(TextLine(l, symbols))
+#
+#    max_s = max(symbols.values())
 # for key in symbols:
 # if symbols[key] == max_s:
-##            max_key = key
+#            max_key = key
 # break
 # print "KEY", max_key
 # for l in lines:

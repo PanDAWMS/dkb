@@ -18,7 +18,7 @@ import csv
 import re
 from datetime import datetime
 
-### DEFAULTS AND CONFIGURATIONS ###
+# *** DEFAULTS AND CONFIGURATIONS *** #
 
 # Default CSV header
 CSV_HEADER = ["datatype", "glanceid", "name", "tid", "chain_tid", "phys_group",
@@ -73,7 +73,7 @@ OWL_PARAMS_OBJ = {
 # Known generator names
 GENERATORS = ['acermc', 'alpgen',
               'charybdis', 'comphep',
-              'evtgen', # <--- There might also be smth like 'EG'
+              'evtgen',  # <--- There might also be smth like 'EG'
               'gg2vv',  # but how do we supposed to know
               'herwig', 'herwig\+\+', 'hijing',  # if it is 'EG' or 'powhEG',
               'isajet',  # or any other word?

@@ -550,58 +550,58 @@ class Paper:
 # Titles consisting of several lines are problematic to
 # determine.
 # """
-##        lines = self.get_xml_page(1)
-##
-##        d = {}
+#        lines = self.get_xml_page(1)
+#
+#        d = {}
 # for l in lines:
-##            m = re_xml_symbol.match(l)
+#            m = re_xml_symbol.match(l)
 # if m:
-##                size = float(m.group(1))
-##                text = m.group(2)
+#                size = float(m.group(1))
+#                text = m.group(2)
 # if size in d.keys():
-##                    d[size] += text
+#                    d[size] += text
 # else:
-##                    d[size] = text
+#                    d[size] = text
 # elif re_xml_empty_symbol.match(l):
-##                d[size] += " "
-##        xml_title = False
+#                d[size] += " "
+#        xml_title = False
 # print d
 # while True:
-##            size = max(d.keys())
-##            valid = True
+#            size = max(d.keys())
+#            valid = True
 # try:
 # d[size].decode()
 # except:
-##                valid = False
+#                valid = False
 # if not "atlas note" in d[size].lower() and valid:
-##                xml_title = d[size]
+#                xml_title = d[size]
 # break
 # else:
-##                del d[size]
-##
+#                del d[size]
+#
 # print xml_title
 # if not xml_title:
 # return False
-##
-##        lines = self.get_txt_page(1)
-##        title = ""
+#
+#        lines = self.get_txt_page(1)
+#        title = ""
 # for l in lines:
 # if len(l) <= 4 or l.startswith("Supporting Note")\
 # or l.startswith("ATLAS NOTE"):
 # continue
-##            words = l.split()
-##            i = 0
+#            words = l.split()
+#            i = 0
 # for w in words:
 # try:
 # This throws exception sometimes, something about
 # ascii codec unable to decode.
-##                    w_in = w in xml_title
+#                    w_in = w in xml_title
 # except:
-##                    w_in = False
+#                    w_in = False
 # if len(w) > 1 and w_in:
-##                    i += 1
+#                    i += 1
 # if i > 1 or (len(words) == 1 and i == 1):
-##                title += l.replace("\n", " ")
+#                title += l.replace("\n", " ")
 # elif title:
 # break
 # return title
@@ -726,7 +726,7 @@ class Paper:
                 num = int(re_table_header_short.match(table.header).group(1))
                 if num in headers_data:
                     # print "TABLE WITH HEADER", headers_data[num].strip(),\
-                    ##                          "MAY CONTAIN DATASETS"
+                    #                          "MAY CONTAIN DATASETS"
                     data_column = -1
                     skip_first = False
                     # Save headers and tables matching selected numbers
@@ -736,7 +736,7 @@ class Paper:
                             txt = table.rows[rnum][i].text.lower()
                             if re_column_with_datasets.match(txt):
                                 # print "COLUMN", txt, "IN TABLE", num,\
-                                ##     "HINTS THAT IT CONTAINS DATASETS"
+                                #     "HINTS THAT IT CONTAINS DATASETS"
                                 data_column = i
                                 if rnum == 1:
                                     # This means that first row contains
@@ -773,7 +773,7 @@ class Paper:
                             rows.append(row)
                         coef = float(rows_with_proper_id) / len(rows)
 # print rows_with_proper_id, "OUT OF", len(rows),\
-##                              "ROWS HAVE PROPER DATASET ID. COEFFICIENT:",\
+#                              "ROWS HAVE PROPER DATASET ID. COEFFICIENT:",\
 # coef
                         if coef >= 0.7 and coef <= 1:
                             if cfg["OPEN_INTERVALS_TABLES"] and diaps:
@@ -820,11 +820,11 @@ class Paper:
 # |december).*20\d\d)",
 # self.get_txt_page(1, True).lower())
 # if paper_date:
-##             d = paper_date.group(1)
+#             d = paper_date.group(1)
 # print "date:", d
-##
-##        text = self.get_text()
-##        m = re_year.findall(text)
+#
+#        text = self.get_text()
+#        m = re_year.findall(text)
 # if m:
 # print m
 # for t in m:
