@@ -43,7 +43,8 @@ def main():
         sql_handler = open(input)
     except IOError:
         sys.stderr.write('File open error. No such file.')
-    result = DButils.ResultIter(conn, sql_handler.read()[:-1], size, True)
+    query = sql_handler.read().rstrip().rstrip(';')
+    result = DButils.ResultIter(conn, query, size, True)
     for row in result:
         row['phys_category'] = get_category(row)
         sys.stdout.write(json.dumps(row) + '\n')
