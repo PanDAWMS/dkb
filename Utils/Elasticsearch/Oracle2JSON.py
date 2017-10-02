@@ -20,7 +20,7 @@ def connectDEFT_DSN(dsn):
 
 def main():
     """
-    --input <SQL file> --size <page size> --config <config file>
+    --input <SQL file> --size <page size> --config <config file> [--offset <datetime>]
     :return:
     """
     args = parsingArguments()
@@ -44,10 +44,18 @@ def main():
     except IOError:
         sys.stderr.write('File open error. No such file.')
     query = sql_handler.read().rstrip().rstrip(';')
+    query = query_sub(query, args)
     result = DButils.ResultIter(conn, query, size, True)
     for row in result:
         row['phys_category'] = get_category(row)
         sys.stdout.write(json.dumps(row) + '\n')
+
+def query_sub(query, args):
+    """ Substitute %%VARIABLE%% in query with args.variable. """
+    query_var = re.compile('%%[A-Z_0-9]*%%')
+    return re.sub(query_var,
+      lambda m: vars(args).get(m.group(0).strip('%').lower(), m.group(0)),
+      query)
 
 def get_category(row):
     """
@@ -113,6 +121,7 @@ def parsingArguments():
     parser.add_argument('--input', help='SQL file path')
     parser.add_argument('--config', help='Configuration file path')
     parser.add_argument('--size', help='Number of lines, processed at a time')
+    parser.add_argument('--offset', help='Offset datetime (dd-mm-yyyy hh24:mi:ss)')
     return parser.parse_args()
 
 if  __name__ =='__main__':
