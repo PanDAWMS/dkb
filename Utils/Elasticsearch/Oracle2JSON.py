@@ -35,7 +35,7 @@ def main():
         Config.read(args.config)
     except IOError:
         sys.stderr.write('Could not read config file %s' % args.config)
-   
+
     global dsn
     dsn = Config.get("oracle", "dsn")
     conn, cursor = connectDEFT_DSN(dsn)
@@ -53,9 +53,11 @@ def main():
 def query_sub(query, args):
     """ Substitute %%VARIABLE%% in query with args.variable. """
     query_var = re.compile('%%[A-Z_0-9]*%%')
-    return re.sub(query_var,
-      lambda m: vars(args).get(m.group(0).strip('%').lower(), m.group(0)),
-      query)
+    return re.sub(
+        query_var,
+        lambda m: vars(args).get(m.group(0).strip('%').lower(), m.group(0)),
+        query
+    )
 
 def get_category(row):
     """
@@ -67,27 +69,31 @@ def get_category(row):
     """
     hashtags = row.get('hashtag_list')
     taskname = row.get('taskname')
-    PHYS_CATEGORIES_MAP = {'BPhysics':['charmonium','jpsi','bs','bd','bminus','bplus','charm','bottom','bottomonium','b0'],
-                            'BTag':['btagging'],
-                            'Diboson':['diboson','zz', 'ww', 'wz', 'wwbb', 'wwll'],
-                            'DrellYan':['drellyan', 'dy'],
-                            'Exotic':['exotic', 'monojet', 'blackhole', 'technicolor', 'randallsundrum',
-                            'wprime', 'zprime', 'magneticmonopole', 'extradimensions', 'warpeded',
-                            'randallsundrum', 'contactinteraction','seesaw'],
-                            'GammaJets':['photon', 'diphoton'],
-                            'Higgs':['whiggs', 'zhiggs', 'mh125', 'higgs', 'vbf', 'smhiggs', 'bsmhiggs', 'chargedhiggs'],
-                            'Minbias':['minbias'],
-                            'Multijet':['dijet', 'multijet', 'qcd'],
-                            'Performance':['performance'],
-                            'SingleParticle':['singleparticle'],
-                            'SingleTop':['singletop'],
-                            'SUSY':['bino', 'susy', 'pmssm', 'leptosusy', 'rpv','mssm'],
-                            'Triboson':['triplegaugecoupling', 'triboson', 'zzw', 'www'],
-                            'TTbar':['ttbar'],
-                            'TTbarX':['ttw','ttz','ttv','ttvv','4top','ttww'],
-                            'Upgrade':['upgrad'],
-                            'Wjets':['w'],
-                            'Zjets':['z']}
+    PHYS_CATEGORIES_MAP = {
+        'BPhysics': ['charmonium', 'jpsi', 'bs', 'bd', 'bminus', 'bplus',
+                     'charm', 'bottom', 'bottomonium', 'b0'],
+        'BTag': ['btagging'],
+        'Diboson': ['diboson', 'zz', 'ww', 'wz', 'wwbb', 'wwll'],
+        'DrellYan': ['drellyan', 'dy'],
+        'Exotic': ['exotic', 'monojet', 'blackhole', 'technicolor',
+                   'randallsundrum', 'wprime', 'zprime', 'magneticmonopole',
+                   'extradimensions', 'warpeded', 'randallsundrum',
+                   'contactinteraction', 'seesaw'],
+        'GammaJets': ['photon', 'diphoton'],
+        'Higgs': ['whiggs', 'zhiggs', 'mh125', 'higgs', 'vbf', 'smhiggs',
+                  'bsmhiggs', 'chargedhiggs'],
+        'Minbias': ['minbias'],
+        'Multijet': ['dijet', 'multijet', 'qcd'],
+        'Performance': ['performance'],
+        'SingleParticle': ['singleparticle'],
+        'SingleTop': ['singletop'],
+        'SUSY': ['bino', 'susy', 'pmssm', 'leptosusy', 'rpv', 'mssm'],
+        'Triboson': ['triplegaugecoupling', 'triboson', 'zzw', 'www'],
+        'TTbar': ['ttbar'],
+        'TTbarX': ['ttw', 'ttz', 'ttv', 'ttvv', '4top', 'ttww'],
+        'Upgrade': ['upgrad'],
+        'Wjets': ['w'],
+        'Zjets': ['z']}
     match = {}
     categories = []
     for phys_category in PHYS_CATEGORIES_MAP:
@@ -124,5 +130,5 @@ def parsingArguments():
     parser.add_argument('--offset', help='Offset datetime (dd-mm-yyyy hh24:mi:ss)')
     return parser.parse_args()
 
-if  __name__ =='__main__':
+if  __name__ == '__main__':
     main()
