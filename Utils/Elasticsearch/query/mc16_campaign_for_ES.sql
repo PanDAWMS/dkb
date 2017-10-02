@@ -1,6 +1,7 @@
 -- QUERY FROM DEFT/JEDI FOR ELASTICSEARCH EVENTS SUMMARY FOR MC16 CAMPAIGN
 
--- 1. (mc16_tasks) get all tasks for mc16 campaign, including some REQUEST params and restricted by GOOD status
+-- 1. (mc16_tasks) get all tasks for mc16 campaign, including some REQUEST params and restricted by GOOD status,
+--    that were changed since OFFSET.
 -- 2. (task_hashtags) get lists of hashtags for all mc16 tasks, defining step_names by step_id
 -- 3. FINALLY:
 --    JOIN with ATLAS_PANDA.jedi_datasets to obtain events numbers
@@ -30,6 +31,7 @@ with mc16_tasks as (
     where
       lower(t.campaign) = 'mc16'
       and t.pr_id = r.pr_id
+      and t.timestamp > to_date('%%OFFSET%%', 'dd-mm-yyyy hh24:mi:ss')
 ),
   task_hashtags as (
       SELECT
