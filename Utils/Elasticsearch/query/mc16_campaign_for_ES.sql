@@ -211,14 +211,16 @@ with mc16_tasks as (
             from ATLAS_PANDA.jedi_datasets jd
             where jd.jeditaskid = t.taskid
           and type IN ('output')) as output_datasets,
-          (SELECT sum(jd.nevents)
+          (SELECT jd.nevents
             from ATLAS_PANDA.jedi_datasets jd
             where jd.jeditaskid = t.taskid
-          and type IN ('input')) as requested_events,
-          (SELECT sum(jd.neventsused)
+          and jd.type IN ('input')
+          AND jd.masterid IS NULL) as requested_events,
+          (SELECT jd.neventsused
             from ATLAS_PANDA.jedi_datasets jd
             where jd.jeditaskid = t.taskid
-          and type IN ('input')) as processed_events
+          and jd.type IN ('input')
+          AND jd.masterid IS NULL) as processed_events
       FROM
         task_hashtags t,
         t_task tt
