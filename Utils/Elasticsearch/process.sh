@@ -42,7 +42,11 @@ putDataToES() {
 }
 
 getDataFromOracle > $ORACLE_OUT 
-convertDataToESFormat < $ORACLE_OUT >$ES_IN 
-putDataToES <$ES_IN
-echo OFFSET="'${NEW_OFFSET}'" > "$OFFSET_FILE"
+if [ -s "$ORACLE_OUT" ]; then
+  convertDataToESFormat < $ORACLE_OUT >$ES_IN
+  putDataToES <$ES_IN
+  echo OFFSET="'${NEW_OFFSET}'" > "$OFFSET_FILE"
+else
+  log "No data changed since last offset."
+fi
 rm -f $ORACLE_OUT $ES_IN
