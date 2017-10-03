@@ -1,8 +1,9 @@
 #!/bin/sh
 
+base_dir=$( cd "$( dirname "$0" )" && pwd )
 ORACLE_OUT=`mktemp`
 ES_IN=`mktemp`
-OFFSET_FILE=./.ora_offset
+OFFSET_FILE=$base_dir/.ora_offset
 
 log() {
   date | tr -d '\n' >&2
@@ -19,18 +20,18 @@ getDataFromOracle() {
     OFFSET='01-01-1970 00:00:00'
   fi
   NEW_OFFSET=`date +"%d-%m-%Y %H:%M:%S"`
-  ./Oracle2JSON.py --config config/settings.cfg --input query/mc16_campaign_for_ES.sql --offset "$OFFSET" || exit 1
+  $base_dir/Oracle2JSON.py --config $base_dir/config/settings.cfg --input $base_dir/query/mc16_campaign_for_ES.sql --offset "$OFFSET" || exit 1
 }
 convertDataToESFormat() {
   #step 2 - create data for ES
   log "Converting data to ES format"
-  php oracle2es.php || exit 2
+  php $base_dir/oracle2es.php || exit 2
 }
 putDataToES() {
   #step 3 - load data to ES
 
   #some default settings and configs loading
-  ES_CONFIG='config/es'
+  ES_CONFIG="$base_dir/config/es"
   log "Loading defaults and config $ES_CONFIG if any"
   ES_HOST='127.0.0.1'
   ES_PORT='9200'
