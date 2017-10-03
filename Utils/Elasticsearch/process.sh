@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -l
 
 base_dir=$( cd "$( dirname "$0" )" && pwd )
 ORACLE_OUT=`mktemp`
