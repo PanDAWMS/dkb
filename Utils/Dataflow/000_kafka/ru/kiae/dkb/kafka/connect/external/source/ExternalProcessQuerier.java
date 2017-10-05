@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
+import java.util.Date;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -49,6 +50,7 @@ import java.nio.file.InvalidPathException;
 public class ExternalProcessQuerier {
 
   private static final Logger log = LoggerFactory.getLogger(ExternalProcessQuerier.class);
+  private static final Logger timing = LoggerFactory.getLogger("timing");
 
   private final ExternalSourceConfig config;
 
@@ -68,6 +70,8 @@ public class ExternalProcessQuerier {
 
   protected long lastUpdate;
   protected List<String> resultSet;
+
+  private long starttime;
 
   ExternalProcessQuerier(final ExternalSourceConfig config) {
     this.config = config;
@@ -129,9 +133,11 @@ public class ExternalProcessQuerier {
   }
 
   private void startProcess() throws IOException {
+    starttime = new Date().getTime();
     externalProcess = Runtime.getRuntime().exec(config.externalCommand);
     externalProcessSTDOUT = new BufferedReader(new InputStreamReader(externalProcess.getInputStream()));
     externalProcessSTDERR = new BufferedReader(new InputStreamReader(externalProcess.getErrorStream()));
+    timing.info("Source process start took: {} ms", new Date().getTime() - starttime);
   }
 
   // Returns an array with one line (as it was originally)
@@ -213,6 +219,8 @@ public class ExternalProcessQuerier {
 // Extracts 1 item (line, JSON line, ...) from the input stream.
 // It can be transformed into one or more records, depending on the data type.
   public List<SourceRecord> extractRecords() throws IOException {
+    long start = new Date().getTime();
+    log.error("Source process extract records: {} since start.", start - starttime);
     List<SourceRecord> result = new ArrayList<>();
     List<String> records = new ArrayList<>();
     String record = null;
@@ -266,6 +274,10 @@ public class ExternalProcessQuerier {
       result.add(new SourceRecord(srcPartition, null,      config.topic, getKeySchema(key), key, getValSchema(), (Object) r));
     }
     if ( result.size() == 0 ) stopQuery();
+    else {
+        long stop = new Date().getTime();
+        timing.info("Source process extract of {} records took: {} ms (avg: {} ms).", result.size(), stop - start, (stop-start) / result.size());
+    }
     return result;
   }
 
