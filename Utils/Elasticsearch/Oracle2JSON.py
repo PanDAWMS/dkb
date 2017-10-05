@@ -41,14 +41,14 @@ def main():
     conn, cursor = connectDEFT_DSN(dsn)
     try:
         sql_handler = open(input)
+        query = sql_handler.read().rstrip().rstrip(';')
+        query = query_sub(query, args)
+        result = DButils.ResultIter(conn, query, size, True)
+        for row in result:
+            row['phys_category'] = get_category(row)
+            sys.stdout.write(json.dumps(row) + '\n')
     except IOError:
         sys.stderr.write('File open error. No such file.')
-    query = sql_handler.read().rstrip().rstrip(';')
-    query = query_sub(query, args)
-    result = DButils.ResultIter(conn, query, size, True)
-    for row in result:
-        row['phys_category'] = get_category(row)
-        sys.stdout.write(json.dumps(row) + '\n')
 
 def query_sub(query, args):
     """ Substitute %%VARIABLE%% in query with args.variable. """
