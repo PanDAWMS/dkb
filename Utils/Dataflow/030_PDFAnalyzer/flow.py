@@ -9,6 +9,7 @@ import os
 import shutil
 import subprocess
 import sys
+import traceback
 
 from manager import cfg
 from manager import path_join
@@ -99,8 +100,17 @@ if __name__ == "__main__":
     except (pyDKB.dataflow.DataflowException, RuntimeError), e:
         if str(e):
             sys.stderr.write("(ERROR) while running stage 30: %s\n" % e)
+        else:
+            exc_info = sys.exc_info()
         exit_code = 2
+    except Exception:
+        exc_info = sys.exc_info()
     finally:
         analyzer_stage.stop()
+
+    if exc_info:
+        trace = traceback.format_exception(*exc_info)
+        for line in trace:
+            sys.stderr.write("(ERROR) %s" % line)
 
     exit(exit_code)
