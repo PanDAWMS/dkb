@@ -38,6 +38,8 @@ import java.io.IOException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 
+import java.lang.IllegalThreadStateException;
+
 public class ExternalProcessorSupplier implements ProcessorSupplier<String, String> {
 
     private static final Logger log = LoggerFactory.getLogger(ExternalProcessorSupplier.class);
@@ -106,7 +108,12 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
                 log.debug("Processing finished.");
               }
               catch (IOException e){
-                log.error("Failed to read data from external process.");
+                log.error("Failed to read data from external process (" + externalCommand[0] + ").");
+                try {
+                    log.error("Exit code: " + this.externalProcessor.exitValue());
+                } catch (IllegalThreadStateException ill) {
+                    log.error("Though the external process is still alive.");
+                }
                 throw new KafkaException(e);
               }
               catch (InterruptedException int_e) {
