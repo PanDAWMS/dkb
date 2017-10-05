@@ -37,12 +37,14 @@ import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.Date;
 
 import java.lang.IllegalThreadStateException;
 
 public class ExternalProcessorSupplier implements ProcessorSupplier<String, String> {
 
     private static final Logger log = LoggerFactory.getLogger(ExternalProcessorSupplier.class);
+    private static final Logger timing = LoggerFactory.getLogger("timing");
 
     private String[] externalCommand;
     private char EOPMarker;
@@ -72,12 +74,17 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
             @Override
             @SuppressWarnings("unchecked")
             public void init(ProcessorContext context) {
+                long start = new Date().getTime();
                 this.context = context;
                 this.start();
+                timing.info("({}) Processor initialization took: {} ms", externalCommand[0], new Date().getTime() - start);
             }
 
             @Override
             public void process(String dummy, String line) {
+              long processing_start = new Date().getTime();
+              long start = processing_start;
+              long time = 0L;
               String outline;
               char   outchar;
               int    outcode;
@@ -93,7 +100,9 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
                     outchar = (char) outcode;
                     if (outchar == EOPMarker || outchar == EOMMarker) {
                         if (buf.length() > 0) {
+                            time += new Date().getTime() - start;
                             context.forward(dummy,buf.toString());
+                            start = new Date().getTime();
                             buf.setLength(0);
                             buf.trimToSize();
                         }
@@ -120,6 +129,9 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
                 log.error("Interrupted by user.");
                 throw new KafkaException(int_e);
               }
+              time += new Date().getTime() - start;
+              timing.info("({}) Message processing took: {} ms", externalCommand[0], time);
+              timing.info("({}) Full processing took: {} ms", externalCommand[0], new Date().getTime() - processing_start);
             }
 
             @Override
