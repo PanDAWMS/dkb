@@ -37,8 +37,10 @@ import java.io.OutputStreamWriter;
 import java.io.IOException;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.concurrent.TimeUnit;
 import java.util.Date;
 
+import java.lang.Math;
 import java.lang.IllegalThreadStateException;
 
 public class ExternalProcessorSupplier implements ProcessorSupplier<String, String> {
@@ -49,6 +51,8 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
     private String[] externalCommand;
     private char EOPMarker;
     private char EOMMarker;
+    private int  maxRetries;
+    private String retryPolicy;
     private final ExternalProcessorConfig config;
 
     public ExternalProcessorSupplier(Map<String, Object> props) {
@@ -60,6 +64,8 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
             this.externalCommand = config.externalCommand.split(" ");
             this.EOPMarker = config.EOPMarker;
             this.EOMMarker = '\n';
+            this.maxRetries = config.maxRetries;
+            this.retryPolicy = config.retryPolicy;
     }
 
     @Override
@@ -70,6 +76,8 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
             private BufferedWriter   externalProcessorSTDIN;
             private BufferedReader   externalProcessorSTDOUT;
             private ExternalProcessLogger externalProcessorLogger;
+            private int              retried = 0;
+            private int              rretried = 0;
 
             @Override
             @SuppressWarnings("unchecked")
@@ -88,6 +96,7 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
               String outline;
               char   outchar;
               int    outcode;
+              boolean retried = false;
               try {
                 externalProcessorSTDIN.write(line);
                 externalProcessorSTDIN.newLine();
@@ -96,6 +105,10 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
                    Thread.sleep(1000);
                 StringBuilder buf = new StringBuilder(256);
                 outcode = externalProcessorSTDOUT.read();
+                if (outcode != -1) {
+                    this.retried = 0;
+                    this.rretried = 0;
+                }
                 while (outcode != -1) {
                     outchar = (char) outcode;
                     if (outchar == EOPMarker || outchar == EOMMarker) {
@@ -113,7 +126,7 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
                     outcode = externalProcessorSTDOUT.read();
                 }
                 if (outcode == -1)
-                    throw new KafkaException("External process seems to be dead.");
+                    throw new IOException("External process seems to be dead.");
                 log.debug("Processing finished.");
               }
               catch (IOException e){
@@ -123,15 +136,18 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
                 } catch (IllegalThreadStateException ill) {
                     log.error("Though the external process is still alive.");
                 }
-                throw new KafkaException(e);
+                this.retry(dummy, line);
+                retried = true;
               }
               catch (InterruptedException int_e) {
                 log.error("Interrupted by user.");
                 throw new KafkaException(int_e);
               }
-              time += new Date().getTime() - start;
-              timing.info("({}) Message processing took: {} ms", externalCommand[0], time);
-              timing.info("({}) Full processing took: {} ms", externalCommand[0], new Date().getTime() - processing_start);
+              if (! retried) {
+                  time += new Date().getTime() - start;
+                  timing.info("({}) Message processing took: {} ms", externalCommand[0], time);
+                  timing.info("({}) Full processing took: {} ms", externalCommand[0], new Date().getTime() - processing_start);
+              }
             }
 
             @Override
@@ -155,6 +171,34 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
                 catch (IOException e){
                   log.error("Can't start new process with command: {}", externalCommand[0]);
                   throw new KafkaException(e);
+                }
+            }
+
+            private void retry(String dummy, String line) {
+                this.retried += 1;
+                if (this.retried > maxRetries) {
+                     log.error("({}) Max retry number has exceeded.", externalCommand[0]);
+                     throw new KafkaException("Max retry number has exceeded.");
+                }
+                log.info("Try to restart external process ({}) ({})", externalCommand[0], this.retried);
+                this.close();
+                this.start();
+                switch(retryPolicy) {
+                    case ExternalProcessorConfig.RetryPolicy.RETRY:
+                        this.process(dummy, line);
+                        break;
+                    case ExternalProcessorConfig.RetryPolicy.ONCE:
+                        if (this.rretried == 0) {
+                            this.rretried += 1;
+                            this.process(dummy, line);
+                        } else {
+                            log.warn("({}) Line skipped: {}", externalCommand[0], line.substring(0, Math.max(100, line.length())));
+                            this.rretried = 0;
+                        }
+                        break;
+                    default:
+                        log.warn("({}) Line skipped: {}", externalCommand[0], line.substring(0, Math.max(100, line.length())));
+                        break;
                 }
             }
         };
