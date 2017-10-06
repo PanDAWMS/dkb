@@ -98,7 +98,8 @@ def get_category(row):
     categories = []
     for phys_category in PHYS_CATEGORIES_MAP:
         current_map = [x.strip(' ').lower() for x in PHYS_CATEGORIES_MAP[phys_category]]
-        match[phys_category] = len([x for x in hashtags.lower().split(',') if x.strip(' ') in current_map])
+        if hashtags is not None:
+            match[phys_category] = len([x for x in hashtags.lower().split(',') if x.strip(' ') in current_map])
     categories = [cat for cat in match if match[cat] > 0]
     if len(categories) > 0:
         return categories
