@@ -1,17 +1,15 @@
 var express = require('express');
 var router = express.Router();
 var elasticsearch = require('elasticsearch');
+var prop = require('properties-parser');
+var syncData = prop.read("./es");
+console.log(syncData.ES_USER);
 
 var client = new elasticsearch.Client({
-	host: 'HOST',
-	httpAuth: 'USER:PASSWORD',
+	host: syncData.ES_HOST+':'+syncData.ES_PORT,
+	httpAuth: syncData.ES_USER+':'+syncData.ES_PASSWORD,
 	log: 'trace'
 });
-
-// var client = new elasticsearch.Client({
-// 	host: 'http://localhost:9200',
-// 	log: 'trace'
-// });
 
 router.get('/search_form', function(req, res, next) {
 	// get ElasticSearch mapping to retrieve all search fields
