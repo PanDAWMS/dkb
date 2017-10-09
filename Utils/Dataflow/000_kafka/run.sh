@@ -1,9 +1,14 @@
 #!/usr/bin/env bash
 
-[ -z "$KAFKA_HOME" ] && KAFKA_HOME=/usr/local/kafka/default/
-[ -z "$CONFIGS" ] && CONFIGS=`dirname $0`/config
+base_dir=`dirname $0`
+. $base_dir/../018_PDFDownloader/switch_realm
 
-pidfile=./.processes
+[ -z "$KAFKA_HOME" ] && KAFKA_HOME=/usr/local/kafka/default/
+[ -z "$CONFIGS" ] && CONFIGS=$base_dir/config
+
+
+
+pidfile=$base_dir/.processes
 
 for f in ./libs/*.jar; do
   CLASSPATH="$CLASSPATH:$f"
@@ -18,9 +23,10 @@ $0 <stage> {start|stop|restart}
 
 STAGES
   010GlancePapers -- Glance source for papers
-  050Links2TTL -- Links to TTL transformation
+  015CDSDocs -- get data from CDS
+  055DocTTL -- generate TTL with document metadata
+  054DocContentTTL -- generate TTL with document content information
   060VirtuosoSink -- TTL and SPARQL sinks to Virtuoso
-  010to055 -- data stream from 010 to 055
 "
 }
 
@@ -35,11 +41,16 @@ _command () {
       cmd="$base_dir/run-class.sh $EXTRA_ARGS $CONNECT_CLASS $CONFIGS/010-connect-standalone.properties $CONFIGS/010-glance-lop-source.properties"
       realm=cern
       ;;
-    050Links2TTL)
-      cmd="./runStreamsApplication.sh $CONFIGS/050-application.properties $CONFIGS/050-topology.properties"
+    015CDSDocs)
+      cmd="./runStreamsApplication.sh $CONFIGS/015-application.properties $CONFIGS/015-topology.properties"
+      realm=cern
       ;;
-    010to055)
-      cmd="./runStreamsApplication.sh $CONFIGS/010-015-055-application.properties $CONFIGS/010-015-055-topology.properties"
+    055DocTTL)
+      cmd="./runStreamsApplication.sh $CONFIGS/055-application.properties $CONFIGS/055-topology.properties"
+      ;;
+    054DocContentTTL)
+      cmd="./runStreamsApplication.sh $CONFIGS/054-application.properties $CONFIGS/054-topology.properties"
+      realm=kiae
       ;;
     *)
       echo "Unknown command: $1" >&2
@@ -50,6 +61,7 @@ _command () {
   export LOG4J_OPTS="-Dlog.file.name=$1 $LOG4J_OPTS"
   export COMMAND=$cmd
   export EXTRA_ARGS
+  export REALM=$realm
 }
 
 _start() {
@@ -57,6 +69,7 @@ _start() {
   _command "$1"
   export LOG4J_OPTS
   export KAFKA_LOG4J_OPTS="$LOG4J_OPTS"
+  [ -n "$REALM" ] && switch_realm $REALM
   if [ -n "$COMMAND" ]; then
     echo $COMMAND
     export LOG_DIR="$base_dir/logs"
