@@ -458,4 +458,6 @@ ON
         LEFT JOIN ATLAS_PANDA.jedi_datasets jd
           ON jd.jeditaskid = t.taskid
       WHERE jd.type IN ('input')
-            AND jd.masterid IS NULL;
+            AND jd.masterid IS NULL
+      ORDER BY
+        t.taskid;
