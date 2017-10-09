@@ -10,6 +10,8 @@ for f in ./libs/*.jar; do
 done
 export CLASSPATH
 
+CONNECT_CLASS=org.apache.kafka.connect.cli.ConnectStandalone
+
 usage () {
   echo "USAGE
 $0 <stage> {start|stop|restart}
@@ -23,12 +25,15 @@ STAGES
 }
 
 _command () {
+  EXTRA_ARGS="-name $1"
+  realm=
   case $1 in
     060VirtuosoSink)
-      cmd="$KAFKA_HOME/bin/connect-standalone.sh $CONFIGS/060-connect-standalone.properties $CONFIGS/060-virtuoso-ttl-sink.properties $CONFIGS/060-virtuoso-sparql-sink.properties"
+      cmd="$base_dir/run-class.sh $EXTRA_ARGS $CONNECT_CLASS $CONFIGS/060-connect-standalone.properties $CONFIGS/060-virtuoso-ttl-sink.properties"
       ;;
     010GlancePapers)
-      cmd="$KAFKA_HOME/bin/connect-standalone.sh $CONFIGS/010-connect-standalone.properties $CONFIGS/010-glance-lop-source.properties"
+      cmd="$base_dir/run-class.sh $EXTRA_ARGS $CONNECT_CLASS $CONFIGS/010-connect-standalone.properties $CONFIGS/010-glance-lop-source.properties"
+      realm=cern
       ;;
     050Links2TTL)
       cmd="./runStreamsApplication.sh $CONFIGS/050-application.properties $CONFIGS/050-topology.properties"
@@ -42,16 +47,20 @@ _command () {
       exit 1
       ;;
   esac
-  echo $cmd
+  export LOG4J_OPTS="-Dlog.file.name=$1 $LOG4J_OPTS"
+  export COMMAND=$cmd
+  export EXTRA_ARGS
 }
 
 _start() {
   local pgid
-  cmd=`_command $1`
-  logfile=$1.log
-  if [ -n "$cmd" ]; then
-    echo $cmd
-    nohup $cmd >>$logfile &
+  _command "$1"
+  export LOG4J_OPTS
+  export KAFKA_LOG4J_OPTS="$LOG4J_OPTS"
+  if [ -n "$COMMAND" ]; then
+    echo $COMMAND
+    export LOG_DIR="$base_dir/logs"
+    EXTRA_ARGS="$EXTRA_ARGS" nohup $COMMAND >> /dev/null &
     pgid=`ps -o pgid= $!`
   fi
   [ -n "$pgid" ] && echo "$1 $pgid" >> $pidfile
