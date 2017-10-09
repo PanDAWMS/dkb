@@ -101,7 +101,7 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
                 externalProcessorSTDIN.write(line);
                 externalProcessorSTDIN.newLine();
                 externalProcessorSTDIN.flush();
-                while (! externalProcessorSTDOUT.ready())
+                while (! externalProcessorSTDOUT.ready() && externalProcessor.isAlive())
                    Thread.sleep(1000);
                 StringBuilder buf = new StringBuilder(256);
                 outcode = externalProcessorSTDOUT.read();
