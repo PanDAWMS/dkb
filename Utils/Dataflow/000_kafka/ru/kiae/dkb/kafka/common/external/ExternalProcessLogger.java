@@ -44,10 +44,7 @@ public class ExternalProcessLogger implements Runnable {
             while ((line = STDERR.readLine()) != null) {
                 external_log(line);
             }
-        } catch (IOException e) {
-            log.error("Failed to read from the process STDERR.");
-            throw new KafkaException(e);
-        }
+        } catch (IOException e) { }
     }
 
     private void external_log(String line) {
