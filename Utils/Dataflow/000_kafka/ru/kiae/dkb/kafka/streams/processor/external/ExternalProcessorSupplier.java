@@ -157,7 +157,11 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
             @Override
             public void close() {
                 log.info("Destroying external process.");
-                this.externalProcessor.destroy();
+                try {
+                  this.externalProcessor.destroy();
+                  this.externalProcessor.waitFor(2L, TimeUnit.SECONDS);
+                } catch (InterruptedException int_e) { }
+
             }
 
             public void start() {
