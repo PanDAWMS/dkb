@@ -15,11 +15,15 @@ for f in ./libs/*.jar; do
 done
 export CLASSPATH
 
+LOG4J_OPTS_ORIG=$LOG4J_OPTS
+
 CONNECT_CLASS=org.apache.kafka.connect.cli.ConnectStandalone
+
+STAGES="010GlancePapers 015CDSDocs 055DocTTL 054DocContentTTL 060VirtuosoSink"
 
 usage () {
   echo "USAGE
-$0 <stage> {start|stop|restart}
+$0 {<stage>|all} {start|stop|restart}
 
 STAGES
   010GlancePapers -- Glance source for papers
@@ -84,7 +88,7 @@ _stop() {
   pgids=`grep $1 $pidfile | awk '{print $2}'`
   echo "Stopping instance of $1">&2
   for pgid in $pgids; do
-    javaPid=`ps a -o pgid,pid,ucmd | grep $pgid |grep java | awk '{print $2}'`
+    javaPid=`ps a -o pgid,pid,command | grep -e $pgid | grep java | grep $1 | awk '{print $2}'`
     if [ -n "$javaPid" ]; then
       echo "Sending SIGTERM to PID: $javaPid" >&2
       kill -s SIGTERM $javaPid
@@ -105,19 +109,26 @@ _stop() {
 
 [ -n "$2" ] && task="$2" || task="start"
 
-case $task in
-  start)
-    _start $1
-    ;;
-  stop)
-    _stop $1
-    ;;
-  restart)
-    _stop $1 && _start $1
-    ;;
-  *)
-    echo "Unknown task: $task" >&2
-    usage >&2
-    exit 1
-    ;;
-esac
+[ "x$1" = "xall" ] && stages=$STAGES || stages=$1
+
+[ -z "$stages" ] && usage >&2 && exit 1
+
+for stage in $stages; do
+  LOG4J_OPTS=$LOG4J_OPTS_ORIG
+  case $task in
+    start)
+      _start $stage
+      ;;
+    stop)
+      _stop $stage
+      ;;
+    restart)
+      _stop $stage && _start $stage
+      ;;
+    *)
+      echo "Unknown task: $task" >&2
+      usage >&2
+      exit 1
+      ;;
+  esac
+done
