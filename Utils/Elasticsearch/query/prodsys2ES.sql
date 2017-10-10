@@ -48,8 +48,7 @@ with tasks as (
       LEFT JOIN ATLAS_DEFT.t_hashtag hashtag
         ON hashtag.ht_id = ht_t.ht_id
     WHERE
-      t.timestamp > to_date('05-05-2015 00:00:00', 'dd-mm-yyyy hh24:mi:ss')
-      AND t.timestamp <= to_date('06-05-2015 00:00:00', 'dd-mm-yyyy hh24:mi:ss')
+      t.timestamp > to_date('%%OFFSET%%', 'dd-mm-yyyy hh24:mi:ss')
     GROUP BY
         t.campaign,
         t.taskid,
