@@ -52,7 +52,7 @@ router.post('/dataset_search', function(req, res, next) {
                 }
             }
     	},
-    	"from" : 0, "size" : 10
+    	"from" : 0, "size" : 1000
   	};
 	client.search({
 	  "index": "prodsys",
