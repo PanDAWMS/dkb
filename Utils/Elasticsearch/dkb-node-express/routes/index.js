@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var elasticsearch = require('elasticsearch');
 var prop = require('properties-parser');
+var dateFormat = require('dateformat');
 var syncData = prop.read("./es");
 console.log(syncData.ES_USER);
 
@@ -27,16 +28,31 @@ router.post('/dataset_search', function(req, res, next) {
 	for (var i = 0; i < keywords_arr.length; i++) {
 		keywords_arr[i] = keywords_arr[i].trim();
 	}
+	start_date = req.body.start_date;
+    end_date = req.body.end_date;
 	var quotedAndSeparated = "\"" + keywords_arr.join("\" AND \"") + "\"";
 
   	var query_string = {
 		"query": {
-	    	"query_string": {
-	      		"query": quotedAndSeparated,
-	      		"analyze_wildcard": true
-    		}
+            "bool": {
+                "must": {
+                    "query_string": {
+                        "query": quotedAndSeparated,
+                        "analyze_wildcard": true
+                    }
+                },
+                "filter": {
+                    "range": {
+                        "task_timestamp": {
+                            "gte": dateFormat(start_date, "dd-mm-yyyy"),
+                            "lt": dateFormat(end_date, "dd-mm-yyyy"),
+                            "format": "dd-MM-yyyy"
+                        }
+                    }
+                }
+            }
     	},
-    	"from" : 0, "size" : 200
+    	"from" : 0, "size" : 10
   	};
 	client.search({
 	  "index": "prodsys",
@@ -45,7 +61,7 @@ router.post('/dataset_search', function(req, res, next) {
 	}).then(function (resp) {
 	    var hits = resp.hits.hits;
 	    var total = resp.hits.total;
-	    console.log(resp);
+	    //console.log(resp);
 	    for (var index = 0; index < hits.length; ++index) {
 	    	var curr_value = hits[index]['_source'];
 	    	for(var key in curr_value) {
