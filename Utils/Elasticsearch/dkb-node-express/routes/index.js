@@ -36,7 +36,7 @@ router.post('/dataset_search', function(req, res, next) {
 	      		"analyze_wildcard": true
     		}
     	},
-    	"from" : 0, "size" : 200, "hydrate" : true 
+    	"from" : 0, "size" : 200
   	};
 	client.search({
 	  "index": "prodsys",
