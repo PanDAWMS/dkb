@@ -6,15 +6,13 @@
 -- ATLAS_DEFT.t_step_template
 -- ATLAS_DEFT.t_ht_to_task
 -- ATLAS_DEFT.t_hashtag
--- ATLAS_DEFT.t_production_tag
 -- ATLAS_PANDA.jedi_datasets
 --
 -- All fields:
--- architecture, campaign, cloud, conditions_tags, core_count, db_release, description, end_time,
+-- architecture, campaign, cloud, conditions_tags, core_count, description, end_time,
 -- energy_gev, evgen_job_opts, geometry_version, hashtag_list, job_config, physics_list, processed_events,
 -- phys_group, project, pr_id, requested_events, run_number, site, start_time, step_name, status, subcampaign,
--- tag_name, tag_ecm_energy, tag_description,taskid, taskname, task_timestamp, task_type, ticket_id, trans_home,
--- trans_path, trans_uses, trf_release, trigger_config, user_name, vo
+-- taskid, taskname, task_timestamp,  ticket_id, trans_home, trans_path, trans_uses, trigger_config, user_name, vo
 with tasks as (
     SELECT
       t.campaign,
@@ -241,222 +239,45 @@ with tasks as (
       FROM
         tasks t LEFT JOIN t_task tt
           ON t.taskid = tt.taskid
-  ),
-  tasks_tags as (
-select
-        t.campaign,
-        t.subcampaign,
-        t.phys_group,
-        t.project,
-        t.pr_id,
-        t.step_name,
-        t.status,
-        t.taskid,
-        t.taskname,
-        t.task_timestamp,
-        t.start_time,
-        t.end_time,
-        t.hashtag_list,
-        t.description,
-        t.energy_gev,
-        t.architecture,
-        t.core_count,
-        t.cloud,
-        t.site,
-        t.task_type,
-        (CASE t.job_config WHEN '' THEN
-                    to_char(NVL(substr(
-          regexp_substr(tag_parameters, '"JobConfig": "[a-zA-Z0-9_\.\-\:]+[^"]'),
-            regexp_instr(
-                regexp_substr(tag_parameters, '"JobConfig": "[a-zA-Z0-9_\.\-\:]+[^"]'),
-                '(": ")+',
-                1,
-                1,
-                1
-            )
-          ), ''))
-        END) as job_config,
-        (CASE t.evgen_job_opts WHEN '' THEN
-          to_char(NVL(substr(
-          regexp_substr(tag_parameters, '"EvgenJobOpts": "[a-zA-Z0-9_\.\-]+[^"]'),
-            regexp_instr(
-                regexp_substr(tag_parameters, '"EvgenJobOpts": "[a-zA-Z0-9_\.\-]+[^"]'),
-                '(": ")+',
-                1,
-                1,
-                1
-            )
-          ), ''))
-          END) as evgen_job_opts,
-        (CASE t.conditions_tags WHEN '' THEN
-          to_char(NVL(regexp_replace(substr(
-        regexp_substr(tag_parameters, '"(ConditionsTag)|(conditionsTag)": "[a-zA-Z0-9_":\.\-]+[^"]'),
-          regexp_instr(
-              regexp_substr(tag_parameters, '"(ConditionsTag)|(conditionsTag)": "[a-zA-Z0-9_":\.\-]+[^"]'),
-              '(": ")+',
-              1,
-              1,
-              1
-          )
-        ), '"|\\|,|default:','') , ''))
-          END) as conditions_tags,
-        (CASE t.geometry_version
-        WHEN ''
-          THEN
-          to_char(NVL(regexp_replace(substr(
-        regexp_substr(tag_parameters, '"(Geometry)|(geometryVersion)": "[a-zA-Z0-9_":\.\-]+[^"]'),
-          regexp_instr(
-              regexp_substr(tag_parameters, '"(Geometry)|(geometryVersion)": "[a-zA-Z0-9_":\.\-]+[^"]'),
-              '(": ")+',
-              1,
-              1,
-              1
-          )
-        ),'"|\\|,|default:',''), '')) END) as geometry_version,
-        t.ticket_id,
-        (CASE t.trans_home WHEN '' THEN
-          to_char(NVL(substr(
-          regexp_substr(tag_parameters, '"SWReleaseCache": "[a-zA-Z0-9_\.\-]+[^"]'),
-            regexp_instr(
-                regexp_substr(tag_parameters, '"SWReleaseCache": "[a-zA-Z0-9_\.\-]+[^"]'),
-                '(": ")+',
-                1,
-                1,
-                1
-            )
-          ), ''))
-          END) as trans_home,
-        t.trans_uses,
-        t.user_name,
-        t.vo,
-        (CASE t.run_number WHEN '' THEN
-          to_char(NVL(substr(
-        regexp_substr(tag_parameters, '"DataRunNumber": "[0-9]+[^"]'),
-          regexp_instr(
-              regexp_substr(tag_parameters, '"DataRunNumber": "[0-9]+[^"]'),
-              '(": ")+',
-              1,
-              1,
-              1
-          )
-        ), ''))
-        END) as run_number,
-        t.trigger_config,
-        tag.name as tag_name,
-        tag.trf_release,
-        to_char(NVL(substr(
-          regexp_substr(tag_parameters, '"DBRelease": "[a-zA-Z0-9_\.\-]+[^"]'),
-            regexp_instr(
-                regexp_substr(tag_parameters, '"DBRelease": "[a-zA-Z0-9_\.\-]+[^"]'),
-                '(": ")+',
-                1,
-                1,
-                1
-            )
-          ), '')) as db_release,
-        (CASE trans_path WHEN '' THEN
-          to_char(NVL(substr(
-          regexp_substr(tag_parameters, '"(Transformation)|(transformation)": "[a-zA-Z0-9_\.\-]+[^"]'),
-            regexp_instr(
-                regexp_substr(tag_parameters, '"(Transformation)|(transformation)": "[a-zA-Z0-9_\.\-]+[^"]'),
-                '(": ")+',
-                1,
-                1,
-                1
-            )
-          ), ''))
-          END) as trans_path,
-          to_char(NVL(substr(
-          regexp_substr(tag_parameters, '"EcmEnergy": "[a-zA-Z0-9_\.\-]+[^"]'),
-            regexp_instr(
-                regexp_substr(tag_parameters, '"EcmEnergy": "[a-zA-Z0-9_\.\-]+[^"]'),
-                '(": ")+',
-                1,
-                1,
-                1
-            )
-          ), '')) as tag_ecm_energy,
-          to_char(NVL(substr(
-          regexp_substr(tag_parameters, '"PhysicsList": "[a-zA-Z0-9_\.\-]+[^"]'),
-            regexp_instr(
-                regexp_substr(tag_parameters, '"PhysicsList": "[a-zA-Z0-9_\.\-]+[^"]'),
-                '(": ")+',
-                1,
-                1,
-                1
-            )
-          ), '')) as physics_list,
-          to_char(NVL(substr(
-          regexp_substr(tag_parameters, '"description": "[a-zA-Z0-9_\.\-]+[^"]'),
-            regexp_instr(
-                regexp_substr(tag_parameters, '"description": "[a-zA-Z0-9_\.\-]+[^"]'),
-                '(": ")+',
-                1,
-                1,
-                1
-            )
-          ), '')) as tag_description,
-          to_char(NVL(substr(
-          regexp_substr(tag_parameters, '"baseRelease": "[0-9\.]+[^"]'),
-            regexp_instr(
-                regexp_substr(tag_parameters, '"baseRelease": "[0-9\.]+[^"]'),
-                '(": ")+',
-                1,
-                1,
-                1
-            )
-          ), '')) as base_release
-from tasks_t_task t
-  LEFT JOIN
-     ATLAS_DEFT.t_production_tag tag
-ON
-  tag.name = trim(regexp_substr(trim(regexp_substr(t.taskname, '[^.]+',1,5)), '[^_]*$'))
   )
-      SELECT
-        t.campaign,
-        t.subcampaign,
-        t.phys_group,
-        t.project,
-        t.pr_id,
-        t.step_name,
-        t.status,
-        t.taskid,
-        t.taskname,
-        t.task_timestamp,
-        t.start_time,
-        t.end_time,
-        t.hashtag_list,
-        t.description,
-        t.energy_gev,
-        t.architecture,
-        t.core_count,
-        t.cloud,
-        t.site,
-        t.task_type,
-        t.conditions_tags,
-        t.geometry_version,
-        t.ticket_id,
-        t.trans_home,
-        t.trans_path,
-        t.trans_uses,
-        t.user_name,
-        t.vo,
-        t.run_number,
-        t.trigger_config,
-        t.tag_name,
-        t.trf_release,
-        t.db_release,
-        t.job_config,
-        t.evgen_job_opts,
-        t.tag_ecm_energy,
-        t.physics_list,
-        t.tag_description,
-        jd.nevents AS requested_events,
-        jd.neventsused AS processed_events
-      FROM tasks_tags t
-        LEFT JOIN ATLAS_PANDA.jedi_datasets jd
-          ON jd.jeditaskid = t.taskid
-      WHERE jd.type IN ('input')
-            AND jd.masterid IS NULL
-      ORDER BY
-        t.taskid;
+  SELECT
+    t.campaign,
+    t.subcampaign,
+    t.phys_group,
+    t.project,
+    t.pr_id,
+    t.step_name,
+    t.status,
+    t.taskid,
+    t.taskname,
+    t.task_timestamp,
+    t.start_time,
+    t.end_time,
+    t.hashtag_list,
+    t.description,
+    t.energy_gev,
+    t.architecture,
+    t.core_count,
+    t.conditions_tags,
+    t.geometry_version,
+    t.ticket_id,
+    t.trans_home,
+    t.trans_path,
+    t.trans_uses,
+    t.user_name,
+    t.vo,
+    t.run_number,
+    t.trigger_config,
+    t.job_config,
+    t.evgen_job_opts,
+    t.cloud,
+    t.site,
+    jd.nevents AS requested_events,
+    jd.neventsused AS processed_events
+  FROM tasks_t_task t
+    LEFT JOIN ATLAS_PANDA.jedi_datasets jd
+      ON jd.jeditaskid = t.taskid
+  WHERE jd.type IN ('input')
+        AND jd.masterid IS NULL
+  ORDER BY
+    t.taskid;
