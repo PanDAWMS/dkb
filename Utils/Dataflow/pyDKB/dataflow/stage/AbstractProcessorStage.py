@@ -334,7 +334,7 @@ class AbstractProcessorStage(AbstractStage):
             for m in message:
                 self.output.message(m)
         else:
-            raise TypeError("Stage.output() expects paramenet to be of type"
+            raise TypeError("Stage.output() expects parameter to be of type"
                             " %s or %s (got %s)"
                             % (self.__output_message_class, list,
                                type(message))

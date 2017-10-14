@@ -80,7 +80,7 @@ class TTLProcessorStage(AbstractProcessorStage):
         super(TTLProcessorStage, self).output(message)
 
 class JSON2TTLProcessorStage(JSONProcessorStage, TTLProcessorStage):
-    """ JSON2TTL Procssor Stage
+    """ JSON2TTL Processor Stage
 
     Input message: JSON
     Output message: TTL
