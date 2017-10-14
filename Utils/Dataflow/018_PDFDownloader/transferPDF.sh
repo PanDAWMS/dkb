@@ -7,8 +7,9 @@
 
 PID=$$
 HDFS_DIR="/user/DKB/store/PDF"
-KRB_KIAE=~/.krb5/krb5cc_$UID.kiae
-KRB_CERN=~/.krb5/krb5cc_$UID.cern
+base_dir=`dirname $0`
+
+. $base_dir/switch_realm
 
 usage() {
     echo "
@@ -21,23 +22,6 @@ PARAMETERS:
 " >&2
 }
 
-switch_realm() {
-    # Switch Kerberos ticket to the given realm
-    [ -z "$1" ] && return 1
-    case $1 in
-        kiae)
-            TKT=$KRB_KIAE
-            ;;
-        cern)
-            TKT=$KRB_CERN
-            ;;
-        *)
-            echo "Unknown realm: $1" >&2
-            return 1
-            ;;
-    esac
-    export KRB5CCNAME="FILE:/$TKT"
-}
 
 upload() {
     # Upload file to HDFS
