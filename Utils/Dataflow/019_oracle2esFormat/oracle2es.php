@@ -1,3 +1,4 @@
+#!/usr/bin/env php
 <?php
 function convertIndexToLowerCase(&$a) {
   $result = array();
