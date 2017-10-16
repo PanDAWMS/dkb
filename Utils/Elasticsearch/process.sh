@@ -25,7 +25,7 @@ getDataFromOracle() {
 convertDataToESFormat() {
   #step 2 - create data for ES
   log "Converting data to ES format"
-  php $base_dir/oracle2es.php || exit 2
+  php $base_dir/../Dataflow/019_oracle2esFormat/oracle2es.php || exit 2
 }
 putDataToES() {
   #step 3 - load data to ES
