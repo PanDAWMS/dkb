@@ -1,3 +1,1 @@
-#!/bin/sh
-
-curl 'http://127.0.0.1:9200/_bulk?pretty' --data-binary @${1}
+../../Dataflow/069_upload2es/load_data.sh
