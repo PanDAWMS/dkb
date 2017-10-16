@@ -5,6 +5,24 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 }
 set_error_handler("exception_error_handler");
 
+function check_input(&$row) {
+  $required_fields = array('hashtag_list', 'campaign', 'taskid');
+
+  if (!is_array($row)) {
+    fwrite(STDERR, "(WARN) Failed to decode message.\n");
+    return FALSE;
+  }
+
+  foreach ($required_fields as $field) {
+    if (!(array_key_exists($field, $row))) {
+      fwrite(STDERR, "(WARN) Required field \"$field\" is missed.\n");
+      return FALSE;
+    }
+  }
+
+  return TRUE;
+}
+
 function convertIndexToLowerCase(&$a) {
   $result = array();
 
@@ -24,6 +42,12 @@ if (isset($argv[1])) {
 if ($h) {
   while (($line = fgets($h)) !== false) {
     $row = json_decode($line,true);
+
+    if (!check_input($row)) {
+      fwrite(STDERR, "(WARN) Input checks failed. Skipping message.\n");
+      continue;
+    }
+
     convertIndexToLowerCase($row);
 
     $hashtag_list = $row['hashtag_list'];
