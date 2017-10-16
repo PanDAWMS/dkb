@@ -1,5 +1,10 @@
 #!/usr/bin/env php
 <?php
+function exception_error_handler($errno, $errstr, $errfile, $errline ) {
+   throw new ErrorException($errstr, 0, $errno, $errfile, $errline);
+}
+set_error_handler("exception_error_handler");
+
 function convertIndexToLowerCase(&$a) {
   $result = array();
 
