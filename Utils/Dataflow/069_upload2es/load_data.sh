@@ -17,7 +17,7 @@ log () {
 usage () {
   echo "
 USAGE:
-  `basename ${0}` file
+  `basename ${0}` file1 file2 ...
 "
 }
 
@@ -27,4 +27,7 @@ if [ -z "$1" ] ; then
   exit 2
 fi
 
-curl $ES_AUTH "http://$ES_HOST:$ES_PORT/_bulk?pretty" --data-binary @${1}
+for INPUTFILE in $*;
+do
+  curl $ES_AUTH "http://$ES_HOST:$ES_PORT/_bulk?pretty" --data-binary @${INPUTFILE}
+done
