@@ -9,4 +9,22 @@ ES_PORT='9200'
 [ -f "$ES_CONFIG" ] && source "$ES_CONFIG"
 [ -n "$ES_USER" -a "$ES_PASSWORD" ] && ES_AUTH="--user ${ES_USER}:${ES_PASSWORD}"
 
+log () {
+  date | tr -d '\n' >&2
+  echo ": $*" >&2
+}
+
+usage () {
+  echo "
+USAGE:
+  `basename ${0}` file
+"
+}
+
+if [ -z "$1" ] ; then
+  log "(ERROR) Input file is not specified."
+  usage >&2
+  exit 2
+fi
+
 curl $ES_AUTH "http://$ES_HOST:$ES_PORT/_bulk?pretty" --data-binary @${1}
