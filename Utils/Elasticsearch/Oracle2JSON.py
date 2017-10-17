@@ -5,6 +5,7 @@ import ConfigParser
 import re
 import DButils
 import sys
+from datetime import datetime, timedelta
 
 try:
     import cx_Oracle
@@ -20,44 +21,126 @@ def connectDEFT_DSN(dsn):
 
 def main():
     """
-    --input <SQL file> --size <page size> --config <config file> [--offset <datetime>]
+    --config <config file> --mode <PLAIN|SQUASH>
     :return:
     """
     args = parsingArguments()
-    if (args.input):
-        input = args.input
-    if (args.size):
-        size = args.size
-    else:
-        size = 100
-    Config = ConfigParser.ConfigParser()
-    try:
-        Config.read(args.config)
-    except IOError:
-        sys.stderr.write('Could not read config file %s' % args.config)
+    global conf
+    conf = args.config
+    global mode
+    mode = args.mode
 
-    global dsn
-    dsn = Config.get("oracle", "dsn")
-    conn, cursor = connectDEFT_DSN(dsn)
+    # read initial configuration
+    config = ConfigParser.ConfigParser()
     try:
-        sql_handler = open(input)
-        query = sql_handler.read().rstrip().rstrip(';')
-        query = query_sub(query, args)
-        result = DButils.ResultIter(conn, query, size, True)
-        for row in result:
-            row['phys_category'] = get_category(row)
-            sys.stdout.write(json.dumps(row) + '\n')
+        config.read(conf)
+        # unchangeable data
+        global dsn
+        dsn = config.get("oracle", "dsn")
+        global initial_date
+        initial_date = config.get("timestamps", "initial")
+        global step_hours
+        step_hours = int(config.get("timestamps", "step_hours"))
+        global final_date
+        final_date = config.get("timestamps", "final")
+        global tasks_sql_file
+        tasks_sql_file = config.get("queries", "tasks")
+        global datasets_sql_file
+        datasets_sql_file = config.get("queries", "datasets")
+
+        # changeable data
+        offset_date = config.get("timestamps", "offset")
+        if offset_date == '':
+            offset_date = initial_date
+    except IOError:
+        sys.stderr.write('Could not read config file %s' % conf)
+
+    conn, cursor = connectDEFT_DSN(dsn)
+
+    if mode == 'PLAIN':
+
+        while (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") < datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S")):
+            # get offset from configuration file
+            offset_date = get_offset()
+            end_date = (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") +
+                        timedelta(hours=step_hours)).strftime("%d-%m-%Y %H:%M:%S")
+            # get all tasks for time range (offset date + 24 hours)
+            tasks = query_executor(conn, tasks_sql_file, offset_date, end_date)
+            # set end_date as current offset in configuration file for next step
+            update_offset(end_date)
+            # joining datasets to tasks
+            ndjson_string = ''
+            for task in tasks:
+                task['phys_category'] = get_category(task)
+                ndjson_string += json.dumps(task) + '\n'
+            # send NDJSON string to STDOUT
+            sys.stdout.write(ndjson_string)
+
+    elif mode == 'SQUASH':
+
+        while (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") < datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S")):
+            # get offset from configuration file
+            offset_date = get_offset()
+            end_date = (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") +
+                        timedelta(hours=step_hours)).strftime("%d-%m-%Y %H:%M:%S")
+            # get all tasks for time range (offset date + 24 hours)
+            tasks = query_executor(conn, tasks_sql_file, offset_date, end_date)
+            # get I/O datasets for time range (offset date + 24 hours)
+            datasets = query_executor(conn, datasets_sql_file, offset_date, end_date)
+            # set end_date as current offset in configuration file for next step
+            update_offset(end_date)
+            ndjson_string = ''
+            for idx, task in enumerate(tasks):
+                task['phys_category'] = get_category(task)
+                task['input_datasets'] = []
+                task['output_datasets'] = []
+                for ds in datasets:
+                    if ds['taskid'] == task['taskid']:
+                        if ds['type'] == 'input':
+                            task['input_datasets'].append(ds['datasetname'])
+                        elif ds['type'] == 'output':
+                            task['output_datasets'].append(ds['datasetname'])
+                ndjson_string += json.dumps(task) + '\n'
+                if (idx % 50 == 0):
+                    sys.stdout.write(ndjson_string)
+                    ndjson_string = ''
+            sys.stdout.write(ndjson_string)
+
+def get_initial_date():
+    """
+     TODO:
+        Procedure to obtain the min(timestamp) from t_production_task
+        SELECT min(timestamp) from t_production_task;
+    """
+    return None
+
+def query_executor(conn, sql_file, offset_date, end_date):
+    """
+    Execution of query with offset from file
+    """
+    try:
+        file_handler = open(sql_file)
+        query = file_handler.read().rstrip().rstrip(';') % (offset_date, end_date)
+        return DButils.ResultIter(conn, query, 1000, True)
     except IOError:
         sys.stderr.write('File open error. No such file.')
 
-def query_sub(query, args):
-    """ Substitute %%VARIABLE%% in query with args.variable. """
-    query_var = re.compile('%%[A-Z_0-9]*%%')
-    return re.sub(
-        query_var,
-        lambda m: vars(args).get(m.group(0).strip('%').lower(), m.group(0)),
-        query
-    )
+
+def get_offset():
+    config = ConfigParser.ConfigParser()
+    config.read(conf)
+    return config.get("timestamps", "offset")
+
+def update_offset(new_offset):
+    """
+    Updating offset value in configuration file
+    """
+    config = ConfigParser.RawConfigParser()
+    config.optionxform = str
+    config.read(conf)
+    config.set('timestamps', 'offset', new_offset)
+    with open(conf, 'w') as configfile:
+        config.write(configfile)
 
 def get_category(row):
     """
@@ -125,10 +208,8 @@ def get_category(row):
 
 def parsingArguments():
     parser = argparse.ArgumentParser(description='Process command line arguments.')
-    parser.add_argument('--input', help='SQL file path')
     parser.add_argument('--config', help='Configuration file path')
-    parser.add_argument('--size', help='Number of lines, processed at a time')
-    parser.add_argument('--offset', help='Offset datetime (dd-mm-yyyy hh24:mi:ss)')
+    parser.add_argument('--mode', help='Mode of execution: PLAIN | SQUASH')
     return parser.parse_args()
 
 if  __name__ == '__main__':

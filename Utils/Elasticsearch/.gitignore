@@ -3,3 +3,4 @@ config/es
 *.pyc
 *.swp
 .ora_offset
+oracle2JSON.cfg
