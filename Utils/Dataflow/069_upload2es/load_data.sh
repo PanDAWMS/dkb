@@ -23,6 +23,7 @@ ES_PORT='9200'
 [ -n "$ES_USER" -a "$ES_PASSWORD" ] && ES_AUTH="--user ${ES_USER}:${ES_PASSWORD}"
 
 DELIMETER=`echo -e -n "\x00"`
+EOProcess=`echo -e -n "\x06"`
 
 cmd="curl $ES_AUTH http://$ES_HOST:$ES_PORT/_bulk?pretty --data-binary @"
 
@@ -40,6 +41,7 @@ load_stream () {
   log "Switched to the stream mode."
   while read -r -d "$DELIMITER" line; do
     echo "$line" | ${cmd}-
+    echo -n "$EOProcess"
   done
 }
 
