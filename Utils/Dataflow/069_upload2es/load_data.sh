@@ -9,6 +9,8 @@ ES_PORT='9200'
 [ -f "$ES_CONFIG" ] && source "$ES_CONFIG"
 [ -n "$ES_USER" -a "$ES_PASSWORD" ] && ES_AUTH="--user ${ES_USER}:${ES_PASSWORD}"
 
+CURL_N_MAX=10
+SLEEP=5
 DELIMETER=`echo -e -n "\x00"`
 EOProcess=`echo -e -n "\x06"`
 
@@ -41,7 +43,12 @@ load_files () {
 
 load_stream () {
   while read -r -d "$DELIMITER" line; do
-    echo "$line" | ${cmd}-
+    n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
+    while [ $n -gt $CURL_N_MAX ]; do
+      sleep $SLEEP
+      n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
+    done
+    echo "$line" | ${cmd}- &
     echo -n "$EOProcess"
   done
 }
