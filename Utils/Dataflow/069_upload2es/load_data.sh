@@ -10,6 +10,7 @@ ES_PORT='9200'
 [ -n "$ES_USER" -a "$ES_PASSWORD" ] && ES_AUTH="--user ${ES_USER}:${ES_PASSWORD}"
 
 DELIMETER=`echo -e -n "\x00"`
+EOProcess=`echo -e -n "\x06"`
 
 log () {
   date | tr -d '\n' >&2
@@ -41,6 +42,7 @@ load_files () {
 load_stream () {
   while read -r -d "$DELIMITER" line; do
     echo "$line" | ${cmd}-
+    echo -n "$EOProcess"
   done
 }
 
