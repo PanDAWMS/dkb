@@ -39,9 +39,10 @@ def main():
         initial_date = config.get("timestamps", "initial")
         step_hours = int(config.get("timestamps", "step_hours"))
         final_date = config.get("timestamps", "final")
-        tasks_sql_file = config.get("queries", "tasks")
-        datasets_sql_file = config.get("queries", "datasets")
-
+        queries_cfg = config.items("queries")
+        queries = {}
+        for (qname, file) in queries_cfg:
+            queries[qname] = {'file': file}
         # changeable data
         offset_date = config.get("timestamps", "offset")
         if offset_date == '':
@@ -51,6 +52,8 @@ def main():
 
     conn, cursor = connectDEFT_DSN(dsn)
 
+
+
     if mode == 'PLAIN':
 
         while (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") < datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S")):
@@ -58,8 +61,9 @@ def main():
             offset_date = get_offset()
             end_date = (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") +
                         timedelta(hours=step_hours)).strftime("%d-%m-%Y %H:%M:%S")
+
             # get all tasks for time range (offset date + 24 hours)
-            tasks = query_executor(conn, tasks_sql_file, offset_date, end_date)
+            tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
             # set end_date as current offset in configuration file for next step
             update_offset(end_date)
             # joining datasets to tasks
@@ -77,10 +81,10 @@ def main():
             offset_date = get_offset()
             end_date = (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") +
                         timedelta(hours=step_hours)).strftime("%d-%m-%Y %H:%M:%S")
-            # get all tasks for time range (offset date + 24 hours)
-            tasks = query_executor(conn, tasks_sql_file, offset_date, end_date)
+                # get all tasks for time range (offset date + 24 hours)
+            tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
             # get I/O datasets for time range (offset date + 24 hours)
-            datasets = query_executor(conn, datasets_sql_file, offset_date, end_date)
+            datasets = query_executor(conn, queries['datasets']['file'], offset_date, end_date)
             # set end_date as current offset in configuration file for next step
             update_offset(end_date)
             ndjson_string = ''
