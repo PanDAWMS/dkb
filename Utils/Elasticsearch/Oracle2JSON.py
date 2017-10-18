@@ -53,56 +53,49 @@ def main():
         sys.stderr.write('Could not read config file %s' % conf)
 
     conn, cursor = connectDEFT_DSN(dsn)
+    process(conn, offset_date, final_date, step_hours, queries)
 
 
+def plain(conn, queries, offset_date, end_date):
+    tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
+    for task in tasks:
+        task['phys_category'] = get_category(task)
+        # send NDJSON string to STDOUT
+        sys.stdout.write(json.dumps(task) + '\n')
 
-    if mode == 'PLAIN':
 
-        while (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") < datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S")):
-            # get offset from configuration file
-            offset_date = get_offset()
-            end_date = (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") +
-                        timedelta(hours=step_hours)).strftime("%d-%m-%Y %H:%M:%S")
+def squash(conn, queries, offset_date, end_date):
+    tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
+    # get I/O datasets for time range (offset date + 24 hours)
+    datasets = query_executor(conn, queries['datasets']['file'], offset_date, end_date)
+    # set end_date as current offset in configuration file for next step
+    ndjson_string = ''
 
-            # get all tasks for time range (offset date + 24 hours)
-            tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
-            # set end_date as current offset in configuration file for next step
-            # joining datasets to tasks
-            ndjson_string = ''
-            for task in tasks:
-                task['phys_category'] = get_category(task)
-                # send NDJSON string to STDOUT
-                sys.stdout.write(json.dumps(task) + '\n')
-            update_offset(end_date)
+    datasets_io = []
+    for ds in datasets:
+        datasets_io.append(ds)
 
-    elif mode == 'SQUASH':
+    for idx, task in enumerate(tasks):
+        task['phys_category'] = get_category(task)
+        task['input_datasets'] = []
+        task['output_datasets'] = []
+        task['input_datasets'] = [row['datasetname'] for row in datasets_io
+                                  if row['type'] == 'input' and row['taskid'] == task['taskid']]
+        task['output_datasets'] = [row['datasetname'] for row in datasets_io
+                                   if row['type'] == 'output' and row['taskid'] == task['taskid']]
+        sys.stdout.write(json.dumps(task) + '\n')
 
-        while (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") < datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S")):
-            # get offset from configuration file
-            offset_date = get_offset()
-            end_date = (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") +
-                        timedelta(hours=step_hours)).strftime("%d-%m-%Y %H:%M:%S")
-                # get all tasks for time range (offset date + 24 hours)
-            tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
-            # get I/O datasets for time range (offset date + 24 hours)
-            datasets = query_executor(conn, queries['datasets']['file'], offset_date, end_date)
-            # set end_date as current offset in configuration file for next step
-            ndjson_string = ''
-
-            datasets_io = []
-            for ds in datasets:
-                datasets_io.append(ds)
-
-            for idx, task in enumerate(tasks):
-                task['phys_category'] = get_category(task)
-                task['input_datasets'] = []
-                task['output_datasets'] = []
-                task['input_datasets'] = [row['datasetname'] for row in datasets_io
-                                          if row['type'] == 'input' and row['taskid'] == task['taskid']]
-                task['output_datasets'] = [row['datasetname'] for row in datasets_io
-                                           if row['type'] == 'output' and row['taskid'] == task['taskid']]
-                sys.stdout.write(json.dumps(task) + '\n')
-            update_offset(end_date)
+def process(conn, offset_date, final_date, step_hours, queries):
+    while (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") < datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S")):
+        # get offset from configuration file
+        offset_date = get_offset()
+        end_date = (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") +
+                    timedelta(hours=step_hours)).strftime("%d-%m-%Y %H:%M:%S")
+        if mode == 'SQUASH':
+            squash(conn, queries, offset_date, end_date)
+        elif mode == 'PLAIN':
+            plain(conn, queries, offset_date, end_date)
+        update_offset(end_date)
 
 def get_initial_date():
     """
