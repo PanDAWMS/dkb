@@ -35,17 +35,11 @@ def main():
     try:
         config.read(conf)
         # unchangeable data
-        global dsn
         dsn = config.get("oracle", "dsn")
-        global initial_date
         initial_date = config.get("timestamps", "initial")
-        global step_hours
         step_hours = int(config.get("timestamps", "step_hours"))
-        global final_date
         final_date = config.get("timestamps", "final")
-        global tasks_sql_file
         tasks_sql_file = config.get("queries", "tasks")
-        global datasets_sql_file
         datasets_sql_file = config.get("queries", "datasets")
 
         # changeable data
