@@ -71,9 +71,8 @@ def main():
             ndjson_string = ''
             for task in tasks:
                 task['phys_category'] = get_category(task)
-                ndjson_string += json.dumps(task) + '\n'
-            # send NDJSON string to STDOUT
-            sys.stdout.write(ndjson_string)
+                # send NDJSON string to STDOUT
+                sys.stdout.write(json.dumps(task) + '\n')
             update_offset(end_date)
 
     elif mode == 'SQUASH':
@@ -99,11 +98,7 @@ def main():
                             task['input_datasets'].append(ds['datasetname'])
                         elif ds['type'] == 'output':
                             task['output_datasets'].append(ds['datasetname'])
-                ndjson_string += json.dumps(task) + '\n'
-                if (idx % 50 == 0):
-                    sys.stdout.write(ndjson_string)
-                    ndjson_string = ''
-            sys.stdout.write(ndjson_string)
+                sys.stdout.write(json.dumps(task) + '\n')
             update_offset(end_date)
 
 def get_initial_date():
