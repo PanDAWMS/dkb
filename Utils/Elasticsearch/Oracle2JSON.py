@@ -67,7 +67,6 @@ def main():
             # get all tasks for time range (offset date + 24 hours)
             tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
             # set end_date as current offset in configuration file for next step
-            update_offset(end_date)
             # joining datasets to tasks
             ndjson_string = ''
             for task in tasks:
@@ -75,6 +74,7 @@ def main():
                 ndjson_string += json.dumps(task) + '\n'
             # send NDJSON string to STDOUT
             sys.stdout.write(ndjson_string)
+            update_offset(end_date)
 
     elif mode == 'SQUASH':
 
@@ -88,7 +88,6 @@ def main():
             # get I/O datasets for time range (offset date + 24 hours)
             datasets = query_executor(conn, queries['datasets']['file'], offset_date, end_date)
             # set end_date as current offset in configuration file for next step
-            update_offset(end_date)
             ndjson_string = ''
             for idx, task in enumerate(tasks):
                 task['phys_category'] = get_category(task)
@@ -105,6 +104,7 @@ def main():
                     sys.stdout.write(ndjson_string)
                     ndjson_string = ''
             sys.stdout.write(ndjson_string)
+            update_offset(end_date)
 
 def get_initial_date():
     """
