@@ -6,6 +6,7 @@ import re
 import DButils
 import sys
 from datetime import datetime, timedelta
+from collections import defaultdict
 
 try:
     import cx_Oracle
@@ -84,6 +85,39 @@ def squash(conn, queries, offset_date, end_date):
         task['output_datasets'] = [row['datasetname'] for row in datasets_io
                                    if row['type'] == 'output' and row['taskid'] == task['taskid']]
         sys.stdout.write(json.dumps(task) + '\n')
+
+
+def squash_records(rec):
+    """
+    a single-pass iterator (for a generator) restructuring list of datasets: 
+    from view: 
+    [
+       {"taskid": 1, "type": "input", "datasetname": "First_in"},
+       {"taskid": 1, "type": "input", "datasetname": "Second_in"},
+       {"taskid": 1, "type": "input", "datasetname": "Third_in"},
+       {"taskid": 1, "type": "output", "datasetname": "First_out"},
+       {"taskid": 1, "type": "output", "datasetname": "Second_out"},
+       {"taskid": 1, "type": "output", "datasetname": "Third_out"},
+       {"taskid": 2, "type": "input", "datasetname": "First_in"},
+       {"taskid": 2, "type": "output", "datasetname": "First_out"},
+       {"taskid": 2, "type": "output", "datasetname": "Second_out"},
+    ...]
+     to 
+    [
+       {"taskid": 1, 
+        "input": ["First_in", "Second_in", "Third_in"], 
+        "output": ["First_out", "Second_out", "Third_out"]
+       },
+       {"taskid": 2, 
+        "input": ["First_in"], 
+        "output": ["First_out","Second_out"]
+       },
+    ...]
+    """
+    grouper = defaultdict(lambda: defaultdict(list))
+    for d in rec:
+        grouper[d['taskid']][d['type']].append(d['datasetname'])
+    return [dict(taskid=k, **v) for k, v in grouper.items()]
 
 def process(conn, offset_date, final_date, step_hours, queries):
     while (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") < datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S")):
