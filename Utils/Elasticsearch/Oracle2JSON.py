@@ -39,6 +39,8 @@ def main():
         initial_date = config.get("timestamps", "initial")
         step_hours = int(config.get("timestamps", "step_hours"))
         final_date = config.get("timestamps", "final")
+        if final_date == '':
+            final_date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
         queries_cfg = config.items("queries")
         queries = {}
         for (qname, file) in queries_cfg:
