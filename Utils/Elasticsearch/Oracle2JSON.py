@@ -88,16 +88,19 @@ def main():
             datasets = query_executor(conn, queries['datasets']['file'], offset_date, end_date)
             # set end_date as current offset in configuration file for next step
             ndjson_string = ''
+
+            datasets_io = []
+            for ds in datasets:
+                datasets_io.append(ds)
+
             for idx, task in enumerate(tasks):
                 task['phys_category'] = get_category(task)
                 task['input_datasets'] = []
                 task['output_datasets'] = []
-                for ds in datasets:
-                    if ds['taskid'] == task['taskid']:
-                        if ds['type'] == 'input':
-                            task['input_datasets'].append(ds['datasetname'])
-                        elif ds['type'] == 'output':
-                            task['output_datasets'].append(ds['datasetname'])
+                task['input_datasets'] = [row['datasetname'] for row in datasets_io
+                                          if row['type'] == 'input' and row['taskid'] == task['taskid']]
+                task['output_datasets'] = [row['datasetname'] for row in datasets_io
+                                           if row['type'] == 'output' and row['taskid'] == task['taskid']]
                 sys.stdout.write(json.dumps(task) + '\n')
             update_offset(end_date)
 
