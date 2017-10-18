@@ -67,25 +67,8 @@ def plain(conn, queries, offset_date, end_date):
 
 def squash(conn, queries, offset_date, end_date):
     tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
-    # get I/O datasets for time range (offset date + 24 hours)
     datasets = query_executor(conn, queries['datasets']['file'], offset_date, end_date)
-    # set end_date as current offset in configuration file for next step
-    ndjson_string = ''
-
-    datasets_io = []
-    for ds in datasets:
-        datasets_io.append(ds)
-
-    for idx, task in enumerate(tasks):
-        task['phys_category'] = get_category(task)
-        task['input_datasets'] = []
-        task['output_datasets'] = []
-        task['input_datasets'] = [row['datasetname'] for row in datasets_io
-                                  if row['type'] == 'input' and row['taskid'] == task['taskid']]
-        task['output_datasets'] = [row['datasetname'] for row in datasets_io
-                                   if row['type'] == 'output' and row['taskid'] == task['taskid']]
-        sys.stdout.write(json.dumps(task) + '\n')
-
+    join_results(tasks, squash_records(datasets))
 
 def squash_records(rec):
     """
@@ -118,6 +101,14 @@ def squash_records(rec):
     for d in rec:
         grouper[d['taskid']][d['type']].append(d['datasetname'])
     return [dict(taskid=k, **v) for k, v in grouper.items()]
+
+
+def join_results(tasks, datasets):
+    d = defaultdict(dict)
+    for l in (tasks, datasets):
+        for elem in l:
+            d[elem['taskid']].update(elem)
+            sys.stdout.write(json.dumps(str(d[elem['taskid']])) + '\n')
 
 def process(conn, offset_date, final_date, step_hours, queries):
     while (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") < datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S")):
