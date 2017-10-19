@@ -120,7 +120,10 @@ def process(conn, offset_date, final_date, step_hours, queries):
             squash(conn, queries, offset_date, end_date)
         elif mode == 'PLAIN':
             plain(conn, queries, offset_date, end_date)
-        update_offset(end_date)
+        if end_date < final_date:
+            update_offset(end_date)
+        else:
+            break
 
 def get_initial_date():
     """
