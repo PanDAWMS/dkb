@@ -108,7 +108,7 @@ def join_results(tasks, datasets):
     for l in (tasks, datasets):
         for elem in l:
             d[elem['taskid']].update(elem)
-            sys.stdout.write(json.dumps(str(d[elem['taskid']])) + '\n')
+            sys.stdout.write(json.dumps(d[elem['taskid']]) + '\n')
 
 def process(conn, offset_date, final_date, step_hours, queries):
     while (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") < datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S")):
