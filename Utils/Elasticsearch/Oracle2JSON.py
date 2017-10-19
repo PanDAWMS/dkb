@@ -42,7 +42,8 @@ def main():
         # unchangeable data
         dsn = config.get("oracle", "dsn")
         initial_date = config.get("timestamps", "initial")
-        step_hours = int(config.get("timestamps", "step_hours"))
+        step = config.get("timestamps", "step")
+        step_seconds = interval_seconds(step)
         final_date = config.get("timestamps", "final")
         if final_date == '':
             final_date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
@@ -58,7 +59,7 @@ def main():
         sys.stderr.write('Could not read config file %s\n' % conf)
 
     conn, cursor = connectDEFT_DSN(dsn)
-    process(conn, offset_date, final_date, step_hours, queries)
+    process(conn, offset_date, final_date, step_seconds, queries)
 
 
 def plain(conn, queries, offset_date, end_date):
@@ -114,12 +115,12 @@ def join_results(tasks, datasets):
             d[elem['taskid']].update(elem)
             sys.stdout.write(json.dumps(d[elem['taskid']]) + '\n')
 
-def process(conn, offset_date, final_date, step_hours, queries):
+def process(conn, offset_date, final_date, step_seconds, queries):
     while (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") < datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S")):
         # get offset from configuration file
         offset_date = get_offset()
         end_date = (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") +
-                    timedelta(hours=step_hours)).strftime("%d-%m-%Y %H:%M:%S")
+                    timedelta(seconds=step_seconds)).strftime("%d-%m-%Y %H:%M:%S")
         sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
                          % (datetime.now().strftime('%d-%m-%Y %H:%M:%S'),
                             offset_date, end_date))
@@ -168,6 +169,29 @@ def update_offset(new_offset):
     config.set('timestamps', 'offset', new_offset)
     with open(conf, 'w') as configfile:
         config.write(configfile)
+
+def interval_seconds(step):
+    """
+    Convert human-readable interval into seconds.
+
+    If no suffix present, take step as seconds.
+    """
+    try:
+        return int(step)
+    except ValueError:
+        pass
+    if len(step) < 2:
+        raise ValueError("Failed to decode interval: %s" % step)
+    suffix = { 'd': 86400, 'h': 3600, 'm': 60, 's': 1}
+    val = step[:-1]
+    try:
+        mul = suffix[step[-1]]
+        return int(val) * mul
+    except ValueError:
+        raise ValueError("Failed to decode numeric part of the interval: %s"
+                         % step)
+    except KeyError:
+        raise ValueError("Failes to decode index of the interval: %s" %step)
 
 def get_category(row):
     """
