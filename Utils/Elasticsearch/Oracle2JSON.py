@@ -117,8 +117,6 @@ def join_results(tasks, datasets):
 
 def process(conn, offset_date, final_date, step_seconds, queries):
     while (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") < datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S")):
-        # get offset from configuration file
-        offset_date = get_offset()
         end_date = (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") +
                     timedelta(seconds=step_seconds)).strftime("%d-%m-%Y %H:%M:%S")
         sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
@@ -130,8 +128,7 @@ def process(conn, offset_date, final_date, step_seconds, queries):
             plain(conn, queries, offset_date, end_date)
         if end_date < final_date:
             update_offset(end_date)
-        else:
-            break
+        offset_date = end_date
 
 def get_initial_date():
     """
