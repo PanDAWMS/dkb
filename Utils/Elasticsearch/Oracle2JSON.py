@@ -116,6 +116,9 @@ def process(conn, offset_date, final_date, step_hours, queries):
         offset_date = get_offset()
         end_date = (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") +
                     timedelta(hours=step_hours)).strftime("%d-%m-%Y %H:%M:%S")
+        sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
+                         % (datetime.now().strftime('%d-%m-%Y %H:%M:%S'),
+                            offset_date, end_date))
         if mode == 'SQUASH':
             squash(conn, queries, offset_date, end_date)
         elif mode == 'PLAIN':
