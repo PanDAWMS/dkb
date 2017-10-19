@@ -14,6 +14,10 @@ except:
     print "****ERROR : DButils. Cannot import cx_Oracle"
     pass
 
+# Policies
+PLAIN_POLICY='PLAIN'
+SQUASH_POLICY='SQUASH'
+
 def connectDEFT_DSN(dsn):
     connect = cx_Oracle.connect(dsn)
     cursor = connect.cursor()
@@ -119,9 +123,9 @@ def process(conn, offset_date, final_date, step_hours, queries):
         sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
                          % (datetime.now().strftime('%d-%m-%Y %H:%M:%S'),
                             offset_date, end_date))
-        if mode == 'SQUASH':
+        if mode == SQUASH_POLICY:
             squash(conn, queries, offset_date, end_date)
-        elif mode == 'PLAIN':
+        elif mode == PLAIN_POLICY:
             plain(conn, queries, offset_date, end_date)
         if end_date < final_date:
             update_offset(end_date)
@@ -232,7 +236,8 @@ def get_category(row):
 def parsingArguments():
     parser = argparse.ArgumentParser(description='Process command line arguments.')
     parser.add_argument('--config', help='Configuration file path')
-    parser.add_argument('--mode', help='Mode of execution: PLAIN | SQUASH')
+    parser.add_argument('--mode', help='Mode of execution: PLAIN | SQUASH',
+                        choices=[PLAIN_POLICY, SQUASH_POLICY])
     return parser.parse_args()
 
 if  __name__ == '__main__':
