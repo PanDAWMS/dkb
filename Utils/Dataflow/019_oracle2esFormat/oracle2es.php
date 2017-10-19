@@ -7,6 +7,7 @@ set_error_handler("exception_error_handler");
 
 function check_input(&$row) {
   $required_fields = array('hashtag_list', 'campaign', 'taskid');
+  $not_empty_fields = array('campaign', 'taskid');
 
   if (!is_array($row)) {
     fwrite(STDERR, "(WARN) Failed to decode message.\n");
@@ -16,6 +17,13 @@ function check_input(&$row) {
   foreach ($required_fields as $field) {
     if (!(array_key_exists($field, $row))) {
       fwrite(STDERR, "(WARN) Required field \"$field\" is missed.\n");
+      return FALSE;
+    }
+  }
+
+  foreach ($not_empty_fields as $field) {
+    if (!(array_key_exists($field, $row) && $row[$field])) {
+      fwrite(STDERR, "(WARN) Required field \"$field\" is empty.\n");
       return FALSE;
     }
   }
