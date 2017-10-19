@@ -143,6 +143,7 @@ def query_executor(conn, sql_file, offset_date, end_date):
         return DButils.ResultIter(conn, query, 1000, True)
     except IOError:
         sys.stderr.write('File open error. No such file (%s).\n' % sql_file)
+        sys.exit(2)
 
 
 def get_offset():
