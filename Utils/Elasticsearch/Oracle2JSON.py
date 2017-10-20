@@ -77,8 +77,8 @@ def squash(conn, queries, offset_date, end_date):
 
 def squash_records(rec):
     """
-    a single-pass iterator (for a generator) restructuring list of datasets: 
-    from view: 
+    a single-pass iterator (for a generator) restructuring list of datasets:
+    from view:
     [
        {"taskid": 1, "type": "input", "datasetname": "First_in"},
        {"taskid": 1, "type": "input", "datasetname": "Second_in"},
@@ -90,14 +90,14 @@ def squash_records(rec):
        {"taskid": 2, "type": "output", "datasetname": "First_out"},
        {"taskid": 2, "type": "output", "datasetname": "Second_out"},
     ...]
-     to 
+     to
     [
-       {"taskid": 1, 
-        "input": ["First_in", "Second_in", "Third_in"], 
+       {"taskid": 1,
+        "input": ["First_in", "Second_in", "Third_in"],
         "output": ["First_out", "Second_out", "Third_out"]
        },
-       {"taskid": 2, 
-        "input": ["First_in"], 
+       {"taskid": 2,
+        "input": ["First_in"],
         "output": ["First_out","Second_out"]
        },
     ...]
