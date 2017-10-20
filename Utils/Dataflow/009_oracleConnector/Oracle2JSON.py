@@ -55,6 +55,7 @@ def main():
             offset_date = initial_date
     except IOError:
         sys.stderr.write('Could not read config file %s\n' % conf)
+        sys.exit(1)
 
     conn, cursor = connectDEFT_DSN(dsn)
     process(conn, offset_date, final_date, step_seconds, queries)
