@@ -143,11 +143,11 @@
           "type" : "keyword",
           "ignore_above" : 256
         },
-        "input_datasets" : {
+        "input" : {
           "type" : "keyword",
           "ignore_above" : 256
         },
-        "output_datasets" : {
+        "output" : {
           "type" : "keyword",
           "ignore_above" : 256
         },
