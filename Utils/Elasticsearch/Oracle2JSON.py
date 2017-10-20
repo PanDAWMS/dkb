@@ -119,6 +119,8 @@ def process(conn, offset_date, final_date, step_seconds, queries):
     while (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") < datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S")):
         end_date = (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") +
                     timedelta(seconds=step_seconds)).strftime("%d-%m-%Y %H:%M:%S")
+        if end_date > final_date:
+            end_date = final_date
         sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
                          % (datetime.now().strftime('%d-%m-%Y %H:%M:%S'),
                             offset_date, end_date))
@@ -126,8 +128,7 @@ def process(conn, offset_date, final_date, step_seconds, queries):
             squash(conn, queries, offset_date, end_date)
         elif mode == PLAIN_POLICY:
             plain(conn, queries, offset_date, end_date)
-        if end_date < final_date:
-            update_offset(end_date)
+        update_offset(end_date)
         offset_date = end_date
 
 def get_initial_date():
