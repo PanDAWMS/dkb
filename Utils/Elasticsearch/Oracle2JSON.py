@@ -15,8 +15,8 @@ except:
     pass
 
 # Policies
-PLAIN_POLICY='PLAIN'
-SQUASH_POLICY='SQUASH'
+PLAIN_POLICY = 'PLAIN'
+SQUASH_POLICY = 'SQUASH'
 
 def connectDEFT_DSN(dsn):
     connect = cx_Oracle.connect(dsn)
@@ -194,7 +194,7 @@ def interval_seconds(step):
         raise ValueError("Failed to decode numeric part of the interval: %s"
                          % step)
     except KeyError:
-        raise ValueError("Failes to decode index of the interval: %s" %step)
+        raise ValueError("Failes to decode index of the interval: %s" % step)
 
 def str2date(str_date):
     """ Convert string (%d-%m-%Y %H:%M:%S) to datetime object. """
