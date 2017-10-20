@@ -60,6 +60,10 @@ if ($h) {
       $row['hashtag_list'][] = trim($tag);
     }
 
+    if (!$row['hashtag_list']) {
+        unset($row['hashtag_list']);
+    }
+
     printf('{ "index" : {"_index":"prodsys", "_type":"%s", "_id":"%d" } }'."\n", $row['campaign'], $row['taskid']);
 
     echo json_encode($row)."\n";
