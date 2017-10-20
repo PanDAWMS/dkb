@@ -45,8 +45,6 @@ def main():
         step = config.get("timestamps", "step")
         step_seconds = interval_seconds(step)
         final_date = config.get("timestamps", "final")
-        if final_date == '':
-            final_date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
         queries_cfg = config.items("queries")
         queries = {}
         for (qname, file) in queries_cfg:
@@ -115,12 +113,19 @@ def join_results(tasks, datasets):
             d[elem['taskid']].update(elem)
             sys.stdout.write(json.dumps(d[elem['taskid']]) + '\n')
 
-def process(conn, offset_date, final_date, step_seconds, queries):
-    while (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") < datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S")):
+def process(conn, offset_date, final_date_cfg, step_seconds, queries):
+    if final_date_cfg:
+        final_date = final_date_cfg
+    else:
+        final_date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
+    break_loop = False
+    while (not break_loop and
+           datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") < datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S")):
         end_date = (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") +
                     timedelta(seconds=step_seconds)).strftime("%d-%m-%Y %H:%M:%S")
         if end_date > final_date:
             end_date = final_date
+            break_loop = True
         sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
                          % (datetime.now().strftime('%d-%m-%Y %H:%M:%S'),
                             offset_date, end_date))
@@ -130,6 +135,8 @@ def process(conn, offset_date, final_date, step_seconds, queries):
             plain(conn, queries, offset_date, end_date)
         update_offset(end_date)
         offset_date = end_date
+        if not final_date_cfg:
+            final_date = datetime.now().strftime('%d-%m-%Y %H:%M:%S')
 
 def get_initial_date():
     """
