@@ -6,25 +6,21 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 set_error_handler("exception_error_handler");
 
 function check_input(&$row) {
-  $required_fields = array('hashtag_list', 'campaign', 'taskid');
-  $not_empty_fields = array('campaign', 'taskid');
+  $required_fields = array('hashtag_list' => '', 'campaign' => 'undefined', 'taskid' => null);
 
   if (!is_array($row)) {
     fwrite(STDERR, "(WARN) Failed to decode message.\n");
     return FALSE;
   }
 
-  foreach ($required_fields as $field) {
-    if (!(array_key_exists($field, $row))) {
-      fwrite(STDERR, "(WARN) Required field \"$field\" is missed.\n");
-      return FALSE;
-    }
-  }
-
-  foreach ($not_empty_fields as $field) {
+  foreach (array_keys($required_fields) as $field) {
     if (!(array_key_exists($field, $row) && $row[$field])) {
-      fwrite(STDERR, "(WARN) Required field \"$field\" is empty.\n");
-      return FALSE;
+      if ($required_fields[$field] !== null) {
+        $row[$field] = $required_fields[$field];
+      } else {
+        fwrite(STDERR, "(WARN) Required field \"$field\" is empty and has no default value.\n");
+        return FALSE;
+      }
     }
   }
 
