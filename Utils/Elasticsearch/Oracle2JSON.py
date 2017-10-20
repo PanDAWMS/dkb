@@ -123,7 +123,7 @@ def process(conn, offset_date, final_date_cfg, step_seconds, queries):
            datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") < datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S")):
         end_date = (datetime.strptime(offset_date, "%d-%m-%Y %H:%M:%S") +
                     timedelta(seconds=step_seconds)).strftime("%d-%m-%Y %H:%M:%S")
-        if end_date > final_date:
+        if datetime.strptime(end_date, "%d-%m-%Y %H:%M:%S") > datetime.strptime(final_date, "%d-%m-%Y %H:%M:%S"):
             end_date = final_date
             break_loop = True
         sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
