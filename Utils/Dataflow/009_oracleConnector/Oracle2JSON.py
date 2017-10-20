@@ -272,7 +272,8 @@ def get_category(row):
 
 def parsingArguments():
     parser = argparse.ArgumentParser(description='Process command line arguments.')
-    parser.add_argument('--config', help='Configuration file path')
+    parser.add_argument('--config', help='Configuration file path',
+                        type=argparse.FileType('rw'), required=True)
     parser.add_argument('--mode', help='Mode of execution: PLAIN | SQUASH',
                         choices=[PLAIN_POLICY, SQUASH_POLICY])
     return parser.parse_args()
