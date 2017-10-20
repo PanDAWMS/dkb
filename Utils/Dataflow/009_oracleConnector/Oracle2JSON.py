@@ -53,8 +53,9 @@ def main():
         offset_date = config.get("timestamps", "offset")
         if offset_date == '':
             offset_date = initial_date
-    except IOError:
-        sys.stderr.write('Could not read config file %s\n' % conf)
+    except (IOError, ConfigParser.Error), e:
+        sys.stderr.write('Failed to read config file (%s): %s\n'
+                         % (conf, e))
         sys.exit(1)
 
     conn, cursor = connectDEFT_DSN(dsn)
