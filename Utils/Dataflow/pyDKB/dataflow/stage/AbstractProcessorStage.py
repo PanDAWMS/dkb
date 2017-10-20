@@ -77,9 +77,6 @@ class AbstractProcessorStage(AbstractStage):
     __input_message_class = None
     __output_message_class = None
 
-    __stream_EOMessage = '\n'
-    __stream_EOProcess = '\0'
-
     def __init__(self, description="DKB Dataflow data processing stage."):
         """ Initialize the stage
 
@@ -93,8 +90,6 @@ class AbstractProcessorStage(AbstractStage):
         self.__input = []
         self.__output_buffer = []
         self.__stoppable = []
-        self.__EOMessage = '\n'
-        self.__EOProcess = '\n'
         super(AbstractProcessorStage, self).__init__(description)
 
     def _set_input_message_class(self, Type=None):
@@ -227,8 +222,6 @@ class AbstractProcessorStage(AbstractStage):
         elif self.ARGS.dest == 's':
            ustdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
            self.__output = ustdout
-           self.__EOMessage = self.__stream_EOMessage
-           self.__EOProcess = self.__stream_EOProcess
 
         self.__stoppable_append(self.__output, types.GeneratorType)
 
@@ -310,7 +303,7 @@ class AbstractProcessorStage(AbstractStage):
         Split stream into messages;
         Yield Message object.
         """
-        if self.__EOMessage == '\n':
+        if self.ARGS.eom == '\n':
             iterator = iter(fd.readline, "")
             for line in iterator:
                 yield self.parseMessage(line)
@@ -342,11 +335,10 @@ class AbstractProcessorStage(AbstractStage):
                            )
 
 
-
     def forward(self):
         """ Send EOPMessage in the streaming output mode. """
         if self.ARGS.dest == 's':
-            self.__output.write(self.__EOProcess)
+            self.__output.write(self.ARGS.eop)
 
     def flush_buffer(self):
         """ Flush message buffer to the output. """
@@ -361,7 +353,7 @@ class AbstractProcessorStage(AbstractStage):
             fd = self.__output
         for msg in self.__output_buffer:
             fd.write(msg.encode())
-            fd.write(self.__EOMessage)
+            fd.write(self.ARGS.eom)
 
     def file_flush(self):
         """ Flush message buffer into a file.
