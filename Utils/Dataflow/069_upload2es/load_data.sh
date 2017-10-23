@@ -5,7 +5,7 @@ log() {
 
 usage() {
   echo "USAGE:
-$(basename "$0") FILE
+$(basename "$0") FILE...
 
 PARAMETERS:
   FILE -- file in NDJSON format for loading to Elasticsearch via bulk interface
@@ -25,4 +25,7 @@ ES_PORT='9200'
 [ -n "$ES_USER" -a "$ES_PASSWORD" ] && ES_AUTH="--user ${ES_USER}:${ES_PASSWORD}"
 
 log "Putting data to ES"
-curl $ES_AUTH "http://$ES_HOST:$ES_PORT/_bulk?pretty" --data-binary @${1} || exit 3
+for INPUTFILE in $*;
+do
+  curl $ES_AUTH "http://$ES_HOST:$ES_PORT/_bulk?pretty" --data-binary @${INPUTFILE} || exit 3
+done
