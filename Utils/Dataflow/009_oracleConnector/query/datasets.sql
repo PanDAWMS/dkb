@@ -11,7 +11,7 @@ FROM
   ATLAS_PANDA.jedi_datasets jd
   ON jd.jeditaskid = t.taskid
 WHERE
-  jd.type IN ('input', 'output')
-  AND t.timestamp > to_date('22-04-2016 00:00:00', 'dd-mm-yyyy hh24:mi:ss')
-  AND t.timestamp <= to_date('23-04-2016 00:00:00', 'dd-mm-yyyy hh24:mi:ss')
+  jd.type IN ('input', 'output') AND
+  t.timestamp > to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
+  t.timestamp <= to_date('%s', 'dd-mm-yyyy hh24:mi:ss')
 ORDER BY t.taskid;

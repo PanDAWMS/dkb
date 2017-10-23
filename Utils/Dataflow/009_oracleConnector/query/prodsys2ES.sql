@@ -46,7 +46,8 @@ with tasks as (
       LEFT JOIN ATLAS_DEFT.t_hashtag hashtag
         ON hashtag.ht_id = ht_t.ht_id
     WHERE
-      t.timestamp > to_date('%%OFFSET%%', 'dd-mm-yyyy hh24:mi:ss')
+      t.timestamp > to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
+      t.timestamp <= to_date('%s', 'dd-mm-yyyy hh24:mi:ss')
     GROUP BY
         t.campaign,
         t.taskid,
@@ -272,12 +273,44 @@ with tasks as (
     t.evgen_job_opts,
     t.cloud,
     t.site,
-    jd.nevents AS requested_events,
-    jd.neventsused AS processed_events
+    sum(jd.nevents) AS requested_events,
+    sum(jd.neventsused) AS processed_events
   FROM tasks_t_task t
     LEFT JOIN ATLAS_PANDA.jedi_datasets jd
       ON jd.jeditaskid = t.taskid
   WHERE jd.type IN ('input')
         AND jd.masterid IS NULL
+  GROUP by
+    t.campaign,
+    t.subcampaign,
+    t.phys_group,
+    t.project,
+    t.pr_id,
+    t.step_name,
+    t.status,
+    t.taskid,
+    t.taskname,
+    t.task_timestamp,
+    t.start_time,
+    t.end_time,
+    t.hashtag_list,
+    t.description,
+    t.energy_gev,
+    t.architecture,
+    t.core_count,
+    t.conditions_tags,
+    t.geometry_version,
+    t.ticket_id,
+    t.trans_home,
+    t.trans_path,
+    t.trans_uses,
+    t.user_name,
+    t.vo,
+    t.run_number,
+    t.trigger_config,
+    t.job_config,
+    t.evgen_job_opts,
+    t.cloud,
+    t.site
   ORDER BY
     t.taskid;
