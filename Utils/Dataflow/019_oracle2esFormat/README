@@ -1,0 +1,34 @@
+============
+* Stage 19 *
+============
+
+Description
+-----------
+Prepare data, taken by Oracle Connector, before uploading to ElasticSearch:
+ * turn JSON keys to lower case
+ * parse comma-separated string 'hashtag_list' to array
+ * generate JSON with index information
+
+Input
+-----
+...comes from Oracle Connector: JSON documents, one document -- one line.
+
+Output
+------
+JSON documents, one document per line:
+{{{
+ <index info>
+ <data>
+ <index info>
+ <data>
+ ...
+}}}
+
+TODO
+----
+Currently, it operates as if one line was one message (piece of information).
+For input it is OK, but for output it would be better to take <index info> and
+  <data> JSON documents together, as one message. I don`t know where it will
+  be critical for now, but something tells me that it will.
+This task requires accurate EOMessage and EOProcess markers handling (see the
+  `kafka-dataflow-markers` branch).
