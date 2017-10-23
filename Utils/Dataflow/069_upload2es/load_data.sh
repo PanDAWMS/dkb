@@ -3,9 +3,18 @@ log() {
   echo "$(date): $*" >&2
 }
 
+usage() {
+  echo "USAGE:
+$(basename "$0") FILE
+
+PARAMETERS:
+  FILE -- file in NDJSON format for loading to Elasticsearch via bulk interface
+"
+}
+
 base_dir=$( cd "$( dirname "$( readlink -f "$0" )" )" && pwd )
 
-[ -z "$1" -o ! -f "$1" ] && log "First argument should be a file in ndjson format for loading to Elasticsearch via bulk interface" && exit 1
+[ -z "$1" -o ! -f "$1" ] && log $(usage) && exit 1
  
 ES_CONFIG="$(base_dir)/../config/es"
 log "Loading defaults and config $ES_CONFIG if any"
