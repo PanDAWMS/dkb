@@ -110,12 +110,27 @@ def squash_records(rec):
 
 def join_results(tasks, datasets):
     d = defaultdict(dict)
-    for l in (tasks, datasets):
+    buffers = (tasks, datasets)
+    join_buffer = {}
+    req_n = len(buffers)
+    for l in buffers:
         for elem in l:
             tid = elem['taskid']
             d[tid].update(elem)
-            d[tid]['phys_category'] = get_category(d[tid])
-            sys.stdout.write(json.dumps(d[tid]) + '\n')
+            n = join_buffer.get(tid, 0) + 1
+            if n == req_n:
+                d[tid]['phys_category'] = get_category(d[tid])
+                sys.stdout.write(json.dumps(d[tid]) + '\n')
+                del join_buffer[tid]
+                del d[tid]
+            else:
+                join_buffer[tid] = n
+
+    # Flush records stuck in the buffer (not joined)
+    for tid in d:
+        d[tid]['phys_category'] = get_category(d[tid])
+        sys.stdout.write(json.dumps(d[tid]) + '\n')
+
 
 def process(conn, offset_date, final_date_cfg, step_seconds, queries):
     if final_date_cfg:
