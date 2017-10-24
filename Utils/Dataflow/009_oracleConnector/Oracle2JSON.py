@@ -112,9 +112,10 @@ def join_results(tasks, datasets):
     d = defaultdict(dict)
     for l in (tasks, datasets):
         for elem in l:
-            d[elem['taskid']].update(elem)
-            d[elem['taskid']]['phys_category'] = get_category(d[elem['taskid']])
-            sys.stdout.write(json.dumps(d[elem['taskid']]) + '\n')
+            tid = elem['taskid']
+            d[tid].update(elem)
+            d[tid]['phys_category'] = get_category(d[tid])
+            sys.stdout.write(json.dumps(d[tid]) + '\n')
 
 def process(conn, offset_date, final_date_cfg, step_seconds, queries):
     if final_date_cfg:
