@@ -13,6 +13,10 @@
 -- energy_gev, evgen_job_opts, geometry_version, hashtag_list, job_config, physics_list, processed_events,
 -- phys_group, project, pr_id, requested_events, run_number, site, start_time, step_name, status, subcampaign,
 -- taskid, taskname, task_timestamp,  ticket_id, trans_home, trans_path, trans_uses, trigger_config, user_name, vo
+
+-- RESTRICTIONS:
+-- 1. taskID must be more than 4 000 000 OR from the date > 12-03-2014
+-- 2. we collecting only PRODUCTION tasks
 with tasks as (
     SELECT
       t.campaign,
@@ -81,27 +85,27 @@ with tasks as (
         t.hashtag_list,
         t.description,
         t.energy_gev,
-        to_char(NVL(substr(regexp_substr(jedi_task_parameters, '"architecture": "(.[^",])+'),
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"architecture": "(.[^",])+'),
                            regexp_instr(
-                               regexp_substr(jedi_task_parameters, '"architecture": "(.[^",])+'),
+                               regexp_substr(tt.jedi_task_parameters, '"architecture": "(.[^",])+'),
                                '(": ")+',
                                1,
                                1,
                                1
                            )
                     ), '')) AS architecture,
-        to_char(NVL(substr(regexp_substr(jedi_task_parameters, '"coreCount": [0-9\.]+'),
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"coreCount": [0-9\.]+'),
                            regexp_instr(
-                               regexp_substr(jedi_task_parameters, '"coreCount": [0-9\.]+'),
+                               regexp_substr(tt.jedi_task_parameters, '"coreCount": [0-9\.]+'),
                                '(": )+',
                                1,
                                1,
                                1
                            )
                     ), '')) AS core_count,
-        to_char(NVL(substr(regexp_substr(jedi_task_parameters, '"\-\-conditionsTag \\"default:[a-zA-Z0-9_\-]+[^\""]'),
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"\-\-conditionsTag \\"default:[a-zA-Z0-9_\-]+[^\""]'),
                            regexp_instr(
-                               regexp_substr(jedi_task_parameters,
+                               regexp_substr(tt.jedi_task_parameters,
                                              '"\-\-conditionsTag \\"default:[a-zA-Z0-9_\-]+[^\""]'),
                                '(:)+',
                                1,
@@ -109,9 +113,9 @@ with tasks as (
                                1
                            )
                     ), '')) AS conditions_tags,
-        to_char(NVL(substr(regexp_substr(jedi_task_parameters, '"\-\-geometryVersion=\\"default:[a-zA-Z0-9_\-]+[^\""]'),
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"\-\-geometryVersion=\\"default:[a-zA-Z0-9_\-]+[^\""]'),
                            regexp_instr(
-                               regexp_substr(jedi_task_parameters,
+                               regexp_substr(tt.jedi_task_parameters,
                                              '"\-\-geometryVersion=\\"default:[a-zA-Z0-9_\-]+[^\""]'),
                                '(:)+',
                                1,
@@ -227,7 +231,11 @@ with tasks as (
                                1,
                                1
                            )
-                    ), '')) AS site,
+                    ), '')) AS site
+      FROM
+        tasks t LEFT JOIN t_task tt
+          ON t.taskid = tt.taskid
+      WHERE
         to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"taskType": "(.[^",])+'),
                            regexp_instr(
                                regexp_substr(tt.jedi_task_parameters, '"taskType": "(.[^",])+'),
@@ -236,10 +244,7 @@ with tasks as (
                                1,
                                1
                            )
-                    ), '')) AS task_type
-      FROM
-        tasks t LEFT JOIN t_task tt
-          ON t.taskid = tt.taskid
+                    ), '')) = 'prod'
   )
   SELECT
     t.campaign,
