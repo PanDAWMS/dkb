@@ -65,15 +65,13 @@ def main():
 def plain(conn, queries, offset_date, end_date):
     tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
     for task in tasks:
-        task['phys_category'] = get_category(task)
-        # send NDJSON string to STDOUT
-        sys.stdout.write(json.dumps(task) + '\n')
+        yield task
 
 
 def squash(conn, queries, offset_date, end_date):
     tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
     datasets = query_executor(conn, queries['datasets']['file'], offset_date, end_date)
-    join_results(tasks, squash_records(datasets))
+    return join_results(tasks, squash_records(datasets))
 
 def squash_records(rec):
     """
@@ -119,8 +117,7 @@ def join_results(tasks, datasets):
             d[tid].update(elem)
             n = join_buffer.get(tid, 0) + 1
             if n == req_n:
-                d[tid]['phys_category'] = get_category(d[tid])
-                sys.stdout.write(json.dumps(d[tid]) + '\n')
+                yield d[tid]
                 del join_buffer[tid]
                 del d[tid]
             else:
@@ -128,8 +125,7 @@ def join_results(tasks, datasets):
 
     # Flush records stuck in the buffer (not joined)
     for tid in d:
-        d[tid]['phys_category'] = get_category(d[tid])
-        sys.stdout.write(json.dumps(d[tid]) + '\n')
+        yield d[tid]
 
 
 def process(conn, offset_date, final_date_cfg, step_seconds, queries):
@@ -147,9 +143,12 @@ def process(conn, offset_date, final_date_cfg, step_seconds, queries):
         sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
                          % (date2str(datetime.now()), offset_date, end_date))
         if mode == SQUASH_POLICY:
-            squash(conn, queries, offset_date, end_date)
+            records = squash(conn, queries, offset_date, end_date)
         elif mode == PLAIN_POLICY:
-            plain(conn, queries, offset_date, end_date)
+            records = plain(conn, queries, offset_date, end_date)
+        for r in records:
+            r['phys_category'] = get_category(r)
+            sys.stdout.write(json.dumps(r) + '\n')
         update_offset(end_date)
         offset_date = end_date
         if not final_date_cfg:
