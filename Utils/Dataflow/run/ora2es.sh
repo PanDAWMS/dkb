@@ -46,4 +46,4 @@ mediator() {
 
 # Run Oracle Connector
 
-oracle_conector | $cmd_19 | mediator | $cmd_69
+oracle_connector | $cmd_19 | mediator | $cmd_69
