@@ -78,8 +78,14 @@ router.post('/dataset_search', function(req, res, next) {
 	});
 });
 /* GET home page. */
-router.get('/', function(req, res, next) {
 
+router.get('/', function(req, res, next) {
+	// get ElasticSearch mapping to retrieve all search fields
+	res.render('index', { title: 'Express'});
+});
+
+router.post('/', function(req, res, next) {
+	campaign = req.body.campaign;
 	// client.ping({
 	//   // ping usually has a 3000ms timeout
 	//   requestTimeout: 1000
@@ -96,18 +102,18 @@ router.get('/', function(req, res, next) {
 		 "query": {
 		   "bool": {
 		     "must": [
-		       { "term": { "subcampaign.keyword": "MC16a" } },
+		       { "term": { "campaign.keyword": campaign } },
 		       { "term": { "status": "done" } }
-		     ],
-		     "should": [
-		       { "term": { "hashtag_list": "MC16a"} },
-		       { "term": { "hashtag_list": "MC16a_CP"} }
-		     ]
+		     ]//,
+		     // "should": [
+		     //   { "term": { "hashtag_list": "MC16a"} },
+		     //   { "term": { "hashtag_list": "MC16a_CP"} }
+		     // ]
 		   }
 		 },
 		 "aggs": {
 		   "category": {
-		     "terms": {"field": "phys_category"},
+		     "terms": {"field": "phys_group.keyword"},
 		     "aggs": {
 		       "step": {
 		         "terms": {
@@ -131,7 +137,7 @@ router.get('/', function(req, res, next) {
 
 	client.search({
 	  "index": "prodsys",
-	  "type": "MC16",
+	  "type": "MC15",
 	  "body": event_summary_report
 	}).then(function (resp) {
 		// console.log(resp);
