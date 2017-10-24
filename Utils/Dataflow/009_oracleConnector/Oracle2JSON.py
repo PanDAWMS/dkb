@@ -252,22 +252,23 @@ def get_category(row):
     if len(categories) > 0:
         return categories
     else:
-        phys_short = taskname.split('.')[2].lower()
-        if re.search('singletop', phys_short) is not None: categories.append("SingleTop")
-        if re.search('ttbar', phys_short) is not None: categories.append("TTbar")
-        if re.search('jets', phys_short) is not None: categories.append("Multijet")
-        if re.search('h125', phys_short) is not None: categories.append("Higgs")
-        if re.search('ttbb', phys_short) is not None: categories.append("TTbarX")
-        if re.search('ttgamma', phys_short) is not None: categories.append("TTbarX")
-        if re.search('_tt_', phys_short) is not None: categories.append("TTbar")
-        if re.search('upsilon', phys_short) is not None: categories.append("BPhysics")
-        if re.search('tanb', phys_short) is not None: categories.append("SUSY")
-        if re.search('4topci', phys_short) is not None: categories.append("Exotic")
-        if re.search('xhh', phys_short) is not None: categories.append("Higgs")
-        if re.search('3top', phys_short) is not None: categories.append("TTbarX")
-        if re.search('_wt', phys_short) is not None: categories.append("SingleTop")
-        if re.search('_wwbb', phys_short) is not None: categories.append("SingleTop")
-        if re.search('_wenu_', phys_short) is not None: categories.append("Wjets")
+        if taskname is not None:
+            phys_short = taskname.split('.')[2].lower()
+            if re.search('singletop', phys_short) is not None: categories.append("SingleTop")
+            if re.search('ttbar', phys_short) is not None: categories.append("TTbar")
+            if re.search('jets', phys_short) is not None: categories.append("Multijet")
+            if re.search('h125', phys_short) is not None: categories.append("Higgs")
+            if re.search('ttbb', phys_short) is not None: categories.append("TTbarX")
+            if re.search('ttgamma', phys_short) is not None: categories.append("TTbarX")
+            if re.search('_tt_', phys_short) is not None: categories.append("TTbar")
+            if re.search('upsilon', phys_short) is not None: categories.append("BPhysics")
+            if re.search('tanb', phys_short) is not None: categories.append("SUSY")
+            if re.search('4topci', phys_short) is not None: categories.append("Exotic")
+            if re.search('xhh', phys_short) is not None: categories.append("Higgs")
+            if re.search('3top', phys_short) is not None: categories.append("TTbarX")
+            if re.search('_wt', phys_short) is not None: categories.append("SingleTop")
+            if re.search('_wwbb', phys_short) is not None: categories.append("SingleTop")
+            if re.search('_wenu_', phys_short) is not None: categories.append("Wjets")
         return categories
     return "Uncategorized"
 
