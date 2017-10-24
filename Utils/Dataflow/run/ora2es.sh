@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 START_OFFSET="09-05-2016 00:00:00"
+BATCH_SIZE=100
 
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
 
@@ -28,12 +29,21 @@ flush_buffer() {
   rm -f $buffer
 }
 
+oracle_connector() {
+  $cmd_OC --config $cfg_OC --mode "SQUASH"
+}
 
-BATCH_SIZE=100
-i=0
-{ $cmd_OC --config $cfg_OC --mode "SQUASH" | $cmd_19 | while read -r line; do
-  echo $line >> $buffer
-  let i=$i+1
-  let f=$i%$BATCH_SIZE
-  [ $f -eq 0 ] && flush_buffer
-done; flush_buffer; } | $cmd_69
+mediator() {
+  i=0
+  while read -r line; do
+    echo $line >> $buffer
+    let i=$i+1
+    let f=$i%$BATCH_SIZE
+    [ $f -eq 0 ] && flush_buffer
+  done
+  flush_buffer
+}
+
+# Run Oracle Connector
+
+oracle_conector | $cmd_19 | mediator | $cmd_69
