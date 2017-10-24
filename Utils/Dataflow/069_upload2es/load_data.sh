@@ -24,7 +24,7 @@ ES_PORT='9200'
 
 CURL_N_MAX=10
 SLEEP=5
-DELIMETER=`echo -e -n "\x00"`
+DELIMITER=`echo -e -n "\x00"`
 EOProcess=`echo -e -n "\x06"`
 
 cmd="curl $ES_AUTH http://$ES_HOST:$ES_PORT/_bulk?pretty --data-binary @"
