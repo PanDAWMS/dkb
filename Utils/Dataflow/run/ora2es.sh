@@ -19,11 +19,21 @@ sed -i.bak -e"s/^offset = .*$/offset = $START_OFFSET/" \
     $cfg_OC
 
 # Run Oracle Connector
+buffer="${base_dir}/.record_buffer"
+touch $buffer || { echo "Failed to access buffer file." >&2; exit 2; }
+
+flush_buffer() {
+  cat $buffer
+  echo -e '\x00'
+  rm -f $buffer
+}
+
+
 BATCH_SIZE=100
 i=0
 { $cmd_OC --config $cfg_OC --mode "SQUASH" | $cmd_19 | while read -r line; do
-  echo $line
+  echo $line >> $buffer
   let i=$i+1
   let f=$i%$BATCH_SIZE
-  [ $f -eq 0 ] && echo -e '\x00'
-done; echo -e '\x00'; } | $cmd_69
+  [ $f -eq 0 ] && flush_buffer
+done; flush_buffer; } | $cmd_69
