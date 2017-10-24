@@ -21,9 +21,9 @@ sed -i.bak -e"s/^offset = .*$/offset = $START_OFFSET/" \
 # Run Oracle Connector
 BATCH_SIZE=100
 i=0
-$cmd_OC --config $cfg_OC --mode "SQUASH" | $cmd_19 | while read -r line; do
+{ $cmd_OC --config $cfg_OC --mode "SQUASH" | $cmd_19 | while read -r line; do
   echo $line
   let i=$i+1
   let f=$i%$BATCH_SIZE
   [ $f -eq 0 ] && echo -e '\x00'
-done | $cmd_69
+done; echo -e '\x00'; } | $cmd_69
