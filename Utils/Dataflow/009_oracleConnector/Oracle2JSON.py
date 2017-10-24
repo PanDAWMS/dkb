@@ -1,4 +1,5 @@
 #!/bin/env python
+import os
 import json
 import argparse
 import ConfigParser
@@ -290,9 +291,16 @@ def get_category(row):
 def parsingArguments():
     parser = argparse.ArgumentParser(description='Process command line arguments.')
     parser.add_argument('--config', help='Configuration file path',
-                        type=argparse.FileType('rw'), required=True)
+                        type=str, required=True)
     parser.add_argument('--mode', help='Mode of execution: PLAIN | SQUASH',
                         choices=[PLAIN_POLICY, SQUASH_POLICY])
+    args = parser.parse_args()
+    if not os.access(args.config, os.F_OK):
+        sys.stderr.write("argument --config: '%s' file not exists\n" % args.config)
+        sys.exit(1)
+    if not os.access(args.config, os.R_OK|os.W_OK):
+        sys.stderr.write("argument --config: '%s' read/write access failed\n" % args.config)
+        sys.exit(1)
     return parser.parse_args()
 
 if  __name__ == '__main__':
