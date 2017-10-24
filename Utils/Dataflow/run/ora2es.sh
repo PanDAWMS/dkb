@@ -6,14 +6,14 @@ BATCH_SIZE=100
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
 
 # Oracle Connector
-cmd_OC="${base_dir}/../../Elasticsearch/Oracle2JSON.py"
+cmd_OC="${base_dir}/../009_oracleConnector/Oracle2JSON.py"
 cfg_OC="${base_dir}/ora2json.cfg"
 
 # Stage 19
-cmd_19="${base_dir}/../../019_oracle2esFormat/oracle2es.php"
+cmd_19="${base_dir}/../019_oracle2esFormat/oracle2es.php"
 
 # Stage 69
-cmd_69="${base_dir}/../../069_upload2es/load_data.sh"
+cmd_69="${base_dir}/../069_upload2es/load_data.sh"
 
 # Reset offset value
 sed -i.bak -e"s/^offset = .*$/offset = $START_OFFSET/" \
