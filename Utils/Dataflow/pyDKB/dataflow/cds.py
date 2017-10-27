@@ -5,6 +5,7 @@ Extended CDSInvenioConnector allowing us to login via Kerberos
 __all__ = ["CDSInvenioConnector", "KerberizedCDSInvenioConnector"]
 
 import sys
+import signal
 
 try:
     import kerberos
@@ -26,11 +27,20 @@ else:
             return self
 
         def __exit__(self, exc_type, exc_val, exc_tb):
-            if self.browser:
+            """ Propagate exceptions after with...as construction. """
+            self.delete()
+            if exc_type:
+                return False
+            return True
+
+        def __del__(self):
+            self.delete()
+
+        def delete(self):
+            if getattr(self, 'browser', None):
+                self.browser.driver.service.process.send_signal(signal.SIGTERM)
                 self.browser.quit()
-            if isinstance(exc_val, KeyboardInterrupt):
-                return True
-            return False
+                del self.browser
 
     class KerberizedCDSInvenioConnector(CDSInvenioConnector):
         """
