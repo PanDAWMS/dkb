@@ -237,9 +237,12 @@ class AbstractProcessorStage(AbstractStage):
             try:
                 if msg and self.process(self, msg):
                     self.flush_buffer()
+            except Exception:
+                raise
+            else:
+                self.forward()
             finally:
                 self.clear_buffer()
-                self.forward()
 
     def stop(self):
         """ Finalize all the processes and prepare to exit. """
