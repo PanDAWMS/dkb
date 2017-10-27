@@ -237,7 +237,6 @@ class AbstractProcessorStage(AbstractStage):
         """ Run process() for every input() message. """
         for msg in self.input():
             try:
-                failed = True
                 if msg and self.process(self, msg):
                     self.flush_buffer()
             finally:
