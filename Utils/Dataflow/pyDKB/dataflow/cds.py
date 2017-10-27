@@ -6,6 +6,7 @@ __all__ = ["CDSInvenioConnector", "KerberizedCDSInvenioConnector"]
 
 import sys
 import signal
+import os
 
 try:
     import kerberos
@@ -22,6 +23,19 @@ else:
 
     class CDSInvenioConnector(cds.CDSInvenioConnector):
         """ CDSInvenioConnector which closes the browser in most cases. """
+
+        orig_handlers = {}
+        handlers = False
+
+        def __init__(self, *args):
+            self.orig_handlers = {
+                    signal.SIGINT:  signal.signal(signal.SIGINT, self.kill),
+                    signal.SIGTERM: signal.signal(signal.SIGTERM, self.kill)
+            }
+            handlers = True
+            super(CDSInvenioConnector, self).__init__(*args)
+
+
         def __enter__(self):
             """ Enter the with...as construction. """
             return self
@@ -34,13 +48,24 @@ else:
             return True
 
         def __del__(self):
-            self.delete()
+            self.delete(False)
 
-        def delete(self):
+        def delete(self, restore_handlers=True):
             if getattr(self, 'browser', None):
                 self.browser.driver.service.process.send_signal(signal.SIGTERM)
                 self.browser.quit()
                 del self.browser
+            if restore_handlers:
+                for s in self.orig_handlers:
+                    signal.signal(s, self.orig_handlers[s])
+
+
+        def kill(self, signum, frame):
+            """ Run del and propagate signal. """
+            self.delete()
+            os.kill(os.getpid(), signum)
+
+
 
     class KerberizedCDSInvenioConnector(CDSInvenioConnector):
         """
