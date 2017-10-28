@@ -162,15 +162,13 @@ class AbstractProcessorStage(AbstractStage):
                           metavar='DIR',
                           dest='output_dir'
                           )
-        self.add_argument('--hdfs', action='store', type=bool, nargs='?',
+        self.add_argument('--hdfs', action='store_true',
                           help=u'Source files are stored in HDFS; '
                                 'if no input FILE specified, filenames will '
                                 'come to stdin. '
                                 'This option is equivalent to '
                                 '"--source h --dest h"',
                           default=False,
-                          const=True,
-                          metavar='HDFS',
                           dest='hdfs'
                           )
 
