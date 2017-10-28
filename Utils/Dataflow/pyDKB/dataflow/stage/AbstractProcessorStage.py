@@ -481,7 +481,12 @@ class AbstractProcessorStage(AbstractStage):
     def __hdfs_in_dir(self):
         """ Call file descriptors generator for files in HDFS dir. """
         dirname = self.ARGS.input_dir
-        files = hdfs.listdir(dirname, "f")
+        try:
+            files = hdfs.listdir(dirname, "f")
+        except hdfs.HDFSException, err:
+            sys.stderr.write("(ERROR) Failed to get list of files.\n"
+                             "(ERROR) Error message: %s\n" % err)
+            files = []
         self.ARGS.input_files = files
         if not files:
             return []
