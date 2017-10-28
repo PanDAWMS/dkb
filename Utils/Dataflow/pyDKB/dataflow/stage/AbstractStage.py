@@ -11,7 +11,6 @@ except ImportError, e:
     raise e
 
 class AbstractStage(object):
-
     """
     Class/instance variable description:
     * Argument parser (argparse.ArgumentParser)
