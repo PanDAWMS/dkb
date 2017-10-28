@@ -16,9 +16,11 @@ except ImportError:
 class CDSInvenioConnector(cds.CDSInvenioConnector):
     """ CDSInvenioConnector which closes the browser in most cases. """
     def __enter__(self):
+        """ Enter the with...as construction. """
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
+        """ Exit the with...as construction. """
         if self.browser:
             self.browser.quit()
         if isinstance(exc_val, KeyboardInterrupt):
@@ -40,12 +42,11 @@ class KerberizedCDSInvenioConnector(CDSInvenioConnector):
         try:
             kerberos
         except NameError:
-            sys.stderr.write("ERROR: Seems like Kerberos Python package is not"
+            sys.stderr.write("(ERROR) Kerberos Python package is not"
                              " installed. Can't proceed with Kerberos"
                              " authorization.\n")
             sys.exit(4)
 
-        super(KerberizedCDSInvenioConnector, self).__init__("user", "password")
 
     def _init_browser(self):
         """
@@ -63,6 +64,6 @@ class KerberizedCDSInvenioConnector(CDSInvenioConnector):
             self.browser.find_link_by_partial_text("Sign in").click()
 
         except kerberos.GSSError, e:
-            sys.stderr.write(str(e)+"\n")
+            sys.stderr.write("(ERROR) %s\n" % str(e))
             sys.exit(3)
 
