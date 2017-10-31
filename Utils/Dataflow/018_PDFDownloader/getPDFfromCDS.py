@@ -5,6 +5,7 @@ Stage 018: download PDF files from CDS and upload them to HDFS
 """
 
 import sys
+import os
 from urlparse import urlparse
 import subprocess
 
@@ -17,7 +18,8 @@ from pyDKB.common import hdfs, HDFSException
 
 def transfer(url, hdfs_name):
     """ Download file from given URL and upload to HDFS. """
-    cmd = ["./transferPDF.sh", url, hdfs_name]
+    base_dir = os.path.dirname(__file__)
+    cmd = [os.path.join(base_dir, "transferPDF.sh"), url, hdfs_name]
     try:
         sp = subprocess.Popen(cmd, stdin=subprocess.PIPE,
                                    stderr=subprocess.PIPE,
