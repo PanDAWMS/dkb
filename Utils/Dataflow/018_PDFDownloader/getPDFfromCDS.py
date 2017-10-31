@@ -9,6 +9,8 @@ import os
 from urlparse import urlparse
 import subprocess
 
+import traceback
+
 sys.path.append("../")
 
 import pyDKB
@@ -80,15 +82,26 @@ def main(args):
     stage.process = process
 
     exit_code = 0
+    exc_info = None
     try:
         stage.parse_args(args)
         stage.run()
     except (DataflowException, RuntimeError), err:
         if str(err):
             sys.stderr.write("(ERROR) %s\n" % err)
+        else:
+            exc_info = sys.exc_info()
+        exit_code = 2
+    except Exception:
+        exc_info = sys.exc_info()
         exit_code = 1
     finally:
         stage.stop()
+
+    if exc_info:
+        trace = traceback.format_exception(*exc_info)
+        for line in trace:
+            sys.stderr.write("(ERROR) %s" % line)
 
     exit(exit_code)
 
