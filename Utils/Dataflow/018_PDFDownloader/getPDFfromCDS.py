@@ -48,8 +48,9 @@ def get_url(item):
         v = -1
         if url.split('.')[-1].lower() == "pdf" \
           and (desc == None or desc.lower().find("fulltext") >= 0):
-            if f.get('version') and f['version'] > v:
-                v = f['version']
+            if f.get('version', None) != None and f['version'] > v \
+              or v < 0:
+                v = f.get('version', v)
                 result = url
     return result
 
