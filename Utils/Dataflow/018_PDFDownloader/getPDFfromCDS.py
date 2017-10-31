@@ -18,6 +18,9 @@ from pyDKB.dataflow import DataflowException
 from pyDKB.dataflow.stage import JSONProcessorStage
 from pyDKB.common import hdfs, HDFSException
 
+_fails_in_row = 0
+_fails_max = 3
+
 def transfer(url, hdfs_name):
     """ Download file from given URL and upload to HDFS. """
     base_dir = os.path.dirname(__file__)
@@ -60,6 +63,7 @@ def process(stage, msg):
     Input message: JSON
     Output message: JSON
     """
+    global _fails_in_row
     data = msg.content()
     ARGS = stage.ARGS
     urls = []
@@ -71,10 +75,16 @@ def process(stage, msg):
         urls.append(url)
         hdfs_location = transfer(url, dkbID + ".pdf")
         if not hdfs_location:
+            _fails_in_row += 1
             continue
+        _fails_in_row = 0
         out_data = {'dkbID': dkbID, 'PDF': "hdfs://" + hdfs_location}
         out_msg = stage.output_message_class()(out_data)
         stage.output(out_msg)
+    if _fails_in_row > _fails_max:
+        raise DataflowException("Failed to transfer PDF from CDS to HDFS"
+                                " %s (>=%s) times in a row"
+                                % (_fails_in_row, _fails_max))
     return True
 
 def main(args):
