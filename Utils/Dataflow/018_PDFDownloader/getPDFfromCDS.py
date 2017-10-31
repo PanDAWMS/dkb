@@ -25,7 +25,7 @@ def transfer(url, hdfs_name):
                                    stderr=subprocess.PIPE,
                                    stdout=subprocess.PIPE)
         if hdfs.check_stderr(sp):
-            raise subprocess.CalledProcessError(proc.returncode, cmd)
+            raise subprocess.CalledProcessError(sp.returncode, cmd)
         out = sp.stdout.readline()
         if out:
             out = out.strip()
