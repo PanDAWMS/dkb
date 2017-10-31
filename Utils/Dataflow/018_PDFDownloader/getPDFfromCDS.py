@@ -44,7 +44,7 @@ def get_url(item):
         url = f.get('url')
         if not url:
             continue
-        desc = f.get('description', '')
+        desc = f.get('description', None)
         v = -1
         if url.split('.')[-1].lower() == "pdf" \
           and (desc == None or desc.lower().find("fulltext") >= 0):
