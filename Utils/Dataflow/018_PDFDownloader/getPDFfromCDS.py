@@ -33,8 +33,8 @@ def transfer(url, hdfs_name):
             out = out.strip()
         return out
     except (subprocess.CalledProcessError, OSError, HDFSException), err:
-        sys.stderr.write("Failed to transfer data from CDS to HDSF: %s\n"
-                         % err)
+        sys.stderr.write("(ERROR) Failed to transfer data from CDS to HDSF:"
+                         " %s\n" % err)
         return None
 
 def get_url(item):
