@@ -7,8 +7,9 @@
 
 PID=$$
 HDFS_DIR="/user/DKB/store/PDF"
-KRB_KIAE=~/.krb5/krb5cc_$UID.kiae
-KRB_CERN=~/.krb5/krb5cc_$UID.cern
+base_dir=`dirname $0`
+
+. $base_dir/switch_realm
 
 usage() {
     echo "
@@ -21,23 +22,6 @@ PARAMETERS:
 " >&2
 }
 
-switch_realm() {
-    # Switch Kerberos ticket to the given realm
-    [ -z "$1" ] && return 1
-    case $1 in
-        kiae)
-            TKT=$KRB_KIAE
-            ;;
-        cern)
-            TKT=$KRB_CERN
-            ;;
-        *)
-            echo "Unknown realm: $1" >&2
-            return 1
-            ;;
-    esac
-    export KRB5CCNAME="FILE:/$TKT"
-}
 
 upload() {
     # Upload file to HDFS
@@ -45,7 +29,10 @@ upload() {
     switch_realm kiae || return $?
     [ -z "$2" ] && hdfs_file=$HDFS_DIR/`basename $1` || hdfs_file=$HDFS_DIR/$2
     hadoop fs -put -f $1 $HDFS_DIR/$2
-    echo $hdfs_file
+    ret=$?
+    [ $ret -eq 0 ] && export hdfs_file
+    rm -f $1
+    exit $ret
 }
 
 
@@ -57,14 +44,15 @@ download() {
     cookie=/tmp/cern-sso-cookie-$PID
     tmpf=`mktemp /tmp/XXXXXXX.pdf`
 
-    cern-get-sso-cookie --krb -r -u "$url" -o $cookie 2>&1 >/dev/null
+    cern-get-sso-cookie --krb -r -u "$url" -o $cookie
 
     if [ $? -ne 0 ]; then
         echo "Failed to get CERN SSO cookie." >&2
         exit 3
     fi
 
-    curl -k -L -f -s  --cookie $cookie --cookie-jar $cookie $url -o $tmpf && echo $tmpf
+    curl -k -L -f -s  --cookie $cookie --cookie-jar $cookie $url -o $tmpf || tmpf=
+    export local_file=$tmpf
 }
 
 which cern-get-sso-cookie 2>&1 >/dev/null
@@ -80,7 +68,12 @@ if [ -z "$1" ]; then
     exit 1
 fi
 
-local_file=`download $1` \
-  && upload $local_file $2 2>/dev/null
 
-exit $?
+download $1 >&2 \
+  && upload $local_file $2 >&2
+
+ret=$?
+
+echo "$hdfs_file"
+
+exit $ret
