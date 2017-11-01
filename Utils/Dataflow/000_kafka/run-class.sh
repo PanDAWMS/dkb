@@ -11,7 +11,7 @@ for f in $base_dir/libs/*.jar ; do
   CLASSPATH="$CLASSPATH:$f"
 done
 
-LOG4J_OPTS="-Dlog4j.configuration=file:$base_dir/config/log4j.properties"
+LOG4J_OPTS="-Dlog4j.configuration=file:$base_dir/config/log4j.properties $LOG4J_OPTS"
 LOG4J_OPTS="-Dlog.dir=${base_dir}/logs $LOG4J_OPTS"
 
 export LOG_DIR="$base_dir/logs"
