@@ -32,6 +32,9 @@ with tasks as (
       t.status,
       t.pr_id,
       t.username as user_name,
+      t.primary_input,
+      t.ctag,
+      t.output_formats,
       s_t.step_name,
       r.description,
       r.energy_gev,
@@ -52,7 +55,8 @@ with tasks as (
         ON hashtag.ht_id = ht_t.ht_id
     WHERE
       t.timestamp > to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
-      t.timestamp <= to_date('%s', 'dd-mm-yyyy hh24:mi:ss')
+      t.timestamp <= to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
+      t.pr_id > 300
     GROUP BY
         t.campaign,
         t.taskid,
@@ -66,6 +70,9 @@ with tasks as (
         t.phys_group,
         t.status,
         t.pr_id,
+        t.primary_input,
+        t.ctag,
+        t.output_formats,
         t.username,
         s_t.step_name,
         r.description,
@@ -88,6 +95,9 @@ with tasks as (
         t.description,
         t.energy_gev,
         t.user_name,
+        t.primary_input,
+        t.ctag,
+        t.output_formats,
         to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"architecture": "(.[^",])+'),
                            regexp_instr(
                                regexp_substr(tt.jedi_task_parameters, '"architecture": "(.[^",])+'),
@@ -229,16 +239,6 @@ with tasks as (
       FROM
         tasks t LEFT JOIN t_task tt
           ON t.taskid = tt.taskid
-      WHERE
-        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"taskType": "(.[^",])+'),
-                           regexp_instr(
-                               regexp_substr(tt.jedi_task_parameters, '"taskType": "(.[^",])+'),
-                               '(": ")+',
-                               1,
-                               1,
-                               1
-                           )
-                    ), '')) = 'prod'
   )
   SELECT
     t.campaign,
@@ -272,6 +272,9 @@ with tasks as (
     t.evgen_job_opts,
     t.cloud,
     t.site,
+    t.primary_input,
+    t.ctag,
+    t.output_formats,
     sum(jd.nevents) AS requested_events,
     sum(jd.neventsused) AS processed_events
   FROM tasks_t_task t
@@ -310,6 +313,9 @@ with tasks as (
     t.job_config,
     t.evgen_job_opts,
     t.cloud,
-    t.site
+    t.site,
+    t.primary_input,
+    t.ctag,
+    t.output_formats
   ORDER BY
     t.taskid;
