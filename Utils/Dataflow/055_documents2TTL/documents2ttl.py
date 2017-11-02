@@ -291,8 +291,19 @@ def abstract_extraction(data):
     :param data: json string
     :return: string with abstract
     """
+    result = None
     if 'abstract' in data:
-        return fix_string(data.get('abstract').get('summary'))
+        abstract = data['abstract']
+        if type(abstract) == dict:
+            result = abstract.get('summary')
+        elif type(abstract) == list:
+            for abstr in abstract:
+                if type(abstr) == dict and 'summary' in abstr:
+                    result = abstr['summary']
+                    break
+    if not result:
+        sys.stderr.write("(WARN) Failed to extract abstract summary.")
+    return fix_string(result)
 
 def title_extraction(data):
     """
@@ -388,6 +399,8 @@ def fix_string(wrong_string):
     :param wrong_string:
     :return:
     """
+    if type(wrong_string) not in (str, unicode):
+        return wrong_string
     return wrong_string.encode('ascii', 'ignore').replace("'", "\\'")\
         .replace("\n", "\\n").replace("\\", r"\\").replace('\"', '')
 
