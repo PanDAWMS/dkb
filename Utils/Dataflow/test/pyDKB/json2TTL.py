@@ -17,6 +17,19 @@ except Exception, err:
     sys.exit(1)
 
 
+def stop_process(msg):
+    """ Raise KeyError. """
+    raise KeyError(msg)
+
+
+def pre_stop_process(msg, n=3):
+    """ Call itself N times and then all stop_process(). """
+    if n > 0:
+        pre_stop_process(msg, n - 1)
+    else:
+        stop_process(msg)
+
+
 def process(stage, msg):
     """
     Input message: JSON
@@ -24,6 +37,8 @@ def process(stage, msg):
     """
     cls = pyDKB.dataflow.Message(pyDKB.dataflow.messageType.TTL)
     myMessage = cls(msg.content())
+    if "stop" in msg.content():
+        pre_stop_process("Key 'stop' in input message.")
     stage.output(myMessage)
     return True
 
@@ -33,15 +48,15 @@ def main(args):
     stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
     stage.process = process
 
-    exit_code = 0
-    try:
-        stage.parse_args(args)
-        stage.run()
-    except (pyDKB.dataflow.DataflowException, RuntimeError), err:
-        if str(err):
-            sys.stderr.write("(ERROR) %s\n" % err)
-        exit_code = 1
-    finally:
+    stage.parse_args(args)
+
+    if stage.ARGS.source == 's':
+        sys.stderr.write("""
+Type '{"stop": ""}' to interrupt.
+""")
+    exit_code = stage.run()
+
+    if exit_code == 0:
         stage.stop()
 
     exit(exit_code)

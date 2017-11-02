@@ -235,19 +235,34 @@ class AbstractProcessorStage(AbstractStage):
 
     def run(self):
         """ Run process() for every input() message. """
-        for msg in self.input():
-            try:
+        exit_code = 0
+        err = None
+        try:
+            for msg in self.input():
                 if msg and self.process(self, msg):
                     self.flush_buffer()
-            except Exception:
-                raise
-            else:
                 self.forward()
-            finally:
                 self.clear_buffer()
+        except BaseException, err:
+            # Catch everything for uniform exception handling
+            # Clear buffer -- just in case someone will decide
+            # to reuse the object.
+            self.clear_buffer()
+            exit_code = 1
+            self.set_error(*sys.exc_info())
+            self.stop()
+        finally:
+            # If something went wrong in `except` clause, we will still
+            # get here and return, so the exceptions from there will never
+            # reach the user
+            if not isinstance(err, Exception):
+                sys.exit(exit_code)
+            return exit_code
 
+    # Override
     def stop(self):
         """ Finalize all the processes and prepare to exit. """
+        super(AbstractProcessorStage, self).stop()
         failures = []
         for p in self.__stoppable:
             try:
