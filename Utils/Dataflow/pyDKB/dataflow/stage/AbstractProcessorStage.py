@@ -43,6 +43,7 @@ import os
 import sys
 import types
 import time
+import traceback
 
 from . import AbstractStage
 from . import messageType
@@ -234,15 +235,33 @@ class AbstractProcessorStage(AbstractStage):
     def run(self):
         """ Run process() for every input() message. """
         for msg in self.input():
+            exit_code = 0
+            exc_info = None
             try:
                 if msg and self.process(self, msg):
                     self.flush_buffer()
-            except Exception:
-                raise
+            except (pyDKB.dataflow.DataflowException, RuntimeError), err:
+                if str(err):
+                    sys.stderr.write("(ERROR) %s\n" % err)
+                else:
+                    exc_info = sys.exc_info()
+                    exit_code = 2
+            except Exception, err:
+                exc_info = sys.exc_info()
+                exit_code = 1
             else:
                 self.forward()
             finally:
                 self.clear_buffer()
+
+            if exc_info:
+                trace = traceback.format_exception(*exc_info)
+                for line in trace:
+                    sys.stderr.write("(ERROR) %s" % line)
+
+            if exit_code:
+                return exit_code
+
 
     def stop(self):
         """ Finalize all the processes and prepare to exit. """
