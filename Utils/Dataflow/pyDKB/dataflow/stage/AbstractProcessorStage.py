@@ -303,13 +303,10 @@ class AbstractProcessorStage(AbstractStage):
         Split stream into messages;
         Yield Message object.
         """
-        if self.ARGS.eom == '\n':
+        if self.ARGS.eom:
             iterator = iter(fd.readline, "")
             for line in iterator:
                 yield self.parseMessage(line)
-        else:
-	    raise NotImplementedError("Stream input is not implemented for"
-                                      " custom EOMessage marker.")
 
     def file_input(self, fd):
         """ Generator for input messages.
