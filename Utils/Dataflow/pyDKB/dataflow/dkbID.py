@@ -94,4 +94,3 @@ def dkbID(json_data, data_type):
         raise DataflowException("Unknown data type in dkbID: %s" % data_type)
 
     return func(json_data)
-

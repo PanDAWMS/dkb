@@ -70,4 +70,3 @@ class KerberizedCDSInvenioConnector(CDSInvenioConnector):
         except kerberos.GSSError, e:
             sys.stderr.write(str(e) + "\n")
             sys.exit(3)
-

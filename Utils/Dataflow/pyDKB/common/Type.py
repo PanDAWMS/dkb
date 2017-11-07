@@ -49,4 +49,3 @@ class Type(object):
     def memberName(self, val):
         """ Return string name of the member. """
         return self.hash.get(val, False)
-
