@@ -99,7 +99,7 @@ def listdir(dirname, mode='a'):
                                 stdin=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
                                 stdout=subprocess.PIPE)
-        while proc.poll() == None:
+        while proc.poll() is None:
             timeout = 0.1
             check_stderr(proc, timeout)
             ready, _, _ = select.select((proc.stdout, ), (), (), timeout)

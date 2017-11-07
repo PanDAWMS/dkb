@@ -52,8 +52,8 @@ def get_url(item):
         desc = f.get('description', None)
         v = -1
         if url.split('.')[-1].lower() == "pdf" \
-                and (desc == None or desc.lower().find("fulltext") >= 0):
-            if f.get('version', None) != None and f['version'] > v \
+                and (desc is None or desc.lower().find("fulltext") >= 0):
+            if f.get('version', None) is not None and f['version'] > v \
                     or v < 0:
                 v = f.get('version', v)
                 result = url

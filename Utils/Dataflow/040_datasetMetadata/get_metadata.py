@@ -338,7 +338,7 @@ def extra_string(extra={}):
             val = '"{val}"'.format(val=val)
         elif type(val) == int:
             val = '{val}'.format(val=val)
-        elif val == None:
+        elif val is None:
             val = 'NULL'
 
         s += '''{val} as `{name}`,

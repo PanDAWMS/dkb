@@ -129,7 +129,7 @@ def search_notes(cds, notes):
     NOTES is a JSON (dict) array with supporting documents information.
     Returns dict: { (str) note_id : (dict|NoneType) note_metadata}
     """
-    if notes == None:
+    if notes is None:
         return {}
     if type(notes) != list:
         return None
