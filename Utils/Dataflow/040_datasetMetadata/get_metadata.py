@@ -167,7 +167,8 @@ def main(argv):
     headers = True
 
     for infile in ARGS.input:
-        if os.stat(infile.name).st_size == 0: continue
+        if os.stat(infile.name).st_size == 0:
+            continue
         stderr.write('FILE: {0}\n'.format(infile.name))
         try:
             DocData = json.load(infile)
@@ -192,10 +193,12 @@ def main(argv):
 
 
 def hdfsFiles(filenames, upload=False):
-    if not filenames: filenames = sys.stdin
+    if not filenames:
+        filenames = sys.stdin
     for f in filenames:
         f = f.strip()
-        if not f: continue
+        if not f:
+            continue
         cmd = "hadoop fs -get %s " % f
         os.system(cmd)
         name = f.split('/')[-1]
@@ -205,7 +208,8 @@ def hdfsFiles(filenames, upload=False):
         if upload:
             hdfspath = f[:f.rfind('/')]
             csvname = name.replace('.json', '.csv')
-            if not os.path.isfile(csvname): continue
+            if not os.path.isfile(csvname):
+                continue
             cmd = "hadoop fs -put -f %s %s" % (csvname, hdfspath)
             os.system(cmd)
             os.remove(csvname)
@@ -231,7 +235,8 @@ def loadMetadata(data, outfile, db, extra={}, headers=True):
 def loadByNames(datasets, outfile, db, extra={}, headers=True):
     global ARGS
     for t in dataType:
-        if not datasets.get(t, None): continue
+        if not datasets.get(t, None):
+            continue
         extra['datatype'] = t
         s = 'SELECT distinct '
         s += extra_string(extra)
@@ -274,8 +279,10 @@ def loadQuery2File(query, outfile, ARGS, headers=True):
         qfile.write(query)
         qfile.close()
         m = {'host': ARGS.host, 'db': ARGS.db}
-        if outfile == sys.stdout: m['output'] = ''
-        else: m['output'] = '-o ' + outfile
+        if outfile == sys.stdout:
+            m['output'] = ''
+        else:
+            m['output'] = '-o ' + outfile
         m['headers'] = "--print_header" if headers else ""
         run = 'PYTHON_EGG_CACHE=/tmp/.python-eggs impala-shell -k -i {host}'\
               ' -d {db} -B -f query.sql --output_delimiter="," {headers}'\
@@ -322,12 +329,17 @@ def extra_string(extra={}):
             stderr.write("(WARN) Replace unacceptable value with NULL.\n")
             val = None
 
-        try: val = int(val)
-        except (ValueError, TypeError): pass
+        try:
+            val = int(val)
+        except (ValueError, TypeError):
+            pass
 
-        if type(val) == str: val = '"{val}"'.format(val=val)
-        elif type(val) == int: val = '{val}'.format(val=val)
-        elif val == None: val = 'NULL'
+        if type(val) == str:
+            val = '"{val}"'.format(val=val)
+        elif type(val) == int:
+            val = '{val}'.format(val=val)
+        elif val == None:
+            val = 'NULL'
 
         s += '''{val} as `{name}`,
 '''.format(val=val, name=e)
@@ -342,7 +354,8 @@ def checkExtra(key, val):
     }
     if key in checkParameters:
         p = checkParameters[key]
-        try: p['type'](val)
+        try:
+            p['type'](val)
         except ValueError:
             stderr.write("(WARN) Unacceptable value for key '%s': '%s'"
                          " (expected type: %s).\n" % (key, val, p['type']))

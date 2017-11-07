@@ -113,7 +113,8 @@ def add_sparql(line, linkfile, triple_map):
 
     gid = line.get('glanceid')
     name = line.get('name')
-    if not gid or not name: return False
+    if not gid or not name:
+        return False
 
     # Create linking statements
     triple_map['GlanceID'] = gid
@@ -127,14 +128,17 @@ def check_synonyms(word, syns):
     # Checks if given word (words) have any default form, in which they are to
     # be processed further, and returns transformed (if needed) value.
 
-    if type(syns) != dict: return word
+    if type(syns) != dict:
+        return word
     if type(word) != list:
         for t in syns:
-            if word in syns[t]: return t
+            if word in syns[t]:
+                return t
     else:
         for i in range(0, len(word)):
             for t in syns:
-                if word[i] in syns[t]: word[i] = t
+                if word[i] in syns[t]:
+                    word[i] = t
     return word
 
 
@@ -184,7 +188,8 @@ def add_ttl(line, outfile, triple_map):
                 'no__filter', 'no_filter').split('__')
             line['physKeyword'] = []
             for kw in kwds:
-                if re.match(GENERATOR, kw): continue
+                if re.match(GENERATOR, kw):
+                    continue
                 line['physKeyword'] += [kw]
     except IndexError:
         pass
@@ -204,11 +209,13 @@ def add_ttl(line, outfile, triple_map):
     outfile.write(triple)
     # ...and its roperties
     for p in line:
-        if not line[p] or line[p] in ('NULL', '\N'): continue
+        if not line[p] or line[p] in ('NULL', '\N'):
+            continue
         value = '{value}'
         val = line[p]
         prop = ''
-        if type(val) != list: val = [val]
+        if type(val) != list:
+            val = [val]
         if p in OWL_PARAMS_NUMSTR.keys():
             # "'a', 'b', 'c'" 4strings OR "1, 2, 3" 4ints
             val = str(val).strip('[]')
@@ -220,7 +227,8 @@ def add_ttl(line, outfile, triple_map):
             prop += OWL_PARAMS_OBJ[p]
             v1 = []
             for v in val:
-                if not line[p] or line[p] in ('NULL', '\N'): continue
+                if not line[p] or line[p] in ('NULL', '\N'):
+                    continue
                 # TODO: CHECK, if such an object exists!
                 v = v.lower() if type(v) == str else v
                 v1 += ['<{ontology}#' + str(v) + '>']
@@ -249,7 +257,8 @@ def LinkFiles(basename, ext='', beg='', end=''):
     # 3) Add same "beginning" and "ending" to the files, so all you need is to
     #    write the substantial part
     n = 0
-    if ext and ext[0] != '.': ext = '.' + ext
+    if ext and ext[0] != '.':
+        ext = '.' + ext
     if type(basename) == file:
         f = basename
         basename = f.name.split('.')
@@ -267,7 +276,8 @@ def LinkFiles(basename, ext='', beg='', end=''):
             dot = f.name.rfind('.')
             basename = f.name[:dot if dot > 0 else None]
         if not f.closed:
-            if f.tell() == 0: f.write(beg)
+            if f.tell() == 0:
+                f.write(beg)
             n += 1
             try:
                 yield f
@@ -362,8 +372,10 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
         if args.processing_mode in ('m', 's'):
             # not <stdout>, as it can be closed acsidentally
             linkfile = '/dev/stdout'
-        if not linkfile: linkfile = fname
-        if type(linkfile) != file: close_link = True
+        if not linkfile:
+            linkfile = fname
+        if type(linkfile) != file:
+            close_link = True
         linkfiles = LinkFiles(linkfile, '.sparql',
                               linkquery_beg, linkquery_end)
         linkfile = linkfiles.next()
@@ -378,8 +390,10 @@ values (?dataset ?GlanceID) {{'''.format(**triple_map)
         if args.processing_mode in ('m', 's'):
             # not <stdout>, as it can be closed acsidentally
             outfile = '/dev/stdout'
-        if not outfile: outfile = fname
-        if type(outfile) != file: close_out = True
+        if not outfile:
+            outfile = fname
+        if type(outfile) != file:
+            close_out = True
         outfiles = LinkFiles(outfile, '.ttl')
         outfile = outfiles.next()
 
