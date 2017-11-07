@@ -53,6 +53,7 @@ TODO: This module doesn't convert authors metadata. This task is still under con
 import argparse
 import sys
 import json
+import traceback
 sys.path.append("../")
 
 import pyDKB
@@ -290,8 +291,19 @@ def abstract_extraction(data):
     :param data: json string
     :return: string with abstract
     """
+    result = None
     if 'abstract' in data:
-        return fix_string(data.get('abstract').get('summary'))
+        abstract = data['abstract']
+        if type(abstract) == dict:
+            result = abstract.get('summary')
+        elif type(abstract) == list:
+            for abstr in abstract:
+                if type(abstr) == dict and 'summary' in abstr:
+                    result = abstr['summary']
+                    break
+    if not result:
+        sys.stderr.write("(WARN) Failed to extract abstract summary.")
+    return fix_string(result)
 
 def title_extraction(data):
     """
@@ -387,6 +399,8 @@ def fix_string(wrong_string):
     :param wrong_string:
     :return:
     """
+    if type(wrong_string) not in (str, unicode):
+        return wrong_string
     return wrong_string.encode('ascii', 'ignore').replace("'", "\\'")\
         .replace("\n", "\\n").replace("\\", r"\\").replace('\"', '')
 
@@ -442,6 +456,7 @@ def main(argv):
     :return:
     """
     exit_code = 0
+    exc_info = None
     stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
     stage.process = process
     try:
@@ -463,9 +478,19 @@ def main(argv):
     except (pyDKB.dataflow.DataflowException, RuntimeError), err:
         if str(err):
             sys.stderr.write("(ERROR) %s\n" % err)
+        else:
+            exc_info = sys.exc_info()
+        exit_code = 2
+    except Exception, err:
+        exc_info = sys.exc_info()
         exit_code = 1
     finally:
         stage.stop()
+
+    if exc_info:
+        trace = traceback.format_exception(*exc_info)
+        for line in trace:
+            sys.stderr.write("(ERROR) %s" % line)
 
     exit(exit_code)
 
