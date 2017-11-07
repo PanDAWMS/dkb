@@ -145,8 +145,8 @@ public class ExternalProcessorSupplier implements ProcessorSupplier<String, Stri
               }
               if (! retried) {
                   time += new Date().getTime() - start;
-                  timing.info("({}) Message processing took: {} ms", externalCommand[0], time);
-                  timing.info("({}) Full processing took: {} ms", externalCommand[0], new Date().getTime() - processing_start);
+                  timing.info("({}) Message processing took: {} ms ({})", externalCommand[0], time, Thread.currentThread().getName());
+                  timing.info("({}) Full processing took: {} ms ({})", externalCommand[0], new Date().getTime() - processing_start, Thread.currentThread().getName());
               }
             }
 
