@@ -206,7 +206,8 @@ def add_ttl(line, outfile, triple_map):
     for p in line:
         if not line[p] or line[p] in ('NULL', '\N'): continue
         value = '{value}'
-        val = line[p]; prop = ''
+        val = line[p]
+        prop = ''
         if type(val) != list: val = [val]
         if p in OWL_PARAMS_NUMSTR.keys():
             # "'a', 'b', 'c'" 4strings OR "1, 2, 3" 4ints
