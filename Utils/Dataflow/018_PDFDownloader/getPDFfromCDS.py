@@ -11,12 +11,18 @@ import subprocess
 
 import traceback
 
-sys.path.append("../")
+try:
+    base_dir = os.path.dirname(__file__)
+    dkb_dir = os.path.join(base_dir, os.pardir)
+    sys.path.append(dkb_dir)
+    import pyDKB
+    from pyDKB.dataflow import DataflowException
+    from pyDKB.dataflow.stage import JSONProcessorStage
+    from pyDKB.common import hdfs, HDFSException
+except Exception, err:
+    sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
+    sys.exit(1)
 
-import pyDKB
-from pyDKB.dataflow import DataflowException
-from pyDKB.dataflow.stage import JSONProcessorStage
-from pyDKB.common import hdfs, HDFSException
 
 _fails_in_row = 0
 _fails_max = 3

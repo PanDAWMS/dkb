@@ -24,11 +24,18 @@ import os
 import warnings
 from requests.packages.urllib3.exceptions import InsecurePlatformWarning
 
-sys.path.append("../")
-from pyDKB.dataflow import CDSInvenioConnector, KerberizedCDSInvenioConnector
-from pyDKB.dataflow import dkbID, dataType
-from pyDKB.dataflow.stage import JSONProcessorStage
-from pyDKB.dataflow import DataflowException
+try:
+    base_dir = os.path.dirname(__file__)
+    dkb_dir = os.path.join(base_dir, os.pardir)
+    sys.path.append(dkb_dir)
+    from pyDKB.dataflow import CDSInvenioConnector
+    from pyDKB.dataflow import KerberizedCDSInvenioConnector
+    from pyDKB.dataflow import dkbID, dataType
+    from pyDKB.dataflow.stage import JSONProcessorStage
+    from pyDKB.dataflow import DataflowException
+except Exception, err:
+    sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
+    sys.exit(1)
 
 counter = 0
 

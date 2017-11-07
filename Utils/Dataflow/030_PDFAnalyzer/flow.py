@@ -16,9 +16,14 @@ from manager import path_join
 from manager import Paper
 from manager import re_pdfname
 
-base_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(base_dir))
-import pyDKB
+try:
+    base_dir = os.path.dirname(__file__)
+    dkb_dir = os.path.join(base_dir, os.pardir)
+    sys.path.append(dkb_dir)
+    import pyDKB
+except Exception, err:
+    sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
+    sys.exit(1)
 
 
 def process(stage, msg):

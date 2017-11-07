@@ -5,9 +5,16 @@ Stage 0XX: some json data to TTL & SPARQL
 """
 
 import sys
-sys.path.append("../../")
+import os
 
-import pyDKB
+try:
+    base_dir = os.path.dirname(__file__)
+    dkb_dir = os.path.join(base_dir, os.pardir, os.pardir)
+    sys.path.append(dkb_dir)
+    import pyDKB
+except Exception, err:
+    sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
+    sys.exit(1)
 
 
 def process(stage, msg):

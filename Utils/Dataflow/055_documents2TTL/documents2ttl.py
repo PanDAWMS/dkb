@@ -53,11 +53,18 @@ TODO: This module doesn't convert authors metadata.
 """
 import argparse
 import sys
+import os
 import json
 import traceback
-sys.path.append("../")
 
-import pyDKB
+try:
+    base_dir = os.path.dirname(__file__)
+    dkb_dir = os.path.join(base_dir, os.pardir)
+    sys.path.append(dkb_dir)
+    import pyDKB
+except Exception, err:
+    sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
+    sys.exit(1)
 
 # defaults
 GRAPH = "http://nosql.tpu.ru:8890/DAV/ATLAS"
