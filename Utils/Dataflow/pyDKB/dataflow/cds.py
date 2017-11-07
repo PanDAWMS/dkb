@@ -2,8 +2,6 @@
 Extended CDSInvenioConnector allowing us to login via Kerberos
 """
 
-__all__ = ["CDSInvenioConnector", "KerberizedCDSInvenioConnector"]
-
 from invenio_client.contrib import cds
 import sys
 
@@ -12,6 +10,8 @@ try:
     import kerberos
 except ImportError:
     pass
+
+__all__ = ["CDSInvenioConnector", "KerberizedCDSInvenioConnector"]
 
 
 class CDSInvenioConnector(cds.CDSInvenioConnector):

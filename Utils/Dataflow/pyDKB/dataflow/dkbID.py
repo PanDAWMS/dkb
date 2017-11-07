@@ -2,14 +2,16 @@
 Utils to generate unique yet meaningful identifier for DKB objects.
 """
 
-__all__ = ["dkbID"]
-
-import os
 from . import dataType
 from exceptions import DataflowException
 from ..common.json_utils import valueByKey
 
+import os
 import json
+import uuid
+
+__all__ = ["dkbID"]
+
 
 try:
     dir_ = os.path.dirname(__file__)
@@ -62,9 +64,6 @@ def docID(json_data):
         val = "{}_{}".format(prefix, val)
 
     return val
-
-
-import uuid
 
 
 def authorID(json_data):

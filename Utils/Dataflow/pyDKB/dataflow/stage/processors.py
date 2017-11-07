@@ -2,13 +2,13 @@
 Processor stages definitions (with predefined message type).
 """
 
-__all__ = ["JSONProcessorStage", "TTLProcessorStage", "JSON2TTLProcessorStage"]
-
 from . import AbstractProcessorStage
 from . import messageType
 
 import sys
 import json
+
+__all__ = ["JSONProcessorStage", "TTLProcessorStage", "JSON2TTLProcessorStage"]
 
 
 class JSONProcessorStage(AbstractProcessorStage):
