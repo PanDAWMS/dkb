@@ -1,0 +1,12 @@
+FROM centos:6
+RUN yum install -y centos-release-scl-rh --enablerepo=*extras
+RUN yum install -y git rh-maven33-maven
+ENV PATH="${PATH}:/opt/rh/rh-maven33/root/usr/bin"
+RUN java -version
+RUN mkdir -p /tmp/OrientDB
+WORKDIR /tmp/OrientDB
+RUN git clone https://github.com/PanDAWMS/dkb.git .
+RUN git checkout orientdb-installation
+WORKDIR /
+RUN /tmp/OrientDB/Installation/OrientDB/install.sh
+
