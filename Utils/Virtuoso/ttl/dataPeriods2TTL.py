@@ -41,7 +41,7 @@ This script just get all data from file despite the data in Virtuoso.
 ------------------------------------------------------------------------------
 This script remove newline symbols in 'description'.
 Triples:
- {project_name} <{ontology}#hasDescription> '{description}' 
+ {project_name} <{ontology}#hasDescription> '{description}'
  {project_name} <{ontology}#hasStatus> '{status}'
  might be non-unique.
  -----------------------------------------------------------------------------

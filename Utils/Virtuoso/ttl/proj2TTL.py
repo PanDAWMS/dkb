@@ -12,7 +12,7 @@ The fragment of data sample:
   a <http://nosql.tpu.ru/ontology/ATLAS#Project> .
 <http://nosql.tpu.ru:8890/DAV/ATLAS/project/data10_7TeV>
   <http://nosql.tpu.ru/ontology/ATLAS#hasDescription>
-  'unsqueezed stable beam data (beta*=10m): typical beam 
+  'unsqueezed stable beam data (beta*=10m): typical beam
     spot width in x and y is 50-60 microns.' .
 <http://nosql.tpu.ru:8890/DAV/ATLAS/project/data10_7TeV>
   <http://nosql.tpu.ru/ontology/ATLAS#hasStatus> 'locked' .
@@ -41,7 +41,7 @@ This script just get all data from file despite the data in Virtuoso.
 ------------------------------------------------------------------------------
 This script remove newline symbols in 'description'.
 Triples:
- {project_name} <{ontology}#hasDescription> '{description}' 
+ {project_name} <{ontology}#hasDescription> '{description}'
  {project_name} <{ontology}#hasStatus> '{status}'
  might be non-unique.
  -----------------------------------------------------------------------------
