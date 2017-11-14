@@ -32,7 +32,7 @@ upload() {
     ret=$?
     [ $ret -eq 0 ] && export hdfs_file
     rm -f $1
-    exit $ret
+    return $ret
 }
 
 
