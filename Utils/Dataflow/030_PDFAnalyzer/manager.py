@@ -15,14 +15,14 @@ import xmltable
 
 CONFIG_FILE = "config.json"
 default_cfg = {
-        "WORK_DIR":              os.getcwd(),
-        "DETERMINE_TITLE":       False,
-        "OPEN_INTERVALS_TEXT":   False,
-        "OPEN_INTERVALS_TABLES": False,
-        "TABLES_IDS_ONLY":       False,
-        "HDFS_PDF_DIR":          "",
-        "HDFS_DOWNLOAD_COMMAND": "hadoop fs -get"
-    }
+    "WORK_DIR": os.getcwd(),
+    "DETERMINE_TITLE": False,
+    "OPEN_INTERVALS_TEXT": False,
+    "OPEN_INTERVALS_TABLES": False,
+    "TABLES_IDS_ONLY": False,
+    "HDFS_PDF_DIR": "",
+    "HDFS_DOWNLOAD_COMMAND": "hadoop fs -get"
+}
 
 
 def load_config(default_cfg):
@@ -49,6 +49,7 @@ def save_config(cfg):
     with open(CONFIG_FILE, "w") as f:
         json.dump(cfg, f, indent=4)
 
+
 cfg, save_needed = load_config(default_cfg)
 if save_needed:
     save_config(cfg)
@@ -61,6 +62,7 @@ def path_join(a, b):
     separators in paths.
     """
     return os.path.join(a, b).replace("\\", "/")
+
 
 if __name__ == "__main__":
     try:
@@ -107,17 +109,18 @@ class DatasetCategory:
     character, and should be "-" or "\-" in different places of regular
     expressions.
     """
+
     def __init__(self, name, string):
         self.name = name
         self.reg = re.compile(string, re.X)
         self.reg_spaces = re.compile(string.replace("_", "\ ")
                                      .replace("\w", "a-zA-Z0-9 "), re.X)
-##        self.reg_dashes = re.compile(string.replace("_", "\-")\
-##                                     .replace("\w", "a-zA-Z0-9-"),
-##                                     re.X)
+# self.reg_dashes = re.compile(string.replace("_", "\-")\
+# .replace("\w", "a-zA-Z0-9-"),
+# re.X)
 
     def find(self, text, intervals, datasets):
-#        print "INTERVALS", intervals
+        #        print "INTERVALS", intervals
         strings = []
         (results, text) = find_cut_reg(self.reg, text)
         strings += results
@@ -129,7 +132,7 @@ class DatasetCategory:
             s = s.strip()
             if "INTERVAL" in s:
                 if cfg["OPEN_INTERVALS_TEXT"]:
-    #                print "STRING WITH INTERVALS:", s
+                    #                print "STRING WITH INTERVALS:", s
                     nums = re.findall("INTERVAL(\d+)!", s)
                     arr = []
                     for n in nums:
@@ -140,8 +143,8 @@ class DatasetCategory:
                     for i in range(0, size):
                         ns = s
                         for n in nums:
-    #                        print intervals[int(n)]
-                            ns = re.sub("INTERVAL"+n+"!",
+                            #                        print intervals[int(n)]
+                            ns = re.sub("INTERVAL" + n + "!",
                                         intervals[int(n)][i], ns)
     #                    print "NEW_STRING:", ns
                         if self.reg.match(ns):
@@ -149,9 +152,9 @@ class DatasetCategory:
                         elif self.reg_spaces.match(ns):
                             datasets[self.name].append([ns.replace(" ", "_"),
                                                         "spaces"])
-    ##                    elif self.reg_dashes.match(ns):
-    ##                        datasets[self.name].append([ns.replace("-", "_"),
-    ##                                                    "dashes"])
+    # elif self.reg_dashes.match(ns):
+    # datasets[self.name].append([ns.replace("-", "_"),
+    # "dashes"])
                 else:
                     res = 0
                     if self.reg.match(s):
@@ -171,10 +174,11 @@ class DatasetCategory:
                 elif self.reg_spaces.match(s):
                     datasets[self.name].append([s.replace(" ", "_"),
                                                 "spaces"])
-##                elif self.reg_dashes.match(s):
-##                    datasets[self.name].append([s.replace("-", "_"),
-##                                                "dashes"])
+# elif self.reg_dashes.match(s):
+# datasets[self.name].append([s.replace("-", "_"),
+# "dashes"])
         return (text, datasets)
+
 
 group = DatasetCategory("group", r"""
 group              # Indicates group dataset.
@@ -235,14 +239,14 @@ ddo                # Project tag.
                                            """)
 
 category_export_dict = {
-        "group": "group",
-        "user": "user",
-        "montecarlo": "mc",
-        "physcont": "cont",
-        "calibration": "calib",
-        "realdata": "real",
-        "database": "db"
-    }
+    "group": "group",
+    "user": "user",
+    "montecarlo": "mc",
+    "physcont": "cont",
+    "calibration": "calib",
+    "realdata": "real",
+    "database": "db"
+}
 
 # Regular expressions
 # We don't need group and user datasets for now.
@@ -352,7 +356,7 @@ def organize_intervals(intervals):
                 e = s[:-len(e)] + e
                 if s <= e:
                     ni1 = []
-                    for i1 in range(int(s), int(e)+1):
+                    for i1 in range(int(s), int(e) + 1):
                         ni1.append(str(i1))
                     maxlen = len(max(ni1, key=lambda num: len(num)))
                     if len(min(ni1, key=lambda num: len(num))) != maxlen:
@@ -381,7 +385,7 @@ def process_diapason(d):
     if len(e) <= len(s):
         e = s[:-len(e)] + e
         if s <= e:
-            for i in range(int(s), int(e)+1):
+            for i in range(int(s), int(e) + 1):
                 values.append(str(i))
     return values
 
@@ -507,7 +511,7 @@ class Paper:
     def get_text(self):
         """ Read and return mined text of the document. """
         text = ""
-        for i in range(1, self.num_pages+1):
+        for i in range(1, self.num_pages + 1):
             with open(path_join(self.txt_dir, "%d.txt") % i, "r") as f:
                 text += f.read()
         return text
@@ -541,66 +545,66 @@ class Paper:
     def delete(self):
         """ Delete all files associated with paper. """
         shutil.rmtree(self.dir)
-##    def find_title(self):
-##        """ New title determining method, does not works ideally yet.
-##        Titles consisting of several lines are problematic to
-##        determine.
-##        """
-##        lines = self.get_xml_page(1)
-##
-##        d = {}
-##        for l in lines:
-##            m = re_xml_symbol.match(l)
-##            if m:
-##                size = float(m.group(1))
-##                text = m.group(2)
-##                if size in d.keys():
-##                    d[size] += text
-##                else:
-##                    d[size] = text
-##            elif re_xml_empty_symbol.match(l):
-##                d[size] += " "
-##        xml_title = False
-##        print d
-##        while True:
-##            size = max(d.keys())
-##            valid = True
-##            try:
-##                d[size].decode()
-##            except:
-##                valid = False
-##            if not "atlas note" in d[size].lower() and valid:
-##                xml_title = d[size]
-##                break
-##            else:
-##                del d[size]
-##
-##        print xml_title
-##        if not xml_title:
-##            return False
-##
-##        lines = self.get_txt_page(1)
-##        title = ""
-##        for l in lines:
-##            if len(l) <= 4 or l.startswith("Supporting Note")\
-##               or l.startswith("ATLAS NOTE"):
-##                continue
-##            words = l.split()
-##            i = 0
-##            for w in words:
-##                try:
-##                    # This throws exception sometimes, something about
-##                    # ascii codec unable to decode.
-##                    w_in = w in xml_title
-##                except:
-##                    w_in = False
-##                if len(w) > 1 and w_in:
-##                    i += 1
-##            if i > 1 or (len(words) == 1 and i == 1):
-##                title += l.replace("\n", " ")
-##            elif title:
-##                break
-##        return title
+# def find_title(self):
+# """ New title determining method, does not works ideally yet.
+# Titles consisting of several lines are problematic to
+# determine.
+# """
+#        lines = self.get_xml_page(1)
+#
+#        d = {}
+# for l in lines:
+#            m = re_xml_symbol.match(l)
+# if m:
+#                size = float(m.group(1))
+#                text = m.group(2)
+# if size in d.keys():
+#                    d[size] += text
+# else:
+#                    d[size] = text
+# elif re_xml_empty_symbol.match(l):
+#                d[size] += " "
+#        xml_title = False
+# print d
+# while True:
+#            size = max(d.keys())
+#            valid = True
+# try:
+# d[size].decode()
+# except:
+#                valid = False
+# if not "atlas note" in d[size].lower() and valid:
+#                xml_title = d[size]
+# break
+# else:
+#                del d[size]
+#
+# print xml_title
+# if not xml_title:
+# return False
+#
+#        lines = self.get_txt_page(1)
+#        title = ""
+# for l in lines:
+# if len(l) <= 4 or l.startswith("Supporting Note")\
+# or l.startswith("ATLAS NOTE"):
+# continue
+#            words = l.split()
+#            i = 0
+# for w in words:
+# try:
+# This throws exception sometimes, something about
+# ascii codec unable to decode.
+#                    w_in = w in xml_title
+# except:
+#                    w_in = False
+# if len(w) > 1 and w_in:
+#                    i += 1
+# if i > 1 or (len(words) == 1 and i == 1):
+#                title += l.replace("\n", " ")
+# elif title:
+# break
+# return title
 
     def find_attributes_general(self):
         """ Find general attributes in a document. """
@@ -625,7 +629,7 @@ class Paper:
         tmp = re_luminosity.search(pages)
         if tmp:
             attrs["luminosity"] = tmp.group(0).replace("−", "-").\
-                                  replace("(cid:0)", "-")
+                replace("(cid:0)", "-")
 
         links = re_link.findall(pages)
         attrs["links"] = {}
@@ -721,8 +725,8 @@ class Paper:
             for table in tables:
                 num = int(re_table_header_short.match(table.header).group(1))
                 if num in headers_data:
-##                    print "TABLE WITH HEADER", headers_data[num].strip(),\
-##                          "MAY CONTAIN DATASETS"
+                    # print "TABLE WITH HEADER", headers_data[num].strip(),\
+                    #                          "MAY CONTAIN DATASETS"
                     data_column = -1
                     skip_first = False
                     # Save headers and tables matching selected numbers
@@ -731,8 +735,8 @@ class Paper:
                         for i in range(0, len(table.rows[rnum])):
                             txt = table.rows[rnum][i].text.lower()
                             if re_column_with_datasets.match(txt):
-##                                print "COLUMN", txt, "IN TABLE", num,\
-##                                      "HINTS THAT IT CONTAINS DATASETS"
+                                # print "COLUMN", txt, "IN TABLE", num,\
+                                #     "HINTS THAT IT CONTAINS DATASETS"
                                 data_column = i
                                 if rnum == 1:
                                     # This means that first row contains
@@ -740,7 +744,7 @@ class Paper:
                                     # or something else, and columns are
                                     # defined in the second one. First
                                     # one must be skipped in such case.
-#                                    print "SKIPPING FIRST ROW"
+                                    # print "SKIPPING FIRST ROW"
                                     skip_first = True
                                 break
                         if data_column >= 0:
@@ -768,13 +772,13 @@ class Paper:
                                 diaps = True
                             rows.append(row)
                         coef = float(rows_with_proper_id) / len(rows)
-##                        print rows_with_proper_id, "OUT OF", len(rows),\
-##                              "ROWS HAVE PROPER DATASET ID. COEFFICIENT:",\
-##                              coef
+# print rows_with_proper_id, "OUT OF", len(rows),\
+#                              "ROWS HAVE PROPER DATASET ID. COEFFICIENT:",\
+# coef
                         if coef >= 0.7 and coef <= 1:
                             if cfg["OPEN_INTERVALS_TABLES"] and diaps:
-##                                print "TABLE CONTAINS DATASET DIAPASONS,\
-##                                      PROCESSING THEM AND MULTIPLYING ROWS"
+                                # print "TABLE CONTAINS DATASET DIAPASONS,\
+                                # PROCESSING THEM AND MULTIPLYING ROWS"
                                 rows_new = []
                                 for row in rows:
                                     r_dc = row[data_column]
@@ -796,9 +800,9 @@ class Paper:
                             else:
                                 data = rows
                             datatables[num] = (headers_data[num], data)
-##                        elif coef < 0.7:
-##                            print "COEFFICIENT IS LOWER THAN 0.7.\
-##                                  SKIPPING TABLE", num
+# elif coef < 0.7:
+# print "COEFFICIENT IS LOWER THAN 0.7.\
+# SKIPPING TABLE", num
 
         return datatables
 
@@ -810,26 +814,26 @@ class Paper:
         skipped.
         """
 
-##        print self.fname
-##        paper_date = re.search("((?:january|february|march|april|may|june\
-##                               |july|august|september|october|november\
-##                               |december).*20\d\d)",
-##                               self.get_txt_page(1, True).lower())
-##        if paper_date:
-##             d = paper_date.group(1)
-##             print "date:", d
-##
-##        text = self.get_text()
-##        m = re_year.findall(text)
-##        if m:
-##            print m
-####            for t in m:
-####                if d not in t.lower():
-####                    print t
-##        else:
-##            print "None"
-##        print "\n"
-##        return True
+# print self.fname
+# paper_date = re.search("((?:january|february|march|april|may|june\
+# |july|august|september|october|november\
+# |december).*20\d\d)",
+# self.get_txt_page(1, True).lower())
+# if paper_date:
+#             d = paper_date.group(1)
+# print "date:", d
+#
+#        text = self.get_text()
+#        m = re_year.findall(text)
+# if m:
+# print m
+# for t in m:
+# if d not in t.lower():
+# print t
+# else:
+# print "None"
+# print "\n"
+# return True
 
         outp = {}
         if not outf:
@@ -874,7 +878,7 @@ class Paper:
                     data = [header, [int(i) for i in ids.split()]]
                 else:
                     data = self.datatables[num]
-                outp["content"]["table_"+str(num)] = data
+                outp["content"]["table_" + str(num)] = data
         elif quick:
             tables = self.find_datatables()
             for num in tables:
@@ -884,7 +888,7 @@ class Paper:
                     data = [header, [int(i) for i in ids.split()]]
                 else:
                     data = tables[num]
-                outp["content"]["table_"+str(num)] = data
+                outp["content"]["table_" + str(num)] = data
         if outp:
             with open(outf, "w") as f:
                 json.dump(outp, f, indent=4)
@@ -893,6 +897,7 @@ class Paper:
 
 class Manager:
     """ Main class of the application, performs most of the work. """
+
     def __init__(self, window):
         self.window = window
         self.window.title("Support notes manager")
@@ -937,7 +942,7 @@ class Manager:
 
         self.status = Tkinter.Label(self.window, text="", bd=1,
                                     relief=Tkinter.SUNKEN)
-        self.status.grid(row=2,  sticky='we')
+        self.status.grid(row=2, sticky='we')
 
         # Intercept closing the program via Alt + F4 or other methods to
         # perform a clean exit.
@@ -1344,7 +1349,7 @@ class Manager:
                 datasets[c] = []
                 for [entry, special, selected] in value[c]:
                     if selected.get():
-#                        datasets[c].append([entry.get(), special])
+                        # datasets[c].append([entry.get(), special])
                         # special is not needed. Maybe temporary.
                         datasets[c].append(entry.get())
                 if not datasets[c]:
@@ -1540,8 +1545,8 @@ class Manager:
                     if isinstance(data, str) or isinstance(data, unicode):
                         l.grid(row=0, column=0)
                         b.grid(row=0, column=1)
-                        t = Tkinter.Text(t_frame, width=(6+1)*5,
-                                         height=data.count(" ")//5+2)
+                        t = Tkinter.Text(t_frame, width=(6 + 1) * 5,
+                                         height=data.count(" ") // 5 + 2)
                         t.insert(Tkinter.END, data)
                         t.grid(row=1, column=0)
                         datatables_s.append([k, header, t, selected])
@@ -1747,23 +1752,23 @@ class Manager:
 
                 text = paper.get_xml_page(number, True)
                 rows = xmltable.analyze_page(text)
-                max_width = max([row[-1].right-row[0].left for row in rows])
+                max_width = max([row[-1].right - row[0].left for row in rows])
                 header_row = False
                 for row in rows:
                     if len(row) == 1 and row[0].text.startswith("Table "):
                         header_row = row
                         color = "red"
                     elif header_row and len(row) == 1 and\
-                      abs(row[0].left-header_row[0].left) < 1.0:
+                            abs(row[0].left - header_row[0].left) < 1.0:
                         color = "red"
-                    elif abs(row[-1].right-row[0].left-max_width) < 1.0:
+                    elif abs(row[-1].right - row[0].left - max_width) < 1.0:
                         color = "blue"
                     else:
                         header_row = False
                         color = "black"
                     for l in row:
-                        cnvs.create_rectangle((l.left, l.top+10, l.right,
-                                               l.bottom+10), outline=color)
+                        cnvs.create_rectangle((l.left, l.top + 10, l.right,
+                                               l.bottom + 10), outline=color)
 
                 b = Tkinter.Button(window, text="Back",
                                    command=lambda window=window, paper=paper:
@@ -1812,7 +1817,7 @@ class Manager:
                 "dataset tables"
             for a in Paper.attributes_general:
                 s += ",%s" % a
-            csv = [s+"\n"]
+            csv = [s + "\n"]
             attr = {}
             attr["mc_datasets"] = []
             attr["real_datasets"] = []
@@ -1823,7 +1828,7 @@ class Manager:
             self.window.after(100, lambda: self.export_all(quick, n, n_p,
                                                            errors, attr, csv))
         else:
-            p = self.papers[n-1]
+            p = self.papers[n - 1]
             msg = "Performing export %d/%d. Paper: %s. Please, wait..."\
                   % (n, len(self.papers), p.fname)
             self.status_set(msg)
@@ -1888,19 +1893,20 @@ class Manager:
                                              len(attr["other_datasets"]),
                                              len(attr["dataset_tables"]))
                     s_p = "100%%,%f%%,%f%%,%f%%,%f%%,"\
-                          % (float(len(attr["mc_datasets"]))/n_p*100,
-                             float(len(attr["real_datasets"]))/n_p*100,
-                             float(len(attr["other_datasets"]))/n_p*100,
-                             float(len(attr["dataset_tables"]))/n_p*100)
+                          % (float(len(attr["mc_datasets"])) / n_p * 100,
+                             float(len(attr["real_datasets"])) / n_p * 100,
+                             float(len(attr["other_datasets"])) / n_p * 100,
+                             float(len(attr["dataset_tables"])) / n_p * 100)
                     for a in Paper.attributes_general:
                         s += "%d," % len(attr[a])
-                        s_p += "%f%%," % (float(len(attr[a]))/n_p*100)
+                        s_p += "%f%%," % (float(len(attr[a])) / n_p * 100)
                     csv += s.rstrip(",") + "\n"
                     csv += s_p.rstrip(",") + "\n"
                     f.writelines(csv)
                 self.status_set("")
                 if msg:
                     tkMessageBox.showwarning("Unable to export papers", msg)
+
 
 if __name__ == "__main__":
     root = Tkinter.Tk()

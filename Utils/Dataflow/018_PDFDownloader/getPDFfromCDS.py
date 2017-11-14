@@ -11,15 +11,22 @@ import subprocess
 
 import traceback
 
-sys.path.append("../")
+try:
+    base_dir = os.path.dirname(__file__)
+    dkb_dir = os.path.join(base_dir, os.pardir)
+    sys.path.append(dkb_dir)
+    import pyDKB
+    from pyDKB.dataflow import DataflowException
+    from pyDKB.dataflow.stage import JSONProcessorStage
+    from pyDKB.common import hdfs, HDFSException
+except Exception, err:
+    sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
+    sys.exit(1)
 
-import pyDKB
-from pyDKB.dataflow import DataflowException
-from pyDKB.dataflow.stage import JSONProcessorStage
-from pyDKB.common import hdfs, HDFSException
 
 _fails_in_row = 0
 _fails_max = 3
+
 
 def transfer(url, hdfs_name):
     """ Download file from given URL and upload to HDFS. """
@@ -27,8 +34,8 @@ def transfer(url, hdfs_name):
     cmd = [os.path.join(base_dir, "transferPDF.sh"), url, hdfs_name]
     try:
         sp = subprocess.Popen(cmd, stdin=subprocess.PIPE,
-                                   stderr=subprocess.PIPE,
-                                   stdout=subprocess.PIPE)
+                              stderr=subprocess.PIPE,
+                              stdout=subprocess.PIPE)
         if hdfs.check_stderr(sp):
             raise subprocess.CalledProcessError(sp.returncode, cmd)
         out = sp.stdout.readline()
@@ -40,6 +47,7 @@ def transfer(url, hdfs_name):
                          " %s\n" % err)
         return None
 
+
 def get_url(item):
     """ Get URL of the document`s PDF from CDS data. """
     result = None
@@ -50,12 +58,13 @@ def get_url(item):
         desc = f.get('description', None)
         v = -1
         if url.split('.')[-1].lower() == "pdf" \
-          and (desc == None or desc.lower().find("fulltext") >= 0):
-            if f.get('version', None) != None and f['version'] > v \
-              or v < 0:
+                and (desc is None or desc.lower().find("fulltext") >= 0):
+            if f.get('version', None) is not None and f['version'] > v \
+                    or v < 0:
                 v = f.get('version', v)
                 result = url
     return result
+
 
 def process(stage, msg):
     """ Message processing function.
@@ -87,6 +96,7 @@ def process(stage, msg):
                                 % (_fails_in_row, _fails_max))
     return True
 
+
 def main(args):
     """ Main function. """
     stage = JSONProcessorStage()
@@ -115,6 +125,7 @@ def main(args):
             sys.stderr.write("(ERROR) %s" % line)
 
     exit(exit_code)
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])

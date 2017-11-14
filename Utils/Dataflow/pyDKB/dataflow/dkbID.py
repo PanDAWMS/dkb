@@ -2,14 +2,16 @@
 Utils to generate unique yet meaningful identifier for DKB objects.
 """
 
-__all__ = ["dkbID"]
-
-import os
 from . import dataType
 from exceptions import DataflowException
 from ..common.json_utils import valueByKey
 
+import os
 import json
+import uuid
+
+__all__ = ["dkbID"]
+
 
 try:
     dir_ = os.path.dirname(__file__)
@@ -22,7 +24,9 @@ except IOError, err:
 except ValueError, err:
     raise DataflowException("dkbID misconfigured: %s" % err)
 except KeyError, err:
-    raise DataflowException("dkbID misconfigured: \"%s\" is not defined." % err)
+    raise DataflowException(
+        "dkbID misconfigured: \"%s\" is not defined." % err)
+
 
 def firstValue(nestedList):
     """ Return first not None value from nested lists. """
@@ -34,6 +38,7 @@ def firstValue(nestedList):
         if val:
             break
     return val
+
 
 def docID(json_data):
     """ Return unique identifier for Document DKB object.
@@ -60,7 +65,7 @@ def docID(json_data):
 
     return val
 
-import uuid
+
 def authorID(json_data):
     """ Return unique identifier for Author DKB object.
 
@@ -70,10 +75,12 @@ def authorID(json_data):
 
 # ----- #
 
+
 __dataTypeFunc = {
-        dataType.DOCUMENT:docID,
-        dataType.AUTHOR:authorID
+    dataType.DOCUMENT: docID,
+    dataType.AUTHOR: authorID
 }
+
 
 def dkbID(json_data, data_type):
     """ Return unique identifier for object of TYPE based on DATA. """
@@ -86,4 +93,3 @@ def dkbID(json_data, data_type):
         raise DataflowException("Unknown data type in dkbID: %s" % data_type)
 
     return func(json_data)
-

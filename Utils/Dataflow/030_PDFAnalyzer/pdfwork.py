@@ -41,7 +41,7 @@ def get_page_text(interpreter, page, tmp, rotation=0):
     when creating PDFMiner device object, so i'm not sure if that's
     possible in this case.
     """
-    page.rotate = (page.rotate+rotation) % 360
+    page.rotate = (page.rotate + rotation) % 360
     interpreter.process_page(page)
     tmp.seek(0)
     text = remove_ligatures(tmp.read())
@@ -90,7 +90,7 @@ def mine_text(infname, page_numbers=False, outtype="text", rotated_pages=[],
         n = 1
 #        pages = {}
         for page in PDFPage.get_pages(inf):
-    #        print n
+            #        print n
             if not page_numbers or n in page_numbers:
                 if outtype == "xml" and n in rotated_pages:
                     rotation = 90

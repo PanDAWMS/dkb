@@ -24,11 +24,18 @@ import os
 import warnings
 from requests.packages.urllib3.exceptions import InsecurePlatformWarning
 
-sys.path.append("../")
-from pyDKB.dataflow import CDSInvenioConnector, KerberizedCDSInvenioConnector
-from pyDKB.dataflow import dkbID, dataType
-from pyDKB.dataflow.stage import JSONProcessorStage
-from pyDKB.dataflow import DataflowException
+try:
+    base_dir = os.path.dirname(__file__)
+    dkb_dir = os.path.join(base_dir, os.pardir)
+    sys.path.append(dkb_dir)
+    from pyDKB.dataflow import CDSInvenioConnector
+    from pyDKB.dataflow import KerberizedCDSInvenioConnector
+    from pyDKB.dataflow import dkbID, dataType
+    from pyDKB.dataflow.stage import JSONProcessorStage
+    from pyDKB.dataflow import DataflowException
+except Exception, err:
+    sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
+    sys.exit(1)
 
 counter = 0
 
@@ -43,9 +50,11 @@ def collection_verification(collection):
                          % (list, dict, type(collection)))
         return False
     if len(collection) > 0 \
-      and type(collection[0]) is dict \
-      and collection[0].get('primary', '') in ("ARTICLE", "ATLAS_Papers"):
+            and type(collection[0]) is dict \
+            and collection[0].get('primary', '')\
+            in ("ARTICLE", "ATLAS_Papers"):
         return True
+
 
 def search_paper(cds, paper_info):
     """ Perform CDS search by given paper info.
@@ -85,8 +94,8 @@ def search_paper(cds, paper_info):
           cc - current collection (e.g. "ATLAS").  The collection the
                user started to search/browse from.
     """
-    sys.stderr.write(paper_info['id']+"\n")
-    #results = cds.search(cc="ATLAS", aas=1, m1="e", op1="a",
+    sys.stderr.write(paper_info['id'] + "\n")
+    # results = cds.search(cc="ATLAS", aas=1, m1="e", op1="a",
     #                     p1=paper_info["full_title"], f1="title", m2="a",
     #                     op2="a", p2="ARTICLE, ATLAS_Papers",
     #                     f2="collection", m3="a", p3=paper_info["ref_code"],
@@ -120,13 +129,14 @@ def search_paper(cds, paper_info):
         sys.stderr.write("Decoding JSON has failed\n")
         return None
 
+
 def search_notes(cds, notes):
     """ Get NOTES metadata from CDS.
 
     NOTES is a JSON (dict) array with supporting documents information.
     Returns dict: { (str) note_id : (dict|NoneType) note_metadata}
     """
-    if notes == None:
+    if notes is None:
         return {}
     if type(notes) != list:
         return None
@@ -135,6 +145,7 @@ def search_notes(cds, notes):
         results[note.get('id')] = search_note(cds, note)
 
     return results
+
 
 def search_note(cds, note):
     """ Get NOTE metadata from CDS.
@@ -151,7 +162,7 @@ def search_note(cds, note):
     url = url.replace('\\', '')
     parsed = urlparse(url)
     if parsed.netloc == "cds.cern.ch" or parsed.netloc == "cdsweb.cern.ch":
-        sys.stderr.write(parsed.path+"\n")
+        sys.stderr.write(parsed.path + "\n")
         if parsed.path[-1:] == '/':
             recid = parsed.path[:-1].split('/')[-1]
         else:
@@ -186,12 +197,13 @@ def search_note(cds, note):
             sys.stderr.write("(WARN) Supporting document search returned more"
                              " than one result (%s)\n"
                              "(WARN) Will be taken the first of the list\n"
-                              % str(len(results)))
+                             % str(len(results)))
         results = results[0]
     if type(results) != dict:
         results = None
 
     return results
+
 
 def form_output_data(GLANCEdata, ppCDSdata, sdCDSdata):
     """ Combine input and found metadata; generate and add dkbID.
@@ -203,9 +215,10 @@ def form_output_data(GLANCEdata, ppCDSdata, sdCDSdata):
                     { $sdGlanceID : [ ... ], ... }
     """
     if type(ppCDSdata) != type(GLANCEdata) != type(sdCDSdata) != dict:
-        sys.stderr.write("(ERROR) form_output_data() expected parameters of"
-                         " type %s (get %s, %s, %s)\n" % (dict,
-                         type(GLANCEdata), type(ppCDSdata), type(sdCDSdata)))
+        sys.stderr.write(
+            "(ERROR) form_output_data() expected parameters of"
+            " type %s (get %s, %s, %s)\n" % (
+                dict, type(GLANCEdata), type(ppCDSdata), type(sdCDSdata)))
     result = {}
 
     ppGLANCEdata = GLANCEdata.copy()
@@ -267,6 +280,7 @@ def input_json_handle(json_data, cds):
     result = form_output_data(json_data, pp_results, ds_results)
     return result
 
+
 def process(stage, message):
     """ Process input message. """
     ARGS = stage.ARGS
@@ -281,6 +295,7 @@ def process(stage, message):
 
     return True
 
+
 def main(argv):
     """ Program body. """
     stage = JSONProcessorStage()
@@ -290,21 +305,22 @@ def main(argv):
                        const='',
                        metavar="LOGIN",
                        dest='login'
-                      )
+                       )
     stage.add_argument("-p", "--password", action="store", type=str, nargs='?',
                        help="CERN account password",
                        default='',
                        const='',
                        metavar="PASSWD",
                        dest='password'
-                      )
-    stage.add_argument("-k", "--kerberos", action="store", type=bool, nargs='?',
+                       )
+    stage.add_argument("-k", "--kerberos", action="store", type=bool,
+                       nargs='?',
                        help="Use Kerberos-based authentification",
                        default=False,
                        const=True,
                        metavar="KERBEROS",
                        dest='kerberos'
-                      )
+                       )
 #    --pretty argument is to be handled by ProcessorStages output methods.
 #    ---
 #    stage.add_argument("-P", "--pretty", action="store", type=int, nargs="?",
@@ -324,20 +340,21 @@ def main(argv):
         # any authentication method
         # Maybe we need a ProcessorWithAuthorization?
         if not stage.ARGS.login and not stage.ARGS.kerberos:
-            sys.stderr.write("WARNING: no authentication method will be used.\n")
-    
+            sys.stderr.write(
+                "WARNING: no authentication method will be used.\n")
+
         warnings.simplefilter("once", InsecurePlatformWarning)
-        ARGS=stage.ARGS
-    
+        ARGS = stage.ARGS
+
         if ARGS.kerberos:
             Connector = KerberizedCDSInvenioConnector
         else:
             Connector = CDSInvenioConnector
-    
+
         with Connector(ARGS.login, ARGS.password) as cds:
             ARGS.cds = cds
             stage.run()
-    
+
     except (DataflowException, RuntimeError), err:
         if str(err):
             sys.stderr.write("(ERROR) %s\n" % err)
@@ -346,6 +363,7 @@ def main(argv):
         stage.stop()
 
     exit(exit_code)
+
 
 if __name__ == "__main__":
     main(sys.argv[1:])
