@@ -1,0 +1,92 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+25
+
+Figure 19: 95% confidence level exclusion contours for non-rotating (left) and rotating (right) black
+holes with six extra dimensions taking into account all statistical and systematic uncertainties. The
+dashed blue line shows the expected exclusion contour with the 1 and 2 σ uncertainty in green and
+yellow respectively. The solid black line shows the observed exclusion contour. The region below the
+contour has been excluded by this analysis. The figures show lines of constant slope equal to 3,4, and 5.
+Only slopes much larger than 1 correspond to physical models.
+
+[2] I. Antoniadis, N. Arkani-Hamed, S. Dimopoulos, and G. R. Dvali, New dimensions at a millimeter
+
+to a Fermi and superstrings at a TeV, Phys. Lett. B436 (1998) 257–263,
+arXiv:hep-ph/9804398.
+
+[3] N. Arkani-Hamed, S. Dimopoulos, and G. R. Dvali, Phenomenology, astrophysics and cosmology
+of theories with sub-millimeter dimensions and TeV scale quantum gravity, Phys. Rev. D59 (1999)
+086004, arXiv:hep-ph/9807344.
+
+[4] G. F. Giudice, R. Rattazzi, and J. D. Wells, Quantum gravity and extra dimensions at high-energy
+
+colliders, Nucl. Phys. B544 (1999) 3–38, arXiv:hep-ph/9811291.
+
+[5] Particle Data Group Collaboration, K. Nakamura, Review of particle physics, J. Phys. G37 (2010)
+
+075021.
+
+[6] S. Ask, Search for extra dimensions at LEP, arXiv:hep-ex/0410004.
+
+[7] CDF Collaboration, T. Aaltonen et al., Search for large extra dimensions in final states containing
+
+one photon or jet and large missing transverse energy produced in p ¯p collisions at
+1.96-TeV, Phys. Rev. Lett. 101 (2008) 181602, arXiv:0807.3132 [hep-ex].
+
+√
+
+s =
+
+[8] D0 Collaboration, V. M. Abazov et al., Search for large extra dimensions via single photon plus
+
+s = 1.96-TeV, Phys. Rev. Lett. 101 (2008) 011601,
+
+√
+missing energy final states at
+arXiv:0803.2137 [hep-ex].
+
+[9] CMS Collaboration, V. Khachatryan et al., Search for Microscopic Black Hole Signatures at the
+
+Large Hadron Collider, Phys. Lett. B697 (2011) 434–453, arXiv:1012.3375 [hep-ex].
+
+416
+
+417
+
+418
+
+419
+
+420
+
+421
+
+422
+
+423
+
+424
+
+425
+
+426
+
+427
+
+428
+
+429
+
+430
+
+431
+
+432
+
+433
+
+434
+
+Notreviewed,forinternalcirculationonlyk=3k=4k=512MD[TeV]345MTH[TeV]ATLASforapproval√s=7TeV,L=1.3fb−1MTH=kMDobservedlimitexpectedlimitexpected1sigmaexpected2sigmak=3k=4k=512MD[TeV]345MTH[TeV]ATLASforapproval√s=7TeV,L=1.3fb−1MTH=kMDobservedlimitexpectedlimitexpected1sigmaexpected2sigma

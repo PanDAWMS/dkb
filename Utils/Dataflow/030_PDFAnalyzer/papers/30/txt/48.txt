@@ -1,0 +1,15 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+47
+
+Figure 45: 95% confidence level exclusion contours for non-rotating (left) and rotating (right) black
+holes with six extra dimensions taking into account all statistical and systematic uncertainties. The
+dashed blue line shows the expected exclusion contour with the 1 and 2 σ uncertainty in green and
+yellow respectively. The solid black line shows the observed exclusion contour. The region below the
+contour has been excluded by this analysis. The figures show lines of constant slope equal to 3,4, and
+5. Only slopes much larger than 1 correspond to physical models. The actual sample points used for the
+limit calculation are shown as black dots.
+
+Notreviewed,forinternalcirculationonly12MD[TeV]345MTH[TeV]12MD[TeV]345MTH[TeV]

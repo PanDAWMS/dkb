@@ -11,6 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
+import java.util.Date;
 
 import java.io.BufferedWriter;
 import java.io.OutputStreamWriter;
@@ -24,6 +25,7 @@ import java.lang.InterruptedException;
 public class ExternalProcessWriter {
 
   private static final Logger log = LoggerFactory.getLogger(ExternalProcessWriter.class);
+  private static final Logger timing = LoggerFactory.getLogger("timing");
 
   private final ExternalSinkConfig config;
   private Process externalProcess = null;
@@ -36,6 +38,7 @@ public class ExternalProcessWriter {
   private final char EOPMarker = '\6';
 
   ExternalProcessWriter(final ExternalSinkConfig config) {
+    long start = new Date().getTime();
     this.config = config;
     try {
       this.externalProcess = Runtime.getRuntime().exec(config.externalCommand);
@@ -46,9 +49,11 @@ public class ExternalProcessWriter {
     catch (IOException e){
       log.error("Can't start new process with command/parameters: " + config.externalCommand.toString());
     }
+    timing.info("Sink process start took: {} ms", new Date().getTime() - start);
   }
 
   void write(final Collection<SinkRecord> records) throws IOException, InterruptedException {
+    long start = new Date().getTime();
     String line;
     if (externalProcess == null)
       throw new IOException();
@@ -69,6 +74,8 @@ public class ExternalProcessWriter {
       externalProcessSTDIN.write("\0\n");
     externalProcessSTDIN.flush();
     waitForResponse();
+    long stop = new Date().getTime();
+    timing.info("Sink process write of {} records took: {} ms (avg: {} ms)", records.size(), stop - start, (stop-start)/records.size());
   }
 
   private void waitForResponse() throws InterruptedException, IOException {

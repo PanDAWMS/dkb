@@ -1,0 +1,53 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+28
+
+(a) Leading (left) and second (right) muon pT (linear scale)
+
+(b) Leading (left) and second (right) muon pT (log scale)
+
+Figure 20: Figure shows the pT distribution for leading (left) and second (right) muons for rotating black
+hole signal in models with 6 extra dimensions. The distributions are shown for three choices of MTH;
+3000, 4000, and 5000 GeV with MD fixed at 1500GeV.
+Appendices
+A Signal Properties
+
+Figure 20 shows the leading and second muon pT distributions for three choices of MTH with the other
+parameters held constant. Figure 21 shows the leading muon isolation distribution for the same choice
+of models, while Fig. 22 shows the NTracks distribution. None of the distributions except NTracks show
+strong correlation with MTH.
+
+Figure 23 shows the signal acceptance as function of MTH (left) and MD (right) with other parameters
+
+held constant.
+
+B Details of Monte Carlo samples
+
+Table 8 shows further details of the Monte Carlo samples used in this analysis. Table 9 shows the details
+of the fully reconstructed signal samples used in Fig. 15.
+
+489
+
+490
+
+491
+
+492
+
+493
+
+494
+
+495
+
+496
+
+497
+
+498
+
+499
+
+Notreviewed,forinternalcirculationonly [GeV]T p1m0200400600800100012001400160018002000Events / 40 GeV00.020.040.060.080.10.120.140.160.180.20.22 = 3000 GeVTHM = 4000 GeVTHM = 5000 GeVTHM [GeV]T p2m02004006008001000Events / 40 GeV00.10.20.30.40.50.6 = 3000 GeVTHM = 4000 GeVTHM = 5000 GeVTHM [GeV]T p1m0200400600800100012001400160018002000Events / 40 GeV-310-210-110 = 3000 GeVTHM = 4000 GeVTHM = 5000 GeVTHM [GeV]T p2m02004006008001000Events / 40 GeV-210-1101 = 3000 GeVTHM = 4000 GeVTHM = 5000 GeVTHM

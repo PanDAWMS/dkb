@@ -1,0 +1,128 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+14
+
+Process
+
+b¯b
+t¯t
+
+µ+fake
+
+Wt
+
+WZ + ZZ
+Predicted
+Observed
+
+Events
+
+748 ± 2(stat) ± 104(syst) ± 28(lumi)
+
+2125 ± 26(stat) ± 181(syst)
+1304 ± 2(stat) ± 261(syst)
+
+53.2 ± 1.7(stat)
+35.7 ± 0.9(stat)
+
+4266 ± 26(stat) ± 335(syst)
+
+3775
+
+Table 3: Number of expected and observed events in the low NTracks control region. The systematic
+uncertainties are discussed in section 6. The systematic uncertainties on the diboson (WZ + ZZ) and
+single-top (Wt) backgrounds are not evaluated.
+
+290
+
+291
+
+292
+
+293
+
+294
+
+295
+
+296
+
+297
+
+298
+
+299
+
+300
+
+301
+
+302
+
+303
+
+304
+
+305
+
+306
+
+307
+
+308
+
+309
+
+310
+
+311
+
+312
+
+313
+
+314
+
+315
+
+5.3 Validation of Background Estimate
+We validate the various background estimation techniques in data by predicting the number of events
+with NTracks < 10. The complete selection is as described in section 4.
+
+Table 3 shows the expected and observed events in this control region. For the b¯b background,
+only the uncertainty on the ratio R = AMC/CMC as shown in section 5.1 is included. The systematic
+uncertainties on the diboson and single-top backgrounds are not evaluated as they are expected to be
+negligible compared to the dominant backgrounds. Figure 9 and Fig. 10 show the pT distributions for
+the leading and second muons respectively. Figure 11 shows the dimuon invariant mass distribution. The
+corresponding figures with the ratio of data to background are shown in Figures 37, 38, and 39.
+
+5.3.1 Validation of t¯t MC
+The t¯t MC prediction is validated in a control region with the following selection.
+
+• Events are required to have two opposite-sign muons with pT > 25, 15 GeV respectively. The
+
+muons are required to be isolated by requiring ptcone20/pT < 0.2 for both.
+
+• A third muon (of either charge) with pT > 15 GeV is required. No isolation is imposed on the third
+
+muon.
+
+• Events are required to have high missing energy; Emiss
+• Events are required to have NTracks < 10 to remove potential signal contamination.
+
+T > 60 GeV.
+
+With this selection, t¯t production is dominant. The predicted number of events, and the data observation
+is shown in Table 4. The µµ+fake contribution is estimated in the same way as the µ + f ake background
+estimate discussed in section 5.2, and is dominated by the Z+jets process. The other predictions (viz. t¯t,
+WZ, ZZ) are made using the nominal simulation samples. The observed number of events in data agrees
+with the prediction at the 20% level, and the prediction of the t¯t MC sample is thus validated.
+
+6 Systematic Uncertainties
+6.1 Data based estimation of background
+The uncertainty on the muon fake rate due to measurement statistics is 8%. The rate is applied to each
+track in muon+track events. Let the rate be denoted by fi for the ith track. When events have more than
+
+Notreviewed,forinternalcirculationonly

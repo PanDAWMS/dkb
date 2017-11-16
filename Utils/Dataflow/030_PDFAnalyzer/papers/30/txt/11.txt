@@ -1,0 +1,32 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+10
+
+(a) Region C : Emiss
+
+T
+
+distribution.
+
+(b) Region A: Emiss
+
+T
+
+distribution.
+
+T
+
+Figure 5: Figure shows the Emiss
+distribution in region C (5(a)) and region A (5(b)) for three different
+choices of muon isolation in the b¯b MC. The black solid line shows the nominal isolation requirement
+ptcone20/pT < 0.2, the red circles are with ptcone20/pT < 0.3, the blue triangles are with ptcone20/pT
+< 0.1. The distributions with higher and lower isolations are normalized to the distribution with nominal
+isolation. The shape of the Emiss
+is same in all cases implying that it is uncorrelated with the choice of
+the isolation requirement.
+
+T
+
+Notreviewed,forinternalcirculationonly [GeV]missTregion C E020406080100120140160180200Events / 4 GeV0102030405060708090Entries  599Mean    22.75RMS     15.63Integral   518.1Entries  635Mean    22.71RMS     15.61Integral   518.1Entries  635Mean    22.71RMS     15.61Integral   518.1Entries  532Mean    23.27RMS     15.85Integral   518.1Entries  532Mean    23.27RMS     15.85Integral   518.1 [GeV]missTregion A E020406080100120140160180200Events / 8 GeV0102030405060Entries  177Mean    20.51RMS     13.66Integral   152.1Entries  91Mean    19.56RMS     11.89Integral   152.1Entries  91Mean    19.56RMS     11.89Integral   152.1Entries  277Mean    20.56RMS     12.65Integral   152.1Entries  277Mean    20.56RMS     12.65Integral   152.1

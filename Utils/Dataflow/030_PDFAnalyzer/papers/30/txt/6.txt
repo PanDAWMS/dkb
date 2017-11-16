@@ -1,0 +1,140 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+5
+
+• The muons are required to satisfy ∆Rη−φ > 0.2 to explicitly ensure that the isolated muon is away
+
+from the second muon.
+
+• The leading and second muons are required to have the same charge.
+• The tracks used in the counting of track multiplicity (NTracks) are required to have pT > 10 GeV.
+Tracks are also required to have |η| < 2.4, and pass all the same inner detector hit requirements
+as the muons. The tracks are also required to come from the primary vertex by requiring that
+|z0 sin(θ)| < 1.5 mm. The track count includes the two muons.
+
+The track multiplicity, NTracks, is used to define two regions. A background region with NTracks <
+10 and the signal region with NTracks ≥ 10. The background region has identical requirements except
+for the inverted NTracks selection. Appendix A shows the pT and NTrack distributions for sample signal
+models.
+
+4.1 Muon Trigger and Identification
+No trigger requirement is imposed on MC events. Instead the MC events are weighted according to their
+probability of being triggered by any muon in the event. The weight is computed using the efficiency
+curves from Ref. [30]. The trigger efficiency has been measured in data for good oﬄine Staco muons
+which match to the trigger at L1 within ∆Rη−φ of 0.5. We make this same requirement in our data events
+for consistency. The trigger efficiency for EF mu20 is at a plateau for pT > 20 GeV and the plateau
+efficiency is 75% for muons in the barrel and 88% for muons in the endcap. In the analysis we use pT
+dependent trigger efficiencies for endcap and barrel, which are measured for three different run ranges,
+178044≤ Run ≤182519 (75% plateau for barrel), 182519< Run ≤183347 (72% plateau for barrel) and
+Run >183347 (77% plateau for barrel). The efficiency in the endcap is the same (88% plateau) for all
+run ranges.
+
+The MC predicts the muon identification and reconstruction efficiencies very well. As per the rec-
+ommendations of the Muon Combined Performance Group [29], we apply weights to the MC events
+which are dependent on muon η and φ to account for the differences in muon identification efficiency
+in data and MC. We also smear the muon pT according to the recommendations. The MC samples are
+reweighted to match their < µ > distribution to data, where < µ > is the mean number of interactions in
+an event.
+
+5 Background Estimation
+
+We group possible sources of background into the following two categories:
+
+• Processes with associated production of dimuon events of the same sign. These include b¯b, t¯t,
+diboson (WZ,ZZ) production as well as single top production in the Wt channel (which is identical
+to t¯t). The backgrounds from t¯t, single-top and dibosons are estimated completely from simulation
+using samples listed in Table 1. In the signal region, the diboson and single-top backgrounds are
+found to be negligible. The b¯b background is estimated using data and simulation as described in
+section 5.1. The dominant background in this category is t¯t.
+
+• Processes with same-sign dimuons, where the muons come from uncorrelated decay chains. We
+expect the dominant process to be W+jets where one muon comes from W decay and the other
+muon comes from a pion/kaon decay in ﬂight or the semi-leptonic decay of b, c hadrons. We
+estimate this contribution completely from data by measuring the probability of a track to give
+a muon, and applying this to all muon+track events in the signal region. The method is further
+
+153
+
+154
+
+155
+
+156
+
+157
+
+158
+
+159
+
+160
+
+161
+
+162
+
+163
+
+164
+
+165
+
+166
+
+167
+
+168
+
+169
+
+170
+
+171
+
+172
+
+173
+
+174
+
+175
+
+176
+
+177
+
+178
+
+179
+
+180
+
+181
+
+182
+
+183
+
+184
+
+185
+
+186
+
+187
+
+188
+
+189
+
+190
+
+191
+
+192
+
+193
+
+Notreviewed,forinternalcirculationonly

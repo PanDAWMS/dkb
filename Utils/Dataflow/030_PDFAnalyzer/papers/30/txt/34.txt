@@ -1,0 +1,105 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+33
+
+Process
+
+W → µν +0p
+W → µν +1p
+W → µν +2p
+W → µν +3p
+W → µν +4p
+W → µν +5p
+W → µν +jets
+
+Single-top (t-channel)
+
+Dataset Generator Cross section (pb) Luminosity(pb−1)
+107690
+107691
+107692
+107693
+107694
+107695
+119129
+108341
+
+A
+A
+A
+A
+A
+A
+S
+@
+
+417.5
+380.8
+8213.3
+7928.1
+8248.7
+8428.7
+161.8
+24928
+
+8303.5
+1564.8
+453.3
+122.3
+30.9
+8.3
+
+10503
+7.12
+
+Table 12: Monte Carlo samples used for fake rate studies described in Appendix D.
+
+Figure 25: Figure shows the fake rate as measured in the A W+jets and single top mixture as a
+function of track pT on the left, and as a function of NTracks on the right. No dependence is seen on
+either variable.
+
+D Fake rate studies in MC
+
+The procedure described in Section 5.2 is used to measure the rate of tracks faking muons in the simulated
+samples. The aim is this study is not to ascertain the absolute scale of the fake rate, but rather to check if
+the fake rate depends on track pT, or the number of tracks in the event, NTracks.
+
+For this study, we use the W+jets simulated samples. Two sets of samples are considered, one
+generated with A, and the other with S. To both sets, a single top (t-channel) sample generated
+with @ is added. The details of the samples are shown in Table 12.
+
+Figures 25 and 26 show the fake rate as a function of track pT and NTracks. In either case, the fake
+
+rate is independent of pT and NTracks.
+
+We also study the composition of the second muon in the A samples. The ratio of second
+(“fake”) muons originating from heavy-ﬂavor (b, c meson) decay to pion/kaon decay in ﬂight is roughly
+one.
+
+528
+
+529
+
+530
+
+531
+
+532
+
+533
+
+534
+
+535
+
+536
+
+537
+
+538
+
+539
+
+Notreviewed,forinternalcirculationonly [GeV]TTrack p20406080100Fake Muon Rate00.0020.0040.0060.0080.010.0120.014 / ndf 2c 6.867 / 2Prob   0.03227p0        0.0003278– 0.0026  / ndf 2c 6.867 / 2Prob   0.03227p0        0.0003278– 0.0026 NTracks2468101214161820Fake Muon Rate00.0020.0040.0060.0080.010.0120.014

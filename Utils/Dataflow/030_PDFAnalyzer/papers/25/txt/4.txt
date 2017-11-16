@@ -1,0 +1,113 @@
+54
+
+55
+
+56
+
+57
+
+58
+
+59
+
+60
+
+61
+
+62
+
+63
+
+64
+
+65
+
+66
+
+67
+
+68
+
+69
+
+70
+
+71
+
+72
+
+73
+
+74
+
+75
+
+76
+
+– Event within list of good runs as defined by data quality ﬂags listed in Table 4 of [5]
+– Muon-triggered event with trigger listed in Table 5 of [5]
+– At least one good primary vertex with |z(PV )| < 200mm and three tracks
+
+• Requirements on two muons in the event:
+
+– Muid combined (author = 12)
+– pT > 25 GeV
+– |h | < 2.4
+– |z0| < 1 mm, |d0| < 0.2 mm with respect to the primary vertex
+– expectBLayerHit=false or numberOfBLayerHits ≥ 1
+– number of pixel hits + number of crossed dead pixel sensors ≥ 2
+– number of SCT hits + number of crossed dead SCT sensors ≥ 6
+– number of pixel holes + number of SCT holes ≤ 1
+– for |h | < 1.9, require nT RT > 5 and noutliers
+and if nT RT > 5, then require noutliers
+where the counts on the r.h.s. are mutually exclusive.
+
+T RT
+
+T RT < 0.9nT RT . For |h | ≥ 1.9, accept if nT RT ≤ 5,
+< 0.9nT RT . For these cuts, nT RT = nhits
+T RT + noutliers
+
+T RT
+
+– MS f hits > 0
+– Inner, middle and outer MDT/CSC precision layers with at least 3 hits in each. The MS
+
+precision 3-layer requirement should be fulfilled completely in the barrel or in the endcap.
+
+– Tracks with hits in BEE, EE and BIS78 MS chambers are vetoed
+– Isolated muons in the ID: S pT (cone 0.3)/pT < 0.05
+
+• Finally, the dimuon pair must have:
+– Both muons opposite charge
+– mmm ≥ 70 GeV
+
+Table 1: PYTHIA LO Monte Carlo samples for benchmark signals and DY background.
+
+Sample
+
+Model
+Constructive interference
+L − = 3 TeV mc10 7TeV.105863.pythiaContactInt Lambda3 minus.merge.AOD.e574 s933 s946 r1831 r1700
+L − = 4 TeV mc10 7TeV.105864.pythiaContactInt Lambda4 minus.merge.AOD.e574 s933 s946 r1831 r1700
+L − = 5 TeV mc10 7TeV.105865.pythiaContactInt Lambda5 minus.merge.AOD.e574 s933 s946 r1831 r1700
+L − = 7 TeV mc10 7TeV.105608.pythiaContactInt Lambda7 minus.merge.AOD.e574 s933 s946 r1831 r1700
+Destructive interference
+L + = 2 TeV mc10 7TeV.105866.pythiaContactInt Lambda2 plus.merge.AOD.e574 s933 s946 r1831 r1700
+L + = 3 TeV mc10 7TeV.105867.pythiaContactInt Lambda3 plus.merge.AOD.e574 s933 s946 r1831 r1700
+L + = 4 TeV mc10 7TeV.105868.pythiaContactInt Lambda4 plus.merge.AOD.e574 s933 s946 r1831 r1700
+L + = 5 TeV mc10 7TeV.105869.pythiaContactInt Lambda5 plus.merge.AOD.e574 s933 s946 r1831 r1700
+
+77
+
+78
+
+79
+
+For search and limit setting purposes, we define our signal region to be above a reconstructed mass
+of mmm ≥150 GeV, and our control region 70 ≤ mmm < 110 GeV. The acceptance times efficiency of this
+selection ranges from 35-40% for our contact interaction samples in the signal region, growing inversely
+
+4
+
+

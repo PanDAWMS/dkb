@@ -1,0 +1,63 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+34
+
+Figure 26: Figure shows the fake rate as measured in the S W+jets and single top mixture as a
+function of track pT on the left, and as a function of NTracks on the right. No dependence is seen on
+either variable.
+
+E Studies of shape of track multiplicity
+
+In Fig. 27, we show the track multiplicity distribution for the different background estimates, and the
+observed data points. Figure 27 shows the shape of the track multiplicity distributions for the µ+fake, t¯t
+and b¯b backgrounds. The shape of the µ+fake track multiplicity background is compared to the expected
+shapes from the W+jet MC samples used in the previous section (Appendix D) in Fig. 28. We can see
+that the shape of the µ+fake data-driven background agrees well with the expected shapes from MC.
+
+In Fig. 29, we compare the shape of the t¯t track multiplicity distribution using the nominal sample
+with a t¯t sample generated with P and hadronized with P. The nominal sample is generated
+with @ and uses H+J for hadronization. The two shapes agree well. The KS probability
+for the agreement of shapes is 0.99.
+
+In Fig 30, we show the track multiplicity distribution for data and b¯b MC in the the heavy-ﬂavor
+rich control region defined in Sec. 5.1. The data is normalized to the b¯b MC. The KS probability for the
+agreement of shapes is 0.96. We repeat the exercise described in Sec. 5.1.2 in this control region. We fit
+the b¯b MC with an exponential in the range 4 <NTracks< 14. The fit is e6.77−0.48×NTrack. The fit predicts
+2.2 events for NTracks≥ 14, and we observe 1.6 events in the data. The extrapolation procedure is thus
+verified in the heavy-ﬂavor control region as well.
+
+540
+
+541
+
+542
+
+543
+
+544
+
+545
+
+546
+
+547
+
+548
+
+549
+
+550
+
+551
+
+552
+
+553
+
+554
+
+555
+
+Notreviewed,forinternalcirculationonly [GeV]TTrack p20406080100Fake Muon Rate00.0020.0040.0060.0080.010.0120.014 / ndf 2c 1.165 / 2Prob   0.5584p0        0.0005725– 0.004413  / ndf 2c 1.165 / 2Prob   0.5584p0        0.0005725– 0.004413 NTracks2468101214161820Fake Muon Rate00.0020.0040.0060.0080.010.0120.014

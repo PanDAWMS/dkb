@@ -1,0 +1,14 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+15
+
+(a) Leading muon pT: NTracks < 10
+
+(b) Leading muon pT: NTracks < 10
+
+Figure 9: The leading muon pT distribution in linear and log scale in the background region. The
+background histograms are stacked. The rightmost bin along X-axis shows the overﬂows.
+
+Notreviewed,forinternalcirculationonly) [GeV]1m(Tp050100150200250300350400Nevents / 8 GeV02004006008001000120014001600Data+fakemttbbDibosonSingle top: Wt) [GeV]1m(Tp050100150200250300350400Nevents / 8 GeV-110110210310Data+fakemttbbDibosonSingle top: Wt

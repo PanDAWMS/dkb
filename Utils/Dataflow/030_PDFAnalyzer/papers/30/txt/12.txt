@@ -1,0 +1,111 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+11
+
+Figure 6: Figure shows the NTracks distribution for b¯b (left) and t¯t (right) simulation for like-sign dimuon
+events. See section 5.1.2 for details.
+
+of events for NTracks ≥ 15 from the fit is 203, and the true number of events is 174. For NTracks ≥ 20
+we predict 17 events and the true number of events is 16.4. If we fit the distribution for 5 <NTracks< 10,
+we predict 28 events for NTracks ≥ 20. The prediction and truth agree well within the 100% uncertainty
+that we assign. We consider this a successful closure test.
+
+5.2 Data based estimate of the fake background
+In this section, we describe a data driven measurement of the fake muon background as it applies to
+this analysis. The procedure consists of two steps: first we measure the per-track fake rate on a control
+sample of events in data. We then apply this rate to data events with one muon + one or more tracks
+where the muon passes the requirements of the leading muon for the analysis. This gives us a prediction
+for dimuon events. While this method includes the contributions from Z+jets, and QCD dijet processes,
+in practice the background is dominated by the W+jets process.
+
+For the control sample we use W+track events. We select events with 25 < Emiss
+
+( GeV) < 80 and
+one isolated muon with pT > 25 GeV. We form the transverse mass (mT) of the muon with Emiss
+and
+require that 50 < mT( GeV) < 120. We also require NTracks < 10 to remove signal contribution. In
+these selected W events, we require an additional track with pT > 15 GeV, which passes the tracking
+requirements as listed in section 4. The track is required to have the same charge as the muon. This
+forms the denominator. Each eligible track in the event is used for the denominator.
+
+T
+
+T
+
+For the numerator, we require that an additional muon with pT > 15 GeV exists in the event passing
+all muon requirements and this additional muon is of the same charge as the muon. The muon is also
+matched to a denominator track. The numerator and denominator give us the rate of obtaining a second
+muon of the same charge given a track. We measure this rate as a function of the track pT. In events with
+more than one additional muon satisfying the requirements, all possible muons enter the numerator.
+
+To avoid double counting we subtract the contributions of b¯b, t¯t, Wt and dibosons (WZ + ZZ) to the
+fake rate by using the MC-driven methods that were discussed earlier in this section. The subtraction is
+done from the fake rate in bins of track pT or η. In Fig. 7 we show the numerator as measured in the data
+before the subtraction, and the estimates of the contributions which will be subtracted.
+Figure 8 shows the measured fake rate as a function of track pT and |η| 3. The fake rate is constant
+for pT > 20 GeV. We measure the fake rate in two bins, one for pT < 20 GeV and one for pT > 20 GeV.
+The fake rate (and error) for pT > 20 GeV is obtained by fitting the fake rate with a straight line. For
+
+3The pT fake rate is shown integrated for all η, and vice versa
+
+246
+
+247
+
+248
+
+249
+
+250
+
+251
+
+252
+
+253
+
+254
+
+255
+
+256
+
+257
+
+258
+
+259
+
+260
+
+261
+
+262
+
+263
+
+264
+
+265
+
+266
+
+267
+
+268
+
+269
+
+270
+
+271
+
+272
+
+273
+
+274
+
+Notreviewed,forinternalcirculationonlyNTracks05101520Events110210 MCbbNTracks·6.5-0.94Fit: Events = e/ndof = 1.92/5, prob = 0.862cNTracks0510152025303540Events-110110210310410 MCttNTracks·12.1-0.5Fit: Events = ePredicted (NTracks>15)= 203True       (NTracks>15)= 174Predicted (NTracks>20)= 17True       (NTracks>20)= 16.4

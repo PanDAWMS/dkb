@@ -1,0 +1,78 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+12
+
+Figure 7: Figure shows the pT distribution of the numerator in data before any subtractions. The contri-
+butions to this numerator from b¯b, t¯t , Wt and diboson (WZ + ZZ) production are also shown as stacked
+histograms. These will be subtracted from the data before the fake rate is measured.
+
+Track pT [ GeV]
+15 < pT < 20
+20 < pT < 60
+
+pT > 60
+
+Fake Rate
+
+0.0044 ± 0.00015
+0.0037 ± 0.00012
+0.0037 ± 0.0021
+
+Table 2: The measured fake rate and uncertainties in the different pT bins.
+
+pT > 60 GeV, the error on the fake rate is taken from the 60 < pT[ GeV] < 120 bin shown in Fig. 8. The
+measured fake rate and uncertainties are shown in Table 2. The constant fake rate for pT > 20 GeV is
+motivated by MC studies (see Appendix D).
+The fake rate increases slightly with increasing |η|. The effect of averaging over the central η hole
+(|η| < 0.1) is studied by measuring the pT dependent fake rate separately for |η| < 0.1 and |η| > 0.1.
+However, this shows no change in the final predictions. The final fake rate is averaged over all η for
+simplicity.
+
+To estimate the background, we select a sample of muon+track events in data, where the muon
+passes the requirements of the leading muon for the analysis and the track passes the same requirements
+as above. If more than one track passes the cuts, each of them is considered. We compute the probability
+for an event to contain a fake and apply it as an event weight. For an event with n tracks, this probability
+
+i=1(1 − pi)), where pi is the probability for the ith track to fake a muon.
+
+is (1 −(cid:81)n
+
+By design, the contribution of double-fakes is included since the selection of muon+track events will
+
+include events where the leading muon is a fake.
+
+A validation of this procedure in simulation samples has been presented in Ref. [10].
+
+275
+
+276
+
+277
+
+278
+
+279
+
+280
+
+281
+
+282
+
+283
+
+284
+
+285
+
+286
+
+287
+
+288
+
+289
+
+Notreviewed,forinternalcirculationonly [GeV]Tp020406080100Events / 4 GeV050100150200250300350Data numeratorttbbsingle top: WtWZ+ZZ

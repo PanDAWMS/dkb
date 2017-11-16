@@ -1,0 +1,21 @@
+#!/bin/bash
+
+KRB_KIAE=~/.krb5/krb5cc_$UID.kiae
+KRB_CERN=~/.krb5/krb5cc_$UID.cern
+switch_realm() {
+    # Switch Kerberos ticket to the given realm
+    [ -z "$1" ] && return 1
+    case $1 in
+        kiae)
+            TKT=$KRB_KIAE
+            ;;
+        cern)
+            TKT=$KRB_CERN
+            ;;
+        *)
+            echo "Unknown realm: $1" >&2
+            return 1
+            ;;
+    esac
+    export KRB5CCNAME="FILE:/$TKT"
+}

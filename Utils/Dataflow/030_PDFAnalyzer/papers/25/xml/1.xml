@@ -1,0 +1,712 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<pages>
+<page id="1" bbox="0.000,0.000,595.000,842.000" rotate="0">
+<textbox id="0" bbox="221.160,650.401,376.893,678.981">
+<textline bbox="221.160,650.401,376.893,678.981">
+<text font="Times-Bold" bbox="221.160,650.401,239.056,678.981" size="28.580">A</text>
+<text font="Times-Bold" bbox="236.640,650.401,253.173,678.981" size="28.580">T</text>
+<text font="Times-Bold" bbox="253.200,650.401,269.733,678.981" size="28.580">L</text>
+<text font="Times-Bold" bbox="269.760,650.401,287.656,678.981" size="28.580">A</text>
+<text font="Times-Bold" bbox="287.640,650.401,301.422,678.981" size="28.580">S</text>
+<text> </text>
+<text font="Times-Bold" bbox="307.560,650.401,325.456,678.981" size="28.580">N</text>
+<text font="Times-Bold" bbox="325.440,650.401,344.724,678.981" size="28.580">O</text>
+<text font="Times-Bold" bbox="343.800,650.401,360.333,678.981" size="28.580">T</text>
+<text font="Times-Bold" bbox="360.360,650.401,376.893,678.981" size="28.580">E</text>
+<text>
+</text>
+</textline>
+</textbox>
+<textbox id="1" bbox="230.280,627.746,367.778,641.088">
+<textline bbox="230.280,627.746,367.778,641.088">
+<text font="Times-Roman" bbox="230.280,627.746,238.912,641.088" size="13.342">A</text>
+<text font="Times-Roman" bbox="237.600,627.746,244.904,641.088" size="13.342">T</text>
+<text font="Times-Roman" bbox="244.920,627.746,252.224,641.088" size="13.342">L</text>
+<text font="Times-Roman" bbox="252.240,627.746,256.221,641.088" size="13.342">-</text>
+<text font="Times-Roman" bbox="256.200,627.746,264.174,641.088" size="13.342">C</text>
+<text font="Times-Roman" bbox="264.120,627.746,272.752,641.088" size="13.342">O</text>
+<text font="Times-Roman" bbox="272.760,627.746,283.388,641.088" size="13.342">M</text>
+<text font="Times-Roman" bbox="283.440,627.746,287.421,641.088" size="13.342">-</text>
+<text font="Times-Roman" bbox="287.400,627.746,294.047,641.088" size="13.342">P</text>
+<text font="Times-Roman" bbox="294.000,627.746,302.632,641.088" size="13.342">H</text>
+<text font="Times-Roman" bbox="302.640,627.746,311.272,641.088" size="13.342">Y</text>
+<text font="Times-Roman" bbox="311.280,627.746,317.927,641.088" size="13.342">S</text>
+<text font="Times-Roman" bbox="317.880,627.746,321.861,641.088" size="13.342">-</text>
+<text font="Times-Roman" bbox="321.840,627.746,327.818,641.088" size="13.342">2</text>
+<text font="Times-Roman" bbox="327.840,627.746,333.818,641.088" size="13.342">0</text>
+<text font="Times-Roman" bbox="333.840,627.746,339.818,641.088" size="13.342">1</text>
+<text font="Times-Roman" bbox="339.840,627.746,345.818,641.088" size="13.342">1</text>
+<text font="Times-Roman" bbox="345.840,627.746,349.821,641.088" size="13.342">-</text>
+<text font="Times-Roman" bbox="349.800,627.746,355.778,641.088" size="13.342">0</text>
+<text font="Times-Roman" bbox="355.800,627.746,361.778,641.088" size="13.342">8</text>
+<text font="Times-Roman" bbox="361.800,627.746,367.778,641.088" size="13.342">1</text>
+<text>
+</text>
+</textline>
+</textbox>
+<textbox id="2" bbox="264.360,602.413,333.535,614.587">
+<textline bbox="264.360,602.413,333.535,614.587">
+<text font="Times-Roman" bbox="264.360,602.413,274.058,614.587" size="12.175">M</text>
+<text font="Times-Roman" bbox="274.080,602.413,278.924,614.587" size="12.175">a</text>
+<text font="Times-Roman" bbox="278.880,602.413,282.513,614.587" size="12.175">r</text>
+<text font="Times-Roman" bbox="282.480,602.413,287.324,614.587" size="12.175">c</text>
+<text font="Times-Roman" bbox="287.280,602.413,292.735,614.587" size="12.175">h</text>
+<text> </text>
+<text font="Times-Roman" bbox="295.560,602.413,301.015,614.587" size="12.175">1</text>
+<text font="Times-Roman" bbox="300.960,602.413,306.415,614.587" size="12.175">5</text>
+<text font="Times-Roman" bbox="306.360,602.413,309.087,614.587" size="12.175">,</text>
+<text> </text>
+<text font="Times-Roman" bbox="311.880,602.413,317.335,614.587" size="12.175">2</text>
+<text font="Times-Roman" bbox="317.280,602.413,322.735,614.587" size="12.175">0</text>
+<text font="Times-Roman" bbox="322.680,602.413,328.135,614.587" size="12.175">1</text>
+<text font="Times-Roman" bbox="328.080,602.413,333.535,614.587" size="12.175">1</text>
+<text>
+</text>
+</textline>
+</textbox>
+<textbox id="3" bbox="82.080,543.107,513.297,559.648">
+<textline bbox="82.080,543.107,513.297,559.648">
+<text font="Times-Bold" bbox="82.080,543.107,90.057,559.648" size="16.541">S</text>
+<text font="Times-Bold" bbox="90.000,543.107,96.370,559.648" size="16.541">e</text>
+<text font="Times-Bold" bbox="96.360,543.107,103.533,559.648" size="16.541">a</text>
+<text font="Times-Bold" bbox="103.560,543.107,109.930,559.648" size="16.541">r</text>
+<text font="Times-Bold" bbox="109.680,543.107,116.050,559.648" size="16.541">c</text>
+<text font="Times-Bold" bbox="116.040,543.107,124.017,559.648" size="16.541">h</text>
+<text> </text>
+<text font="Times-Bold" bbox="127.560,543.107,132.337,559.648" size="16.541">f</text>
+<text font="Times-Bold" bbox="132.000,543.107,139.173,559.648" size="16.541">o</text>
+<text font="Times-Bold" bbox="139.200,543.107,145.570,559.648" size="16.541">r</text>
+<text> </text>
+<text font="Times-Bold" bbox="149.160,543.107,159.518,559.648" size="16.541">C</text>
+<text font="Times-Bold" bbox="159.480,543.107,166.653,559.648" size="16.541">o</text>
+<text font="Times-Bold" bbox="166.680,543.107,174.656,559.648" size="16.541">n</text>
+<text font="Times-Bold" bbox="174.600,543.107,179.377,559.648" size="16.541">t</text>
+<text font="Times-Bold" bbox="179.400,543.107,186.573,559.648" size="16.541">a</text>
+<text font="Times-Bold" bbox="186.600,543.107,192.970,559.648" size="16.541">c</text>
+<text font="Times-Bold" bbox="192.960,543.107,197.737,559.648" size="16.541">t</text>
+<text> </text>
+<text font="Times-Bold" bbox="201.360,543.107,206.941,559.648" size="16.541">I</text>
+<text font="Times-Bold" bbox="207.000,543.107,214.976,559.648" size="16.541">n</text>
+<text font="Times-Bold" bbox="214.920,543.107,219.697,559.648" size="16.541">t</text>
+<text font="Times-Bold" bbox="219.720,543.107,226.090,559.648" size="16.541">e</text>
+<text font="Times-Bold" bbox="226.080,543.107,232.450,559.648" size="16.541">r</text>
+<text font="Times-Bold" bbox="232.440,543.107,239.613,559.648" size="16.541">a</text>
+<text font="Times-Bold" bbox="239.640,543.107,246.009,559.648" size="16.541">c</text>
+<text font="Times-Bold" bbox="246.000,543.107,250.777,559.648" size="16.541">t</text>
+<text font="Times-Bold" bbox="250.800,543.107,254.788,559.648" size="16.541">i</text>
+<text font="Times-Bold" bbox="254.760,543.107,261.933,559.648" size="16.541">o</text>
+<text font="Times-Bold" bbox="261.960,543.107,269.936,559.648" size="16.541">n</text>
+<text font="Times-Bold" bbox="269.880,543.107,275.460,559.648" size="16.541">s</text>
+<text> </text>
+<text font="Times-Bold" bbox="279.000,543.107,282.988,559.648" size="16.541">i</text>
+<text font="Times-Bold" bbox="282.960,543.107,290.936,559.648" size="16.541">n</text>
+<text> </text>
+<text font="Times-Bold" bbox="294.599,543.107,304.957,559.648" size="16.541">D</text>
+<text font="Times-Bold" bbox="304.919,543.107,308.908,559.648" size="16.541">i</text>
+<text font="Times-Bold" bbox="308.879,543.107,320.830,559.648" size="16.541">m</text>
+<text font="Times-Bold" bbox="320.879,543.107,328.856,559.648" size="16.541">u</text>
+<text font="Times-Bold" bbox="328.799,543.107,335.972,559.648" size="16.541">o</text>
+<text font="Times-Bold" bbox="335.999,543.107,343.976,559.648" size="16.541">n</text>
+<text> </text>
+<text font="Times-Bold" bbox="347.639,543.107,357.208,559.648" size="16.541">E</text>
+<text font="Times-Bold" bbox="357.239,543.107,364.412,559.648" size="16.541">v</text>
+<text font="Times-Bold" bbox="364.319,543.107,370.689,559.648" size="16.541">e</text>
+<text font="Times-Bold" bbox="370.679,543.107,378.656,559.648" size="16.541">n</text>
+<text font="Times-Bold" bbox="378.599,543.107,383.376,559.648" size="16.541">t</text>
+<text font="Times-Bold" bbox="383.399,543.107,388.980,559.648" size="16.541">s</text>
+<text> </text>
+<text font="Times-Bold" bbox="392.519,543.107,397.296,559.648" size="16.541">f</text>
+<text font="Times-Bold" bbox="397.319,543.107,403.689,559.648" size="16.541">r</text>
+<text font="Times-Bold" bbox="403.439,543.107,410.612,559.648" size="16.541">o</text>
+<text font="Times-Bold" bbox="410.639,543.107,422.589,559.648" size="16.541">m</text>
+<text> </text>
+<text font="Times-Bold" bbox="426.119,543.107,434.095,559.648" size="16.541">p</text>
+<text font="Times-Bold" bbox="434.039,543.107,440.409,559.648" size="16.541">r</text>
+<text font="Times-Bold" bbox="440.159,543.107,447.332,559.648" size="16.541">o</text>
+<text font="Times-Bold" bbox="447.359,543.107,452.136,559.648" size="16.541">t</text>
+<text font="Times-Bold" bbox="452.159,543.107,459.332,559.648" size="16.541">o</text>
+<text font="Times-Bold" bbox="459.360,543.107,467.337,559.648" size="16.541">n</text>
+<text font="Times-Bold" bbox="467.280,543.107,472.057,559.648" size="16.541">-</text>
+<text font="Times-Bold" bbox="472.080,543.107,480.057,559.648" size="16.541">p</text>
+<text font="Times-Bold" bbox="480.000,543.107,486.370,559.648" size="16.541">r</text>
+<text font="Times-Bold" bbox="486.120,543.107,493.293,559.648" size="16.541">o</text>
+<text font="Times-Bold" bbox="493.320,543.107,498.097,559.648" size="16.541">t</text>
+<text font="Times-Bold" bbox="498.120,543.107,505.293,559.648" size="16.541">o</text>
+<text font="Times-Bold" bbox="505.320,543.107,513.297,559.648" size="16.541">n</text>
+<text>
+</text>
+</textline>
+</textbox>
+<textbox id="4" bbox="142.200,524.753,453.130,549.420">
+<textline bbox="142.200,524.753,453.130,549.420">
+<text font="Times-Bold" bbox="142.200,525.227,152.558,541.768" size="16.541">C</text>
+<text font="Times-Bold" bbox="152.520,525.227,159.693,541.768" size="16.541">o</text>
+<text font="Times-Bold" bbox="159.720,525.227,163.708,541.768" size="16.541">l</text>
+<text font="Times-Bold" bbox="163.680,525.227,167.668,541.768" size="16.541">l</text>
+<text font="Times-Bold" bbox="167.640,525.227,171.628,541.768" size="16.541">i</text>
+<text font="Times-Bold" bbox="171.600,525.227,177.181,541.768" size="16.541">s</text>
+<text font="Times-Bold" bbox="177.240,525.227,181.228,541.768" size="16.541">i</text>
+<text font="Times-Bold" bbox="181.200,525.227,188.373,541.768" size="16.541">o</text>
+<text font="Times-Bold" bbox="188.400,525.227,196.376,541.768" size="16.541">n</text>
+<text font="Times-Bold" bbox="196.320,525.227,201.901,541.768" size="16.541">s</text>
+<text> </text>
+<text font="Times-Bold" bbox="205.560,525.227,212.733,541.768" size="16.541">a</text>
+<text font="Times-Bold" bbox="212.760,525.227,217.537,541.768" size="16.541">t</text>
+<text> </text>
+<text font="QFRKPR+CMSY10" bbox="221.040,524.888,232.990,549.420" size="24.532">√</text>
+<text font="Times-Italic" bbox="233.040,525.227,238.621,541.008" size="15.781">s</text>
+<text> </text>
+<text font="EGYAWT+CMR10" bbox="245.400,524.753,256.547,539.100" size="14.346">=</text>
+<text> </text>
+<text font="Times-Bold" bbox="260.160,525.227,267.333,541.768" size="16.541">7</text>
+<text> </text>
+<text font="Times-Bold" bbox="270.840,525.227,280.409,541.768" size="16.541">T</text>
+<text font="Times-Bold" bbox="279.120,525.227,285.490,541.768" size="16.541">e</text>
+<text font="Times-Bold" bbox="285.480,525.227,295.838,541.768" size="16.541">V</text>
+<text> </text>
+<text font="Times-Bold" bbox="299.520,525.227,309.878,541.768" size="16.541">w</text>
+<text font="Times-Bold" bbox="309.840,525.227,313.829,541.768" size="16.541">i</text>
+<text font="Times-Bold" bbox="313.800,525.227,318.578,541.768" size="16.541">t</text>
+<text font="Times-Bold" bbox="318.600,525.227,326.577,541.768" size="16.541">h</text>
+<text> </text>
+<text font="Times-Bold" bbox="330.120,525.227,334.898,541.768" size="16.541">t</text>
+<text font="Times-Bold" bbox="334.920,525.227,342.897,541.768" size="16.541">h</text>
+<text font="Times-Bold" bbox="342.840,525.227,349.210,541.768" size="16.541">e</text>
+<text> </text>
+<text font="Times-Bold" bbox="352.800,525.227,363.158,541.768" size="16.541">A</text>
+<text font="Times-Bold" bbox="361.800,525.227,371.369,541.768" size="16.541">T</text>
+<text font="Times-Bold" bbox="371.400,525.227,380.969,541.768" size="16.541">L</text>
+<text font="Times-Bold" bbox="381.000,525.227,391.358,541.768" size="16.541">A</text>
+<text font="Times-Bold" bbox="391.320,525.227,399.297,541.768" size="16.541">S</text>
+<text> </text>
+<text font="Times-Bold" bbox="402.960,525.227,410.937,541.768" size="16.541">d</text>
+<text font="Times-Bold" bbox="410.880,525.227,417.250,541.768" size="16.541">e</text>
+<text font="Times-Bold" bbox="417.240,525.227,422.018,541.768" size="16.541">t</text>
+<text font="Times-Bold" bbox="422.040,525.227,428.410,541.768" size="16.541">e</text>
+<text font="Times-Bold" bbox="428.400,525.227,434.770,541.768" size="16.541">c</text>
+<text font="Times-Bold" bbox="434.760,525.227,439.538,541.768" size="16.541">t</text>
+<text font="Times-Bold" bbox="439.560,525.227,446.733,541.768" size="16.541">o</text>
+<text font="Times-Bold" bbox="446.760,525.227,453.130,541.768" size="16.541">r</text>
+<text>
+</text>
+</textline>
+</textbox>
+<textbox id="5" bbox="233.880,423.386,361.538,436.728">
+<textline bbox="233.880,423.386,361.538,436.728">
+<text font="Times-Roman" bbox="233.880,423.386,241.185,436.728" size="13.342">T</text>
+<text font="Times-Roman" bbox="241.200,423.386,247.178,436.728" size="13.342">h</text>
+<text font="Times-Roman" bbox="247.200,423.386,252.508,436.728" size="13.342">e</text>
+<text> </text>
+<text font="Times-Roman" bbox="255.480,423.386,264.112,436.728" size="13.342">A</text>
+<text font="Times-Roman" bbox="262.800,423.386,270.105,436.728" size="13.342">T</text>
+<text font="Times-Roman" bbox="270.120,423.386,277.425,436.728" size="13.342">L</text>
+<text font="Times-Roman" bbox="277.440,423.386,286.072,436.728" size="13.342">A</text>
+<text font="Times-Roman" bbox="286.080,423.386,292.727,436.728" size="13.342">S</text>
+<text> </text>
+<text font="Times-Roman" bbox="295.680,423.386,303.654,436.728" size="13.342">C</text>
+<text font="Times-Roman" bbox="303.600,423.386,309.578,436.728" size="13.342">o</text>
+<text font="Times-Roman" bbox="309.600,423.386,312.924,436.728" size="13.342">l</text>
+<text font="Times-Roman" bbox="312.960,423.386,316.284,436.728" size="13.342">l</text>
+<text font="Times-Roman" bbox="316.320,423.386,321.628,436.728" size="13.342">a</text>
+<text font="Times-Roman" bbox="321.600,423.386,327.578,436.728" size="13.342">b</text>
+<text font="Times-Roman" bbox="327.600,423.386,333.578,436.728" size="13.342">o</text>
+<text font="Times-Roman" bbox="333.600,423.386,337.581,436.728" size="13.342">r</text>
+<text font="Times-Roman" bbox="337.560,423.386,342.869,436.728" size="13.342">a</text>
+<text font="Times-Roman" bbox="342.840,423.386,346.164,436.728" size="13.342">t</text>
+<text font="Times-Roman" bbox="346.200,423.386,349.524,436.728" size="13.342">i</text>
+<text font="Times-Roman" bbox="349.560,423.386,355.538,436.728" size="13.342">o</text>
+<text font="Times-Roman" bbox="355.560,423.386,361.538,436.728" size="13.342">n</text>
+<text>
+</text>
+</textline>
+</textbox>
+<textbox id="6" bbox="275.400,322.346,319.821,336.130">
+<textline bbox="275.400,322.346,319.821,336.130">
+<text font="Times-Bold" bbox="275.400,322.346,284.032,336.130" size="13.784">A</text>
+<text font="Times-Bold" bbox="284.040,322.346,290.687,336.130" size="13.784">b</text>
+<text font="Times-Bold" bbox="290.640,322.346,295.291,336.130" size="13.784">s</text>
+<text font="Times-Bold" bbox="295.320,322.346,299.301,336.130" size="13.784">t</text>
+<text font="Times-Bold" bbox="299.280,322.346,304.588,336.130" size="13.784">r</text>
+<text font="Times-Bold" bbox="304.560,322.346,310.538,336.130" size="13.784">a</text>
+<text font="Times-Bold" bbox="310.560,322.346,315.868,336.130" size="13.784">c</text>
+<text font="Times-Bold" bbox="315.840,322.346,319.821,336.130" size="13.784">t</text>
+<text>
+</text>
+</textline>
+</textbox>
+<textbox id="7" bbox="98.160,241.568,497.094,309.307">
+<textline bbox="114.480,297.133,496.953,309.307">
+<text font="Times-Roman" bbox="114.480,297.133,124.778,309.307" size="12.175">W</text>
+<text font="Times-Roman" bbox="123.960,297.133,128.804,309.307" size="12.175">e</text>
+<text> </text>
+<text font="Times-Roman" bbox="132.240,297.133,137.695,309.307" size="12.175">d</text>
+<text font="Times-Roman" bbox="137.640,297.133,140.673,309.307" size="12.175">i</text>
+<text font="Times-Roman" bbox="140.640,297.133,144.884,309.307" size="12.175">s</text>
+<text font="Times-Roman" bbox="144.840,297.133,149.684,309.307" size="12.175">c</text>
+<text font="Times-Roman" bbox="149.640,297.133,155.095,309.307" size="12.175">u</text>
+<text font="Times-Roman" bbox="155.040,297.133,159.284,309.307" size="12.175">s</text>
+<text font="Times-Roman" bbox="159.240,297.133,163.484,309.307" size="12.175">s</text>
+<text> </text>
+<text font="Times-Roman" bbox="167.280,297.133,170.313,309.307" size="12.175">t</text>
+<text font="Times-Roman" bbox="170.280,297.133,175.735,309.307" size="12.175">h</text>
+<text font="Times-Roman" bbox="175.680,297.133,180.524,309.307" size="12.175">e</text>
+<text> </text>
+<text font="Times-Roman" bbox="184.200,297.133,189.655,309.307" size="12.175">p</text>
+<text font="Times-Roman" bbox="189.600,297.133,195.055,309.307" size="12.175">o</text>
+<text font="Times-Roman" bbox="195.000,297.133,199.244,309.307" size="12.175">s</text>
+<text font="Times-Roman" bbox="199.200,297.133,203.444,309.307" size="12.175">s</text>
+<text font="Times-Roman" bbox="203.400,297.133,206.433,309.307" size="12.175">i</text>
+<text font="Times-Roman" bbox="206.400,297.133,211.855,309.307" size="12.175">b</text>
+<text font="Times-Roman" bbox="211.800,297.133,214.833,309.307" size="12.175">i</text>
+<text font="Times-Roman" bbox="214.800,297.133,217.833,309.307" size="12.175">l</text>
+<text font="Times-Roman" bbox="217.800,297.133,220.833,309.307" size="12.175">i</text>
+<text font="Times-Roman" bbox="220.800,297.133,223.833,309.307" size="12.175">t</text>
+<text font="Times-Roman" bbox="223.800,297.133,229.255,309.307" size="12.175">y</text>
+<text> </text>
+<text font="Times-Roman" bbox="233.160,297.133,236.193,309.307" size="12.175">t</text>
+<text font="Times-Roman" bbox="236.160,297.133,241.615,309.307" size="12.175">o</text>
+<text> </text>
+<text font="Times-Roman" bbox="245.160,297.133,250.615,309.307" size="12.175">d</text>
+<text font="Times-Roman" bbox="250.560,297.133,253.593,309.307" size="12.175">i</text>
+<text font="Times-Roman" bbox="253.560,297.133,257.804,309.307" size="12.175">s</text>
+<text font="Times-Roman" bbox="257.760,297.133,262.604,309.307" size="12.175">c</text>
+<text font="Times-Roman" bbox="262.560,297.133,268.015,309.307" size="12.175">o</text>
+<text font="Times-Roman" bbox="267.840,297.133,273.295,309.307" size="12.175">v</text>
+<text font="Times-Roman" bbox="273.120,297.133,277.964,309.307" size="12.175">e</text>
+<text font="Times-Roman" bbox="277.920,297.133,281.553,309.307" size="12.175">r</text>
+<text> </text>
+<text font="Times-Roman" bbox="285.360,297.133,290.815,309.307" size="12.175">n</text>
+<text font="Times-Roman" bbox="290.760,297.133,295.604,309.307" size="12.175">e</text>
+<text font="Times-Roman" bbox="295.320,297.133,303.197,309.307" size="12.175">w</text>
+<text> </text>
+<text font="Times-Roman" bbox="306.721,297.133,312.175,309.307" size="12.175">p</text>
+<text font="Times-Roman" bbox="312.121,297.133,317.575,309.307" size="12.175">h</text>
+<text font="Times-Roman" bbox="317.521,297.133,322.975,309.307" size="12.175">y</text>
+<text font="Times-Roman" bbox="322.921,297.133,327.164,309.307" size="12.175">s</text>
+<text font="Times-Roman" bbox="327.121,297.133,330.153,309.307" size="12.175">i</text>
+<text font="Times-Roman" bbox="330.121,297.133,334.964,309.307" size="12.175">c</text>
+<text font="Times-Roman" bbox="334.921,297.133,339.164,309.307" size="12.175">s</text>
+<text> </text>
+<text font="Times-Roman" bbox="342.960,297.133,345.993,309.307" size="12.175">i</text>
+<text font="Times-Roman" bbox="345.960,297.133,351.415,309.307" size="12.175">n</text>
+<text> </text>
+<text font="Times-Roman" bbox="354.960,297.133,357.993,309.307" size="12.175">t</text>
+<text font="Times-Roman" bbox="357.960,297.133,363.415,309.307" size="12.175">h</text>
+<text font="Times-Roman" bbox="363.360,297.133,368.204,309.307" size="12.175">e</text>
+<text> </text>
+<text font="Times-Roman" bbox="371.760,297.133,379.637,309.307" size="12.175">A</text>
+<text font="Times-Roman" bbox="378.480,297.133,385.146,309.307" size="12.175">T</text>
+<text font="Times-Roman" bbox="385.200,297.133,391.866,309.307" size="12.175">L</text>
+<text font="Times-Roman" bbox="391.920,297.133,399.797,309.307" size="12.175">A</text>
+<text font="Times-Roman" bbox="399.840,297.133,405.906,309.307" size="12.175">S</text>
+<text> </text>
+<text font="Times-Roman" bbox="409.200,297.133,417.077,309.307" size="12.175">D</text>
+<text font="Times-Roman" bbox="417.120,297.133,421.964,309.307" size="12.175">e</text>
+<text font="Times-Roman" bbox="421.920,297.133,424.953,309.307" size="12.175">t</text>
+<text font="Times-Roman" bbox="424.920,297.133,429.764,309.307" size="12.175">e</text>
+<text font="Times-Roman" bbox="429.720,297.133,434.564,309.307" size="12.175">c</text>
+<text font="Times-Roman" bbox="434.520,297.133,437.553,309.307" size="12.175">t</text>
+<text font="Times-Roman" bbox="437.520,297.133,442.975,309.307" size="12.175">o</text>
+<text font="Times-Roman" bbox="442.920,297.133,446.553,309.307" size="12.175">r</text>
+<text> </text>
+<text font="Times-Roman" bbox="450.360,297.133,455.815,309.307" size="12.175">v</text>
+<text font="Times-Roman" bbox="455.760,297.133,458.793,309.307" size="12.175">i</text>
+<text font="Times-Roman" bbox="458.760,297.133,463.604,309.307" size="12.175">a</text>
+<text> </text>
+<text font="Times-Roman" bbox="467.160,297.133,472.004,309.307" size="12.175">a</text>
+<text> </text>
+<text font="Times-Roman" bbox="475.560,297.133,479.193,309.307" size="12.175">f</text>
+<text font="Times-Roman" bbox="479.160,297.133,484.615,309.307" size="12.175">o</text>
+<text font="Times-Roman" bbox="484.560,297.133,490.015,309.307" size="12.175">u</text>
+<text font="Times-Roman" bbox="489.960,297.133,493.593,309.307" size="12.175">r</text>
+<text font="Times-Roman" bbox="493.321,297.133,496.953,309.307" size="12.175">-</text>
+<text>
+</text>
+</textline>
+<textline bbox="98.160,283.573,497.094,295.747">
+<text font="Times-Roman" bbox="98.160,283.573,101.793,295.747" size="12.175">f</text>
+<text font="Times-Roman" bbox="101.760,283.573,106.604,295.747" size="12.175">e</text>
+<text font="Times-Roman" bbox="106.560,283.573,110.193,295.747" size="12.175">r</text>
+<text font="Times-Roman" bbox="110.160,283.573,118.647,295.747" size="12.175">m</text>
+<text font="Times-Roman" bbox="118.680,283.573,121.713,295.747" size="12.175">i</text>
+<text font="Times-Roman" bbox="121.680,283.573,127.135,295.747" size="12.175">o</text>
+<text font="Times-Roman" bbox="127.080,283.573,132.535,295.747" size="12.175">n</text>
+<text> </text>
+<text font="Times-Roman" bbox="136.080,283.573,140.924,295.747" size="12.175">c</text>
+<text font="Times-Roman" bbox="140.880,283.573,146.335,295.747" size="12.175">o</text>
+<text font="Times-Roman" bbox="146.280,283.573,151.735,295.747" size="12.175">n</text>
+<text font="Times-Roman" bbox="151.680,283.573,154.713,295.747" size="12.175">t</text>
+<text font="Times-Roman" bbox="154.680,283.573,159.524,295.747" size="12.175">a</text>
+<text font="Times-Roman" bbox="159.480,283.573,164.324,295.747" size="12.175">c</text>
+<text font="Times-Roman" bbox="164.280,283.573,167.313,295.747" size="12.175">t</text>
+<text> </text>
+<text font="Times-Roman" bbox="171.000,283.573,174.033,295.747" size="12.175">i</text>
+<text font="Times-Roman" bbox="174.000,283.573,179.455,295.747" size="12.175">n</text>
+<text font="Times-Roman" bbox="179.400,283.573,182.433,295.747" size="12.175">t</text>
+<text font="Times-Roman" bbox="182.400,283.573,187.244,295.747" size="12.175">e</text>
+<text font="Times-Roman" bbox="187.200,283.573,190.833,295.747" size="12.175">r</text>
+<text font="Times-Roman" bbox="190.800,283.573,195.644,295.747" size="12.175">a</text>
+<text font="Times-Roman" bbox="195.600,283.573,200.444,295.747" size="12.175">c</text>
+<text font="Times-Roman" bbox="200.400,283.573,203.433,295.747" size="12.175">t</text>
+<text font="Times-Roman" bbox="203.400,283.573,206.433,295.747" size="12.175">i</text>
+<text font="Times-Roman" bbox="206.400,283.573,211.855,295.747" size="12.175">o</text>
+<text font="Times-Roman" bbox="211.800,283.573,217.255,295.747" size="12.175">n</text>
+<text> </text>
+<text font="Times-Roman" bbox="221.040,283.573,226.495,295.747" size="12.175">b</text>
+<text font="Times-Roman" bbox="226.440,283.573,231.284,295.747" size="12.175">e</text>
+<text font="Times-Roman" bbox="231.240,283.573,234.273,295.747" size="12.175">t</text>
+<text font="Times-Roman" bbox="234.240,283.573,242.116,295.747" size="12.175">w</text>
+<text font="Times-Roman" bbox="242.160,283.573,247.004,295.747" size="12.175">e</text>
+<text font="Times-Roman" bbox="246.960,283.573,251.804,295.747" size="12.175">e</text>
+<text font="Times-Roman" bbox="251.760,283.573,257.215,295.747" size="12.175">n</text>
+<text> </text>
+<text font="Times-Roman" bbox="260.880,283.573,263.913,295.747" size="12.175">t</text>
+<text font="Times-Roman" bbox="263.880,283.573,271.756,295.747" size="12.175">w</text>
+<text font="Times-Roman" bbox="271.680,283.573,277.134,295.747" size="12.175">o</text>
+<text> </text>
+<text font="Times-Roman" bbox="280.560,283.573,283.593,295.747" size="12.175">i</text>
+<text font="Times-Roman" bbox="283.560,283.573,289.014,295.747" size="12.175">n</text>
+<text font="Times-Roman" bbox="288.960,283.573,291.993,295.747" size="12.175">i</text>
+<text font="Times-Roman" bbox="291.960,283.573,294.993,295.747" size="12.175">t</text>
+<text font="Times-Roman" bbox="294.960,283.573,297.993,295.747" size="12.175">i</text>
+<text font="Times-Roman" bbox="297.960,283.573,302.804,295.747" size="12.175">a</text>
+<text font="Times-Roman" bbox="302.760,283.573,305.793,295.747" size="12.175">l</text>
+<text font="Times-Roman" bbox="305.760,283.573,309.393,295.747" size="12.175">-</text>
+<text font="Times-Roman" bbox="309.360,283.573,313.604,295.747" size="12.175">s</text>
+<text font="Times-Roman" bbox="313.560,283.573,316.593,295.747" size="12.175">t</text>
+<text font="Times-Roman" bbox="316.560,283.573,321.404,295.747" size="12.175">a</text>
+<text font="Times-Roman" bbox="321.360,283.573,324.393,295.747" size="12.175">t</text>
+<text font="Times-Roman" bbox="324.360,283.573,329.204,295.747" size="12.175">e</text>
+<text> </text>
+<text font="Times-Roman" bbox="333.000,283.573,338.454,295.747" size="12.175">q</text>
+<text font="Times-Roman" bbox="338.400,283.573,343.854,295.747" size="12.175">u</text>
+<text font="Times-Roman" bbox="343.800,283.573,348.643,295.747" size="12.175">a</text>
+<text font="Times-Roman" bbox="348.599,283.573,352.232,295.747" size="12.175">r</text>
+<text font="Times-Roman" bbox="352.199,283.573,357.654,295.747" size="12.175">k</text>
+<text font="Times-Roman" bbox="357.599,283.573,361.843,295.747" size="12.175">s</text>
+<text> </text>
+<text font="Times-Roman" bbox="365.519,283.573,370.363,295.747" size="12.175">a</text>
+<text font="Times-Roman" bbox="370.319,283.573,375.774,295.747" size="12.175">n</text>
+<text font="Times-Roman" bbox="375.719,283.573,381.174,295.747" size="12.175">d</text>
+<text> </text>
+<text font="Times-Roman" bbox="384.719,283.573,387.752,295.747" size="12.175">t</text>
+<text font="Times-Roman" bbox="387.719,283.573,395.596,295.747" size="12.175">w</text>
+<text font="Times-Roman" bbox="395.519,283.573,400.974,295.747" size="12.175">o</text>
+<text> </text>
+<text font="Times-Roman" bbox="404.399,283.573,410.465,295.747" size="12.175">fi</text>
+<text font="Times-Roman" bbox="410.519,283.573,415.974,295.747" size="12.175">n</text>
+<text font="Times-Roman" bbox="415.919,283.573,420.763,295.747" size="12.175">a</text>
+<text font="Times-Roman" bbox="420.719,283.573,423.752,295.747" size="12.175">l</text>
+<text font="Times-Roman" bbox="423.719,283.573,427.352,295.747" size="12.175">-</text>
+<text font="Times-Roman" bbox="427.319,283.573,431.563,295.747" size="12.175">s</text>
+<text font="Times-Roman" bbox="431.519,283.573,434.552,295.747" size="12.175">t</text>
+<text font="Times-Roman" bbox="434.519,283.573,439.363,295.747" size="12.175">a</text>
+<text font="Times-Roman" bbox="439.319,283.573,442.352,295.747" size="12.175">t</text>
+<text font="Times-Roman" bbox="442.319,283.573,447.163,295.747" size="12.175">e</text>
+<text> </text>
+<text font="Times-Roman" bbox="450.839,283.573,459.326,295.747" size="12.175">m</text>
+<text font="Times-Roman" bbox="459.359,283.573,464.814,295.747" size="12.175">u</text>
+<text font="Times-Roman" bbox="464.759,283.573,470.214,295.747" size="12.175">o</text>
+<text font="Times-Roman" bbox="470.159,283.573,475.614,295.747" size="12.175">n</text>
+<text font="Times-Roman" bbox="475.559,283.573,479.803,295.747" size="12.175">s</text>
+<text font="Times-Roman" bbox="479.759,283.573,482.486,295.747" size="12.175">.</text>
+<text> </text>
+<text font="Times-Roman" bbox="488.039,283.573,491.672,295.747" size="12.175">I</text>
+<text font="Times-Roman" bbox="491.639,283.573,497.094,295.747" size="12.175">n</text>
+<text>
+</text>
+</textline>
+<textline bbox="98.160,270.013,496.964,282.187">
+<text font="Times-Roman" bbox="98.160,270.013,101.193,282.187" size="12.175">t</text>
+<text font="Times-Roman" bbox="101.160,270.013,106.615,282.187" size="12.175">h</text>
+<text font="Times-Roman" bbox="106.560,270.013,111.404,282.187" size="12.175">e</text>
+<text> </text>
+<text font="Times-Roman" bbox="115.560,270.013,120.404,282.187" size="12.175">a</text>
+<text font="Times-Roman" bbox="120.360,270.013,125.815,282.187" size="12.175">b</text>
+<text font="Times-Roman" bbox="125.760,270.013,130.004,282.187" size="12.175">s</text>
+<text font="Times-Roman" bbox="129.960,270.013,134.804,282.187" size="12.175">e</text>
+<text font="Times-Roman" bbox="134.760,270.013,140.215,282.187" size="12.175">n</text>
+<text font="Times-Roman" bbox="140.160,270.013,145.004,282.187" size="12.175">c</text>
+<text font="Times-Roman" bbox="144.960,270.013,149.804,282.187" size="12.175">e</text>
+<text> </text>
+<text font="Times-Roman" bbox="154.080,270.013,159.535,282.187" size="12.175">o</text>
+<text font="Times-Roman" bbox="159.480,270.013,163.113,282.187" size="12.175">f</text>
+<text> </text>
+<text font="Times-Roman" bbox="167.160,270.013,172.615,282.187" size="12.175">n</text>
+<text font="Times-Roman" bbox="172.560,270.013,177.404,282.187" size="12.175">e</text>
+<text font="Times-Roman" bbox="177.120,270.013,184.997,282.187" size="12.175">w</text>
+<text> </text>
+<text font="Times-Roman" bbox="189.120,270.013,194.575,282.187" size="12.175">p</text>
+<text font="Times-Roman" bbox="194.520,270.013,199.975,282.187" size="12.175">h</text>
+<text font="Times-Roman" bbox="199.920,270.013,205.375,282.187" size="12.175">y</text>
+<text font="Times-Roman" bbox="205.320,270.013,209.564,282.187" size="12.175">s</text>
+<text font="Times-Roman" bbox="209.520,270.013,212.553,282.187" size="12.175">i</text>
+<text font="Times-Roman" bbox="212.520,270.013,217.364,282.187" size="12.175">c</text>
+<text font="Times-Roman" bbox="217.320,270.013,221.564,282.187" size="12.175">s</text>
+<text> </text>
+<text font="Times-Roman" bbox="225.840,270.013,230.084,282.187" size="12.175">s</text>
+<text font="Times-Roman" bbox="230.040,270.013,233.073,282.187" size="12.175">i</text>
+<text font="Times-Roman" bbox="233.040,270.013,238.495,282.187" size="12.175">g</text>
+<text font="Times-Roman" bbox="238.440,270.013,243.895,282.187" size="12.175">n</text>
+<text font="Times-Roman" bbox="243.840,270.013,248.684,282.187" size="12.175">a</text>
+<text font="Times-Roman" bbox="248.640,270.013,251.673,282.187" size="12.175">l</text>
+<text font="Times-Roman" bbox="251.640,270.013,254.368,282.187" size="12.175">,</text>
+<text> </text>
+<text font="Times-Roman" bbox="258.960,270.013,266.837,282.187" size="12.175">w</text>
+<text font="Times-Roman" bbox="266.880,270.013,271.724,282.187" size="12.175">e</text>
+<text> </text>
+<text font="Times-Roman" bbox="275.760,270.013,280.004,282.187" size="12.175">s</text>
+<text font="Times-Roman" bbox="279.960,270.013,284.804,282.187" size="12.175">e</text>
+<text font="Times-Roman" bbox="284.760,270.013,287.793,282.187" size="12.175">t</text>
+<text> </text>
+<text font="Times-Roman" bbox="291.960,270.013,296.804,282.187" size="12.175">a</text>
+<text> </text>
+<text font="Times-Roman" bbox="300.840,270.013,306.295,282.187" size="12.175">9</text>
+<text font="Times-Roman" bbox="306.240,270.013,311.695,282.187" size="12.175">5</text>
+<text font="Times-Roman" bbox="311.640,270.013,320.728,282.187" size="12.175">%</text>
+<text> </text>
+<text font="Times-Roman" bbox="324.840,270.013,332.117,282.187" size="12.175">C</text>
+<text font="Times-Roman" bbox="332.160,270.013,334.888,282.187" size="12.175">.</text>
+<text font="Times-Roman" bbox="334.920,270.013,341.586,282.187" size="12.175">L</text>
+<text font="Times-Roman" bbox="341.640,270.013,344.368,282.187" size="12.175">.</text>
+<text> </text>
+<text font="Times-Roman" bbox="348.240,270.013,351.273,282.187" size="12.175">l</text>
+<text font="Times-Roman" bbox="351.240,270.013,356.695,282.187" size="12.175">o</text>
+<text font="Times-Roman" bbox="356.401,270.013,364.277,282.187" size="12.175">w</text>
+<text font="Times-Roman" bbox="364.321,270.013,369.164,282.187" size="12.175">e</text>
+<text font="Times-Roman" bbox="369.121,270.013,372.753,282.187" size="12.175">r</text>
+<text> </text>
+<text font="Times-Roman" bbox="376.921,270.013,379.953,282.187" size="12.175">l</text>
+<text font="Times-Roman" bbox="379.921,270.013,382.953,282.187" size="12.175">i</text>
+<text font="Times-Roman" bbox="382.921,270.013,391.408,282.187" size="12.175">m</text>
+<text font="Times-Roman" bbox="391.441,270.013,394.473,282.187" size="12.175">i</text>
+<text font="Times-Roman" bbox="394.440,270.013,397.473,282.187" size="12.175">t</text>
+<text> </text>
+<text font="Times-Roman" bbox="401.520,270.013,406.975,282.187" size="12.175">o</text>
+<text font="Times-Roman" bbox="406.920,270.013,412.375,282.187" size="12.175">n</text>
+<text> </text>
+<text font="Times-Roman" bbox="416.520,270.013,419.553,282.187" size="12.175">t</text>
+<text font="Times-Roman" bbox="419.520,270.013,424.975,282.187" size="12.175">h</text>
+<text font="Times-Roman" bbox="424.920,270.013,429.764,282.187" size="12.175">e</text>
+<text> </text>
+<text font="Times-Roman" bbox="433.800,270.013,438.644,282.187" size="12.175">e</text>
+<text font="Times-Roman" bbox="438.600,270.013,442.233,282.187" size="12.175">f</text>
+<text font="Times-Roman" bbox="441.960,270.013,445.593,282.187" size="12.175">f</text>
+<text font="Times-Roman" bbox="445.560,270.013,450.404,282.187" size="12.175">e</text>
+<text font="Times-Roman" bbox="450.360,270.013,455.204,282.187" size="12.175">c</text>
+<text font="Times-Roman" bbox="455.160,270.013,458.193,282.187" size="12.175">t</text>
+<text font="Times-Roman" bbox="458.160,270.013,461.193,282.187" size="12.175">i</text>
+<text font="Times-Roman" bbox="460.921,270.013,466.375,282.187" size="12.175">v</text>
+<text font="Times-Roman" bbox="466.201,270.013,471.044,282.187" size="12.175">e</text>
+<text> </text>
+<text font="Times-Roman" bbox="475.321,270.013,479.564,282.187" size="12.175">s</text>
+<text font="Times-Roman" bbox="479.521,270.013,484.364,282.187" size="12.175">c</text>
+<text font="Times-Roman" bbox="484.321,270.013,489.164,282.187" size="12.175">a</text>
+<text font="Times-Roman" bbox="489.121,270.013,492.153,282.187" size="12.175">l</text>
+<text font="Times-Roman" bbox="492.121,270.013,496.964,282.187" size="12.175">e</text>
+<text>
+</text>
+</textline>
+<textline bbox="98.160,256.092,496.976,273.034">
+<text font="Symbol" bbox="98.160,258.820,98.160,273.034" size="14.215">L</text>
+<text> </text>
+<text font="IUSPVO+CMMI10" bbox="108.120,256.092,116.597,267.001" size="10.909">&gt;</text>
+<text> </text>
+<text font="Times-Roman" bbox="119.520,256.452,124.975,268.627" size="12.175">4</text>
+<text font="Times-Roman" bbox="124.920,256.452,127.648,268.627" size="12.175">.</text>
+<text font="Times-Roman" bbox="127.680,256.452,133.135,268.627" size="12.175">9</text>
+<text> </text>
+<text font="Times-Roman" bbox="136.080,256.452,142.746,268.627" size="12.175">T</text>
+<text font="Times-Roman" bbox="142.080,256.452,146.924,268.627" size="12.175">e</text>
+<text font="Times-Roman" bbox="146.880,256.452,154.757,268.627" size="12.175">V</text>
+<text> </text>
+<text font="Times-Roman" bbox="157.560,256.452,161.193,268.627" size="12.175">(</text>
+<text font="Times-Roman" bbox="161.160,256.452,166.615,268.627" size="12.175">4</text>
+<text font="Times-Roman" bbox="166.560,256.452,169.288,268.627" size="12.175">.</text>
+<text font="Times-Roman" bbox="169.320,256.452,174.775,268.627" size="12.175">5</text>
+<text> </text>
+<text font="Times-Roman" bbox="177.720,256.452,184.386,268.627" size="12.175">T</text>
+<text font="Times-Roman" bbox="183.721,256.452,188.564,268.627" size="12.175">e</text>
+<text font="Times-Roman" bbox="188.521,256.452,196.397,268.627" size="12.175">V</text>
+<text font="Times-Roman" bbox="196.441,256.452,200.073,268.627" size="12.175">)</text>
+<text> </text>
+<text font="Times-Roman" bbox="202.801,256.452,206.433,268.627" size="12.175">f</text>
+<text font="Times-Roman" bbox="206.401,256.452,211.855,268.627" size="12.175">o</text>
+<text font="Times-Roman" bbox="211.801,256.452,215.433,268.627" size="12.175">r</text>
+<text> </text>
+<text font="Times-Roman" bbox="218.401,256.452,221.433,268.627" size="12.175">t</text>
+<text font="Times-Roman" bbox="221.401,256.452,226.855,268.627" size="12.175">h</text>
+<text font="Times-Roman" bbox="226.801,256.452,231.644,268.627" size="12.175">e</text>
+<text> </text>
+<text font="Times-Roman" bbox="234.721,256.452,239.564,268.627" size="12.175">c</text>
+<text font="Times-Roman" bbox="239.521,256.452,244.975,268.627" size="12.175">o</text>
+<text font="Times-Roman" bbox="244.921,256.452,250.375,268.627" size="12.175">n</text>
+<text font="Times-Roman" bbox="250.321,256.452,254.564,268.627" size="12.175">s</text>
+<text font="Times-Roman" bbox="254.521,256.452,257.553,268.627" size="12.175">t</text>
+<text font="Times-Roman" bbox="257.521,256.452,261.153,268.627" size="12.175">r</text>
+<text font="Times-Roman" bbox="261.121,256.452,266.575,268.627" size="12.175">u</text>
+<text font="Times-Roman" bbox="266.521,256.452,271.364,268.627" size="12.175">c</text>
+<text font="Times-Roman" bbox="271.321,256.452,274.353,268.627" size="12.175">t</text>
+<text font="Times-Roman" bbox="274.321,256.452,277.353,268.627" size="12.175">i</text>
+<text font="Times-Roman" bbox="277.081,256.452,282.535,268.627" size="12.175">v</text>
+<text font="Times-Roman" bbox="282.361,256.452,287.204,268.627" size="12.175">e</text>
+<text> </text>
+<text font="Times-Roman" bbox="290.401,256.452,294.033,268.627" size="12.175">(</text>
+<text font="Times-Roman" bbox="294.001,256.452,299.455,268.627" size="12.175">d</text>
+<text font="Times-Roman" bbox="299.401,256.452,304.244,268.627" size="12.175">e</text>
+<text font="Times-Roman" bbox="304.201,256.452,308.444,268.627" size="12.175">s</text>
+<text font="Times-Roman" bbox="308.401,256.452,311.433,268.627" size="12.175">t</text>
+<text font="Times-Roman" bbox="311.401,256.452,315.033,268.627" size="12.175">r</text>
+<text font="Times-Roman" bbox="315.001,256.452,320.455,268.627" size="12.175">u</text>
+<text font="Times-Roman" bbox="320.401,256.452,325.244,268.627" size="12.175">c</text>
+<text font="Times-Roman" bbox="325.201,256.452,328.233,268.627" size="12.175">t</text>
+<text font="Times-Roman" bbox="328.201,256.452,331.233,268.627" size="12.175">i</text>
+<text font="Times-Roman" bbox="330.961,256.452,336.415,268.627" size="12.175">v</text>
+<text font="Times-Roman" bbox="336.241,256.452,341.084,268.627" size="12.175">e</text>
+<text font="Times-Roman" bbox="341.041,256.452,344.674,268.627" size="12.175">)</text>
+<text> </text>
+<text font="Times-Roman" bbox="348.001,256.452,354.666,268.627" size="12.175">L</text>
+<text font="Times-Roman" bbox="354.721,256.452,359.565,268.627" size="12.175">e</text>
+<text font="Times-Roman" bbox="359.521,256.452,363.154,268.627" size="12.175">f</text>
+<text font="Times-Roman" bbox="363.121,256.452,366.154,268.627" size="12.175">t</text>
+<text font="Times-Roman" bbox="366.121,256.452,369.754,268.627" size="12.175">-</text>
+<text font="Times-Roman" bbox="369.721,256.452,372.754,268.627" size="12.175">l</text>
+<text font="Times-Roman" bbox="372.721,256.452,377.565,268.627" size="12.175">e</text>
+<text font="Times-Roman" bbox="377.521,256.452,381.154,268.627" size="12.175">f</text>
+<text font="Times-Roman" bbox="381.121,256.452,384.154,268.627" size="12.175">t</text>
+<text> </text>
+<text font="Times-Roman" bbox="387.241,256.452,390.874,268.627" size="12.175">I</text>
+<text font="Times-Roman" bbox="390.841,256.452,395.085,268.627" size="12.175">s</text>
+<text font="Times-Roman" bbox="395.041,256.452,400.496,268.627" size="12.175">o</text>
+<text font="Times-Roman" bbox="400.441,256.452,404.685,268.627" size="12.175">s</text>
+<text font="Times-Roman" bbox="404.641,256.452,409.485,268.627" size="12.175">c</text>
+<text font="Times-Roman" bbox="409.441,256.452,414.285,268.627" size="12.175">a</text>
+<text font="Times-Roman" bbox="414.241,256.452,417.274,268.627" size="12.175">l</text>
+<text font="Times-Roman" bbox="417.241,256.452,422.085,268.627" size="12.175">a</text>
+<text font="Times-Roman" bbox="422.041,256.452,425.674,268.627" size="12.175">r</text>
+<text> </text>
+<text font="Times-Roman" bbox="429.001,256.452,438.700,268.627" size="12.175">M</text>
+<text font="Times-Roman" bbox="438.721,256.452,444.176,268.627" size="12.175">o</text>
+<text font="Times-Roman" bbox="444.121,256.452,449.576,268.627" size="12.175">d</text>
+<text font="Times-Roman" bbox="449.521,256.452,454.365,268.627" size="12.175">e</text>
+<text font="Times-Roman" bbox="454.321,256.452,457.354,268.627" size="12.175">l</text>
+<text> </text>
+<text font="Times-Roman" bbox="460.321,256.452,465.776,268.627" size="12.175">o</text>
+<text font="Times-Roman" bbox="465.721,256.452,469.354,268.627" size="12.175">f</text>
+<text> </text>
+<text font="Times-Roman" bbox="472.321,256.452,477.776,268.627" size="12.175">q</text>
+<text font="Times-Roman" bbox="477.721,256.452,483.176,268.627" size="12.175">u</text>
+<text font="Times-Roman" bbox="483.121,256.452,487.965,268.627" size="12.175">a</text>
+<text font="Times-Roman" bbox="487.921,256.452,491.554,268.627" size="12.175">r</text>
+<text font="Times-Roman" bbox="491.521,256.452,496.976,268.627" size="12.175">k</text>
+<text>
+</text>
+</textline>
+<textline bbox="98.160,241.568,400.408,261.362">
+<text font="Times-Roman" bbox="98.160,242.893,103.004,255.067" size="12.175">c</text>
+<text font="Times-Roman" bbox="102.960,242.893,108.415,255.067" size="12.175">o</text>
+<text font="Times-Roman" bbox="108.360,242.893,116.848,255.067" size="12.175">m</text>
+<text font="Times-Roman" bbox="116.880,242.893,122.335,255.067" size="12.175">p</text>
+<text font="Times-Roman" bbox="122.280,242.893,127.735,255.067" size="12.175">o</text>
+<text font="Times-Roman" bbox="127.680,242.893,131.924,255.067" size="12.175">s</text>
+<text font="Times-Roman" bbox="131.880,242.893,134.913,255.067" size="12.175">i</text>
+<text font="Times-Roman" bbox="134.880,242.893,137.913,255.067" size="12.175">t</text>
+<text font="Times-Roman" bbox="137.880,242.893,142.724,255.067" size="12.175">e</text>
+<text font="Times-Roman" bbox="142.680,242.893,148.135,255.067" size="12.175">n</text>
+<text font="Times-Roman" bbox="148.080,242.893,152.924,255.067" size="12.175">e</text>
+<text font="Times-Roman" bbox="152.880,242.893,157.124,255.067" size="12.175">s</text>
+<text font="Times-Roman" bbox="157.080,242.893,161.324,255.067" size="12.175">s</text>
+<text> </text>
+<text font="Times-Roman" bbox="164.521,242.893,172.397,255.067" size="12.175">w</text>
+<text font="Times-Roman" bbox="172.441,242.893,175.473,255.067" size="12.175">i</text>
+<text font="Times-Roman" bbox="175.441,242.893,178.473,255.067" size="12.175">t</text>
+<text font="Times-Roman" bbox="178.441,242.893,183.895,255.067" size="12.175">h</text>
+<text> </text>
+<text font="Times-Roman" bbox="186.601,242.893,189.633,255.067" size="12.175">i</text>
+<text font="Times-Roman" bbox="189.601,242.893,195.055,255.067" size="12.175">n</text>
+<text font="Times-Roman" bbox="195.001,242.893,198.033,255.067" size="12.175">t</text>
+<text font="Times-Roman" bbox="198.001,242.893,202.844,255.067" size="12.175">e</text>
+<text font="Times-Roman" bbox="202.681,242.893,208.135,255.067" size="12.175">g</text>
+<text font="Times-Roman" bbox="208.081,242.893,211.714,255.067" size="12.175">r</text>
+<text font="Times-Roman" bbox="211.681,242.893,216.524,255.067" size="12.175">a</text>
+<text font="Times-Roman" bbox="216.481,242.893,219.514,255.067" size="12.175">t</text>
+<text font="Times-Roman" bbox="219.481,242.893,224.324,255.067" size="12.175">e</text>
+<text font="Times-Roman" bbox="224.281,242.893,229.735,255.067" size="12.175">d</text>
+<text> </text>
+<text font="Times-Roman" bbox="232.801,242.893,235.833,255.067" size="12.175">l</text>
+<text font="Times-Roman" bbox="235.801,242.893,241.255,255.067" size="12.175">u</text>
+<text font="Times-Roman" bbox="241.201,242.893,249.688,255.067" size="12.175">m</text>
+<text font="Times-Roman" bbox="249.721,242.893,252.753,255.067" size="12.175">i</text>
+<text font="Times-Roman" bbox="252.721,242.893,258.175,255.067" size="12.175">n</text>
+<text font="Times-Roman" bbox="258.121,242.893,263.575,255.067" size="12.175">o</text>
+<text font="Times-Roman" bbox="263.521,242.893,267.764,255.067" size="12.175">s</text>
+<text font="Times-Roman" bbox="267.721,242.893,270.753,255.067" size="12.175">i</text>
+<text font="Times-Roman" bbox="270.721,242.893,273.753,255.067" size="12.175">t</text>
+<text font="Times-Roman" bbox="273.721,242.893,279.175,255.067" size="12.175">y</text>
+<text> </text>
+<text font="Times-Roman" bbox="282.241,242.893,287.695,255.067" size="12.175">o</text>
+<text font="Times-Roman" bbox="287.641,242.893,291.273,255.067" size="12.175">f</text>
+<text> </text>
+<text font="Times-Roman" bbox="294.001,242.893,299.455,255.067" size="12.175">4</text>
+<text font="Times-Roman" bbox="299.401,242.893,304.855,255.067" size="12.175">2</text>
+<text> </text>
+<text font="Times-Roman" bbox="307.681,242.893,313.135,255.067" size="12.175">p</text>
+<text font="Times-Roman" bbox="313.081,242.893,318.535,255.067" size="12.175">b</text>
+<text font="QFRKPR+CMSY10" bbox="318.480,241.568,324.673,255.197" size="13.629">−</text>
+<text font="Times-Roman" bbox="324.720,247.490,328.705,256.385" size="8.895">1</text>
+<text> </text>
+<text font="Times-Roman" bbox="331.920,242.893,336.764,255.067" size="12.175">a</text>
+<text font="Times-Roman" bbox="336.720,242.893,339.753,255.067" size="12.175">t</text>
+<text> </text>
+<text font="QFRKPR+CMSY10" bbox="342.600,242.707,351.688,261.362" size="18.655">√</text>
+<text font="Times-Italic" bbox="351.720,242.893,355.964,254.893" size="12.000">s</text>
+<text> </text>
+<text font="EGYAWT+CMR10" bbox="361.080,242.533,369.557,253.442" size="10.909">=</text>
+<text> </text>
+<text font="Times-Roman" bbox="372.240,242.893,377.695,255.067" size="12.175">7</text>
+<text> </text>
+<text font="Times-Roman" bbox="380.401,242.893,387.066,255.067" size="12.175">T</text>
+<text font="Times-Roman" bbox="386.401,242.893,391.244,255.067" size="12.175">e</text>
+<text font="Times-Roman" bbox="391.201,242.893,399.077,255.067" size="12.175">V</text>
+<text font="Times-Roman" bbox="397.681,242.893,400.408,255.067" size="12.175">.</text>
+<text>
+</text>
+</textline>
+</textbox>
+<figure name="R8" bbox="59.393,597.697,176.693,699.697">
+<image width="117" height="102" />
+</figure>
+<figure name="R11" bbox="439.320,604.780,524.320,690.768">
+<image width="84" height="85" />
+</figure>
+<figure name="57409680" bbox="233.028,538.648,238.668,539.248">
+<image width="5" height="0" />
+</figure>
+<figure name="57412112" bbox="351.708,253.168,356.028,253.648">
+<image width="4" height="0" />
+</figure>
+<layout>
+<textgroup bbox="82.080,241.568,513.297,678.981">
+<textgroup bbox="82.080,524.753,513.297,678.981">
+<textgroup bbox="221.160,602.413,376.893,678.981">
+<textgroup bbox="221.160,627.746,376.893,678.981">
+<textbox id="0" bbox="221.160,650.401,376.893,678.981" />
+<textbox id="1" bbox="230.280,627.746,367.778,641.088" />
+</textgroup>
+<textbox id="2" bbox="264.360,602.413,333.535,614.587" />
+</textgroup>
+<textgroup bbox="82.080,524.753,513.297,559.648">
+<textbox id="3" bbox="82.080,543.107,513.297,559.648" />
+<textbox id="4" bbox="142.200,524.753,453.130,549.420" />
+</textgroup>
+</textgroup>
+<textgroup bbox="98.160,241.568,497.094,436.728">
+<textbox id="5" bbox="233.880,423.386,361.538,436.728" />
+<textgroup bbox="98.160,241.568,497.094,336.130">
+<textbox id="6" bbox="275.400,322.346,319.821,336.130" />
+<textbox id="7" bbox="98.160,241.568,497.094,309.307" />
+</textgroup>
+</textgroup>
+</textgroup>
+</layout>
+</page>
