@@ -1,0 +1,26 @@
+Benchmarking utility (tools/benchmark-db-queries.py)
+====================================================
+
+Exception handling
+------------------
+
+... everywhere.
+
+
+Control knobs
+-------------
+
+Enable/disable persistent HTTP connections to ES.
+
+
+Timing/measurement infrastructure
+---------------------------------
+
+Option to include Oracle session establishment time to the
+query timings.
+
+Add inner loop for fast queries to measure the mean value for many
+iterations (weak time source, anyone?).
+
+Add different timesources and make them configurable.  Provide
+an option and framework to measure their quality.
