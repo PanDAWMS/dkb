@@ -2,6 +2,7 @@
 
 START_OFFSET="09-05-2016 00:00:00"
 BATCH_SIZE=100
+DEBUG=
 
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
 
@@ -47,4 +48,6 @@ mediator() {
 
 # Run Oracle Connector
 
-oracle_connector | $cmd_19 | mediator | $cmd_69
+[ -n "$DEBUG" ] \
+   && oracle_connector | tee oc.out | $cmd_19 | tee 19.out | mediator > 69.inp \
+   || oracle_connector | $cmd_19 | mediator | $cmd_69
