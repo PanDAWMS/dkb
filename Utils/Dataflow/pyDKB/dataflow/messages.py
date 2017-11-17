@@ -10,6 +10,7 @@ import sys
 
 __message_class = {}
 
+
 class DecodeUnknownType(NotImplementedError):
     """ Exception to be thrown when message type is not decodable. """
     def __init__(self, code, cls):
@@ -17,12 +18,14 @@ class DecodeUnknownType(NotImplementedError):
                   % (cls.__name__, codeType.memberName(code))
         super(DecodeUnknownType, self).__init__(message)
 
+
 class EncodeUnknownType(NotImplementedError):
     """ Exception to be thrown when message type is not encodable. """
     def __init__(self, code, cls):
         message = "%s can`t be encoded into %s" \
                   % (cls.__name__, codeType.memberName(code))
         super(EncodeUnknownType, self).__init__(message)
+
 
 def Message(msg_type):
     """ Return class XXXMessage, where XXX is the passed type. """

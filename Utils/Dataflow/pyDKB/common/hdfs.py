@@ -24,7 +24,7 @@ def check_stderr(proc, timeout=None, max_lines=1):
     if not isinstance(proc, subprocess.Popen):
         raise TypeError("proc must be an instance of subprocess.Popen")
     n_lines = 0
-    while proc.poll() == None:
+    while proc.poll() is None:
         ready, _, _ = select.select((proc.stderr, ), (), (), timeout)
         if ready:
             err = proc.stderr.readline()

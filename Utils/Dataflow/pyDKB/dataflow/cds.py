@@ -31,12 +31,11 @@ else:
 
         def __init__(self, *args):
             self.orig_handlers = {
-                    signal.SIGINT:  signal.signal(signal.SIGINT, self.kill),
-                    signal.SIGTERM: signal.signal(signal.SIGTERM, self.kill)
+                signal.SIGINT:  signal.signal(signal.SIGINT, self.kill),
+                signal.SIGTERM: signal.signal(signal.SIGTERM, self.kill)
             }
             handlers = True
             super(CDSInvenioConnector, self).__init__(*args)
-
 
         def __enter__(self):
             """ Enter the with...as construction. """
@@ -61,25 +60,23 @@ else:
                 for s in self.orig_handlers:
                     signal.signal(s, self.orig_handlers[s])
 
-
         def kill(self, signum, frame):
             """ Run del and propagate signal. """
             self.delete()
             os.kill(os.getpid(), signum)
 
 
-
     class KerberizedCDSInvenioConnector(CDSInvenioConnector):
         """
-        Represents same CDSInvenioConnector, but this one is aware about SPNEGO:
-        Simple and Protected GSSAPI Negotiation Mechanism
+        Represents same CDSInvenioConnector, but this one is aware about
+        SPNEGO: Simple and Protected GSSAPI Negotiation Mechanism
         """
         def __init__(self, login="user", password="password"):
             """ Run parent's constructor with fake login/password
 
             ...to make it run _init_browser().
-            Can't use input parameters as if they're empty strings, _init_browser
-            won't be called.
+            Can't use input parameters as if they're empty strings,
+            _init_browser won't be called.
             """
             try:
                 kerberos
@@ -89,7 +86,8 @@ else:
                                  " authorization.\n")
                 sys.exit(4)
 
-            super(KerberizedCDSInvenioConnector, self).__init__("user", "password")
+            super(KerberizedCDSInvenioConnector, self).__init__("user",
+                                                                "password")
 
         def _init_browser(self):
             """
@@ -100,9 +98,10 @@ else:
                 kerberos.authGSSClientStep(vc, "")
                 token = kerberos.authGSSClientResponse(vc)
 
-                headers = {'Authorization': 'Negotiate '+token}
+                headers = {'Authorization': 'Negotiate ' + token}
 
-                self.browser = splinter.Browser('phantomjs', custom_headers=headers)
+                self.browser = splinter.Browser('phantomjs',
+                                                custom_headers=headers)
                 self.browser.visit(self.server_url)
                 self.browser.find_link_by_partial_text("Sign in").click()
 
