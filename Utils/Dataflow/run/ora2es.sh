@@ -16,8 +16,9 @@ cmd_19="${base_dir}/../019_oracle2esFormat/oracle2es.php"
 cmd_69="${base_dir}/../069_upload2es/load_data.sh"
 
 # Reset offset value
-sed -i.bak -e"s/^offset = .*$/offset = $START_OFFSET/" \
-    $cfg_OC
+[ -n "$START_OFFSET" ] \
+    && sed -i.bak -e"s/^offset = .*$/offset = $START_OFFSET/" \
+           $cfg_OC
 
 # Run Oracle Connector
 buffer="${base_dir}/.record_buffer"
