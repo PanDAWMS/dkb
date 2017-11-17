@@ -1,6 +1,17 @@
 Benchmarking utility (tools/benchmark-db-queries.py)
 ====================================================
 
+
+General things
+--------------
+
+Be minimal: try to allow the utility to produce something useful
+(e.g., dump queries if only this mode was requested) when the full
+library stack (Oracle libraries, cURL, etc) is missing.  Also,
+import only functionally-needed parts: if we test ElasticSearch,
+Oracle support isn't required at all and, thus, must not be imported.
+
+
 Exception handling
 ------------------
 
