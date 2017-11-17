@@ -1,0 +1,294 @@
+s
+t
+n
+e
+m
+
+i
+r
+e
+p
+x
+e
+N
+
+ 
+
+1200
+
+1000
+
+800
+
+600
+
+400
+
+200
+
+Pseudo experiments
+Gaussian fit
+Limit in data
+
+-1
+ L dt = 42 pb
+
+s
+
+=7 TeV
+
+0
+0
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+10
+ [TeV]
+
+Figure 9: Result of pseudo-experiments on the expected limit. The mean of the fitted Gaussian is
+(5.23±0.01) TeV and the width is (0.321±0.003) TeV.
+
+]
+]
+2
+2
+V
+V
+e
+e
+T
+T
+
+[
+[
+ 
+ 
+)
+)
+a
+a
+
+t
+t
+
+a
+a
+d
+d
+
+ 
+ 
+|
+|
+ 
+ 
+l
+l
+
+a
+a
+n
+n
+g
+g
+s
+s
+(
+(
+P
+P
+
+i
+i
+
+Posterior PDF (
+
+Posterior PDF (
+
+Limit data (95% C.L.)
+
+Limit expected (95% C.L.)
+
+-
+, data)
+-
+, expected)
+
+50
+50
+45
+45
+40
+40
+35
+35
+30
+30
+25
+25
+20
+20
+15
+15
+10
+10
+5
+5
+0
+0
+0 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1
+0 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1
+
+-1
+ L dt = 42 pb
+
+=7 TeV
+
+s
+
+2L1/
+2L1/
+
+ [TeV
+ [TeV
+
+]-2
+]-2
+
+]
+]
+2
+2
+V
+V
+e
+e
+T
+T
+
+[
+[
+ 
+ 
+)
+)
+a
+a
+
+t
+t
+
+a
+a
+d
+d
+
+ 
+ 
+|
+|
+ 
+ 
+l
+l
+
+a
+a
+n
+n
+g
+g
+s
+s
+(
+(
+P
+P
+
+i
+i
+
+, data)
+
++L
++L
+
+, expected)
+
+Posterior PDF (
+
+Posterior PDF (
+
+Limit data (95% C.L.)
+
+Limit expected (95% C.L.)
+
+50
+50
+45
+45
+40
+40
+35
+35
+30
+30
+25
+25
+20
+20
+15
+15
+10
+10
+5
+5
+0
+0
+0 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1
+0 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1
+
+-1
+ L dt = 42 pb
+
+=7 TeV
+
+s
+
+2L1/
+2L1/
+
+ [TeV
+ [TeV
+
+]-2
+]-2
+
+Figure 10: Expected and observed posterior PDF distributions for constructive (left) and destructive
+(right) interference.
+
+10
+
+L
+(cid:242)
+L
+L
+(cid:242)
+(cid:242)
+

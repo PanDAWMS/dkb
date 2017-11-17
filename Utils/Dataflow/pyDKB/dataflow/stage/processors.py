@@ -2,13 +2,14 @@
 Processor stages definitions (with predefined message type).
 """
 
-__all__ = ["JSONProcessorStage", "TTLProcessorStage", "JSON2TTLProcessorStage"]
-
 from . import AbstractProcessorStage
 from . import messageType
 
 import sys
 import json
+
+__all__ = ["JSONProcessorStage", "TTLProcessorStage", "JSON2TTLProcessorStage"]
+
 
 class JSONProcessorStage(AbstractProcessorStage):
     """ JSON2JSON Processor Stage
@@ -30,8 +31,10 @@ class JSONProcessorStage(AbstractProcessorStage):
         except ValueError:
             sys.stderr.write("(WARN) failed to read input file %(f)s as"
                              " Newline Delimeted %(t)s. Will try to read as"
-                             " true %(t)s file.\n" % {"f":fd.name,
-                             "t":self.input_message_class().typeName()})
+                             " true %(t)s file.\n" % {
+                                 "f": fd.name,
+                                 "t": self.input_message_class().typeName()
+                             })
             fd.seek(0)
             for m in self.file_true_json(fd):
                 yield m
@@ -45,7 +48,7 @@ class JSONProcessorStage(AbstractProcessorStage):
         data = self.stream_input(fd)
         m = data.next()
         if not (m and m.content() and type(m.content()) != list):
-             raise ValueError
+            raise ValueError
         yield m
         for m in data:
             yield m
@@ -60,8 +63,10 @@ class JSONProcessorStage(AbstractProcessorStage):
                 yield self.parseMessage(m)
         except ValueError, err:
             sys.stderr.write("(WARN) failed to read input file %s as %s: %s.\n"
-                       % (fd.name, self.input_message_class().typeName(), err))
+                             % (fd.name,
+                                self.input_message_class().typeName(), err))
             yield None
+
 
 class TTLProcessorStage(AbstractProcessorStage):
     """ TTL2TTL Processor Stage
@@ -78,6 +83,7 @@ class TTLProcessorStage(AbstractProcessorStage):
     # Override
     def output(self, message):
         super(TTLProcessorStage, self).output(message)
+
 
 class JSON2TTLProcessorStage(JSONProcessorStage, TTLProcessorStage):
     """ JSON2TTL Processor Stage

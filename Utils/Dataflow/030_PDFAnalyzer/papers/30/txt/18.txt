@@ -1,0 +1,14 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+17
+
+(a) Dimuon Invariant Mass: NTracks < 10
+
+(b) Dimuon Invariant Mass: NTracks < 10
+
+Figure 11: The invariant mass distribution of the two muons in linear and log scale in the background
+region. The background histograms are stacked. The rightmost bin along X-axis shows the overﬂows.
+
+Notreviewed,forinternalcirculationonly [GeV]mmM050100150200250300350400Nevents / 8 GeV0100200300400500600Data+fakemttbbDibosonSingle top: Wt [GeV]mmM050100150200250300350400Nevents / 8 GeV-110110210310Data+fakemttbbDibosonSingle top: Wt

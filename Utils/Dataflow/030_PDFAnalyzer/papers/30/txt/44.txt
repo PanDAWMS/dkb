@@ -1,0 +1,16 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+43
+
+Figure 38: The second muon pT distribution in log scale in the background region (NTracks < 10). The
+background histograms are stacked. The bottom part of the figure shows the ratio of data to predic-
+tion.The error on the points is statistical, while the red band shows the systematic uncertainty.
+
+Figure 39: The invariant mass distribution of the two muons in log scale in the background region
+(NTracks < 10). The background histograms are stacked. The bottom part of the figure shows the ratio
+of data to prediction. The error on the points is statistical, while the red band shows the systematic
+uncertainty.
+
+Notreviewed,forinternalcirculationonlyNevents-110110210310Data+fakemttbbDibosonSingle top: Wt) [GeV]2m(Tp050100150200250300350400data / bkg024Nevents110210310Data+fakemttbbDibosonSingle top: Wt [GeV]mmM050100150200250300350400data / bkg024

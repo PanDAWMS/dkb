@@ -1,0 +1,128 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+19
+
+Source
+
+Muon+fake (%)
+
+t¯t (%)
+
+b/c (%) Signal (%)
+
+Measurement statistics
+
+Subtraction of
+
+t¯t + b/c + Wt+diboson
+
+4
+20
+
+ISR/FSR
+
+t-quark mass
+Cross section
+
+Generator
+Luminosity
+µ reco/trig
+
+PDF(Acceptance)
+
+Rescale Truth Acceptance
+Ratio (nominal/inverted)
+Extrapolation to NTracks ≥ 10
+
+7
+4.5
++7−9.6
+5.1
+3.7
+2.6
+
+Total uncertainty
+
+20.4
+
+14.4
+
+3.7
+1.5
+3
+14
+
+15
+
+8.5
+100
+100
+
+Table 5: Systematic uncertainties in percent on the background estimates in the signal region from vari-
+ous sources. µ reco/trig stands for the uncertainty due to trigger efficiency weight and muon reconstruc-
+tion efficiency scale factors applied to the Monte Carlo events.
+
+• We test the effect of initial and final state radiation by checking the t¯t prediction using a sample
+where the ISR and FSR have been enhanced over nominal versus a sample where both ISR and
+FSR have been decreased versus nominal. These samples have been generated with A and
+hadronized with . This yields an uncertainty of 7%.
+
+• The systematic uncertainty due to trigger efficiency and muon identification scalefactors is 2.6%.
+The total systematic uncertainty on t¯t from all sources is 14.5%.
+
+6.3 Estimation of b¯b background
+In the background region with NTracks < 10, the uncertainty on b¯b background is from the measurement
+of R = AMC/CMC as described in section 5.1. In the signal region, in addition a 100% uncertainty is taken
+on the b¯b estimate which arises from the extrapolation in the NTracks variable as described in Step 2 in
+section 5.1.
+
+7 Results
+
+348
+
+349
+
+350
+
+351
+
+352
+
+353
+
+354
+
+355
+
+356
+
+357
+
+358
+
+359
+
+361
+
+Table 6 shows the expected and observed number of events for like-sign dimuon events with NTracks
+360 ≥ 10. The expected background contributions from diboson and single-top Wt are listed as other back-
+grounds. In Table 7, the prediction and observation is shown broken into categories based on muon
+charge.
+
+362
+
+363
+
+364
+
+365
+
+366
+
+Figure 12 shows the NTracks distribution for signal and background control regions. Figure 13 shows
+the pT distributions of the leading and second muon in the signal region. Figure 14 shows the invariant
+mass distribution of the dimuons in the signal region.
+
+Notreviewed,forinternalcirculationonly

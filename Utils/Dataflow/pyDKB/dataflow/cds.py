@@ -2,11 +2,13 @@
 Extended CDSInvenioConnector allowing us to login via Kerberos
 """
 
-__all__ = ["CDSInvenioConnector", "KerberizedCDSInvenioConnector"]
-
 import sys
 import signal
 import os
+
+
+__all__ = ["CDSInvenioConnector", "KerberizedCDSInvenioConnector"]
+
 
 try:
     import kerberos

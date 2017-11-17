@@ -1,0 +1,48 @@
+============
+* Stage 18 *
+============
+
+Description
+===========
+Get PDF documents from CDS and put them to HDFS.
+
+Run ./kerberos_init.sh first, and then ./getPDFfromCDS.py as a regular stage.
+
+Input
+-----
+JSON (Stage 015/output):
+{{{
+{
+  "GLANCE": {<GLANCE info>},
+  "CDS":    {<CDS info>},
+  "dkbID":  <dkbID>
+  "supporting_notes": [
+    {
+       "GLANCE": {<GLANCE info>},
+       "CDS":    {<CDS info>},
+       "dkbID":  <dkbID>
+    },
+    ...
+  ]
+}
+}}}
+
+Output
+------
+JSON:
+{{{
+{
+   "dkbID": <dkbID>,
+   "PDF":   <PDF location>
+}
+}}}
+
+Files
+=====
+./kerberos_init.sh  service script to organize multi-realm Kerberos access
+                      (for CERN.CH and HADOOP.NOSQL.KIAE.RU)
+
+./transferPDF.sh    service script to download PDF from CDS
+                      and upload it to HDFS.
+
+./getPDFfromCDS.py  main stage script

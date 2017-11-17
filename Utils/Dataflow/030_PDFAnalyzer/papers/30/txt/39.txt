@@ -1,0 +1,73 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+38
+
+Figure 31: Figure shows the isolation efficiency in data and MC (top) and the scalefactor (Data/MC).
+The scale factor is 0.999.
+
+592
+
+593
+
+594
+
+595
+
+596
+
+597
+
+598
+
+599
+
+600
+
+601
+
+602
+
+603
+
+604
+
+605
+
+606
+
+607
+
+608
+
+609
+
+610
+
+G Miscellaneous Studies
+
+In this section, we present other auxiliary studies.
+
+We check the efficiency of our isolation selection, ptcone20/pT < 0.2 in a sample of Z events. We
+use the standard tag-and-probe method. Events with two muons of opposite sign and with invariant mass
+satisfying 81 < Mµµ( GeV) < 101 are selected. The muon selection is the same as described for the
+analysis. The tag muon is required to be isolated, and the efficiency for the probe muon to be isolated is
+measured in data and MC. The data sample is the same as the one used for this analysis. The MC sample
+is a P Z → µµ sample with MC10b pileup conditions. Figure 31 shows the measured isolation
+efficiency in data and MC and the scale factor (Data/MC). The measured scale factor is 0.999. We also
+the measure the scale factor for the d0 significance requirement (d0/derr
+0 < 3) for these Z events. The
+scale factor for isolated probes is 0.998. Both the isolation and d0 significance scale factors are close to
+1 and we do not apply any corrections to the MC samples in this analysis.
+
+We also find that the isolation efficiency in signal is stable at high pT. In Figure 32, we show the
+isolation efficiency for the leading muon for two different black hole samples. The efficiency is only
+measured for truly isolated muons by requiring that the muons originate promptly from the black hole,
+or arise from the decay of W or Z bosons from the black hole.
+
+To check the effect of pileup, we measure the isolation efficiency for muons in the Z, t¯t and b¯b
+MC samples as a function of < µ >, the average number of interactions per event. Here the efficiency
+is measured for all muons matched to a truth-level muon. Figure 33 shows that the efficiency for our
+
+Notreviewed,forinternalcirculationonly [GeV]TMuon p20406080100120140Isolation Efficiency0.80.850.90.9511.051.1DatammfiPythia Z [GeV]TMuon p20406080100120140160Scalefactor Data/MC0.80.850.90.9511.051.1

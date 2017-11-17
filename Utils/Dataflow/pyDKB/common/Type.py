@@ -2,6 +2,7 @@
 Abstract class for type definitions.
 """
 
+
 class Type(object):
     """
     Abstract class for type definitions.
@@ -43,9 +44,8 @@ class Type(object):
 
     def hasMember(self, val):
         """ Check if the member exists (by value). """
-        return self.memberName(val) != False
+        return self.memberName(val) is not False
 
     def memberName(self, val):
         """ Return string name of the member. """
         return self.hash.get(val, False)
-

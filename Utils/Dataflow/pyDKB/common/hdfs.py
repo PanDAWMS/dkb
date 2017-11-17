@@ -12,6 +12,7 @@ from . import HDFSException
 DEVNULL = open(os.path.devnull, "w")
 DKB_HOME = "/user/DKB/"
 
+
 def check_stderr(proc, timeout=None, max_lines=1):
     """ Wait till the end of the subprocess and send its STDERR to STDERR.
 
@@ -35,12 +36,13 @@ def check_stderr(proc, timeout=None, max_lines=1):
         raise subprocess.CalledProcessError(proc.returncode, None)
     return proc.poll()
 
+
 def makedirs(dirname):
     """ Try to create directory (with parents). """
     cmd = ["hadoop", "fs", "-mkdir", "-p", dirname]
     try:
         proc = subprocess.Popen(cmd,
-                                stdin =subprocess.PIPE,
+                                stdin=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
                                 stdout=DEVNULL)
         check_stderr(proc)
@@ -50,12 +52,13 @@ def makedirs(dirname):
         raise HDFSException("Failed to create HDFS directory: %s\n"
                             "Error message: %s\n" % (dirname, err))
 
+
 def putfile(fname, dest):
     """ Upload file to HDFS. """
     cmd = ["hadoop", "fs", "-put", fname, dest]
     try:
         proc = subprocess.Popen(cmd,
-                                stdin =subprocess.PIPE,
+                                stdin=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
                                 stdout=DEVNULL)
         check_stderr(proc)
@@ -64,6 +67,7 @@ def putfile(fname, dest):
             err.cmd = ' '.join(cmd)
         raise HDFSException("Failed to put file to HDFS: %s\n"
                             "Error message: %s\n" % (fname, err))
+
 
 def getfile(fname):
     """ Download file from HDFS.
@@ -74,7 +78,7 @@ def getfile(fname):
     name = os.path.basename(fname)
     try:
         proc = subprocess.Popen(cmd,
-                                stdin =subprocess.PIPE,
+                                stdin=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
                                 stdout=DEVNULL)
         check_stderr(proc)
@@ -84,6 +88,7 @@ def getfile(fname):
         raise HDFSException("Failed to get file from HDFS: %s\n"
                             "Error message: %s\n" % (fname, err))
     return name
+
 
 def listdir(dirname, mode='a'):
     """ List files and/or subdirectories of HDFS directory.
@@ -100,10 +105,10 @@ def listdir(dirname, mode='a'):
         # Use PIPE for all the std* to avoid catching and/or blocking
         # current process std*
         proc = subprocess.Popen(cmd,
-                              stdin =subprocess.PIPE,
-                              stderr=subprocess.PIPE,
-                              stdout=subprocess.PIPE)
-        while proc.poll() == None:
+                                stdin=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                stdout=subprocess.PIPE)
+        while proc.poll() is None:
             timeout = 0.1
             check_stderr(proc, timeout)
             ready, _, _ = select.select((proc.stdout, ), (), (), timeout)
@@ -120,9 +125,9 @@ def listdir(dirname, mode='a'):
     # Parse output of `ls`:
     # {{{
     # Found 3 items
-    # -rwxrwx---   3 $user        $group 1114404 2016-09-28 16:11 /path/to/file1
-    # -rwxrwx---   3 $user        $group 1572867 2016-09-28 16:11 /path/to/file2
-    # drwxrwx---   - $user        $group       0 2017-05-22 14:07 /path/to/subdir
+    # -rwxrwx---   3 $user      $group 1114404 2016-09-28 16:11 /path/to/file1
+    # -rwxrwx---   3 $user      $group 1572867 2016-09-28 16:11 /path/to/file2
+    # drwxrwx---   - $user      $group       0 2017-05-22 14:07 /path/to/subdir
     # }}}
 
     subdirs, files = [], []

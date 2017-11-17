@@ -1,0 +1,99 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+6
+
+Figure 1: Figure shows a schematic of the different kinematic regions used for b¯b estimation. The phase
+space is divided into regions based on d0 significance and isolation of the leading muon. The signal
+region is A, with isolated leading muon with low impact parameter significance. Region C has additional
+selections to enhance the heavy-ﬂavor fraction.
+
+explained in section 5.2. This background will include contributions from Z+jets, and single-top
+in the t and s channels, along with low-pT QCD.
+
+5.1 Estimation of b¯b background
+The b¯b background is estimated by using a heavy-ﬂavor rich control region in data and extrapolating to
+the signal region using the b¯b MC sample. The estimate is obtained in two steps. In the first step, the
+kinematic regions shown in Fig. 1 and described below are used to obtain a b¯b estimate in the background
+region with NTracks < 10. In the second step, the b¯b MC is used to extrapolate the prediction from the
+background region to the signal region (NTracks ≥ 10). The steps are described below.
+
+5.1.1 Step 1 - In the background region with NTracks < 10
+
+Figure 1 shows the relevant kinematic regions.
+
+Region A is the region of interest; the leading muon has ptcone20/pT < 0.2 and |dsig
+
+0 | < 3. Let us
+denote by Adata the number of b¯b events in region A in data, with AMC denoting the number of events
+from b¯b MC. Region C has inverted requirements on the isolation and dsig
+In
+0 of the leading muon.
+addition, the leading and second muon in region C must satisfy 1− pMS
+T /pID
+T < 0.2 to enhance the heavy
+ﬂavor fraction (see Appendix C). Let Cdata and CMC denote the number of events in region C in data and
+b¯b MC respectively.
+We measure the ratio R = AMC/CMC in the b¯b MC. The ratio is 0.328 ± 0.028(stat). Adata is then
+given by R·Cdata. Mathematically, this is identical to the method used in Ref. [10]. In data, Cdata = 6480
+events. In addition we model the shapes of the muon pT and Emiss
+distributions in region Adata using the
+shapes in Cdata. By using the shapes from Cdata we are able to ameliorate several issues. Cdata has higher
+statistics than Adata and thus lower statistical uncertainties, unlike the MC. Cdata is also naturally better
+to model pile-up effects of the data.
+
+T
+
+For the method to work, the distributions of d0 significance and isolation are required to be well
+modeled in the simulation. In Fig. 2 we show the d0 significance for the leading muon in region C. In
+
+194
+
+195
+
+196
+
+197
+
+198
+
+199
+
+200
+
+201
+
+202
+
+203
+
+204
+
+205
+
+206
+
+207
+
+208
+
+209
+
+210
+
+211
+
+212
+
+213
+
+214
+
+215
+
+216
+
+217
+
+Notreviewed,forinternalcirculationonlyACHFenhancedµ1Isolationµ1|dsig0|ptcone20/pT<0.2|dsig0|<3

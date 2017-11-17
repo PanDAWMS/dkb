@@ -1,0 +1,14 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+41
+
+Figure 34: Figure shows the distribution of NTracks versus < µ > for events with at least two muons
+with pT > 15 GeV each in different simulation samples. NTracks is found to be uncorrelated with < µ >
+as indicated by the correlation factors shown in the figure.
+
+Figure 35: Figure shows the regions as described in Fig. 1 populated by events for the b¯b MC (left) and
+for the t¯t MC (right).
+
+Notreviewed,forinternalcirculationonly>m<0510152025NTracks0102030405060708090100024681012141618SignalCorrelation Factor = -0.048>m<0510152025NTracks01020304050020004000600080001000012000ttCorrelation Factor = -0.0029>m<0510152025NTracks0102030405002004006008001000bbCorrelation Factor = 0.0029>m<0510152025NTracks01020304050020004000600080001000012000mmfiZCorrelation Factor = -0.004Tptcone20 / p012345|sig0|d0102030405001020304050607080 MCbbTptcone20/p012345|sig0|d010203040500100002000030000400005000060000700008000090000 MCtt

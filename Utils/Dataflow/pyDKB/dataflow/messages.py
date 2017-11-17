@@ -30,11 +30,13 @@ def Message(msg_type):
         raise ValueError("Message type must be a member of messageType")
     cls = __message_class.get(msg_type)
     if not cls:
-        sys.stderr.write("(WARN) Message class for type %s is not implemented. "
-                         "Using AbstractMessage instead.")
+        sys.stderr.write(
+            "(WARN) Message class for type %s is not implemented. "
+            "Using AbstractMessage instead.")
         cls = AbstractMessage
 
     return cls
+
 
 class AbstractMessage(object):
     """ Abstract message """
@@ -56,7 +58,6 @@ class AbstractMessage(object):
     def getOriginal(self):
         """ Return original message. """
         return self.__orig
-
 
     def decode(self, code):
         """ Decode original from CODE to TYPE-specific format.
@@ -119,6 +120,7 @@ class JSONMessage(AbstractMessage):
 
 __message_class[messageType.JSON] = JSONMessage
 
+
 class TTLMessage(AbstractMessage):
     """ Messages in TTL format
 
@@ -158,5 +160,6 @@ class TTLMessage(AbstractMessage):
                 raise EncodeUnknownType(code, self.__class__)
             self.decoded = orig
         return self.encoded
+
 
 __message_class[messageType.TTL] = TTLMessage

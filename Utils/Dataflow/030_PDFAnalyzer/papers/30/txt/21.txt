@@ -1,0 +1,68 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+20
+
+Figure 12: The NTracks distribution for all like-sign dimuon events. In this figure the shape of the b¯b
+background is taken from the fit shown in Fig. 6. We select the region with NTracks ≥ 10 as the signal
+region. The background histograms are stacked, the signal histogram is overlaid.
+
+Process
+
+b¯b
+t¯t
+
+µ+fake
+
+Other backgrounds
+
+Predicted
+Observed
+
+Signal MT H = 4000 GeV
+
+Events
+
+0.77 ± 0.77(syst)
+
+29.2 ± 0.4(stat) ± 4.1(syst) ± 1.1(lumi)
+
+25.6± 0.3(stat) ± 5.2(syst)
+
+0.25 ± 0.11(stat)
+
+55.8 ± 0.5(stat) ± 6.8(syst) ± 1.1(lumi)
+
+60
+
+72.1 ± 2.7(stat) ± 3.6(syst)
+
+Table 6: Number of expected and observed events in the signal region, like-sign dimuon events with
+NTracks ≥ 10. The signal expectation for the point with MT H = 4000 GeV is also shown. The other
+backgrounds are from diboson and single-top Wt processes.
+
+Process
+
+t¯t
+
+µ+fake
+Σ(t¯t+fake)
+Observed
+
+Events(µ+µ+) Events(µ−µ−)
+
+14.2
+14
+28.2
+28
+
+15
+11.6
+26.6
+32
+
+Table 7: Number of expected and observed events in the signal region broken down by charge of the
+muons.
+
+Notreviewed,forinternalcirculationonlyNTracks5101520253035404550Events-110110210310-1L dt = 1.3 fb(cid:242)= 7 TeVsData : +fakemttbbDibosonSingle top: Wt=4 TeVTHM

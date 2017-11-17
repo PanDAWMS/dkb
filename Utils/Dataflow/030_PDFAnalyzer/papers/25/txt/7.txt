@@ -1,0 +1,188 @@
+s
+t
+
+n
+e
+m
+
+i
+r
+e
+p
+x
+e
+-
+o
+d
+u
+e
+s
+P
+
+410
+
+310
+
+210
+
+10
+
+1
+0
+
+Pseudo experiments
+Value in data
+
+ L dt = 42 pb
+
+-1
+s,  
+
+=7 TeV
+
+5
+
+10
+
+15
+
+20
+
+25
+
+30
+-ln(L)
+
+Figure 5: Negative log-likelihood distribution resulting from pseudo-experiments with ﬂuctuations on
+the number of expected SM-only events. The value in data was found to be 10.7, with p-value = 56%.
+
+L ( ¯n | q , ¯n ) =
+
+Nk
+
+k=1
+
+k e−m k
+m nk
+nk!
+
+, where m k = s(q ,n k) + b(n k).
+
+(3)
+
+Here, q
+is a parameter characterizing the new physics on which we would like to set the limit, and ¯n
+encompasses the “nuisance” parameters (for example resolution, efficiency, etc) which are not directly
+measured. The Poisson distribution in the product can be approximated with a Gaussian function for
+sufficiently large number of observed events in mass bin k (nk ≥ 40).
+given ¯n and ¯n can be written as:
+
+According to Bayes’ Theorem, the posterior probability density function (PDF) of the parameter q
+
+1
+Z
+
+P(q
+
+| ¯n, ¯n ) =
+
+(4)
+where Z normalizes the posterior PDF as a function of q . P(q ,n ) is the prior probability function
+depending on q , which should be a function of our new contact interaction scale L
+and the nuisance
+parameters n . The latter may be marginalized by convolving each Poisson probability with a prior
+probability function (typically chosen as Gaussian). For one particular mass bin, the likelihood would
+then look like:
+
+L ( ¯n | ¯q , ¯n )P(q ,n ),
+
+L ( ¯n | q ,n ) =
+′ can depend on n .
+
+1
+C Z
+
+0
+
+m
+
+′ne−m
+n!
+
+′
+
+e− (n −n ′)2
+
+2s 2n dn ′ .
+
+Note that the parameter m
+
+The 95% C.L limit is then found by integrating over the posterior PDF and solving for q lim:
+
+q lim
+
+Z
+
+0
+
+P(q ′ | ¯n, ¯n )dq ′ = 0.95.
+
+4.1 Contact Interaction Limit Setting
+
+(5)
+
+(6)
+
+Often when setting a limit one can treat the signal and background contributions separately, such as in
+the case of a resonance search [6]. However, because new physics via the contact interaction would have
+appeared as a continuous excess of events above the expected DY invariant mass distribution, and the
+signal interference with DY component of the background contributes a non-negligible amount to this
+
+excess, we choose to employ a slightly different method than that of the Z′ → mm
+
+search.
+
+7
+
+104
+
+105
+
+106
+
+107
+
+108
+
+109
+
+110
+
+111
+
+112
+
+113
+
+114
+
+115
+
+116
+
+117
+
+118
+
+119
+
+120
+
+121
+
+122
+
+(cid:242)
+(cid:213)
+¥
+

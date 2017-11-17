@@ -1,0 +1,292 @@
+d
+e
+t
+c
+e
+p
+x
+e
+ 
+N
+
+50
+45
+40
+35
+30
+25
+20
+15
+10
+5
+0
+0
+
+Constructive
+
+-1
+ L dt = 42 pb
+
+s
+
+=7 TeV
+
+Mass bin 150-170GeV
+Mass bin 170-200GeV
+Mass bin 200-240GeV
+Mass bin 240-300GeV
+Mass bin 300-400GeV
+Mass bin 400-550GeV
+Mass bin 550-800GeV
+Mass bin 800-1200GeV
+Mass bin 1200-2000GeV
+
+0.02
+
+0.04
+
+0.06
+
+0.08
+
+0.1
+2L1/
+
+0.12
+]-2
+
+ [TeV
+
+d
+e
+t
+c
+e
+p
+x
+e
+ 
+N
+
+50
+45
+40
+35
+30
+25
+20
+15
+10
+5
+0
+0
+
+Destructive
+
+-1
+ L dt = 42 pb
+
+s
+
+=7 TeV
+
+Mass bin 150-170GeV
+Mass bin 170-200GeV
+Mass bin 200-240GeV
+Mass bin 240-300GeV
+Mass bin 300-400GeV
+Mass bin 400-550GeV
+Mass bin 550-800GeV
+Mass bin 800-1200GeV
+Mass bin 1200-2000GeV
+
+0.05
+
+0.1
+
+0.15
+
+0.2
+
+0.25
+ [TeV
+
+2L1/
+
+]-2
+
+Figure 7: Quadratic fits in each mass bin for the constructive (left) and destructive (right) interference
+models as a function of 1
+
+L 2 , with benchmark L values shown as points.
+
+]
+]
+2
+2
+V
+V
+e
+e
+T
+T
+
+[
+[
+ 
+ 
+)
+)
+d
+d
+e
+e
+
+t
+t
+c
+c
+e
+e
+p
+p
+x
+x
+e
+e
+
+ 
+ 
+|
+|
+ 
+ 
+l
+l
+
+a
+a
+n
+n
+g
+g
+s
+s
+(
+(
+P
+P
+
+i
+i
+
+=5 TeV
+
+-1
+ L dt = 42 pb
+
+Posterior PDF with 
+
+Expected Posterior PDF
+
+50
+50
+45
+45
+40
+40
+35
+35
+30
+30
+25
+25
+20
+20
+15
+15
+10
+10
+5
+5
+0
+0
+0 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1
+0 0.01 0.02 0.03 0.04 0.05 0.06 0.07 0.08 0.09 0.1
+
+s
+
+=7 TeV
+
+-
+
+2L1/
+2L1/
+
+ [TeV
+ [TeV
+
+]-2
+]-2
+
+Figure 8: Showing the expected posterior PDF from MC for SM-only and in the presence of new physics
+at L − = 5 TeV.
+
+149
+
+150
+
+151
+
+152
+
+153
+
+154
+
+155
+
+156
+
+157
+
+158
+
+159
+
+160
+
+161
+
+162
+
+width of the Gaussian fit to this distribution yields a 0.3 TeV width on the expected limit for both con-
+structive and destructive interference (Fig. 9).
+
+From data, we extract an observed limit of L −lim = 5.1 TeV for constructive interference and
+L +
+lim = 4.6 TeV for destructive interference (at 95% C.L.) without systematic uncertainties incorporated,
+well within range of the expected limits.
+
+After including systematics (see section 4.1.3 below), we find an expected limit of L
+
+lim = 5.1 TeV
+(4.8 TeV) and an observed limit in data of L
+lim = 4.9 TeV (4.5 TeV) for constructive (destructive)
+interference at 95% C.L. The posterior distributions are shown in Fig. 10 for both the expected and
+observed limits.
+
+4.1.3 Details of the Treatment of Systematic Uncertainties
+
+Because we normalize to the Z0 peak, only mass-dependent systematic uncertainties affect our limit cal-
+culation, and any overall constant scale to each uncertainty factors out. Statistical uncertainty dominates
+with low luminosity, so we have chosen to take the conservative estimates of theoretical and detector
+systematics described in [5]. The systematics are summarized in Table 5, and with the exception of the
+
+9
+
+(cid:242)
+(cid:242)
+L
+(cid:242)
+

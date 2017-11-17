@@ -1,0 +1,143 @@
+1 Theoretical Background
+
+Beyond the Standard Model phenomena such as quark/lepton compositeness [1] may be described as
+a 4-fermion contact interaction (CI) between two incoming quarks and two final state leptons. In the
+same spirit as the Fermi Interaction described b -decay long before the discovery of the W boson, one
+can write an effective Lagrangian describing a new interaction without directly knowing the intermediate
+process [2]:
+
+g2
+
+L =
+
+2L 2 [ h LL(cid:0) ¯y Lg m y L(cid:1) ( ¯y Lg m y L)] + h RR(cid:0) ¯y Rg m y R(cid:1) ( ¯y Rg m y R) + 2h LR(cid:0) ¯y Lg m y L(cid:1) ( ¯y Rg m y R) ] ,
+
+(1)
+
+where g is a coupling constant and y L (y R) is the left (right) fermionic field. The interaction appears
+experimentally as a deviation from the Standard Model (SM) dilepton mass spectrum originating from
+Drell-Yan (DY) production (q ¯q → g ,Z → l+l−). The value of h
+(±1) determines the whether or not
+the new physics interference is constructive (h =-1) or destructive (h =+1) with the DY in the observ-
+able regime. Often for search purposes, the terms in this Lagrangian are treated as different models.
+For example, the Left-Left Isoscalar Model (LLIM) used in this study is defined by h LL = ±1 and
+h RR = h LR = 0.
+q ¯q → m +m − is given in terms of the dimuon mass mmm
+ds DY
+dmmm − h FI
+L 2 +
+
+With the introduction of this new interaction (Fig. 1), the differential cross section for the process
+
+ds
+dmmm
+
+FC
+L 4 ,
+
+(2)
+
+by
+
+=
+
+which includes a SM Drell-Yan (DY) term, as well as DY-CI interference (FI) and pure contact interaction
+(FC) terms. Fig. 2 shows the cross section as a function of L
+the cross section
+approaches the DY value). Depending on the model of new physics, there may be different interpretations
+of the scale L
+is the scale beneath which fermion
+constituents are bound to form the SM quarks and leptons.
+
+In quark compositeness models, for example, L
+
+(note that as L → ¥
+
+.
+
+1
+
+2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+10
+
+11
+
+12
+
+13
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+q
+
+q
+
+g /Z
+
+-
+
+m +
+
++
+
+q
+
+q
+
+-
+
+m +
+
+2
+
+Figure 1: LO production mechanism of Drell-Yan with additional contact term with scale L
+final state.
+
+in the dimuon
+
+21
+
+22
+
+23
+
+24
+
+Previous searches for contact interactions have been carried out in neutrino scattering, as well as at
+electron-positron, electron-proton and hadron colliders [1]. For the quark-quark-dimuon channel pre-
+sented here, the best limit in the LLIM is L − > 4.2 TeV (95% C.L.) for constructive interference and
+L + > 2.9 TeV (95% C.L.) for destructive interference [3].
+
+2
+
+m
+L
+m
+

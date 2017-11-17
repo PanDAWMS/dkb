@@ -1,0 +1,17 @@
+October 11, 2011 – 15 : 03
+
+DRAFT
+
+44
+
+Figure 40: The NTracks distribution for all like-sign dimuon events. In this figure the shape of the b¯b
+background is taken from the fit shown in Fig. 6. The background histograms are stacked, the signal
+histogram is overlaid. The bottom part of the figure shows the ratio of data to prediction. The error on
+the points is statistical, while the red band shows the systematic uncertainty.
+
+Figure 41: The leading (left) and second (right) muon pT distributions in the signal region. The back-
+ground histograms are stacked, the signal histogram is overlaid. The bottom part of the figure shows the
+ratio of data to prediction. The error on the points is statistical, while the red band shows the systematic
+uncertainty.
+
+Notreviewed,forinternalcirculationonlyEvents-110110210310=7TeVsData: +fakemttb/cDibosonSingle top: Wt=4 TeVTHM-1L dt = 1.3 fb(cid:242)trkN5101520253035404550data / bkg012Nevents0246810121416Data+fakemtt) [GeV]1m(Tp050100150200250300350400data / bkg012Nevents-110110Data+fakemtt) [GeV]2m(Tp050100150200250300350400data / bkg024
