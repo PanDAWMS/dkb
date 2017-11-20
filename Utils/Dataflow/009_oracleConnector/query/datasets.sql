@@ -15,7 +15,7 @@ FROM
   LEFT JOIN t_task tt
   ON t.taskid = tt.taskid
 WHERE
-  jd.type IN ('input', 'output') AND
+  jd.type IN ('output') AND
       t.timestamp > to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
       t.timestamp <= to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
       t.pr_id > 300
