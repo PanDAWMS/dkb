@@ -5,8 +5,8 @@ import json
 import re
 import sys
 
-DATASET_TYPE = ['input', 'output']
 rucio_client = rucio.client.Client()
+DS_TYPE = 'output'
 
 def main():
     args = parsingArguments()
@@ -20,26 +20,29 @@ def process_data():
         json_str = json.loads(line)
         ds = {}
         ds['taskid'] = json_str.get('taskid')
-        for type in DATASET_TYPE:
-            datasets_to_array(json_str, type, ds)
+        datasets_to_array(json_str, ds)
         sys.stdout.write(json.dumps(ds) + '\n')
 
-def datasets_to_array(data, type, ds):
-    ds[type] = []
-    if data.get(type) is not None:
-        for dataset in data.get(type):
+def datasets_to_array(data, ds):
+
+    ds[DS_TYPE] = []
+
+    if data.get(DS_TYPE) is not None:
+        for dataset in data.get(DS_TYPE):
             ds_dict = {}
             ds_dict['datasetname'] = dataset
             try:
-                bytes = get_metadata_attribute(rucio_client, remove_tid(dataset), 'bytes')
+                bytes = get_metadata_attribute(rucio_client, dataset, 'bytes')
                 if bytes == 'null' or bytes is None:
-                    ds_dict['bytes'] = ''
+                    ds_dict['bytes'] = -1
                 else:
                     ds_dict['bytes'] = bytes
-                ds[type].append(ds_dict)
+                    ds_dict['deleted'] = False
+                ds[DS_TYPE].append(ds_dict)
             except:
-                ds_dict['bytes'] = ''
-                ds[type].append(ds_dict)
+                ds_dict['bytes'] = -1
+                ds_dict['deleted'] = True
+                ds[DS_TYPE].append(ds_dict)
     return ds
 
 def extract_scope(dsn):
@@ -50,9 +53,6 @@ def extract_scope(dsn):
             if dsn.startswith('user') or dsn.startswith('group'):
                 scope = '.'.join(dsn.split('.')[0:2])
             return scope, dsn
-
-def remove_tid(dsn):
-    return re.sub('(_tid[0-9]+_[0-9]+)', '', dsn)
 
 def get_metadata_attribute(rucio_client, dsn, attribute_name):
         scope, dataset = extract_scope(dsn)
