@@ -45,13 +45,13 @@ class AbstractStage(object):
         self.add_argument('-e','--end-of-message', action='store', type=str,
                           help=u'Custom end of message marker.',
                           nargs='?',
-                          default='',
+                          default=None,
                           dest='eom'
                           )
         self.add_argument('-E','--end-of-process', action='store', type=str,
                           help=u'Custom end of process marker.',
                           nargs='?',
-                          default='',
+                          default=None,
                           dest='eop'
                           )
 
@@ -65,7 +65,7 @@ class AbstractStage(object):
         if not self.ARGS.mode:
             raise ValueError("Parameter -m|--mode must be used with value: -m MODE.")
 
-        if not self.ARGS.eom:
+        if self.ARGS.eom is None:
             self.ARGS.eom = '\n'
         else:
             try:
@@ -75,7 +75,7 @@ class AbstractStage(object):
                                  "Case: %s\n" % (err))
                 sys.exit(1)
 
-        if not self.ARGS.eop:
+        if self.ARGS.eop is None:
             if self.ARGS.mode == 's':
                 self.ARGS.eop = '\0'
             else:

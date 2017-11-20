@@ -303,7 +303,7 @@ class AbstractProcessorStage(AbstractStage):
         Split stream into messages;
         Yield Message object.
         """
-        if self.ARGS.eom:
+        if self.ARGS.eom == '\n':
             iterator = iter(fd.readline, "")
             for line in iterator:
                 yield self.parseMessage(line)
