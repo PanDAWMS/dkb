@@ -25,6 +25,7 @@ Directory layout
       stagex.sh
       stagex.py
     README         # Dataflow description
+  Elasticsearch/   # Tools for working with elasticsearch
 
 ./DataSamples/     # Data samples for dataflow scripts
   input/

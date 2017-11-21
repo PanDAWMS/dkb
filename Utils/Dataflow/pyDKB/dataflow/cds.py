@@ -2,8 +2,6 @@
 Extended CDSInvenioConnector allowing us to login via Kerberos
 """
 
-__all__ = ["CDSInvenioConnector", "KerberizedCDSInvenioConnector"]
-
 from invenio_client.contrib import cds
 import sys
 
@@ -13,8 +11,12 @@ try:
 except ImportError:
     pass
 
+__all__ = ["CDSInvenioConnector", "KerberizedCDSInvenioConnector"]
+
+
 class CDSInvenioConnector(cds.CDSInvenioConnector):
     """ CDSInvenioConnector which closes the browser in most cases. """
+
     def __enter__(self):
         return self
 
@@ -25,11 +27,13 @@ class CDSInvenioConnector(cds.CDSInvenioConnector):
             return True
         return False
 
+
 class KerberizedCDSInvenioConnector(CDSInvenioConnector):
     """
     Represents same CDSInvenioConnector, but this one is aware about SPNEGO:
     Simple and Protected GSSAPI Negotiation Mechanism
     """
+
     def __init__(self, login="user", password="password"):
         """ Run parent's constructor with fake login/password
 
@@ -56,13 +60,13 @@ class KerberizedCDSInvenioConnector(CDSInvenioConnector):
             kerberos.authGSSClientStep(vc, "")
             token = kerberos.authGSSClientResponse(vc)
 
-            headers = {'Authorization': 'Negotiate '+token}
+            headers = {'Authorization': 'Negotiate ' + token}
 
-            self.browser = splinter.Browser('phantomjs', custom_headers=headers)
+            self.browser = splinter.Browser(
+                'phantomjs', custom_headers=headers)
             self.browser.visit(self.server_url)
             self.browser.find_link_by_partial_text("Sign in").click()
 
         except kerberos.GSSError, e:
-            sys.stderr.write(str(e)+"\n")
+            sys.stderr.write(str(e) + "\n")
             sys.exit(3)
-
