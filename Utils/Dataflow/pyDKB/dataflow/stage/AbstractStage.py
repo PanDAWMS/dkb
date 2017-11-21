@@ -43,13 +43,13 @@ class AbstractStage(object):
                           choices=['f', 's', 'm'],
                           dest='mode'
                           )
-        self.add_argument('-e','--end-of-message', action='store', type=str,
+        self.add_argument('-e', '--end-of-message', action='store', type=str,
                           help=u'Custom end of message marker.',
                           nargs='?',
                           default=None,
                           dest='eom'
                           )
-        self.add_argument('-E','--end-of-process', action='store', type=str,
+        self.add_argument('-E', '--end-of-process', action='store', type=str,
                           help=u'Custom end of process marker.',
                           nargs='?',
                           default=None,
