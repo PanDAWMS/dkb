@@ -86,13 +86,15 @@ class TextLine:
              self.text, self.spaces_coords] = params
 #        print self.text
 
-            self.center = [(self.left+self.right)/2, (self.top+self.bottom)/2]
+            self.center = [(self.left + self.right) / 2,
+                           (self.top + self.bottom) / 2]
 
     def swap_y(self, top):
         """ Change Y-coords according to new Y-axis. """
         self.top = top - self.top
         self.bottom = top - self.bottom
-        self.center = [(self.left+self.right)/2, (self.top+self.bottom)/2]
+        self.center = [(self.left + self.right) / 2,
+                       (self.top + self.bottom) / 2]
 
     def same_row(self, line):
         """ Determine whether line and self belong to the same row.
@@ -107,8 +109,8 @@ class TextLine:
     def split(self, space):
         """ Split self into two lines by breaking over the space. """
         words = self.text.split()
-        words1 = words[:self.spaces_coords.index(space)+1]
-        words2 = words[self.spaces_coords.index(space)+1:]
+        words1 = words[:self.spaces_coords.index(space) + 1]
+        words2 = words[self.spaces_coords.index(space) + 1:]
         left1 = self.left
         right1 = space[0]
         text1 = " ".join(words1)
@@ -186,9 +188,10 @@ class Table:
         while r > 0:
             if not max_diff:
                 max_diff = row_centery(self.rows[r])\
-                           - row_centery(self.rows[r-1])
+                    - row_centery(self.rows[r - 1])
             else:
-                diff = row_centery(self.rows[r]) - row_centery(self.rows[r-1])
+                diff = row_centery(self.rows[r]) - \
+                    row_centery(self.rows[r - 1])
 #                print "DIFF BETWEEN", self.row_text(num = r), "AND",\
 #                      self.row_text(num = r - 1), ":", diff
                 if diff > 1.4 * max_diff:
@@ -205,9 +208,9 @@ class Table:
         # are above each other. No additional spaces are added.
         rows = []
         for row in self.rows:
-#            print "ROW"
-#            for l in row:
-#                print l.text, l.left, l.top, l.right, l.bottom
+            # print "ROW"
+            # for l in row:
+            #     print l.text, l.left, l.top, l.right, l.bottom
             new_row = []
             line = row[0]
             for i in range(1, len(row)):
@@ -215,8 +218,8 @@ class Table:
                     new_row.append(line)
                     line = row[i]
                 else:
-#                    print "LINES WITH TEXT", line.text, "AND",\
-#                          row[i].text, "OVERLAP - MERGING"
+                    # print "LINES WITH TEXT", line.text, "AND",\
+                    #     row[i].text, "OVERLAP - MERGING"
                     line = line.merge(row[i])
             new_row.append(line)
             rows.append(new_row)
@@ -231,11 +234,11 @@ class Table:
                 if len_min == len_max:
                     break
                 else:
-#                    print "ATTEMPTING TO BREAK SHORT ROWS"
+                    # print "ATTEMPTING TO BREAK SHORT ROWS"
                     self.break_short_rows(len_max)
                     i += 1
                 if i == 2:
-#                    print "MAXIMUM BREAKING ATTEMPTS REACHED"
+                    # print "MAXIMUM BREAKING ATTEMPTS REACHED"
                     break
 
     def construct_row(self, line, used_lines):
@@ -268,9 +271,9 @@ class Table:
 #        print "ROWS"
         # Divide rows on short and normal.
         for row in self.rows:
-#            print "ROW"
-#            for l in row:
-#                print l.text, l.left, l.top, l.right, l.bottom
+            #            print "ROW"
+            #            for l in row:
+            #                print l.text, l.left, l.top, l.right, l.bottom
             if len(row) == max_elements:
                 normal_rows.append(row)
             else:
@@ -280,8 +283,8 @@ class Table:
         # row.
         main_centers = []
         for l in main_row:
-#            print "MAIN CENTER", (l.left + l.right)/2
-            main_centers.append((l.left+l.right)/2)
+            #            print "MAIN CENTER", (l.left + l.right)/2
+            main_centers.append((l.left + l.right) / 2)
         # Calculate x boundaries of each column.
         boundaries = []
         for i in range(0, max_elements):
@@ -296,8 +299,8 @@ class Table:
         del boundaries[-1]
         # Transform boundaries into spaces between columns.
         column_spaces = []
-        for i in range(0, len(boundaries)/2):
-            column_spaces.append([boundaries[2*i], boundaries[2*i+1]])
+        for i in range(0, len(boundaries) / 2):
+            column_spaces.append([boundaries[2 * i], boundaries[2 * i + 1]])
 #        for cs in column_spaces:
 #            print "COLUMN SPACE", column_spaces.index(cs), cs
         self.rows = normal_rows
@@ -310,27 +313,28 @@ class Table:
                     # If line crosses the space entirely, attempt to
                     # break it on one of the spaces in it.
                     if l.left < cs[0] and l.right > cs[1]:
-#                        print "LINE OVER BOUNDARIES", l.text, l.left,\
-#                              l.right, l.spaces_coords, cs
+                        # print "LINE OVER BOUNDARIES", l.text, l.left,\
+                        #     l.right, l.spaces_coords, cs
                         # We cannot break a line if there are no spaces.
                         # This means that line is, most likely, not needed.
                         if not l.spaces_coords:
-#                            print "LINE HAS NO SPACES TO BREAK ON, REMOVING"
+                            # print "LINE HAS NO SPACES TO BREAK ON, REMOVING"
                             l = None
                             break
                         else:
                             # Find the line space closest to column space.
-                            cs2 = (cs[1]+cs[0])/2
+                            cs2 = (cs[1] + cs[0]) / 2
                             cls = min(l.spaces_coords,
                                       key=lambda space:
-                                      abs((space[1]+space[0])/2-cs2))
-                            if abs((cls[1]+cls[0])/2-cs2) > 5000:
+                                      abs((space[1] + space[0]) / 2 - cs2))
+                            if abs((cls[1] + cls[0]) / 2 - cs2) > 5000:
                                 # TO DO: fix this.
-##                                print "LINE ONLY HAS SPACES TOO FAR\
-##                                FROM COLUMN BOUNDARIES, REMOVING"
+                                # print "LINE ONLY HAS SPACES TOO FAR\
+                                # FROM COLUMN BOUNDARIES, REMOVING"
                                 l = None
                                 break
-#                            print "BREAKING ON SPACE", closest_space  # min_x[0]
+#                            print "BREAKING ON SPACE", \
+#                                  closest_space  # min_x[0]
                             [nl1, nl2] = l.split(cls)
                             new_row.append(nl1)
                             l = nl2
@@ -338,7 +342,7 @@ class Table:
                     new_row.append(l)
             # Make sure that new row has enough members.
             if new_row:
-#                print "NEW_ROW", self.row_text(row = new_row)
+                #                print "NEW_ROW", self.row_text(row = new_row)
                 num_lines = len(new_row)
                 # Try to find a line corresponding each main center.
                 for c in main_centers:
@@ -354,9 +358,9 @@ class Table:
                     # If there is no line corresponding a center, add
                     # an "EMPTY" line to row.
                     if not existing_column:
-#                        print "ADDING EMPTY LINE", c - 1,
-#                        new_row[0].top, c + 1, new_row[0].bottom
-                        nl = TextLine([c-1, new_row[0].top, c+1,
+                        # print "ADDING EMPTY LINE", c - 1,
+                        # new_row[0].top, c + 1, new_row[0].bottom
+                        nl = TextLine([c - 1, new_row[0].top, c + 1,
                                        new_row[0].bottom, "EMPTY", []])
                         new_row.append(nl)
                         num_lines += 1
@@ -382,7 +386,7 @@ def get_tables_from_text(text):
 
     # Find the highest top coordinate possible and use it as a zero
     # point for new Y axis.
-    top = max(table_headers+lines, key=lambda l: l.top).top
+    top = max(table_headers + lines, key=lambda l: l.top).top
     for l in table_headers + lines:
         l.swap_y(top)
 
@@ -434,29 +438,29 @@ def analyze_page(text):
     rows.sort(key=lambda row: row_centery(row))
 
     return rows
-##    for row in rows:
-##        if row[0].text.isdigit():
-##            print "NUM ROW"
-##        else:
-##            print "OTHER ROW"
-##        for l in row:
-##            print l.text
-##            if row.index(l) == 0:
-##                print "ROW LEFT:", l.left
-##            elif row.index(l) == len(row):
-##                print "ROW RIGHT:", l.right
+# for row in rows:
+# if row[0].text.isdigit():
+# print "NUM ROW"
+# else:
+# print "OTHER ROW"
+# for l in row:
+# print l.text
+# if row.index(l) == 0:
+# print "ROW LEFT:", l.left
+# elif row.index(l) == len(row):
+# print "ROW RIGHT:", l.right
 
-##    symbols = {}
-##    lines = []
-##    for l in tlines:
-##        lines.append(TextLine(l, symbols))
-##
-##    max_s = max(symbols.values())
-##    for key in symbols:
-##        if symbols[key] == max_s:
-##            max_key = key
-##            break
-##    print "KEY", max_key
-##    for l in lines:
-##        if max_key in l.symbols:
-##            print l.text
+#    symbols = {}
+#    lines = []
+# for l in tlines:
+#        lines.append(TextLine(l, symbols))
+#
+#    max_s = max(symbols.values())
+# for key in symbols:
+# if symbols[key] == max_s:
+#            max_key = key
+# break
+# print "KEY", max_key
+# for l in lines:
+# if max_key in l.symbols:
+# print l.text

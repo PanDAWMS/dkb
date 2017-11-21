@@ -24,8 +24,10 @@ for item in json_content:
     projectName = item['projectName']
     year = str(re.findall(r'\d+', projectName)[0])
     try:
-        result = AtlasAPI.list_runs(client, year=int(year), data_periods=period)
-        tmp.append(",".join(str(json.dumps(item, indent=4)) for item in result))
+        result = AtlasAPI.list_runs(
+            client, year=int(year), data_periods=period)
+        tmp.append(",".join(str(json.dumps(item, indent=4))
+                            for item in result))
     except:
         print "Cannot find results for period = " + str(period)
 

@@ -13,16 +13,18 @@ krb_init() {
     case $1 in
         cern)
             realm="CERN.CH"
+            def_user=`echo "$USER" | cut -c 1-8`
             ;;
         kiae)
             realm="HADOOP.NOSQL.KIAE.RU"
+            def_user=$USER
             ;;
         *)
             echo "Unknown realm: $1" >&2
     esac
 
-    read -p "Username ($realm) ($USER): " user
-    [ -z "$user" ] && user=$USER
+    read -p "Username ($realm) ($def_user): " user
+    [ -z "$user" ] && user=$def_user
 
     kinit -c "${KRB_TMP}/${KRB_TKT}.${1}" "$user"@"$realm"
 }

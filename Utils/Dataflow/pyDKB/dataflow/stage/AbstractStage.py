@@ -10,6 +10,7 @@ except ImportError, e:
     sys.stderr.write("Please install 'argparse' package.\n")
     raise e
 
+
 class AbstractStage(object):
 
     """
@@ -33,7 +34,7 @@ class AbstractStage(object):
         self.defaultArguments()
 
     def defaultArguments(self):
-        """ Configure argument parser with parameters common for all stages. """
+        """ Config argument parser with parameters common for all stages. """
         self.add_argument('-m', '--mode', action='store', type=str, nargs='?',
                           help=u'Processing mode: (f)ile, (s)tream'
                                 ' or (m)ap-reduce (default: %(default)s).',
@@ -63,7 +64,8 @@ class AbstractStage(object):
         """ Parse arguments and set dependant arguments if needed. """
         self.ARGS = self.__parser.parse_args(args)
         if not self.ARGS.mode:
-            raise ValueError("Parameter -m|--mode must be used with value: -m MODE.")
+            raise ValueError(
+                "Parameter -m|--mode must be used with value: -m MODE.")
 
         if self.ARGS.eom is None:
             self.ARGS.eom = '\n'

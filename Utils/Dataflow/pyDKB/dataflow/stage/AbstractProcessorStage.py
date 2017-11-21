@@ -50,6 +50,7 @@ from . import Message
 from pyDKB.dataflow import DataflowException
 from pyDKB.common import hdfs
 
+
 class AbstractProcessorStage(AbstractStage):
     """ Abstract class to implement Processor stages
 
@@ -118,8 +119,9 @@ class AbstractProcessorStage(AbstractStage):
         self.add_argument('input_files', type=str, nargs='*',
                           help=u'Source data file.',
                           metavar=u'FILE'
-                         )
-        self.add_argument('-s', '--source', action='store', type=str, nargs='?',
+                          )
+        self.add_argument('-s', '--source', action='store', type=str,
+                          nargs='?',
                           help=u'Where to get data from: '
                                 'local (f)iles, (s)tdin, '
                                 '(h)dfs (same as --hdfs).',
@@ -159,16 +161,15 @@ class AbstractProcessorStage(AbstractStage):
                           )
         self.add_argument('--hdfs', action='store', type=bool, nargs='?',
                           help=u'Source files are stored in HDFS; '
-                                'if no input FILE specified, filenames will '
-                                'come to stdin. '
-                                'This option is equivalent to '
-                                '"--source h --dest h"',
+                          'if no input FILE specified, filenames will '
+                          'come to stdin. '
+                          'This option is equivalent to '
+                          '"--source h --dest h"',
                           default=False,
                           const=True,
                           metavar='HDFS',
                           dest='hdfs'
                           )
-
 
     def parse_args(self, args):
         """ Parse arguments and set dependant arguments if neeeded. """
@@ -177,7 +178,7 @@ class AbstractProcessorStage(AbstractStage):
         # HDFS: HDFS file -> local file -> processor -> local file -> HDFS file
         if self.ARGS.hdfs:
             self.ARGS.source = 'h'
-            self.ARGS.dest   = 'h'
+            self.ARGS.dest = 'h'
 
         # Stream (Kafka) and MapReduce mode: STDIN -> processor -> STDOUT
         # If data source is specified as HDFS, files will be taken from HDFS
@@ -187,9 +188,10 @@ class AbstractProcessorStage(AbstractStage):
                 self.ARGS.source = 's'
             self.ARGS.dest = 's'
 
-        if   self.ARGS.source == 'h':
+        if self.ARGS.source == 'h':
             if self.ARGS.input_files or self.ARGS.mode == 'm':
-            # In MapReduce mode we`re going to get the list of files from STDIN
+                # In MapReduce mode
+                # we`re going to get the list of files from STDIN
                 self.__input = self.__hdfs_in_files()
             else:
                 self.__input = self.__hdfs_in_dir()
@@ -207,7 +209,7 @@ class AbstractProcessorStage(AbstractStage):
 
         # Check that data source is specified
         if self.ARGS.source == 'f' \
-            and not (self.ARGS.input_files or self.ARGS.input_dir):
+                and not (self.ARGS.input_files or self.ARGS.input_dir):
             sys.stderr.write("No input data sources specified.\n")
             self.print_usage(sys.stderr)
             raise DataflowException
@@ -215,16 +217,15 @@ class AbstractProcessorStage(AbstractStage):
         self.__stoppable_append(self.__input, types.GeneratorType)
 
         # Configure output
-        if   self.ARGS.dest == 'f':
-           self.__output = self.__out_files('l')
+        if self.ARGS.dest == 'f':
+            self.__output = self.__out_files('l')
         elif self.ARGS.dest == 'h':
-           self.__output = self.__out_files('h')
+            self.__output = self.__out_files('h')
         elif self.ARGS.dest == 's':
            ustdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
            self.__output = ustdout
 
         self.__stoppable_append(self.__output, types.GeneratorType)
-
 
     def run(self):
         """ Run process() for every input() message. """
@@ -251,7 +252,6 @@ class AbstractProcessorStage(AbstractStage):
         if failures:
             for f in failures:
                 sys.stderr.write("(ERROR) Failed to stop %s: %s" % f)
-
 
     @staticmethod
     def process(stage, input_message):
@@ -316,7 +316,6 @@ class AbstractProcessorStage(AbstractStage):
         """
         return self.stream_input(fd)
 
-
     def output(self, message):
         """ Put the (list of) message(s) to the output buffer. """
         if isinstance(message, self.__output_message_class):
@@ -329,8 +328,7 @@ class AbstractProcessorStage(AbstractStage):
                             " %s or %s (got %s)"
                             % (self.__output_message_class, list,
                                type(message))
-                           )
-
+                            )
 
     def forward(self):
         """ Send EOPMessage in the streaming output mode. """
@@ -415,8 +413,9 @@ class AbstractProcessorStage(AbstractStage):
                 try:
                     os.makedirs(output_dir, 0770)
                 except OSError, err:
-                    sys.stderr.write("(ERROR) Failed to create output directory\n"
-                                     "Error message: %s\n" % err)
+                    sys.stderr.write(
+                        "(ERROR) Failed to create output directory\n"
+                        "Error message: %s\n" % err)
                     raise DataflowException
             else:
                 hdfs.makedirs(output_dir)
@@ -427,19 +426,19 @@ class AbstractProcessorStage(AbstractStage):
                     continue
                 output_dir = self.ARGS.output_dir
                 if not output_dir:
-                     output_dir = os.path.dirname(self.__current_file_full)
+                    output_dir = os.path.dirname(self.__current_file_full)
                 if not output_dir:
-                     if t == 'l':
-                         output_dir = os.getcwd()
-                     if t == 'h':
-                         output_dir = os.path.join(hdfs.DKB_HOME, "temp",
-                                                   str(int(time.time())))
-                         hdfs.makedirs(output_dir)
-                     self.ARGS.output_dir = output_dir
-                     sys.stderr.write("(INFO) Output dir set to: %s\n"
-                                      % output_dir)
+                    if t == 'l':
+                        output_dir = os.getcwd()
+                    if t == 'h':
+                        output_dir = os.path.join(hdfs.DKB_HOME, "temp",
+                                                  str(int(time.time())))
+                        hdfs.makedirs(output_dir)
+                    self.ARGS.output_dir = output_dir
+                    sys.stderr.write("(INFO) Output dir set to: %s\n"
+                                     % output_dir)
                 if self.__current_file \
-                  and self.__current_file != sys.stdin.name:
+                        and self.__current_file != sys.stdin.name:
                     filename = os.path.splitext(self.__current_file)[0] + ext
                 else:
                     filename = str(int(time.time())) + ext
@@ -451,7 +450,7 @@ class AbstractProcessorStage(AbstractStage):
                         continue
                     else:
                         raise DataflowException("File already exists: %s\n"
-                                                 % filename)
+                                                % filename)
                 if fd:
                     fd.close()
                     if t == 'h':
@@ -465,7 +464,6 @@ class AbstractProcessorStage(AbstractStage):
                 if t == 'h':
                     hdfs.putfile(fd.name, output_dir)
                     os.remove(fd.name)
-
 
     def __hdfs_in_dir(self):
         """ Call file descriptors generator for files in HDFS dir. """
@@ -502,7 +500,6 @@ class AbstractProcessorStage(AbstractStage):
                                      " %s\n" % name)
             self.__current_file = None
             self.__current_file_full = None
-
 
     def __stoppable_append(self, obj, cls):
         """ Appends OBJ (of type CLS) to the list of STOPPABLE. """

@@ -16,9 +16,14 @@ from manager import path_join
 from manager import Paper
 from manager import re_pdfname
 
-base_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(os.path.dirname(base_dir))
-import pyDKB
+try:
+    base_dir = os.path.dirname(__file__)
+    dkb_dir = os.path.join(base_dir, os.pardir)
+    sys.path.append(dkb_dir)
+    import pyDKB
+except Exception, err:
+    sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
+    sys.exit(1)
 
 
 def process(stage, msg):
@@ -44,11 +49,11 @@ def process(stage, msg):
         fname = os.path.abspath(fname).replace("\\", "/")
         if not os.access(fname, os.F_OK):
             sys.stderr.write("(ERROR) No such file or directory:"
-                             +fname+"\n")
+                             + fname + "\n")
             return False
     pdfname = re_pdfname.search(fname)
     if not pdfname:
-        sys.stderr.write("(ERROR) File "+fname+" is not a pdf file.\n")
+        sys.stderr.write("(ERROR) File " + fname + " is not a pdf file.\n")
         return False
     else:
         pdfname = pdfname.group(1)
@@ -57,9 +62,9 @@ def process(stage, msg):
         try:
             if hdfs:
                 command_list = cfg["HDFS_DOWNLOAD_COMMAND"].split() \
-                               + [fname, dirname]
+                    + [fname, dirname]
                 subprocess.check_call(command_list, stderr=sys.stderr,
-                                stdout=sys.stderr)
+                                      stdout=sys.stderr)
             else:
                 shutil.copy(fname, dirname)
         except Exception as e:
@@ -67,9 +72,9 @@ def process(stage, msg):
                              " directory\n")
             if hdfs:
                 sys.stderr.write("(ERROR) hdfs download command:"
-                                 +str(command_list)
-                                 +"\n")
-            sys.stderr.write("(ERROR) "+str(e)+"\n")
+                                 + str(command_list)
+                                 + "\n")
+            sys.stderr.write("(ERROR) " + str(e) + "\n")
             shutil.rmtree(dirname)
             return False
         p = Paper(pdfname, dirname)
@@ -88,12 +93,13 @@ def process(stage, msg):
     stage.output(outMessage)
     return True
 
+
 if __name__ == "__main__":
     analyzer_stage = pyDKB.dataflow.stage.JSONProcessorStage()
     analyzer_stage.process = process
 
     exit_code = 0
-    exc_info= None
+    exc_info = None
     try:
         analyzer_stage.parse_args(sys.argv[1:])
         analyzer_stage.run()
@@ -105,6 +111,7 @@ if __name__ == "__main__":
         exit_code = 2
     except Exception:
         exc_info = sys.exc_info()
+        exit_code = 1
     finally:
         analyzer_stage.stop()
 
