@@ -69,6 +69,8 @@ class AbstractStage(object):
 
         if self.ARGS.eom is None:
             self.ARGS.eom = '\n'
+        elif self.ARGS.eom == '':
+            raise ValueError("(ERROR) Empty EOM marker specified.\n")
         else:
             try:
                 self.ARGS.eom = self.ARGS.eom.decode('string_escape')
