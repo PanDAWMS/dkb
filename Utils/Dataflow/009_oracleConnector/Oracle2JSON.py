@@ -1,4 +1,5 @@
 #!/bin/env python
+import os
 import json
 import argparse
 import ConfigParser
@@ -65,15 +66,13 @@ def main():
 def plain(conn, queries, offset_date, end_date):
     tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
     for task in tasks:
-        task['phys_category'] = get_category(task)
-        # send NDJSON string to STDOUT
-        sys.stdout.write(json.dumps(task) + '\n')
+        yield task
 
 
 def squash(conn, queries, offset_date, end_date):
     tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
     datasets = query_executor(conn, queries['datasets']['file'], offset_date, end_date)
-    join_results(tasks, squash_records(datasets))
+    return join_results(tasks, squash_records(datasets))
 
 def squash_records(rec):
     """
@@ -110,10 +109,25 @@ def squash_records(rec):
 
 def join_results(tasks, datasets):
     d = defaultdict(dict)
-    for l in (tasks, datasets):
+    buffers = (tasks, datasets)
+    join_buffer = {}
+    req_n = len(buffers)
+    for l in buffers:
         for elem in l:
-            d[elem['taskid']].update(elem)
-            sys.stdout.write(json.dumps(d[elem['taskid']]) + '\n')
+            tid = elem['taskid']
+            d[tid].update(elem)
+            n = join_buffer.get(tid, 0) + 1
+            if n == req_n:
+                yield d[tid]
+                del join_buffer[tid]
+                del d[tid]
+            else:
+                join_buffer[tid] = n
+
+    # Flush records stuck in the buffer (not joined)
+    for tid in d:
+        yield d[tid]
+
 
 def process(conn, offset_date, final_date_cfg, step_seconds, queries):
     if final_date_cfg:
@@ -130,9 +144,12 @@ def process(conn, offset_date, final_date_cfg, step_seconds, queries):
         sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
                          % (date2str(datetime.now()), offset_date, end_date))
         if mode == SQUASH_POLICY:
-            squash(conn, queries, offset_date, end_date)
+            records = squash(conn, queries, offset_date, end_date)
         elif mode == PLAIN_POLICY:
-            plain(conn, queries, offset_date, end_date)
+            records = plain(conn, queries, offset_date, end_date)
+        for r in records:
+            r['phys_category'] = get_category(r)
+            sys.stdout.write(json.dumps(r) + '\n')
         update_offset(end_date)
         offset_date = end_date
         if not final_date_cfg:
@@ -251,31 +268,39 @@ def get_category(row):
     if len(categories) > 0:
         return categories
     else:
-        phys_short = taskname.split('.')[2].lower()
-        if re.search('singletop', phys_short) is not None: categories.append("SingleTop")
-        if re.search('ttbar', phys_short) is not None: categories.append("TTbar")
-        if re.search('jets', phys_short) is not None: categories.append("Multijet")
-        if re.search('h125', phys_short) is not None: categories.append("Higgs")
-        if re.search('ttbb', phys_short) is not None: categories.append("TTbarX")
-        if re.search('ttgamma', phys_short) is not None: categories.append("TTbarX")
-        if re.search('_tt_', phys_short) is not None: categories.append("TTbar")
-        if re.search('upsilon', phys_short) is not None: categories.append("BPhysics")
-        if re.search('tanb', phys_short) is not None: categories.append("SUSY")
-        if re.search('4topci', phys_short) is not None: categories.append("Exotic")
-        if re.search('xhh', phys_short) is not None: categories.append("Higgs")
-        if re.search('3top', phys_short) is not None: categories.append("TTbarX")
-        if re.search('_wt', phys_short) is not None: categories.append("SingleTop")
-        if re.search('_wwbb', phys_short) is not None: categories.append("SingleTop")
-        if re.search('_wenu_', phys_short) is not None: categories.append("Wjets")
+        if taskname is not None:
+            phys_short = taskname.split('.')[2].lower()
+            if re.search('singletop', phys_short) is not None: categories.append("SingleTop")
+            if re.search('ttbar', phys_short) is not None: categories.append("TTbar")
+            if re.search('jets', phys_short) is not None: categories.append("Multijet")
+            if re.search('h125', phys_short) is not None: categories.append("Higgs")
+            if re.search('ttbb', phys_short) is not None: categories.append("TTbarX")
+            if re.search('ttgamma', phys_short) is not None: categories.append("TTbarX")
+            if re.search('_tt_', phys_short) is not None: categories.append("TTbar")
+            if re.search('upsilon', phys_short) is not None: categories.append("BPhysics")
+            if re.search('tanb', phys_short) is not None: categories.append("SUSY")
+            if re.search('4topci', phys_short) is not None: categories.append("Exotic")
+            if re.search('xhh', phys_short) is not None: categories.append("Higgs")
+            if re.search('3top', phys_short) is not None: categories.append("TTbarX")
+            if re.search('_wt', phys_short) is not None: categories.append("SingleTop")
+            if re.search('_wwbb', phys_short) is not None: categories.append("SingleTop")
+            if re.search('_wenu_', phys_short) is not None: categories.append("Wjets")
         return categories
     return "Uncategorized"
 
 def parsingArguments():
     parser = argparse.ArgumentParser(description='Process command line arguments.')
     parser.add_argument('--config', help='Configuration file path',
-                        type=argparse.FileType('rw'), required=True)
+                        type=str, required=True)
     parser.add_argument('--mode', help='Mode of execution: PLAIN | SQUASH',
                         choices=[PLAIN_POLICY, SQUASH_POLICY])
+    args = parser.parse_args()
+    if not os.access(args.config, os.F_OK):
+        sys.stderr.write("argument --config: '%s' file not exists\n" % args.config)
+        sys.exit(1)
+    if not os.access(args.config, os.R_OK|os.W_OK):
+        sys.stderr.write("argument --config: '%s' read/write access failed\n" % args.config)
+        sys.exit(1)
     return parser.parse_args()
 
 if  __name__ == '__main__':
