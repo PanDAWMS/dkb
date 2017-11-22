@@ -32,6 +32,11 @@ def main():
     """
     --config <config file> --mode <PLAIN|SQUASH>
     :return:
+
+     TODO:
+        Obtain the min(timestamp) from t_production_task
+          in case of no `initial_date` specified.
+        Query: SELECT min(timestamp) from t_production_task;
     """
     args = parsingArguments()
     global conf
@@ -161,14 +166,6 @@ def process(conn, offset_date, final_date_cfg, step_seconds, queries):
         offset_date = end_date
         if not final_date_cfg:
             final_date = date2str(datetime.now())
-
-def get_initial_date():
-    """
-     TODO:
-        Procedure to obtain the min(timestamp) from t_production_task
-        SELECT min(timestamp) from t_production_task;
-    """
-    return None
 
 def query_executor(conn, sql_file, offset_date, end_date):
     """
