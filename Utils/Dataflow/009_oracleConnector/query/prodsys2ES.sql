@@ -31,6 +31,7 @@ with tasks as (
       t.phys_group,
       t.status,
       t.pr_id,
+      t.username as user_name,
       s_t.step_name,
       r.description,
       r.energy_gev,
@@ -65,6 +66,7 @@ with tasks as (
         t.phys_group,
         t.status,
         t.pr_id,
+        t.username,
         s_t.step_name,
         r.description,
         r.energy_gev),
@@ -85,6 +87,7 @@ with tasks as (
         t.hashtag_list,
         t.description,
         t.energy_gev,
+        t.user_name,
         to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"architecture": "(.[^",])+'),
                            regexp_instr(
                                regexp_substr(tt.jedi_task_parameters, '"architecture": "(.[^",])+'),
@@ -160,15 +163,6 @@ with tasks as (
                                1
                            )
                     ), '')) AS trans_uses,
-        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"userName": "(.[^",])+'),
-                           regexp_instr(
-                               regexp_substr(tt.jedi_task_parameters, '"userName": "(.[^",])+'),
-                               '(": ")+',
-                               1,
-                               1,
-                               1
-                           )
-                    ), '')) AS user_name,
         to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"vo": "[a-zA-Z0-9_\-\.]+[^"]'),
                            regexp_instr(
                                regexp_substr(tt.jedi_task_parameters, '"vo": "[a-zA-Z0-9_\-\.]+[^"]'),
