@@ -52,7 +52,8 @@ with tasks as (
         ON hashtag.ht_id = ht_t.ht_id
     WHERE
       t.timestamp > to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
-      t.timestamp <= to_date('%s', 'dd-mm-yyyy hh24:mi:ss')
+      t.timestamp <= to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
+      t.pr_id > 300
     GROUP BY
         t.campaign,
         t.taskid,
@@ -229,16 +230,6 @@ with tasks as (
       FROM
         tasks t LEFT JOIN t_task tt
           ON t.taskid = tt.taskid
-      WHERE
-        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"taskType": "(.[^",])+'),
-                           regexp_instr(
-                               regexp_substr(tt.jedi_task_parameters, '"taskType": "(.[^",])+'),
-                               '(": ")+',
-                               1,
-                               1,
-                               1
-                           )
-                    ), '')) = 'prod'
   )
   SELECT
     t.campaign,

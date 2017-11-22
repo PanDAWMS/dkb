@@ -15,14 +15,6 @@ FROM
 WHERE
   jd.type IN ('input', 'output') AND
       t.timestamp > to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
-      t.timestamp <= to_date('%s', 'dd-mm-yyyy hh24:mi:ss')
-  AND to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"taskType": "(.[^",])+'),
-                           regexp_instr(
-                               regexp_substr(tt.jedi_task_parameters, '"taskType": "(.[^",])+'),
-                               '(": ")+',
-                               1,
-                               1,
-                               1
-                           )
-                    ), '')) = 'prod'
+      t.timestamp <= to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
+      t.pr_id > 300
 ORDER BY t.taskid;
