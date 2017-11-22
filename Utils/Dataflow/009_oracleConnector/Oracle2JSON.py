@@ -12,23 +12,31 @@ from collections import defaultdict
 try:
     import cx_Oracle
 except:
-    print "****ERROR : DButils. Cannot import cx_Oracle"
-    pass
+    sys.stderr.write("(ERROR) Failed to import cx_Oracle. Exiting.\n")
+    sys.exit(3)
 
 # Policies
 PLAIN_POLICY = 'PLAIN'
 SQUASH_POLICY = 'SQUASH'
 
 def connectDEFT_DSN(dsn):
-    connect = cx_Oracle.connect(dsn)
-    cursor = connect.cursor()
+    try:
+        connect = cx_Oracle.connect(dsn)
+    except cx_Oracle.DatabaseError, err:
+        sys.stderr.write("(ERROR) %s\n" % err)
+        return None
 
-    return connect, cursor
+    return connect
 
 def main():
     """
     --config <config file> --mode <PLAIN|SQUASH>
     :return:
+
+     TODO:
+        Obtain the min(timestamp) from t_production_task
+          in case of no `initial_date` specified.
+        Query: SELECT min(timestamp) from t_production_task;
     """
     args = parsingArguments()
     global conf
@@ -59,7 +67,11 @@ def main():
                          % (conf, e))
         sys.exit(1)
 
-    conn, cursor = connectDEFT_DSN(dsn)
+    conn = connectDEFT_DSN(dsn)
+    if not conn:
+        sys.stderr.write("(ERROR) Failed to connect to Oracle. Exiting.\n")
+        sys.exit(3)
+
     process(conn, offset_date, final_date, step_seconds, queries)
 
 
@@ -154,14 +166,6 @@ def process(conn, offset_date, final_date_cfg, step_seconds, queries):
         offset_date = end_date
         if not final_date_cfg:
             final_date = date2str(datetime.now())
-
-def get_initial_date():
-    """
-     TODO:
-        Procedure to obtain the min(timestamp) from t_production_task
-        SELECT min(timestamp) from t_production_task;
-    """
-    return None
 
 def query_executor(conn, sql_file, offset_date, end_date):
     """
@@ -265,28 +269,26 @@ def get_category(row):
         if hashtags is not None:
             match[phys_category] = len([x for x in hashtags.lower().split(',') if x.strip(' ') in current_map])
     categories = [cat for cat in match if match[cat] > 0]
-    if len(categories) > 0:
-        return categories
-    else:
-        if taskname is not None:
-            phys_short = taskname.split('.')[2].lower()
-            if re.search('singletop', phys_short) is not None: categories.append("SingleTop")
-            if re.search('ttbar', phys_short) is not None: categories.append("TTbar")
-            if re.search('jets', phys_short) is not None: categories.append("Multijet")
-            if re.search('h125', phys_short) is not None: categories.append("Higgs")
-            if re.search('ttbb', phys_short) is not None: categories.append("TTbarX")
-            if re.search('ttgamma', phys_short) is not None: categories.append("TTbarX")
-            if re.search('_tt_', phys_short) is not None: categories.append("TTbar")
-            if re.search('upsilon', phys_short) is not None: categories.append("BPhysics")
-            if re.search('tanb', phys_short) is not None: categories.append("SUSY")
-            if re.search('4topci', phys_short) is not None: categories.append("Exotic")
-            if re.search('xhh', phys_short) is not None: categories.append("Higgs")
-            if re.search('3top', phys_short) is not None: categories.append("TTbarX")
-            if re.search('_wt', phys_short) is not None: categories.append("SingleTop")
-            if re.search('_wwbb', phys_short) is not None: categories.append("SingleTop")
-            if re.search('_wenu_', phys_short) is not None: categories.append("Wjets")
-        return categories
-    return "Uncategorized"
+    if not categories and taskname:
+        phys_short = taskname.split('.')[2].lower()
+        if re.search('singletop', phys_short) is not None: categories.append("SingleTop")
+        if re.search('ttbar', phys_short) is not None: categories.append("TTbar")
+        if re.search('jets', phys_short) is not None: categories.append("Multijet")
+        if re.search('h125', phys_short) is not None: categories.append("Higgs")
+        if re.search('ttbb', phys_short) is not None: categories.append("TTbarX")
+        if re.search('ttgamma', phys_short) is not None: categories.append("TTbarX")
+        if re.search('_tt_', phys_short) is not None: categories.append("TTbar")
+        if re.search('upsilon', phys_short) is not None: categories.append("BPhysics")
+        if re.search('tanb', phys_short) is not None: categories.append("SUSY")
+        if re.search('4topci', phys_short) is not None: categories.append("Exotic")
+        if re.search('xhh', phys_short) is not None: categories.append("Higgs")
+        if re.search('3top', phys_short) is not None: categories.append("TTbarX")
+        if re.search('_wt', phys_short) is not None: categories.append("SingleTop")
+        if re.search('_wwbb', phys_short) is not None: categories.append("SingleTop")
+        if re.search('_wenu_', phys_short) is not None: categories.append("Wjets")
+    if not categories:
+        categories = ["Uncategorized"]
+    return categories
 
 def parsingArguments():
     parser = argparse.ArgumentParser(description='Process command line arguments.')
