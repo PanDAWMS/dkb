@@ -7,11 +7,12 @@ import sys
 try:
     import argparse
 except ImportError, e:
-    sys.stderr.write("(ERROR) argparse package is not installed.\n")
+    sys.stderr.write("Please install 'argparse' package.\n")
     raise e
 
 
 class AbstractStage(object):
+
     """
     Class/instance variable description:
     * Argument parser (argparse.ArgumentParser)
