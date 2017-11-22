@@ -1,0 +1,28 @@
+-- select input and output datasets for all tasks
+-- for time period
+-- P.S. mininum value of t_production_task.timestamp is 12-03-2014 14:53:51.33390
+SELECT
+  t.taskid,
+  jd.datasetname,
+  jd.type
+FROM
+  t_production_task t
+  JOIN
+  ATLAS_PANDA.jedi_datasets jd
+  ON jd.jeditaskid = t.taskid
+  LEFT JOIN t_task tt
+  ON t.taskid = tt.taskid
+WHERE
+  jd.type IN ('input', 'output') AND
+      t.timestamp > to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
+      t.timestamp <= to_date('%s', 'dd-mm-yyyy hh24:mi:ss')
+  AND to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"taskType": "(.[^",])+'),
+                           regexp_instr(
+                               regexp_substr(tt.jedi_task_parameters, '"taskType": "(.[^",])+'),
+                               '(": ")+',
+                               1,
+                               1,
+                               1
+                           )
+                    ), '')) = 'prod'
+ORDER BY t.taskid;
