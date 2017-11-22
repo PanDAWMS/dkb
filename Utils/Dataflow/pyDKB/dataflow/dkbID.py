@@ -61,7 +61,7 @@ def docID(json_data):
     val = firstValue(val)
     if source:
         prefix = config[source].get("prefix", source)
-        val = "{}_{}".format(prefix, val)
+        val = "%s_%s" % (prefix, val)
 
     return val
 
