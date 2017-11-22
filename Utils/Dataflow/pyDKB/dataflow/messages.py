@@ -11,6 +11,22 @@ import sys
 __message_class = {}
 
 
+class DecodeUnknownType(NotImplementedError):
+    """ Exception to be thrown when message type is not decodable. """
+    def __init__(self, code, cls):
+        message = "%s can`t be decoded from %s" \
+                  % (cls.__name__, codeType.memberName(code))
+        super(DecodeUnknownType, self).__init__(message)
+
+
+class EncodeUnknownType(NotImplementedError):
+    """ Exception to be thrown when message type is not encodable. """
+    def __init__(self, code, cls):
+        message = "%s can`t be encoded into %s" \
+                  % (cls.__name__, codeType.memberName(code))
+        super(EncodeUnknownType, self).__init__(message)
+
+
 def Message(msg_type):
     """ Return class XXXMessage, where XXX is the passed type. """
     if not messageType.hasMember(msg_type):
@@ -51,14 +67,14 @@ class AbstractMessage(object):
 
         Raises ValueError
         """
-        raise NotImplementedError("Method decode() is not implemented.")
+        raise DecodeUnknownType(code, self.__class__)
 
     def encode(self, code):
         """ Encode original message from TYPE-specific format to CODE.
 
         Raises ValueError
         """
-        raise NotImplementedError("Method encode() is not implemented.")
+        raise EncodeUnknownType(code, self.__class__)
 
     @classmethod
     def typeName(cls):
@@ -89,8 +105,7 @@ class JSONMessage(AbstractMessage):
             if code == codeType.STRING:
                 self.decoded = json.loads(orig)
             else:
-                sys.stderr.write("Unknown code type: %s\n"
-                                 % codeType.memberName(code))
+                raise DecodeUnknownType(code, self.__class__)
             self.encoded = orig
         return self.decoded
 
@@ -101,8 +116,7 @@ class JSONMessage(AbstractMessage):
             if code == codeType.STRING:
                 self.encoded = json.dumps(orig)
             else:
-                sys.stderr.write("Unknown code type: %s\n"
-                                 % codeType.memberName(code))
+                raise EncodeUnknownType(code, self.__class__)
             self.decoded = orig
         return self.encoded
 
@@ -135,8 +149,7 @@ class TTLMessage(AbstractMessage):
             if code == codeType.STRING:
                 self.decoded = orig
             else:
-                sys.stderr.write("Unknown code type: %s\n"
-                                 % codeType.memberName(code))
+                raise DecodeUnknownType(code, self.__class__)
             self.encoded = orig
         return self.decoded
 
@@ -147,8 +160,7 @@ class TTLMessage(AbstractMessage):
             if code == codeType.STRING:
                 self.encoded = str(orig)
             else:
-                sys.stderr.write("Unknown code type: %s\n"
-                                 % codeType.memberName(code))
+                raise EncodeUnknownType(code, self.__class__)
             self.decoded = orig
         return self.encoded
 
