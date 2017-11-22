@@ -31,7 +31,7 @@ function convertIndexToLowerCase(&$a) {
   $result = array();
 
   foreach (array_keys($a) as $i) {
-    $result[strtolower($i)] = $t;
+    $result[strtolower($i)] = $a[$i];
   }
 
   $a = $result;
