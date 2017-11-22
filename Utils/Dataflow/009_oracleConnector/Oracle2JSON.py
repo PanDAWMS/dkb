@@ -21,9 +21,8 @@ SQUASH_POLICY = 'SQUASH'
 
 def connectDEFT_DSN(dsn):
     connect = cx_Oracle.connect(dsn)
-    cursor = connect.cursor()
 
-    return connect, cursor
+    return connect
 
 def main():
     """
@@ -59,7 +58,7 @@ def main():
                          % (conf, e))
         sys.exit(1)
 
-    conn, cursor = connectDEFT_DSN(dsn)
+    conn = connectDEFT_DSN(dsn)
     process(conn, offset_date, final_date, step_seconds, queries)
 
 
