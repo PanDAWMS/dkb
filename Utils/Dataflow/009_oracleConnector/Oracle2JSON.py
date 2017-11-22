@@ -12,8 +12,8 @@ from collections import defaultdict
 try:
     import cx_Oracle
 except:
-    print "****ERROR : DButils. Cannot import cx_Oracle"
-    pass
+    sys.stderr.write("(ERROR) Failed to import cx_Oracle. Exiting.\n")
+    sys.exit(3)
 
 # Policies
 PLAIN_POLICY = 'PLAIN'
