@@ -269,9 +269,7 @@ def get_category(row):
         if hashtags is not None:
             match[phys_category] = len([x for x in hashtags.lower().split(',') if x.strip(' ') in current_map])
     categories = [cat for cat in match if match[cat] > 0]
-    if len(categories) > 0:
-        return categories
-    else:
+    if len(categories) == 0:
         if taskname is not None:
             phys_short = taskname.split('.')[2].lower()
             if re.search('singletop', phys_short) is not None: categories.append("SingleTop")
@@ -289,8 +287,9 @@ def get_category(row):
             if re.search('_wt', phys_short) is not None: categories.append("SingleTop")
             if re.search('_wwbb', phys_short) is not None: categories.append("SingleTop")
             if re.search('_wenu_', phys_short) is not None: categories.append("Wjets")
-        return categories
-    return "Uncategorized"
+    if not categories:
+        categories = ["Uncategorized"]
+    return categories
 
 def parsingArguments():
     parser = argparse.ArgumentParser(description='Process command line arguments.')
