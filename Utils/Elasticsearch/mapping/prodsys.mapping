@@ -162,9 +162,16 @@
         "phys_category" : {
           "type" : "keyword",
           "ignore_above" : 256
-        }
+        },
+        "ctag": {
+          "type": "keyword",
+          "ignore_above" : 256
+        },
+        "output_formats": {
+          "type": "keyword",
+          "ignore_above" : 256
+        },
       }
     }
   }
 }
-
