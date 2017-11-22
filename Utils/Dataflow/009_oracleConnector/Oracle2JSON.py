@@ -20,7 +20,11 @@ PLAIN_POLICY = 'PLAIN'
 SQUASH_POLICY = 'SQUASH'
 
 def connectDEFT_DSN(dsn):
-    connect = cx_Oracle.connect(dsn)
+    try:
+        connect = cx_Oracle.connect(dsn)
+    except cx_Oracle.DatabaseError, err:
+        sys.stderr.write("(ERROR) %s\n" % err)
+        return None
 
     return connect
 
@@ -59,6 +63,10 @@ def main():
         sys.exit(1)
 
     conn = connectDEFT_DSN(dsn)
+    if not conn:
+        sys.stderr.write("(ERROR) Failed to connect to Oracle. Exiting.\n")
+        sys.exit(3)
+
     process(conn, offset_date, final_date, step_seconds, queries)
 
 
