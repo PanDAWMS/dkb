@@ -164,13 +164,15 @@ class AbstractProcessorStage(AbstractStage):
                           metavar='DIR',
                           dest='output_dir'
                           )
-        self.add_argument('--hdfs', action='store_true',
+        self.add_argument('--hdfs', action='store', type=bool, nargs='?',
                           help=u'Source files are stored in HDFS; '
                           'if no input FILE specified, filenames will '
                           'come to stdin. '
                           'This option is equivalent to '
                           '"--source h --dest h"',
                           default=False,
+                          const=True,
+                          metavar='HDFS',
                           dest='hdfs'
                           )
 
@@ -213,7 +215,7 @@ class AbstractProcessorStage(AbstractStage):
         # Check that data source is specified
         if self.ARGS.source == 'f' \
                 and not (self.ARGS.input_files or self.ARGS.input_dir):
-            sys.stderr.write("(ERROR) No input data sources specified.\n")
+            sys.stderr.write("No input data sources specified.\n")
             self.print_usage(sys.stderr)
             raise DataflowException
 
@@ -236,14 +238,12 @@ class AbstractProcessorStage(AbstractStage):
         """ Run process() for every input() message. """
         for msg in self.input():
             try:
+                failed = True
                 if msg and self.process(self, msg):
                     self.flush_buffer()
-            except Exception:
-                raise
-            else:
-                self.forward()
             finally:
                 self.clear_buffer()
+                self.forward()
 
     def stop(self):
         """ Finalize all the processes and prepare to exit. """
@@ -258,7 +258,7 @@ class AbstractProcessorStage(AbstractStage):
                 failures.append((p, e))
         if failures:
             for f in failures:
-                sys.stderr.write("(ERROR) Failed to stop %s: %s\n" % f)
+                sys.stderr.write("(ERROR) Failed to stop %s: %s" % f)
 
     @staticmethod
     def process(stage, input_message):
@@ -286,8 +286,7 @@ class AbstractProcessorStage(AbstractStage):
             return msg
         except (ValueError, TypeError), err:
             sys.stderr.write("(WARN) Failed to read input message as %s.\n"
-                             "(WARN) Cause: %s\n" % (messageClass.typeName(),
-                                                     err))
+                             "Cause: %s\n" % (messageClass.typeName(), err))
             return None
 
     def input(self):
@@ -335,7 +334,7 @@ class AbstractProcessorStage(AbstractStage):
             for m in message:
                 self.output.message(m)
         else:
-            raise TypeError("Stage.output() expects parameter to be of type"
+            raise TypeError("Stage.output() expects paramenet to be of type"
                             " %s or %s (got %s)"
                             % (self.__output_message_class, list,
                                type(message))
@@ -386,7 +385,7 @@ class AbstractProcessorStage(AbstractStage):
                     files.append(f)
         except OSError, err:
             sys.stderr.write("(ERROR) Failed to get list of files.\n"
-                             "(ERROR) Error message: %s\n" % err)
+                             "Error message: %s\n" % err)
         if not files:
             return []
         self.ARGS.input_files = files
@@ -426,7 +425,7 @@ class AbstractProcessorStage(AbstractStage):
                 except OSError, err:
                     sys.stderr.write(
                         "(ERROR) Failed to create output directory\n"
-                        "(ERROR) Error message: %s\n" % err)
+                        "Error message: %s\n" % err)
                     raise DataflowException
             else:
                 hdfs.makedirs(output_dir)
@@ -479,12 +478,7 @@ class AbstractProcessorStage(AbstractStage):
     def __hdfs_in_dir(self):
         """ Call file descriptors generator for files in HDFS dir. """
         dirname = self.ARGS.input_dir
-        try:
-            files = hdfs.listdir(dirname, "f")
-        except hdfs.HDFSException, err:
-            sys.stderr.write("(ERROR) Failed to get list of files.\n"
-                             "(ERROR) Error message: %s\n" % err)
-            files = []
+        files = hdfs.listdir(dirname, "f")
         self.ARGS.input_files = files
         if not files:
             return []
