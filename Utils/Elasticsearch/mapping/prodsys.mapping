@@ -74,15 +74,15 @@
         },
         "task_timestamp" : {
           "type" : "date",
-          "format" : "dd-MM-yy HH.mm.ss"
+          "format" : "dd-MM-yy HH:mm:ss"
         },
         "start_time" : {
           "type" : "date",
-          "format" : "dd-MM-yy HH.mm.ss"
+          "format" : "dd-MM-yy HH:mm:ss"
         },
         "end_time" : {
           "type" : "date",
-          "format" : "dd-MM-yy HH.mm.ss"
+          "format" : "dd-MM-yy HH:mm:ss"
         },
 
         "hashtag_list" : {
