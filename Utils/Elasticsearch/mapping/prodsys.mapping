@@ -145,10 +145,6 @@
           "type" : "keyword",
           "ignore_above" : 256
         },
-        "input" : {
-          "type" : "keyword",
-          "ignore_above" : 256
-        },
         "output" : {
           "type" : "keyword",
           "ignore_above" : 256
@@ -171,6 +167,15 @@
           "type": "keyword",
           "ignore_above" : 256
         },
+        "primary_input" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        }
       }
     }
   }

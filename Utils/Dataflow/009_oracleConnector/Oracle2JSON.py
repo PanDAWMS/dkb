@@ -91,24 +91,18 @@ def squash_records(rec):
     a single-pass iterator (for a generator) restructuring list of datasets:
     from view:
     [
-       {"taskid": 1, "type": "input", "datasetname": "First_in"},
-       {"taskid": 1, "type": "input", "datasetname": "Second_in"},
-       {"taskid": 1, "type": "input", "datasetname": "Third_in"},
        {"taskid": 1, "type": "output", "datasetname": "First_out"},
        {"taskid": 1, "type": "output", "datasetname": "Second_out"},
        {"taskid": 1, "type": "output", "datasetname": "Third_out"},
-       {"taskid": 2, "type": "input", "datasetname": "First_in"},
        {"taskid": 2, "type": "output", "datasetname": "First_out"},
        {"taskid": 2, "type": "output", "datasetname": "Second_out"},
     ...]
      to
     [
        {"taskid": 1,
-        "input": ["First_in", "Second_in", "Third_in"],
         "output": ["First_out", "Second_out", "Third_out"]
        },
        {"taskid": 2,
-        "input": ["First_in"],
         "output": ["First_out","Second_out"]
        },
     ...]
