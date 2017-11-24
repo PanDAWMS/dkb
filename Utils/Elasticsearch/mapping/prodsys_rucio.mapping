@@ -1,10 +1,10 @@
 {
-  "template": "prodsys",
+  "template": "prodsys_rucio",
   "settings": {
     "number_of_shards": 4
   },
   "mappings" : {
-    "_default_" : {
+    "task" : {
       "properties" : {
         "campaign" : {
           "type" : "text",
@@ -145,10 +145,6 @@
           "type" : "keyword",
           "ignore_above" : 256
         },
-        "output" : {
-          "type" : "keyword",
-          "ignore_above" : 256
-        },
         "requested_events" : {
           "type" : "long"
         },
@@ -175,6 +171,28 @@
               "ignore_above" : 256
             }
           }
+        }
+      }
+    },
+    "output_dataset": {
+      "_parent": {
+        "type": "task"
+      },
+      "properties": {
+        "datasetname" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        },
+        "bytes" : {
+          "type" : "long"
+        },
+        "deleted": {
+          "type": "boolean"
         }
       }
     }
