@@ -1,0 +1,3 @@
+#.rucio/etc/*
+#.rucio/auth/*.pem
+.rucio/
