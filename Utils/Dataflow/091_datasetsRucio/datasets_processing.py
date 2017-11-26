@@ -6,21 +6,26 @@ import json
 import re
 import sys
 
-try:
-    rucio_client = rucio.client.Client()
-except RucioException as err:
-    sys.stderr.write("(ERROR) Failed to initialize Rucio client.\n")
-    err_str = str(err).replace("\n", "\n(==) ")
-    sys.stderr.write("(ERROR) %s.\n" % err_str)
-    sys.exit(1)
 
+rucio_client = None
 DS_TYPE = 'output'
 
 def main():
     args = parsingArguments()
     global INPUT
     INPUT = args.input
+    init_rucio_client()
     process_data()
+
+def init_rucio_client():
+    global rucio_client
+    try:
+        rucio_client = rucio.client.Client()
+    except RucioException as err:
+        sys.stderr.write("(ERROR) Failed to initialize Rucio client.\n")
+        err_str = str(err).replace("\n", "\n(==) ")
+        sys.stderr.write("(ERROR) %s.\n" % err_str)
+        sys.exit(1)
 
 def process_data():
     input_file = open(INPUT)
