@@ -1,6 +1,4 @@
 #!/bin/env python
-import argparse
-import json
 import sys
 import os
 
@@ -21,16 +19,36 @@ except ImportError, err:
     sys.stderr.write("(ERROR) Failed to import Rucio module: %s\n" % err)
     sys.exit(1)
 
+try:
+    dkb_dir = os.path.join(base_dir, os.pardir)
+    sys.path.append(dkb_dir)
+    import pyDKB
+except Exception, err:
+    sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
+    sys.exit(1)
+
 rucio_client = None
 DS_TYPE = 'output'
 
 
-def main():
-    args = parsingArguments()
-    global INPUT
-    INPUT = args.input
-    init_rucio_client()
-    process_data()
+def main(argv):
+    """ Program body. """
+    stage = pyDKB.dataflow.stage.JSONProcessorStage()
+    exit_code = 0
+    try:
+        stage.parse_args(argv)
+        stage.process = process
+        init_rucio_client()
+        stage.run()
+    except (pyDKB.dataflow.exceptions.DataflowException, RuntimeError), err:
+        if str(err):
+            str_err = str(err).replace("\n", "\n(==) ")
+            sys.stderr.write("(ERROR) %s\n" % str_err)
+        exit_code = 2
+    finally:
+        stage.stop()
+
+    sys.exit(exit_code)
 
 
 def init_rucio_client():
@@ -44,25 +62,21 @@ def init_rucio_client():
         sys.exit(1)
 
 
-def process_data():
-    input_file = open(INPUT)
-    for line in input_file:
-        ds = process(line)
-        sys.stdout.write(json.dumps(ds) + '\n')
+def process(stage, message):
+    """ Process input message.
 
-
-def process(line):
-    """ Construct NDJSON string with the following format:
-
+    Generate output JSON document of the following structure:
         { "taskid": <TASKID>,
           "output": []
         }
     """
-    json_str = json.loads(line)
+    json_str = message.content()
     ds = {}
     ds['taskid'] = json_str.get('taskid')
     datasets_to_array(json_str, ds)
-    return ds
+    stage.output(pyDKB.dataflow.messages.JSONMessage(ds))
+
+    return True
 
 
 def datasets_to_array(data, ds):
@@ -131,11 +145,5 @@ def get_metadata_attribute(rucio_client, dsn, attribute_name):
         return None
 
 
-def parsingArguments():
-    parser = argparse.ArgumentParser(description='Process command line arguments.')
-    parser.add_argument('--input', help='Input file path',required=True)
-    return parser.parse_args()
-
-
 if __name__ == '__main__':
-    main()
+    main(sys.argv[1:])
