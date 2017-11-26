@@ -1,11 +1,25 @@
 #!/bin/env python
-import rucio.client
-from rucio.common.exception import RucioException
 import argparse
 import json
 import re
 import sys
+import os
 
+base_dir = os.path.abspath(os.path.dirname(__file__))
+
+try:
+    if not os.environ.get("VIRTUAL_ENV", None):
+        user_rucio_dir = os.path.expanduser("~/.rucio")
+        if os.path.exists(user_rucio_dir):
+            os.environ["VIRTUAL_ENV"] = os.path.join(user_rucio_dir)
+        else:
+            os.environ["VIRTUAL_ENV"] = os.path.join(base_dir, ".rucio")
+        sys.stderr.write("(TRACE) Set VIRTUAL_ENV: %s\n" % os.environ["VIRTUAL_ENV"])
+    import rucio.client
+    from rucio.common.exception import RucioException
+except ImportError, err:
+    sys.stderr.write("(ERROR) Failed to import Rucio module: %s\n" % err)
+    sys.exit(1)
 
 rucio_client = None
 DS_TYPE = 'output'
