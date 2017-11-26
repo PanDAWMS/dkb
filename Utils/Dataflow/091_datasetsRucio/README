@@ -1,8 +1,23 @@
 Stage 091_datasetsRucio
------------------------
+=======================
 
+1. Description
+--------------
 This stage is implemented to obtain output datasets metadata from Rucio.
 
+
+2. Requirements
+---------------
+* pyRucio
+* grid user certificate stored in VIRTUAL_ENV/auth/{cert,key}.pem
+  (or somewhere else, just don`t forget to fix paths),
+  where VIRTUAL_ENV = ~/.rucio (if exists) or ./.rucio.
+* rucio.cfg in VIRTUAL_ENV/etc/
+  (don`t forget to fix USERNAME and, again, path to cert files)
+
+
+3. Input
+--------
 The INPUT data for this stage comes from stage 009_oracleConnector.
 
 example:
@@ -45,6 +60,8 @@ example:
 	"end_time": "09-05-2016 11:18:32"
 }
 
+4. Output
+---------
 Stage 091_datasetsRucio constructs the following NDJSON string, with 'bytes' from Rucio:
 
 example:
