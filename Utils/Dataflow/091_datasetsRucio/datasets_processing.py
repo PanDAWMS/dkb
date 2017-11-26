@@ -44,15 +44,21 @@ def init_rucio_client():
 def process_data():
     input_file = open(INPUT)
     for line in input_file:
-        # Construct NDJSON string with the following format:
-        # { "taskid": <TASKID>,
-        #   "output": []
-        # }
-        json_str = json.loads(line)
-        ds = {}
-        ds['taskid'] = json_str.get('taskid')
-        datasets_to_array(json_str, ds)
+        ds = process(line)
         sys.stdout.write(json.dumps(ds) + '\n')
+
+def process(line):
+    """ Construct NDJSON string with the following format:
+
+        { "taskid": <TASKID>,
+          "output": []
+        }
+    """
+    json_str = json.loads(line)
+    ds = {}
+    ds['taskid'] = json_str.get('taskid')
+    datasets_to_array(json_str, ds)
+    return ds
 
 def datasets_to_array(data, ds):
     """
