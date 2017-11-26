@@ -1,11 +1,19 @@
 #!/bin/env python
 import rucio.client
+from rucio.common.exception import RucioException
 import argparse
 import json
 import re
 import sys
 
-rucio_client = rucio.client.Client()
+try:
+    rucio_client = rucio.client.Client()
+except RucioException as err:
+    sys.stderr.write("(ERROR) Failed to initialize Rucio client.\n")
+    err_str = str(err).replace("\n", "\n(==) ")
+    sys.stderr.write("(ERROR) %s.\n" % err_str)
+    sys.exit(1)
+
 DS_TYPE = 'output'
 
 def main():
