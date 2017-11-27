@@ -1,0 +1,17 @@
+=============
+* Stage 016 *
+=============
+
+1. Description
+--------------
+Transform task metadata to fit ES scheme.
+
+
+2. Input
+--------
+Comes from 009 Oracle Connector.
+
+
+3. Output
+---------
+Goes to 019 esFormat.
