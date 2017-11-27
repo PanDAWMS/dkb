@@ -1,4 +1,16 @@
 #!/bin/env python
+"""
+DKB Dataflow Stage 091 (datasetsRucio)
+
+Get metadata abourt datasets from Rucio.
+Input: from Stage 009.
+Output: to Stage 069.
+
+Authors:
+  Maria Grigorievs (maria.grigorieva@cern.ch)
+  Marina Golosova (golosova.marina@cern.ch)
+"""
+
 import re
 import sys
 import os
@@ -51,6 +63,7 @@ def main(argv):
 
 
 def init_rucio_client():
+    """ Initialize global variable `rucio_client`. """
     global rucio_client
     try:
         rucio_client = rucio.client.Client()
@@ -77,8 +90,9 @@ def process(stage, message):
     return True
 
 def datasets_to_array(data, ds):
-    """
-    Constructs the array of dictionaries with datasets with the following format:
+    """ Construct the array of dictionaries with datasets.
+
+    Array format:
     "output": [
         {"deleted": true | false,
          "datasetname": "<DS_NAME>",
@@ -112,10 +126,14 @@ def datasets_to_array(data, ds):
     return ds
 
 def extract_scope(dsn):
-    """
-    Extracs the first part of dataset name (ex: mc15_13TeV.XXX)
+    """ Extract the first field from the dataset name
+
+    Example:
+      mc15_13TeV.XXX
+      mc15_13TeV:XXX.YYY
+
     :param dsn: full dataset name
-    :return:
+    :return tuple: dataset scope (first field), rest of the name
     """
     if dsn.find(':') > -1:
         return dsn.split(':')[0], dsn.split(':')[1]
@@ -126,8 +144,8 @@ def extract_scope(dsn):
         return scope, dsn
 
 def get_metadata_attribute(rucio_client, dsn, attribute_name):
-    """
-    Returns the value of the attribute from Rucio
+    """ Get attribute value from Rucio
+
     :param dsn: full dataset name
     :param attribute_name: name of searchable attribute
     :return:
