@@ -4,8 +4,8 @@
 
 1. Description
 --------------
-Transform task metadata to fit ES scheme.
-
+Transform task metadata to fit ES scheme:
+* detect 'phys_category'
 
 2. Input
 --------

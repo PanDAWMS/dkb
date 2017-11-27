@@ -3,7 +3,6 @@ import os
 import json
 import argparse
 import ConfigParser
-import re
 import DButils
 import sys
 from datetime import datetime, timedelta
@@ -154,7 +153,6 @@ def process(conn, offset_date, final_date_cfg, step_seconds, queries):
         elif mode == PLAIN_POLICY:
             records = plain(conn, queries, offset_date, end_date)
         for r in records:
-            r['phys_category'] = get_category(r)
             sys.stdout.write(json.dumps(r) + '\n')
         update_offset(end_date)
         offset_date = end_date
@@ -220,69 +218,6 @@ def str2date(str_date):
 def date2str(date):
     """ Convert datetime object to string (%d-%m-%Y %H:%M:%S). """
     return datetime.strftime(date, "%d-%m-%Y %H:%M:%S")
-
-def get_category(row):
-    """
-    Each task can be associated with a number of Physics Categories.
-    1) search category in hashtags list
-    2) if not found in hashtags, then search category in phys_short field of tasknames
-    :param row
-    :return:
-    """
-    hashtags = row.get('hashtag_list')
-    taskname = row.get('taskname')
-    PHYS_CATEGORIES_MAP = {
-        'BPhysics': ['charmonium', 'jpsi', 'bs', 'bd', 'bminus', 'bplus',
-                     'charm', 'bottom', 'bottomonium', 'b0'],
-        'BTag': ['btagging'],
-        'Diboson': ['diboson', 'zz', 'ww', 'wz', 'wwbb', 'wwll'],
-        'DrellYan': ['drellyan', 'dy'],
-        'Exotic': ['exotic', 'monojet', 'blackhole', 'technicolor',
-                   'randallsundrum', 'wprime', 'zprime', 'magneticmonopole',
-                   'extradimensions', 'warpeded', 'randallsundrum',
-                   'contactinteraction', 'seesaw'],
-        'GammaJets': ['photon', 'diphoton'],
-        'Higgs': ['whiggs', 'zhiggs', 'mh125', 'higgs', 'vbf', 'smhiggs',
-                  'bsmhiggs', 'chargedhiggs'],
-        'Minbias': ['minbias'],
-        'Multijet': ['dijet', 'multijet', 'qcd'],
-        'Performance': ['performance'],
-        'SingleParticle': ['singleparticle'],
-        'SingleTop': ['singletop'],
-        'SUSY': ['bino', 'susy', 'pmssm', 'leptosusy', 'rpv', 'mssm'],
-        'Triboson': ['triplegaugecoupling', 'triboson', 'zzw', 'www'],
-        'TTbar': ['ttbar'],
-        'TTbarX': ['ttw', 'ttz', 'ttv', 'ttvv', '4top', 'ttww'],
-        'Upgrade': ['upgrad'],
-        'Wjets': ['w'],
-        'Zjets': ['z']}
-    match = {}
-    categories = []
-    for phys_category in PHYS_CATEGORIES_MAP:
-        current_map = [x.strip(' ').lower() for x in PHYS_CATEGORIES_MAP[phys_category]]
-        if hashtags is not None:
-            match[phys_category] = len([x for x in hashtags.lower().split(',') if x.strip(' ') in current_map])
-    categories = [cat for cat in match if match[cat] > 0]
-    if not categories and taskname:
-        phys_short = taskname.split('.')[2].lower()
-        if re.search('singletop', phys_short) is not None: categories.append("SingleTop")
-        if re.search('ttbar', phys_short) is not None: categories.append("TTbar")
-        if re.search('jets', phys_short) is not None: categories.append("Multijet")
-        if re.search('h125', phys_short) is not None: categories.append("Higgs")
-        if re.search('ttbb', phys_short) is not None: categories.append("TTbarX")
-        if re.search('ttgamma', phys_short) is not None: categories.append("TTbarX")
-        if re.search('_tt_', phys_short) is not None: categories.append("TTbar")
-        if re.search('upsilon', phys_short) is not None: categories.append("BPhysics")
-        if re.search('tanb', phys_short) is not None: categories.append("SUSY")
-        if re.search('4topci', phys_short) is not None: categories.append("Exotic")
-        if re.search('xhh', phys_short) is not None: categories.append("Higgs")
-        if re.search('3top', phys_short) is not None: categories.append("TTbarX")
-        if re.search('_wt', phys_short) is not None: categories.append("SingleTop")
-        if re.search('_wwbb', phys_short) is not None: categories.append("SingleTop")
-        if re.search('_wenu_', phys_short) is not None: categories.append("Wjets")
-    if not categories:
-        categories = ["Uncategorized"]
-    return categories
 
 def parsingArguments():
     parser = argparse.ArgumentParser(description='Process command line arguments.')
