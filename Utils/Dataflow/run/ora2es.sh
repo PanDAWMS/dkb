@@ -11,7 +11,7 @@ cmd_OC="${base_dir}/../009_oracleConnector/Oracle2JSON.py"
 cfg_OC="${base_dir}/ora2json.cfg"
 
 # Stage 19
-cmd_19="${base_dir}/../019_oracle2esFormat/oracle2es.php"
+cmd_19="${base_dir}/../019_esFormat/esFormat.php"
 
 # Stage 69
 cmd_69="${base_dir}/../069_upload2es/load_data.sh"
