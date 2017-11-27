@@ -134,13 +134,14 @@ def extract_scope(dsn):
 
     Example:
       mc15_13TeV.XXX
-      mc15_13TeV:XXX.YYY
+      mc15_13TeV:YYY.XXX
 
     :param dsn: full dataset name
-    :return tuple: dataset scope (first field), rest of the name
+    :return tuple: dataset scope, dataset name
     """
-    if dsn.find(':') > -1:
-        return dsn.split(':')[0], dsn.split(':')[1]
+    pos = dsn.find(':')
+    if pos > -1:
+        result = (dsn[:pos], dsn.split[pos+1:])
     else:
         scope = dsn.split('.')[0]
         if dsn.startswith('user') or dsn.startswith('group'):
