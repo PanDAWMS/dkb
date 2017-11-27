@@ -6,7 +6,6 @@ Description
 -----------
 Prepare data, taken by Oracle Connector, before uploading to ElasticSearch:
  * turn JSON keys to lower case
- * parse comma-separated string 'hashtag_list' to array
  * generate JSON with index information
 
 Use ./run.sh to run stage with common configuration from

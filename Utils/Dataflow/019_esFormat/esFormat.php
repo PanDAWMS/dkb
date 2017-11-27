@@ -8,7 +8,7 @@ set_error_handler("exception_error_handler");
 $DEFAULT_INDEX = 'prodsys';
 
 function check_input(&$row) {
-  $required_fields = array('hashtag_list' => '', 'campaign' => 'undefined', 'taskid' => null);
+  $required_fields = array('campaign' => 'undefined', 'taskid' => null);
 
   if (!is_array($row)) {
     fwrite(STDERR, "(WARN) Failed to decode message.\n");
@@ -60,16 +60,6 @@ if ($h) {
     }
 
     convertIndexToLowerCase($row);
-
-    $hashtag_list = $row['hashtag_list'];
-    $row['hashtag_list'] = array();
-    foreach( explode(',',$hashtag_list) as $tag) {
-      $row['hashtag_list'][] = trim($tag);
-    }
-
-    if (!$row['hashtag_list']) {
-        unset($row['hashtag_list']);
-    }
 
     printf('{ "index" : {"_index":'."$ES_INDEX".', "_type":"%s", "_id":"%d" } }'."\n", $row['campaign'], $row['taskid']);
 
