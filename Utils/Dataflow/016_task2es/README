@@ -6,6 +6,7 @@
 --------------
 Transform task metadata to fit ES scheme:
 * detect 'phys_category'
+* split comma-separated 'hashtag_list' to the actual list structure
 
 2. Input
 --------
