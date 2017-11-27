@@ -112,7 +112,7 @@ def datasets_to_array(data, ds):
             ds_dict = {}
             ds_dict['datasetname'] = dataset
             try:
-                bytes = get_metadata_attribute(rucio_client, dataset, 'bytes')
+                bytes = get_metadata_attribute(dataset, 'bytes')
                 if bytes == 'null' or bytes is None:
                     ds_dict['bytes'] = -1
                 else:
@@ -149,7 +149,7 @@ def extract_scope(dsn):
         return scope, dsn
 
 
-def get_metadata_attribute(rucio_client, dsn, attribute_name):
+def get_metadata_attribute(dsn, attribute_name):
     """ Get attribute value from Rucio
 
     :param dsn: full dataset name
