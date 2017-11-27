@@ -4,7 +4,7 @@ DKB Dataflow Stage 091 (datasetsRucio)
 
 Get metadata abourt datasets from Rucio.
 Input: from Stage 009.
-Output: to Stage 069.
+Output: to Stage 019.
 
 Authors:
   Maria Grigorievs (maria.grigorieva@cern.ch)
