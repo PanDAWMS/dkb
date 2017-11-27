@@ -87,9 +87,6 @@ def process(stage, message):
 
     if not json_str.get(DS_TYPE):
         # Nothing to process; over.
-        # Output left to correspond previous version.
-        ds = {'taskid': json_str.get('taskid'), 'output': []}
-        stage.output(pyDKB.dataflow.messages.JSONMessage(ds))
         return True
 
     for dataset in json_str[DS_TYPE]:
