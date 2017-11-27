@@ -9,6 +9,9 @@ Prepare data, taken by Oracle Connector, before uploading to ElasticSearch:
  * parse comma-separated string 'hashtag_list' to array
  * generate JSON with index information
 
+Use ./run.sh to run stage with common configuration from
+  /Utils/Elasticsearch/config/es
+
 Input
 -----
 ...comes from Oracle Connector: JSON documents, one document -- one line.

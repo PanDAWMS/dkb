@@ -5,6 +5,8 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 }
 set_error_handler("exception_error_handler");
 
+$DEFAULT_INDEX = 'prodsys';
+
 function check_input(&$row) {
   $required_fields = array('hashtag_list' => '', 'campaign' => 'undefined', 'taskid' => null);
 
@@ -43,6 +45,11 @@ if (isset($argv[1])) {
   $h = fopen('php://stdin', 'r');
 }
 
+$ES_INDEX = getenv('ES_INDEX');
+if (!$ES_INDEX) {
+  $ES_INDEX = $DEFAULT_INDEX;
+}
+
 if ($h) {
   while (($line = fgets($h)) !== false) {
     $row = json_decode($line,true);
@@ -64,7 +71,7 @@ if ($h) {
         unset($row['hashtag_list']);
     }
 
-    printf('{ "index" : {"_index":"prodsys", "_type":"%s", "_id":"%d" } }'."\n", $row['campaign'], $row['taskid']);
+    printf('{ "index" : {"_index":'."$ES_INDEX".', "_type":"%s", "_id":"%d" } }'."\n", $row['campaign'], $row['taskid']);
 
     echo json_encode($row)."\n";
   }
