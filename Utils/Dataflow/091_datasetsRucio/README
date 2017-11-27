@@ -62,15 +62,13 @@ example:
 
 4. Output
 ---------
-Stage 091_datasetsRucio constructs the following NDJSON string, with 'bytes' from Rucio:
+Stage 091_datasetsRucio constructs the following JSON documents, with 'bytes' from Rucio:
 
 example:
 {
-	"output": [{
-		"deleted": true,
-		"datasetname": "mc15_13TeV.343507.aMcAtNloPythia8EvtGen_A14NNPDF23LO_bbA360_yb2_Zhllbb.recon.AOD.e4741_a766_a821_tid08343552_00",
-		"bytes": -1
-	}],
+	"deleted": true,
+	"datasetname": "mc15_13TeV.343507.aMcAtNloPythia8EvtGen_A14NNPDF23LO_bbA360_yb2_Zhllbb.recon.AOD.e4741_a766_a821_tid08343552_00",
+	"bytes": -1,
 	"taskid": 8343552
 }
 
