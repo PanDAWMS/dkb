@@ -82,48 +82,47 @@ def process(stage, message):
         }
     """
     json_str = message.content()
-    ds = {}
-    ds['taskid'] = json_str.get('taskid')
-    datasets_to_array(json_str, ds)
-    stage.output(pyDKB.dataflow.messages.JSONMessage(ds))
+
+    if not json_str.get(DS_TYPE):
+        # Nothing to process; over.
+        # Output left to correspond previous version.
+        ds = {'taskid': json_str.get('taskid'), 'output': []}
+        stage.output(pyDKB.dataflow.messages.JSONMessage(ds))
+        return True
+
+    for dataset in json_str[DS_TYPE]:
+        ds = get_dataset_info(dataset)
+        ds['taskid'] = json_str.get('taskid')
+        stage.output(pyDKB.dataflow.messages.JSONMessage(ds))
 
     return True
 
-def datasets_to_array(data, ds):
-    """ Construct the array of dictionaries with datasets.
+def get_dataset_info(dataset):
+    """ Construct dictionary with dataset info.
 
-    Array format:
-    "output": [
+    Dict format:
         {"deleted": true | false,
          "datasetname": "<DS_NAME>",
          "bytes": <BYTES>}
-    ]
-    :param data: input JSON string
-    :param ds: output dictionary
-    :return:
+    :param dataset: dataset name
+    :return: dict
     """
-    ds[DS_TYPE] = []
-
-    if data.get(DS_TYPE) is not None:
-        for dataset in data.get(DS_TYPE):
-            ds_dict = {}
-            ds_dict['datasetname'] = dataset
-            try:
-                bytes = get_metadata_attribute(dataset, 'bytes')
-                if bytes == 'null' or bytes is None:
-                    ds_dict['bytes'] = -1
-                else:
-                    ds_dict['bytes'] = bytes
-                    ds_dict['deleted'] = False
-                ds[DS_TYPE].append(ds_dict)
-            except:
-                # if dataset wasn't find in Rucio, it means that it was deleted from
-                # the Rucio catalog. In this case 'deleted' is set to TRUE and
-                # the length of file is set to -1
-                ds_dict['bytes'] = -1
-                ds_dict['deleted'] = True
-                ds[DS_TYPE].append(ds_dict)
-    return ds
+    ds_dict = {}
+    ds_dict['datasetname'] = dataset
+    try:
+        bytes = get_metadata_attribute(dataset, 'bytes')
+        if bytes == 'null' or bytes is None:
+            ds_dict['bytes'] = -1
+        else:
+            ds_dict['bytes'] = bytes
+            ds_dict['deleted'] = False
+    except:
+        # if dataset wasn't find in Rucio, it means that it was deleted from
+        # the Rucio catalog. In this case 'deleted' is set to TRUE and
+        # the length of file is set to -1
+        ds_dict['bytes'] = -1
+        ds_dict['deleted'] = True
+    return ds_dict
 
 def extract_scope(dsn):
     """ Extract the first field from the dataset name
