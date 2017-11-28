@@ -66,7 +66,7 @@ def get_category(row):
     for phys_category in PHYS_CATEGORIES_MAP:
         current_map = [x.strip(' ').lower() for x in PHYS_CATEGORIES_MAP[phys_category]]
         if hashtags is not None:
-            match[phys_category] = len([x for x in hashtags.lower().split(',') if x.strip(' ') in current_map])
+            match[phys_category] = len([x for x in hashtags if x in current_map])
     categories = [cat for cat in match if match[cat] > 0]
     if not categories and taskname:
         phys_short = taskname.split('.')[2].lower()
@@ -92,6 +92,10 @@ def get_category(row):
 def process(stage, message):
     """ Single message processing. """
     data = message.content()
+    hashtags = data.get('hashtag_list')
+    if hashtags:
+        hashtags = hashtags.lower().split(',')
+        data['hashtag_list'] = [x.strip() for x in hashtags]
     data['phys_category'] = get_category(data)
     out_message = JSONMessage(data)
     stage.output(out_message)
