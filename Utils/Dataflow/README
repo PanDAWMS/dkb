@@ -25,6 +25,7 @@ Number
 9.1              091_datasetsRucio              Get dataset metadata from Rucio
 9.3              093_datasetsFormat             Update dataset metadata:
                                                   add "data_format" field
+9.5              095_datasetInfoAMI             Get dataset metadata from AMI
 
 
 

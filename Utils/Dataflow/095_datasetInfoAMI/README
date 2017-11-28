@@ -1,0 +1,13 @@
+=============
+* Stage 095 *
+=============
+
+1. Description
+--------------
+This stage is implemented to extract physics parameter values from AMI.
+
+
+2. Dataflow
+-----------
+
+093_datasetsFormat/output --> 095_datasetsFromAMI
