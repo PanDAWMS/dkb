@@ -92,6 +92,11 @@ def process(stage, message):
     for dataset in json_str[DS_TYPE]:
         ds = get_dataset_info(dataset)
         ds['taskid'] = json_str.get('taskid')
+        if not add_es_index_info(ds):
+            sys.stderr.write("(WARN) Skip message (not enough info"
+                             " for ES indexing).\n")
+            return True
+        del(ds['taskid'])
         stage.output(pyDKB.dataflow.messages.JSONMessage(ds))
 
     return True
@@ -159,6 +164,28 @@ def get_metadata_attribute(dsn, attribute_name):
         return metadata[attribute_name]
     else:
         return None
+
+
+def add_es_index_info(data):
+    """ Update data with required for ES indexing info.
+
+    Add fields:
+      _id => datasetname
+      _type => 'output_dataset'
+      _parent => taskid
+
+    Return value:
+      False -- update failed, skip the record
+      True  -- update successful
+    """
+    if type(data) is not dict:
+        return False
+    if not (data.get('datasetname') and data.get('taskid')):
+        return False
+    data['_id'] = data['datasetname']
+    data['_type'] = 'output_dataset'
+    data['_parent'] = data['taskid']
+    return True
 
 
 if __name__ == '__main__':
