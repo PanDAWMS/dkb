@@ -27,6 +27,26 @@ except Exception, err:
     sys.exit(1)
 
 
+def add_es_index_info(data):
+    """ Update data with required for ES indexing info.
+
+    Add fields:
+      _id => taskid
+      _type => 'task'
+
+    Return value:
+      False -- update failed, skip the record
+      True  -- update successful
+    """
+    if type(data) is not dict:
+        return False
+    if not data.get('taskid'):
+        return False
+    data['_id'] = data['taskid']
+    data['_type'] = 'task'
+    return True
+
+
 def get_category(row):
     """
     Each task can be associated with a number of Physics Categories.
@@ -117,6 +137,10 @@ def process(stage, message):
         hashtags = hashtags.lower().split(',')
         data['hashtag_list'] = [x.strip() for x in hashtags]
     data['phys_category'] = get_category(data)
+    if not add_es_index_info(data):
+        sys.stderr.write("(WARN) Skip message (not enough info"
+                         " for ES indexing.\n")
+        return True
     out_message = JSONMessage(data)
     stage.output(out_message)
     return True
