@@ -4,7 +4,7 @@
 
 Description
 -----------
-Prepare data, taken by Oracle Connector, before uploading to ElasticSearch:
+Prepare data before uploading to ElasticSearch:
  * turn JSON keys to lower case
  * generate JSON with index information
 
@@ -13,7 +13,13 @@ Use ./run.sh to run stage with common configuration from
 
 Input
 -----
-...comes from Oracle Connector: JSON documents, one document -- one line.
+Expects data in JSON format with special fields.
+Required:
+* '_id' (ES record identifier);
+* '_type' (ES record type).
+
+Optional:
+* '_parent' (ES identifier for parent type record).
 
 Output
 ------

@@ -6,23 +6,20 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 set_error_handler("exception_error_handler");
 
 $DEFAULT_INDEX = 'prodsys';
+$ES_INDEX = NULL;
 
-function check_input(&$row) {
-  $required_fields = array('campaign' => 'undefined', 'taskid' => null);
+function check_input($row) {
+  $required_fields = array('_id', '_type');
 
   if (!is_array($row)) {
     fwrite(STDERR, "(WARN) Failed to decode message.\n");
     return FALSE;
   }
 
-  foreach (array_keys($required_fields) as $field) {
-    if (!(array_key_exists($field, $row) && $row[$field])) {
-      if ($required_fields[$field] !== null) {
-        $row[$field] = $required_fields[$field];
-      } else {
-        fwrite(STDERR, "(WARN) Required field \"$field\" is empty and has no default value.\n");
-        return FALSE;
-      }
+  foreach ($required_fields as $field) {
+    if (!(isset($row[$field]))) {
+      fwrite(STDERR, "(WARN) Required field \"$field\" is not set or empty.\n");
+      return FALSE;
     }
   }
 
@@ -37,6 +34,27 @@ function convertIndexToLowerCase(&$a) {
   }
 
   $a = $result;
+}
+
+function constructIndexJson(&$row) {
+  global $ES_INDEX;
+  $index = Array(
+    'index' => Array(
+      '_index' => $ES_INDEX,
+      '_type'  => $row['_type'],
+      '_id'    => $row['_id'],
+    )
+  );
+
+  if (isset($row['_parent'])) {
+    $index['index']['_parent'] = $row['_parent'];
+  }
+
+  foreach ($index as $key => $val) {
+    unset($row[$key]);
+  }
+
+  return $index;
 }
 
 if (isset($argv[1])) {
@@ -55,14 +73,15 @@ if ($h) {
     $row = json_decode($line,true);
 
     if (!check_input($row)) {
-      fwrite(STDERR, "(WARN) Input checks failed. Skipping message.\n");
+      fwrite(STDERR, "(WARN) Skipping message.\n");
       continue;
     }
 
     convertIndexToLowerCase($row);
 
-    printf('{ "index" : {"_index":'."$ES_INDEX".', "_type":"%s", "_id":"%d" } }'."\n", $row['campaign'], $row['taskid']);
+    $index = constructIndexJson($row);
 
+    echo json_encode($index)."\n";
     echo json_encode($row)."\n";
   }
 }
