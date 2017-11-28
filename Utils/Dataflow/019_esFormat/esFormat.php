@@ -73,7 +73,7 @@ if ($h) {
     $row = json_decode($line,true);
 
     if (!check_input($row)) {
-      fwrite(STDERR, "(WARN) Skipping message.\n");
+      fwrite(STDERR, "(WARN) Skipping message (\"".substr($line, 0, 1000)."\").\n");
       continue;
     }
 
