@@ -36,7 +36,7 @@ touch $buffer || { echo "Failed to access buffer file." >&2; exit 2; }
 # ---
 # EOP filter (required due to the unconfigurable EOP marker in pyDKB)
 eop_filter() {
-  sed -e"s/\\x00//"
+  sed -e"s/\\x00//g"
 }
 
 # Flush Sink Connector buffer to STDOUT and reset it
