@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+
+base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
+pgidfile=$base_dir/$(basename "$0" | cut -d- -f1).pgid
+pidfile=$base_dir/$(basename "$0" | cut -d- -f1).pid
+pgids=`cat $pgidfile`
+pids=`cat $pidfile`
+
+for pgid in $pgids; do
+  pids="$pids $(ps ho pgid,pid | grep -E -e"(^|\s)${pgid}\s" | awk '{print $2}')"
+done
+
+kill $pids 1>/dev/null 2>&1 
+
+sleep 1
+
+for pid in $pids; do
+  ps ao pid | grep "^\s*$pid\s" >> ${pidfile}.tmp
+done
+
+mv ${pidfile}.tmp $pidfile 2>/dev/null
+rm $pgidfile 2>/dev/null
