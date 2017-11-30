@@ -19,7 +19,7 @@ mkdir -p $buffer_dir
 # ---
 # Oracle Connector
 cmd_09="${base_dir}/../009_oracleConnector/Oracle2JSON.py"
-cfg_09="${base_dir}/ora2json.cfg"
+cfg_09="${base_dir}/../config/009.cfg"
 cmd_OC="$cmd_09 --config $cfg_09 --mode SQUASH"
 
 # Stage 16
