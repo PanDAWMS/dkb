@@ -1,5 +1,5 @@
 {
-  "template": "prodsys_rucio",
+  "template": "prodsys_rucio_ami",
   "settings": {
     "number_of_shards": 4
   },
@@ -193,6 +193,22 @@
         },
         "deleted": {
           "type": "boolean"
+        },
+        "k_factor": {
+          "type": "keyword",
+          "ignore_above" : 256
+        },
+        "cross_section_ref": {
+          "type": "keyword",
+          "ignore_above" : 256
+        },
+        "cross_section": {
+          "type": "keyword",
+          "ignore_above" : 256
+        },
+        "gen_filt_eff": {
+          "type": "keyword",
+          "ignore_above" : 256
         }
       }
     }
