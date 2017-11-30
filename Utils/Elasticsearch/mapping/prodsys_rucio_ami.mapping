@@ -1,5 +1,5 @@
 {
-  "template": "prodsys_rucio",
+  "template": "prodsys_rucio_ami",
   "settings": {
     "number_of_shards": 4
   },
@@ -145,6 +145,10 @@
           "type" : "keyword",
           "ignore_above" : 256
         },
+        "output" : {
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
         "requested_events" : {
           "type" : "long"
         },
@@ -171,48 +175,47 @@
               "ignore_above" : 256
             }
           }
-        },
-        "k_factor": {
-          "type": "keyword",
-          "ignore_above" : 256
-        },
-        "cross_section_ref": {
-          "type": "keyword",
-          "ignore_above" : 256
-        },
-        "cross_section": {
-          "type": "keyword",
-          "ignore_above" : 256
-        },
-        "gen_filt_eff": {
-          "type": "keyword",
-          "ignore_above" : 256
         }
       }
     },
     {
-        "output_dataset": {
-            "_parent": {
-                "type": "task"
-            },
-            "properties": {
-                "datasetname" : {
-                  "type" : "text",
-                  "fields" : {
-                     "keyword" : {
-                         "type" : "keyword",
-                         "ignore_above" : 256
-                     }
+    "output_dataset": {
+        "_parent": {
+             "type": "task"
+         },
+         "properties": {
+             "datasetname" : {
+               "type" : "text",
+               "fields" : {
+                  "keyword" : {
+                      "type" : "keyword",
+                      "ignore_above" : 256
                   }
-                },
-                "bytes" : {
-                    "type" : "long"
-                },
-                "deleted": {
-                    "type": "boolean"
-                }
-            }
-        }
-    }
+               }
+             },
+             "bytes" : {
+                 "type" : "long"
+             },
+             "deleted": {
+                 "type": "boolean"
+             },
+             "k_factor": {
+                 "type": "keyword",
+                 "ignore_above" : 256
+             },
+             "cross_section_ref": {
+                 "type": "keyword",
+                 "ignore_above" : 256
+             },
+             "cross_section": {
+                 "type": "keyword",
+                 "ignore_above" : 256
+             },
+             "gen_filt_eff": {
+                 "type": "keyword",
+                 "ignore_above" : 256
+             }
+         }
+     }
   }
 }
