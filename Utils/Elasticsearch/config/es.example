@@ -2,4 +2,4 @@ ES_HOST=%__es_host__%           #elasticsearch host
 ES_PORT=%__es_port__%           #elasticsearch port
 ES_USER=%__es_user__%           #elasticsearch username for basic auth
 ES_PASSWORD=%__es_password__%   #password for basic auth
-ES_INDEX=%__es_index__%         #default index to work with
+ES_INDEX=prodsys_rucio_ami      #default index to work with
