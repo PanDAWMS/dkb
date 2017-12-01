@@ -256,7 +256,8 @@ re_pdfname = re.compile("/([^./]+)\.pdf$")
 re_table_header = re.compile("Table \d+:.*?\n\n", re.DOTALL)
 re_table_header_short = re.compile("Table (\d+):")
 re_table_datasets = re.compile("(?:sample|dataset|run)")
-re_column_with_datasets = re.compile("^(?:ds[-_ ]?|mc[-_ ]?|data ?|dataset ?"
+re_column_with_datasets = re.compile("^(?:d[cs]?[-_ ]?|mc[-_ ]?|data ?"
+                                     "|dataset ?"
                                      "|period|request ?|run ?|sample ?)(?:id"
                                      "|number|period|range|sample|set)")
 re_dsid = re.compile("^\d{4,8}$")
