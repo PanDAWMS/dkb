@@ -1083,6 +1083,8 @@ class Manager:
         if fnames is None:
             fnames = askopenfilenames(initialdir=cfg["WORK_DIR"],
                                       filetypes=[("PDF files", ".pdf")])
+            if not fnames:
+                return False
             errors = {}
             n = 1
             self.window.after(100, lambda: self.add_papers(fnames, errors, n))
