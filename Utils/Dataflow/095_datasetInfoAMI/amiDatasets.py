@@ -8,7 +8,7 @@ try:
     import pyAMI.atlas.api as AtlasAPI
     import pyAMI.config
 except ImportError:
-    sys.stderr.write("Unable to find pyAMI client.")
+    sys.stderr.write("(ERROR) Unable to find pyAMI client.\n")
     sys.exit(1)
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
@@ -70,8 +70,8 @@ def init_ami_client(userkey, usercert):
         AtlasAPI.init()
     except Exception:
         sys.stderr.write(
-            "Could not establish pyAMI session."
-            " Are you sure you have a valid certificate?")
+            "(ERROR) Could not establish pyAMI session."
+            " Are you sure you have a valid certificate?\n")
         sys.exit(1)
 
 
@@ -111,7 +111,7 @@ def amiPhysValues(data):
                     continue
         return change_key_names(data)
     except Exception:
-        sys.stderr.write("No values found in AMI")
+        sys.stderr.write("(WARN) No values found in AMI\n")
 
 
 def change_key_names(data):
