@@ -112,7 +112,8 @@ def amiPhysValues(data):
                     continue
         return change_key_names(data)
     except Exception:
-        sys.stderr.write("(WARN) No values found in AMI\n")
+        sys.stderr.write("(WARN) No values found in AMI for dataset '%s'\n"
+                         % data['datasetname'])
 
 
 def change_key_names(data):
