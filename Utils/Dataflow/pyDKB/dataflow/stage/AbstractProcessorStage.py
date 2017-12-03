@@ -286,8 +286,9 @@ class AbstractProcessorStage(AbstractStage):
             return msg
         except (ValueError, TypeError), err:
             sys.stderr.write("(WARN) Failed to read input message as %s.\n"
-                             "(WARN) Cause: %s\n" % (messageClass.typeName(),
-                                                     err))
+                             "(==) Cause: %s\n"
+                             "(==) Original message: '%s'\n"
+                             % (messageClass.typeName(), err, input_message))
             return None
 
     def input(self):
