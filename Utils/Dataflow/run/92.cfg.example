@@ -1,0 +1,2 @@
+AUTH_CRT=/path/to/my/crt.pem
+AUTH_KEY=/path/to/my/key.pem

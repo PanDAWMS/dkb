@@ -33,6 +33,14 @@ cmd_69="${base_dir}/../069_upload2es/load_data.sh"
 
 # Stage 91
 cmd_91="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
+
+# Stage 92
+auth_cfg=${base_dir}/92.cfg
+source $auth_cfg
+[ -r "$AUTH_KEY" -a -r "$AUTH_CRT" ] \
+  || { echo "Stage 092: wrong authentication parameters (failed to read certificate files: $AUTH_KEY and $AUTH_CRT)" >&2;
+       exit 1; }
+cmd_92="${base_dir}/../092_datasetInfoAMI/amiDatasets.py -m s --userkey $AUTH_KEY --usercert $AUTH_CRT"
 # ---
 
 # Reset offset value for Oracle Connector.
@@ -116,7 +124,11 @@ chain_16() {
 }
 
 chain_91() {
-  cat $b_91 | $cmd_91 | eop_filter
+  out=/dev/null
+  [ -n "$DEBUG" ] \
+    && out='91.out'
+  cat $b_91 | $cmd_91 | eop_filter | tee $out \
+            | $cmd_92 | eop_filter
 }
 
 # Sink chain
@@ -139,7 +151,7 @@ chain_16 | tee $out | sink_chain b16 &
 ps q $! ho pgid  >> $pgidfile
 
 [ -n "$DEBUG" ] \
-  && out='91.out'
+  && out='92.out'
 chain_91 | tee $out | sink_chain b91 &
 ps q $! ho pgid  >> $pgidfile
 
