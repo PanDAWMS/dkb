@@ -107,12 +107,29 @@ branch() {
 
 b_91=`branch b_91` && b_16=`branch b_16` \
   || exit $?
-
 # ---
 
 # Run Dataflow
 # ---
 
+# Parse command line parameters
+while [ -n "$1" ]; do
+  case $1 in
+    --debug)
+      DEBUG=1;;
+    --)
+      shift
+      break;;
+    -*)
+      echo "Unknown option: $1" >&1;;
+    *)
+      break;;
+  esac
+  shift
+done
+
+
+# Define subchains
 # Source subchain: Oracle Connector
 source_chain() {
   $cmd_OC | tee $b_16 $b_91
