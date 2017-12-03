@@ -74,8 +74,9 @@ def init_ami_client(userkey, usercert):
 
 def process(stage, message):
 
-    stage.output(pyDKB.dataflow.messages.JSONMessage(
-        amiPhysValues(message.content())))
+    data = message.content()
+    amiPhysValues(data)
+    stage.output(pyDKB.dataflow.messages.JSONMessage(data))
 
     return True
 
