@@ -5,7 +5,7 @@ BATCH_SIZE=100
 DEBUG=
 
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
-pgidfile=$base_dir/$(basename "$0" | cut -d- -f1).pgid
+pidfile=$base_dir/$(basename "$0" | cut -d- -f1).pid
 
 # Create aux directories
 # ---
@@ -162,16 +162,18 @@ out=/dev/null
 [ -n "$DEBUG" ] \
   && out='src.out'
 source_chain > $out &
-ps q $! ho pgid  >> $pgidfile
 
 [ -n "$DEBUG" ] \
   && out='16.out'
 chain_16 | tee $out | sink_chain b16 &
-ps q $! ho pgid  >> $pgidfile
 
 [ -n "$DEBUG" ] \
   && out='92.out'
 chain_91 | tee $out | sink_chain b91 &
-ps q $! ho pgid  >> $pgidfile
+
+ps ax | grep "$cmd_OC" | grep -v grep | awk '{print $1 " source"}' >> $pidfile
+for cmd in "$cmd_16" "$cmd_91" "$cmd_92" "$cmd_19" "$cmd_69"; do
+  ps ax | grep "$cmd" | awk '{print $1}' >> $pidfile
+done
 
 wait
