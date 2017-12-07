@@ -91,41 +91,41 @@ def main():
     process(conn, offset_date, final_date, step_seconds, queries)
 
 
-def plain(conn, queries, offset_date, end_date):
+def plain(conn, queries, start_date, end_date):
     """ Execute 'tasks' query.
 
     Queries structure: {<query_name> : { 'file': <filename> } [, ...]}
 
     :param conn: open connection to Oracle
     :param queries: queries to execute
-    :param offset_date: start date
+    :param start_date: start date
     :param end_date: end date
     :type conn: cx_Oracle.Connection
     :type queries: dict
-    :type offset_date: str
+    :type start_date: str
     :type end_date: str
     """
-    tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
+    tasks = query_executor(conn, queries['tasks']['file'], start_date, end_date)
     for task in tasks:
         yield task
 
 
-def squash(conn, queries, offset_date, end_date):
+def squash(conn, queries, start_date, end_date):
     """ Execute queries 'tasks' and 'datesets' and squash the results.
 
     Queries structure: {<query_name> : { 'file': <filename> } [, ...]}
 
     :param conn: open connection to Oracle
     :param queries: queries to execute
-    :param offset_date: start date
+    :param start_date: start date
     :param end_date: end date
     :type conn: cx_Oracle.Connection
     :type queries: dict
-    :type offset_date: str
+    :type start_date: str
     :type end_date: str
     """
-    tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
-    datasets = query_executor(conn, queries['datasets']['file'], offset_date, end_date)
+    tasks = query_executor(conn, queries['tasks']['file'], start_date, end_date)
+    datasets = query_executor(conn, queries['datasets']['file'], start_date, end_date)
     return join_results(tasks, squash_records(datasets))
 
 def squash_records(rec):
@@ -230,21 +230,21 @@ def process(conn, offset_date, final_date_cfg, step_seconds, queries):
         if not final_date_cfg:
             final_date = date2str(datetime.now())
 
-def query_executor(conn, sql_file, offset_date, end_date):
+def query_executor(conn, sql_file, start_date, end_date):
     """ Execute query with offset from file.
 
     :param conn: open connection to Oracle
     :param sql_file: name of the file with SQL query to execute
-    :param offset_date: start date for the SQL query
+    :param start_date: start date for the SQL query
     :param end_date: end date for the SQL query
     :type conn: cx_Oracle.Connection
     :type sql_file: str
-    :type offset_date: str
+    :type start_date: str
     :type end_date: str
     """
     try:
         file_handler = open(sql_file)
-        query = file_handler.read().rstrip().rstrip(';') % (offset_date, end_date)
+        query = file_handler.read().rstrip().rstrip(';') % (start_date, end_date)
         return DButils.ResultIter(conn, query, 1000, True)
     except IOError:
         sys.stderr.write('File open error. No such file (%s).\n' % sql_file)
