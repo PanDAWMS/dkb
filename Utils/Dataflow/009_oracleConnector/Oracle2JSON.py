@@ -19,7 +19,22 @@ except:
 PLAIN_POLICY = 'PLAIN'
 SQUASH_POLICY = 'SQUASH'
 
+# Global variables
+# ---
+# Config file
+conf = None
+# Operating mode
+mode = None
+# ---
+
 def connectDEFT_DSN(dsn):
+    """ Establish connection to the Oracle by DSN.
+
+    :param dsn: oracle Data Source Name
+    :type dsn: str
+    :return: open connection to Oracle database
+    :rtype: cx_Oracle.Connection
+    """
     try:
         connect = cx_Oracle.connect(dsn)
     except cx_Oracle.DatabaseError, err:
@@ -29,14 +44,15 @@ def connectDEFT_DSN(dsn):
     return connect
 
 def main():
-    """
-    --config <config file> --mode <PLAIN|SQUASH>
-    :return:
+    """ Main program cycle.
 
-     TODO:
-        Obtain the min(timestamp) from t_production_task
-          in case of no `initial_date` specified.
-        Query: SELECT min(timestamp) from t_production_task;
+    USAGE:
+       ./Oracle2JSON.py --config <config file> --mode <PLAIN|SQUASH>
+
+    TODO:
+       Obtain the min(timestamp) from t_production_task
+         in case of no `initial_date` specified.
+       Query: SELECT min(timestamp) from t_production_task;
     """
     args = parsingArguments()
     global conf
@@ -76,20 +92,50 @@ def main():
 
 
 def plain(conn, queries, offset_date, end_date):
+    """ Execute 'tasks' query.
+
+    Queries structure: {<query_name> : { 'file': <filename> } [, ...]}
+
+    :param conn: open connection to Oracle
+    :param queries: queries to execute
+    :param offset_date: start date
+    :param end_date: end date
+    :type conn: cx_Oracle.Connection
+    :type queries: dict
+    :type offset_date: str
+    :type end_date: str
+    """
     tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
     for task in tasks:
         yield task
 
 
 def squash(conn, queries, offset_date, end_date):
+    """ Execute queries 'tasks' and 'datesets' and squash the results.
+
+    Queries structure: {<query_name> : { 'file': <filename> } [, ...]}
+
+    :param conn: open connection to Oracle
+    :param queries: queries to execute
+    :param offset_date: start date
+    :param end_date: end date
+    :type conn: cx_Oracle.Connection
+    :type queries: dict
+    :type offset_date: str
+    :type end_date: str
+    """
     tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
     datasets = query_executor(conn, queries['datasets']['file'], offset_date, end_date)
     return join_results(tasks, squash_records(datasets))
 
 def squash_records(rec):
-    """
-    a single-pass iterator (for a generator) restructuring list of datasets:
-    from view:
+    """ Squash multiple records with same 'taskid' value into one.
+
+    The squashing is performed via joining values of 'datasetname'
+      parameter into a lists of dataset names: one list for every
+      'type' value.
+
+    Original structure:
     [
        {"taskid": 1, "type": "output", "datasetname": "First_out"},
        {"taskid": 1, "type": "output", "datasetname": "Second_out"},
@@ -97,7 +143,8 @@ def squash_records(rec):
        {"taskid": 2, "type": "output", "datasetname": "First_out"},
        {"taskid": 2, "type": "output", "datasetname": "Second_out"},
     ...]
-     to
+
+    Result structure:
     [
        {"taskid": 1,
         "output": ["First_out", "Second_out", "Third_out"]
@@ -106,6 +153,9 @@ def squash_records(rec):
         "output": ["First_out","Second_out"]
        },
     ...]
+
+    :param rec: original records
+    :type rec: iterable object
     """
     grouper = defaultdict(lambda: defaultdict(list))
     for d in rec:
@@ -114,6 +164,13 @@ def squash_records(rec):
 
 
 def join_results(tasks, datasets):
+    """ Join results of two queries by 'taskid'.
+
+    :param tasks: result of query 'tasks'
+    :param datasets: result of query 'datasets'
+    :type tasks: iterable object
+    :type datasets: iterable object
+    """
     d = defaultdict(dict)
     buffers = (tasks, datasets)
     join_buffer = {}
@@ -136,6 +193,18 @@ def join_results(tasks, datasets):
 
 
 def process(conn, offset_date, final_date_cfg, step_seconds, queries):
+    """ Run the source connector process: extract data from ext. source.
+
+    :param conn: open connection to Oracle
+    :param offset_date: initial offset date
+    :param final_date_cfg: final date from the namin config file
+    :param step_seconds: interval for single process iteration
+    :param queries: queries to be executed for data extraction
+    :type conn: cx_Oracle.Connection
+    :type offset_date: str
+    :type final_date_cfg: str
+    :type queries: dict
+    """
     if final_date_cfg:
         final_date = final_date_cfg
     else:
@@ -162,8 +231,16 @@ def process(conn, offset_date, final_date_cfg, step_seconds, queries):
             final_date = date2str(datetime.now())
 
 def query_executor(conn, sql_file, offset_date, end_date):
-    """
-    Execution of query with offset from file
+    """ Execute query with offset from file.
+
+    :param conn: open connection to Oracle
+    :param sql_file: name of the file with SQL query to execute
+    :param offset_date: start date for the SQL query
+    :param end_date: end date for the SQL query
+    :type conn: cx_Oracle.Connection
+    :type sql_file: str
+    :type offset_date: str
+    :type end_date: str
     """
     try:
         file_handler = open(sql_file)
@@ -173,16 +250,14 @@ def query_executor(conn, sql_file, offset_date, end_date):
         sys.stderr.write('File open error. No such file (%s).\n' % sql_file)
         sys.exit(2)
 
-
 def get_offset():
+    """ Get current offset. """
     config = ConfigParser.ConfigParser()
     config.read(conf)
     return config.get("timestamps", "offset")
 
 def update_offset(new_offset):
-    """
-    Updating offset value in configuration file
-    """
+    """ Update offset value in configuration file. """
     config = ConfigParser.RawConfigParser()
     config.optionxform = str
     config.read(conf)
@@ -191,10 +266,11 @@ def update_offset(new_offset):
         config.write(configfile)
 
 def interval_seconds(step):
-    """
-    Convert human-readable interval into seconds.
+    """ Convert human-readable interval into seconds.
 
     If no suffix present, take step as seconds.
+    :param step: human-readable time interval (3600, 1h, 1d, 15m....)
+    :type step: str|int
     """
     try:
         return int(step)
@@ -222,12 +298,16 @@ def date2str(date):
     return datetime.strftime(date, "%d-%m-%Y %H:%M:%S")
 
 def get_category(row):
-    """
+    """ Categorize task.
+
     Each task can be associated with a number of Physics Categories.
     1) search category in hashtags list
-    2) if not found in hashtags, then search category in phys_short field of tasknames
-    :param row
-    :return:
+    2) if not found in hashtags, then search category in phys_short
+       field of taskname
+    :param row: task metadata
+    :type row: dict
+    :return: detected categories for the task
+    :rtype: list
     """
     hashtags = row.get('hashtag_list')
     taskname = row.get('taskname')
@@ -285,6 +365,11 @@ def get_category(row):
     return categories
 
 def parsingArguments():
+    """ Parse command line arguments.
+
+    :return: parsed arguments
+    :rtype: argparse.Namespace
+    """
     parser = argparse.ArgumentParser(description='Process command line arguments.')
     parser.add_argument('--config', help='Configuration file path',
                         type=str, required=True)
