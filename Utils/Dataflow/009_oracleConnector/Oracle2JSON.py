@@ -66,16 +66,16 @@ def main():
         config.read(conf)
         # unchangeable data
         dsn = config.get("oracle", "dsn")
-        initial_date = config.get("timestamps", "initial")
+        initial_date = str2date(config.get("timestamps", "initial"))
         step = config.get("timestamps", "step")
         step_seconds = interval_seconds(step)
-        final_date = config.get("timestamps", "final")
+        final_date = str2date(config.get("timestamps", "final"))
         queries_cfg = config.items("queries")
         queries = {}
         for (qname, file) in queries_cfg:
             queries[qname] = {'file': file}
         # changeable data
-        offset_date = config.get("timestamps", "offset")
+        offset_date = str2date(config.get("timestamps", "offset"))
         if offset_date == '':
             offset_date = initial_date
     except (IOError, ConfigParser.Error), e:
@@ -102,8 +102,8 @@ def plain(conn, queries, start_date, end_date):
     :param end_date: end date
     :type conn: cx_Oracle.Connection
     :type queries: dict
-    :type start_date: str
-    :type end_date: str
+    :type start_date: datetime.datetime
+    :type end_date: datetime.datetime
     """
     tasks = query_executor(conn, queries['tasks']['file'], start_date, end_date)
     for task in tasks:
@@ -121,8 +121,8 @@ def squash(conn, queries, start_date, end_date):
     :param end_date: end date
     :type conn: cx_Oracle.Connection
     :type queries: dict
-    :type start_date: str
-    :type end_date: str
+    :type start_date: datetime.datetime
+    :type end_date: datetime.datetime
     """
     tasks = query_executor(conn, queries['tasks']['file'], start_date, end_date)
     datasets = query_executor(conn, queries['datasets']['file'], start_date, end_date)
@@ -201,23 +201,23 @@ def process(conn, offset_date, final_date_cfg, step_seconds, queries):
     :param step_seconds: interval for single process iteration
     :param queries: queries to be executed for data extraction
     :type conn: cx_Oracle.Connection
-    :type offset_date: str
-    :type final_date_cfg: str
+    :type offset_date: datetime.datetime
+    :type final_date_cfg: datetime.datetime
     :type queries: dict
     """
     if final_date_cfg:
         final_date = final_date_cfg
     else:
-        final_date = date2str(datetime.now())
+        final_date = datetime.now()
     break_loop = False
-    while (not break_loop and str2date(offset_date) < str2date(final_date)):
-        end_date = date2str(str2date(offset_date)
-                            + timedelta(seconds=step_seconds))
-        if str2date(end_date) > str2date(final_date):
+    while (not break_loop and offset_date < final_date):
+        end_date = offset_date + timedelta(seconds=step_seconds)
+        if end_date > final_date:
             end_date = final_date
             break_loop = True
         sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
-                         % (date2str(datetime.now()), offset_date, end_date))
+                         % (date2str(datetime.now()), date2str(offset_date),
+                            date2str(end_date)))
         if mode == SQUASH_POLICY:
             records = squash(conn, queries, offset_date, end_date)
         elif mode == PLAIN_POLICY:
@@ -228,7 +228,7 @@ def process(conn, offset_date, final_date_cfg, step_seconds, queries):
         update_offset(end_date)
         offset_date = end_date
         if not final_date_cfg:
-            final_date = date2str(datetime.now())
+            final_date = datetime.now()
 
 def query_executor(conn, sql_file, start_date, end_date):
     """ Execute query with offset from file.
@@ -239,12 +239,13 @@ def query_executor(conn, sql_file, start_date, end_date):
     :param end_date: end date for the SQL query
     :type conn: cx_Oracle.Connection
     :type sql_file: str
-    :type start_date: str
-    :type end_date: str
+    :type start_date: datetime.datetime
+    :type end_date: datetime.datetime
     """
     try:
         file_handler = open(sql_file)
-        query = file_handler.read().rstrip().rstrip(';') % (start_date, end_date)
+        query = file_handler.read().rstrip().rstrip(';')
+        query = query % (date2str(start_date), date2str(end_date))
         return DButils.ResultIter(conn, query, 1000, True)
     except IOError:
         sys.stderr.write('File open error. No such file (%s).\n' % sql_file)
@@ -254,14 +255,14 @@ def get_offset():
     """ Get current offset. """
     config = ConfigParser.ConfigParser()
     config.read(conf)
-    return config.get("timestamps", "offset")
+    return str2date(config.get("timestamps", "offset"))
 
 def update_offset(new_offset):
     """ Update offset value in configuration file. """
     config = ConfigParser.RawConfigParser()
     config.optionxform = str
     config.read(conf)
-    config.set('timestamps', 'offset', new_offset)
+    config.set('timestamps', 'offset', date2str(new_offset))
     with open(conf, 'w') as configfile:
         config.write(configfile)
 
@@ -291,10 +292,14 @@ def interval_seconds(step):
 
 def str2date(str_date):
     """ Convert string (%d-%m-%Y %H:%M:%S) to datetime object. """
+    if not str_date:
+        return None
     return datetime.strptime(str_date, "%d-%m-%Y %H:%M:%S")
 
 def date2str(date):
     """ Convert datetime object to string (%d-%m-%Y %H:%M:%S). """
+    if not date:
+        return None
     return datetime.strftime(date, "%d-%m-%Y %H:%M:%S")
 
 def get_category(row):
