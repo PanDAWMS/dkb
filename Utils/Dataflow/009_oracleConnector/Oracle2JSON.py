@@ -224,11 +224,44 @@ def squash_records(rec):
     :param rec: original records
     :type rec: iterable object
     """
-    grouper = defaultdict(lambda: defaultdict(list))
+    key_fields = ['taskid']
+    fold_fields = [('type', 'datasetname')]
+    result = {}
     for d in rec:
-        grouper[d['taskid']][d['type']].append(d['datasetname'])
-    return [dict(taskid=k, **v) for k, v in grouper.items()]
+        for key_field in key_fields:
+            if not d.get(key_field):
+                # There must not be empty key fields (or how is it "key");
+                # but we better explicitly skip it. Just in case.
+                continue
+            if result.get(key_field) and result[key_field] != d[key_field]:
+                # Squashing is over for given set of values of the key fields
+                yield result
+                result = {}
+                break
 
+        # Fold original record
+        # {'taskid': 1, 'type': 'output', 'datasetname': DSNAME} ->
+        #  -> {'taskid': 1, 'output': DSNAME}
+        for fkey, fval in fold_fields:
+            if fkey in d:
+                new_key = d.pop(fkey)
+                new_val = d.pop(fval, None)
+                d[new_key] = new_val
+
+        for f in d:
+            if f in key_fields:
+                result[f] = d[f]
+                continue
+            if d[f]:
+                if result.get(f):
+                    if type(result[f]) != list:
+                        result[f] = [result[f]]
+                    result[f].append(d[f])
+                else:
+                    result[f] = d[f]
+
+    if result:
+        yield result
 
 def join_results(tasks, datasets):
     """ Join results of two queries by 'taskid'.
