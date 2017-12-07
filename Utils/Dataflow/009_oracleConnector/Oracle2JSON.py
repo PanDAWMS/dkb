@@ -7,7 +7,10 @@ import re
 import DButils
 import sys
 from datetime import datetime, timedelta
+import time
 from collections import defaultdict
+
+from OffsetStorage import FileOffsetStorage
 
 try:
     import cx_Oracle
@@ -66,7 +69,6 @@ def main():
         config.read(conf)
         # unchangeable data
         dsn = config.get("oracle", "dsn")
-        initial_date = str2date(config.get("timestamps", "initial"))
         step = config.get("timestamps", "step")
         step_seconds = interval_seconds(step)
         final_date = str2date(config.get("timestamps", "final"))
@@ -74,22 +76,87 @@ def main():
         queries = {}
         for (qname, file) in queries_cfg:
             queries[qname] = {'file': file}
-        # changeable data
-        offset_date = str2date(config.get("timestamps", "offset"))
-        if offset_date == '':
-            offset_date = initial_date
     except (IOError, ConfigParser.Error), e:
         sys.stderr.write('Failed to read config file (%s): %s\n'
                          % (conf, e))
         sys.exit(1)
+
+    # Offset storage initialization
+    offset_storage = init_offset_storage(config)
+    if not offset_storage:
+        sys.exit(2)
 
     conn = connectDEFT_DSN(dsn)
     if not conn:
         sys.stderr.write("(ERROR) Failed to connect to Oracle. Exiting.\n")
         sys.exit(3)
 
-    process(conn, offset_date, final_date, step_seconds, queries)
+    process(conn, offset_storage, final_date, step_seconds, queries)
 
+def init_offset_storage(config):
+    """ Get configured (or default) offset file.
+
+    If file does not exist, create file.
+    If the directory for that file does not exist, raise exception.
+
+    :param config: stage configuration
+    :type config: ConfigParser.ConfigParser
+    :return: offset storage
+    :rtype: FileOffsetStorage
+    """
+    config_file = conf
+    offset_storage = None
+
+    if not isinstance(config, ConfigParser.ConfigParser):
+        raise ValueError("get_offset_file: ConfigParser object is expected;"
+                         " got %s" % type(config))
+
+    try:
+        offset_file = config.get("logging", "offset_file")
+    except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+        sys.stderr.write('(INFO) Config: "offset_file" not found in section'
+                         ' "logging". Using default value.\n')
+        offset_file = '.offset'
+
+    if not os.path.isabs(offset_file):
+        config_dir = os.path.dirname(os.path.abspath(config_file))
+        offset_file = os.path.join(config_dir, offset_file)
+
+    try:
+        offset_storage = FileOffsetStorage(offset_file)
+        if not offset_storage.get():
+            initial_date = config.get("timestamps", "initial")
+            current_offset = str2date(initial_date)
+            commit_offset(offset_storage, current_offset)
+    except IOError, err:
+        sys.stderr.write("(ERROR) %s\n" % err)
+
+    return offset_storage
+
+def commit_offset(offset_storage, new_offset):
+    """ Save current offset to the storage.
+
+    :param offset_storage: the offset storage
+    :param new_offset: offset to commit
+    :type offset_storage: OffsetStorage
+    :type new_offset: datetime.datetime
+    """
+    timestamp = time.mktime(new_offset.timetuple())
+    offset_storage.commit(timestamp)
+
+def get_offset(offset_storage):
+    """ Get current offset from the offset storage.
+
+    :param offset_storage: the offset storage
+    :type offset_storage: OffsetStorage
+    :return: current offset
+    :rtype: datetime.datetime
+    """
+    result = offset_storage.get()
+    if result is not None:
+        timestamp = float(result)
+        result = datetime.fromtimestamp(timestamp)
+    return result
 
 def plain(conn, queries, start_date, end_date):
     """ Execute 'tasks' query.
@@ -192,16 +259,16 @@ def join_results(tasks, datasets):
         yield d[tid]
 
 
-def process(conn, offset_date, final_date_cfg, step_seconds, queries):
+def process(conn, offset_storage, final_date_cfg, step_seconds, queries):
     """ Run the source connector process: extract data from ext. source.
 
     :param conn: open connection to Oracle
-    :param offset_date: initial offset date
+    :param offset_storage: offset storage
     :param final_date_cfg: final date from the namin config file
     :param step_seconds: interval for single process iteration
     :param queries: queries to be executed for data extraction
     :type conn: cx_Oracle.Connection
-    :type offset_date: datetime.datetime
+    :type offset_storage: OffsetStorage
     :type final_date_cfg: datetime.datetime
     :type queries: dict
     """
@@ -210,6 +277,7 @@ def process(conn, offset_date, final_date_cfg, step_seconds, queries):
     else:
         final_date = datetime.now()
     break_loop = False
+    offset_date = get_offset(offset_storage)
     while (not break_loop and offset_date < final_date):
         end_date = offset_date + timedelta(seconds=step_seconds)
         if end_date > final_date:
@@ -225,8 +293,8 @@ def process(conn, offset_date, final_date_cfg, step_seconds, queries):
         for r in records:
             r['phys_category'] = get_category(r)
             sys.stdout.write(json.dumps(r) + '\n')
-        update_offset(end_date)
         offset_date = end_date
+        commit_offset(offset_storage, offset_date)
         if not final_date_cfg:
             final_date = datetime.now()
 
@@ -250,21 +318,6 @@ def query_executor(conn, sql_file, start_date, end_date):
     except IOError:
         sys.stderr.write('File open error. No such file (%s).\n' % sql_file)
         sys.exit(2)
-
-def get_offset():
-    """ Get current offset. """
-    config = ConfigParser.ConfigParser()
-    config.read(conf)
-    return str2date(config.get("timestamps", "offset"))
-
-def update_offset(new_offset):
-    """ Update offset value in configuration file. """
-    config = ConfigParser.RawConfigParser()
-    config.optionxform = str
-    config.read(conf)
-    config.set('timestamps', 'offset', date2str(new_offset))
-    with open(conf, 'w') as configfile:
-        config.write(configfile)
 
 def interval_seconds(step):
     """ Convert human-readable interval into seconds.
