@@ -4,19 +4,13 @@ import json
 import argparse
 import ConfigParser
 import re
-import DButils
 import sys
 from datetime import datetime, timedelta
 import time
 from collections import defaultdict
 
 from OffsetStorage import FileOffsetStorage
-
-try:
-    import cx_Oracle
-except:
-    sys.stderr.write("(ERROR) Failed to import cx_Oracle. Exiting.\n")
-    sys.exit(3)
+from dbConnection import OracleConnection
 
 # Policies
 PLAIN_POLICY = 'PLAIN'
@@ -29,22 +23,6 @@ conf = None
 # Operating mode
 mode = None
 # ---
-
-def connectDEFT_DSN(dsn):
-    """ Establish connection to the Oracle by DSN.
-
-    :param dsn: oracle Data Source Name
-    :type dsn: str
-    :return: open connection to Oracle database
-    :rtype: cx_Oracle.Connection
-    """
-    try:
-        connect = cx_Oracle.connect(dsn)
-    except cx_Oracle.DatabaseError, err:
-        sys.stderr.write("(ERROR) %s\n" % err)
-        return None
-
-    return connect
 
 def main():
     """ Main program cycle.
@@ -86,12 +64,16 @@ def main():
     if not offset_storage:
         sys.exit(2)
 
-    conn = connectDEFT_DSN(dsn)
-    if not conn:
+    conn = OracleConnection(dsn)
+    if not conn.establish():
         sys.stderr.write("(ERROR) Failed to connect to Oracle. Exiting.\n")
         sys.exit(3)
 
-    process(conn, offset_storage, final_date, step_seconds, queries)
+    if not conn.save_queries(queries):
+        sys.stderr.write("(ERROR) Queries seem to be misconfigured. Exiting.\n")
+        sys.exit(1)
+
+    process(conn, offset_storage, final_date, step_seconds)
 
 def init_offset_storage(config):
     """ Get configured (or default) offset file.
@@ -161,18 +143,19 @@ def get_offset(offset_storage):
 def plain(conn, queries, start_date, end_date):
     """ Execute 'tasks' query.
 
-    Queries structure: {<query_name> : { 'file': <filename> } [, ...]}
+    The only acceptable value for `queries` is ['tasks'].
 
     :param conn: open connection to Oracle
-    :param queries: queries to execute
+    :param queries: names of queries to execute
     :param start_date: start date
     :param end_date: end date
-    :type conn: cx_Oracle.Connection
-    :type queries: dict
+    :type conn: OracleConnection
+    :type queries: list
     :type start_date: datetime.datetime
     :type end_date: datetime.datetime
     """
-    tasks = query_executor(conn, queries['tasks']['file'], start_date, end_date)
+    conn.execute_saved(queries[0], start_date=start_date, end_date=end_date)
+    tasks = conn.results(queries[0], 1000, True)
     for task in tasks:
         yield task
 
@@ -180,19 +163,21 @@ def plain(conn, queries, start_date, end_date):
 def squash(conn, queries, start_date, end_date):
     """ Execute queries 'tasks' and 'datesets' and squash the results.
 
-    Queries structure: {<query_name> : { 'file': <filename> } [, ...]}
+    The only acceptable value for `queries` is ['tasks', 'datasets'].
 
     :param conn: open connection to Oracle
-    :param queries: queries to execute
+    :param queries: names of queries to execute
     :param start_date: start date
     :param end_date: end date
-    :type conn: cx_Oracle.Connection
-    :type queries: dict
+    :type conn: OracleConnection
+    :type queries: list
     :type start_date: datetime.datetime
     :type end_date: datetime.datetime
     """
-    tasks = query_executor(conn, queries['tasks']['file'], start_date, end_date)
-    datasets = query_executor(conn, queries['datasets']['file'], start_date, end_date)
+    conn.execute_saved(queries[0], start_date=start_date, end_date=end_date)
+    conn.execute_saved(queries[1], start_date=start_date, end_date=end_date)
+    tasks = conn.results(queries[0], 1000, True)
+    datasets = conn.results(queries[1], 1000, True)
     return join_results(tasks, squash_records(datasets))
 
 def squash_records(rec):
@@ -292,18 +277,16 @@ def join_results(tasks, datasets):
         yield d[tid]
 
 
-def process(conn, offset_storage, final_date_cfg, step_seconds, queries):
+def process(conn, offset_storage, final_date_cfg, step_seconds):
     """ Run the source connector process: extract data from ext. source.
 
     :param conn: open connection to Oracle
     :param offset_storage: offset storage
     :param final_date_cfg: final date from the namin config file
     :param step_seconds: interval for single process iteration
-    :param queries: queries to be executed for data extraction
-    :type conn: cx_Oracle.Connection
+    :type conn: OracleConnection
     :type offset_storage: OffsetStorage
     :type final_date_cfg: datetime.datetime
-    :type queries: dict
     """
     if final_date_cfg:
         final_date = final_date_cfg
@@ -320,9 +303,9 @@ def process(conn, offset_storage, final_date_cfg, step_seconds, queries):
                          % (date2str(datetime.now()), date2str(offset_date),
                             date2str(end_date)))
         if mode == SQUASH_POLICY:
-            records = squash(conn, queries, offset_date, end_date)
+            records = squash(conn, ['tasks', 'datasets'], offset_date, end_date)
         elif mode == PLAIN_POLICY:
-            records = plain(conn, queries, offset_date, end_date)
+            records = plain(conn, ['tasks'], offset_date, end_date)
         for r in records:
             r['phys_category'] = get_category(r)
             sys.stdout.write(json.dumps(r) + '\n')
@@ -330,27 +313,6 @@ def process(conn, offset_storage, final_date_cfg, step_seconds, queries):
         commit_offset(offset_storage, offset_date)
         if not final_date_cfg:
             final_date = datetime.now()
-
-def query_executor(conn, sql_file, start_date, end_date):
-    """ Execute query with offset from file.
-
-    :param conn: open connection to Oracle
-    :param sql_file: name of the file with SQL query to execute
-    :param start_date: start date for the SQL query
-    :param end_date: end date for the SQL query
-    :type conn: cx_Oracle.Connection
-    :type sql_file: str
-    :type start_date: datetime.datetime
-    :type end_date: datetime.datetime
-    """
-    try:
-        file_handler = open(sql_file)
-        query = file_handler.read().rstrip().rstrip(';')
-        query = query % (date2str(start_date), date2str(end_date))
-        return DButils.ResultIter(conn, query, 1000, True)
-    except IOError:
-        sys.stderr.write('File open error. No such file (%s).\n' % sql_file)
-        sys.exit(2)
 
 def interval_seconds(step):
     """ Convert human-readable interval into seconds.
