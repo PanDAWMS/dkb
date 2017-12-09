@@ -61,9 +61,25 @@ class OracleConnection(dbConnection):
         self.dsn = dsn
 
     def establish(self):
-        """ Establish connection to database. """
+        """ (Re-)establish connection to database. """
+        if self.connection:
+            try:
+                sys.stderr.write("(INFO) Re-establishing connection"
+                                 " to the DB.\n")
+                sys.stderr.write("(INFO) Close connection...\n")
+                for q in self.queries:
+                    c = self.queries[q].pop('cursor', None)
+                    if c:
+                        c.close()
+                self.connection.close()
+                sys.stderr.write("(INFO) Connection closed.\n")
+            except cx_Oracle.OperationalError:
+                pass
+
         try:
+            sys.stderr.write("(INFO) Establish connection to the DB...\n")
             self.connection = cx_Oracle.connect(self.dsn)
+            sys.stderr.write("(INFO) Connection established.\n")
         except cx_Oracle.DatabaseError, err:
             sys.stderr.write("(ERROR) %s\n" % err)
             return False
@@ -130,8 +146,39 @@ class OracleConnection(dbConnection):
         if not c:
             return False
 
-        c.execute(None, params)
+        try:
+            c.execute(None, params)
+        except cx_Oracle.DatabaseError, err:
+            sys.stderr.write("(WARN) Failed to execute query '%s': %s\n"
+                             % (qname, err))
+            return self.query_retry(qname, **params)
 
+        return True
+
+    def query_set_retried(self, qname):
+        """ Set marker 'retried' for given saved query. """
+        self.queries[qname]['retried'] = True
+
+    def query_unset_retried(self, qname):
+        """ Unset marker 'retried' for given saved query. """
+        self.queries[qname]['retried'] = False
+
+    def query_is_retried(self, qname):
+        """ Check if marker 'retried' for given saved query is set. """
+        return self.queries[qname].get('retried', False)
+
+    def query_retry(self, qname, **params):
+        """ Retry query execution, if it was not retried yet. """
+        if self.query_is_retried(qname):
+            sys.stderr.write("(ERROR) Retried query execution,"
+                             " but failed again.\n")
+            return False
+        self.query_set_retried(qname)
+        if not self.establish():
+            return False
+        if not self.execute_saved(qname, **params):
+            return False
+        self.query_unset_retried(qname)
         return True
 
     def results(self, qname, arraysize=1000, rows_as_dict=False):

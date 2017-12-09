@@ -154,7 +154,9 @@ def plain(conn, queries, start_date, end_date):
     :type start_date: datetime.datetime
     :type end_date: datetime.datetime
     """
-    conn.execute_saved(queries[0], start_date=start_date, end_date=end_date)
+    if not conn.execute_saved(queries[0], start_date=start_date,
+                              end_date=end_date):
+        raise StopIteration
     tasks = conn.results(queries[0], 1000, True)
     for task in tasks:
         yield task
@@ -174,8 +176,11 @@ def squash(conn, queries, start_date, end_date):
     :type start_date: datetime.datetime
     :type end_date: datetime.datetime
     """
-    conn.execute_saved(queries[0], start_date=start_date, end_date=end_date)
-    conn.execute_saved(queries[1], start_date=start_date, end_date=end_date)
+    if not conn.execute_saved(queries[0], start_date=start_date,
+                              end_date=end_date) \
+            or not conn.execute_saved(queries[1], start_date=start_date,
+                                      end_date=end_date):
+        raise StopIteration
     tasks = conn.results(queries[0], 1000, True)
     datasets = conn.results(queries[1], 1000, True)
     return join_results(tasks, squash_records(datasets))
