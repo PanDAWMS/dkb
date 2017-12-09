@@ -22,6 +22,8 @@ SQUASH_POLICY = 'SQUASH'
 conf = None
 # Operating mode
 mode = None
+# Output stream
+OUT = os.fdopen(sys.stdout.fileno(), 'w', 0)
 # ---
 
 def main():
@@ -313,7 +315,7 @@ def process(conn, offset_storage, final_date_cfg, step_seconds):
             records = plain(conn, ['tasks'], offset_date, end_date)
         for r in records:
             r['phys_category'] = get_category(r)
-            sys.stdout.write(json.dumps(r) + '\n')
+            OUT.write(json.dumps(r) + '\n')
         offset_date = end_date
         commit_offset(offset_storage, offset_date)
         if not final_date_cfg:
