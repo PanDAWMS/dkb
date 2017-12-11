@@ -19,6 +19,7 @@ except:
 PLAIN_POLICY = 'PLAIN'
 SQUASH_POLICY = 'SQUASH'
 
+
 def connectDEFT_DSN(dsn):
     try:
         connect = cx_Oracle.connect(dsn)
@@ -27,6 +28,7 @@ def connectDEFT_DSN(dsn):
         return None
 
     return connect
+
 
 def main():
     """
@@ -76,15 +78,19 @@ def main():
 
 
 def plain(conn, queries, offset_date, end_date):
-    tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
+    tasks = query_executor(conn, queries['tasks']['file'], offset_date,
+                           end_date)
     for task in tasks:
         yield task
 
 
 def squash(conn, queries, offset_date, end_date):
-    tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
-    datasets = query_executor(conn, queries['datasets']['file'], offset_date, end_date)
+    tasks = query_executor(conn, queries['tasks']['file'], offset_date,
+                           end_date)
+    datasets = query_executor(conn, queries['datasets']['file'], offset_date,
+                              end_date)
     return join_results(tasks, squash_records(datasets))
+
 
 def squash_records(rec):
     """
@@ -161,13 +167,15 @@ def process(conn, offset_date, final_date_cfg, step_seconds, queries):
         if not final_date_cfg:
             final_date = date2str(datetime.now())
 
+
 def query_executor(conn, sql_file, offset_date, end_date):
     """
     Execution of query with offset from file
     """
     try:
         file_handler = open(sql_file)
-        query = file_handler.read().rstrip().rstrip(';') % (offset_date, end_date)
+        query = file_handler.read().rstrip().rstrip(';') % (offset_date,
+                                                            end_date)
         return DButils.ResultIter(conn, query, 1000, True)
     except IOError:
         sys.stderr.write('File open error. No such file (%s).\n' % sql_file)
@@ -179,6 +187,7 @@ def get_offset():
     config.read(conf)
     return config.get("timestamps", "offset")
 
+
 def update_offset(new_offset):
     """
     Updating offset value in configuration file
@@ -189,6 +198,7 @@ def update_offset(new_offset):
     config.set('timestamps', 'offset', new_offset)
     with open(conf, 'w') as configfile:
         config.write(configfile)
+
 
 def interval_seconds(step):
     """
@@ -202,7 +212,7 @@ def interval_seconds(step):
         pass
     if len(step) < 2:
         raise ValueError("Failed to decode interval: %s" % step)
-    suffix = { 'd': 86400, 'h': 3600, 'm': 60, 's': 1}
+    suffix = {'d': 86400, 'h': 3600, 'm': 60, 's': 1}
     val = step[:-1]
     try:
         mul = suffix[step[-1]]
@@ -213,19 +223,23 @@ def interval_seconds(step):
     except KeyError:
         raise ValueError("Failes to decode index of the interval: %s" % step)
 
+
 def str2date(str_date):
     """ Convert string (%d-%m-%Y %H:%M:%S) to datetime object. """
     return datetime.strptime(str_date, "%d-%m-%Y %H:%M:%S")
+
 
 def date2str(date):
     """ Convert datetime object to string (%d-%m-%Y %H:%M:%S). """
     return datetime.strftime(date, "%d-%m-%Y %H:%M:%S")
 
+
 def get_category(row):
     """
     Each task can be associated with a number of Physics Categories.
     1) search category in hashtags list
-    2) if not found in hashtags, then search category in phys_short field of tasknames
+    2) if not found in hashtags, then search category in phys_short
+       field of tasknames
     :param row
     :return:
     """
@@ -259,45 +273,66 @@ def get_category(row):
     match = {}
     categories = []
     for phys_category in PHYS_CATEGORIES_MAP:
-        current_map = [x.strip(' ').lower() for x in PHYS_CATEGORIES_MAP[phys_category]]
+        current_map = [x.strip(' ').lower()
+                       for x in PHYS_CATEGORIES_MAP[phys_category]]
         if hashtags is not None:
-            match[phys_category] = len([x for x in hashtags.lower().split(',') if x.strip(' ') in current_map])
+            match[phys_category] = len([x for x in hashtags.lower().split(',')
+                                        if x.strip(' ') in current_map])
     categories = [cat for cat in match if match[cat] > 0]
     if not categories and taskname:
         phys_short = taskname.split('.')[2].lower()
-        if re.search('singletop', phys_short) is not None: categories.append("SingleTop")
-        if re.search('ttbar', phys_short) is not None: categories.append("TTbar")
-        if re.search('jets', phys_short) is not None: categories.append("Multijet")
-        if re.search('h125', phys_short) is not None: categories.append("Higgs")
-        if re.search('ttbb', phys_short) is not None: categories.append("TTbarX")
-        if re.search('ttgamma', phys_short) is not None: categories.append("TTbarX")
-        if re.search('_tt_', phys_short) is not None: categories.append("TTbar")
-        if re.search('upsilon', phys_short) is not None: categories.append("BPhysics")
-        if re.search('tanb', phys_short) is not None: categories.append("SUSY")
-        if re.search('4topci', phys_short) is not None: categories.append("Exotic")
-        if re.search('xhh', phys_short) is not None: categories.append("Higgs")
-        if re.search('3top', phys_short) is not None: categories.append("TTbarX")
-        if re.search('_wt', phys_short) is not None: categories.append("SingleTop")
-        if re.search('_wwbb', phys_short) is not None: categories.append("SingleTop")
-        if re.search('_wenu_', phys_short) is not None: categories.append("Wjets")
+        if re.search('singletop', phys_short) is not None:
+            categories.append("SingleTop")
+        if re.search('ttbar', phys_short) is not None:
+            categories.append("TTbar")
+        if re.search('jets', phys_short) is not None:
+            categories.append("Multijet")
+        if re.search('h125', phys_short) is not None:
+            categories.append("Higgs")
+        if re.search('ttbb', phys_short) is not None:
+            categories.append("TTbarX")
+        if re.search('ttgamma', phys_short) is not None:
+            categories.append("TTbarX")
+        if re.search('_tt_', phys_short) is not None:
+            categories.append("TTbar")
+        if re.search('upsilon', phys_short) is not None:
+            categories.append("BPhysics")
+        if re.search('tanb', phys_short) is not None:
+            categories.append("SUSY")
+        if re.search('4topci', phys_short) is not None:
+            categories.append("Exotic")
+        if re.search('xhh', phys_short) is not None:
+            categories.append("Higgs")
+        if re.search('3top', phys_short) is not None:
+            categories.append("TTbarX")
+        if re.search('_wt', phys_short) is not None:
+            categories.append("SingleTop")
+        if re.search('_wwbb', phys_short) is not None:
+            categories.append("SingleTop")
+        if re.search('_wenu_', phys_short) is not None:
+            categories.append("Wjets")
     if not categories:
         categories = ["Uncategorized"]
     return categories
 
+
 def parsingArguments():
-    parser = argparse.ArgumentParser(description='Process command line arguments.')
+    parser = argparse.ArgumentParser(description='Process command line
+                                     arguments.')
     parser.add_argument('--config', help='Configuration file path',
                         type=str, required=True)
     parser.add_argument('--mode', help='Mode of execution: PLAIN | SQUASH',
                         choices=[PLAIN_POLICY, SQUASH_POLICY])
     args = parser.parse_args()
     if not os.access(args.config, os.F_OK):
-        sys.stderr.write("argument --config: '%s' file not exists\n" % args.config)
+        sys.stderr.write("argument --config: '%s' file not exists\n"
+                         % args.config)
         sys.exit(1)
-    if not os.access(args.config, os.R_OK|os.W_OK):
-        sys.stderr.write("argument --config: '%s' read/write access failed\n" % args.config)
+    if not os.access(args.config, os.R_OK | os.W_OK):
+        sys.stderr.write("argument --config: '%s' read/write access failed\n"
+                         % args.config)
         sys.exit(1)
     return parser.parse_args()
 
-if  __name__ == '__main__':
+if __name__ == '__main__':
     main()

@@ -12,11 +12,13 @@ except:
     print "****ERROR : DButils. Cannot import cx_Oracle"
     pass
 
+
 def connectDEFT_DSN(dsn):
     connect = cx_Oracle.connect(dsn)
     cursor = connect.cursor()
 
     return connect, cursor
+
 
 def connectDEFT(dbname, dbuser, pwd):
     connect = cx_Oracle.connect(dbuser, pwd, dbname)
@@ -56,7 +58,8 @@ def OneByOneIter(connection, query, rows_as_dict=False):
     https://bitbucket.org/anthony_tuininga/cx_oracle/issues/49/lob-object-documentation-clarification
     :param connection: Oracle connection
     :param query: query steing
-    :param rows_as_dict: return rows with headers as dicts (True), or as lists (False)
+    :param rows_as_dict: return rows with headers as dicts (True),
+                         or as lists (False)
     :return:
     """
     cursor = connection.cursor()
@@ -72,6 +75,7 @@ def OneByOneIter(connection, query, rows_as_dict=False):
             yield dict(zip(colnames, row))
         else:
             yield row
+
 
 def fix_lob(row):
     """
@@ -106,6 +110,7 @@ def QueryAll(connection, query):
 
     return dbrows
 
+
 def QueryToCSV(connection, query, filename, arraysize=100):
     cursor = connection.cursor()
     cursor.execute(query)
@@ -120,6 +125,7 @@ def QueryToCSV(connection, query, filename, arraysize=100):
                 row = fix_lob(row)
                 writer.writerow(row)
 
+
 def CSV2JSON(csv_file, json_file):
     csv_file_handler = open(csv_file, 'r')
     json_file_handler = open(json_file, 'w')
@@ -130,6 +136,7 @@ def CSV2JSON(csv_file, json_file):
         json_file_handler.write(',')
         json_file_handler.write('\n')
     json_file_handler.write(']')
+
 
 def QueryUpdate(connection, query):
     error = 0
