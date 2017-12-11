@@ -208,7 +208,7 @@ def interval_seconds(step):
         pass
     if len(step) < 2:
         raise ValueError("Failed to decode interval: %s" % step)
-    suffix = { 'd': 86400, 'h': 3600, 'm': 60, 's': 1}
+    suffix = {'d': 86400, 'h': 3600, 'm': 60, 's': 1}
     val = step[:-1]
     try:
         mul = suffix[step[-1]]
@@ -304,10 +304,10 @@ def parsingArguments():
     if not os.access(args.config, os.F_OK):
         sys.stderr.write("argument --config: '%s' file not exists\n" % args.config)
         sys.exit(1)
-    if not os.access(args.config, os.R_OK|os.W_OK):
+    if not os.access(args.config, os.R_OK | os.W_OK):
         sys.stderr.write("argument --config: '%s' read/write access failed\n" % args.config)
         sys.exit(1)
     return parser.parse_args()
 
-if  __name__ == '__main__':
+if __name__ == '__main__':
     main()
