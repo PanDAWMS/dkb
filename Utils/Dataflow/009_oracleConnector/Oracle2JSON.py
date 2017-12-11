@@ -19,6 +19,7 @@ except:
 PLAIN_POLICY = 'PLAIN'
 SQUASH_POLICY = 'SQUASH'
 
+
 def connectDEFT_DSN(dsn):
     try:
         connect = cx_Oracle.connect(dsn)
@@ -27,6 +28,7 @@ def connectDEFT_DSN(dsn):
         return None
 
     return connect
+
 
 def main():
     """
@@ -85,6 +87,7 @@ def squash(conn, queries, offset_date, end_date):
     tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
     datasets = query_executor(conn, queries['datasets']['file'], offset_date, end_date)
     return join_results(tasks, squash_records(datasets))
+
 
 def squash_records(rec):
     """
@@ -161,6 +164,7 @@ def process(conn, offset_date, final_date_cfg, step_seconds, queries):
         if not final_date_cfg:
             final_date = date2str(datetime.now())
 
+
 def query_executor(conn, sql_file, offset_date, end_date):
     """
     Execution of query with offset from file
@@ -179,6 +183,7 @@ def get_offset():
     config.read(conf)
     return config.get("timestamps", "offset")
 
+
 def update_offset(new_offset):
     """
     Updating offset value in configuration file
@@ -189,6 +194,7 @@ def update_offset(new_offset):
     config.set('timestamps', 'offset', new_offset)
     with open(conf, 'w') as configfile:
         config.write(configfile)
+
 
 def interval_seconds(step):
     """
@@ -213,13 +219,16 @@ def interval_seconds(step):
     except KeyError:
         raise ValueError("Failes to decode index of the interval: %s" % step)
 
+
 def str2date(str_date):
     """ Convert string (%d-%m-%Y %H:%M:%S) to datetime object. """
     return datetime.strptime(str_date, "%d-%m-%Y %H:%M:%S")
 
+
 def date2str(date):
     """ Convert datetime object to string (%d-%m-%Y %H:%M:%S). """
     return datetime.strftime(date, "%d-%m-%Y %H:%M:%S")
+
 
 def get_category(row):
     """
@@ -283,6 +292,7 @@ def get_category(row):
     if not categories:
         categories = ["Uncategorized"]
     return categories
+
 
 def parsingArguments():
     parser = argparse.ArgumentParser(description='Process command line arguments.')
