@@ -317,8 +317,8 @@ def get_category(row):
 
 
 def parsingArguments():
-    parser = argparse.ArgumentParser(description='Process command line
-                                     arguments.')
+    parser = argparse.ArgumentParser(description='Process command line'
+                                     'arguments.')
     parser.add_argument('--config', help='Configuration file path',
                         type=str, required=True)
     parser.add_argument('--mode', help='Mode of execution: PLAIN | SQUASH',
