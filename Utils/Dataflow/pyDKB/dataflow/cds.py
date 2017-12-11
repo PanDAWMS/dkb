@@ -65,7 +65,6 @@ else:
             self.delete()
             os.kill(os.getpid(), signum)
 
-
     class KerberizedCDSInvenioConnector(CDSInvenioConnector):
         """
         Represents same CDSInvenioConnector, but this one is aware about
