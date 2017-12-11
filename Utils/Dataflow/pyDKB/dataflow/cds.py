@@ -31,7 +31,7 @@ else:
 
         def __init__(self, *args):
             self.orig_handlers = {
-                signal.SIGINT:  signal.signal(signal.SIGINT, self.kill),
+                signal.SIGINT: signal.signal(signal.SIGINT, self.kill),
                 signal.SIGTERM: signal.signal(signal.SIGTERM, self.kill)
             }
             handlers = True
