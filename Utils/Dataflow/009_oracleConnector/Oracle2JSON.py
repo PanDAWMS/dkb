@@ -78,14 +78,17 @@ def main():
 
 
 def plain(conn, queries, offset_date, end_date):
-    tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
+    tasks = query_executor(conn, queries['tasks']['file'], offset_date,
+                           end_date)
     for task in tasks:
         yield task
 
 
 def squash(conn, queries, offset_date, end_date):
-    tasks = query_executor(conn, queries['tasks']['file'], offset_date, end_date)
-    datasets = query_executor(conn, queries['datasets']['file'], offset_date, end_date)
+    tasks = query_executor(conn, queries['tasks']['file'], offset_date,
+                           end_date)
+    datasets = query_executor(conn, queries['datasets']['file'], offset_date,
+                              end_date)
     return join_results(tasks, squash_records(datasets))
 
 
@@ -171,7 +174,8 @@ def query_executor(conn, sql_file, offset_date, end_date):
     """
     try:
         file_handler = open(sql_file)
-        query = file_handler.read().rstrip().rstrip(';') % (offset_date, end_date)
+        query = file_handler.read().rstrip().rstrip(';') % (offset_date,
+                                                            end_date)
         return DButils.ResultIter(conn, query, 1000, True)
     except IOError:
         sys.stderr.write('File open error. No such file (%s).\n' % sql_file)
@@ -234,7 +238,8 @@ def get_category(row):
     """
     Each task can be associated with a number of Physics Categories.
     1) search category in hashtags list
-    2) if not found in hashtags, then search category in phys_short field of tasknames
+    2) if not found in hashtags, then search category in phys_short
+       field of tasknames
     :param row
     :return:
     """
@@ -268,9 +273,11 @@ def get_category(row):
     match = {}
     categories = []
     for phys_category in PHYS_CATEGORIES_MAP:
-        current_map = [x.strip(' ').lower() for x in PHYS_CATEGORIES_MAP[phys_category]]
+        current_map = [x.strip(' ').lower()
+                       for x in PHYS_CATEGORIES_MAP[phys_category]]
         if hashtags is not None:
-            match[phys_category] = len([x for x in hashtags.lower().split(',') if x.strip(' ') in current_map])
+            match[phys_category] = len([x for x in hashtags.lower().split(',')
+                                        if x.strip(' ') in current_map])
     categories = [cat for cat in match if match[cat] > 0]
     if not categories and taskname:
         phys_short = taskname.split('.')[2].lower()
@@ -310,17 +317,20 @@ def get_category(row):
 
 
 def parsingArguments():
-    parser = argparse.ArgumentParser(description='Process command line arguments.')
+    parser = argparse.ArgumentParser(description='Process command line
+                                     arguments.')
     parser.add_argument('--config', help='Configuration file path',
                         type=str, required=True)
     parser.add_argument('--mode', help='Mode of execution: PLAIN | SQUASH',
                         choices=[PLAIN_POLICY, SQUASH_POLICY])
     args = parser.parse_args()
     if not os.access(args.config, os.F_OK):
-        sys.stderr.write("argument --config: '%s' file not exists\n" % args.config)
+        sys.stderr.write("argument --config: '%s' file not exists\n"
+                         % args.config)
         sys.exit(1)
     if not os.access(args.config, os.R_OK | os.W_OK):
-        sys.stderr.write("argument --config: '%s' read/write access failed\n" % args.config)
+        sys.stderr.write("argument --config: '%s' read/write access failed\n"
+                         % args.config)
         sys.exit(1)
     return parser.parse_args()
 

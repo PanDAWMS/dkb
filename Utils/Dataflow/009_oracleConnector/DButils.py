@@ -58,7 +58,8 @@ def OneByOneIter(connection, query, rows_as_dict=False):
     https://bitbucket.org/anthony_tuininga/cx_oracle/issues/49/lob-object-documentation-clarification
     :param connection: Oracle connection
     :param query: query steing
-    :param rows_as_dict: return rows with headers as dicts (True), or as lists (False)
+    :param rows_as_dict: return rows with headers as dicts (True),
+                         or as lists (False)
     :return:
     """
     cursor = connection.cursor()
