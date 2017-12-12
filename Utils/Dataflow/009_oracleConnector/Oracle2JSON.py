@@ -56,7 +56,7 @@ def main():
         queries_cfg = config.items("queries")
         queries = {}
         for (qname, file) in queries_cfg:
-            queries[qname] = {'file': file}
+            queries[qname] = {'file': config_path(file)}
     except (IOError, ConfigParser.Error), e:
         sys.stderr.write('Failed to read config file (%s): %s\n'
                          % (conf, e))
@@ -80,6 +80,23 @@ def main():
     process(conn, offset_storage, final_date, step_seconds)
 
 
+def config_path(rel_path):
+    """ Turn relative (to config dir) path to absolute.
+
+    :param rel_path: relative (or absolute) path
+    :type rel_path: str
+    :return: absolute path
+    :rtype: str
+    """
+    config_file = conf
+    if os.path.isabs(rel_path):
+        abs_path = rel_path
+    else:
+        config_dir = os.path.dirname(os.path.abspath(config_file))
+        abs_path = os.path.join(config_dir, rel_path)
+    return abs_path
+
+
 def init_offset_storage(config):
     """ Get configured (or default) offset file.
 
@@ -91,7 +108,6 @@ def init_offset_storage(config):
     :return: offset storage
     :rtype: FileOffsetStorage
     """
-    config_file = conf
     offset_storage = None
 
     if not isinstance(config, ConfigParser.ConfigParser):
@@ -105,9 +121,7 @@ def init_offset_storage(config):
                          ' "logging". Using default value.\n')
         offset_file = '.offset'
 
-    if not os.path.isabs(offset_file):
-        config_dir = os.path.dirname(os.path.abspath(config_file))
-        offset_file = os.path.join(config_dir, offset_file)
+    offset_file = config_path(offset_file)
 
     try:
         offset_storage = FileOffsetStorage(offset_file)
