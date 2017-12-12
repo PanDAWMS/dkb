@@ -73,10 +73,12 @@ def main():
         sys.exit(3)
 
     if not conn.save_queries(queries):
-        sys.stderr.write("(ERROR) Queries seem to be misconfigured. Exiting.\n")
+        sys.stderr.write("(ERROR) Queries seem to be misconfigured."
+                         " Exiting.\n")
         sys.exit(1)
 
     process(conn, offset_storage, final_date, step_seconds)
+
 
 def init_offset_storage(config):
     """ Get configured (or default) offset file.
@@ -260,6 +262,7 @@ def squash_records(rec):
     if result:
         yield result
 
+
 def join_results(tasks, datasets):
     """ Join results of two queries by 'taskid'.
 
@@ -315,7 +318,8 @@ def process(conn, offset_storage, final_date_cfg, step_seconds):
                          % (date2str(datetime.now()), date2str(offset_date),
                             date2str(end_date)))
         if mode == SQUASH_POLICY:
-            records = squash(conn, ['tasks', 'datasets'], offset_date, end_date)
+            records = squash(conn, ['tasks', 'datasets'], offset_date,
+                             end_date)
         elif mode == PLAIN_POLICY:
             records = plain(conn, ['tasks'], offset_date, end_date)
         for r in records:
