@@ -475,8 +475,8 @@ def parsingArguments():
     :return: parsed arguments
     :rtype: argparse.Namespace
     """
-    parser = argparse.ArgumentParser(description='Process command line'
-                                     'arguments.')
+    parser = argparse.ArgumentParser(description='DKB Dataflow Oracle'
+                                     ' connector stage.')
     parser.add_argument('--config', help='Configuration file path',
                         type=str, required=True)
     parser.add_argument('--mode', help='Mode of execution: PLAIN | SQUASH',
