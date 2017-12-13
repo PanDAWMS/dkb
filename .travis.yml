@@ -7,10 +7,10 @@ jobs:
       language: python
       python: 2.7
       before_install:
-        - pip install pep8
+        - pip install pycodestyle
 
       script:
-        - errors=`find . -name "*.py" -exec pep8 --ignore W503,W292 {} \; `
+        - errors=`find . -name "*.py" -exec pycodestyle --ignore W503,W292 {} \; `
         - num_errors=`echo -n "$errors" | wc -l`
         - |
             if [ $num_errors -eq 0 ]; then
