@@ -14,10 +14,10 @@ jobs:
         - num_errors=`echo -n "$errors" | wc -l`
         - |
             if [ $num_errors -eq 0 ]; then
-              true 
+              true
             else
               echo "$errors"
-              false 
+              false
             fi
 
     - stage: python_check
@@ -28,8 +28,8 @@ jobs:
         - errors=`find . -name "*.py" -exec python -m py_compile {} \; 2>&1`
         - |
             if [ -z "$errors" ]; then
-              true 
+              true
             else
               echo "$errors"
-              false 
+              false
             fi
