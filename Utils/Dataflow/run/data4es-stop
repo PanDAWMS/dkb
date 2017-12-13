@@ -34,7 +34,10 @@ done
 sleep 1
 
 if [ -n "$WAIT" ]; then
+  i=1
+  int=1
   while [ -n "$pids" ]; do
+    i=$((i+1))
     new_pids=""
     for pid in $pids; do
       [[ "$pid" =~ ^[0-9]+$ ]] \
@@ -42,7 +45,10 @@ if [ -n "$WAIT" ]; then
 $(ps axo pid | grep "^\s*${pid}$")"
     done
     pids=$new_pids
-    sleep 1
+    [ $i -eq 30 ] \
+      && { echo "Waiting for processes:" $pids;
+           int=10; }
+    sleep $int
   done
   rm $pidfile 2>/dev/null
 else
