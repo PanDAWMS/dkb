@@ -147,7 +147,8 @@ def extract_scope(dsn):
         scope = dsn.split('.')[0]
         if dsn.startswith('user') or dsn.startswith('group'):
             scope = '.'.join(dsn.split('.')[0:2])
-        return scope, dsn
+        result = (scope, dsn)
+    return result
 
 
 def get_metadata_attribute(dsn, attribute_name):
