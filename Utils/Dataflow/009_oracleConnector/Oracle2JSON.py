@@ -103,6 +103,9 @@ def init_offset_storage(config):
     If file does not exist, create file.
     If the directory for that file does not exist, raise exception.
 
+    If the configured initial date is greater than a stored offset
+      (or if no offset found) it becomes the initial offset value.
+
     :param config: stage configuration
     :type config: ConfigParser.ConfigParser
     :return: offset storage
@@ -124,11 +127,28 @@ def init_offset_storage(config):
     offset_file = config_path(offset_file)
 
     try:
+        initial_date = str2date(config.get("timestamps", "initial"))
+    except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+        initial_date = None
+
+    if initial_date is None:
+        sys.stderr.write('(INFO) Config: "initial" date (section'
+                         ' "timestamps") is not configured. Using default'
+                         ' value.\n')
+        initial_date = datetime.utcfromtimestamp(0)
+
+    try:
         offset_storage = FileOffsetStorage(offset_file)
-        if not offset_storage.get():
-            initial_date = config.get("timestamps", "initial")
-            current_offset = str2date(initial_date)
-            commit_offset(offset_storage, current_offset)
+        current_offset = get_offset(offset_storage)
+        if not current_offset:
+            sys.stderr.write('(INFO) No stored offset found.'
+                             ' Using initial date.\n')
+            current_offset = initial_date
+        elif current_offset < initial_date:
+            sys.stderr.write('(INFO) Stored offset is less then configured'
+                             ' initial date. Using initial date instead.\n')
+            current_offset = initial_date
+        commit_offset(offset_storage, current_offset)
     except IOError, err:
         sys.stderr.write("(ERROR) %s\n" % err)
 
