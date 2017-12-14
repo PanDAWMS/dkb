@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash -l
 
 START_OFFSET="09-05-2016 00:00:00"
 BATCH_SIZE=100
