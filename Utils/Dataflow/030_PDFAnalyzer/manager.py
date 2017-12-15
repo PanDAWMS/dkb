@@ -1248,7 +1248,7 @@ class Manager:
                     # This throws exception sometimes, something about
                     # ascii codec unable to decode.
                     w_in = w in possible_title
-                except:
+                except Exception as e:
                     w_in = False
                 if len(w) > 1 and w_in:
                     i += 1
