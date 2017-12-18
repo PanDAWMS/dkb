@@ -49,6 +49,7 @@ from . import messageType
 from . import Message
 from pyDKB.dataflow import DataflowException
 from pyDKB.common import hdfs
+from pyDKB.common.custom_readline import custom_readline
 
 
 class AbstractProcessorStage(AbstractStage):
@@ -309,8 +310,8 @@ class AbstractProcessorStage(AbstractStage):
             for line in iterator:
                 yield self.parseMessage(line)
         else:
-            raise NotImplementedError("Stream input is not implemented for"
-                                      " custom EOMessage marker.")
+            for line in custom_readline(fd, self.ARGS.eom):
+                yield self.parseMessage(line)
 
     def file_input(self, fd):
         """ Generator for input messages.
