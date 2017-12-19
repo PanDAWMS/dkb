@@ -48,11 +48,18 @@ class AbstractStage(object):
         self.__parser.add_argument(*args, **kwargs)
 
     def parse_args(self, args):
-        """ Parse arguments and set dependant arguments if needed. """
+        """ Parse arguments and set dependant arguments if needed.
+
+        Exits with code 2 in case of error (just as ArgumentParser does).
+        """
         self.ARGS = self.__parser.parse_args(args)
         if not self.ARGS.mode:
-            raise ValueError(
-                "Parameter -m|--mode must be used with value: -m MODE.")
+            self.args_error("Parameter -m|--mode must be used with value:"
+                            " -m MODE.")
+
+    def args_error(self, message):
+        """ Output USAGE, error message and exit. """
+        self.__parser.error(message)
 
     def print_usage(self, fd=sys.stderr):
         """ Print usage message. """

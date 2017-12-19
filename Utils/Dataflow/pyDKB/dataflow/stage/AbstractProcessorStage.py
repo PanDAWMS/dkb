@@ -175,7 +175,10 @@ class AbstractProcessorStage(AbstractStage):
                           )
 
     def parse_args(self, args):
-        """ Parse arguments and set dependant arguments if neeeded. """
+        """ Parse arguments and set dependant arguments if neeeded.
+
+        Exits with code 2 in case of error (just like ArgumentParser does).
+        """
         super(AbstractProcessorStage, self).parse_args(args)
 
         # HDFS: HDFS file -> local file -> processor -> local file -> HDFS file
@@ -208,14 +211,12 @@ class AbstractProcessorStage(AbstractStage):
             self.__current_file = sys.stdin.name
             self.__current_file_full = sys.stdin.name
         else:
-            raise ValueError("Unrecognized source type: %s" % self.ARGS.source)
+            self.args_error("Unrecognized source type: %s" % self.ARGS.source)
 
         # Check that data source is specified
         if self.ARGS.source == 'f' \
                 and not (self.ARGS.input_files or self.ARGS.input_dir):
-            sys.stderr.write("(ERROR) No input data sources specified.\n")
-            self.print_usage(sys.stderr)
-            raise DataflowException
+            self.args_error("No input data sources specified.")
 
         self.__stoppable_append(self.__input, types.GeneratorType)
 
