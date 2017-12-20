@@ -6,6 +6,7 @@ Stage 0XX: some json data to TTL & SPARQL
 
 import sys
 import os
+import json
 
 try:
     base_dir = os.path.dirname(__file__)
@@ -49,6 +50,10 @@ def main(args):
     stage.process = process
 
     stage.parse_args(args)
+    if stage.CONFIG:
+        str_config = json.dumps(stage.CONFIG, indent=2)
+        labeled_config = "(==) " + str_config.replace('\n', '\n(==) ')
+        sys.stderr.write("(DEBUG) Config:\n%s\n" % labeled_config)
 
     if stage.ARGS.source == 's':
         sys.stderr.write("""

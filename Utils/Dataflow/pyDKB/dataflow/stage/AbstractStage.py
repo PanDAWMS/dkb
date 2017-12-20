@@ -4,6 +4,8 @@ Definition of an abstract class for Dataflow Stages.
 
 import sys
 import traceback
+import ConfigParser
+from collections import defaultdict
 
 try:
     import argparse
@@ -20,6 +22,12 @@ class AbstractStage(object):
 
     * Parsed arguments (argparse.Namespace)
         ARGS
+
+    * Stage config parser (ConfigParser.SafeConfigParser)
+        __config
+
+    * Stage custom config (defaultdict(defaultdict(str)))
+        CONFIG
     """
 
     def __init__(self, description="DKB Dataflow stage"):
@@ -31,6 +39,8 @@ class AbstractStage(object):
         """
         self.ARGS = None
         self.__parser = argparse.ArgumentParser(description=description)
+        self.CONFIG = None
+        self.__config = ConfigParser.SafeConfigParser()
         self.defaultArguments()
 
         self._error = None
@@ -45,6 +55,13 @@ class AbstractStage(object):
                           choices=['f', 's', 'm'],
                           dest='mode'
                           )
+        self.add_argument('-c', '--config', action='store',
+                          type=argparse.FileType('r'), nargs='?',
+                          help=u'Stage configuration file.',
+                          default=None,
+                          metavar='CONFIG',
+                          dest='config'
+                          )
 
     def add_argument(self, *args, **kwargs):
         """ Add specific (not common) arguments. """
@@ -53,16 +70,52 @@ class AbstractStage(object):
     def parse_args(self, args):
         """ Parse arguments and set dependant arguments if needed.
 
-        Exits with code 2 in case of error (just as ArgumentParser does).
+        Exits in case of error with code:
+            2 -- failed to parse arguments
+            3 -- failed to read config file
         """
         self.ARGS = self.__parser.parse_args(args)
         if not self.ARGS.mode:
             self.args_error("Parameter -m|--mode must be used with value:"
                             " -m MODE.")
 
+        if not self.read_config():
+            self.config_error()
+
     def args_error(self, message):
-        """ Output USAGE, error message and exit. """
+        """ Output USAGE, error message and exit with code 2. """
         self.__parser.error(message)
+
+    def config_error(self, message="Failed to read config file:"):
+        """ Output error message and exit with code 3. """
+        if self._error:
+            message = message + "\n" + str(self._error['exception'])
+        self.output_error(message)
+        sys.exit(3)
+
+    def read_config(self):
+        """ Reads stage custom config file.
+
+        :return: (True|False)
+        """
+        if not self.ARGS.config:
+            return True
+
+        c = self.__config
+
+        try:
+            c.readfp(self.ARGS.config)
+        except (AttributeError, ConfigParser.Error), err:
+            self.set_error(*sys.exc_info())
+            return False
+
+        self.CONFIG = defaultdict(lambda: defaultdict(str))
+        for section in c.sections():
+            self.CONFIG[section] = {}
+            for (key, val) in c.items(section):
+                self.CONFIG[section][key] = val
+
+        return True
 
     def print_usage(self, fd=sys.stderr):
         """ Print usage message. """
@@ -74,10 +127,16 @@ class AbstractStage(object):
                        'exception': err_val,
                        'trace': err_trace}
 
-    def output_error(self):
-        """ Output information about last error. """
+    def output_error(self, message=None):
+        """ Output information about last error or `message`. """
         err = self._error
-        if err:
+        cur_lvl = 'ERROR'
+        if message:
+            messages = message.strip().split('\n')
+            sys.stderr.write("(%s) %s\n" % (cur_lvl, messages[0]))
+            for m in messages[1:]:
+                sys.stderr.write("(==) %s\n" % m)
+        elif err:
             if err['etype'] == KeyboardInterrupt:
                 sys.stderr.write("(INFO) Interrupted by user.\n")
             else:
@@ -88,7 +147,6 @@ class AbstractStage(object):
                 labeled_trace = []
                 n_lines = len(trace)
                 levels = [('TRACE', -1), ('DEBUG', 8), ('ERROR', 3)]
-                cur_lvl = 'ERROR'
                 for i in xrange(n_lines):
                     for lvl, N in levels:
                         if not N - 1 < i < n_lines - N or N < 0:
