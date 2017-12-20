@@ -1,21 +1,35 @@
-language: python
-python:
-    - 2.7
-
 notifications:
     email: false
 
-before_install:
-    - pip install pep8
+jobs:
+  include:
+    - stage: python_check
+      language: python
+      python: 2.7
+      before_install:
+        - pip install pep8
 
-script:
-    - errors=`find . -name "*.py" -exec pep8 --select E121,E122,E126,E128,E203,E225,E226,E228,E231,E251,E261,E262,E265,E266,W291,W293,E502 {} \; `
-    - num_errors=`echo -n "$errors" | wc -l`
-    - |
-        if [ $num_errors -eq 0 ]; then
-          true 
-        else
-          echo "$errors"
-          false 
-        fi
+      script:
+        - errors=`find . -name "*.py" -exec pep8 --ignore W503,W292 {} \; `
+        - num_errors=`echo -n "$errors" | wc -l`
+        - |
+            if [ $num_errors -eq 0 ]; then
+              true 
+            else
+              echo "$errors"
+              false 
+            fi
 
+    - stage: python_check
+      language: python
+      python: 2.7
+
+      script:
+        - errors=`find . -name "*.py" -exec python -m py_compile {} \; 2>&1`
+        - |
+            if [ -z "$errors" ]; then
+              true 
+            else
+              echo "$errors"
+              false 
+            fi

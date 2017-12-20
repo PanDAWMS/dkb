@@ -256,7 +256,8 @@ re_pdfname = re.compile("/([^./]+)\.pdf$")
 re_table_header = re.compile("Table \d+:.*?\n\n", re.DOTALL)
 re_table_header_short = re.compile("Table (\d+):")
 re_table_datasets = re.compile("(?:sample|dataset|run)")
-re_column_with_datasets = re.compile("^(?:ds[-_ ]?|mc[-_ ]?|data ?|dataset ?"
+re_column_with_datasets = re.compile("^(?:d[cs]?[-_ ]?|mc[-_ ]?|data ?"
+                                     "|dataset ?"
                                      "|period|request ?|run ?|sample ?)(?:id"
                                      "|number|period|range|sample|set)")
 re_dsid = re.compile("^\d{4,8}$")
@@ -1082,6 +1083,8 @@ class Manager:
         if fnames is None:
             fnames = askopenfilenames(initialdir=cfg["WORK_DIR"],
                                       filetypes=[("PDF files", ".pdf")])
+            if not fnames:
+                return False
             errors = {}
             n = 1
             self.window.after(100, lambda: self.add_papers(fnames, errors, n))

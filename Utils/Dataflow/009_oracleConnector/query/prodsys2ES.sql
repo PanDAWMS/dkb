@@ -13,6 +13,10 @@
 -- energy_gev, evgen_job_opts, geometry_version, hashtag_list, job_config, physics_list, processed_events,
 -- phys_group, project, pr_id, requested_events, run_number, site, start_time, step_name, status, subcampaign,
 -- taskid, taskname, task_timestamp,  ticket_id, trans_home, trans_path, trans_uses, trigger_config, user_name, vo
+
+-- RESTRICTIONS:
+-- 1. taskID must be more than 4 000 000 OR from the date > 12-03-2014
+-- 2. we collecting only PRODUCTION tasks
 with tasks as (
     SELECT
       t.campaign,
@@ -27,6 +31,10 @@ with tasks as (
       t.phys_group,
       t.status,
       t.pr_id,
+      t.username as user_name,
+      t.primary_input,
+      t.ctag,
+      t.output_formats,
       s_t.step_name,
       r.description,
       r.energy_gev,
@@ -46,7 +54,9 @@ with tasks as (
       LEFT JOIN ATLAS_DEFT.t_hashtag hashtag
         ON hashtag.ht_id = ht_t.ht_id
     WHERE
-      t.timestamp > to_date('%%OFFSET%%', 'dd-mm-yyyy hh24:mi:ss')
+      t.timestamp > to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
+      t.timestamp <= to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
+      t.pr_id > 300
     GROUP BY
         t.campaign,
         t.taskid,
@@ -60,6 +70,10 @@ with tasks as (
         t.phys_group,
         t.status,
         t.pr_id,
+        t.primary_input,
+        t.ctag,
+        t.output_formats,
+        t.username,
         s_t.step_name,
         r.description,
         r.energy_gev),
@@ -80,27 +94,31 @@ with tasks as (
         t.hashtag_list,
         t.description,
         t.energy_gev,
-        to_char(NVL(substr(regexp_substr(jedi_task_parameters, '"architecture": "(.[^",])+'),
+        t.user_name,
+        t.primary_input,
+        t.ctag,
+        t.output_formats,
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"architecture": "(.[^",])+'),
                            regexp_instr(
-                               regexp_substr(jedi_task_parameters, '"architecture": "(.[^",])+'),
+                               regexp_substr(tt.jedi_task_parameters, '"architecture": "(.[^",])+'),
                                '(": ")+',
                                1,
                                1,
                                1
                            )
                     ), '')) AS architecture,
-        to_char(NVL(substr(regexp_substr(jedi_task_parameters, '"coreCount": [0-9\.]+'),
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"coreCount": [0-9\.]+'),
                            regexp_instr(
-                               regexp_substr(jedi_task_parameters, '"coreCount": [0-9\.]+'),
+                               regexp_substr(tt.jedi_task_parameters, '"coreCount": [0-9\.]+'),
                                '(": )+',
                                1,
                                1,
                                1
                            )
                     ), '')) AS core_count,
-        to_char(NVL(substr(regexp_substr(jedi_task_parameters, '"\-\-conditionsTag \\"default:[a-zA-Z0-9_\-]+[^\""]'),
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"\-\-conditionsTag \\"default:[a-zA-Z0-9_\-]+[^\""]'),
                            regexp_instr(
-                               regexp_substr(jedi_task_parameters,
+                               regexp_substr(tt.jedi_task_parameters,
                                              '"\-\-conditionsTag \\"default:[a-zA-Z0-9_\-]+[^\""]'),
                                '(:)+',
                                1,
@@ -108,9 +126,9 @@ with tasks as (
                                1
                            )
                     ), '')) AS conditions_tags,
-        to_char(NVL(substr(regexp_substr(jedi_task_parameters, '"\-\-geometryVersion=\\"default:[a-zA-Z0-9_\-]+[^\""]'),
+        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"\-\-geometryVersion=\\"default:[a-zA-Z0-9_\-]+[^\""]'),
                            regexp_instr(
-                               regexp_substr(jedi_task_parameters,
+                               regexp_substr(tt.jedi_task_parameters,
                                              '"\-\-geometryVersion=\\"default:[a-zA-Z0-9_\-]+[^\""]'),
                                '(:)+',
                                1,
@@ -155,15 +173,6 @@ with tasks as (
                                1
                            )
                     ), '')) AS trans_uses,
-        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"userName": "(.[^",])+'),
-                           regexp_instr(
-                               regexp_substr(tt.jedi_task_parameters, '"userName": "(.[^",])+'),
-                               '(": ")+',
-                               1,
-                               1,
-                               1
-                           )
-                    ), '')) AS user_name,
         to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"vo": "[a-zA-Z0-9_\-\.]+[^"]'),
                            regexp_instr(
                                regexp_substr(tt.jedi_task_parameters, '"vo": "[a-zA-Z0-9_\-\.]+[^"]'),
@@ -226,16 +235,7 @@ with tasks as (
                                1,
                                1
                            )
-                    ), '')) AS site,
-        to_char(NVL(substr(regexp_substr(tt.jedi_task_parameters, '"taskType": "(.[^",])+'),
-                           regexp_instr(
-                               regexp_substr(tt.jedi_task_parameters, '"taskType": "(.[^",])+'),
-                               '(": ")+',
-                               1,
-                               1,
-                               1
-                           )
-                    ), '')) AS task_type
+                    ), '')) AS site
       FROM
         tasks t LEFT JOIN t_task tt
           ON t.taskid = tt.taskid
@@ -272,12 +272,50 @@ with tasks as (
     t.evgen_job_opts,
     t.cloud,
     t.site,
-    jd.nevents AS requested_events,
-    jd.neventsused AS processed_events
+    t.primary_input,
+    t.ctag,
+    t.output_formats,
+    sum(jd.nevents) AS requested_events,
+    sum(jd.neventsused) AS processed_events
   FROM tasks_t_task t
     LEFT JOIN ATLAS_PANDA.jedi_datasets jd
       ON jd.jeditaskid = t.taskid
   WHERE jd.type IN ('input')
         AND jd.masterid IS NULL
+  GROUP by
+    t.campaign,
+    t.subcampaign,
+    t.phys_group,
+    t.project,
+    t.pr_id,
+    t.step_name,
+    t.status,
+    t.taskid,
+    t.taskname,
+    t.task_timestamp,
+    t.start_time,
+    t.end_time,
+    t.hashtag_list,
+    t.description,
+    t.energy_gev,
+    t.architecture,
+    t.core_count,
+    t.conditions_tags,
+    t.geometry_version,
+    t.ticket_id,
+    t.trans_home,
+    t.trans_path,
+    t.trans_uses,
+    t.user_name,
+    t.vo,
+    t.run_number,
+    t.trigger_config,
+    t.job_config,
+    t.evgen_job_opts,
+    t.cloud,
+    t.site,
+    t.primary_input,
+    t.ctag,
+    t.output_formats
   ORDER BY
     t.taskid;

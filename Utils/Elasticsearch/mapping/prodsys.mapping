@@ -74,15 +74,15 @@
         },
         "task_timestamp" : {
           "type" : "date",
-          "format" : "dd-MM-yy HH.mm.ss"
+          "format" : "dd-MM-yy HH:mm:ss"
         },
         "start_time" : {
           "type" : "date",
-          "format" : "dd-MM-yy HH.mm.ss"
+          "format" : "dd-MM-yy HH:mm:ss"
         },
         "end_time" : {
           "type" : "date",
-          "format" : "dd-MM-yy HH.mm.ss"
+          "format" : "dd-MM-yy HH:mm:ss"
         },
 
         "hashtag_list" : {
@@ -145,11 +145,7 @@
           "type" : "keyword",
           "ignore_above" : 256
         },
-        "input_datasets" : {
-          "type" : "keyword",
-          "ignore_above" : 256
-        },
-        "output_datasets" : {
+        "output" : {
           "type" : "keyword",
           "ignore_above" : 256
         },
@@ -162,9 +158,25 @@
         "phys_category" : {
           "type" : "keyword",
           "ignore_above" : 256
+        },
+        "ctag": {
+          "type": "keyword",
+          "ignore_above" : 256
+        },
+        "output_formats": {
+          "type": "keyword",
+          "ignore_above" : 256
+        },
+        "primary_input" : {
+          "type" : "text",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
         }
       }
     }
   }
 }
-
