@@ -209,6 +209,14 @@
         "gen_filt_eff": {
           "type": "keyword",
           "ignore_above" : 256
+        },
+        "process_group": {
+          "type": "keyword",
+          "ignore_above" : 256
+        },
+        "me_pdf": {
+          "type": "keyword",
+          "ignore_above" : 256
         }
       }
     }

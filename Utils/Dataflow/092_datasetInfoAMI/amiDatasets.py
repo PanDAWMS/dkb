@@ -25,7 +25,10 @@ ami_client = None
 PHYS_VALUES = [{"ami": "genFiltEff", "es": "gen_filt_eff"},
                {"ami": "crossSection", "es": "cross_section"},
                {"ami": "crossSectionRef", "es": "cross_section_ref"},
-               {"ami": "kFactor", "es": "k_factor"}]
+               {"ami": "kFactor", "es": "k_factor"},
+               {"ami": "processGroup", "es": "process_group"},
+               {"ami": "mePDF", "es": "me_pdf"},
+               ]
 
 
 def main(argv):
