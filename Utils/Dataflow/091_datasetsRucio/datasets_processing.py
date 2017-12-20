@@ -89,7 +89,11 @@ def process(stage, message):
         # Nothing to process; over.
         return True
 
-    for dataset in json_str[DS_TYPE]:
+    datasets = json_str[DS_TYPE]
+    if type(datasets) != list:
+        datasets = [datasets]
+
+    for dataset in datasets:
         ds = get_dataset_info(dataset)
         ds['taskid'] = json_str.get('taskid')
         if not add_es_index_info(ds):
