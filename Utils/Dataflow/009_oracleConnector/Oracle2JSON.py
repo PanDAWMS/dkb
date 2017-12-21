@@ -45,7 +45,7 @@ def main():
     mode = args.mode
 
     # read initial configuration
-    config = ConfigParser.ConfigParser()
+    config = ConfigParser.SafeConfigParser()
     try:
         config.read(conf)
         # unchangeable data
