@@ -546,71 +546,10 @@ class Paper:
     def delete(self):
         """ Delete all files associated with paper. """
         shutil.rmtree(self.dir)
-# def find_title(self):
-# """ New title determining method, does not works ideally yet.
-# Titles consisting of several lines are problematic to
-# determine.
-# """
-#        lines = self.get_xml_page(1)
-#
-#        d = {}
-# for l in lines:
-#            m = re_xml_symbol.match(l)
-# if m:
-#                size = float(m.group(1))
-#                text = m.group(2)
-# if size in d.keys():
-#                    d[size] += text
-# else:
-#                    d[size] = text
-# elif re_xml_empty_symbol.match(l):
-#                d[size] += " "
-#        xml_title = False
-# print d
-# while True:
-#            size = max(d.keys())
-#            valid = True
-# try:
-# d[size].decode()
-# except:
-#                valid = False
-# if not "atlas note" in d[size].lower() and valid:
-#                xml_title = d[size]
-# break
-# else:
-#                del d[size]
-#
-# print xml_title
-# if not xml_title:
-# return False
-#
-#        lines = self.get_txt_page(1)
-#        title = ""
-# for l in lines:
-# if len(l) <= 4 or l.startswith("Supporting Note")\
-# or l.startswith("ATLAS NOTE"):
-# continue
-#            words = l.split()
-#            i = 0
-# for w in words:
-# try:
-# This throws exception sometimes, something about
-# ascii codec unable to decode.
-#                    w_in = w in xml_title
-# except:
-#                    w_in = False
-# if len(w) > 1 and w_in:
-#                    i += 1
-# if i > 1 or (len(words) == 1 and i == 1):
-#                title += l.replace("\n", " ")
-# elif title:
-# break
-# return title
 
     def find_attributes_general(self):
         """ Find general attributes in a document. """
         attrs = {}
-#        attrs["title"] = self.find_title()
         text = self.get_text()
 
         attrs["campaigns"] = []
