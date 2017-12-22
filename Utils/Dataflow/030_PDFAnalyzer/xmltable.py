@@ -208,9 +208,6 @@ class Table:
         # are above each other. No additional spaces are added.
         rows = []
         for row in self.rows:
-            # print "ROW"
-            # for l in row:
-            #     print l.text, l.left, l.top, l.right, l.bottom
             new_row = []
             line = row[0]
             for i in range(1, len(row)):
@@ -271,9 +268,6 @@ class Table:
 #        print "ROWS"
         # Divide rows on short and normal.
         for row in self.rows:
-            #            print "ROW"
-            #            for l in row:
-            #                print l.text, l.left, l.top, l.right, l.bottom
             if len(row) == max_elements:
                 normal_rows.append(row)
             else:
@@ -283,7 +277,6 @@ class Table:
         # row.
         main_centers = []
         for l in main_row:
-            #            print "MAIN CENTER", (l.left + l.right)/2
             main_centers.append((l.left + l.right) / 2)
         # Calculate x boundaries of each column.
         boundaries = []
@@ -313,8 +306,6 @@ class Table:
                     # If line crosses the space entirely, attempt to
                     # break it on one of the spaces in it.
                     if l.left < cs[0] and l.right > cs[1]:
-                        # print "LINE OVER BOUNDARIES", l.text, l.left,\
-                        #     l.right, l.spaces_coords, cs
                         # We cannot break a line if there are no spaces.
                         # This means that line is, most likely, not needed.
                         if not l.spaces_coords:
@@ -438,29 +429,3 @@ def analyze_page(text):
     rows.sort(key=lambda row: row_centery(row))
 
     return rows
-# for row in rows:
-# if row[0].text.isdigit():
-# print "NUM ROW"
-# else:
-# print "OTHER ROW"
-# for l in row:
-# print l.text
-# if row.index(l) == 0:
-# print "ROW LEFT:", l.left
-# elif row.index(l) == len(row):
-# print "ROW RIGHT:", l.right
-
-#    symbols = {}
-#    lines = []
-# for l in tlines:
-#        lines.append(TextLine(l, symbols))
-#
-#    max_s = max(symbols.values())
-# for key in symbols:
-# if symbols[key] == max_s:
-#            max_key = key
-# break
-# print "KEY", max_key
-# for l in lines:
-# if max_key in l.symbols:
-# print l.text
