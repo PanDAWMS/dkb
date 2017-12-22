@@ -1205,10 +1205,6 @@ class Manager:
         selection = Tkinter.StringVar()
         for key in d:
             if len(d[key]) > 10:
-                if len(d[key]) > 50:
-                    bt = d[key][:50] + "..."
-                else:
-                    bt = d[key]
                 if r == 1:
                     selection.set(d[key])
                 button = Tkinter.Radiobutton(window, text=d[key],
