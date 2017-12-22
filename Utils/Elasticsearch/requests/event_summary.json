@@ -1,0 +1,49 @@
+/*
+  Event Summary Report query:
+  Query search by:
+    - campaign
+    - task status
+    - hashtag
+  Outer aggregation: by phys_category
+  Inner aggregation: by step_name (production step)
+  Aggregated parameters:
+    - requested_events (sum)
+    - processed_events (sum)
+*/
+GET /prodsys_rucio_ami/task/_search
+{
+  "size": 0,
+   "query": {
+     "bool": {
+       "must": [
+         { "term": { "campaign.keyword": "<CAMPAIGN>" } },
+         { "term": { "status": "<STATUS>" } }
+       ],
+       "should": [
+         { "term": { "hashtag_list": "<HASHTAG>"} }
+       ]
+     }
+   },
+   "aggs": {
+     "category": {
+       "terms": {"field": "phys_category"},
+       "aggs": {
+         "step": {
+           "terms": {
+             "field": "step_name.keyword"
+           },
+           "aggs": {
+             "requested": {
+               "sum": {
+                 "field": "requested_events"
+               }
+             },
+             "processed": {
+               "sum": {"field": "processed_events"}
+             }
+           }
+         }
+       }
+     }
+   }
+}

@@ -1,0 +1,29 @@
+/*
+    Query search in index by a set of strings:
+    query string example:
+    "query": "\"ATLAS-R2-2016-00-01-00\" AND \"MC16b\" AND \"BPhysics\""
+*/
+GET /prodsys_rucio_ami/task/_search
+{
+    "query": {
+        "bool": {
+            "must": {
+                "query_string": {
+                    "query": "<QUERY_STRING>",
+                    "analyze_wildcard": true
+                }
+            },
+            "filter": {
+                "range": {
+                    "task_timestamp": {
+                        "gte": "<START_DATE>",
+                        "lt": "<END_DATE>",
+                        "format": "dd-MM-yyyy"
+                    }
+                }
+            }
+        }
+    },
+    "from": 0,
+    "size": 1000
+}

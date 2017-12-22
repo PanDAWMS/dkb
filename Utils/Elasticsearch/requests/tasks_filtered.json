@@ -1,0 +1,28 @@
+/*
+  Get all tasks and theirs output datasets
+  filtered by a set of terms.
+*/
+GET prodsys_rucio_ami/task/_search
+{
+  "query": {
+   "bool": {
+     "must":
+     {
+       "has_child": {
+            "type": "output_dataset",
+            "score_mode": "sum",
+            "inner_hits": {}
+          }
+      },
+         "filter": {
+           "bool": {
+             "must": [
+                {"term": {"<TERM_NAME>.keyword": "<TERM_VALUE>"}},
+                {"term": {"<TERM_NAME>.keyword": "<TERM_VALUE>"}},
+                {"term": {...}}
+             ]
+           }
+        }
+      }
+  }
+}

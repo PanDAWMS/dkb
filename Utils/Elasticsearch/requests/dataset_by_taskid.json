@@ -1,0 +1,16 @@
+/*
+  Return output_datasets for tasks by taskid
+*/
+GET prodsys_rucio_ami/output_dataset/_search
+{
+  "query": {
+    "has_parent": {
+      "parent_type": "task",
+      "query": {
+        "terms": {
+          "_id": ["<TASKID>", ..., ...]
+        }
+      }
+    }
+  }
+}

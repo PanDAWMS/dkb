@@ -1,0 +1,155 @@
+/*
+  Aggregated summary:
+  Average not deleted dataset size, categorized by campaigns and output formats
+
+  There are many occasions when aggregations are required but search hits are not.
+  For these cases the hits can be ignored by setting size=0.
+*/
+GET prodsys_rucio_ami/task/_search
+{
+   "size": 0,
+   "aggs": {
+     "campaign": {
+       "terms": {
+         "field": "campaign.keyword"
+       },
+       "aggs": {
+         "format": {
+            "terms": {
+              "field": "output_formats"
+            },
+           "aggs": {
+             "datasets": {
+               "children": {
+                 "type": "output_dataset"
+               },
+               "aggs": {
+                 "bytes": {
+                   "filter": {
+                     "term": {
+                       "deleted": false
+                     }
+                   },
+                  "aggs": {
+                     "avg_bytes": {
+                       "avg": {
+                          "field": "bytes"
+                        }
+                     }
+                   }
+                 }
+               }
+             }
+           }
+         }
+       }
+     }
+   }
+}
+
+
+
+/*
+  Real example:
+  Average dataset size for tasks, filtered by query string and
+  with output format DAOD
+  Search by tasks
+*/
+
+GET prodsys_rucio_ami/task/_search
+{
+   "size": 0,
+   "query": {
+     "bool": {
+       "must": [
+         {"query_string": {
+           "query": "\"MC15a\" AND \"higgs\""
+         }},
+         {"wildcard": {
+           "output_formats": "DAOD*"
+         }}
+         ]
+     }
+   },
+   "aggs": {
+     "datasets": {
+       "children": {
+         "type": "output_dataset"
+       },
+       "aggs": {
+         "bytes": {
+            "filter": {
+               "term": {
+                "deleted": false
+               }
+             },
+             "aggs": {
+               "avg_bytes": {
+                 "avg": {
+                  "field": "bytes"
+                }
+               }
+             }
+         }
+       }
+     }
+   }
+ }
+
+/*
+  Real example:
+  Average dataset size
+  Search by datasets
+*/
+GET prodsys_rucio_ami/output_dataset/_search
+{
+  "size": 0,
+  "query": {
+    "bool": {
+      "must": [
+        {
+          "term": {
+            "deleted": false
+          }
+        },
+        {
+          "has_parent": {
+            "parent_type": "task",
+            "query": {
+              "bool": {
+                "must": [
+                  {
+                    "term": {
+                      "project.keyword": "mc15_13TeV"
+                    }
+                  },
+                  {
+                    "bool": {
+                      "should": [
+                        {
+                          "term": {
+                            "output_formats": "AOD"
+                          }
+                        },
+                        {
+                          "term": {
+                            "output_formats": "DAOD"
+                          }
+                        }
+                      ]
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+      ]
+    }
+  },
+  "aggs": {
+        "avg_bytes": {
+          "avg": {"field": "bytes"}
+        }
+      }
+}

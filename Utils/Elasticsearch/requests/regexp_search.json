@@ -1,0 +1,12 @@
+/*
+  Search dataset by the data format using regular expression.
+*/
+
+GET prodsys_rucio_ami/output_dataset/_search
+{
+  "query": {
+      "regexp": {
+        "datasetname.keyword": "[a-z0-9_]+\\.[0-9]+\\.[a-zA-Z_]+\\.[a-z]+\\.(AOD)\\..+"
+      }
+  }
+}
