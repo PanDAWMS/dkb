@@ -67,8 +67,7 @@ def path_join(a, b):
 if __name__ == "__main__":
     try:
         import Tkinter
-        from tkFileDialog import askdirectory, askopenfilename,\
-            askopenfilenames, asksaveasfile
+        from tkFileDialog import askdirectory, askopenfilenames, asksaveasfile
         import tkMessageBox
     except Exception as e:
         sys.stderr.write("Exception while loading Tkinter: %s\n" % e)
