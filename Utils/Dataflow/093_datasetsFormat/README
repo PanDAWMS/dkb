@@ -1,0 +1,18 @@
+=============
+* Stage 093 *
+=============
+
+1. Description
+--------------
+Update dataset metadata:
+* add "data_format" field (field value type: str)
+
+
+2. Input
+--------
+Comes from stage 091.
+
+
+3. Output
+---------
+Same as input, with additional field(s).
