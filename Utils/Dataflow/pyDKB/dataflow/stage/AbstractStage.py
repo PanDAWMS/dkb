@@ -29,7 +29,22 @@ class AbstractStage(object):
         * ...
         """
         self.ARGS = None
-        self.__parser = argparse.ArgumentParser(description=description)
+        self.__parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+            description=description,
+            epilog='''\
+                Shortcut table:
+                
+                mode | source | dest | eom | eop
+                -----+--------+------+-----+-----
+                  s  |    s   |   s  |  \\n |  \\0
+                -----+--------+------+-----+-----
+                  f  |   f/h  |  f/h |  \\n |
+                -----+--------+------+-----+-----
+                  m  |   s/h  |   s  |  \\n |
+                -----+--------+------+-----+-----
+                  h  |    h   |  h/f |  \\n |
+                -----+--------+------+-----+-----''')
         self.defaultArguments()
 
     def defaultArguments(self):
