@@ -47,13 +47,14 @@ class AbstractStage(object):
                           nargs='?',
                           default=None,
                           dest='eom'
-                         )
+                          )
         self.add_argument('-E', '--end-of-process', action='store', type=str,
                           help=u'Custom end of process marker.',
                           nargs='?',
                           default=None,
                           dest='eop'
-                         )
+                          )
+
     def add_argument(self, *args, **kwargs):
         """ Add specific (not common) arguments. """
         self.__parser.add_argument(*args, **kwargs)
@@ -79,9 +80,9 @@ class AbstractStage(object):
 
         if self.ARGS.eop is None:
             if self.ARGS.mode == 's':
-                 self.ARGS.eop = '\0'
+                self.ARGS.eop = '\0'
             else:
-                 self.ARGS.eop = ''
+                self.ARGS.eop = ''
         else:
             try:
                 self.ARGS.eop = self.ARGS.eop.decode('string_escape')
@@ -89,7 +90,6 @@ class AbstractStage(object):
                 sys.stderr.write("(ERROR) Failed to read arguments.\n"
                                  "Case: %s\n" % (err))
                 sys.exit(1)
-
 
     def print_usage(self, fd=sys.stderr):
         """ Print usage message. """
