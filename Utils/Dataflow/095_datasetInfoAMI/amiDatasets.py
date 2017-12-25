@@ -29,6 +29,7 @@ PHYS_VALUES = [{"ami": "genFiltEff", "es": "gen_filt_eff"},
                {"ami": "processGroup", "es": "process_group"},
                {"ami": "mePDF", "es": "me_pdf"},
                ]
+FILTER = ['AOD', 'EVNT', 'HITS']
 
 
 def main(argv):
@@ -78,7 +79,18 @@ def init_ami_client(userkey, usercert):
 def process(stage, message):
 
     data = message.content()
-    amiPhysValues(data)
+    # 'data_format' field contains a list of strings,
+    # e.g. ['DAOD_SUSY5', 'DAOD']
+    formats = data.get('data_format', [])
+    update = False
+    for f in formats:
+        if f in FILTER:
+            update = True
+    # Update data with information from AMI only if
+    # 'data_format' list contains one of the allowed formats
+    # or not set at all.
+    if update or not formats:
+        amiPhysValues(data)
     stage.output(pyDKB.dataflow.messages.JSONMessage(data))
 
     return True

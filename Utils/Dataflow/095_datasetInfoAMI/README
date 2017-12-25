@@ -11,3 +11,15 @@ This stage is implemented to extract physics parameter values from AMI.
 -----------
 
 093_datasetsFormat/output --> 095_datasetsFromAMI
+
+As we know, AMI maintains valid physics parameters only for datasets with the
+following data types/formats:
+   - AOD
+   - EVNT
+   - HITS
+
+So, during the datasets processing we filter datasetnames by data formats, and
+execute requests for AMI only for the filtered datasets. The rest of the
+records, which haven't pass the filter, we write to the output "AS-IS".
+It allows us to optimize time of data extraction from AMI, which is very
+time-consuming.
