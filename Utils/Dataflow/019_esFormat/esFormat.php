@@ -5,7 +5,7 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 }
 set_error_handler("exception_error_handler");
 
-$DEFAULT_INDEX = 'prodsys';
+$DEFAULT_INDEX = 'prodsys_rucio';
 $ES_INDEX = NULL;
 
 function check_input($row) {
