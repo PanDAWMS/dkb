@@ -65,6 +65,8 @@
         },
         "taskname" : {
           "type" : "text",
+          "analyzer": "pattern",
+          "search_analyzer": "pattern",
           "fields" : {
             "keyword" : {
               "type" : "keyword",
@@ -165,6 +167,8 @@
         },
         "primary_input" : {
           "type" : "text",
+          "analyzer": "pattern",
+          "search_analyzer": "pattern",
           "fields" : {
             "keyword" : {
               "type" : "keyword",
@@ -181,6 +185,8 @@
       "properties": {
         "datasetname" : {
           "type" : "text",
+          "analyzer": "pattern",
+          "search_analyzer": "pattern",
           "fields" : {
             "keyword" : {
               "type" : "keyword",
