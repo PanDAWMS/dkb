@@ -1,7 +1,16 @@
 {
   "template": "prodsys_rucio_ami",
   "settings": {
-    "number_of_shards": 4
+    "number_of_shards": 4,
+    "analysis": {
+      "analyzer": {
+        "task_dataset_analyzer": {
+          "type":      "pattern",
+          "pattern":   "\\W|_",
+          "lowercase": true
+        }
+      }
+    }
   },
   "mappings" : {
     "task" : {
@@ -65,6 +74,8 @@
         },
         "taskname" : {
           "type" : "text",
+          "analyzer": "task_dataset_analyzer",
+          "search_analyzer": "task_dataset_analyzer",
           "fields" : {
             "keyword" : {
               "type" : "keyword",
@@ -165,6 +176,8 @@
         },
         "primary_input" : {
           "type" : "text",
+          "analyzer": "task_dataset_analyzer",
+          "search_analyzer": "task_dataset_analyzer",
           "fields" : {
             "keyword" : {
               "type" : "keyword",
@@ -181,6 +194,8 @@
       "properties": {
         "datasetname" : {
           "type" : "text",
+          "analyzer": "task_dataset_analyzer",
+          "search_analyzer": "task_dataset_analyzer",
           "fields" : {
             "keyword" : {
               "type" : "keyword",
