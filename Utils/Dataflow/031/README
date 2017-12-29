@@ -1,0 +1,7 @@
+These scripts represent my current work on elastic search.
+
+IMPORTANT NOTE: it's yet to be decided, how we'll load data into es and how we'll integrate this stage, stage 069, stage 019 and maybe other ones together. Therefore, the scripts here lack some things, such as dataflow integration, which will be added later.
+
+purge.py - script for converting a NDJSON file into JSON files. Also performs some changes on data during conversion, such as layered dictionaries simplification.
+
+es.py - script for elastic search interaction.
