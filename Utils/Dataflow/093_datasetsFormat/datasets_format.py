@@ -5,6 +5,7 @@ Add 'data_format' field, extracted from datasetname
 
 import sys
 import os
+import re
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -56,10 +57,19 @@ def dataset_format(datasetname):
     for Real Data:
         DataNN_subProject.runNumber.streamName.prodStep.dataType.Version
     In both cases the dataType filed is required.
+
+    In case of complex data formats, like 'DAOD_SUSY5',
+    the field is splitted by '_' and returns it's full name
+    and first part ('DAOD'), defining the general name of the data format.
+
     :param datasetname:
-    :return: str
+    :return: str|tuple
     """
-    return datasetname.split('.')[4]
+    ds_format = datasetname.split('.')[4]
+    if re.match("\w+_\w+", ds_format) is not None:
+        return (ds_format, ds_format.split('_')[0])
+    else:
+        return ds_format
 
 
 if __name__ == '__main__':

@@ -5,7 +5,7 @@
 1. Description
 --------------
 Update dataset metadata:
-* add "data_format" field (field value type: str)
+* add "data_format" field (field value type: str|tuple)
 
 
 2. Input
