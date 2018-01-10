@@ -1,0 +1,286 @@
+{
+    "GLANCE": {
+        "ref_code": "EXOT-2010-07", 
+        "full_title": "Search for New Physics in Dijet Mass and Angular Distributions in pp Collisions at sqrt(s) = 7 TeV Measured with the ATLAS Detector", 
+        "id": "462", 
+        "short_title": "dijet paper with full 2010 data"
+    }, 
+    "dkbID": "CDS_ATLAS-EXOT-2010-07", 
+    "supporting_notes": [
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1322656", 
+                "id": "57", 
+                "label": "Dijet Angular Distribution Backup Note"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2011-032", 
+            "CDS": {
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2011-032"
+                }, 
+                "abstract": "Searches for new physics processes appearing in two-jet (dijet) angular distributions are presented. The data were produced in 7 TeV proton-proton collisions at the Large Hadron Collider (LHC) by the ATLAS detector, and include the full ATLAS 2010 dataset, corresponding to an integrated luminosity of 36.4 pb^-1. All distributions are found to be consistent with Standard Model QCD predictions. In the absence of new physics signals, the current data sample has been used to set stringent upper limits on quark contact interactions (QCI), and on the production of quantum black holes (QBH) and excited quarks (q*). This COM note is supporting information for a forthcoming publication draft describing the dijet resonance and angular searches using the full 2010 dataset.", 
+                "creation_date": "2011-01-17T21:57:02", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2011-032", 
+                "keywords": [
+                    "dijet; compositeness; contact interactions; excited quark; axigluon ; graviton ; extra dimensions", 
+                    "EXOTICS"
+                ], 
+                "email_address": [
+                    "adam.gibson@cern.ch", 
+                    "shupe@uazhep.physics.arizona.edu", 
+                    "pekka.sinervo@utoronto.ca"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "cataloguer_info": {
+                    "creation_date": "20110117", 
+                    "library": "CER01", 
+                    "modification_date": "20110117", 
+                    "hour": "2157"
+                }, 
+                "agency_code": "SzGeCERN", 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Searches for Quark Contact Interactions and Other New Physics in Dijet Angular Distributions in pp Collisions at sqrt(s) = 7 TeV Measured with the ATLAS Detector at the LHC", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000712281CER", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T16:39:59", 
+                "pagination": "mult. p", 
+                "number_of_authors": 10, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 0, 
+                "imprint_date": "2011", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201170"
+                }, 
+                "recid": 1322656, 
+                "prepublication": {
+                    "date": "17 Jan 2011", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }, 
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1313756", 
+                "id": "62", 
+                "label": "Dijet Resonance Mass Backup Note"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2010-1038", 
+            "CDS": {
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2010-1038"
+                }, 
+                "abstract": "A search for new heavy particles manifested as resonances in two-jet final states is presented. The data were produced in 7 TeV proton-proton collisions by the Large Hadron Collider (LHC) and correspond to an integrated luminosity of 36.4 pb-1 collected by the ATLAS detector. No resonances were observed. Upper limits were set on the product of cross section and signal acceptance for excited-quark (q*) and axigluon production as a function of mass. These exclude at the 95% CL the q* mass interval 0.60 < mq* < 2.05 TeV and the axigluon mass interval 0.60 < m < 1.87 TeV, extending the reach of previous searches. Upper limits were also set on the number of observed resonance events in a model-independent way, as a function of resonance mass and width. This COM note is supporting information for a forthcoming publication draft describing the dijet resonance and angular searches using the full 2010 dataset.", 
+                "creation_date": "2010-12-13T16:41:34", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2010-1038", 
+                "keywords": [
+                    "dijet", 
+                    "resonance", 
+                    "compositeness", 
+                    "excited quark", 
+                    "axigluon", 
+                    "graviton", 
+                    "extra dimensions", 
+                    "EXOTICS", 
+                    "EXOTICS"
+                ], 
+                "email_address": [
+                    "adam.gibson@cern.ch", 
+                    "shupe@physics.arizona.edu", 
+                    "pekka.sinervo@utoronto.ca"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "cataloguer_info": {
+                    "creation_date": "20101213", 
+                    "library": "CER01", 
+                    "modification_date": "20101213", 
+                    "hour": "1646"
+                }, 
+                "agency_code": "SzGeCERN", 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Search for New Particles in Two-Jet Final States in 7~TeV Proton-Proton Collisions with the ATLAS Detector at the LHC", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000711793CER", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T16:23:41", 
+                "pagination": "18 p", 
+                "number_of_authors": 12, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 1, 
+                "imprint_date": "2010", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201070"
+                }, 
+                "recid": 1313756, 
+                "prepublication": {
+                    "date": "13 Dec 2010", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }
+    ], 
+    "CDS": {
+        "comment": "Comments: 29 pages plus author list (51 pages total), 11 figures, 5 tables", 
+        "report_number": [
+            {
+                "internal": "ATLAS-EXOT-2010-07"
+            }, 
+            {
+                "report_number": "CERN-PH-EP-2011-030"
+            }
+        ], 
+        "abstract": "A search for new interactions and resonances produced in LHC proton-proton (pp) collisions at a centre-of-mass energy !s = 7 TeV has been performed with the ATLAS detector. Using a dataset with an integrated luminosity of 36 pb\u22121, dijet mass and angular distributions have been measured up to dijet masses of \" 3.5 TeV and found to be in good agreement with Standard Model predictions. This analysis sets limits at 95% C.L. on various models for new physics: an excited quark is excluded with mass between 0.60 and 2.64 TeV, an axigluon hypothesis is excluded for axigluon masses between 0.60 and 2.10 TeV and Randall-Meade quantum black holes are excluded in models with six extra space-time dimensions for quantum gravity scales between 0.75 and 3.67 TeV. Production cross section limits as a function of dijet mass are set using a simplified Gaussian signal model to facilitate comparisons with other hypotheses. Analysis of the dijet angular distribution using a novel technique simultaneously employing the dijet mass excludes quark contact interactions with a compositeness scale Lambda below 9.51 TeV.", 
+        "creation_date": "2011-03-21T14:50:00", 
+        "owner": "PUBLIC", 
+        "primary_report_number": "arXiv:1103.3864", 
+        "persistent_identifiers_keys": [
+            "recid", 
+            "system_control_number", 
+            "doi", 
+            "oai"
+        ], 
+        "keywords": "exotics", 
+        "publication_info": {
+            "volume": "13", 
+            "pagination": "053044", 
+            "year": "2011", 
+            "title": "New J. Phys."
+        }, 
+        "email_address": "klaus.moenig@cern.ch", 
+        "subject": {
+            "source": "SzGeCERN", 
+            "term": "Particle Physics - Experiment"
+        }, 
+        "version_id": "2016-07-04T11:12:38", 
+        "agency_code": "SzGeCERN", 
+        "number_of_citations": 0, 
+        "other_report_number": {
+            "source_number": "CERN Library", 
+            "classification_number": "PH-EP-2011-030"
+        }, 
+        "title": "A search for new physics in dijet mass and angular distributions in pp collisions at \u221as = 7 TeV measured with the ATLAS detector", 
+        "oai": {
+            "indicator": [
+                "cerncds:FULLTEXT", 
+                "cerncds:CERN:FULLTEXT", 
+                "cerncds:CERN"
+            ], 
+            "value": "oai:cds.cern.ch:1337270"
+        }, 
+        "thesaurus_terms": {
+            "institute": "LANL EDS", 
+            "term": "hep-ex"
+        }, 
+        "copyright_status": [
+            {
+                "date": "2011", 
+                "materials": "Preprint", 
+                "holder": "CERN"
+            }, 
+            {
+                "date": "2011", 
+                "materials": "Publication", 
+                "holder": "CERN"
+            }
+        ], 
+        "collaboration": [
+            "ATLAS Collaboration"
+        ], 
+        "collection": [
+            "ARTICLE", 
+            "ATLAS_Papers"
+        ], 
+        "language": "eng", 
+        "imprint_date": "2011", 
+        "base": "13", 
+        "system_control_number": [
+            {
+                "institute": "arXiv", 
+                "value": "oai:arXiv.org:1103.3864"
+            }, 
+            {
+                "institute": "Inspire", 
+                "value": "893264"
+            }
+        ], 
+        "pagination": "51 p", 
+        "doi": "10.1088/1367-2630/13/5/053044", 
+        "number_of_authors": 3062, 
+        "license": [
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Preprint", 
+                "license": [
+                    "Open Access", 
+                    "CC-BY-3.0"
+                ]
+            }, 
+            {
+                "material": "Publication", 
+                "license": "CC-BY-3.0"
+            }
+        ], 
+        "accelerator_experiment": {
+            "experiment": "ATLAS", 
+            "accelerator": "CERN LHC"
+        }, 
+        "number_of_comments": 0, 
+        "number_of_reviews": 0, 
+        "status_week": {
+            "status": "n", 
+            "status_week": "201112", 
+            "year": "a2011"
+        }, 
+        "url": {
+            "url": "http://arxiv.org/pdf/1103.3864.pdf", 
+            "description": "Preprint"
+        }, 
+        "recid": 1337270, 
+        "glance_id": "462", 
+        "prepublication": {
+            "date": "22 Mar 2011", 
+            "publisher_name": "CERN", 
+            "place": "Geneva"
+        }
+    }
+}

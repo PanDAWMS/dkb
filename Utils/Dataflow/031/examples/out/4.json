@@ -1,0 +1,228 @@
+{
+    "GLANCE": {
+        "ref_code": "TRIG-2011-02", 
+        "full_title": "Performance of the ATLAS Trigger System in 2010", 
+        "id": "261", 
+        "short_title": "Trigger Performance with 2010 data"
+    }, 
+    "dkbID": "GLANCE_TRIG-2011-02", 
+    "supporting_notes": [
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1303327", 
+                "id": "79", 
+                "label": "The ATLAS MissingET trigger performance with initial LHC run"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-DAQ-2010-191", 
+            "CDS": {
+                "report_number": {
+                    "internal": "CERN-ATL-COM-DAQ-2010-191"
+                }, 
+                "abstract": "This paper shows the performance of the ATLAS triggers based on the vector (MET) and scalar (SumET) sums of the measured transverse energies, obtained with LHC proton-proton collision events at sqrt(s) = 7 TeV collected in August 2010. In the data set considered here, the average number of collisions per bunch crossing ranged from 0.6 to 2 and the instantaneous luminosity ranged from 0.3 to 1 x 1e31 cm<sup>-2</sup> s<sup>-1</sup>. Hence, the impact of the pile-up on the MET and SumET triggers is not negligible.", 
+                "creation_date": "2010-10-29T15:31:32", 
+                "primary_report_number": "ATL-COM-DAQ-2010-191", 
+                "owner": "PUBLIC", 
+                "email_address": [
+                    "diego.casadei@cern.ch", 
+                    "allen.mincer@nyu.edu"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "cataloguer_info": {
+                    "creation_date": "20101029", 
+                    "library": "CER01", 
+                    "modification_date": "20110404", 
+                    "hour": "2104"
+                }, 
+                "agency_code": "SzGeCERN", 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "DAQ and Trigger"
+                }, 
+                "title": "The ATLAS missing Et trigger performance with initial LHC runs at sqrt(s) = 7 TeV", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000710998CER", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T16:05:04", 
+                "pagination": "mult. p", 
+                "number_of_authors": 21, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 25, 
+                "imprint_date": "2010", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201070"
+                }, 
+                "recid": 1303327, 
+                "prepublication": {
+                    "date": "29 Oct 2010", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }, 
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1331180", 
+                "id": "80", 
+                "label": "The implementation of the ATLAS missing Et triggers for the initial LHC operation"
+            }, 
+            "dkbID": "CDS_ATL-COM-DAQ-2011-010", 
+            "CDS": {
+                "report_number": {
+                    "internal": "ATL-COM-DAQ-2011-010"
+                }, 
+                "abstract": "The trigger system of the ATLAS detector is a three-level architecture in which the decision is taken by custom electronics at the first level whereas the following levels operate in a software environment that is similar to the offline reconstruction program. This paper describes the missing transverse energy (\\MET) triggers in ATLAS for the first data taking in 2009 and 2010 LHC runs, in particular providing the first public documentation of their implementation at all trigger levels.", 
+                "creation_date": "2011-02-22T16:21:23", 
+                "primary_report_number": "ATL-DAQ-PUB-2011-001", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number", 
+                    "system_control_number", 
+                    "oai"
+                ], 
+                "owner": "PUBLIC", 
+                "email_address": "diego.casadei@cern.ch", 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "DAQ and Trigger"
+                }, 
+                "title": "The implementation of the ATLAS missing Et triggers for the initial LHC operation", 
+                "oai": {
+                    "indicator": "cerncds:FULLTEXT", 
+                    "value": "oai:cds.cern.ch:1331180"
+                }, 
+                "system_number": "000712927CER", 
+                "type": "PUB", 
+                "collaboration": [], 
+                "version_id": "2016-06-29T21:38:57", 
+                "number_of_reviews": 0, 
+                "base": "91", 
+                "system_control_number": {
+                    "institute": "Inspire", 
+                    "value": "1196749"
+                }, 
+                "address": {
+                    "contact": "Casadei, D", 
+                    "email": "Diego.Casadei@cern.ch"
+                }, 
+                "pagination": "mult. p", 
+                "number_of_authors": 25, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 0, 
+                "imprint_date": "2011", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201170"
+                }, 
+                "recid": 1331180, 
+                "collection": [
+                    "INTNOTEATLASPUBL", 
+                    "NOTE"
+                ], 
+                "prepublication": {
+                    "date": "22 Feb 2011", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }, 
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1325329", 
+                "id": "81", 
+                "label": "Performance of the ATLAS electron and photon triggers"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-DAQ-2011-008", 
+            "CDS": {
+                "report_number": {
+                    "internal": "CERN-ATL-COM-DAQ-2011-008"
+                }, 
+                "abstract": "This note summarises the performance of the electron and photon triggers during the ATLAS data taking in 2010. Approximately 45 pb^{-1} of proton-proton collision data at a centre of mass energy of sqrt(s)= 7 TeV were collected under stable beam conditions. In the initial commissioning phase the event selection was based only on the first level trigger. The high-level trigger was run but without rejecting any events. With increasing luminosities the high-level trigger was progressively put in to rejection mode. Since August, when a liminosity of ~10^{31} cm^{-2} {s}^{-1} was reached, all triggers have relied on the HLT selection. In this note results from the commissioning phase as well as first results of the physics performance will be shown. Comparisons of selection variables, based on calorimeter and tracking information calculated by the different trigger levels, with the offline reconstruction will be shown. This has been an important step in the commissioning of these triggers to ensure their correct functioning. Electrons from physics signals such as J/Psi->ee, W->enu, Z->ee have been used to extract the trigger efficiencies with respect to the offline benchmark selections. HLT efficiencies are typically of the order of 99%, and are higher for offline electrons and photons with transverse energies above the turn-on region.", 
+                "creation_date": "2011-01-28T18:05:35", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-DAQ-2011-008", 
+                "keywords": [
+                    "Electron", 
+                    "Photon", 
+                    "Trigger", 
+                    "Performance", 
+                    "ATLAS"
+                ], 
+                "email_address": [
+                    "john.taylor.childers@cern.ch", 
+                    "Alessandro.Tricoli@cern.ch"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "cataloguer_info": {
+                    "creation_date": "20110128", 
+                    "library": "CER01", 
+                    "modification_date": "20110406", 
+                    "hour": "1017"
+                }, 
+                "agency_code": "SzGeCERN", 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "DAQ and Trigger"
+                }, 
+                "title": "Performance of the Electron and Photon Trigger in p-p Collisions at sqrt(s) = 7 TeV", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000712484CER", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T16:44:25", 
+                "pagination": "25 p", 
+                "number_of_authors": 24, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 19, 
+                "imprint_date": "2011", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201170"
+                }, 
+                "recid": 1325329, 
+                "prepublication": {
+                    "date": "28 Jan 2011", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }
+    ], 
+    "CDS": {}
+}

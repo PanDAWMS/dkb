@@ -1,0 +1,264 @@
+{
+    "GLANCE": {
+        "ref_code": "STDM-2011-29", 
+        "full_title": "Measurement of hard double-parton interactions in W (-> lnu) + 2 jet events at sqrt(s) = 7 TeV with the ATLAS detector", 
+        "id": "722", 
+        "short_title": "Multiparton Interaction Studies"
+    }, 
+    "dkbID": "CDS_ATLAS-STDM-2011-29-003", 
+    "supporting_notes": [
+        {
+            "GLANCE": {
+                "url": "https://cdsweb.cern.ch/record/1474078", 
+                "id": "568", 
+                "label": "Working draft of paper"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2012-1258", 
+            "CDS": {
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2012-1258"
+                }, 
+                "abstract": "Paper draft", 
+                "creation_date": "2012-08-22T15:29:11", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2012-1258", 
+                "keywords": [
+                    "QCD"
+                ], 
+                "email_address": "eleanor.dobson@cern.ch", 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Double parton interactions in W+2jet events with the ATLAS detector", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000725538CER", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2013-01-27T19:11:32", 
+                "pagination": "mult. p", 
+                "number_of_authors": 2, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 60, 
+                "imprint_date": "2012", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201270"
+                }, 
+                "recid": 1474078, 
+                "prepublication": {
+                    "date": "22 Aug 2012", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }, 
+        {
+            "GLANCE": {
+                "url": "https://cdsweb.cern.ch/record/1432931", 
+                "id": "569", 
+                "label": "Internal supporting note"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2012-336", 
+            "CDS": {
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2012-336"
+                }, 
+                "abstract": "internal supporting note for ATLAS paper", 
+                "creation_date": "2012-03-19T14:59:35", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2012-336", 
+                "keywords": [
+                    "QCD"
+                ], 
+                "email_address": [
+                    "eleanor.dobson@cern.ch", 
+                    "atlas-stdm-2011-29-editors@cern.ch", 
+                    "frank.krauss@durham.ac.uk"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Double parton interactions in W+2jet events with the ATLAS detector", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000721377CER", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T22:24:20", 
+                "pagination": "37 p", 
+                "number_of_authors": 2, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 53, 
+                "imprint_date": "2012", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201270"
+                }, 
+                "recid": 1432931, 
+                "prepublication": {
+                    "date": "19 Mar 2012", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }
+    ], 
+    "CDS": {
+        "comment": "Comments: 23 pages plus author list (45 pages total), 10 figures, 2 tables, submitted to NPJ. All figures including auxiliary figures are available at <a href=\"http://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/STDM-2011-29/\">http://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/STDM-2011-29/</a> -Note that v2 differs from v1 only in that the author list was updated-", 
+        "report_number": [
+            {
+                "internal": "ATLAS-STDM-2011-29-003"
+            }, 
+            {
+                "report_number": "CERN-PH-EP-2012-355"
+            }
+        ], 
+        "abstract": "The production of W bosons in association with two jets in proton-proton collisions at a centre-of-mass energy of $\\sqrt{s}$=7 TeV has been analysed for the presence of double-parton interactions using data corresponding to an integrated luminosity of 36/pb, collected with the ATLAS detector at the LHC. The fraction of events arising from double-parton interactions, $f_{DP}^{(D)}$ has been measured through the momentum balance between the two jets and amounts to $f_{DP}^{(D)} = 0.08 \\pm 0.01 (stat.) \\pm 0.02 (sys.)$ for jets with transverse momentum PT > 20 GeV and rapidity |y|<2.8. This corresponds to a measurement of the effective area parameter for hard double-parton interactions of $\\sigma_{eff} = 15 \\pm 3 (stat.)^{+5}_{-3}$ (sys.) mb.", 
+        "creation_date": "2013-01-30T08:22:01", 
+        "primary_report_number": "arXiv:1301.6872", 
+        "persistent_identifiers_keys": [
+            "recid", 
+            "system_control_number", 
+            "doi", 
+            "oai"
+        ], 
+        "keywords": [
+            "QCD", 
+            "global features", 
+            "hard scattering", 
+            "experimental results"
+        ], 
+        "publication_info": {
+            "volume": "15", 
+            "pagination": "033038", 
+            "year": "2013", 
+            "title": "New J. Phys."
+        }, 
+        "email_address": "tony.doyle@glasgow.ac.uk", 
+        "subject": {
+            "source": "SzGeCERN", 
+            "term": "Particle Physics - Experiment"
+        }, 
+        "version_id": "2016-06-30T02:38:35", 
+        "number_of_citations": 0, 
+        "other_report_number": {
+            "source_number": "CERN Library", 
+            "classification_number": "PH-EP-2012-355"
+        }, 
+        "title": "Measurement of hard double-parton interactions in $W(\\to l\\nu)$+ 2 jet events at $\\sqrt{s}$=7 TeV with the ATLAS detector", 
+        "oai": [
+            {
+                "indicator": [
+                    "cerncds:FULLTEXT", 
+                    "cerncds:CERN:FULLTEXT", 
+                    "cerncds:CERN"
+                ], 
+                "value": "oai:cds.cern.ch:1510534"
+            }, 
+            {
+                "indicator": "cerncds:CERN", 
+                "value": "oai:cds.cern.ch:1510938"
+            }
+        ], 
+        "thesaurus_terms": {
+            "institute": "LANL EDS", 
+            "term": "hep-ex"
+        }, 
+        "copyright_status": [
+            {
+                "date": "2013", 
+                "materials": "Preprint", 
+                "holder": "CERN"
+            }, 
+            {
+                "date": "2013", 
+                "materials": "Publication", 
+                "holder": "CERN"
+            }
+        ], 
+        "collaboration": [
+            "ATLAS Collaboration"
+        ], 
+        "collection": [
+            "ARTICLE", 
+            "ATLAS_Papers"
+        ], 
+        "language": "eng", 
+        "number_of_reviews": 0, 
+        "base": "13", 
+        "system_control_number": [
+            {
+                "institute": "arXiv", 
+                "value": "oai:arXiv.org:1301.6872"
+            }, 
+            {
+                "institute": "Inspire", 
+                "value": "1216670"
+            }
+        ], 
+        "pagination": "46 p", 
+        "doi": "10.1088/1367-2630/15/3/033038", 
+        "number_of_authors": 2917, 
+        "license": [
+            {
+                "material": "Preprint", 
+                "license": "CC-BY-3.0"
+            }, 
+            {
+                "material": "Publication", 
+                "license": "CC-BY-3.0"
+            }
+        ], 
+        "accelerator_experiment": {
+            "experiment": "ATLAS", 
+            "accelerator": "CERN LHC"
+        }, 
+        "number_of_comments": 0, 
+        "imprint_date": "2013", 
+        "status_week": {
+            "status": "n", 
+            "status_week": "201304", 
+            "year": "a2013"
+        }, 
+        "url": {
+            "url": "http://arxiv.org/pdf/1301.6872.pdf", 
+            "description": "Preprint"
+        }, 
+        "recid": 1510534, 
+        "glance_id": "722", 
+        "prepublication": {
+            "date": "30 Jan 2013", 
+            "publisher_name": "CERN", 
+            "place": "Geneva"
+        }
+    }
+}

@@ -1,0 +1,280 @@
+{
+    "GLANCE": {
+        "ref_code": "STDM-2011-27", 
+        "full_title": "Measurement of the production cross section for Z/gamma* in association with jets in pp collisions at sqrt(s) = 7 TeV with the ATLAS Detector", 
+        "id": "604", 
+        "short_title": "Z+jets"
+    }, 
+    "dkbID": "CDS_ATLAS-STDM-2011-27-004", 
+    "supporting_notes": [
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1363363", 
+                "id": "205", 
+                "label": "Working draft of paper"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2011-820", 
+            "CDS": {
+                "comment": "This is a draft of a PRD ", 
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2011-820"
+                }, 
+                "abstract": "We present results on the production of jets of particles in association with a Z/gamma* boson in the final state, in proton-proton collisions at sqrt{s} = 7 TeV with the ATLAS detector. The analysis includes the full 2010 data set corresponding to an integrated luminosity of 36 pb^-1. Inclusive jet cross sections in Z/gamma* events, with Z/gamma* decaying into electron or muon pairs, are measured for jets with transverse momentum pT &gt;30 GeV and jet rapidity in the region |y | &lt; 4.4. The measurements are compared to next-to-leading-order perturbative QCD calculations, and to predictions from different Monte Carlo generators implementing leading-order matrix elements supplemented by parton showers.", 
+                "creation_date": "2011-07-04T15:01:47", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2011-820", 
+                "keywords": [
+                    "Jets, Z bosons, QCD, NLO, ALPGEN, SHERPA, MCFM, electrons, muons", 
+                    "QCD"
+                ], 
+                "email_address": "mmp@ifae.es", 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Measurement of the production cross section for Z/gamma* in association with jets in pp collisions at sqrt{s}=7 TeV with the ATLAS Detector", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000715508CER", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T20:44:33", 
+                "pagination": "58 p", 
+                "number_of_authors": 1, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 46, 
+                "imprint_date": "2011", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201170"
+                }, 
+                "recid": 1363363, 
+                "prepublication": {
+                    "date": "04 Jul 2011", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }, 
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1355694", 
+                "id": "209", 
+                "label": "Internal supporting note"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2011-647", 
+            "CDS": {
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2011-647"
+                }, 
+                "abstract": "We present cross-sections for jets produced in association with a $Z$-boson in proton-proton collisions at $\\rm \\sqrt{s}=7~TeV$. The measurement is performed with 36~\\ipb\\ of data observed with the ATLAS detector at the LHC. $Z$-bosons are identified using electron and muon decay modes. Jets are reconstructed with the anti-kT algorithm. Inclusive cross-sections, $\\sigma(Z+\\geq{N\\:}{\\rm jets})$, are measured for events with a $Z$-boson and N or more jets (N=0-4). Differential cross-sections d$\\sigma$($Z$~+~jets)/d$p_T$ are measured with respect to the transverse momenta $p_T$, and to the rapidities of the first, 2nd and 3rd leading jets. In addition, we normalize the total cross section per bin in multiplicity or in $p_T$ to the inclusive $Z$ cross section and calculate ratios $\\sigma(Z+\\geq{N+1\\:}{\\rm jets})/\\sigma(Z+\\geq{N}\\:{\\rm jets})$ between the inclusive cross-sections, to cancel out systematic uncertainties. The cross-sections and their ratios are corrected for all detector effects and are given for the fiducial, restricted, region of the detector acceptance. We compare the measured cross-sections to next-to-leading order (NLO) pQCD calculations from MCFM and leading-order simulations from ALPGEN, PYTHIA, and SHERPA. The observed cross-sections are found in agreement with the NLO predictions.", 
+                "creation_date": "2011-06-02T01:28:35", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2011-647", 
+                "keywords": [
+                    "qcd", 
+                    "QCD"
+                ], 
+                "email_address": "ublumenschein@googlemail.com", 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Measurement of the cross section for jets produced in association with Z bosons", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000714816CER", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T20:35:50", 
+                "pagination": "mult. p", 
+                "number_of_authors": 15, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 15, 
+                "imprint_date": "2011", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201170"
+                }, 
+                "recid": 1355694, 
+                "prepublication": {
+                    "date": "01 Jun 2011", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }
+    ], 
+    "CDS": {
+        "comment": [
+            "Comments: 48 pages plus author list (60 pages in total), 26 figures, 20 tables, submitted to Physical Review D", 
+            "48 pages plus author list (60 pages in total), 26 figures, 20 tables, submitted to Physical Review D"
+        ], 
+        "report_number": [
+            {
+                "internal": "ATLAS-STDM-2011-27-004"
+            }, 
+            {
+                "report_number": "CERN-PH-EP-2011-162"
+            }
+        ], 
+        "abstract": [
+            "Results are presented on the production of jets of particles in association with a Z/gamma* boson, in proton-proton collisions at sqrt(s) = 7 TeV with the ATLAS detector. The analysis includes the full 2010 data set, collected with a low rate of multiple proton-proton collisions in the accelerator, corresponding to an integrated luminosity of 36 pb^-1. Inclusive jet cross sections in Z/gamma* events, with Z/gamma* decaying into electron or muon pairs, are measured for jets with transverse momentum pT > 30 GeV and jet rapidity |y| < 4.4. The measurements are compared to next-to-leading-order perturbative QCD calculations, and to predictions from different Monte Carlo generators implementing leading-order matrix elements supplemented by parton showers.", 
+            "Results are presented on the production of jets of particles in association with a Z/gamma* boson, in proton-proton collisions at sqrt(s) = 7 TeV with the ATLAS detector. The analysis includes the full 2010 data set, collected with a low rate of multiple proton-proton collisions in the accelerator, corresponding to an integrated luminosity of 36 pb^-1. Inclusive jet cross sections in Z/gamma* events, with Z/gamma* decaying into electron or muon pairs, are measured for jets with transverse momentum pT > 30 GeV and jet rapidity |y| < 4.4. The measurements are compared to next-to-leading-order perturbative QCD calculations, and to predictions from different Monte Carlo generators implementing leading-order matrix elements supplemented by parton showers."
+        ], 
+        "creation_date": "2011-11-14T08:52:28", 
+        "primary_report_number": [
+            "arXiv:1111.2690", 
+            "CERN-PH-EP-2011-162"
+        ], 
+        "persistent_identifiers_keys": [
+            "recid", 
+            "system_control_number", 
+            "doi", 
+            "oai"
+        ], 
+        "keywords": [
+            "electroweak interaction", 
+            "QCD", 
+            "experimental results"
+        ], 
+        "publication_info": {
+            "volume": "85", 
+            "pagination": "032009", 
+            "year": "2012", 
+            "title": "Phys. Rev. D"
+        }, 
+        "email_address": "klaus.moenig@cern.ch", 
+        "subject": {
+            "source": "SzGeCERN", 
+            "term": "Particle Physics - Experiment"
+        }, 
+        "version_id": "2017-10-05T09:43:09", 
+        "number_of_citations": 0, 
+        "other_report_number": {
+            "source_number": "CERN Library", 
+            "classification_number": "PH-EP-2011-162"
+        }, 
+        "title": "Measurement of the production cross section for $Z/\\gamma^*$ in association with jets in pp collisions at $\\sqrt{s}$ = 7 TeV with the ATLAS detector", 
+        "oai": {
+            "indicator": [
+                "cerncds:FULLTEXT", 
+                "cerncds:CERN:FULLTEXT", 
+                "cerncds:CERN"
+            ], 
+            "value": "oai:cds.cern.ch:1398384"
+        }, 
+        "thesaurus_terms": {
+            "institute": "LANL EDS", 
+            "term": "hep-ex"
+        }, 
+        "copyright_status": [
+            {
+                "date": "2012", 
+                "materials": "Publication", 
+                "holder": "CERN"
+            }, 
+            {
+                "date": "2011", 
+                "materials": "Preprint", 
+                "holder": "CERN"
+            }
+        ], 
+        "collaboration": [
+            "ATLAS Collaboration"
+        ], 
+        "collection": [
+            "ARTICLE", 
+            "ATLAS_Papers"
+        ], 
+        "language": "eng", 
+        "number_of_reviews": 0, 
+        "base": "13", 
+        "system_control_number": [
+            {
+                "institute": "arXiv", 
+                "canceled": "oai:arXiv.org:1111.2690", 
+                "value": "oai:arXiv.org:1111.2690"
+            }, 
+            {
+                "institute": "Inspire", 
+                "value": "945498"
+            }
+        ], 
+        "pagination": "48 p", 
+        "doi": "10.1103/PhysRevD.85.032009", 
+        "number_of_authors": 3011, 
+        "license": [
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Publication", 
+                "license": [
+                    "Open Access", 
+                    "CC-BY-3.0"
+                ]
+            }, 
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Preprint", 
+                "license": [
+                    "CC-BY-3.0", 
+                    "Open Access"
+                ]
+            }
+        ], 
+        "accelerator_experiment": {
+            "experiment": "ATLAS", 
+            "accelerator": "CERN LHC"
+        }, 
+        "number_of_comments": 0, 
+        "imprint_date": "2012", 
+        "status_week": {
+            "status": "n", 
+            "status_week": "201146", 
+            "year": "a2012"
+        }, 
+        "url": [
+            {
+                "url": "https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/STDM-2011-27/", 
+                "description": "all figures including auxiliary figures"
+            }, 
+            {
+                "url": "http://durpdg.dur.ac.uk/cgi-hepdata/hepreac/9265643", 
+                "description": "DURHAM"
+            }
+        ], 
+        "recid": 1398203, 
+        "glance_id": "604", 
+        "prepublication": {
+            "date": "14 Nov 2011", 
+            "publisher_name": "CERN", 
+            "place": "Geneva"
+        }
+    }
+}

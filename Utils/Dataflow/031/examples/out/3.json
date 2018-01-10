@@ -1,0 +1,299 @@
+{
+    "GLANCE": {
+        "ref_code": "STDM-2011-01", 
+        "full_title": "Rapidity gap cross sections measured with the ATLAS detector in pp collisions at sqrt(s) = 7 TeV", 
+        "id": "41", 
+        "short_title": "Diffraction with calorimeter information"
+    }, 
+    "dkbID": "CDS_ATLAS-STDM-2011-01-003", 
+    "supporting_notes": [
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1373726", 
+                "id": "288", 
+                "label": "Working draft paper"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2011-1038", 
+            "CDS": {
+                "comment": "Supporting note at: http://cdsweb.cern.ch/record/1368509", 
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2011-1038"
+                }, 
+                "abstract": "Pseudorapidity gap distributions are studied using a mimimum bias data sample of integrated luminosity $7.1 \\ {\\rm \\mu b^{-1}}$ from the Large Hadron Collider at $\\sqrt{s} = 7$ TeV. Cross sections are measured differentially in the size, $\\Delta\\eta^{F}$, of the larger pseudorapidity region extending to the limits of the ATLAS detector acceptance at $\\eta = \\pm 4.9$ in which no final state particles are produced above a transverse momentum threshold $p_{T}^{\\rm cut}$. The measurements span the region $0 < \\Delta\\eta^{F} < 8$ for $200 < p_{T}^{\\rm cut} < 800 \\ {\\rm MeV}$. At small $\\Delta\\eta^{F}$, the data are used to test the reliability of hadronisation models in describing rapidity and transverse momentum fluctuations in final state particle production. The measurements at larger gap sizes are dominated by contributions from the single diffractive dissociation process ($pp \\rightarrow Xp$), enhanced by double dissociation ($pp \\rightarrow XY$) where the invariant mass of the lighter of the two dissociation systems satisfies $M_Y \\stackrel{<}{_{\\sim}} 7 \\ {\\rm GeV}$. The result is ${\\rm d} \\sigma / {\\rm d} \\Delta\\eta^{F} \\stackrel{>}{_{\\sim}} 1 \\ {\\rm mb}$ throughout the region $\\Delta\\eta^{F} \\stackrel{>}{_{\\sim}} 3$. The large gap data are used to constrain the value of the pomeron intercept appropriate to triple Regge models of soft diffraction. The cross section integrated over all gap sizes is compared with other LHC inelastic cross section measurements.", 
+                "creation_date": "2011-08-08T19:58:18", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2011-1038", 
+                "keywords": [
+                    "diffraction, pomeron, hadronisation, inelastic cross section, gaps, rapidity gaps, colour singlet exchange, double pomeron exhange, minimum bias", 
+                    "QCD"
+                ], 
+                "email_address": [
+                    "tim.martin@cern.ch", 
+                    "Paul.Newman@cern.ch", 
+                    "Paul.Richard.Newman@cern.ch", 
+                    "prn@hep.ph.bham.ac.uk", 
+                    "Pavel.Ruzicka@cern.ch", 
+                    "Oldrich.Kepka@cern.ch"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Rapidity Gap Cross Sections in $pp$ Interactions at $\\sqrt{s}$ = 7 TeV", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000716330CER", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2013-01-09T14:54:24", 
+                "pagination": "11 p", 
+                "number_of_authors": 4, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 15, 
+                "imprint_date": "2011", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201170"
+                }, 
+                "recid": 1373726, 
+                "prepublication": {
+                    "date": "08 Aug 2011", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }, 
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1368509", 
+                "id": "291", 
+                "label": "Internal supporting note"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2011-965", 
+            "CDS": {
+                "comment": "Request INT status for supporting material of published paper STDM-2011-01", 
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2011-965"
+                }, 
+                "abstract": "Pseudorapidity gap distributions are studied using a data sample of integrated luminosity $7.1 \\pm 0.2 \\ {\\rm \\mu b^{-1}}$ from the first physics run provided by the Large Hadron Collider at $\\sqrt{s} = 7$ TeV. Events were collected using a minimum-bias trigger and are subjected to a search for large gaps in the pseudorapidity distribution of final state particles, based both on energy deposits in the ATLAS calorimeters and on tracks reconstructed in the inner detector. Forward pseudorapidity gaps of size $\\Delta\\eta^{F} < 8$, extending to the limit of the detector acceptance at $\\eta = \\pm 4.9$, are used to measure cross sections differentially in gap size. At large $\\Delta\\eta^{F}$, these cross sections are dominated by contributions from the single diffractive dissociation process ($pp \\rightarrow Xp$) and double dissociation ($pp \\rightarrow XY$), where the invariant mass of the lighter of the two dissociation systems satisfies $M_Y \\stackrel{<}{_{\\sim}} \\ {\\rm GeV}$. The result is ${\\rm d} \\sigma / {\\rm d} \\Delta\\eta^{F} \\approx 1$~mb over a wide range of gap size with $\\Delta\\eta^{F} > 3$.", 
+                "creation_date": "2011-07-19T17:19:17", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2011-965", 
+                "keywords": [
+                    "diffraction", 
+                    "inealastic", 
+                    "rapidity gaps", 
+                    "pommeron", 
+                    "hadronisation", 
+                    "QCD"
+                ], 
+                "email_address": [
+                    "tim.martin@cern.ch", 
+                    "Paul.Newman@cern.ch", 
+                    "Oldrich.Kepka@cern.ch", 
+                    "Pavel.Ruzicka@cern.ch"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Rapidity Gap Cross Sections in $pp$ Interactions at $\\sqrt{s} = 7$ TeV.", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000715982CER", 
+                "type": "INT", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T20:54:41", 
+                "pagination": "41 p", 
+                "number_of_authors": 4, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 21, 
+                "imprint_date": "2011", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201170"
+                }, 
+                "recid": 1368509, 
+                "prepublication": {
+                    "date": "19 Jul 2011", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }
+    ], 
+    "CDS": {
+        "comment": [
+            "Comments: 20 pages plus author list (30 pages total), 10 figures, 2 tables, submitted to Eur. Phys. J. C", 
+            "21 pages plus author list (32 pages total), 10 figures, 2 tables, matches published version in EPJC"
+        ], 
+        "report_number": [
+            {
+                "internal": "ATLAS-STDM-2011-01-003"
+            }, 
+            {
+                "report_number": "CERN-PH-EP-2011-220"
+            }
+        ], 
+        "abstract": [
+            "Pseudorapidity gap distributions in proton-proton collisions at sqrt(s) = 7 TeV are studied using a minimum bias data sample with an integrated luminosity of 7.1 inverse microbarns. Cross sections are measured differentially in terms of Delta eta F, the larger of the pseudorapidity regions extending to the limits of the ATLAS sensitivity, at eta = +/- 4.9, in which no final state particles are produced above a transverse momentum threshold p_T Cut. The measurements span the region 0 < Delta eta F < 8 for 200 < p_T Cut < 800 MeV. At small Delta eta F, the data test the reliability of hadronisation models in describing rapidity and transverse momentum fluctuations in final state particle production. The measurements at larger gap sizes are dominated by contributions from the single diffractive dissociation process (pp -> Xp), enhanced by double dissociation (pp -> XY) where the invariant mass of the lighter of the two dissociation systems satisfies M_Y <~ 7 GeV. The resulting cross section is d sigma / d Delta eta F ~ 1 mb for Delta eta F >~ 3. The large rapidity gap data are used to constrain the value of the pomeron intercept appropriate to triple Regge models of soft diffraction. The cross section integrated over all gap sizes is compared with other LHC inelastic cross section measurements.", 
+            "Pseudorapidity gap distributions in proton-proton collisions at sqrt(s) = 7 TeV are studied using a minimum bias data sample with an integrated luminosity of 7.1 inverse microbarns. Cross sections are measured differentially in terms of Delta eta F, the larger of the pseudorapidity regions extending to the limits of the ATLAS sensitivity, at eta = +/- 4.9, in which no final state particles are produced above a transverse momentum threshold p_T Cut. The measurements span the region 0 < Delta eta F < 8 for 200 < p_T Cut < 800 MeV. At small Delta eta F, the data test the reliability of hadronisation models in describing rapidity and transverse momentum fluctuations in final state particle production. The measurements at larger gap sizes are dominated by contributions from the single diffractive dissociation process (pp -> Xp), enhanced by double dissociation (pp -> XY) where the invariant mass of the lighter of the two dissociation systems satisfies M_Y <~ 7 GeV. The resulting cross section is d sigma / d Delta eta F ~ 1 mb for Delta eta F >~ 3. The large rapidity gap data are used to constrain the value of the pomeron intercept appropriate to triple Regge models of soft diffraction. The cross section integrated over all gap sizes is compared with other LHC inelastic cross section measurements."
+        ], 
+        "creation_date": "2012-01-16T08:38:24", 
+        "primary_report_number": [
+            "arXiv:1201.2808", 
+            "CERN-PH-EP-2011-220"
+        ], 
+        "persistent_identifiers_keys": [
+            "recid", 
+            "system_control_number", 
+            "doi", 
+            "oai"
+        ], 
+        "keywords": [
+            "QCD", 
+            "particle correlations and fluctuations", 
+            "minimum bias", 
+            "experimental results"
+        ], 
+        "publication_info": {
+            "volume": "72", 
+            "pagination": "1926", 
+            "year": "2012", 
+            "title": "Eur. Phys. J. C"
+        }, 
+        "email_address": "klaus.moenig@cern.ch", 
+        "subject": {
+            "source": "SzGeCERN", 
+            "term": "Particle Physics - Experiment"
+        }, 
+        "version_id": "2017-10-05T09:49:44", 
+        "number_of_citations": 0, 
+        "other_report_number": {
+            "source_number": "CERN Library", 
+            "classification_number": "PH-EP-2011-220"
+        }, 
+        "title": "Rapidity gap cross sections measured with the ATLAS detector in pp collisions at $\\sqrt{s}$ = 7 TeV", 
+        "oai": {
+            "indicator": [
+                "cerncds:FULLTEXT", 
+                "cerncds:CERN:FULLTEXT", 
+                "cerncds:CERN"
+            ], 
+            "value": "oai:cds.cern.ch:1416198"
+        }, 
+        "thesaurus_terms": {
+            "institute": "LANL EDS", 
+            "term": "hep-ex"
+        }, 
+        "copyright_status": [
+            {
+                "date": "2012", 
+                "materials": "Publication", 
+                "holder": "CERN"
+            }, 
+            {
+                "date": "2012", 
+                "materials": "Preprint", 
+                "holder": "CERN"
+            }
+        ], 
+        "collaboration": [
+            "ATLAS Collaboration"
+        ], 
+        "collection": [
+            "ARTICLE", 
+            "ATLAS_Papers"
+        ], 
+        "language": "eng", 
+        "number_of_reviews": 0, 
+        "base": "13", 
+        "system_control_number": [
+            {
+                "institute": "arXiv", 
+                "canceled": "oai:arXiv.org:1201.2808", 
+                "value": "oai:arXiv.org:1201.2808"
+            }, 
+            {
+                "institute": "Inspire", 
+                "value": "1084540"
+            }
+        ], 
+        "pagination": "20 p", 
+        "doi": "10.1140/epjc/s10052-012-1926-0", 
+        "number_of_authors": 3019, 
+        "license": [
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Publication", 
+                "license": [
+                    "Open Access", 
+                    "CC-BY-3.0"
+                ]
+            }, 
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Preprint", 
+                "license": [
+                    "CC-BY-3.0", 
+                    "Open Access"
+                ]
+            }
+        ], 
+        "accelerator_experiment": {
+            "experiment": "ATLAS", 
+            "accelerator": "CERN LHC"
+        }, 
+        "number_of_comments": 0, 
+        "imprint_date": "2012-03-13", 
+        "status_week": {
+            "status": "n", 
+            "status_week": "201203", 
+            "year": "a2012"
+        }, 
+        "url": [
+            {
+                "url": "https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/STDM-2011-01/", 
+                "description": "all figures including auxiliary figures"
+            }, 
+            {
+                "url": "http://durpdg.dur.ac.uk/cgi-hepdata/hepreac/9334530", 
+                "description": "DURHAM"
+            }
+        ], 
+        "recid": 1416082, 
+        "glance_id": "41", 
+        "prepublication": {
+            "date": "16 Jan 2012", 
+            "publisher_name": "CERN", 
+            "place": "Geneva"
+        }
+    }
+}

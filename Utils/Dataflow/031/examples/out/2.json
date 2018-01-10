@@ -1,0 +1,292 @@
+{
+    "GLANCE": {
+        "ref_code": "STDM-2011-05", 
+        "full_title": "Measurement of isolated diphoton cross-section in pp collision at 7 TeV with the ATLAS detector", 
+        "id": "82", 
+        "short_title": "Diphoton cross section"
+    }, 
+    "dkbID": "CDS_ATLAS-STDM-2011-05-003", 
+    "supporting_notes": [
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1337015", 
+                "id": "255", 
+                "label": "http://cdsweb.cern.ch/record/1337015"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2011-301", 
+            "CDS": {
+                "comment": "This is the supporting note for the 2010 SM diphoton cross section paper, approved by ATLAS and submitted for publication.", 
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2011-301"
+                }, 
+                "abstract": "The ATLAS experiment has measured the production cross-section of events with two isolated photons in the final state, in proton-proton collisions at $\\sqrt{s}$ = 7 TeV. The full data set acquired in year 2010, corresponding to an integrated luminosity of 37 ${\\rm pb}^{-1}$, is used. The amount of the background, consisting in hadronic jets and isolated electrons, is estimated with fully data-driven techniques and subtracted. The differential cross-section as a function of the di-photon mass, transverse momentum and azimuthal separation is presented and compared to the prediction of NLO generators (DIPHOX and RESBOS).", 
+                "creation_date": "2011-03-18T18:24:19", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2011-301", 
+                "keywords": [
+                    "QCD"
+                ], 
+                "email_address": [
+                    "marcello.fanti@mi.infn.it", 
+                    "laplace@lpnhe.in2p3.fr", 
+                    "marco.delmastro@cern.ch"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "cataloguer_info": {
+                    "creation_date": "20110318", 
+                    "library": "CER01", 
+                    "modification_date": "20110318", 
+                    "hour": "1827"
+                }, 
+                "agency_code": "SzGeCERN", 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Measurement of isolated di-photon cross section in pp collision at \u221as = 7 TeV with the ATLAS detector", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000713493CER", 
+                "type": "INT", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T20:15:02", 
+                "pagination": "100 p", 
+                "number_of_authors": 37, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 4, 
+                "imprint_date": "2011", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201170"
+                }, 
+                "recid": 1337015, 
+                "prepublication": {
+                    "date": "18 Mar 2011", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }, 
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1342526", 
+                "id": "258", 
+                "label": "Working paper draft"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2011-379", 
+            "CDS": {
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2011-379"
+                }, 
+                "abstract": "The ATLAS experiment has measured the production cross-section of events with two isolated photons in the final state, in proton-proton collisions at $\\sqrt{s} = 7$~TeV. The full data set acquired in year 2010, corresponding to an integrated luminosity of $37~\\ipb$, is used. The amount of the background, consisting in hadronic jets and isolated electrons, is estimated with fully data-driven techniques and subtracted. The differential cross-section as a function of the di-photon mass (\\mgg), total transverse momentum (\\ptgg) and azimuthal separation (\\dphigg) is presented and compared to the prediction of NLO generators.", 
+                "creation_date": "2011-04-05T15:53:42", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2011-379", 
+                "keywords": [
+                    "QCD"
+                ], 
+                "email_address": [
+                    "marcello.fanti@mi.infn.it", 
+                    "laplace@lpnhe.in2p3.fr", 
+                    "Marco.Delmastro@cern.ch"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "cataloguer_info": {
+                    "creation_date": "20110405", 
+                    "library": "CER01", 
+                    "modification_date": "20110405", 
+                    "hour": "1556"
+                }, 
+                "agency_code": "SzGeCERN", 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Measurement of isolated di-photon cross section in $pp$ collision at $\\sqrt{s}=7$~TeV with the ATLAS detector", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000713785CER", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T20:20:01", 
+                "pagination": "mult. p", 
+                "number_of_authors": 1, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 49, 
+                "imprint_date": "2011", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201170"
+                }, 
+                "recid": 1342526, 
+                "prepublication": {
+                    "date": "05 Apr 2011", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }
+    ], 
+    "CDS": {
+        "comment": [
+            "Comments: 15 pages plus author list (27 pages total), 9 figures, 2 tables, submitted to Phys. Rev. D", 
+            "15 pages plus author list (27 pages total), 9 figures, 2 tables, final version to appear in Physical Review D"
+        ], 
+        "report_number": [
+            {
+                "internal": "ATLAS-STDM-2011-05-003"
+            }, 
+            {
+                "report_number": "CERN-PH-EP-2011-088"
+            }
+        ], 
+        "abstract": [
+            "The ATLAS experiment has measured the production cross-section of events with two isolated photons in the final state, in proton-proton collisions at sqrt(s) = 7 TeV. The full data set acquired in 2010 is used, corresponding to an integrated luminosity of 37 pb-1. The background, consisting of hadronic jets and isolated electrons, is estimated with fully data-driven techniques and subtracted. The differential cross-sections, as functions of the di-photon mass, total transverse momentum and azimuthal separation, are presented and compared to the predictions of next-to-leading-order QCD.", 
+            "The ATLAS experiment has measured the production cross-section of events with two isolated photons in the final state, in proton-proton collisions at sqrt(s) = 7 TeV. The full data set acquired in 2010 is used, corresponding to an integrated luminosity of 37 pb^-1. The background, consisting of hadronic jets and isolated electrons, is estimated with fully data-driven techniques and subtracted. The differential cross-sections, as functions of the di-photon mass, total transverse momentum and azimuthal separation, are presented and compared to the predictions of next-to-leading-order QCD."
+        ], 
+        "creation_date": "2011-07-05T18:53:07", 
+        "primary_report_number": [
+            "arXiv:1107.0581", 
+            "CERN-PH-EP-2011-088"
+        ], 
+        "persistent_identifiers_keys": [
+            "recid", 
+            "system_control_number", 
+            "doi", 
+            "oai"
+        ], 
+        "publication_info": {
+            "volume": "85", 
+            "pagination": "012003", 
+            "year": "2012", 
+            "title": "Phys. Rev. D"
+        }, 
+        "email_address": "klaus.moenig@cern.ch", 
+        "subject": {
+            "source": "SzGeCERN", 
+            "term": "Particle Physics - Experiment"
+        }, 
+        "version_id": "2017-10-05T09:22:34", 
+        "number_of_citations": 0, 
+        "other_report_number": {
+            "source_number": "CERN Library", 
+            "classification_number": "PH-EP-2011-088"
+        }, 
+        "title": "Measurement of the isolated diphoton cross section in pp collisions at $\\sqrt{s}$=7 TeV with the ATLAS detector", 
+        "oai": {
+            "indicator": [
+                "cerncds:FULLTEXT", 
+                "cerncds:CERN:FULLTEXT", 
+                "cerncds:CERN"
+            ], 
+            "value": "oai:cds.cern.ch:1364240"
+        }, 
+        "thesaurus_terms": {
+            "institute": "LANL EDS", 
+            "term": "hep-ex"
+        }, 
+        "copyright_status": [
+            {
+                "date": "2011", 
+                "materials": "Preprint", 
+                "holder": "CERN"
+            }, 
+            {
+                "date": "2012", 
+                "materials": "Publication", 
+                "holder": "CERN"
+            }
+        ], 
+        "collaboration": [
+            "ATLAS Collaboration"
+        ], 
+        "system_control_number": [
+            {
+                "institute": "arXiv", 
+                "canceled": "oai:arXiv.org:1107.0581", 
+                "value": "oai:arXiv.org:1107.0581"
+            }, 
+            {
+                "institute": "Inspire", 
+                "value": "916832"
+            }
+        ], 
+        "language": "eng", 
+        "number_of_reviews": 0, 
+        "base": "13", 
+        "collection": [
+            "ARTICLE", 
+            "ATLAS_Papers"
+        ], 
+        "pagination": "15 p", 
+        "doi": "10.1103/PhysRevD.85.012003", 
+        "number_of_authors": 3034, 
+        "license": [
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Preprint", 
+                "license": [
+                    "Open Access", 
+                    "CC-BY-3.0"
+                ]
+            }, 
+            {
+                "material": "Publication", 
+                "license": "CC-BY-3.0"
+            }
+        ], 
+        "accelerator_experiment": {
+            "experiment": "ATLAS", 
+            "accelerator": "CERN LHC"
+        }, 
+        "number_of_comments": 0, 
+        "imprint_date": "2012", 
+        "status_week": {
+            "status": "n", 
+            "status_week": "201127", 
+            "year": "a2012"
+        }, 
+        "url": [
+            {
+                "url": "https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/STDM-2011-05/", 
+                "description": "all figures including auxiliary figures"
+            }, 
+            {
+                "url": "http://durpdg.dur.ac.uk/cgi-hepdata/hepreac/9120807", 
+                "description": "DURHAM"
+            }
+        ], 
+        "recid": 1364240, 
+        "glance_id": "82", 
+        "prepublication": {
+            "date": "05 Jul 2011", 
+            "publisher_name": "CERN", 
+            "place": "Geneva"
+        }
+    }
+}

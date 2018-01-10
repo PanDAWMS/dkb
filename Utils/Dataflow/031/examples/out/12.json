@@ -1,0 +1,270 @@
+{
+    "GLANCE": {
+        "ref_code": "STDM-2011-23", 
+        "full_title": "Measurement of the W to tau nu Cross Section in pp Collisions at sqrt(s) = 7 TeV with the ATLAS experiment", 
+        "id": "421", 
+        "short_title": "Wtaunu"
+    }, 
+    "dkbID": "CDS_ATLAS-STDM-2011-23-003", 
+    "supporting_notes": [
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1355375", 
+                "id": "315", 
+                "label": "Internal supporting note"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2011-637", 
+            "CDS": {
+                "comment": "Supporting document for W->taunu cross section paper (PLB 706, 276). SM convenors asked us to request approval as INT note.", 
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2011-637"
+                }, 
+                "abstract": "We present the measurement of the W \u2192 \u03c4h\u03bd\u03c4 production cross section in pp collisions at \u221as = 7 TeV at the LHC. The measurement has been performed on the full data sample collected during the year 2010 by the ATLAS Experiment, corresponding to an integrated luminosity of 34.3 pb\u22121.", 
+                "creation_date": "2011-05-31T19:03:36", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2011-637", 
+                "keywords": [
+                    "Standard Model", 
+                    "Cross section", 
+                    "EWEAK"
+                ], 
+                "email_address": [
+                    "lidia.dell'asta@cern.ch", 
+                    "Juergen.Kroseberg@cern.ch", 
+                    "Jana.Kraus@cern.ch"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Measurement of the W \u2192 \u03c4\u03bd Cross Section in $pp$ Collisions at \u221as = 7 TeV with the ATLAS Experiment", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000714772CER", 
+                "type": "INT", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2015-04-13T17:30:44", 
+                "pagination": "mult. p", 
+                "number_of_authors": 17, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 8, 
+                "imprint_date": "2011", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201170"
+                }, 
+                "recid": 1355375, 
+                "prepublication": {
+                    "date": "31 May 2011", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }, 
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1361981", 
+                "id": "316", 
+                "label": "Working paper draft"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2011-778", 
+            "CDS": {
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2011-778"
+                }, 
+                "abstract": "The cross section for the production of W bosons with subsequent decay W -> tau nu is measured with the ATLAS detector at the LHC. The analysis is based on a data sample that was recorded in 2010 at a proton-proton center-of-mass energy of \u221as = 7 TeV and corresponds to an integrated luminosity of 34.3 pb\u22121. The cross section is measured in a region of high detector acceptance and then extrapolated to the full phase space. The product of the total W production cross section and the W -> tau nu branching ratio is measured to be sigma_tot=[11.1\u00b10.3(stat)\u00b11.7(sys)\u00b10.4(lum)] nb.", 
+                "creation_date": "2011-06-28T02:24:28", 
+                "primary_report_number": "ATL-COM-PHYS-2011-778", 
+                "owner": "PUBLIC", 
+                "email_address": [
+                    "juergen.kroseberg@cern.ch", 
+                    "lidia.dell'asta@cern.ch", 
+                    "Jana.Kraus@cern.ch"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Measurement of the W -> tau nu Production Cross Section in pp Collisions at \\sqrt{s} = 7 TeV with the ATLAS Experiment", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000715364CER", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T20:42:47", 
+                "pagination": "mult. p", 
+                "number_of_authors": 17, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 25, 
+                "imprint_date": "2011", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201170"
+                }, 
+                "recid": 1361981, 
+                "prepublication": {
+                    "date": "27 Jun 2011", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }
+    ], 
+    "CDS": {
+        "comment": "Comments: 8 pages (20 including author list), 10 figures, 4 tables, submitted to Phys. Lett. B", 
+        "report_number": [
+            {
+                "internal": "ATLAS-STDM-2011-23-003"
+            }, 
+            {
+                "report_number": "CERN-PH-EP-2011-122"
+            }
+        ], 
+        "abstract": "The cross section for the production of W bosons with subsequent decay W to tau nu is measured with the ATLAS detector at the LHC. The analysis is based on a data sample that was recorded in 2010 at a proton-proton center-of-mass energy of sqrt(s) = 7 TeV and corresponds to an integrated luminosity of 34 pb^-1. The cross section is measured in a region of high detector acceptance and then extrapolated to the full phase space. The product of the total W production cross section and the W to tau nu branching ratio is measured to be 11.1 +/- 0.3 (stat) +/- 1.7 (syst) +/- 0.4 (lumi) nb.", 
+        "creation_date": "2011-09-14T10:02:09", 
+        "primary_report_number": "arXiv:1108.4101", 
+        "persistent_identifiers_keys": [
+            "recid", 
+            "system_control_number", 
+            "doi", 
+            "oai"
+        ], 
+        "keywords": [
+            "electroweak interaction", 
+            "lepton production", 
+            "experimental results"
+        ], 
+        "publication_info": {
+            "volume": "706", 
+            "pagination": "276-294", 
+            "year": "2011", 
+            "title": "Phys. Lett. B"
+        }, 
+        "email_address": "klaus.moenig@cern.ch", 
+        "subject": {
+            "source": "SzGeCERN", 
+            "term": "Particle Physics - Experiment"
+        }, 
+        "version_id": "2016-07-01T11:58:26", 
+        "number_of_citations": 0, 
+        "other_report_number": {
+            "source_number": "CERN Library", 
+            "classification_number": "PH-EP-2011-122"
+        }, 
+        "title": "Measurement of the $W \\to \\tau \\nu_{\\tau}$ Cross Section in pp Collisions at $\\sqrt{s}$ = 7 TeV with the ATLAS experiment", 
+        "oai": {
+            "indicator": [
+                "cerncds:FULLTEXT", 
+                "cerncds:CERN:FULLTEXT", 
+                "cerncds:CERN"
+            ], 
+            "value": "oai:cds.cern.ch:1382039"
+        }, 
+        "thesaurus_terms": {
+            "institute": "LANL EDS", 
+            "term": "hep-ex"
+        }, 
+        "copyright_status": [
+            {
+                "date": "2011", 
+                "materials": "Preprint", 
+                "holder": "CERN"
+            }, 
+            {
+                "date": "2011", 
+                "materials": "Publication", 
+                "holder": "CERN"
+            }
+        ], 
+        "collaboration": [
+            "ATLAS Collaboration"
+        ], 
+        "collection": [
+            "ARTICLE", 
+            "ATLAS_Papers"
+        ], 
+        "language": "eng", 
+        "number_of_reviews": 0, 
+        "base": "13", 
+        "system_control_number": [
+            {
+                "institute": "arXiv", 
+                "value": "oai:arXiv.org:1108.4101"
+            }, 
+            {
+                "institute": "Inspire", 
+                "value": "924669"
+            }
+        ], 
+        "pagination": "20 p", 
+        "doi": "10.1016/j.physletb.2011.11.057", 
+        "number_of_authors": 3024, 
+        "license": [
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Preprint", 
+                "license": [
+                    "Open Access", 
+                    "CC-BY-3.0"
+                ]
+            }, 
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Publication", 
+                "license": [
+                    "Open Access", 
+                    "CC-BY-3.0"
+                ]
+            }
+        ], 
+        "accelerator_experiment": {
+            "experiment": "ATLAS", 
+            "accelerator": "CERN LHC"
+        }, 
+        "number_of_comments": 0, 
+        "imprint_date": "2011", 
+        "status_week": {
+            "status": "n", 
+            "status_week": "201137", 
+            "year": "a2011"
+        }, 
+        "url": {
+            "url": "http://arxiv.org/pdf/1108.4101.pdf", 
+            "description": "Preprint"
+        }, 
+        "recid": 1382039, 
+        "glance_id": "421", 
+        "prepublication": {
+            "date": "14 Sep 2011", 
+            "publisher_name": "CERN", 
+            "place": "Geneva"
+        }
+    }
+}

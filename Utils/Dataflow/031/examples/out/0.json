@@ -1,0 +1,213 @@
+{
+    "GLANCE": {
+        "ref_code": "STDM-2010-16", 
+        "full_title": "Measurement of the W charge asymmetry in the W -> munu decay mode in pp collisions at sqrt(s) = 7 TeV with the ATLAS detector", 
+        "id": "115", 
+        "short_title": "W asymmetry"
+    }, 
+    "dkbID": "CDS_ATLAS-STDM-2010-16", 
+    "supporting_notes": [
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1313261", 
+                "id": "268", 
+                "label": "http://cdsweb.cern.ch/record/1313261"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2010-1032", 
+            "CDS": {
+                "comment": "backup note of publication", 
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2010-1032"
+                }, 
+                "abstract": "This note presents a measurement by the ATLAS experiment of the asymmetry in the production rates of positively and negatively charged W bosons. The W candidates are reconstructed in the lnu final state, where l=e,mu. In samples corresponding to a total integrated luminosity of 36 pb^-1(e) and 31 pb^-1 (mu), produced in sqrt(s)=7TeV proton-proton collisions at the LHC, we observe 1.13 10^5 W(enu) and 1.30 10^5 W(munu) candidates. We measure the differential charge asymmetry as a function of the pseudorapidity eta of the charged lepton.", 
+                "creation_date": "2010-12-10T20:52:57", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2010-1032", 
+                "keywords": [
+                    "charge", 
+                    "asymmetry", 
+                    "EWEAK"
+                ], 
+                "email_address": [
+                    "alberto.belloni@cern.ch", 
+                    "kristin.lohwasser@cern.ch"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "cataloguer_info": {
+                    "creation_date": "20101210", 
+                    "library": "CER01", 
+                    "modification_date": "20101210", 
+                    "hour": "2102"
+                }, 
+                "agency_code": "SzGeCERN", 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Measurement of W-&gt;ln charge asymmetry in proton-proton collisions at sqrt(s)=7TeV with the ATLAS detector", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000711764CER", 
+                "type": "INT", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T16:23:06", 
+                "pagination": "76 p", 
+                "number_of_authors": 26, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 4, 
+                "imprint_date": "2010", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201070"
+                }, 
+                "recid": 1313261, 
+                "prepublication": {
+                    "date": "10 Dec 2010", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }
+    ], 
+    "CDS": {
+        "comment": null, 
+        "report_number": [
+            {
+                "internal": "ATLAS-STDM-2010-16"
+            }, 
+            {
+                "report_number": "CERN-PH-EP-2011-036"
+            }
+        ], 
+        "abstract": "This letter reports a measurement of the muon charge asymmetry from W Boson produced in proton-proton collisions at a centre-of-mass energy of 7 TeV with the ATLAS experiment at the LHC. The asymmetry is measured in the W Boson to muon decay mode as a function of the muon pseudorapidity using a data sample corresponding to a total integrated luminosity of 31 pb-1. The results are compared to predictions based on next-to-leading order calculations with various parton distribution functions. This measurement provides information on the u and d quark momentum fractions in the proton. ", 
+        "creation_date": "2011-03-16T06:55:27", 
+        "primary_report_number": "arXiv:1103.2929", 
+        "persistent_identifiers_keys": [
+            "recid", 
+            "system_control_number", 
+            "doi", 
+            "oai"
+        ], 
+        "owner": "PUBLIC", 
+        "publication_info": {
+            "volume": "701", 
+            "pagination": "31-49", 
+            "year": "2011", 
+            "title": "Phys. Lett. B"
+        }, 
+        "email_address": "klaus.moenig@cern.ch", 
+        "subject": {
+            "source": "SzGeCERN", 
+            "term": "Particle Physics - Experiment"
+        }, 
+        "version_id": "2017-02-09T08:14:23", 
+        "agency_code": "SzGeCERN", 
+        "number_of_citations": 0, 
+        "other_report_number": {
+            "source_number": "CERN Library", 
+            "classification_number": "PH-EP-2011-036"
+        }, 
+        "title": "Measurement of the W charge asymmetry in the W \u2192\u03bc\u03bd decay mode in pp collisions at \u221a s = 7 TeV with the ATLAS detector", 
+        "oai": {
+            "indicator": [
+                "cerncds:FULLTEXT", 
+                "cerncds:CERN:FULLTEXT", 
+                "cerncds:CERN"
+            ], 
+            "value": "oai:cds.cern.ch:1336252"
+        }, 
+        "thesaurus_terms": {
+            "institute": "LANL EDS", 
+            "term": "hep-ex"
+        }, 
+        "copyright_status": [
+            {
+                "date": "2011", 
+                "materials": "Preprint", 
+                "holder": "CERN"
+            }, 
+            {
+                "date": "2011", 
+                "materials": "Publication", 
+                "holder": "CERN"
+            }
+        ], 
+        "collaboration": [
+            "ATLAS Collaboration"
+        ], 
+        "collection": [
+            "ARTICLE", 
+            "ATLAS_Papers"
+        ], 
+        "language": "eng", 
+        "imprint_date": "2011", 
+        "base": "13", 
+        "system_control_number": [
+            {
+                "institute": "arXiv", 
+                "value": "\toai:arXiv.org:1103.2929"
+            }, 
+            {
+                "institute": "Inspire", 
+                "value": "892704"
+            }, 
+            {
+                "institute": "arXiv", 
+                "value": "oai:arXiv.org:1103.2929"
+            }
+        ], 
+        "pagination": "22 p", 
+        "doi": "10.1016/j.physletb.2011.05.024", 
+        "number_of_authors": 3044, 
+        "license": [
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Preprint", 
+                "license": [
+                    "Open Access", 
+                    "CC-BY-3.0"
+                ]
+            }, 
+            {
+                "material": "Publication", 
+                "license": "CC-BY-3.0"
+            }
+        ], 
+        "accelerator_experiment": {
+            "experiment": "ATLAS", 
+            "accelerator": "CERN LHC"
+        }, 
+        "number_of_comments": 0, 
+        "number_of_reviews": 0, 
+        "status_week": {
+            "status": "n", 
+            "status_week": "201111", 
+            "year": "a2011"
+        }, 
+        "url": {
+            "url": "https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/WAsymmetry_01", 
+            "description": "all figures including auxiliary figures"
+        }, 
+        "recid": 1336252, 
+        "glance_id": "115", 
+        "title_additional": "Measurement of the Muon Charge Asymmetry from W Bosons Produced in pp Collisions at $\\sqrt{s}$ = 7 TeV with the ATLAS detector", 
+        "prepublication": {
+            "date": "16 Mar 2011", 
+            "publisher_name": "CERN", 
+            "place": "Geneva"
+        }
+    }
+}

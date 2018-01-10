@@ -1,0 +1,275 @@
+{
+    "GLANCE": {
+        "ref_code": "STDM-2011-32", 
+        "full_title": "Measurement of charged-particle event shape variables in sqrt(s) = 7 TeV proton-proton interactions with the ATLAS detector", 
+        "id": "743", 
+        "short_title": "Minimum bias event shapes"
+    }, 
+    "dkbID": "CDS_ATLAS-STDM-2011-32-003", 
+    "supporting_notes": [
+        {
+            "GLANCE": {
+                "url": "https://cdsweb.cern.ch/record/1436990", 
+                "id": "481", 
+                "label": "https://cdsweb.cern.ch/record/1436990"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2012-381", 
+            "CDS": {
+                "comment": "This is the paper draft - the supporting note can be found at: https://cdsweb.cern.ch/record/1425956/", 
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2012-381"
+                }, 
+                "abstract": "This paper presents the first measurement of event shape variables in $pp$ collisions at center-of-mass energy of $\\sqrt{s} = 7 TeV$ with the ATLAS detector at the LHC. The observables studied are the transverse thrust, thrust minor and transverse sphericity, all defined over final state momenta perpendicular to the beam direction. These variables are calculated using tracks in inclusive minimum-bias events. In addition to differential distributions, the evolution of event shape variables as a function of the leading track $p_T$ is presented. The data is compared with different Monte-Carlo models, and significant difference from the predictions are observed.", 
+                "creation_date": "2012-04-03T14:38:40", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2012-381", 
+                "keywords": [
+                    "Event Shape ", 
+                    "Minimum Bias", 
+                    "Transverse Sphericity", 
+                    "Transverse Thrust ", 
+                    "Thrust Minor ", 
+                    "Monte Carlo Tunes ", 
+                    "QCD"
+                ], 
+                "email_address": [
+                    "deepak.kar@cern.ch", 
+                    "t.huelsing@uni-mainz.de", 
+                    "atlas-STDM-2011-32-editors@cern.ch"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Measurement of events shape variables in inclusive events at $\\sqrt{s}=7$ TeV with the ATLAS detector at the LHC", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000721627CER", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2013-07-18T18:03:18", 
+                "pagination": "mult. p", 
+                "number_of_authors": 4, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 65, 
+                "imprint_date": "2012", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201270"
+                }, 
+                "recid": 1436990, 
+                "prepublication": {
+                    "date": "03 Apr 2012", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }, 
+        {
+            "GLANCE": {
+                "url": "https://cdsweb.cern.ch/record/1425956", 
+                "id": "483", 
+                "label": "Internal supporting note"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2012-203", 
+            "CDS": {
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2012-203"
+                }, 
+                "abstract": "This note presents the first measurement of event shape variables in $pp$ collisions at center-of-mass energy of $\\sqrt{s} = 7$ TeV with the ATLAS detector at the LHC. The observables studied are the transverse thrust, thrust minor and transverse sphericity, all defined over final state momenta perpendicular to the beam direction. These variables are calculated using tracks in inclusive minimum-bias events. In addition to differential distributions, we present the evolution of event shape variables as a function of the leading track transverse momentum. The data is compared with different Monte-Carlo models, and significant difference from the predictions are observed.", 
+                "creation_date": "2012-02-21T19:14:19", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2012-203", 
+                "keywords": [
+                    "Event Shape", 
+                    "Minimum Bias", 
+                    "Transverse Sphericity", 
+                    "Transverse Thrust", 
+                    "Thrust Minor", 
+                    "Monte Carlo Tunes", 
+                    "QCD"
+                ], 
+                "email_address": [
+                    "deepak.kar@cern.ch", 
+                    "Daniel.Wicke@physik.uni-wuppertal.de", 
+                    "t.huelsing@uni-mainz.de", 
+                    "atlas-STDM-2011-32-editors@cern.ch"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Measurement of events shape variables in inclusive events at $\\sqrt{s} =7$ TeV with the ATLAS detector at the LHC", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000720836CER", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2013-06-28T10:10:50", 
+                "pagination": "mult. p", 
+                "number_of_authors": 4, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 41, 
+                "imprint_date": "2012", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201270"
+                }, 
+                "recid": 1425956, 
+                "prepublication": {
+                    "date": "21 Feb 2012", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }
+    ], 
+    "CDS": {
+        "comment": "Comments: 14 pages plus author list (27 pages total), 6 figures, 2 tables, submitted to PRD. All figures including auxiliary figures are available at this http URL http://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/STDM-2011-32/", 
+        "report_number": [
+            {
+                "internal": "ATLAS-STDM-2011-32-003"
+            }, 
+            {
+                "report_number": "CERN-PH-EP-2012-178"
+            }
+        ], 
+        "abstract": "The measurement of several event shape variables is presented in minimum bias pp collisions at a center-of-mass energy of 7 TeV using the ATLAS detector at the LHC. The observables studied are the transverse thrust, thrust minor and transverse sphericity, each defined using the momenta perpendicular to the beam direction of the final state charged particles. Events with at least six charged particles are selected. In addition to the differential distributions, the evolution of each event shape variable as a function of the leading charged particle transverse momentum, charged particle multiplicity and summed transverse momentum is presented. Predictions from several Monte Carlo models have been compared with data and they show significant deviations from data.", 
+        "creation_date": "2012-07-31T07:20:13", 
+        "primary_report_number": "arXiv:1207.6915", 
+        "persistent_identifiers_keys": [
+            "recid", 
+            "system_control_number", 
+            "doi", 
+            "oai"
+        ], 
+        "keywords": [
+            "QCD", 
+            "global features", 
+            "experimental results"
+        ], 
+        "publication_info": {
+            "volume": "88", 
+            "pagination": "032004", 
+            "year": "2013", 
+            "title": "Phys. Rev. D"
+        }, 
+        "email_address": "tony.doyle@glasgow.ac.uk", 
+        "subject": {
+            "source": "SzGeCERN", 
+            "term": "Particle Physics - Experiment"
+        }, 
+        "version_id": "2016-06-30T03:02:53", 
+        "number_of_citations": 0, 
+        "other_report_number": {
+            "source_number": "CERN Library", 
+            "classification_number": "PH-EP-2012-178"
+        }, 
+        "title": "Measurement of charged-particle event shape variables in $\\sqrt{s}$ = 7 TeV proton-proton interactions with the ATLAS detector", 
+        "oai": {
+            "indicator": [
+                "cerncds:FULLTEXT", 
+                "cerncds:CERN:FULLTEXT", 
+                "cerncds:CERN"
+            ], 
+            "value": "oai:cds.cern.ch:1470847"
+        }, 
+        "thesaurus_terms": {
+            "institute": "LANL EDS", 
+            "term": "hep-ex"
+        }, 
+        "copyright_status": [
+            {
+                "date": "2012", 
+                "materials": "Preprint", 
+                "holder": "CERN"
+            }, 
+            {
+                "date": "2013", 
+                "materials": "Publication", 
+                "holder": "CERN"
+            }
+        ], 
+        "collaboration": [
+            "ATLAS Collaboration"
+        ], 
+        "collection": [
+            "ARTICLE", 
+            "ATLAS_Papers"
+        ], 
+        "language": "eng", 
+        "number_of_reviews": 0, 
+        "base": "13", 
+        "system_control_number": [
+            {
+                "institute": "arXiv", 
+                "value": "oai:arXiv.org:1207.6915"
+            }, 
+            {
+                "institute": "Inspire", 
+                "value": "1124167"
+            }
+        ], 
+        "pagination": "24 p", 
+        "doi": "10.1103/PhysRevD.88.032004", 
+        "number_of_authors": 2885, 
+        "license": [
+            {
+                "material": "Preprint", 
+                "license": "CC-BY-3.0"
+            }, 
+            {
+                "material": "Publication", 
+                "license": "CC-BY-3.0"
+            }
+        ], 
+        "accelerator_experiment": {
+            "experiment": "ATLAS", 
+            "accelerator": "CERN LHC"
+        }, 
+        "number_of_comments": 0, 
+        "imprint_date": "2013", 
+        "status_week": {
+            "status": "n", 
+            "status_week": "201231", 
+            "year": "a2013"
+        }, 
+        "url": {
+            "url": "http://arxiv.org/pdf/1207.6915.pdf", 
+            "description": "Preprint"
+        }, 
+        "recid": 1470847, 
+        "glance_id": "743", 
+        "prepublication": {
+            "date": "31 Jul 2012", 
+            "publisher_name": "CERN", 
+            "place": "Geneva"
+        }
+    }
+}

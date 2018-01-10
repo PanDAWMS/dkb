@@ -1,0 +1,222 @@
+{
+    "GLANCE": {
+        "ref_code": "SUSY-2010-06", 
+        "full_title": "Search for a heavy particle decaying into an electron and a muon with the ATLAS detector in sqrt(s) = 7 TeV pp collisions at the LHC", 
+        "id": "292", 
+        "short_title": "Sneutrino -> e mu in Rp violating"
+    }, 
+    "dkbID": "CDS_ATLAS-SUSY-2010-06-003", 
+    "supporting_notes": [
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1316982", 
+                "id": "176", 
+                "label": "http://cdsweb.cern.ch/record/1316982"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2010-1061", 
+            "CDS": {
+                "comment": "The supporting material of emu resonance paper: CERN-PH-EP-2011-031", 
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2010-1061"
+                }, 
+                "abstract": "We present a search for a heavy particle decaying into an emu final state using 35/pb of data collected by the ATLAS detector at sqrt(s) = 7 TeV at the LHC. The number of observed emu events in data is found to be in agreement with the background predictions. In the absence of any excess, limits on the production of sneutrinos in R-parity violating SUSY model and lepton flavor violating Z's are set.", 
+                "creation_date": "2010-12-21T16:42:46", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2010-1061", 
+                "keywords": [
+                    "Sneutrino", 
+                    "emu resonance", 
+                    "Z prime", 
+                    "SUSY"
+                ], 
+                "email_address": [
+                    "dongliang.zhang@cern.ch", 
+                    "Junjie.Zhu@cern.ch"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "cataloguer_info": {
+                    "creation_date": "20101221", 
+                    "library": "CER01", 
+                    "modification_date": "20110401", 
+                    "hour": "1249"
+                }, 
+                "agency_code": "SzGeCERN", 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Search for a heavy particle decaying into an electron and a muon with the ATLAS detector in sqrt(s) = 7 TeV pp collisions at the LHC(Supporting INT note)", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000711958CER", 
+                "type": "INT", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T16:33:58", 
+                "pagination": "21 p", 
+                "number_of_authors": 7, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 24, 
+                "imprint_date": "2010", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201070"
+                }, 
+                "recid": 1316982, 
+                "prepublication": {
+                    "date": "21 Dec 2010", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }
+    ], 
+    "CDS": {
+        "comment": [
+            "Comments: 5 pages plus author list (18 pages total), 4 figures, 1 table, submitted to PRL", 
+            "5 pages plus author list (18 pages total), 4 figures, 1 table, submitted to PRL"
+        ], 
+        "report_number": [
+            {
+                "internal": "ATLAS-SUSY-2010-06-003"
+            }, 
+            {
+                "report_number": "CERN-PH-EP-2011-031"
+            }
+        ], 
+        "abstract": [
+            "This Letter presents the first search for a heavy particle decaying into an e-mu final state in sqrt(s)=7 TeV pp collisions at the LHC. The data were recorded by the ATLAS detector during 2010 and correspond to a total integrated luminosity of 35/pb. No excess above the Standard Model background expectation is observed. Exclusions at 95% confidence level are placed on two representative models. In an R-parity violating supersymmetric model, tau sneutrinos with a mass below 0.75 TeV are excluded, assuming single coupling dominance and the couplings lambda'_{311}=0.11, lambda_{312}=0.07. In a lepton flavor violating model, a Z'-like vector boson with masses of 0.70 to 1.00 TeV and corresponding cross sections times branching ratios of 0.175 to 0.183 pb is excluded. These results extend to higher mass RPV sneutrinos and LFV Z's than previous constraints from the Tevatron.", 
+            "This Letter presents the first search for a heavy particle decaying into an e\\mu final state in sqrt(s)=7 TeV pp collisions at the LHC. The data were recorded by the ATLAS detector during 2010 and correspond to a total integrated luminosity of 35/pb. No excess above the Standard Model background expectation is observed. Exclusions at 95% confidence level are placed on two representative models. In an R-parity violating supersymmetric model, tau sneutrinos with a mass below 0.75 TeV are excluded, assuming single coupling dominance and the couplings lambda'_{311}=0.11, lambda_{312}=0.07. In a lepton flavor violating model, a Z'-like vector boson with masses of 0.70 to 1.00 TeV and corresponding cross sections times branching ratios of 0.175 to 0.183 pb is excluded. These results extend to higher mass RPV sneutrinos and LFV Z's than previous constraints from the Tevatron."
+        ], 
+        "creation_date": "2011-03-30T15:37:35", 
+        "primary_report_number": "arXiv:1103.5559", 
+        "persistent_identifiers_keys": [
+            "recid", 
+            "system_control_number", 
+            "doi", 
+            "oai"
+        ], 
+        "keywords": "supersymmetry", 
+        "publication_info": {
+            "volume": "106", 
+            "pagination": "251801", 
+            "year": "2011", 
+            "title": "Phys. Rev. Lett."
+        }, 
+        "email_address": "klaus.moenig@cern.ch", 
+        "subject": {
+            "source": "SzGeCERN", 
+            "term": "Particle Physics - Experiment"
+        }, 
+        "version_id": "2017-10-05T09:18:13", 
+        "agency_code": "SzGeCERN", 
+        "number_of_citations": 0, 
+        "other_report_number": {
+            "source_number": "CERN Library", 
+            "classification_number": "PH-EP-2011-031"
+        }, 
+        "title": "Search for a heavy particle decaying into an electron and a muon with the ATLAS detector in $\\sqrt{s}$ = 7 TeV pp collisions at the LHC", 
+        "oai": {
+            "indicator": [
+                "cerncds:FULLTEXT", 
+                "cerncds:CERN:FULLTEXT", 
+                "cerncds:CERN"
+            ], 
+            "value": "oai:cds.cern.ch:1341242"
+        }, 
+        "thesaurus_terms": {
+            "institute": "LANL EDS", 
+            "term": "hep-ex"
+        }, 
+        "copyright_status": [
+            {
+                "date": "2011", 
+                "materials": "Preprint", 
+                "holder": "CERN"
+            }, 
+            {
+                "date": "2011", 
+                "materials": "Publication", 
+                "holder": "CERN"
+            }
+        ], 
+        "collaboration": [
+            "ATLAS Collaboration"
+        ], 
+        "collection": [
+            "ARTICLE", 
+            "ATLAS_Papers"
+        ], 
+        "language": "eng", 
+        "imprint_date": "2011", 
+        "base": "13", 
+        "system_control_number": [
+            {
+                "institute": "arXiv", 
+                "canceled": "oai:arXiv.org:1103.5559", 
+                "value": "oai:arXiv.org:1103.5559"
+            }, 
+            {
+                "institute": "Inspire", 
+                "value": "894358"
+            }
+        ], 
+        "pagination": "5 p", 
+        "doi": "10.1103/PhysRevLett.106.251801", 
+        "number_of_authors": 3044, 
+        "license": [
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Preprint", 
+                "license": [
+                    "Open Access", 
+                    "CC-BY-3.0"
+                ]
+            }, 
+            {
+                "material": "Publication", 
+                "license": "CC-BY-3.0"
+            }
+        ], 
+        "accelerator_experiment": {
+            "experiment": "ATLAS", 
+            "accelerator": "CERN LHC"
+        }, 
+        "number_of_comments": 0, 
+        "number_of_reviews": 0, 
+        "status_week": {
+            "status": "n", 
+            "status_week": "201113", 
+            "year": "a2011"
+        }, 
+        "url": [
+            {
+                "url": "https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/susy-emuResonance_01", 
+                "description": "all figures including auxiliary figures"
+            }, 
+            {
+                "url": "http://durpdg.dur.ac.uk/cgi-hepdata/hepreac/9016988", 
+                "description": "DURHAM"
+            }
+        ], 
+        "recid": 1341242, 
+        "glance_id": "292", 
+        "prepublication": {
+            "date": "30 Mar 2011", 
+            "publisher_name": "CERN", 
+            "place": "Geneva"
+        }
+    }
+}

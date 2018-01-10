@@ -1,0 +1,222 @@
+{
+    "GLANCE": {
+        "ref_code": "STDM-2010-10", 
+        "full_title": "Study of Jet Shapes in Inclusive Jet Production in pp Collisions at sqrt(s) = 7 TeV using the ATLAS Detector", 
+        "id": "109", 
+        "short_title": "Jet Shapes"
+    }, 
+    "dkbID": "CDS_ATLAS-STDM-2010-10-003", 
+    "supporting_notes": [
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1298303", 
+                "id": "36", 
+                "label": "http://cdsweb.cern.ch/record/1298303"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2010-828", 
+            "CDS": {
+                "comment": "Apologies that this comes very late: we forgot to ask for it earlier.", 
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2010-828"
+                }, 
+                "abstract": "In this note we present for the first time, results on the measurement of differential and integrated jet shapes corrected to the hadron level, with a detailed study of systematics. The minimum bias, L1Calo and JetEtMiss stream data samples used by this analysis were collected by the ATLAS experiment in $pp$ collisions at $sqrt{s} = 7$~TeV, and correspond to about $3 pb^{-1}$ of integrated luminosity delivered by the LHC. The data is corrected for detector effects and compared to several leading-order QCD matrix elements plus parton shower Monte Carlo predictions.", 
+                "creation_date": "2010-10-07T19:53:58", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2010-828", 
+                "keywords": [
+                    "jet shapes", 
+                    "QCD"
+                ], 
+                "email_address": "bilge.demirkoz@cern.ch", 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "cataloguer_info": {
+                    "creation_date": "20101007", 
+                    "library": "CER01", 
+                    "modification_date": "20101008", 
+                    "hour": "1820"
+                }, 
+                "agency_code": "SzGeCERN", 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Measurements of Jet Shapes in proton-proton collisions at 7 TeV centre-of-mass energy with the ATLAS Detector", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000710435CER", 
+                "type": "INT", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T15:57:09", 
+                "pagination": "76 p", 
+                "number_of_authors": 5, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 7, 
+                "imprint_date": "2010", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201070"
+                }, 
+                "recid": 1298303, 
+                "prepublication": {
+                    "date": "07 Oct 2010", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }
+    ], 
+    "CDS": {
+        "comment": [
+            "Comments: Submitted to Physical Review D", 
+            "Submitted to Physical Review D"
+        ], 
+        "report_number": [
+            {
+                "internal": "ATLAS-STDM-2010-10-003"
+            }, 
+            {
+                "report_number": "CERN-PH-EP-2010-077"
+            }
+        ], 
+        "abstract": [
+            "Jet shapes have been measured in inclusive jet production in proton-proton collisions at sqrt(s) = 7 TeV using 3 pb^{-1} of data recorded by the ATLAS experiment at the LHC. Jets are reconstructed using the anti-kt algorithm with transverse momentum 30 GeV < pT < 600 GeV and rapidity in the region |y| < 2.8. The data are corrected for detector effects and compared to several leading-order QCD matrix elements plus parton shower Monte Carlo predictions, including different sets of parameters tuned to model fragmentation processes and underlying event contributions in the final state. The measured jets become narrower with increasing jet transverse momentum and the jet shapes present a moderate jet rapidity dependence. Within QCD, the data test a variety of perturbative and non-perturbative effects. In particular, the data show sensitivity to the details of the parton shower, fragmentation, and underlying event models in the Monte Carlo generators. For an appropriate choice of the parameters used in these models, the data are well described.", 
+            "Jet shapes have been measured in inclusive jet production in proton-proton collisions at sqrt(s) = 7 TeV using 3 pb^{-1} of data recorded by the ATLAS experiment at the LHC. Jets are reconstructed using the anti-kt algorithm with transverse momentum 30 GeV < pT < 600 GeV and rapidity in the region |y| < 2.8. The data are corrected for detector effects and compared to several leading-order QCD matrix elements plus parton shower Monte Carlo predictions, including different sets of parameters tuned to model fragmentation processes and underlying event contributions in the final state. The measured jets become narrower with increasing jet transverse momentum and the jet shapes present a moderate jet rapidity dependence. Within QCD, the data test a variety of perturbative and non-perturbative effects. In particular, the data show sensitivity to the details of the parton shower, fragmentation, and underlying event models in the Monte Carlo generators. For an appropriate choice of the parameters used in these models, the data are well described."
+        ], 
+        "creation_date": "2011-01-04T19:21:53", 
+        "affiliation": "CERN", 
+        "primary_report_number": [
+            "arXiv:1101.0070", 
+            "CERN-PH-EP-2010-077"
+        ], 
+        "persistent_identifiers_keys": [
+            "recid", 
+            "system_control_number", 
+            "doi", 
+            "oai"
+        ], 
+        "owner": "PUBLIC", 
+        "publication_info": {
+            "volume": "83", 
+            "pagination": "052003", 
+            "year": "2011", 
+            "title": "Phys. Rev. D"
+        }, 
+        "email_address": "giuseppe.iacobucci@cern.ch", 
+        "subject": {
+            "source": "SzGeCERN", 
+            "term": "Particle Physics - Experiment"
+        }, 
+        "version_id": "2017-11-01T07:40:27", 
+        "agency_code": "SzGeCERN", 
+        "number_of_citations": 0, 
+        "other_report_number": {
+            "source_number": "CERN Library", 
+            "classification_number": "PH-EP-2010-077"
+        }, 
+        "title": "Study of Jet Shapes in Inclusive Jet Production in pp Collisions at $\\sqrt{s}$ = 7 TeV using the ATLAS Detector", 
+        "oai": {
+            "indicator": [
+                "cerncds:FULLTEXT", 
+                "cerncds:CERN:FULLTEXT", 
+                "cerncds:CERN"
+            ], 
+            "value": "oai:cds.cern.ch:1319028"
+        }, 
+        "thesaurus_terms": {
+            "institute": "LANL EDS", 
+            "term": "hep-ex"
+        }, 
+        "copyright_status": [
+            {
+                "date": "2011", 
+                "materials": "Preprint", 
+                "holder": "CERN"
+            }, 
+            {
+                "date": "2011", 
+                "materials": "Publication", 
+                "holder": "CERN"
+            }
+        ], 
+        "collaboration": [
+            "ATLAS Collaboration"
+        ], 
+        "collection": [
+            "ARTICLE", 
+            "ATLAS_Papers"
+        ], 
+        "language": "eng", 
+        "imprint_date": "2011", 
+        "base": "13", 
+        "system_control_number": [
+            {
+                "institute": "arXiv", 
+                "canceled": "oai:arXiv.org:1101.0070", 
+                "value": "oai:arXiv.org:1101.0070"
+            }, 
+            {
+                "institute": "Inspire", 
+                "value": "882984"
+            }
+        ], 
+        "pagination": "35 p", 
+        "doi": "10.1103/PhysRevD.83.052003", 
+        "number_of_authors": 3043, 
+        "license": [
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Preprint", 
+                "license": [
+                    "Open Access", 
+                    "CC-BY-3.0"
+                ]
+            }, 
+            {
+                "material": "Publication", 
+                "license": "CC-BY-3.0"
+            }
+        ], 
+        "accelerator_experiment": {
+            "experiment": "ATLAS", 
+            "accelerator": "CERN LHC"
+        }, 
+        "number_of_comments": 0, 
+        "number_of_reviews": 0, 
+        "status_week": {
+            "status": "n", 
+            "status_week": "201101", 
+            "year": "a2011"
+        }, 
+        "url": [
+            {
+                "url": "https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/JetShapes_01/", 
+                "description": "all figures including auxiliary figures"
+            }, 
+            {
+                "url": "http://durpdg.dur.ac.uk/cgi-hepdata/hepreac/8924791", 
+                "description": "DURHAM"
+            }
+        ], 
+        "recid": 1319028, 
+        "glance_id": "109", 
+        "title_additional": "Study of Jet Shapes in Inclusive Jet Production in pp Collisions at sqrt(s) = 7 TeV using the ATLAS Detector", 
+        "prepublication": {
+            "date": "04 Jan 2011", 
+            "publisher_name": "CERN", 
+            "place": "Geneva"
+        }
+    }
+}

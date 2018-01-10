@@ -1,0 +1,235 @@
+{
+    "GLANCE": {
+        "ref_code": "SUSY-2011-02", 
+        "full_title": "Search for displaced vertices arising from decays of new heavy particles in 7 TeV pp collisions at ATLAS", 
+        "id": "385", 
+        "short_title": "SUSY searches with Displaced Vertex"
+    }, 
+    "dkbID": "CDS_ATLAS-SUSY-2011-02-003", 
+    "supporting_notes": [
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1329851", 
+                "id": "376", 
+                "label": "http://cdsweb.cern.ch/record/1329851"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2011-161", 
+            "CDS": {
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2011-161"
+                }, 
+                "abstract": "We report on a search for heavy particles whose decay takes place a significant distance from their production point in 7 TeV pp collisions at the CERN Large Hadron Collider. Production of such particles is expected in various new-physics scenarios, such as supersymmetry with R-parity violation. The search is based on a data set with luminosity 33.0 pb\u22121, collected by the ATLAS detector. Limits on the production cross section for a range of parameters are obtained.", 
+                "creation_date": "2011-02-17T12:56:54", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2011-161", 
+                "keywords": [
+                    "long-lived", 
+                    "displaced vertices", 
+                    "RPV susy", 
+                    "SUSY"
+                ], 
+                "email_address": [
+                    "nick.barlow@cern.ch", 
+                    "abi@slac.stanford.edu", 
+                    "changwei@physics.ubc.ca", 
+                    "jain2@hep.physics.indiana.edu", 
+                    "nimrodta@gmail.com", 
+                    "brochu@hep.phy.cam.ac.uk"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "cataloguer_info": {
+                    "creation_date": "20110217", 
+                    "library": "CER01", 
+                    "modification_date": "20110217", 
+                    "hour": "1302"
+                }, 
+                "agency_code": "SzGeCERN", 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Search for Heavy Medium-Lived Particles at ATLAS", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000712818CER", 
+                "type": "INT", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T19:51:15", 
+                "pagination": "36 p", 
+                "number_of_authors": 6, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 20, 
+                "imprint_date": "2011", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201170"
+                }, 
+                "recid": 1329851, 
+                "prepublication": {
+                    "date": "17 Feb 2011", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }
+    ], 
+    "CDS": {
+        "comment": [
+            "Comments: 8 pages plus author list (21 pages total), 8 figures, 1 table, submitted to Physics Letters B", 
+            "8 pages plus author list (20 pages total), 8 figures, 1 table, final version to appear in Physics Letters B"
+        ], 
+        "report_number": [
+            {
+                "internal": "ATLAS-SUSY-2011-02-003"
+            }, 
+            {
+                "report_number": "CERN-PH-EP-2011-131"
+            }
+        ], 
+        "abstract": [
+            "We present the results of a search for new, heavy particles that decay at a significant distance from their production point into a final state containing charged hadrons in association with a high-momentum muon. The search is conducted in a pp-collision data sample with a center-of-mass energy of 7 TeV and an integrated luminosity of 33 pb^-1 collected in 2010 by the ATLAS detector operating at the Large Hadron Collider. Production of such particles is expected in various scenarios of physics beyond the standard model. We observe no signal and place limits on the production cross-section of supersymmetric particles in an R-parity-violating scenario as a function of the neutralino lifetime. Limits are presented for different squark and neutralino masses, enabling extension of the limits to a variety of other models.", 
+            "We present the results of a search for new, heavy particles that decay at a significant distance from their production point into a final state containing charged hadrons in association with a high-momentum muon. The search is conducted in a pp-collision data sample with a center-of-mass energy of 7 TeV and an integrated luminosity of 33 pb^-1 collected in 2010 by the ATLAS detector operating at the Large Hadron Collider. Production of such particles is expected in various scenarios of physics beyond the standard model. We observe no signal and place limits on the production cross-section of supersymmetric particles in an R-parity-violating scenario as a function of the neutralino lifetime. Limits are presented for different squark and neutralino masses, enabling extension of the limits to a variety of other models.", 
+            "We present the results of a search for new, heavy particles that decay at a significant distance from their production point into a final state containing charged hadrons in association with a high-momentum muon. The search is conducted in a pp -collision data sample with a center-of-mass energy of 7 TeV and an integrated luminosity of 33 pb \u22121 collected in 2010 by the ATLAS detector operating at the Large Hadron Collider. Production of such particles is expected in various scenarios of physics beyond the standard model. We observe no signal and place limits on the production cross-section of supersymmetric particles in an R -parity-violating scenario as a function of the neutralino lifetime. Limits are presented for different squark and neutralino masses, enabling extension of the limits to a variety of other models."
+        ], 
+        "creation_date": "2011-09-13T10:01:14", 
+        "primary_report_number": [
+            "arXiv:1109.2242", 
+            "CERN-PH-EP-2011-131"
+        ], 
+        "persistent_identifiers_keys": [
+            "recid", 
+            "system_control_number", 
+            "doi", 
+            "oai"
+        ], 
+        "keywords": [
+            "supersymmetry", 
+            "experimental results"
+        ], 
+        "publication_info": {
+            "volume": "707", 
+            "pagination": "478-496", 
+            "year": "2012", 
+            "title": "Phys. Lett. B"
+        }, 
+        "email_address": "klaus.moenig@cern.ch", 
+        "subject": {
+            "source": "SzGeCERN", 
+            "term": "Particle Physics - Experiment"
+        }, 
+        "version_id": "2017-10-05T09:32:17", 
+        "number_of_citations": 0, 
+        "other_report_number": {
+            "source_number": "CERN Library", 
+            "classification_number": "PH-EP-2011-131"
+        }, 
+        "title": "Search for displaced vertices arising from decays of new heavy particles in 7 TeV pp collisions at ATLAS", 
+        "oai": {
+            "indicator": [
+                "cerncds:FULLTEXT", 
+                "cerncds:CERN:FULLTEXT", 
+                "cerncds:CERN"
+            ], 
+            "value": "oai:cds.cern.ch:1381516"
+        }, 
+        "thesaurus_terms": {
+            "institute": "LANL EDS", 
+            "term": "hep-ex"
+        }, 
+        "copyright_status": [
+            {
+                "date": "2012", 
+                "materials": "Publication", 
+                "holder": "CERN"
+            }, 
+            {
+                "date": "2011", 
+                "materials": "Preprint", 
+                "holder": "CERN"
+            }
+        ], 
+        "collaboration": [
+            "ATLAS Collaboration"
+        ], 
+        "collection": [
+            "ARTICLE", 
+            "ATLAS_Papers"
+        ], 
+        "language": "eng", 
+        "number_of_reviews": 0, 
+        "base": "13", 
+        "system_control_number": [
+            {
+                "institute": "arXiv", 
+                "canceled": "oai:arXiv.org:1109.2242", 
+                "value": "oai:arXiv.org:1109.2242"
+            }, 
+            {
+                "institute": "Inspire", 
+                "value": "927046"
+            }
+        ], 
+        "pagination": "19 p", 
+        "doi": "10.1016/j.physletb.2011.12.057", 
+        "number_of_authors": 3026, 
+        "license": [
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Publication", 
+                "license": [
+                    "Open Access", 
+                    "CC-BY-3.0"
+                ]
+            }, 
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Preprint", 
+                "license": [
+                    "CC-BY-3.0", 
+                    "Open Access"
+                ]
+            }
+        ], 
+        "accelerator_experiment": {
+            "experiment": "ATLAS", 
+            "accelerator": "CERN LHC"
+        }, 
+        "number_of_comments": 0, 
+        "imprint_date": "2013-07-16", 
+        "status_week": {
+            "status": "n", 
+            "status_week": "201137", 
+            "year": "a2012"
+        }, 
+        "url": [
+            {
+                "url": "https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/SUSY-2011-02", 
+                "description": "all figures including auxiliary figures"
+            }, 
+            {
+                "url": "http://durpdg.dur.ac.uk/cgi-hepdata/hepreac/9192743", 
+                "description": "DURHAM"
+            }
+        ], 
+        "recid": 1381516, 
+        "glance_id": "385", 
+        "prepublication": {
+            "date": "13 Sep 2011", 
+            "publisher_name": "CERN", 
+            "place": "Geneva"
+        }
+    }
+}

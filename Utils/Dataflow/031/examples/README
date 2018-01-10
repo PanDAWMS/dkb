@@ -1,0 +1,3 @@
+metadata-example - NDJSON file containing part of source metadata (first 20 lines).
+
+out - directory containing JSON files corresponding to information from metadata-example after being processed by purge.py.

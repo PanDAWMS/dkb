@@ -5,3 +5,5 @@ IMPORTANT NOTE: it's yet to be decided, how we'll load data into es and how we'l
 purge.py - script for converting a NDJSON file into JSON files. Also performs some changes on data during conversion, such as layered dictionaries simplification.
 
 es.py - script for elastic search interaction.
+
+examples - (ND)JSON files demonstrating the work of purge.py.

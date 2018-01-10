@@ -1,0 +1,390 @@
+{
+    "GLANCE": {
+        "ref_code": "STDM-2011-07", 
+        "full_title": "Measurements of the electron and muon inclusive cross-sections in proton-proton collisions at sqrt(s) = 7 TeV with the ATLAS detector", 
+        "id": "84", 
+        "short_title": "Inclusive electron and muon cross section"
+    }, 
+    "dkbID": "CDS_ATLAS-STDM-2011-07-003", 
+    "supporting_notes": [
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1333408", 
+                "id": "396", 
+                "label": "combination note"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2011-219", 
+            "CDS": {
+                "comment": "Supporting document for published paper on inclusive electron and muons cross section measurement.", 
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2011-219"
+                }, 
+                "abstract": "A study of the combined reconstruction efficiency for prompt muons in the range of pT from 4 to 50 GeV/c has been performed using data samples with various trigger conditions and two different methods. In the trigger enhanced method, the relative reconstruction efficiency is estimated from the matching of a combined track with a reference represented by a Inner Detector (ID) track matching a muon trigger Region of Interest. In the ``B-jets'' enhanced method a 99 % pure sample of mu from B decays has been selected from ID tracks using b-tagging and the muon identification capabilities of the calorimeter. The results are compared with Monte Carlo (MC) simulation, deriving scale factors as the relative differences between data and Monte Carlo. The data to MC ratio of the muon reconstruction efficiency is found to be epsilon_DATA/epsilon_MC = 0.986 +/- 0.003 +/- 0.010.", 
+                "creation_date": "2011-03-02T22:03:46", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2011-219", 
+                "keywords": [
+                    "efficiency", 
+                    "muons", 
+                    "b-tagging", 
+                    "MUCOMBINED"
+                ], 
+                "email_address": [
+                    "biagio.di.micco@cern.ch", 
+                    "mario.antonelli@lnf.infn.it", 
+                    "mauro.iodice@roma3.infn.it"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "cataloguer_info": {
+                    "creation_date": "20110302", 
+                    "library": "CER01", 
+                    "modification_date": "20110302", 
+                    "hour": "2205"
+                }, 
+                "agency_code": "SzGeCERN", 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Studies of the muon combined reconstruction efficiency from B-jets and with a muon trigger enhanced method", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000713106CER", 
+                "type": "INT", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2014-06-15T23:42:05", 
+                "pagination": "13 p", 
+                "number_of_authors": 4, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 0, 
+                "imprint_date": "2011", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201170"
+                }, 
+                "recid": 1333408, 
+                "prepublication": {
+                    "date": "16 Feb 2011", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }, 
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1329573", 
+                "id": "400", 
+                "label": "Muon supporting note"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2011-159", 
+            "CDS": {
+                "comment": "Supporitng document for published paper on inclusive electron and muon cross section measurement.", 
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2011-159"
+                }, 
+                "abstract": "We present the measurement of the muon inclusive differential cross section dSigma/dpT in pp collisions at sqrt(s) = 7 TeV. The analysis is performed in the pseudorapidity interval |eta| <2.5 for muon of transverse momentum 4 < pT < 100 GeV. The data have been recorded using different configurations of the level-1 muon trigger for an integrated luminosity of 1.4 pb$^-1$. The result is compared with the Next-To-Leading Order with Next to Leading Log high $p_{T}$ resummation prediction for the heavy flavour production and with MC@NLO prediction for W-Z bosons production. The measurement is sensitive for the first time to the Next to Leading Log contribution to the heavy flavour production in hadronic interactions.", 
+                "creation_date": "2011-02-16T18:46:39", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2011-159", 
+                "keywords": [
+                    "BPHYS", 
+                    "EWEAK", 
+                    "QCD", 
+                    "MUCOMBINED"
+                ], 
+                "email_address": [
+                    "biagio.di.micco@cern.ch", 
+                    "toni.baroncelli@roma3.infn.it", 
+                    "fabrizio.petrucci@roma3.infn.it", 
+                    "filippo.ceradini@roma3.infn.it"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "cataloguer_info": {
+                    "creation_date": "20110216", 
+                    "library": "CER01", 
+                    "modification_date": "20110403", 
+                    "hour": "2113"
+                }, 
+                "agency_code": "SzGeCERN", 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Measurement of the muon inclusive cross section in pp collisions at $sqrt{s}=7$~TeV with the ATLAS detector", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000712807CER", 
+                "type": "INT", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2014-06-15T23:42:13", 
+                "pagination": "43 p", 
+                "number_of_authors": 9, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 9, 
+                "imprint_date": "2011", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201170"
+                }, 
+                "recid": 1329573, 
+                "prepublication": {
+                    "date": "16 Feb 2011", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }, 
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1330327", 
+                "id": "402", 
+                "label": "Electron supporting note"
+            }, 
+            "dkbID": "CDS_CERN-ATL-COM-PHYS-2011-164", 
+            "CDS": {
+                "comment": "Supporting document of the published paper on \"Measurements of the electron and muon inclusive cross-sections in proton-proton collisions at \u221as = 7 TeV with the ATLAS detector\". Phys.Lett. B707 (2012) 438-458. ATLAS internal reference: STDM-2011-07. ", 
+                "report_number": {
+                    "internal": "CERN-ATL-COM-PHYS-2011-164"
+                }, 
+                "abstract": "This supporting document presents the full method and results of the measurement of the inclusive electron cross-section from the decays of heavy \ufb02avour hadrons produced in proton-proton collisions at a centre-of-mass energy of 7 TeV, using 1.28 \u00b1 0.4 pb\u22121 of data collected by the ATLAS experiment. A binned maximum likelihood method is used to extract 46649 \u00b1 1602 (stat.) \u00b1 4561 (syst.) signal electrons, predominantly from semi-leptonic decays of charm and beauty hadrons, from a sample of 408496 selected candidates, using a combination of particle identification techniques to discriminate against the dominant hadron and conversion backgrounds. Taking into account trigger, reconstruction and identi\ufb01cation efficiencies this extracted signal is unfolded to a differential cross-section distribution as a function of electron transverse momentum which is compared to theoretical expectations.", 
+                "creation_date": "2011-02-18T13:32:07", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-COM-PHYS-2011-164", 
+                "keywords": [
+                    "electrons/ Inclusive electrons cross section", 
+                    "BPHYS", 
+                    "EGAMMA", 
+                    "BPHYS", 
+                    "EWEAK"
+                ], 
+                "email_address": [
+                    "paul.bell@cern.ch", 
+                    "daniel.froidevaux@cern.ch", 
+                    "gabriella.pasztor@cern.ch", 
+                    "xin.wu@cern.ch"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "cataloguer_info": {
+                    "creation_date": "20110218", 
+                    "library": "CER01", 
+                    "modification_date": "20110401", 
+                    "hour": "2040"
+                }, 
+                "agency_code": "SzGeCERN", 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Measurement of the inclusive electron cross-section from the decays of heavy flavour hadrons in pp collisions at $sqrt{s}=7TeV", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000712842CER", 
+                "type": "INT", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASPRIV", 
+                "number_of_reviews": 0, 
+                "base": "90", 
+                "version_id": "2012-12-19T19:51:27", 
+                "pagination": "68 p", 
+                "number_of_authors": 12, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 5, 
+                "imprint_date": "2011", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201170"
+                }, 
+                "recid": 1330327, 
+                "prepublication": {
+                    "date": "18 Feb 2011", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }
+    ], 
+    "CDS": {
+        "comment": [
+            "Comments: 25 pages plus author list (53 pages total), 4 figures, 4 tables, submitted to Physics Letters B", 
+            "25 pages plus author list (53 pages total), 4 figures, 4 tables, final version to appear in Physics Letters B"
+        ], 
+        "report_number": [
+            {
+                "internal": "ATLAS-STDM-2011-07-003"
+            }, 
+            {
+                "report_number": "CERN-PH-EP-2011-108"
+            }
+        ], 
+        "abstract": [
+            "This letter presents measurements of the differential cross-sections for inclusive electron and muon production in proton-proton collisions at a centre-of-mass energy of sqrt(s) = 7 TeV, using data collected by the ATLAS detector at the LHC. The muon cross-section is measured as a function of pT in the range 4 < pT < 100 GeV and within pseudorapidity |eta| < 2.5. In addition the electron and muon cross-sections are measured in the range 7 < pT < 26 GeV and within |eta| <2.0, excluding 1.37<|eta|<1.52. Integrated luminosities of 1.3 pb-1 and 1.4 pb-1 are used for the electron and muon measurements, respectively. After subtraction of the W/Z/gamma* contribution, the differential cross-sections are found to be in good agreement with theoretical predictions for heavy-flavour production obtained from Fixed Order NLO calculations with NLL high-pT resummation, and to be sensitive to the effects of NLL resummation.", 
+            "This letter presents measurements of the differential cross-sections for inclusive electron and muon production in proton-proton collisions at a centre-of-mass energy of sqrt(s) = 7 TeV, using data collected by the ATLAS detector at the LHC. The muon cross-section is measured as a function of pT in the range 4 < pT < 100 GeV and within pseudorapidity |eta| < 2.5. In addition the electron and muon cross-sections are measured in the range 7 < pT < 26 GeV and within |eta| <2.0, excluding 1.37<|eta|<1.52. Integrated luminosities of 1.3 pb-1 and 1.4 pb-1 are used for the electron and muon measurements, respectively. After subtraction of the W/Z/gamma* contribution, the differential cross-sections are found to be in good agreement with theoretical predictions for heavy-flavour production obtained from Fixed Order NLO calculations with NLL high-pT resummation, and to be sensitive to the effects of NLL resummation.", 
+            "This Letter presents measurements of the differential cross-sections for inclusive electron and muon production in proton\u2013proton collisions at a centre-of-mass energy of s=7\u00a0TeV , using data collected by the ATLAS detector at the LHC. The muon cross-section is measured as a function of pT in the range 4<pT<100\u00a0GeV and within pseudorapidity |\u03b7|<2.5 . In addition the electron and muon cross-sections are measured in the range 7<pT<26\u00a0GeV and within |\u03b7|<2.0 , excluding 1.37<|\u03b7|<1.52 . Integrated luminosities of 1.3\u00a0pb\u22121 and 1.4\u00a0pb\u22121 are used for the electron and muon measurements, respectively. After subtraction of the W/Z/\u03b3\u204e contribution, the differential cross-sections are found to be in good agreement with theoretical predictions for heavy-flavour production obtained from Fixed Order NLO calculations with NLL high- pT resummation, and to be sensitive to the effects of NLL resummation."
+        ], 
+        "creation_date": "2011-09-06T12:40:42", 
+        "primary_report_number": [
+            "arXiv:1109.0525", 
+            "CERN-PH-EP-2011-108"
+        ], 
+        "persistent_identifiers_keys": [
+            "recid", 
+            "system_control_number", 
+            "doi", 
+            "oai"
+        ], 
+        "keywords": [
+            "QCD", 
+            "heavy quark production", 
+            "lepton production", 
+            "experimental results"
+        ], 
+        "publication_info": {
+            "volume": "707", 
+            "pagination": "438-458", 
+            "year": "2012", 
+            "title": "Phys. Lett. B"
+        }, 
+        "email_address": "klaus.moenig@cern.ch", 
+        "subject": {
+            "source": "SzGeCERN", 
+            "term": "Particle Physics - Experiment"
+        }, 
+        "version_id": "2017-10-05T09:31:23", 
+        "number_of_citations": 0, 
+        "other_report_number": {
+            "source_number": "CERN Library", 
+            "classification_number": "PH-EP-2011-108"
+        }, 
+        "title": "Measurements of the electron and muon inclusive cross-sections in proton-proton collisions at $\\sqrt{s}$ = 7 TeV with the ATLAS detector", 
+        "oai": {
+            "indicator": [
+                "cerncds:FULLTEXT", 
+                "cerncds:CERN:FULLTEXT", 
+                "cerncds:CERN"
+            ], 
+            "value": "oai:cds.cern.ch:1379766"
+        }, 
+        "thesaurus_terms": {
+            "institute": "LANL EDS", 
+            "term": "hep-ex"
+        }, 
+        "copyright_status": [
+            {
+                "date": "2012", 
+                "materials": "Publication", 
+                "holder": "CERN"
+            }, 
+            {
+                "date": "2011", 
+                "materials": "Preprint", 
+                "holder": "CERN"
+            }
+        ], 
+        "collaboration": [
+            "ATLAS Collaboration"
+        ], 
+        "collection": [
+            "ARTICLE", 
+            "ATLAS_Papers"
+        ], 
+        "language": "eng", 
+        "number_of_reviews": 0, 
+        "base": "13", 
+        "system_control_number": [
+            {
+                "institute": "arXiv", 
+                "canceled": "oai:arXiv.org:1109.0525", 
+                "value": "oai:arXiv.org:1109.0525"
+            }, 
+            {
+                "institute": "Inspire", 
+                "value": "926145"
+            }
+        ], 
+        "pagination": "21 p", 
+        "doi": "10.1016/j.physletb.2011.12.054", 
+        "number_of_authors": 3020, 
+        "license": [
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Publication", 
+                "license": [
+                    "Open Access", 
+                    "CC-BY-3.0"
+                ]
+            }, 
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Preprint", 
+                "license": [
+                    "CC-BY-3.0", 
+                    "Open Access"
+                ]
+            }
+        ], 
+        "accelerator_experiment": {
+            "experiment": "ATLAS", 
+            "accelerator": "CERN LHC"
+        }, 
+        "number_of_comments": 0, 
+        "imprint_date": "2013-07-16", 
+        "status_week": {
+            "status": "n", 
+            "status_week": "201136", 
+            "year": "a2012"
+        }, 
+        "url": [
+            {
+                "url": "https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/STDM-2011-07/", 
+                "description": "all figures including auxiliary figures"
+            }, 
+            {
+                "url": "http://durpdg.dur.ac.uk/cgi-hepdata/hepreac/9185208", 
+                "description": "DURHAM"
+            }
+        ], 
+        "recid": 1379865, 
+        "glance_id": "84", 
+        "prepublication": {
+            "date": "06 Sep 2011", 
+            "publisher_name": "CERN", 
+            "place": "Geneva"
+        }
+    }
+}

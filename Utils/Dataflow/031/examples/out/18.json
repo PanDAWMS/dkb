@@ -1,0 +1,168 @@
+{
+    "GLANCE": {
+        "ref_code": "TCAL-2010-01", 
+        "full_title": "Readiness of the ATLAS Tile Calorimeter for LHC collisions", 
+        "id": "9", 
+        "short_title": "Tilecal Performance"
+    }, 
+    "dkbID": "CDS_ATLAS-TCAL-2010-01-006", 
+    "supporting_notes": [], 
+    "CDS": {
+        "comment": [
+            "Comments: Submitted for publication in EPJC", 
+            "Accepted for publication in EPJC (latest version has minor editorial modifications following requests from EPJC referees)"
+        ], 
+        "report_number": [
+            {
+                "report_number": "CERN-PH-EP-2010-024"
+            }, 
+            {
+                "internal": "ATLAS-TCAL-2010-01-006"
+            }
+        ], 
+        "abstract": [
+            "The Tile hadronic calorimeter of the ATLAS detector has undergone extensive testing in the experimental hall since its installation in late 2005. The readout, control and calibration systems have been fully operational since 2007 and the detector successfully collected data from the LHC single beams in 2008 and first collisions in 2009. This paper gives an overview of the Tile Calorimeter performance as measured using random triggers, calibration data, data from cosmic ray muons and single beam data. The detector operation status, noise characteristics and performance of the calibration systems are presented, as well as the validation of the timing and energy calibration carried out with minimum ionising cosmic ray muons data. The calibration systems' precision is well below the design of 1%. The determination of the global energy scale was performed with an uncertainty of 4%.", 
+            "The Tile hadronic calorimeter of the ATLAS detector has undergone extensive testing in the experimental hall since its installation in late 2005. The readout, control and calibration systems have been fully operational since 2007 and the detector successfully collected data from the LHC single beams in 2008 and first collisions in 2009. This paper gives an overview of the Tile Calorimeter performance as measured using random triggers, calibration data, data from cosmic ray muons and single beam data. The detector operation status, noise characteristics and performance of the calibration systems are presented, as well as the validation of the timing and energy calibration carried out with minimum ionising cosmic ray muons data. The calibration systems' precision is well below the design of 1%. The determination of the global energy scale was performed with an uncertainty of 4%."
+        ], 
+        "creation_date": "2010-08-03T09:31:31", 
+        "affiliation": "CERN", 
+        "primary_report_number": [
+            "arXiv:1007.5423", 
+            "CERN-PH-EP-2010-024"
+        ], 
+        "oai": {
+            "indicator": [
+                "cerncds:FULLTEXT", 
+                "cerncds:CERN:FULLTEXT", 
+                "cerncds:CERN"
+            ], 
+            "value": "oai:cds.cern.ch:1282535"
+        }, 
+        "owner": "PUBLIC", 
+        "publication_info": {
+            "volume": "70", 
+            "pagination": "1193-1236", 
+            "year": "2010", 
+            "title": "Eur. Phys. J. C"
+        }, 
+        "email_address": "klaus.moenig@cern.ch", 
+        "subject": {
+            "source": "arXiv", 
+            "term": "Detectors and Experimental Techniques"
+        }, 
+        "cataloguer_info": {
+            "creation_date": "20100803", 
+            "library": "CER01", 
+            "modification_date": "20100916", 
+            "hour": "1143"
+        }, 
+        "agency_code": "SzGeCERN", 
+        "number_of_citations": 0, 
+        "subject_additional": {
+            "source": "arXiv", 
+            "term": "Particle Physics - Experiment"
+        }, 
+        "title": "Readiness of the ATLAS Tile Calorimeter for LHC collisions", 
+        "persistent_identifiers_keys": [
+            "recid", 
+            "system_control_number", 
+            "doi", 
+            "oai"
+        ], 
+        "thesaurus_terms": [
+            {
+                "institute": "LANL EDS", 
+                "term": "physics.ins-det"
+            }, 
+            {
+                "institute": "LANL EDS", 
+                "term": "hep-ex"
+            }
+        ], 
+        "copyright_status": [
+            {
+                "date": "2010", 
+                "materials": "Publication", 
+                "holder": "CERN"
+            }, 
+            {
+                "date": "2010", 
+                "materials": "Preprint", 
+                "holder": "CERN"
+            }
+        ], 
+        "collaboration": [
+            "ATLAS Collaboration"
+        ], 
+        "aleph_linking_page": {
+            "pages": "195-238", 
+            "up_link": "book", 
+            "down_link": "book", 
+            "sysno": "1485681"
+        }, 
+        "system_control_number": [
+            {
+                "institute": "arXiv", 
+                "canceled": "oai:arXiv.org:1007.5423", 
+                "value": "oai:arXiv.org:1007.5423"
+            }, 
+            {
+                "institute": "Inspire", 
+                "value": "863749"
+            }
+        ], 
+        "language": "eng", 
+        "imprint_date": "2010", 
+        "base": "13", 
+        "version_id": "2017-10-10T08:00:37", 
+        "other_report_number": {
+            "source_number": "CERN Library", 
+            "classification_number": "PH-EP-2010-024"
+        }, 
+        "pagination": "64 p", 
+        "doi": "10.1140/epjc/s10052-010-1508-y", 
+        "number_of_authors": 2577, 
+        "license": [
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Publication", 
+                "license": [
+                    "Open Access", 
+                    "CC-BY-3.0"
+                ]
+            }, 
+            {
+                "material": "Preprint", 
+                "license": "CC-BY-3.0"
+            }
+        ], 
+        "accelerator_experiment": {
+            "experiment": "ATLAS", 
+            "accelerator": "CERN LHC"
+        }, 
+        "number_of_comments": 0, 
+        "number_of_reviews": 0, 
+        "status_week": {
+            "status": "n", 
+            "status_week": "201031", 
+            "year": "a2010"
+        }, 
+        "url": {
+            "url": "http://arxiv.org/pdf/1007.5423.pdf", 
+            "description": "Preprint"
+        }, 
+        "recid": 1282535, 
+        "glance_id": "9", 
+        "collection": [
+            "ARTICLE", 
+            "ATLAS_Papers", 
+            "BookChapter"
+        ], 
+        "title_additional": "Readiness of the ATLAS Tile Calorimeter for LHC collisions", 
+        "prepublication": {
+            "date": "30 Jul 2010", 
+            "publisher_name": "CERN", 
+            "place": "Geneva"
+        }
+    }
+}

@@ -1,0 +1,298 @@
+{
+    "GLANCE": {
+        "ref_code": "STDM-2010-04", 
+        "full_title": "Measurement of underlying event characteristics using charged particles in pp collisions at sqrt(s) = 900 GeV and 7 TeV with the ATLAS Detector", 
+        "id": "16", 
+        "short_title": "UE with tracks"
+    }, 
+    "dkbID": "CDS_ATLAS-STDM-2010-04-003", 
+    "supporting_notes": [
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1311846", 
+                "id": "71", 
+                "label": "http://cdsweb.cern.ch/record/1311846"
+            }, 
+            "dkbID": "CDS_ATL-COM-PHYS-2010-822", 
+            "CDS": {
+                "report_number": {
+                    "internal": "ATL-COM-PHYS-2010-822"
+                }, 
+                "abstract": "Underlying event measurements with the ATLAS detector at the LHC are presented. Data were collected using a minimum-bias trigger in December 2009 and March-April 2010 during proton-proton collisions at center of mass energies of 900 GeV and 7 TeV respectively. The observables sensitive to the underlying event, e.g the charged particle density and the sum and average charged transverse momentum are measured as a function of the leading track transverse momentum. The angular distribution of the charged tracks and their transverse momentum with respect to the leading track is also presented, as well as the correlation between mean transverse momentum and charged particle multiplicity. The data show a higher underlying event activity than that predicted by the pre-LHC Monte Carlo models to which it is compared.", 
+                "creation_date": "2010-12-06T09:05:15", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-PHYS-INT-2010-128", 
+                "keywords": [
+                    "Underlying Event", 
+                    "QCD"
+                ], 
+                "email_address": [
+                    "deepak.kar@cern.ch", 
+                    "andy.buckley@ed.ac.uk", 
+                    "ghare@cern.ch"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "cataloguer_info": {
+                    "creation_date": "20101206", 
+                    "library": "CER01", 
+                    "modification_date": "20101206", 
+                    "hour": "0906"
+                }, 
+                "agency_code": "SzGeCERN", 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Update: Track-based underlying event measurements in pp collisions at sqrt(s) = 900 GeV and 7 TeV with the ATLAS Detector at the LHC", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000711699CER", 
+                "type": "INT", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASINT", 
+                "number_of_reviews": 0, 
+                "base": "91", 
+                "version_id": "2012-12-19T16:19:43", 
+                "pagination": "mult. p", 
+                "number_of_authors": 11, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 0, 
+                "imprint_date": "2010", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201070"
+                }, 
+                "recid": 1311846, 
+                "prepublication": {
+                    "date": "06 Dec 2010", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }, 
+        {
+            "GLANCE": {
+                "url": "http://cdsweb.cern.ch/record/1311845", 
+                "id": "76", 
+                "label": "http://cdsweb.cern.ch/record/1311845"
+            }, 
+            "dkbID": "CDS_ATL-COM-PHYS-2010-792", 
+            "CDS": {
+                "report_number": {
+                    "internal": "ATL-COM-PHYS-2010-792"
+                }, 
+                "abstract": "Previously track based underlying event these measurements were performed with a track pT cut of 500 MeV. This note shows some of the profiles reproduced with a pT cut of 100 MeV. Also charged multiplicity and sum pT is against the leading track eta is looked at as a probe of the centrality of the event.", 
+                "creation_date": "2010-12-06T09:04:28", 
+                "owner": "PUBLIC", 
+                "primary_report_number": "ATL-PHYS-INT-2010-127", 
+                "keywords": [
+                    "Underlying Event", 
+                    "Low pT", 
+                    "QCD"
+                ], 
+                "email_address": [
+                    "deepak.kar@cern.ch", 
+                    "andy.buckley@ed.ac.uk"
+                ], 
+                "subject": {
+                    "source": "SzGeCERN", 
+                    "term": "Detectors and Experimental Techniques"
+                }, 
+                "cataloguer_info": {
+                    "creation_date": "20101206", 
+                    "library": "CER01", 
+                    "modification_date": "20101206", 
+                    "hour": "0906"
+                }, 
+                "agency_code": "SzGeCERN", 
+                "number_of_citations": 0, 
+                "subject_additional": {
+                    "source": "SzGeCERN", 
+                    "term": "Physics"
+                }, 
+                "title": "Additional plots for track-based underlying event measurement", 
+                "persistent_identifiers_keys": [
+                    "recid", 
+                    "system_number"
+                ], 
+                "system_number": "000711698CER", 
+                "type": "INT", 
+                "collaboration": [], 
+                "collection": "INTNOTEATLASINT", 
+                "number_of_reviews": 0, 
+                "base": "91", 
+                "version_id": "2012-12-19T16:19:43", 
+                "pagination": "mult. p", 
+                "number_of_authors": 11, 
+                "language": "eng", 
+                "accelerator_experiment": {
+                    "experiment": "ATLAS", 
+                    "accelerator": "CERN LHC"
+                }, 
+                "number_of_comments": 0, 
+                "imprint_date": "2010", 
+                "status_week": {
+                    "status": "n", 
+                    "status_week": "201070"
+                }, 
+                "recid": 1311845, 
+                "prepublication": {
+                    "date": "06 Dec 2010", 
+                    "publisher_name": "CERN", 
+                    "place": "Geneva"
+                }
+            }
+        }
+    ], 
+    "CDS": {
+        "comment": [
+            "Submitted to PRD (3 Dec 2010)", 
+            "36 pages plus author list (65 pages total), 12 figures, 2 tables"
+        ], 
+        "report_number": [
+            {
+                "internal": "ATLAS-STDM-2010-04-003"
+            }, 
+            {
+                "report_number": "CERN-PH-EP-2010-063"
+            }
+        ], 
+        "abstract": [
+            "Measurements of charged particle distributions, sensitive to the underlying event, have been performed with the ATLAS detector at the LHC. The measurements are based on data collected using a minimum-bias trigger to select proton{proton collisions at center-of-mass energies of 900 GeV and 7 TeV. The \"underlying event\" is defined as those aspects of a hadronic interaction attributed not to the hard scattering process, but rather to the accompanying interactions of the rest of the proton. Three regions are defined in azimuthal angle with respect to the the highest-$p_T$ charged particle in the event, such that the region transverse to the dominant momentum-flow is most sensitive to the underlying event. In each of these regions, distributions of the charged particle multiplicity, $p_T$ density, and average $p_T$ are measured. The data show a higher underlying event activity than that predicted by Monte Carlo models tuned to pre-LHC data. ", 
+            "Measurements of charged particle distributions, sensitive to the underlying event, have been performed with the ATLAS detector at the LHC. The measurements are based on data collected using a minimum-bias trigger to select proton-proton collisions at center-of-mass energies of 900 GeV and 7 TeV. The 'underlying event' is defined as those aspects of a hadronic interaction attributed not to the hard scattering process, but rather to the accompanying interactions of the rest of the proton. Three regions are defined in azimuthal angle with respect to the highest-pt charged particle in the event, such that the region transverse to the dominant momentum-flow is most sensitive to the underlying event. In each of these regions, distributions of the charged particle multiplicity, pt density, and average pt are measured. The data show a higher underlying event activity than that predicted by Monte Carlo models tuned to pre-LHC data."
+        ], 
+        "creation_date": "2010-11-26T15:15:09", 
+        "affiliation": "CERN", 
+        "primary_report_number": [
+            "arXiv:1012.0791", 
+            "CERN-PH-EP-2010-063"
+        ], 
+        "persistent_identifiers_keys": [
+            "recid", 
+            "system_control_number", 
+            "doi", 
+            "oai"
+        ], 
+        "publication_info": {
+            "volume": "83", 
+            "pagination": "112001", 
+            "year": "2011", 
+            "title": "Phys. Rev. D"
+        }, 
+        "email_address": "giuseppe.iacobucci@cern.ch", 
+        "subject": {
+            "source": "arXiv", 
+            "term": "Particle Physics - Experiment"
+        }, 
+        "version_id": "2017-10-05T09:06:29", 
+        "number_of_citations": 0, 
+        "other_report_number": {
+            "source_number": "CERN Library", 
+            "classification_number": "PH-EP-2010-063"
+        }, 
+        "title": "Measurement of underlying event characteristics using charged particles in $pp$ collisions at $\\sqrt{s}$ = 900 GeV and 7 TeV with the ATLAS Detector", 
+        "oai": {
+            "indicator": [
+                "cerncds:FULLTEXT", 
+                "cerncds:CERN:FULLTEXT", 
+                "cerncds:CERN"
+            ], 
+            "value": "oai:cds.cern.ch:1309895"
+        }, 
+        "thesaurus_terms": {
+            "institute": "LANL EDS", 
+            "term": "hep-ex"
+        }, 
+        "copyright_status": [
+            {
+                "date": "2010", 
+                "materials": "Preprint", 
+                "holder": "CERN"
+            }, 
+            {
+                "date": "2011", 
+                "materials": "Publication", 
+                "holder": "CERN"
+            }
+        ], 
+        "collaboration": [
+            "ATLAS Collaboration"
+        ], 
+        "system_control_number": [
+            {
+                "institute": "arXiv", 
+                "canceled": "oai:arXiv.org:1012.0791", 
+                "value": "oai:arXiv.org:1012.0791"
+            }, 
+            {
+                "institute": "Inspire", 
+                "value": "879407"
+            }
+        ], 
+        "language": "eng", 
+        "number_of_reviews": 0, 
+        "base": "13", 
+        "collection": [
+            "ARTICLE", 
+            "ATLAS_Papers"
+        ], 
+        "pagination": "37 p", 
+        "doi": "10.1103/PhysRevD.83.112001", 
+        "number_of_authors": 3070, 
+        "license": [
+            {
+                "url": "http://creativecommons.org/licenses/by/3.0/", 
+                "material": "Preprint", 
+                "license": [
+                    "Open Access", 
+                    "CC-BY-3.0"
+                ]
+            }, 
+            {
+                "material": "Publication", 
+                "license": "CC-BY-3.0"
+            }
+        ], 
+        "accelerator_experiment": {
+            "experiment": "ATLAS", 
+            "accelerator": "CERN LHC"
+        }, 
+        "number_of_comments": 0, 
+        "imprint_date": "2011", 
+        "status_week": {
+            "status": "n", 
+            "status_week": "201049", 
+            "year": [
+                "2011", 
+                "a2011"
+            ]
+        }, 
+        "url": [
+            {
+                "url": "https://atlas.web.cern.ch/Atlas/GROUPS/PHYSICS/PAPERS/UnderlyingEvent_01/", 
+                "description": "all figures including auxiliary figures"
+            }, 
+            {
+                "url": "http://durpdg.dur.ac.uk/cgi-hepdata/hepreac/8894728", 
+                "description": "DURHAM"
+            }
+        ], 
+        "recid": 1309895, 
+        "glance_id": "16", 
+        "prepublication": {
+            "date": "26 Nov 2010", 
+            "publisher_name": "CERN", 
+            "place": "Geneva"
+        }
+    }
+}
