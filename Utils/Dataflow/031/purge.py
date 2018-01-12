@@ -104,10 +104,12 @@ def purge_store(j, fname):
 
 
 if __name__ == "__main__":
-    fname = "D:/elasticsearch/document-metadata"
-    fname_out = "D:/elasticsearch/out.json"
-    dirname_out = "D:/elasticsearch/out"
-    json_nd = True
+    with open("config.json", "r") as f:
+        config = json.load(f)
+    fname = config["FNAME"]
+    fname_out = config["FNAME_OUT"]
+    dirname_out = config["DIRNAME_OUT"]
+    json_nd = config["JSON_ND"]
     if not fname:
         if len(sys.argv) < 2:
             sys.exit(0)

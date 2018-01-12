@@ -1,0 +1,6 @@
+{
+	"FNAME":"D:/elasticsearch/document-metadata",
+	"FNAME_OUT":"D:/elasticsearch/out.json",
+	"DIRNAME_OUT":"D:/elasticsearch/out",
+	"JSON_ND":true
+}
