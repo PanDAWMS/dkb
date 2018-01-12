@@ -132,8 +132,8 @@ if __name__ == "__main__":
                 sys.stderr.write("EXCEPTION " + str(e) + ", details:" +
                                  traceback.format_exc() + "\n")
             i += 1
-            if i == 10:
-                break
+##            if i == 10:
+##                break
     else:
         with open(fname, "r") as f:
             try:
