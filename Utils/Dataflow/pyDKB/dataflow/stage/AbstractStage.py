@@ -3,6 +3,7 @@ Definition of an abstract class for Dataflow Stages.
 """
 
 import sys
+import textwrap
 
 try:
     import argparse
@@ -32,19 +33,26 @@ class AbstractStage(object):
         self.__parser = argparse.ArgumentParser(
             formatter_class=argparse.RawDescriptionHelpFormatter,
             description=description,
-            epilog='''\
-                Shortcut table:
+            epilog=textwrap.dedent(
+                '''\
+                NOTES
                 
-                mode | source | dest | eom | eop
-                -----+--------+------+-----+-----
-                  s  |    s   |   s  |  \\n |  \\0
-                -----+--------+------+-----+-----
-                  f  |   f/h  |  f/h |  \\n |
-                -----+--------+------+-----+-----
-                  m  |   s/h  |   s  |  \\n |
-                -----+--------+------+-----+-----
-                  h  |    h   |  h/f |  \\n |
-                -----+--------+------+-----+-----''')
+                Processing mode
+                  is defined as a combination of data source and
+                  destination type (local/HDFS file(s) or standard stream)
+                  and pre-defined EOP and EOM markers:
+                
+                  mode | source | dest | eom | eop
+                  -----+--------+------+-----+-----
+                    s  |    s   |   s  |  \\n |  \\0
+                  -----+--------+------+-----+-----
+                    f  |   f/h  |  f/h |  \\n |
+                  -----+--------+------+-----+-----
+                    m  |   s/h  |   s  |  \\n |
+                  -----+--------+------+-----+-----
+                    h  |    h   |  h/f |  \\n |
+                  -----+--------+------+-----+-----''')
+        )
         self.defaultArguments()
 
     def defaultArguments(self):
