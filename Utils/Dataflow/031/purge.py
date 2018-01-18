@@ -99,6 +99,9 @@ def purge_store(j, fname):
     NOTE: file is overwritten.
     """
     jsn = purge(j)
+    if "supporting_notes" in jsn and "GLANCE" in jsn:
+        jsn["GLANCE"]["supporting_notes"] = jsn["supporting_notes"]
+        del jsn["supporting_notes"]
     with open(fname, "w") as f:
         json.dump(jsn, f, indent=4)
 

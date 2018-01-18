@@ -93,7 +93,7 @@ def load_data(es):
         doc["_type"] = "paper"
         supp_notes = []
         print i
-        for sn in doc["supporting_notes"]:
+        for sn in doc["GLANCE"]["supporting_notes"]:
             sn["_index"] = "supp-notes"
             sn["_type"] = "supp-note"
             sn["datasets"] = {}
@@ -111,7 +111,7 @@ def load_data(es):
                         sn["datasets"][key] = content[key]
             supp_notes.append(sn)
             results.append(sn)
-        doc["supporting_notes"] = [sn["dkbID"] for sn in supp_notes]
+        doc["GLANCE"]["supporting_notes"] = [sn["dkbID"] for sn in supp_notes]
         results.append(doc)
     elasticsearch.helpers.bulk(es, results)
 
@@ -151,7 +151,7 @@ def doc_find_by_query(es, paperid):
         sdocs = []
         datasets = []
         for hit in r["hits"]["hits"]:
-            for sd in hit["_source"]["supporting_notes"]:
+            for sd in hit["_source"]["GLANCE"]["supporting_notes"]:
                 sdocs.append(sd)
         # For now we believe that exact paper name was typed, and it's unique.
         rtrn[0] = r["hits"]["hits"][0]["_source"]

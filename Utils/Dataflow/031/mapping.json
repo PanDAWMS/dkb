@@ -4,11 +4,11 @@
                 "ref_code":{"type":"keyword"}, 
                 "full_title":{"type":"text"}, 
                 "id":{"type":"integer"}, 
-                "short_title":{"type":"text"}
+                "short_title":{"type":"text"},
+                "supporting_notes":{"type":"keyword"}
             }
     }, 
     "dkbID":{"type":"keyword"}, 
-    "supporting_notes":{"type":"keyword"}, 
     "CDS": {
         "properties":{
                 "comment":{"type":"text"},
