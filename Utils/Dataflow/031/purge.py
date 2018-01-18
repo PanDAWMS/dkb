@@ -27,8 +27,8 @@ This also works for arrays of dictionaries:
 changes into
 {"a and b":[1, 2]}
 """
-rm = ["authors", "filenames", "files", "filetypes", "periodical_internal_note",
-      "restriction_access"]
+rm = ["authors", "copyright_status", "filenames", "files", "filetypes",
+      "license", "periodical_internal_note", "restriction_access"]
 renames = {
         "email_message": ["address", "email_address"],
         "abstract": ["summary", "abstract"],
