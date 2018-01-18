@@ -1,14 +1,14 @@
 {
     "GLANCE": {
         "properties":{
-                "ref_code":{"type":"keyword"}, 
-                "full_title":{"type":"text"}, 
-                "id":{"type":"integer"}, 
+                "ref_code":{"type":"keyword"},
+                "full_title":{"type":"text"},
+                "id":{"type":"integer"},
                 "short_title":{"type":"text"},
                 "supporting_notes":{"type":"keyword"}
             }
-    }, 
-    "dkbID":{"type":"keyword"}, 
+    },
+    "dkbID":{"type":"keyword"},
     "CDS": {
         "properties":{
                 "comment":{"type":"text"},
@@ -21,11 +21,9 @@
                 "abstract":{"type":"text"},
                 "creation_date":{"type":"date"},
                 "imprint_date":{"type":"date"},
-                "restriction_access":{"type":"object"},
                 "affiliation":{"type":"keyword"},
                 "keywords":{"type":"keyword"},
                 "primary_report_number":{"type":"keyword"},
-                "periodical_internal_note":{"type":"object"},
                 "persistent_identifiers_keys":{"type":"keyword"},
                 "owner":{"type":"keyword"},
                 "publication_info":{
@@ -81,32 +79,6 @@
                                 "term":{"type":"keyword"}
                             }
                     },
-                "files":{
-                        "properties":{
-                                "comment":{"type":"text"},
-                                "status":{"type":"keyword"},
-                                "magic":{"type":"keyword"},
-                                "description":{"type":"text"},
-                                "name":{"type":"keyword"},
-                                "url":{"type":"keyword"},
-                                "eformat":{"type":"keyword"},
-                                "subformat":{"type":"keyword"},
-                                "version":{"type":"integer"},
-                                "full_name":{"type":"keyword"},
-                                "superformat":{"type":"keyword"},
-                                "path":{"type":"keyword"},
-                                "type":{"type":"keyword"},
-                                "full_path":{"type":"keyword"},
-                                "size":{"type":"integer"}
-                            }
-                    },
-                "copyright_status":{
-                        "properties":{
-                                "date":{"type":"date"},
-                                "materials":{"type":"keyword"},
-                                "holder":{"type":"keyword"}
-                            }
-                    },
                 "collection":{"type":"keyword"},
                 "language":{"type":"keyword"},
                 "number_of_reviews":{"type":"integer"},
@@ -128,13 +100,6 @@
                     },
                 "doi":{"type":"keyword"},
                 "number_of_authors":{"type":"integer"},
-                "license":{
-                        "properties":{
-                                "url":{"type":"keyword"},
-                                "material":{"type":"keyword"},
-                                "license":{"type":"keyword"}
-                            }
-                    },
                 "accelerator_experiment":{
                         "properties":{
                                 "experiment":{"type":"keyword"},
@@ -160,7 +125,6 @@
                                 "size":{"type":"integer"}
                             }
                     },
-                "filetypes":{"type":"keyword"},
                 "prepublication":{
                         "properties":{
                                 "date":{
