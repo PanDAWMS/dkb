@@ -12,12 +12,8 @@
     "CDS": {
         "properties":{
                 "comment":{"type":"text"},
-                "report_number":{
-                        "properties":{
-                                "internal":{"type":"keyword"},
-                                "report_number":{"type":"keyword"}
-                            }
-                    },
+                "report_number":{"type":"keyword"},
+                "internal_number":{"type":"keyword"},
                 "abstract":{"type":"text"},
                 "creation_date":{"type":"date"},
                 "imprint_date":{"type":"date"},
@@ -91,13 +87,8 @@
                                 "up_link":{"type":"keyword"}
                             }
                     },
-                "system_control_number":{
-                        "properties":{
-                                "institute":{"type":"keyword"},
-                                "canceled":{"type":"keyword"},
-                                "value":{"type":"keyword"}
-                            }
-                    },
+                "inspire_number":{"type":"keyword"},
+                "arxiv_number":{"type":"keyword"},
                 "doi":{"type":"keyword"},
                 "number_of_authors":{"type":"integer"},
                 "accelerator_experiment":{

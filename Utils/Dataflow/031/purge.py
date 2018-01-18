@@ -43,6 +43,30 @@ renames = {
     }
 
 
+def add_vlk(d, key, ls):
+    """ Add/replace a new key into a dictionary according to ES's
+    mapping rules.
+
+    d - dictionary
+    key - key name
+    ls - value, type = list
+
+    If ls is empty, key is not added.
+    If ls contains exactly one element, key is added,
+    value is added as a single element.
+    If ls contains several elements, key is added,
+    value is added as list.
+    Example:
+    {}, "k", [] => d = {}
+    {}, "k", [0] => d = {"k":0}
+    {}, "k", [0, 1, 2, 3] => d = {"k":[0, 1, 2, 3]}
+    """
+    if len(ls) > 1:
+        d[key] = ls
+    elif len(ls) == 1:
+        d[key] = ls[0]
+
+
 def purge(inp):
     """ Remove keys from dictionary, repeat for contents recursively.
 
@@ -52,7 +76,49 @@ def purge(inp):
         d = {}
         for key in inp:
             if key not in rm:
-                if isinstance(inp[key], dict):
+                if key.lower() == "report_number":
+                    if isinstance(inp[key], dict):
+                        for key2 in inp[key]:
+                            if key2.lower() == "internal":
+                                d["internal_number"] = inp[key][key2]
+                            elif key2.lower() == "report_number":
+                                d["report_number"] = inp[key][key2]
+                    elif isinstance(inp[key], list):
+                        int_nums = []
+                        rep_nums = []
+                        for d2 in inp[key]:
+                            for key2 in d2:
+                                if key2.lower() == "internal":
+                                    int_nums.append(d2[key2])
+                                elif key2.lower() == "report_number":
+                                    rep_nums.append(d2[key2])
+                        add_vlk(d, "internal_number", int_nums)
+                        add_vlk(d, "report_number", rep_nums)
+                    else:
+                        d[key] = inp[key]
+                elif key.lower() == "system_control_number":
+                    if isinstance(inp[key], dict):
+                        for key2 in inp[key]:
+                            if key2.lower() == "institute":
+                                if inp[key][key2].lower() == "inspire":
+                                    d["inspire_number"] = inp[key]["value"]
+                                elif inp[key][key2].lower() == "arxiv":
+                                    d["report_number"] = inp[key]["value"]
+                    elif isinstance(inp[key], list):
+                        ins_nums = []
+                        arx_nums = []
+                        for d2 in inp[key]:
+                            for key2 in d2:
+                                if key2.lower() == "institute":
+                                    if d2[key2].lower() == "inspire":
+                                        ins_nums.append(d2["value"])
+                                    elif d2[key2].lower() == "arxiv":
+                                        arx_nums.append(d2["value"])
+                        add_vlk(d, "inspire_number", ins_nums)
+                        add_vlk(d, "arxiv_number", arx_nums)
+                    else:
+                        d[key] = inp[key]
+                elif isinstance(inp[key], dict):
                     if key in renames and renames[key][0] in inp[key]:
                         d[renames[key][1]] = inp[key][renames[key][0]]
                     else:
