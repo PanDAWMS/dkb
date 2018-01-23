@@ -9,6 +9,7 @@ import traceback
 import elasticsearch
 import elasticsearch.helpers
 
+EXPLORE_METAFIELDS = False
 JSON_DIR = "D:/elasticsearch/out"
 ANALYZER_OUT_DIR = "C:/Work/papers_analysis/manager/export"
 # ANALYZER_OUT_DIR = "D:/elasticsearch/fake_export"
@@ -116,7 +117,7 @@ def load_data(es):
     elasticsearch.helpers.bulk(es, results)
 
 
-def doc_find_all(es, index="_all"):
+def doc_find_all(es, index="_all", meta=False):
     """ Find all documents
     """
     srch = {
@@ -134,7 +135,10 @@ def doc_find_all(es, index="_all"):
         for hit in results["hits"]["hits"]:
             if hit["_index"] not in rtrn:
                 rtrn[hit["_index"]] = []
-            rtrn[hit["_index"]].append(hit["_source"])
+            if meta:
+                rtrn[hit["_index"]].append(hit)
+            else:
+                rtrn[hit["_index"]].append(hit["_source"])
         fr += sz
     return rtrn
 
@@ -171,7 +175,7 @@ def doc_find_by_query(es, paperid):
 
 
 def explore(es):
-    contents = doc_find_all(es)
+    contents = doc_find_all(es, meta=EXPLORE_METAFIELDS)
     if not contents:
         print "No data to explore"
         return False
@@ -196,9 +200,16 @@ def explore(es):
         path = "ALL"
         words = s.split()
         for w in words:
-            if isinstance(r, dict) and w in r:
-                r = r[w]
-                path += " " + w
+            if isinstance(r, dict):
+                if w in r:
+                    r = r[w]
+                    path += " " + w
+                else:
+                    for key in r:
+                        if str(key).startswith(w):
+                            r = r[key]
+                            path += " " + key
+                            break
             elif isinstance(r, list) and w == "all":
                 show_all = True
                 break
