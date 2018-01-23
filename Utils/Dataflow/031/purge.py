@@ -157,19 +157,24 @@ def purge(inp):
     return outp
 
 
-def purge_store(j, fname):
-    """ Use purge() on a json, then save it to a file.
+def purge_store(j, outf):
+    """ Use purge() on a JSON data, then save it to a file.
 
-    j - json
-    fname - name of file where the json should be stored.
-    NOTE: file is overwritten.
+    j - JSON data
+    outf - file where the data should be stored. If outf is a string, then it
+    is presumed to be a name for a new JSON file to be created. If outf is a
+    file object, then it is presumed to be an already opened NDJSON.
+    NOTE: file is overwritten in first case.
     """
     jsn = purge(j)
     if "supporting_notes" in jsn and "GLANCE" in jsn:
         jsn["GLANCE"]["supporting_notes"] = jsn["supporting_notes"]
         del jsn["supporting_notes"]
-    with open(fname, "w") as f:
-        json.dump(jsn, f, indent=4)
+    if isinstance(outf, str) or isinstance(outf, unicode):
+        with open(outf, "w") as f:
+            json.dump(jsn, f, indent=4)
+    elif isinstance(outf, file):
+        outf.write(json.dumps(jsn) + "\n")
 
 
 if __name__ == "__main__":
@@ -178,12 +183,15 @@ if __name__ == "__main__":
     fname = config["FNAME"]
     fname_out = config["FNAME_OUT"]
     dirname_out = config["DIRNAME_OUT"]
-    json_nd = config["JSON_ND"]
+    json_nd_in = config["JSON_ND_IN"]
+    json_nd_out = config["JSON_ND_OUT"]
     if not fname:
         if len(sys.argv) < 2:
             sys.exit(0)
         fname = sys.argv[1]
-    if json_nd:
+    if json_nd_in:
+        if json_nd_out:
+            outf = open(fname_out, "w")
         with open(fname, "r") as f:
             lines = f.readlines()
         try:
@@ -196,15 +204,18 @@ if __name__ == "__main__":
 # This is copied from manager.py function. Could be imported.
             try:
                 j = json.loads(lines[i])
-                fname_out = os.path.join(dirname_out,
-                                         "%d.json" % (i)).replace("\\", "/")
-                purge_store(j, fname_out)
+                if not json_nd_out:
+                    outf = os.path.join(dirname_out,
+                                        "%d.json" % (i)).replace("\\", "/")
+                purge_store(j, outf)
             except Exception as e:
                 sys.stderr.write("EXCEPTION " + str(e) + ", details:" +
                                  traceback.format_exc() + "\n")
             i += 1
 ##            if i == 10:
 ##                break
+        if json_nd_out:
+            outf.close()
     else:
         with open(fname, "r") as f:
             try:
