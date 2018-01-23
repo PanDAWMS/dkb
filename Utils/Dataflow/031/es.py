@@ -90,11 +90,13 @@ def load_data(es):
         fname = os.path.join(JSON_DIR, "%d.json" % (i)).replace("\\", "/")
         with open(fname, "r") as f:
             doc = json.load(f)
+        doc["_id"] = doc["dkbID"]
         doc["_index"] = "papers"
         doc["_type"] = "paper"
         supp_notes = []
         print i
         for sn in doc["GLANCE"]["supporting_notes"]:
+            sn["_id"] = sn["dkbID"]
             sn["_index"] = "supp-notes"
             sn["_type"] = "supp-note"
             sn["datasets"] = {}
