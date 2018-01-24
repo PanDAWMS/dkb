@@ -112,11 +112,17 @@ def get_category(row):
 def process(stage, message):
     """ Single message processing. """
     data = message.content()
+    # 1. Hashtag_list unification
     hashtags = data.get('hashtag_list')
     if hashtags:
         hashtags = hashtags.lower().split(',')
         data['hashtag_list'] = [x.strip() for x in hashtags]
+    # 2. Physics category detection
     data['phys_category'] = get_category(data)
+    # 3. Output_formats unification
+    output_formats = data.get('output_formats')
+    if output_formats:
+        data['output_formats'] = output_formats.split('.')
     out_message = JSONMessage(data)
     stage.output(out_message)
     return True
