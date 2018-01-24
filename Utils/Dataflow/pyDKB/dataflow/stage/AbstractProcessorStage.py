@@ -307,10 +307,9 @@ class AbstractProcessorStage(AbstractStage):
         """
         if self.ARGS.eom == '\n':
             iterator = iter(fd.readline, "")
-            for line in iterator:
-                yield self.parseMessage(line)
         else:
-            for line in custom_readline(fd, self.ARGS.eom):
+            iterator = custom_readline(fd, self.ARGS.eom)
+        for line in iterator:
                 yield self.parseMessage(line)
 
     def file_input(self, fd):
