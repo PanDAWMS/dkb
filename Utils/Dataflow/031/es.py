@@ -82,19 +82,40 @@ def doc_del_by_query(es, index="_all"):
     es.delete_by_query(index=index, body=srch)
 
 
-def load_data(es):
+def load_data(es, source):
     """ Load papers and support documents from JSONs.
+
+    es - elasticsearch handle.
+    source - source of data.
     """
     results = []
-    for i in range(0, 10):
-        fname = os.path.join(JSON_DIR, "%d.json" % (i)).replace("\\", "/")
-        with open(fname, "r") as f:
-            doc = json.load(f)
+    docs = []
+    if isinstance(source, str) or isinstance(source, unicode):
+        i = 0
+        while True:
+            try:
+                fname = os.path.join(JSON_DIR, "%d.json" %
+                                     (i)).replace("\\", "/")
+                sys.stderr.write("Loading %s..." % fname)
+                with open(fname, "r") as f:
+                    docs.append(json.load(f))
+                sys.stderr.write("Done.\n")
+                i += 1
+            except Exception as e:
+                sys.stderr.write("Unable to load %s, proceeding.\n" % fname)
+                break
+    elif isinstance(source, file):
+        lines = source.readlines()
+        source.close()
+        for line in lines:
+            docs.append(json.loads(line))
+    else:
+        return False
+    for doc in docs:
         doc["_id"] = doc["dkbID"]
         doc["_index"] = "papers"
         doc["_type"] = "paper"
         supp_notes = []
-        print i
         for sn in doc["GLANCE"]["supporting_notes"]:
             sn["_id"] = sn["dkbID"]
             sn["_index"] = "supp-notes"
@@ -243,8 +264,14 @@ if __name__ == "__main__":
         index_create(es, "papers")
         index_create(es, "supp-notes")
     elif cmnd == "load":
+        with open("config.json", "r") as f:
+            config = json.load(f)
+        if config["JSON_ND_OUT"]:
+            source = open(config["FNAME_OUT"], "r")
+        else:
+            source = config["DIRNAME_OUT"]
         try:
-            load_data(es)
+            load_data(es, source)
         except Exception as e:
             sys.stderr.write("EXCEPTION " +
                              ", details:" + traceback.format_exc() + "\n")
