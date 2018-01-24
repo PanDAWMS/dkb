@@ -27,7 +27,8 @@
                                 "volume":{"type":"integer"},
                                 "pagination":{"type":"keyword"},
                                 "year":{"type":"integer"},
-                                "title":{"type":"text"}
+                                "title":{"type":"text"},
+                                "reference":{"type":"keyword"}
                             }
                     },
                 "collaboration":{"type":"keyword"},
@@ -120,7 +121,7 @@
                         "properties":{
                                 "date":{
                                         "type":"date",
-                                        "format":"dd MM yyyy||dd MMM yyyy"
+                                        "format":"dd MM yyyy||dd MMM yyyy||yyyy-MM-dd"
                                     },
                                 "publisher_name":{"type":"keyword"},
                                 "place":{"type":"keyword"}
