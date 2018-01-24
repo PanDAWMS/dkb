@@ -1,4 +1,9 @@
 def custom_readline(f, newline):
+    """Custom readline() function. It separates content from a text file 'f'
+    by delimiter 'newline' to distinct messages.
+    The last line can be incomplete, if the input data flow is interrupted
+    in the middle of data writing.
+    """
     buf = ""
     max_buf_size = 1
     while True:
