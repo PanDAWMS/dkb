@@ -36,12 +36,12 @@ class AbstractStage(object):
             epilog=textwrap.dedent(
                 '''\
                 NOTES
-                
+
                 Processing mode
                   is defined as a combination of data source and
                   destination type (local/HDFS file(s) or standard stream)
                   and pre-defined EOP and EOM markers:
-                
+
                   mode | source | dest | eom | eop
                   -----+--------+------+-----+-----
                     s  |    s   |   s  |  \\n |  \\0
