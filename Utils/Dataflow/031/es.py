@@ -26,6 +26,8 @@ def index_create(es, index):
     """
     # Note: it seems that mapping name and document_type are the same thing.
     if index == "supp-notes":
+        with open("PDFAnalyzer_mapping.json", "r") as f:
+            PDFA = json.load(f)
         # Supporting note
         body = {
                 "mappings": {
@@ -33,7 +35,8 @@ def index_create(es, index):
                                 "properties": {
                                         "dkbID": {"type": "keyword"},
                                         "GLANCE": {"type": "object"},
-                                        "CDS": {"type": "object"}
+                                        "CDS": {"type": "object"},
+                                        "PDFAnalyzer": {"properties": PDFA}
                                     }
                             }
                     }
@@ -120,19 +123,14 @@ def load_data(es, source):
             sn["_id"] = sn["dkbID"]
             sn["_index"] = "supp-notes"
             sn["_type"] = "supp-note"
-            sn["datasets"] = {}
             supp_fname = os.path.join(ANALYZER_OUT_DIR,
                                       "%s.json" %
                                       (sn["dkbID"])).replace("\\", "/")
             if os.access(supp_fname, os.F_OK):
-                with open(supp_fname, "r") as f:
-                    content = json.load(f)["content"]
                 print "Analyzed file found for %s, paper:%s" % (sn["dkbID"],
                                                                 doc["dkbID"])
-                for key in content:
-                    if key.endswith("datasets"):
-                        print "Datasets found for " + sn["dkbID"]
-                        sn["datasets"][key] = content[key]
+                with open(supp_fname, "r") as f:
+                    sn["PDFAnalyzer"] = json.load(f)["content"]
             supp_notes.append(sn)
             results.append(sn)
         doc["GLANCE"]["supporting_notes"] = [sn["dkbID"] for sn in supp_notes]
@@ -192,8 +190,9 @@ def doc_find_by_query(es, paperid):
         if r["hits"]["hits"]:
             for hit in r["hits"]["hits"]:
                 rtrn[1].append(hit["_source"])
-                for category in hit["_source"]["datasets"]:
-                    rtrn[2] += hit["_source"]["datasets"][category]
+                for key in hit["_source"]["PDFAnalyzer"]:
+                    if key.endswith("datasets"):
+                        rtrn[2] += hit["_source"]["PDFAnalyzer"][key]
     return rtrn
 
 

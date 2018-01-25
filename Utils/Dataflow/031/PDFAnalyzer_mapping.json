@@ -1,0 +1,13 @@
+{
+    "plain_text": {
+        "properties": {
+               "atlas_name": {"type": "keyword"},
+               "data taking year": {"type": "keyword"},
+               "luminosity": {"type": "keyword"},
+               "energy": {"type": "keyword"},
+               "possible_project_montecarlo": {"type": "keyword"},
+               "collisions": {"type": "keyword"},
+               "possible_project_realdata": {"type": "keyword"}
+            }
+    }
+}
