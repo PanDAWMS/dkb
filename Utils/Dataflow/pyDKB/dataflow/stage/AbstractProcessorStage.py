@@ -309,8 +309,12 @@ class AbstractProcessorStage(AbstractStage):
             iterator = iter(fd.readline, "")
         else:
             iterator = custom_readline(fd, self.ARGS.eom)
-        for line in iterator:
+        try:
+            for line in iterator:
                 yield self.parseMessage(line)
+        except KeyboardInterrupt:
+            sys.stderr.write("(INFO) Interrupted by user.\n")
+            sys.exit()
 
     def file_input(self, fd):
         """ Generator for input messages.
