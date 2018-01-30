@@ -334,5 +334,6 @@ def parsingArguments():
         sys.exit(1)
     return parser.parse_args()
 
+
 if __name__ == '__main__':
     main()
