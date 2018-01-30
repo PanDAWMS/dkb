@@ -12,7 +12,6 @@ import elasticsearch.helpers
 EXPLORE_METAFIELDS = False
 JSON_DIR = "D:/elasticsearch/out"
 ANALYZER_OUT_DIR = "C:/Work/papers_analysis/manager/export"
-# ANALYZER_OUT_DIR = "D:/elasticsearch/fake_export"
 
 
 def index_get(es):
@@ -127,8 +126,6 @@ def load_data(es, source):
                                       "%s.json" %
                                       (sn["dkbID"])).replace("\\", "/")
             if os.access(supp_fname, os.F_OK):
-                print "Analyzed file found for %s, paper:%s" % (sn["dkbID"],
-                                                                doc["dkbID"])
                 with open(supp_fname, "r") as f:
                     sn["PDFAnalyzer"] = json.load(f)["content"]
                 if "plain_text" in sn["PDFAnalyzer"] \
