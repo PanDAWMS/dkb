@@ -8,7 +8,7 @@ import json
 
 try:
     import cx_Oracle
-except:
+except ImportError:
     print "****ERROR : DButils. Cannot import cx_Oracle"
     pass
 
@@ -92,7 +92,7 @@ def fix_lob(row):
             result = ''
             try:
                 result = json.load(col)
-            except:
+            except Exception:
                 result = str(col)
             return result
         else:
@@ -145,7 +145,7 @@ def QueryUpdate(connection, query):
 
     try:
         cursor.execute(query)
-    except:
+    except Exception:
         error = 1
         print "Error : QueryUpdate - Oracle exception ; query ", query
         sys.exit(1)

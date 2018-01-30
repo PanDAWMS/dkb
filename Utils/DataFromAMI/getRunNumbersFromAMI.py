@@ -28,7 +28,7 @@ for item in json_content:
             client, year=int(year), data_periods=period)
         tmp.append(",".join(str(json.dumps(item, indent=4))
                             for item in result))
-    except:
+    except Exception:
         print "Cannot find results for period = " + str(period)
 
 runs_file.write("[" + ",".join(str(x) for x in tmp) + "]")

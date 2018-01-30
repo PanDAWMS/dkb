@@ -11,7 +11,7 @@ from collections import defaultdict
 
 try:
     import cx_Oracle
-except:
+except ImportError:
     sys.stderr.write("(ERROR) Failed to import cx_Oracle. Exiting.\n")
     sys.exit(3)
 
