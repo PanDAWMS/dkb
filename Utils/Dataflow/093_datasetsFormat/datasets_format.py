@@ -65,6 +65,8 @@ def dataset_format(datasetname):
     :param datasetname:
     :return: str|tuple
     """
+    if not datasetname:
+        return None
     ds_format = datasetname.split('.')[4]
     if re.match("\w+_\w+", ds_format) is not None:
         return (ds_format, ds_format.split('_')[0])
