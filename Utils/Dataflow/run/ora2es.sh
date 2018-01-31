@@ -10,6 +10,9 @@ base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
 cmd_OC="${base_dir}/../009_oracleConnector/Oracle2JSON.py"
 cfg_OC="${base_dir}/ora2json.cfg"
 
+# Stage 16
+cmd_16="${base_dir}/../016_task2es/task2es.py -m s"
+
 # Stage 19
 cmd_19="${base_dir}/../019_oracle2esFormat/oracle2es.php"
 
@@ -24,6 +27,11 @@ cmd_69="${base_dir}/../069_upload2es/load_data.sh"
 # Run Oracle Connector
 buffer="${base_dir}/.record_buffer"
 touch $buffer || { echo "Failed to access buffer file." >&2; exit 2; }
+
+# EOP filter
+eop_filter() {
+  sed -e"s/\\x00//"
+}
 
 flush_buffer() {
   cat $buffer
@@ -49,5 +57,8 @@ mediator() {
 # Run Oracle Connector
 
 [ -n "$DEBUG" ] \
-   && oracle_connector | tee oc.out | $cmd_19 | tee 19.out | mediator > 69.inp \
-   || oracle_connector | $cmd_19 | mediator | $cmd_69
+   && oracle_connector | tee oc.out | \
+      $cmd_16 | eop_filter | tee 16.out | \
+      $cmd_19 | tee 19.out | mediator > 69.inp \
+   || oracle_connector | $cmd_16 | eop_filter | \
+      $cmd_19 | mediator | $cmd_69
