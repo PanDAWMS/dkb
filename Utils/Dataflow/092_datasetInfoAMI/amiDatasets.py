@@ -33,7 +33,7 @@ FILTER = ['AOD', 'EVNT', 'HITS']
 
 
 def main(argv):
-
+    """ Main program body. """
     stage = pyDKB.dataflow.stage.JSONProcessorStage()
 
     stage.add_argument('--userkey', help='PEM key file', required=True)
@@ -58,8 +58,8 @@ def main(argv):
 
 
 def init_ami_client(userkey, usercert):
-    """
-    Initialisation of AMI client into the global variable
+    """ Initialisation of AMI client into the global variable
+
     :param userkey: user key pem file
     :param usercert: user certificate pem file
     :return:
@@ -77,7 +77,7 @@ def init_ami_client(userkey, usercert):
 
 
 def process(stage, message):
-
+    """ Single message processing. """
     data = message.content()
     if not data.get('data_format', None) \
             or data.get('data_format', None) in FILTER:
@@ -88,8 +88,8 @@ def process(stage, message):
 
 
 def amiPhysValues(data):
-    """
-    Add elements in JSON string, according to theirs names in ES mapping
+    """ Add elements in JSON string, according to theirs names in ES mapping
+
     - gen_filt_eff
     - cross_section
     - k_factor
@@ -120,8 +120,8 @@ def amiPhysValues(data):
 
 
 def change_key_names(data):
-    """
-    Changing parameter names according to PHYS_VALUES dictionary.
+    """ Changing parameter names according to PHYS_VALUES dictionary.
+
     :param data: JSON string
     :return: JSON string
     """
@@ -132,10 +132,12 @@ def change_key_names(data):
 
 
 def remove_tid(dataset):
-    """
+    """ Remove TaskID (_tidXX) part from dataset name.
+
     As AMI GetPhysicsParamsForDataset works with containers,
-    we construct the container name from each dataset name ,
+    we construct the container name from each dataset name,
     removing the _tid{...} part
+
     :param dataset: dataset name
     :return: dataset name without _tid => container name
     """
