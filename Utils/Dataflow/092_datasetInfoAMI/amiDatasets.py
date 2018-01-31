@@ -79,7 +79,10 @@ def init_ami_client(userkey, usercert):
 def process(stage, message):
     """ Single message processing. """
     data = message.content()
-    if not data.get('data_format', None) \
+    # Update data with information from AMI only if
+    # 'data_format' is one of the allowed formats
+    # or not set at all.
+    if data.get('data_format', None) is None \
             or data.get('data_format', None) in FILTER:
         amiPhysValues(data)
     stage.output(pyDKB.dataflow.messages.JSONMessage(data))
