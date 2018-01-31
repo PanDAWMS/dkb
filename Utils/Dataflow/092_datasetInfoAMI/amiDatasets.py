@@ -31,6 +31,7 @@ PHYS_VALUES = [{"ami": "genFiltEff", "es": "gen_filt_eff"},
                ]
 FILTER = ['AOD', 'EVNT', 'HITS']
 
+
 def main(argv):
 
     stage = pyDKB.dataflow.stage.JSONProcessorStage()
@@ -78,7 +79,8 @@ def init_ami_client(userkey, usercert):
 def process(stage, message):
 
     data = message.content()
-    if not data.get('data_format', None) or data.get('data_format', None) in FILTER:
+    if not data.get('data_format', None) \
+            or data.get('data_format', None) in FILTER:
         amiPhysValues(data)
     stage.output(pyDKB.dataflow.messages.JSONMessage(data))
 
@@ -138,6 +140,7 @@ def remove_tid(dataset):
     :return: dataset name without _tid => container name
     """
     return re.sub('_tid(.)+', '', dataset)
+
 
 if __name__ == '__main__':
     main(sys.argv[1:])
