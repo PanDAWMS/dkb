@@ -63,15 +63,15 @@ def dataset_format(datasetname):
     and first part ('DAOD'), defining the general name of the data format.
 
     :param datasetname:
-    :return: str|tuple
+    :return: list
     """
     if not datasetname:
         return None
     ds_format = datasetname.split('.')[4]
     if re.match("\w+_\w+", ds_format) is not None:
-        result = (ds_format, ds_format.split('_')[0])
+        result = [ds_format, ds_format.split('_')[0]]
     else:
-        result = ds_format
+        result = [ds_format]
     return result
 
 
