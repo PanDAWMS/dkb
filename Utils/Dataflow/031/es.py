@@ -139,6 +139,8 @@ def load_data(es, source):
                     sn["PDFAnalyzer"]["plain_text"]["links"]["NO_NAME"] =\
                             sn["PDFAnalyzer"]["plain_text"]["links"][""]
                     del sn["PDFAnalyzer"]["plain_text"]["links"][""]
+            else:
+                sn["PDFAnalyzer"] = {}
             supp_notes.append(sn)
             results.append(sn)
         doc["GLANCE"]["supporting_notes"] = [sn["dkbID"] for sn in supp_notes]
