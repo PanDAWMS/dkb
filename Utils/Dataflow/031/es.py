@@ -118,6 +118,11 @@ def load_data(es, source):
         doc["_index"] = "papers"
         doc["_type"] = "paper"
         supp_notes = []
+        try:
+            doc["CDS"]["publication_info"]["volume"] = \
+                    int(doc["CDS"]["publication_info"]["volume"])
+        except Exception as e:
+            pass
         for sn in doc["GLANCE"]["supporting_notes"]:
             sn["_id"] = sn["dkbID"]
             sn["_index"] = "supp-notes"
