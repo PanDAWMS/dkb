@@ -23,6 +23,8 @@ Number
 6.0		 060_upload2virtuoso		Upload data to Virtuoso
 6.9              069_upload2es                  Upload data to ES
 9.1              091_datasetsRucio              Get dataset metadata from Rucio
+9.3              093_datasetsFormat             Update dataset metadata:
+                                                  add "data_format" field
 
 
 

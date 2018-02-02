@@ -193,6 +193,10 @@
         },
         "deleted": {
           "type": "boolean"
+        },
+        "data_format": {
+          "type": "keyword",
+          "ignore_above" : 256
         }
       }
     }
