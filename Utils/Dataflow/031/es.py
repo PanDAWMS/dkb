@@ -11,7 +11,6 @@ import elasticsearch.helpers
 
 EXPLORE_METAFIELDS = False
 JSON_DIR = "D:/elasticsearch/out"
-ANALYZER_OUT_DIR = "C:/Work/papers_analysis/manager/export"
 
 
 def index_get(es):
@@ -84,11 +83,12 @@ def doc_del_by_query(es, index="_all"):
     es.delete_by_query(index=index, body=srch)
 
 
-def load_data(es, source):
+def load_data(es, source, pdfdata):
     """ Load papers and support documents from JSONs.
 
     es - elasticsearch handle.
     source - source of data.
+    pdfdata - directory with files exported from PDF Analyzer.
     """
     results = []
     docs = []
@@ -127,8 +127,7 @@ def load_data(es, source):
             sn["_id"] = sn["dkbID"]
             sn["_index"] = "supp-notes"
             sn["_type"] = "supp-note"
-            supp_fname = os.path.join(ANALYZER_OUT_DIR,
-                                      "%s.json" %
+            supp_fname = os.path.join(pdfdata, "%s.json" %
                                       (sn["dkbID"])).replace("\\", "/")
             if os.access(supp_fname, os.F_OK):
                 with open(supp_fname, "r") as f:
@@ -280,7 +279,7 @@ if __name__ == "__main__":
         else:
             source = config["DIRNAME_OUT"]
         try:
-            load_data(es, source)
+            load_data(es, source, config["PDF_DATA"])
         except Exception as e:
             sys.stderr.write("EXCEPTION " +
                              ", details:" + traceback.format_exc() + "\n")

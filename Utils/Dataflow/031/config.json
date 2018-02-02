@@ -3,5 +3,6 @@
 	"FNAME_OUT":"D:/elasticsearch/outnd",
 	"DIRNAME_OUT":"D:/elasticsearch/out",
 	"JSON_ND_IN":true,
-	"JSON_ND_OUT":true
+	"JSON_ND_OUT":true,
+	"PDF_DATA":"C:/Work/papers_analysis/manager/export"
 }
