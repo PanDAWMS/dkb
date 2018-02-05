@@ -26,6 +26,7 @@ mode = None
 OUT = os.fdopen(sys.stdout.fileno(), 'w', 0)
 # ---
 
+
 def main():
     """ Main program cycle.
 
@@ -117,6 +118,7 @@ def init_offset_storage(config):
 
     return offset_storage
 
+
 def commit_offset(offset_storage, new_offset):
     """ Save current offset to the storage.
 
@@ -127,6 +129,7 @@ def commit_offset(offset_storage, new_offset):
     """
     timestamp = time.mktime(new_offset.timetuple())
     offset_storage.commit(timestamp)
+
 
 def get_offset(offset_storage):
     """ Get current offset from the offset storage.
@@ -141,6 +144,7 @@ def get_offset(offset_storage):
         timestamp = float(result)
         result = datetime.fromtimestamp(timestamp)
     return result
+
 
 def plain(conn, queries, start_date, end_date):
     """ Execute 'tasks' query.
@@ -186,6 +190,7 @@ def squash(conn, queries, start_date, end_date):
     tasks = conn.results(queries[0], 1000, True)
     datasets = conn.results(queries[1], 1000, True)
     return join_results(tasks, squash_records(datasets))
+
 
 def squash_records(rec):
     """ Squash multiple records with same 'taskid' value into one.
@@ -321,6 +326,7 @@ def process(conn, offset_storage, final_date_cfg, step_seconds):
         if not final_date_cfg:
             final_date = datetime.now()
 
+
 def interval_seconds(step):
     """ Convert human-readable interval into seconds.
 
@@ -334,7 +340,7 @@ def interval_seconds(step):
         pass
     if len(step) < 2:
         raise ValueError("Failed to decode interval: %s" % step)
-    suffix = { 'd': 86400, 'h': 3600, 'm': 60, 's': 1}
+    suffix = {'d': 86400, 'h': 3600, 'm': 60, 's': 1}
     val = step[:-1]
     try:
         mul = suffix[step[-1]]
@@ -345,17 +351,20 @@ def interval_seconds(step):
     except KeyError:
         raise ValueError("Failes to decode index of the interval: %s" % step)
 
+
 def str2date(str_date):
     """ Convert string (%d-%m-%Y %H:%M:%S) to datetime object. """
     if not str_date:
         return None
     return datetime.strptime(str_date, "%d-%m-%Y %H:%M:%S")
 
+
 def date2str(date):
     """ Convert datetime object to string (%d-%m-%Y %H:%M:%S). """
     if not date:
         return None
     return datetime.strftime(date, "%d-%m-%Y %H:%M:%S")
+
 
 def get_category(row):
     """ Categorize task.
@@ -399,30 +408,48 @@ def get_category(row):
     match = {}
     categories = []
     for phys_category in PHYS_CATEGORIES_MAP:
-        current_map = [x.strip(' ').lower() for x in PHYS_CATEGORIES_MAP[phys_category]]
+        current_map = [x.strip(' ').lower()
+                       for x in PHYS_CATEGORIES_MAP[phys_category]]
         if hashtags is not None:
-            match[phys_category] = len([x for x in hashtags.lower().split(',') if x.strip(' ') in current_map])
+            match[phys_category] = len([x for x in hashtags.lower().split(',')
+                                        if x.strip(' ') in current_map])
     categories = [cat for cat in match if match[cat] > 0]
     if not categories and taskname:
         phys_short = taskname.split('.')[2].lower()
-        if re.search('singletop', phys_short) is not None: categories.append("SingleTop")
-        if re.search('ttbar', phys_short) is not None: categories.append("TTbar")
-        if re.search('jets', phys_short) is not None: categories.append("Multijet")
-        if re.search('h125', phys_short) is not None: categories.append("Higgs")
-        if re.search('ttbb', phys_short) is not None: categories.append("TTbarX")
-        if re.search('ttgamma', phys_short) is not None: categories.append("TTbarX")
-        if re.search('_tt_', phys_short) is not None: categories.append("TTbar")
-        if re.search('upsilon', phys_short) is not None: categories.append("BPhysics")
-        if re.search('tanb', phys_short) is not None: categories.append("SUSY")
-        if re.search('4topci', phys_short) is not None: categories.append("Exotic")
-        if re.search('xhh', phys_short) is not None: categories.append("Higgs")
-        if re.search('3top', phys_short) is not None: categories.append("TTbarX")
-        if re.search('_wt', phys_short) is not None: categories.append("SingleTop")
-        if re.search('_wwbb', phys_short) is not None: categories.append("SingleTop")
-        if re.search('_wenu_', phys_short) is not None: categories.append("Wjets")
+        if re.search('singletop', phys_short) is not None:
+            categories.append("SingleTop")
+        if re.search('ttbar', phys_short) is not None:
+            categories.append("TTbar")
+        if re.search('jets', phys_short) is not None:
+            categories.append("Multijet")
+        if re.search('h125', phys_short) is not None:
+            categories.append("Higgs")
+        if re.search('ttbb', phys_short) is not None:
+            categories.append("TTbarX")
+        if re.search('ttgamma', phys_short) is not None:
+            categories.append("TTbarX")
+        if re.search('_tt_', phys_short) is not None:
+            categories.append("TTbar")
+        if re.search('upsilon', phys_short) is not None:
+            categories.append("BPhysics")
+        if re.search('tanb', phys_short) is not None:
+            categories.append("SUSY")
+        if re.search('4topci', phys_short) is not None:
+            categories.append("Exotic")
+        if re.search('xhh', phys_short) is not None:
+            categories.append("Higgs")
+        if re.search('3top', phys_short) is not None:
+            categories.append("TTbarX")
+        if re.search('_wt', phys_short) is not None:
+            categories.append("SingleTop")
+        if re.search('_wwbb', phys_short) is not None:
+            categories.append("SingleTop")
+        if re.search('_wenu_', phys_short) is not None:
+            categories.append("Wjets")
     if not categories:
         categories = ["Uncategorized"]
     return categories
+
 
 def parsingArguments():
     """ Parse command line arguments.
@@ -430,19 +457,23 @@ def parsingArguments():
     :return: parsed arguments
     :rtype: argparse.Namespace
     """
-    parser = argparse.ArgumentParser(description='Process command line arguments.')
+    parser = argparse.ArgumentParser(description='Process command line'
+                                     'arguments.')
     parser.add_argument('--config', help='Configuration file path',
                         type=str, required=True)
     parser.add_argument('--mode', help='Mode of execution: PLAIN | SQUASH',
                         choices=[PLAIN_POLICY, SQUASH_POLICY])
     args = parser.parse_args()
     if not os.access(args.config, os.F_OK):
-        sys.stderr.write("argument --config: '%s' file not exists\n" % args.config)
+        sys.stderr.write("argument --config: '%s' file not exists\n"
+                         % args.config)
         sys.exit(1)
-    if not os.access(args.config, os.R_OK|os.W_OK):
-        sys.stderr.write("argument --config: '%s' read/write access failed\n" % args.config)
+    if not os.access(args.config, os.R_OK | os.W_OK):
+        sys.stderr.write("argument --config: '%s' read/write access failed\n"
+                         % args.config)
         sys.exit(1)
     return parser.parse_args()
 
-if  __name__ == '__main__':
+
+if __name__ == '__main__':
     main()
