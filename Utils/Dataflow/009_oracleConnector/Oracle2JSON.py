@@ -55,8 +55,8 @@ def main():
         final_date = str2date(config.get("timestamps", "final"))
         queries_cfg = config.items("queries")
         queries = {}
-        for (qname, file) in queries_cfg:
-            queries[qname] = {'file': config_path(file)}
+        for (qname, f) in queries_cfg:
+            queries[qname] = {'file': config_path(f)}
     except (IOError, ConfigParser.Error), e:
         sys.stderr.write('Failed to read config file (%s): %s\n'
                          % (conf, e))
