@@ -80,6 +80,8 @@ def read_config(config_file):
         result['dsn'] = config.get("oracle", "dsn")
         step = config.get("timestamps", "step")
         result['step_seconds'] = interval_seconds(step)
+        if result['step_seconds'] <= 0:
+            raise ConfigParser.Error("'timestamps.step': unacceptable value")
         queries_cfg = config.items("queries")
         queries = {}
         for (qname, f) in queries_cfg:
