@@ -180,8 +180,8 @@ def init_offset_storage(config):
     offset_storage = None
 
     if not isinstance(config, dict):
-        raise ValueError("get_offset_file: dict object is expected;"
-                         " got %s" % type(config))
+        raise TypeError("get_offset_file: dict object is expected;"
+                        " got %s" % type(config))
 
     offset_file = config['offset_file']
     initial_date = config['initial_date']
