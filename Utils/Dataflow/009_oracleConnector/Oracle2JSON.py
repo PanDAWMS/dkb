@@ -76,11 +76,10 @@ def read_config(config_file):
     config = ConfigParser.SafeConfigParser()
     try:
         config.read(config_file)
-        # unchangeable data
+        # Required parameters (with no defaults)
         result['dsn'] = config.get("oracle", "dsn")
         step = config.get("timestamps", "step")
         result['step_seconds'] = interval_seconds(step)
-        result['final_date'] = str2date(config.get("timestamps", "final"))
         queries_cfg = config.items("queries")
         queries = {}
         for (qname, f) in queries_cfg:
@@ -91,25 +90,57 @@ def read_config(config_file):
                          % (config_file, e))
         return None
 
-    try:
-        offset_file = config.get("logging", "offset_file")
-    except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
-        sys.stderr.write('(INFO) Config: "offset_file" not found in section'
-                         ' "logging". Using default value.\n')
-        offset_file = '.offset'
-    result['offset_file'] = config_path(offset_file, result)
+    # Optional parameters
+    result['final_date'] = str2date(config_get(config, "timestamps", "final"))
+    result['initial_date'] = str2date(
+        config_get(config, "timestamps", "initial",
+                   datetime.utcfromtimestamp(0)))
+    result['offset_file'] = config_path(config_get(config, "logging",
+                                                   "offset_file", ".offset"),
+                                        result)
+
+    return result
+
+
+def config_get(config, section, param, default=None):
+    """ Get $param value from $section of $config with $default value.
+
+    If the parameter (or even section) is not presented in the config,
+      returns default value instead of throwing an exception (as
+      `config.get()` does).
+
+    :param config: config to read from
+    :param section: config section name
+    :param param: config parameter name
+    :param default: default value
+    :type config: ConfigParser object
+    :type section: string
+    :type param: string
+    :param default: object (any type)
+    :return: param value from config or default value
+    :rtype: object
+    """
+    if not isinstance(config, ConfigParser.ConfigParser):
+        raise TypeError("config_get() expects first parameter to be"
+                        " an instance of 'ConfigParser' (get '%s')."
+                        % config.__class__.__name__)
+    if type(section) != str and type(section) != unicode:
+        raise TypeError("config_get() expects second parameter to be"
+                        " string (get '%s')."
+                        % section.__class__.__name__)
+    if type(param) != str and type(param) != unicode:
+        raise TypeError("config_get() expects third parameter to be"
+                        " string (get '%s')."
+                        % section.__class__.__name__)
 
     try:
-        initial_date = str2date(config.get("timestamps", "initial"))
-    except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
-        initial_date = None
-
-    if initial_date is None:
-        sys.stderr.write('(INFO) Config: "initial" date (section'
-                         ' "timestamps") is not configured. Using default'
-                         ' value.\n')
-        initial_date = datetime.utcfromtimestamp(0)
-    result['initial_date'] = initial_date
+        result = config.get(section, param)
+    except ConfigParser.Error:
+        if default is not None:
+            sys.stderr.write("(INFO) Config: parameter '%s' (section '%s')"
+                             " is not configured. Using default value: %s\n"
+                             % (param, section, default))
+        result = default
 
     return result
 
@@ -408,9 +439,20 @@ def interval_seconds(step):
 
 
 def str2date(str_date):
-    """ Convert string (%d-%m-%Y %H:%M:%S) to datetime object. """
+    """ Convert string (%d-%m-%Y %H:%M:%S) to datetime object.
+
+    If passed parameter is of type datetime.datetime, it is returned
+    as is.
+
+    :param str_date: string to convert
+    :type str_date: string | datetime.datetime
+    :return: converted value
+    :rtype: datetime.datetime
+    """
     if not str_date:
         return None
+    if isinstance(str_date, datetime):
+        return str_date
     return datetime.strptime(str_date, "%d-%m-%Y %H:%M:%S")
 
 
