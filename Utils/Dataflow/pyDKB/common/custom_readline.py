@@ -1,12 +1,6 @@
 import select
-import sys
 import os
 import fcntl
-
-poller = select.poll()
-poller.register(sys.stdin, select.POLLIN)
-flags = fcntl.fcntl(sys.stdin.fileno(), fcntl.F_GETFL)
-fcntl.fcntl(sys.stdin.fileno(), fcntl.F_SETFL, flags | os.O_NONBLOCK)
 
 
 def custom_readline(f, newline):
@@ -15,6 +9,10 @@ def custom_readline(f, newline):
     The last line can be incomplete, if the input data flow is interrupted
     in the middle of data writing.
     """
+    poller = select.poll()
+    poller.register(f, select.POLLIN)
+    flags = fcntl.fcntl(f.fileno(), fcntl.F_GETFL)
+    fcntl.fcntl(f.fileno(), fcntl.F_SETFL, flags | os.O_NONBLOCK)
     buf = ""
     while True:
         if poller.poll(500):
