@@ -14,7 +14,7 @@ FROM
   ON t.taskid = tt.taskid
 WHERE
   jd.type IN ('output') AND
-      t.timestamp > to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
-      t.timestamp <= to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
+      t.timestamp > :start_date AND
+      t.timestamp <= :end_date AND
       t.pr_id > 300
 ORDER BY t.taskid;

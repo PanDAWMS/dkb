@@ -3,41 +3,39 @@ import os
 import json
 import argparse
 import ConfigParser
-import DButils
 import sys
 from datetime import datetime, timedelta
+import time
 from collections import defaultdict
 
-try:
-    import cx_Oracle
-except:
-    sys.stderr.write("(ERROR) Failed to import cx_Oracle. Exiting.\n")
-    sys.exit(3)
+from OffsetStorage import FileOffsetStorage
+from dbConnection import OracleConnection
 
 # Policies
 PLAIN_POLICY = 'PLAIN'
 SQUASH_POLICY = 'SQUASH'
 
-
-def connectDEFT_DSN(dsn):
-    try:
-        connect = cx_Oracle.connect(dsn)
-    except cx_Oracle.DatabaseError, err:
-        sys.stderr.write("(ERROR) %s\n" % err)
-        return None
-
-    return connect
+# Global variables
+# ---
+# Config file
+conf = None
+# Operating mode
+mode = None
+# Output stream
+OUT = os.fdopen(sys.stdout.fileno(), 'w', 0)
+# ---
 
 
 def main():
-    """
-    --config <config file> --mode <PLAIN|SQUASH>
-    :return:
+    """ Main program cycle.
 
-     TODO:
-        Obtain the min(timestamp) from t_production_task
-          in case of no `initial_date` specified.
-        Query: SELECT min(timestamp) from t_production_task;
+    USAGE:
+       ./Oracle2JSON.py --config <config file> --mode <PLAIN|SQUASH>
+
+    TODO:
+       Obtain the min(timestamp) from t_production_task
+         in case of no `initial_date` specified.
+       Query: SELECT min(timestamp) from t_production_task;
     """
     args = parsingArguments()
     global conf
@@ -46,55 +44,197 @@ def main():
     mode = args.mode
 
     # read initial configuration
-    config = ConfigParser.ConfigParser()
+    config = ConfigParser.SafeConfigParser()
     try:
         config.read(conf)
         # unchangeable data
         dsn = config.get("oracle", "dsn")
-        initial_date = config.get("timestamps", "initial")
         step = config.get("timestamps", "step")
         step_seconds = interval_seconds(step)
-        final_date = config.get("timestamps", "final")
+        final_date = str2date(config.get("timestamps", "final"))
         queries_cfg = config.items("queries")
         queries = {}
-        for (qname, file) in queries_cfg:
-            queries[qname] = {'file': file}
-        # changeable data
-        offset_date = config.get("timestamps", "offset")
-        if offset_date == '':
-            offset_date = initial_date
+        for (qname, f) in queries_cfg:
+            queries[qname] = {'file': config_path(f)}
     except (IOError, ConfigParser.Error), e:
         sys.stderr.write('Failed to read config file (%s): %s\n'
                          % (conf, e))
         sys.exit(1)
 
-    conn = connectDEFT_DSN(dsn)
-    if not conn:
+    # Offset storage initialization
+    offset_storage = init_offset_storage(config)
+    if not offset_storage:
+        sys.exit(2)
+
+    conn = OracleConnection(dsn)
+    if not conn.establish():
         sys.stderr.write("(ERROR) Failed to connect to Oracle. Exiting.\n")
         sys.exit(3)
 
-    process(conn, offset_date, final_date, step_seconds, queries)
+    if not conn.save_queries(queries):
+        sys.stderr.write("(ERROR) Queries seem to be misconfigured."
+                         " Exiting.\n")
+        sys.exit(1)
+
+    process(conn, offset_storage, final_date, step_seconds)
 
 
-def plain(conn, queries, offset_date, end_date):
-    tasks = query_executor(conn, queries['tasks']['file'], offset_date,
-                           end_date)
+def config_path(rel_path):
+    """ Turn relative (to config dir) path to absolute.
+
+    :param rel_path: relative (or absolute) path
+    :type rel_path: str
+    :return: absolute path
+    :rtype: str
+    """
+    config_file = conf
+    if os.path.isabs(rel_path):
+        abs_path = rel_path
+    else:
+        config_dir = os.path.dirname(os.path.abspath(config_file))
+        abs_path = os.path.join(config_dir, rel_path)
+    return abs_path
+
+
+def init_offset_storage(config):
+    """ Get configured (or default) offset file.
+
+    If file does not exist, create file.
+    If the directory for that file does not exist, raise exception.
+
+    If the configured initial date is greater than a stored offset
+      (or if no offset found) it becomes the initial offset value.
+
+    :param config: stage configuration
+    :type config: ConfigParser.ConfigParser
+    :return: offset storage
+    :rtype: FileOffsetStorage
+    """
+    offset_storage = None
+
+    if not isinstance(config, ConfigParser.ConfigParser):
+        raise ValueError("get_offset_file: ConfigParser object is expected;"
+                         " got %s" % type(config))
+
+    try:
+        offset_file = config.get("logging", "offset_file")
+    except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+        sys.stderr.write('(INFO) Config: "offset_file" not found in section'
+                         ' "logging". Using default value.\n')
+        offset_file = '.offset'
+
+    offset_file = config_path(offset_file)
+
+    try:
+        initial_date = str2date(config.get("timestamps", "initial"))
+    except (ConfigParser.NoSectionError, ConfigParser.NoOptionError):
+        initial_date = None
+
+    if initial_date is None:
+        sys.stderr.write('(INFO) Config: "initial" date (section'
+                         ' "timestamps") is not configured. Using default'
+                         ' value.\n')
+        initial_date = datetime.utcfromtimestamp(0)
+
+    try:
+        offset_storage = FileOffsetStorage(offset_file)
+        current_offset = get_offset(offset_storage)
+        if not current_offset:
+            sys.stderr.write('(INFO) No stored offset found.'
+                             ' Using initial date.\n')
+            current_offset = initial_date
+        elif current_offset < initial_date:
+            sys.stderr.write('(INFO) Stored offset is less then configured'
+                             ' initial date. Using initial date instead.\n')
+            current_offset = initial_date
+        commit_offset(offset_storage, current_offset)
+    except IOError, err:
+        sys.stderr.write("(ERROR) %s\n" % err)
+
+    return offset_storage
+
+
+def commit_offset(offset_storage, new_offset):
+    """ Save current offset to the storage.
+
+    :param offset_storage: the offset storage
+    :param new_offset: offset to commit
+    :type offset_storage: OffsetStorage
+    :type new_offset: datetime.datetime
+    """
+    timestamp = time.mktime(new_offset.timetuple())
+    offset_storage.commit(timestamp)
+
+
+def get_offset(offset_storage):
+    """ Get current offset from the offset storage.
+
+    :param offset_storage: the offset storage
+    :type offset_storage: OffsetStorage
+    :return: current offset
+    :rtype: datetime.datetime
+    """
+    result = offset_storage.get()
+    if result is not None:
+        timestamp = float(result)
+        result = datetime.fromtimestamp(timestamp)
+    return result
+
+
+def plain(conn, queries, start_date, end_date):
+    """ Execute 'tasks' query.
+
+    The only acceptable value for `queries` is ['tasks'].
+
+    :param conn: open connection to Oracle
+    :param queries: names of queries to execute
+    :param start_date: start date
+    :param end_date: end date
+    :type conn: OracleConnection
+    :type queries: list
+    :type start_date: datetime.datetime
+    :type end_date: datetime.datetime
+    """
+    if not conn.execute_saved(queries[0], start_date=start_date,
+                              end_date=end_date):
+        raise StopIteration
+    tasks = conn.results(queries[0], 1000, True)
     for task in tasks:
         yield task
 
 
-def squash(conn, queries, offset_date, end_date):
-    tasks = query_executor(conn, queries['tasks']['file'], offset_date,
-                           end_date)
-    datasets = query_executor(conn, queries['datasets']['file'], offset_date,
-                              end_date)
+def squash(conn, queries, start_date, end_date):
+    """ Execute queries 'tasks' and 'datesets' and squash the results.
+
+    The only acceptable value for `queries` is ['tasks', 'datasets'].
+
+    :param conn: open connection to Oracle
+    :param queries: names of queries to execute
+    :param start_date: start date
+    :param end_date: end date
+    :type conn: OracleConnection
+    :type queries: list
+    :type start_date: datetime.datetime
+    :type end_date: datetime.datetime
+    """
+    if not conn.execute_saved(queries[0], start_date=start_date,
+                              end_date=end_date) \
+            or not conn.execute_saved(queries[1], start_date=start_date,
+                                      end_date=end_date):
+        raise StopIteration
+    tasks = conn.results(queries[0], 1000, True)
+    datasets = conn.results(queries[1], 1000, True)
     return join_results(tasks, squash_records(datasets))
 
 
 def squash_records(rec):
-    """
-    a single-pass iterator (for a generator) restructuring list of datasets:
-    from view:
+    """ Squash multiple records with same 'taskid' value into one.
+
+    The squashing is performed via joining values of 'datasetname'
+      parameter into a lists of dataset names: one list for every
+      'type' value.
+
+    Original structure:
     [
        {"taskid": 1, "type": "output", "datasetname": "First_out"},
        {"taskid": 1, "type": "output", "datasetname": "Second_out"},
@@ -102,7 +242,8 @@ def squash_records(rec):
        {"taskid": 2, "type": "output", "datasetname": "First_out"},
        {"taskid": 2, "type": "output", "datasetname": "Second_out"},
     ...]
-     to
+
+    Result structure:
     [
        {"taskid": 1,
         "output": ["First_out", "Second_out", "Third_out"]
@@ -111,14 +252,58 @@ def squash_records(rec):
         "output": ["First_out","Second_out"]
        },
     ...]
+
+    :param rec: original records
+    :type rec: iterable object
     """
-    grouper = defaultdict(lambda: defaultdict(list))
+    key_fields = ['taskid']
+    fold_fields = [('type', 'datasetname')]
+    result = {}
     for d in rec:
-        grouper[d['taskid']][d['type']].append(d['datasetname'])
-    return [dict(taskid=k, **v) for k, v in grouper.items()]
+        for key_field in key_fields:
+            if not d.get(key_field):
+                # There must not be empty key fields (or how is it "key");
+                # but we better explicitly skip it. Just in case.
+                continue
+            if result.get(key_field) and result[key_field] != d[key_field]:
+                # Squashing is over for given set of values of the key fields
+                yield result
+                result = {}
+                break
+
+        # Fold original record
+        # {'taskid': 1, 'type': 'output', 'datasetname': DSNAME} ->
+        #  -> {'taskid': 1, 'output': DSNAME}
+        for fkey, fval in fold_fields:
+            if fkey in d:
+                new_key = d.pop(fkey)
+                new_val = d.pop(fval, None)
+                d[new_key] = new_val
+
+        for f in d:
+            if f in key_fields:
+                result[f] = d[f]
+                continue
+            if d[f]:
+                if result.get(f):
+                    if type(result[f]) != list:
+                        result[f] = [result[f]]
+                    result[f].append(d[f])
+                else:
+                    result[f] = d[f]
+
+    if result:
+        yield result
 
 
 def join_results(tasks, datasets):
+    """ Join results of two queries by 'taskid'.
+
+    :param tasks: result of query 'tasks'
+    :param datasets: result of query 'datasets'
+    :type tasks: iterable object
+    :type datasets: iterable object
+    """
     d = defaultdict(dict)
     buffers = (tasks, datasets)
     join_buffer = {}
@@ -140,69 +325,50 @@ def join_results(tasks, datasets):
         yield d[tid]
 
 
-def process(conn, offset_date, final_date_cfg, step_seconds, queries):
+def process(conn, offset_storage, final_date_cfg, step_seconds):
+    """ Run the source connector process: extract data from ext. source.
+
+    :param conn: open connection to Oracle
+    :param offset_storage: offset storage
+    :param final_date_cfg: final date from the namin config file
+    :param step_seconds: interval for single process iteration
+    :type conn: OracleConnection
+    :type offset_storage: OffsetStorage
+    :type final_date_cfg: datetime.datetime
+    """
     if final_date_cfg:
         final_date = final_date_cfg
     else:
-        final_date = date2str(datetime.now())
+        final_date = datetime.now()
     break_loop = False
-    while (not break_loop and str2date(offset_date) < str2date(final_date)):
-        end_date = date2str(str2date(offset_date)
-                            + timedelta(seconds=step_seconds))
-        if str2date(end_date) > str2date(final_date):
+    offset_date = get_offset(offset_storage)
+    while (not break_loop and offset_date < final_date):
+        end_date = offset_date + timedelta(seconds=step_seconds)
+        if end_date > final_date:
             end_date = final_date
             break_loop = True
         sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
-                         % (date2str(datetime.now()), offset_date, end_date))
+                         % (date2str(datetime.now()), date2str(offset_date),
+                            date2str(end_date)))
         if mode == SQUASH_POLICY:
-            records = squash(conn, queries, offset_date, end_date)
+            records = squash(conn, ['tasks', 'datasets'], offset_date,
+                             end_date)
         elif mode == PLAIN_POLICY:
-            records = plain(conn, queries, offset_date, end_date)
+            records = plain(conn, ['tasks'], offset_date, end_date)
         for r in records:
-            sys.stdout.write(json.dumps(r) + '\n')
-        update_offset(end_date)
+            OUT.write(json.dumps(r) + '\n')
         offset_date = end_date
+        commit_offset(offset_storage, offset_date)
         if not final_date_cfg:
-            final_date = date2str(datetime.now())
-
-
-def query_executor(conn, sql_file, offset_date, end_date):
-    """
-    Execution of query with offset from file
-    """
-    try:
-        file_handler = open(sql_file)
-        query = file_handler.read().rstrip().rstrip(';') % (offset_date,
-                                                            end_date)
-        return DButils.ResultIter(conn, query, 1000, True)
-    except IOError:
-        sys.stderr.write('File open error. No such file (%s).\n' % sql_file)
-        sys.exit(2)
-
-
-def get_offset():
-    config = ConfigParser.ConfigParser()
-    config.read(conf)
-    return config.get("timestamps", "offset")
-
-
-def update_offset(new_offset):
-    """
-    Updating offset value in configuration file
-    """
-    config = ConfigParser.RawConfigParser()
-    config.optionxform = str
-    config.read(conf)
-    config.set('timestamps', 'offset', new_offset)
-    with open(conf, 'w') as configfile:
-        config.write(configfile)
+            final_date = datetime.now()
 
 
 def interval_seconds(step):
-    """
-    Convert human-readable interval into seconds.
+    """ Convert human-readable interval into seconds.
 
     If no suffix present, take step as seconds.
+    :param step: human-readable time interval (3600, 1h, 1d, 15m....)
+    :type step: str|int
     """
     try:
         return int(step)
@@ -224,17 +390,26 @@ def interval_seconds(step):
 
 def str2date(str_date):
     """ Convert string (%d-%m-%Y %H:%M:%S) to datetime object. """
+    if not str_date:
+        return None
     return datetime.strptime(str_date, "%d-%m-%Y %H:%M:%S")
 
 
 def date2str(date):
     """ Convert datetime object to string (%d-%m-%Y %H:%M:%S). """
+    if not date:
+        return None
     return datetime.strftime(date, "%d-%m-%Y %H:%M:%S")
 
 
 def parsingArguments():
-    parser = argparse.ArgumentParser(description='Process command line'
-                                     'arguments.')
+    """ Parse command line arguments.
+
+    :return: parsed arguments
+    :rtype: argparse.Namespace
+    """
+    parser = argparse.ArgumentParser(description='DKB Dataflow Oracle'
+                                     ' connector stage.')
     parser.add_argument('--config', help='Configuration file path',
                         type=str, required=True)
     parser.add_argument('--mode', help='Mode of execution: PLAIN | SQUASH',
@@ -249,6 +424,7 @@ def parsingArguments():
                          % args.config)
         sys.exit(1)
     return parser.parse_args()
+
 
 if __name__ == '__main__':
     main()

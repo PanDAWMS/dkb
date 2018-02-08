@@ -38,10 +38,16 @@ datasets: query/datasets.sql
 [timestamps]
 # initial timestamp
 initial = 04-03-2014 00:00:00
-# current timestamp
-offset = 08-05-2016 00:00:00
 # final timestamp
 final = 10-05-2016 00:00:00
 # hours offset from current timestamp
 step = 24h
+
+[logging]
+# Current offset file
+# (relative to the dir with the config file or absolute path)
+# offset_file = .offset
 ```
+
+Current offset by default is stored in the same directory as the config file,
+  but it can be configured.
