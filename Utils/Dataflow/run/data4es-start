@@ -5,7 +5,7 @@ BATCH_SIZE=100
 DEBUG=
 
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
-pgidfile=$base_dir/$(basename "$0" | cut -d- -f1).pgid
+pidfile=$base_dir/$(basename "$0" | cut -d- -f1).pid
 
 # Create aux directories
 # ---
@@ -33,6 +33,17 @@ cmd_69="${base_dir}/../069_upload2es/load_data.sh"
 
 # Stage 91
 cmd_91="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
+
+# Stage 93
+cmd_93="${base_dir}/../093_datasetsFormat/datasets_format.py -m s"
+
+# Stage 95
+auth_cfg=${base_dir}/95.cfg
+source $auth_cfg
+[ -r "$AUTH_KEY" -a -r "$AUTH_CRT" ] \
+  || { echo "Stage 095: wrong authentication parameters (failed to read certificate files: $AUTH_KEY and $AUTH_CRT)" >&2;
+       exit 1; }
+cmd_95="${base_dir}/../095_datasetInfoAMI/amiDatasets.py -m s --userkey $AUTH_KEY --usercert $AUTH_CRT"
 # ---
 
 # Reset offset value for Oracle Connector.
@@ -56,9 +67,11 @@ get_buffer() {
 # Flush Sink Connector buffer to STDOUT and reset it
 flush_buffer() {
   bufer=`get_buffer "$1"`
-  cat $buffer
-  echo -e '\x00'
-  rm -f $buffer
+  if [ -r "$buffer" ]; then
+    cat $buffer
+    echo -e '\x00'
+    rm -f $buffer
+  fi
 }
 
 # Glue between processing functions and Sink Connector
@@ -99,12 +112,29 @@ branch() {
 
 b_91=`branch b_91` && b_16=`branch b_16` \
   || exit $?
-
 # ---
 
 # Run Dataflow
 # ---
 
+# Parse command line parameters
+while [ -n "$1" ]; do
+  case $1 in
+    --debug)
+      DEBUG=1;;
+    --)
+      shift
+      break;;
+    -*)
+      echo "Unknown option: $1" >&1;;
+    *)
+      break;;
+  esac
+  shift
+done
+
+
+# Define subchains
 # Source subchain: Oracle Connector
 source_chain() {
   $cmd_OC | tee $b_16 $b_91
@@ -116,7 +146,13 @@ chain_16() {
 }
 
 chain_91() {
-  cat $b_91 | $cmd_91 | eop_filter
+  out=/dev/null
+  [ -n "$DEBUG" ] \
+    && out_91='91.out' \
+    && out_93='93.out'
+  cat $b_91 | $cmd_91 | eop_filter | tee $out_91 \
+            | $cmd_93 | eop_filter | tee $out_93 \
+            | $cmd_95 | eop_filter
 }
 
 # Sink chain
@@ -131,16 +167,18 @@ out=/dev/null
 [ -n "$DEBUG" ] \
   && out='src.out'
 source_chain > $out &
-ps q $! ho pgid  >> $pgidfile
 
 [ -n "$DEBUG" ] \
   && out='16.out'
 chain_16 | tee $out | sink_chain b16 &
-ps q $! ho pgid  >> $pgidfile
 
 [ -n "$DEBUG" ] \
-  && out='91.out'
+  && out='95.out'
 chain_91 | tee $out | sink_chain b91 &
-ps q $! ho pgid  >> $pgidfile
+
+ps ax | grep "$cmd_OC" | grep -v grep | awk '{print $1 " source"}' >> $pidfile
+for cmd in "$cmd_16" "$cmd_91" "$cmd_93" "$cmd_95" "$cmd_19" "$cmd_69"; do
+  ps ax | grep "$cmd" | awk '{print $1}' >> $pidfile
+done
 
 wait

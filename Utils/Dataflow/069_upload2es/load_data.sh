@@ -14,7 +14,7 @@ PARAMETERS:
 
 base_dir=$( cd "$( dirname "$( readlink -f "$0" )" )" && pwd )
 
-ES_CONFIG="${base_dir}/../config/es"
+ES_CONFIG="${base_dir}/../../Elasticsearch/config/es"
 log "Loading defaults and config $ES_CONFIG if any"
 ES_HOST='127.0.0.1'
 ES_PORT='9200'
