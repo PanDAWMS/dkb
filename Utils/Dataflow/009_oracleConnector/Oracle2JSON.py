@@ -59,7 +59,7 @@ def main():
                          " Exiting.\n")
         sys.exit(1)
 
-    process(conn, offset_storage, config['final_date'], config['step_seconds'])
+    process(conn, offset_storage, config)
 
 
 def read_config(config_file):
@@ -377,23 +377,25 @@ def join_results(tasks, datasets):
         yield d[tid]
 
 
-def process(conn, offset_storage, final_date_cfg, step_seconds):
+def process(conn, offset_storage, config):
     """ Run the source connector process: extract data from ext. source.
 
     :param conn: open connection to Oracle
     :param offset_storage: offset storage
-    :param final_date_cfg: final date from the namin config file
-    :param step_seconds: interval for single process iteration
+    :param config: stage configuration
     :type conn: OracleConnection
     :type offset_storage: OffsetStorage
-    :type final_date_cfg: datetime.datetime
+    :type config: dict
     """
-    if final_date_cfg:
-        final_date = final_date_cfg
-    else:
+    final_date = config['final_date']
+    step_seconds = config['step_seconds']
+    offset_date = get_offset(offset_storage)
+    if not final_date:
+        # 'final_date' may be None:
+        # it means we need to adjust it to current timestamp
+        # before every check
         final_date = datetime.now()
     break_loop = False
-    offset_date = get_offset(offset_storage)
     while (not break_loop and offset_date < final_date):
         end_date = offset_date + timedelta(seconds=step_seconds)
         if end_date > final_date:
@@ -411,7 +413,7 @@ def process(conn, offset_storage, final_date_cfg, step_seconds):
             OUT.write(json.dumps(r) + '\n')
         offset_date = end_date
         commit_offset(offset_storage, offset_date)
-        if not final_date_cfg:
+        if not config['final_date']:
             final_date = datetime.now()
 
 
