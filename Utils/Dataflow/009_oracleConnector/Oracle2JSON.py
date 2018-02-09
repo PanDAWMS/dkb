@@ -80,7 +80,7 @@ def read_config(config_file):
         result['dsn'] = config.get("oracle", "dsn")
         step = config.get("timestamps", "step")
         result['step_seconds'] = interval_seconds(step)
-        if result['step_seconds'] <= 0:
+        if result['step_seconds'] == 0:
             raise ConfigParser.Error("'timestamps.step': unacceptable value")
         queries_cfg = config.items("queries")
         queries = {}
@@ -93,10 +93,17 @@ def read_config(config_file):
         return None
 
     # Optional parameters
-    result['final_date'] = str2date(config_get(config, "timestamps", "final"))
-    result['initial_date'] = str2date(
-        config_get(config, "timestamps", "initial",
-                   datetime.utcfromtimestamp(0)))
+    if result['step_seconds'] > 0:
+        default_initial = datetime.utcfromtimestamp(0)
+        default_final = None
+    else:
+        default_initial = datetime.now()
+        default_final = datetime.utcfromtimestamp(0)
+
+    result['final_date'] = str2date(config_get(config, "timestamps", "final",
+                                               default_final))
+    result['initial_date'] = str2date(config_get(config, "timestamps",
+                                                 "initial", default_initial))
     result['offset_file'] = config_path(config_get(config, "logging",
                                                    "offset_file", ".offset"),
                                         result)
@@ -187,6 +194,7 @@ def init_offset_storage(config):
 
     offset_file = config['offset_file']
     initial_date = config['initial_date']
+    reverse = config['step_seconds'] < 0
 
     try:
         offset_storage = FileOffsetStorage(offset_file)
@@ -195,9 +203,13 @@ def init_offset_storage(config):
             sys.stderr.write('(INFO) No stored offset found.'
                              ' Using initial date.\n')
             current_offset = initial_date
-        elif current_offset < initial_date:
-            sys.stderr.write('(INFO) Stored offset is less then configured'
-                             ' initial date. Using initial date instead.\n')
+        elif not reverse and current_offset < initial_date \
+                or reverse and current_offset > initial_date:
+            sys.stderr.write('(INFO) Stored offset is %s then configured'
+                             ' initial date (%s data loading). Using initial'
+                             ' date instead.\n'
+                             % ('greater' if reverse else 'less',
+                                'reverse' if reverse else 'normal'))
             current_offset = initial_date
         commit_offset(offset_storage, current_offset)
     except IOError, err:
@@ -387,27 +399,30 @@ def process(conn, offset_storage, config):
     :type offset_storage: OffsetStorage
     :type config: dict
     """
+    reverse = config['step_seconds'] < 0
     final_date = config['final_date']
     step_seconds = config['step_seconds']
     offset_date = get_offset(offset_storage)
-    if not final_date:
-        # 'final_date' may be None:
+    if not reverse and not final_date:
+        # In case of normal data load 'final_date' may be None:
         # it means we need to adjust it to current timestamp
         # before every check
         final_date = datetime.now()
-    full_interval = {'l': offset_date,
-                     'r': final_date}
+    full_interval = {'l': min(final_date, offset_date),
+                     'r': max(final_date, offset_date)}
     break_loop = False
-    while full_interval['l'] <= offset_date < full_interval['r']:
+    while full_interval['l'] <= offset_date <= full_interval['r']:
         new_offset = offset_date + timedelta(seconds=step_seconds)
         if not full_interval['l'] < new_offset < full_interval['r']:
             # Get outside the configured full interval:
             # need to adjust current interval
-            new_offset = full_interval['r']
+            new_offset = full_interval['l'] if reverse else full_interval['r']
             # and break the loop before next interation
             break_loop = True
-        start_date = offset_date
-        end_date = new_offset
+        if new_offset == offset_date:
+            break
+        start_date = min(offset_date, new_offset)
+        end_date = max(offset_date, new_offset)
         sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
                          % (date2str(datetime.now()), date2str(start_date),
                             date2str(end_date)))
