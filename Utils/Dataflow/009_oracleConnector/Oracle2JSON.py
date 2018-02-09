@@ -395,26 +395,35 @@ def process(conn, offset_storage, config):
         # it means we need to adjust it to current timestamp
         # before every check
         final_date = datetime.now()
+    full_interval = {'l': offset_date,
+                     'r': final_date}
     break_loop = False
-    while (not break_loop and offset_date < final_date):
-        end_date = offset_date + timedelta(seconds=step_seconds)
-        if end_date > final_date:
-            end_date = final_date
+    while full_interval['l'] <= offset_date < full_interval['r']:
+        new_offset = offset_date + timedelta(seconds=step_seconds)
+        if not full_interval['l'] < new_offset < full_interval['r']:
+            # Get outside the configured full interval:
+            # need to adjust current interval
+            new_offset = full_interval['r']
+            # and break the loop before next interation
             break_loop = True
+        start_date = offset_date
+        end_date = new_offset
         sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
-                         % (date2str(datetime.now()), date2str(offset_date),
+                         % (date2str(datetime.now()), date2str(start_date),
                             date2str(end_date)))
         if mode == SQUASH_POLICY:
-            records = squash(conn, ['tasks', 'datasets'], offset_date,
+            records = squash(conn, ['tasks', 'datasets'], start_date,
                              end_date)
         elif mode == PLAIN_POLICY:
-            records = plain(conn, ['tasks'], offset_date, end_date)
+            records = plain(conn, ['tasks'], start_date, end_date)
         for r in records:
             OUT.write(json.dumps(r) + '\n')
-        offset_date = end_date
+        offset_date = new_offset
         commit_offset(offset_storage, offset_date)
         if not config['final_date']:
-            final_date = datetime.now()
+            full_interval['r'] = datetime.now()
+        if break_loop:
+            break
 
 
 def interval_seconds(step):
