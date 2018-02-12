@@ -131,7 +131,11 @@ def load_data(es, source, pdfdata):
                                       (sn["dkbID"])).replace("\\", "/")
             if os.access(supp_fname, os.F_OK):
                 with open(supp_fname, "r") as f:
-                    sn["PDFAnalyzer"] = json.load(f)["content"]
+                    sn["PDFAnalyzer"] = {}
+                    content = json.load(f)["content"]
+                    for key in content:
+                        if not key.startswith("table"):
+                            sn["PDFAnalyzer"][key] = content[key]
                 if "plain_text" in sn["PDFAnalyzer"] \
                         and "links" in sn["PDFAnalyzer"]["plain_text"] \
                         and "" in sn["PDFAnalyzer"]["plain_text"]["links"]:
