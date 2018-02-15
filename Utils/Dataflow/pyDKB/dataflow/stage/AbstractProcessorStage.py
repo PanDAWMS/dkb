@@ -313,8 +313,7 @@ class AbstractProcessorStage(AbstractStage):
             for i, line in enumerate(iterator):
                 yield self.parseMessage(line)
         except KeyboardInterrupt:
-            sys.stderr.write("(WARN) Input stream processing interrupt"
-                             " on line %s\n" % i)
+            sys.exit()
 
     def file_input(self, fd):
         """ Generator for input messages.
