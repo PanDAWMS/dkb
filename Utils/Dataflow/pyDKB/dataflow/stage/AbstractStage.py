@@ -3,6 +3,7 @@ Definition of an abstract class for Dataflow Stages.
 """
 
 import sys
+import textwrap
 
 try:
     import argparse
@@ -29,7 +30,29 @@ class AbstractStage(object):
         * ...
         """
         self.ARGS = None
-        self.__parser = argparse.ArgumentParser(description=description)
+        self.__parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+            description=description,
+            epilog=textwrap.dedent(
+                '''\
+                NOTES
+
+                Processing mode
+                  is defined as a combination of data source and
+                  destination type (local/HDFS file(s) or standard stream)
+                  and pre-defined EOP and EOM markers:
+
+                  mode | source | dest | eom | eop
+                  -----+--------+------+-----+-----
+                    s  |    s   |   s  |  \\n |  \\0
+                  -----+--------+------+-----+-----
+                    f  |   f/h  |  f/h |  \\n |
+                  -----+--------+------+-----+-----
+                    m  |   s/h  |   s  |  \\n |
+                  -----+--------+------+-----+-----
+                    h  |    h   |  h/f |  \\n |
+                  -----+--------+------+-----+-----''')
+        )
         self.defaultArguments()
 
     def defaultArguments(self):
@@ -42,6 +65,18 @@ class AbstractStage(object):
                           choices=['f', 's', 'm'],
                           dest='mode'
                           )
+        self.add_argument('-e', '--end-of-message', action='store', type=str,
+                          help=u'Custom end of message marker.',
+                          nargs='?',
+                          default=None,
+                          dest='eom'
+                          )
+        self.add_argument('-E', '--end-of-process', action='store', type=str,
+                          help=u'Custom end of process marker.',
+                          nargs='?',
+                          default=None,
+                          dest='eop'
+                          )
 
     def add_argument(self, *args, **kwargs):
         """ Add specific (not common) arguments. """
@@ -53,6 +88,31 @@ class AbstractStage(object):
         if not self.ARGS.mode:
             raise ValueError(
                 "Parameter -m|--mode must be used with value: -m MODE.")
+
+        if self.ARGS.eom is None:
+            self.ARGS.eom = '\n'
+        elif self.ARGS.eom == '':
+            raise ValueError("(ERROR) Empty EOM marker specified.\n")
+        else:
+            try:
+                self.ARGS.eom = self.ARGS.eom.decode('string_escape')
+            except (ValueError), err:
+                sys.stderr.write("(ERROR) Failed to read arguments.\n"
+                                 "Case: %s\n" % (err))
+                sys.exit(1)
+
+        if self.ARGS.eop is None:
+            if self.ARGS.mode == 's':
+                self.ARGS.eop = '\0'
+            else:
+                self.ARGS.eop = ''
+        else:
+            try:
+                self.ARGS.eop = self.ARGS.eop.decode('string_escape')
+            except (ValueError), err:
+                sys.stderr.write("(ERROR) Failed to read arguments.\n"
+                                 "Case: %s\n" % (err))
+                sys.exit(1)
 
     def print_usage(self, fd=sys.stderr):
         """ Print usage message. """
