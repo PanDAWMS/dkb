@@ -419,8 +419,8 @@ def parsingArguments():
         sys.stderr.write("argument --config: '%s' file not exists\n"
                          % args.config)
         sys.exit(1)
-    if not os.access(args.config, os.R_OK | os.W_OK):
-        sys.stderr.write("argument --config: '%s' read/write access failed\n"
+    if not os.access(args.config, os.R_OK):
+        sys.stderr.write("argument --config: '%s' read access failed\n"
                          % args.config)
         sys.exit(1)
     return parser.parse_args()
