@@ -313,6 +313,7 @@ class AbstractProcessorStage(AbstractStage):
             for i, line in enumerate(iterator):
                 yield self.parseMessage(line)
         except KeyboardInterrupt:
+            sys.stderr.write("(INFO) Interrupted by user.\n")
             sys.exit()
 
     def file_input(self, fd):
