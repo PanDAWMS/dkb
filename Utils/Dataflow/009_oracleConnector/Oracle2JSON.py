@@ -133,11 +133,13 @@ def config_get(config, section, param, default=None):
         raise TypeError("config_get() expects first parameter to be"
                         " an instance of 'ConfigParser' (get '%s')."
                         % config.__class__.__name__)
-    if type(section) != str and type(section) != unicode:
+    if type(section) != str and \
+            (sys.version_info.major > 2 or type(section) != unicode):
         raise TypeError("config_get() expects second parameter to be"
                         " string (get '%s')."
                         % section.__class__.__name__)
-    if type(param) != str and type(param) != unicode:
+    if type(param) != str and \
+            (sys.version_info.major > 2 or type(param) != unicode):
         raise TypeError("config_get() expects third parameter to be"
                         " string (get '%s')."
                         % section.__class__.__name__)
