@@ -13,17 +13,17 @@ GET prodsys_rucio_ami/task/_search
        "terms": {
          "field": "campaign.keyword"
        },
-       "aggs": {
-         "format": {
-            "terms": {
-              "field": "output_formats"
-            },
+        "aggs": {
+         "datasets": {
+           "children": {
+             "type": "output_dataset"
+           },
            "aggs": {
-             "datasets": {
-               "children": {
-                 "type": "output_dataset"
+             "data_format": {
+               "terms": {
+                 "field": "data_format"
                },
-               "aggs": {
+                "aggs": {
                  "bytes": {
                    "filter": {
                      "term": {
@@ -52,7 +52,7 @@ GET prodsys_rucio_ami/task/_search
 /*
   Real example:
   Average dataset size for tasks, filtered by query string and
-  with output format DAOD
+  with data format DAOD
   Search by tasks
 */
 
@@ -60,16 +60,9 @@ GET prodsys_rucio_ami/task/_search
 {
    "size": 0,
    "query": {
-     "bool": {
-       "must": [
-         {"query_string": {
+      "query_string": {
            "query": "\"MC15a\" AND \"higgs\""
-         }},
-         {"wildcard": {
-           "output_formats": "DAOD*"
-         }}
-         ]
-     }
+         }
    },
    "aggs": {
      "datasets": {
@@ -79,17 +72,20 @@ GET prodsys_rucio_ami/task/_search
        "aggs": {
          "bytes": {
             "filter": {
-               "term": {
-                "deleted": false
-               }
+              "bool": {
+                "must": [
+                  {"term": {"deleted": false }},
+                  {"term": {"data_format": "DAOD" }}
+                  ]
+              }
              },
-             "aggs": {
-               "avg_bytes": {
-                 "avg": {
-                  "field": "bytes"
-                }
-               }
+           "aggs": {
+             "avg_bytes": {
+               "avg": {
+                "field": "bytes"
+              }
              }
+           }
          }
        }
      }
@@ -115,33 +111,20 @@ GET prodsys_rucio_ami/output_dataset/_search
         {
           "has_parent": {
             "parent_type": "task",
-            "query": {
-              "bool": {
-                "must": [
-                  {
-                    "term": {
-                      "project.keyword": "mc15_13TeV"
-                    }
-                  },
-                  {
-                    "bool": {
-                      "should": [
-                        {
-                          "term": {
-                            "output_formats": "AOD"
-                          }
-                        },
-                        {
-                          "term": {
-                            "output_formats": "DAOD"
-                          }
-                        }
-                      ]
-                    }
-                  }
-                ]
-              }
+            "query":
+              {"term": {"project.keyword": "mc15_13TeV"}}
             }
+          }
+      ],
+      "should": [
+        {
+          "term": {
+            "data_format.keyword": "AOD"
+          }
+        },
+        {
+          "term": {
+            "data_format.keyword": "DAOD"
           }
         }
       ]
