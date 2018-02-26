@@ -19,7 +19,7 @@ mkdir -p $buffer_dir
 # ---
 # Oracle Connector
 cmd_09="${base_dir}/../009_oracleConnector/Oracle2JSON.py"
-cfg_09="${base_dir}/ora2json.cfg"
+cfg_09="${base_dir}/../config/009.cfg"
 cmd_OC="$cmd_09 --config $cfg_09 --mode SQUASH"
 
 # Stage 16
@@ -38,7 +38,7 @@ cmd_91="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
 cmd_93="${base_dir}/../093_datasetsFormat/datasets_format.py -m s"
 
 # Stage 95
-auth_cfg=${base_dir}/95.cfg
+auth_cfg=${base_dir}/../config/095.cfg
 source $auth_cfg
 [ -r "$AUTH_KEY" -a -r "$AUTH_CRT" ] \
   || { echo "Stage 095: wrong authentication parameters (failed to read certificate files: $AUTH_KEY and $AUTH_CRT)" >&2;
