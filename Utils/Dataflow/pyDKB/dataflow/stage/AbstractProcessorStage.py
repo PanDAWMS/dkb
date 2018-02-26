@@ -49,7 +49,7 @@ from . import messageType
 from . import Message
 from pyDKB.dataflow import DataflowException
 from pyDKB.common import hdfs
-from pyDKB.common.custom_readline import custom_readline
+from pyDKB.common import custom_readline
 
 
 class AbstractProcessorStage(AbstractStage):
