@@ -55,7 +55,7 @@ class OracleConnection(dbConnection):
             cx_Oracle
         except NameError:
             sys.stderr.write("(ERROR) Failed to create %s: cx_Oracle not"
-                             " found." % self.__class__.__name__)
+                             " found.\n" % self.__class__.__name__)
             raise RuntimeError
 
         self.dsn = dsn
@@ -134,7 +134,7 @@ class OracleConnection(dbConnection):
             try:
                 c.prepare(self.queries[qname]['query'])
             except cx_Oracle.DatabaseError, err:
-                sys.stderr.write("(ERROR) Failed to compile query '%s': %s"
+                sys.stderr.write("(ERROR) Failed to compile query '%s': %s\n"
                                  % (qname, err))
             self.queries[qname]['cursor'] = c
 
