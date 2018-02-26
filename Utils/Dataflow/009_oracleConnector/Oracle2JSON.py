@@ -77,12 +77,12 @@ def read_config(config_file):
     try:
         config.read(config_file)
         # Required parameters (with no defaults)
-        result['dsn'] = config.get("oracle", "dsn")
-        step = config.get("timestamps", "step")
+        result['dsn'] = config.get('oracle', 'dsn')
+        step = config.get('timestamps', 'step')
         result['step_seconds'] = interval_seconds(step)
         if result['step_seconds'] == 0:
             raise ConfigParser.Error("'timestamps.step': unacceptable value")
-        queries_cfg = config.items("queries")
+        queries_cfg = config.items('queries')
         queries = {}
         for (qname, f) in queries_cfg:
             queries[qname] = {'file': config_path(f, result)}
@@ -100,12 +100,12 @@ def read_config(config_file):
         default_initial = datetime.now()
         default_final = datetime.utcfromtimestamp(0)
 
-    result['final_date'] = str2date(config_get(config, "timestamps", "final",
+    result['final_date'] = str2date(config_get(config, 'timestamps', 'final',
                                                default_final))
-    result['initial_date'] = str2date(config_get(config, "timestamps",
-                                                 "initial", default_initial))
-    result['offset_file'] = config_path(config_get(config, "logging",
-                                                   "offset_file", ".offset"),
+    result['initial_date'] = str2date(config_get(config, 'timestamps',
+                                                 'initial', default_initial))
+    result['offset_file'] = config_path(config_get(config, 'logging',
+                                                   'offset_file', '.offset'),
                                         result)
 
     return result
@@ -202,14 +202,14 @@ def init_offset_storage(config):
         offset_storage = FileOffsetStorage(offset_file)
         current_offset = get_offset(offset_storage)
         if not current_offset:
-            sys.stderr.write('(INFO) No stored offset found.'
-                             ' Using initial date.\n')
+            sys.stderr.write("(INFO) No stored offset found."
+                             " Using initial date.\n")
             current_offset = initial_date
         elif not reverse and current_offset < initial_date \
                 or reverse and current_offset > initial_date:
-            sys.stderr.write('(INFO) Stored offset is %s then configured'
-                             ' initial date (%s data loading). Using initial'
-                             ' date instead.\n'
+            sys.stderr.write("(INFO) Stored offset is %s then configured"
+                             " initial date (%s data loading). Using initial"
+                             " date instead.\n"
                              % ('greater' if reverse else 'less',
                                 'reverse' if reverse else 'normal'))
             current_offset = initial_date
@@ -499,11 +499,11 @@ def parsingArguments():
     :return: parsed arguments
     :rtype: argparse.Namespace
     """
-    parser = argparse.ArgumentParser(description='DKB Dataflow Oracle'
-                                     ' connector stage.')
-    parser.add_argument('--config', help='Configuration file path',
+    parser = argparse.ArgumentParser(description="DKB Dataflow Oracle"
+                                     " connector stage.")
+    parser.add_argument('--config', help="Configuration file path",
                         type=str, required=True)
-    parser.add_argument('--mode', help='Mode of execution: PLAIN | SQUASH',
+    parser.add_argument('--mode', help="Mode of execution: PLAIN | SQUASH",
                         choices=[PLAIN_POLICY, SQUASH_POLICY])
     args = parser.parse_args()
     if not os.access(args.config, os.F_OK):
