@@ -209,6 +209,81 @@ def doc_find_by_query(es, paperid):
     return rtrn
 
 
+def scroll_search(es, index, query):
+    ret = []
+    r = es.search(index=index, body=query, scroll="1m")
+    sid = r["_scroll_id"]
+    if r["hits"]["hits"]:
+        ret += r["hits"]["hits"]
+        while True:
+            r = es.scroll(scroll_id=sid, scroll="1m")
+            sid = r["_scroll_id"]
+            if r["hits"]["hits"]:
+                ret += r["hits"]["hits"]
+            else:
+                es.clear_scroll(sid)
+                break
+    else:
+        es.clear_scroll(sid)
+    return ret
+
+
+def find_datasets(es, output):
+    ret = []
+    if isinstance(output, list):
+        for d in output:
+            sys.stderr.write(d + "\n")
+            srch = {
+                    "query": {
+                            "match_phrase": {"PDFAnalyzer.mc_datasets": d}
+                        }
+                }
+            r = es.search(index="supp-notes", body=srch)
+            if r["hits"]["hits"]:
+                for hit in r["hits"]["hits"]:
+                    ret.append(hit["_id"])
+    elif isinstance(output, str) or isinstance(output, unicode):
+        sys.stderr.write(output + "\n")
+        srch = {
+                "query": {
+                        "match_phrase": {"PDFAnalyzer.mc_datasets": output}
+                    }
+            }
+        r = es.search(index="supp-notes", body=srch)
+        if r["hits"]["hits"]:
+            for hit in r["hits"]["hits"]:
+                ret.append(hit["_id"])
+    else:
+        sys.stderr.write("WRONG OUTPUT:" + output + "\n")
+    return ret
+
+
+def compare_datasets(es):
+    ret = []
+    srch = {
+            "query": {
+                    "prefix": {"output": "mc"}
+                }
+        }
+    r = es.search(index="prodsys_rucio_ami", body=srch, scroll="1m")
+    sid = r["_scroll_id"]
+    if r["hits"]["hits"]:
+        for hit in r["hits"]["hits"]:
+            ret += find_datasets(es, hit["_source"]["output"])
+        while True:
+            r = es.scroll(scroll_id=sid, scroll="1m")
+            sid = r["_scroll_id"]
+            if r["hits"]["hits"]:
+                for hit in r["hits"]["hits"]:
+                    ret += find_datasets(es, hit["_source"]["output"])
+            else:
+                es.clear_scroll(sid)
+                break
+    else:
+        es.clear_scroll(sid)
+    return ret
+
+
 def explore(es):
     contents = doc_find_all(es, meta=EXPLORE_METAFIELDS)
     if not contents:
@@ -301,3 +376,5 @@ if __name__ == "__main__":
             print datasets
         else:
             print "No such paper"
+    elif cmnd == "compare":
+        print compare_datasets(es)
