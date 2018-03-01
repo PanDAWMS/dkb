@@ -44,6 +44,36 @@
     
 
 
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute">
+        <rdfs:label>ContainerObjectAttribute</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#bunchspacingINcontainer -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#bunchspacingINcontainer">
+        <owl:inverseOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#hasContainerBunchspacing"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#BunchSpacing"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:label>bunchspacingINcontainer</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#campaignINcontainer -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#campaignINcontainer">
+        <owl:inverseOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#hasContainerCampaign"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Campaign"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:label>campaignINcontainer</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://nosql.tpu.ru/ontology/ATLAS#containsPublication -->
 
     <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#containsPublication">
@@ -52,6 +82,39 @@
         <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Paper"/>
         <rdfs:comment>Journal issue contains the following publication</rdfs:comment>
         <rdfs:label>containsPublication</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#energyINcontainer -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#energyINcontainer">
+        <owl:inverseOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#hasContainerECMEnergy"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Energy"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:label>energyINcontainer</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#generatorINcontainer -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#generatorINcontainer">
+        <owl:inverseOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#hasContainerGeneratorName"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#GeneratorName"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:label>generatorINcontainer</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#geometryINcontainer -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#geometryINcontainer">
+        <owl:inverseOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#hasContainerGeometryVersion"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#GeometryVersion"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:label>geometryINcontainer</rdfs:label>
     </owl:ObjectProperty>
     
 
@@ -88,6 +151,180 @@
         <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Campaign"/>
         <rdfs:comment>Campaign</rdfs:comment>
         <rdfs:label>hasCampaign</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerAtlasRelease -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerAtlasRelease">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <owl:inverseOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#releaseINcontainer"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#AtlasRelease"/>
+        <rdfs:label>hasContainerAtlasRelease</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerBunchspacing -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerBunchspacing">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#BunchSpacing"/>
+        <rdfs:label>hasContainerBunchspacing</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerCampaign -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerCampaign">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Campaign"/>
+        <rdfs:label>hasContainerCampaign</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerDataTakingPeriod -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerDataTakingPeriod">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <owl:inverseOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#periodINcontainer"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#DataTakingPeriod"/>
+        <rdfs:label>hasContainerDataTakingPeriod</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerECMEnergy -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerECMEnergy">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Energy"/>
+        <rdfs:label>hasContainerECMEnergy</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerGeneratorName -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerGeneratorName">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Generator"/>
+        <rdfs:label>hasContainerGeneratorName</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerGeometryVersion -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerGeometryVersion">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#GeometryVersion"/>
+        <rdfs:label>hasContainerGeometryVersion</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerPhysicsGroup -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerPhysicsGroup">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <owl:inverseOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#physicsGroupINcontainer"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#PhysGroup"/>
+        <rdfs:label>hasContainerPhysicsGroup</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerPileup -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerPileup">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <owl:inverseOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#pileupINcontainer"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Pileup"/>
+        <rdfs:label>hasContainerPileup</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerProductionStep -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerProductionStep">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <owl:inverseOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#prodStepINcontainer"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ProductionStep"/>
+        <rdfs:label>hasContainerProductionStep</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerProductionTag -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerProductionTag">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <owl:inverseOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#prodTagINcontainer"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ProductionTag"/>
+        <rdfs:label>hasContainerProductionTag</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerProject -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerProject">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <owl:inverseOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#projectINcontainer"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Project"/>
+        <rdfs:label>hasContainerProject</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerTransformationPackage -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerTransformationPackage">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <owl:inverseOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#transformationINcontainer"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#TransformationPackage"/>
+        <rdfs:label>hasContainerTransformationPackage</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerTriggerConfig -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerTriggerConfig">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <owl:inverseOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#triggerINcontainer"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#TriggerConfig"/>
+        <rdfs:label>hasContainerTriggerConfig</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerVirtualOrganization -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerVirtualOrganization">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#VirtualOrganization"/>
+        <rdfs:label>hasContainerVirtualOrganization</rdfs:label>
     </owl:ObjectProperty>
     
 
@@ -135,6 +372,27 @@
     
 
 
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasDataset -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasDataset">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerObjectAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Dataset"/>
+        <rdfs:label>hasDataset</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasDocument -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasDocument">
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#DocumentContent"/>
+        <rdfs:range rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
+        <rdfs:label>hasDocument</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://nosql.tpu.ru/ontology/ATLAS#hasDocumentDataTakingPeriod -->
 
     <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasDocumentDataTakingPeriod">
@@ -161,6 +419,16 @@
         <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#DataSample"/>
         <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Generator"/>
         <rdfs:label>hasGenerator</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasKeyword -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasKeyword">
+        <rdfs:domain rdf:resource="http://www.w3.org/2002/07/owl#Thing"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Keyword"/>
+        <rdfs:label>hasKeyword</rdfs:label>
     </owl:ObjectProperty>
     
 
@@ -350,6 +618,76 @@
     
 
 
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#mentionsYear -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#mentionsYear">
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#DocumentContent"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Year"/>
+        <rdfs:label>mentionsYear</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#periodINcontainer -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#periodINcontainer">
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#DataTakingPeriod"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:label>periodINcontainer</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#physicsGroupINcontainer -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#physicsGroupINcontainer">
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#PhysGroup"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:label>physicsGroupINcontainer</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#pileupINcontainer -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#pileupINcontainer">
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Pileup"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:label>pileupINcontainer</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#prodStepINcontainer -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#prodStepINcontainer">
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ProductionStep"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:label>prodStepINcontainer</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#prodTagINcontainer -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#prodTagINcontainer">
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ProductionTag"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:label>prodTagINcontainer</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#projectINcontainer -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#projectINcontainer">
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Project"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:label>projectINcontainer</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
     <!-- http://nosql.tpu.ru/ontology/ATLAS#publishedIn -->
 
     <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#publishedIn">
@@ -368,6 +706,36 @@
         <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#DataSample"/>
         <rdfs:comment>Link between document and DataSample</rdfs:comment>
         <rdfs:label>referTo</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#releaseINcontainer -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#releaseINcontainer">
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#AtlasRelease"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:label>releaseINcontainer</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#transformationINcontainer -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#transformationINcontainer">
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#TransformationPackage"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:label>transformationINcontainer</rdfs:label>
+    </owl:ObjectProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#triggerINcontainer -->
+
+    <owl:ObjectProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#triggerINcontainer">
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#TriggerConfig"/>
+        <rdfs:range rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:label>triggerINcontainer</rdfs:label>
     </owl:ObjectProperty>
     
 
@@ -420,6 +788,23 @@
     ///////////////////////////////////////////////////////////////////////////////////////
      -->
 
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute">
+        <rdfs:comment>ContainerAttribute</rdfs:comment>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#DatasetAttribute -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#DatasetAttribute">
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Dataset"/>
+        <rdfs:label>DatasetAttribute</rdfs:label>
+    </owl:DatatypeProperty>
     
 
 
@@ -535,6 +920,115 @@
     
 
 
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerDataType -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerDataType">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label>hasContainerDataType</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerID -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerID">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+        <rdfs:label>hasContainerID</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerName -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerName">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label>hasContainerName</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerProductionStatus -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerProductionStatus">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label>hasContainerProductionStatus</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerProductionTimestamp -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerProductionTimestamp">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTimeStamp"/>
+        <rdfs:label>hasContainerProductionTimestamp</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerRequestID -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerRequestID">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+        <rdfs:label>hasContainerRequestID</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerRunNumber -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerRunNumber">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#long"/>
+        <rdfs:label>hasContainerRunNumber</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerSizeBytes -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerSizeBytes">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#long"/>
+        <rdfs:label>hasContainerSizeBytes</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerTotalEvents -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerTotalEvents">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+        <rdfs:label>hasContainerTotalEvents</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasContainerTotalFiles -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasContainerTotalFiles">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+        <rdfs:label>hasContainerTotalFiles</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://nosql.tpu.ru/ontology/ATLAS#hasControlNumber -->
 
     <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasControlNumber">
@@ -581,6 +1075,39 @@
     
 
 
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasDataSampleDatasetName -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasDataSampleDatasetName">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#DatasetAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Dataset"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label>hasDataSampleDatasetName</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasDatasetEvents -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasDatasetEvents">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#DatasetAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Dataset"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+        <rdfs:label>hasDatasetEvents</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasDatasetFiles -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasDatasetFiles">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#DatasetAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Dataset"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+        <rdfs:label>hasDatasetFiles</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://nosql.tpu.ru/ontology/ATLAS#hasDatasetID -->
 
     <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasDatasetID">
@@ -603,12 +1130,33 @@
     
 
 
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasDatasetNumber -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasDatasetNumber">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#DatasetAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Dataset"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://nosql.tpu.ru/ontology/ATLAS#hasDatasetSize -->
 
     <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasDatasetSize">
         <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#DataSample"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
         <rdfs:label>hasDatasetSize</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasDatasetSizeBytes -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasDatasetSizeBytes">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#DatasetAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Dataset"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#long"/>
+        <rdfs:label>hasDatasetSizeBytes</rdfs:label>
     </owl:DatatypeProperty>
     
 
@@ -626,6 +1174,7 @@
     <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasDocumentContentDescription">
         <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#DocumentContent"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label>hasDocumentContentDescription</rdfs:label>
     </owl:DatatypeProperty>
     
 
@@ -763,14 +1312,12 @@
     
 
 
-    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasKeyword -->
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasKeywordText -->
 
-    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasKeyword">
-        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#hasDocumentProperty"/>
-        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Document"/>
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasKeywordText">
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Keyword"/>
         <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
-        <rdfs:comment>Kewords describing document contents, received from CDS</rdfs:comment>
-        <rdfs:label>hasKeyowrd</rdfs:label>
+        <rdfs:label>hasKeywordText</rdfs:label>
     </owl:DatatypeProperty>
     
 
@@ -898,6 +1445,94 @@
     
 
 
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasTaskComment -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasTaskComment">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label>hasTaskComment</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasTaskID -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasTaskID">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#integer"/>
+        <rdfs:label>hasTaskID</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasTaskName -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasTaskName">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label>hasTaskName</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasTaskProvenance -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasTaskProvenance">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label>hasTaskProvenance</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasTaskStartTime -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasTaskStartTime">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTimeStamp"/>
+        <rdfs:label>hasTaskStartTime</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasTaskStatus -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasTaskStatus">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label>hasTaskStatus</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasTaskSubmitTime -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasTaskSubmitTime">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#dateTimeStamp"/>
+        <rdfs:label>hasTaskSubmitTime</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#hasTaskUsername -->
+
+    <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasTaskUsername">
+        <rdfs:subPropertyOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ContainerAttribute"/>
+        <rdfs:domain rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:range rdf:resource="http://www.w3.org/2001/XMLSchema#string"/>
+        <rdfs:label>hasTaskUsername</rdfs:label>
+    </owl:DatatypeProperty>
+    
+
+
     <!-- http://nosql.tpu.ru/ontology/ATLAS#hasTimestamp -->
 
     <owl:DatatypeProperty rdf:about="http://nosql.tpu.ru/ontology/ATLAS#hasTimestamp">
@@ -994,6 +1629,24 @@
     
 
 
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#AtlasRelease -->
+
+    <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#AtlasRelease">
+        <rdfs:subClassOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ProductionConfiguration"/>
+        <rdfs:label>AtlasRelease</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#BunchSpacing -->
+
+    <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#BunchSpacing">
+        <rdfs:subClassOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ProductionConfiguration"/>
+        <rdfs:label>BunchSpacing</rdfs:label>
+    </owl:Class>
+    
+
+
     <!-- http://nosql.tpu.ru/ontology/ATLAS#Campaign -->
 
     <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#Campaign">
@@ -1008,6 +1661,14 @@
     <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#ConfNote">
         <rdfs:subClassOf rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
         <rdfs:label>ConfNote</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#Container -->
+
+    <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#Container">
+        <rdfs:label>Container</rdfs:label>
     </owl:Class>
     
 
@@ -1052,6 +1713,15 @@
     <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#DataTakingPeriod">
         <rdfs:subClassOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ExperimentAttribute"/>
         <rdfs:label>DataTakingPeriod</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#Dataset -->
+
+    <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#Dataset">
+        <rdfs:subClassOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Container"/>
+        <rdfs:label>Dataset</rdfs:label>
     </owl:Class>
     
 
@@ -1109,11 +1779,37 @@
     
 
 
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#GeneratorName -->
+
+    <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#GeneratorName">
+        <rdfs:subClassOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ProductionConfiguration"/>
+        <rdfs:label>GeneratorName</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#GeometryVersion -->
+
+    <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#GeometryVersion">
+        <rdfs:subClassOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ProductionConfiguration"/>
+        <rdfs:label>GeometryVersion</rdfs:label>
+    </owl:Class>
+    
+
+
     <!-- http://nosql.tpu.ru/ontology/ATLAS#JournalIssue -->
 
     <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#JournalIssue">
         <rdfs:subClassOf rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
         <rdfs:label>JournalIssue</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#Keyword -->
+
+    <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#Keyword">
+        <rdfs:label>Keyword</rdfs:label>
     </owl:Class>
     
 
@@ -1171,11 +1867,37 @@
     
 
 
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#Pileup -->
+
+    <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#Pileup">
+        <rdfs:subClassOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ProductionConfiguration"/>
+        <rdfs:label>Pileup</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#ProductionConfiguration -->
+
+    <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#ProductionConfiguration">
+        <rdfs:label>ProductionConfiguration</rdfs:label>
+    </owl:Class>
+    
+
+
     <!-- http://nosql.tpu.ru/ontology/ATLAS#ProductionStep -->
 
     <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#ProductionStep">
         <rdfs:subClassOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#DataSampleAttribute"/>
         <rdfs:label>ProductionStep</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#ProductionTag -->
+
+    <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#ProductionTag">
+        <rdfs:subClassOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ProductionConfiguration"/>
+        <rdfs:label>ProductionTag</rdfs:label>
     </owl:Class>
     
 
@@ -1207,11 +1929,47 @@
     
 
 
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#Subcampaign -->
+
+    <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#Subcampaign">
+        <rdfs:subClassOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#Campaign"/>
+        <rdfs:label>Subcampaign</rdfs:label>
+    </owl:Class>
+    
+
+
     <!-- http://nosql.tpu.ru/ontology/ATLAS#SupportingDocument -->
 
     <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#SupportingDocument">
         <rdfs:subClassOf rdf:resource="http://xmlns.com/foaf/0.1/Document"/>
         <rdfs:label>SupportingDocument</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#TransformationPackage -->
+
+    <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#TransformationPackage">
+        <rdfs:subClassOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ProductionConfiguration"/>
+        <rdfs:label>TransformationPackage</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#TriggerConfig -->
+
+    <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#TriggerConfig">
+        <rdfs:subClassOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ProductionConfiguration"/>
+        <rdfs:label>TriggerConfig</rdfs:label>
+    </owl:Class>
+    
+
+
+    <!-- http://nosql.tpu.ru/ontology/ATLAS#VirtualOrganization -->
+
+    <owl:Class rdf:about="http://nosql.tpu.ru/ontology/ATLAS#VirtualOrganization">
+        <rdfs:subClassOf rdf:resource="http://nosql.tpu.ru/ontology/ATLAS#ProductionConfiguration"/>
+        <rdfs:label>VirtualOrganization</rdfs:label>
     </owl:Class>
     
 

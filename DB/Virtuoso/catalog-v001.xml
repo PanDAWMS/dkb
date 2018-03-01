@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <catalog prefer="public" xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog">
     <group id="Folder Repository, directory=, recursive=true, Auto-Update=true, version=2" prefer="public" xml:base="">
-        <uri id="Automatically generated entry, Timestamp=1490261657580" name="http://nosql.tpu.ru/ontology/ATLAS" uri="ATLAS.owl"/>
+        <uri id="Automatically generated entry, Timestamp=1505980686691" name="http://nosql.tpu.ru/ontology/ATLAS" uri="ATLAS.owl"/>
     </group>
 </catalog>
