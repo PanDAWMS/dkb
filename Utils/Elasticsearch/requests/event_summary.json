@@ -16,10 +16,8 @@ GET /prodsys_rucio_ami/task/_search
    "query": {
      "bool": {
        "must": [
-         { "term": { "campaign.keyword": "<CAMPAIGN>" } },
-         { "term": { "status": "<STATUS>" } }
-       ],
-       "should": [
+         { "term": { "campaign": "<CAMPAIGN>" } },
+         { "term": { "status": "<STATUS>" } },
          { "term": { "hashtag_list": "<HASHTAG>"} }
        ]
      }
