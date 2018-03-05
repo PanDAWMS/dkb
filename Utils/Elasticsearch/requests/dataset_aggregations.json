@@ -114,19 +114,13 @@ GET prodsys_rucio_ami/output_dataset/_search
             "query":
               {"term": {"project.keyword": "mc15_13TeV"}}
             }
-          }
-      ],
-      "should": [
-        {
-          "term": {
-            "data_format.keyword": "AOD"
-          }
-        },
-        {
-          "term": {
-            "data_format.keyword": "DAOD"
-          }
-        }
+          },
+          {"bool": {
+            "should": [
+                {"term": {"data_format": "AOD"}},
+                {"term": {"data_format": "DAOD"}}
+              ]
+          }}
       ]
     }
   },
