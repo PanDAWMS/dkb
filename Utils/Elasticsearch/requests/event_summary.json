@@ -27,14 +27,10 @@ GET /prodsys_rucio_ami/task/_search
        "terms": {"field": "phys_category"},
        "aggs": {
          "step": {
-           "terms": {
-             "field": "step_name.keyword"
-           },
+           "terms": {"field": "step_name.keyword"},
            "aggs": {
              "requested": {
-               "sum": {
-                 "field": "requested_events"
-               }
+               "sum": {"field": "requested_events"}
              },
              "processed": {
                "sum": {"field": "processed_events"}

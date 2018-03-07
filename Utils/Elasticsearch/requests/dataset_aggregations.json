@@ -10,9 +10,7 @@ GET prodsys_rucio_ami/task/_search
    "size": 0,
    "aggs": {
      "campaign": {
-       "terms": {
-         "field": "campaign.keyword"
-       },
+       "terms": {"field": "campaign.keyword"},
         "aggs": {
          "datasets": {
            "children": {
@@ -20,22 +18,12 @@ GET prodsys_rucio_ami/task/_search
            },
            "aggs": {
              "data_format": {
-               "terms": {
-                 "field": "data_format"
-               },
+               "terms": {"field": "data_format"},
                 "aggs": {
                  "bytes": {
-                   "filter": {
-                     "term": {
-                       "deleted": false
-                     }
-                   },
+                  "filter": {"term": {"deleted": false}},
                   "aggs": {
-                     "avg_bytes": {
-                       "avg": {
-                          "field": "bytes"
-                        }
-                     }
+                     "avg_bytes": {"avg": {"field": "bytes"}}
                    }
                  }
                }
@@ -60,15 +48,11 @@ GET prodsys_rucio_ami/task/_search
 {
    "size": 0,
    "query": {
-      "query_string": {
-           "query": "\"MC15a\" AND \"higgs\""
-         }
+      "query_string": {"query": "\"MC15a\" AND \"higgs\""}
    },
    "aggs": {
      "datasets": {
-       "children": {
-         "type": "output_dataset"
-       },
+       "children": {"type": "output_dataset"},
        "aggs": {
          "bytes": {
             "filter": {
@@ -80,11 +64,7 @@ GET prodsys_rucio_ami/task/_search
               }
              },
            "aggs": {
-             "avg_bytes": {
-               "avg": {
-                "field": "bytes"
-              }
-             }
+             "avg_bytes": {"avg": {"field": "bytes"}}
            }
          }
        }
@@ -104,9 +84,7 @@ GET prodsys_rucio_ami/output_dataset/_search
     "bool": {
       "must": [
         {
-          "term": {
-            "deleted": false
-          }
+          "term": {"deleted": false}
         },
         {
           "has_parent": {
@@ -125,8 +103,6 @@ GET prodsys_rucio_ami/output_dataset/_search
     }
   },
   "aggs": {
-        "avg_bytes": {
-          "avg": {"field": "bytes"}
-        }
-      }
+        "avg_bytes": {"avg": {"field": "bytes"}}
+  }
 }
