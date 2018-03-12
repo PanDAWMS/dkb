@@ -183,7 +183,7 @@ def doc_find_by_query(es, paperid):
                     "match": {"dkbID": paperid}
                 }
         }
-    rtrn = [False, [], []]
+    rtrn = [False, [], {}]
     r = es.search(index="papers", body=srch)
     if r["hits"]["hits"]:
         sdocs = []
@@ -205,7 +205,9 @@ def doc_find_by_query(es, paperid):
                 rtrn[1].append(hit["_source"])
                 for key in hit["_source"]["PDFAnalyzer"]:
                     if key.endswith("datasets"):
-                        rtrn[2] += hit["_source"]["PDFAnalyzer"][key]
+                        if key not in rtrn[2]:
+                            rtrn[2][key] = []
+                        rtrn[2][key] += hit["_source"]["PDFAnalyzer"][key]
     return rtrn
 
 
@@ -225,6 +227,20 @@ def scroll_search(es, index, query):
                 break
     else:
         es.clear_scroll(sid)
+    return ret
+
+
+def find_children(es, pid):
+    ret = []
+    srch = {
+            "query": {
+                    "parent_id": {"type": "output_dataset", "id": pid}
+                }
+        }
+    r = es.search(index="prodsys_rucio_ami", body=srch)
+    if r["hits"]["hits"]:
+        for hit in r["hits"]["hits"]:
+            ret.append(hit["_source"]["datasetname"])
     return ret
 
 
@@ -258,30 +274,44 @@ def find_datasets(es, output):
     return ret
 
 
-def compare_datasets(es):
+def compare_datasets_from_prodsys(es):
     ret = []
     srch = {
             "query": {
-                    "prefix": {"output": "mc"}
+                    "has_child": {"type": "output_dataset"}
                 }
         }
     r = es.search(index="prodsys_rucio_ami", body=srch, scroll="1m")
     sid = r["_scroll_id"]
     if r["hits"]["hits"]:
         for hit in r["hits"]["hits"]:
-            ret += find_datasets(es, hit["_source"]["output"])
+            datasets = find_children(es, hit["_id"])
+            ret += find_datasets(es, datasets)
         while True:
             r = es.scroll(scroll_id=sid, scroll="1m")
             sid = r["_scroll_id"]
             if r["hits"]["hits"]:
                 for hit in r["hits"]["hits"]:
-                    ret += find_datasets(es, hit["_source"]["output"])
+                    datasets = find_children(es, hit["_id"])
+                    ret += find_datasets(es, datasets)
             else:
                 es.clear_scroll(sid)
                 break
     else:
         es.clear_scroll(sid)
     return ret
+
+
+def compare_datasets(es):
+    srch = {
+            "query": {
+                    "prefix": {"datasetname.keyword": "mc15_13TeV.364422"}
+                }
+        }
+    r = es.search(index="prodsys_rucio_ami", body=srch)
+    for hit in r["hits"]["hits"]:
+        print hit
+    return False
 
 
 def explore(es):
@@ -373,7 +403,23 @@ if __name__ == "__main__":
             for note in suppnotes:
                 print note["dkbID"] + str(note)[:100] + "...}"
             print "Datasets:"
-            print datasets
+            for category in datasets:
+                print category
+                words = []
+                for d in datasets[category]:
+                    spl = d.split(".")[:2]
+                    words.append(".".join(spl))
+                words = list(set(words))
+                for w in words:
+                    print w
+                    srch = {
+                            "query": {
+                                    "prefix": {"datasetname.keyword": w}
+                                }
+                        }
+                    r = es.search(index="prodsys_rucio_ami", body=srch)
+                    for hit in r["hits"]["hits"]:
+                        print hit
         else:
             print "No such paper"
     elif cmnd == "compare":
