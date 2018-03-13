@@ -350,7 +350,7 @@ class AbstractProcessorStage(AbstractStage):
             self.__output_buffer.append(message)
         elif type(message) == list:
             for m in message:
-                self.output.message(m)
+                self.output(m)
         else:
             raise TypeError("Stage.output() expects parameter to be of type"
                             " %s or %s (got %s)"
