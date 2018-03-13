@@ -77,8 +77,8 @@ class TTLProcessorStage(AbstractProcessorStage):
 
     def __init__(self):
         super(JSONProcessorStage, self).__init__()
-        self._set_input_message_class(messageType.JSON)
-        self._set_output_message_class(messageType.JSON)
+        self._set_input_message_class(messageType.TTL)
+        self._set_output_message_class(messageType.TTL)
 
     # Override
     def output(self, message):
