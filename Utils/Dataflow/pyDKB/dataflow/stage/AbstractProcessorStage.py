@@ -512,7 +512,7 @@ class AbstractProcessorStage(AbstractStage):
         for f in filenames:
             f = f.strip()
             if self.ARGS.input_dir:
-                f = os.path.join(self.ARGS.input_dir, f)
+                f = hdfs.join(self.ARGS.input_dir, f)
             if not f:
                 continue
             name = hdfs.getfile(f)
