@@ -457,8 +457,8 @@ class AbstractProcessorStage(AbstractStage):
                     if t == 'l':
                         output_dir = os.getcwd()
                     if t == 'h':
-                        output_dir = os.path.join(hdfs.DKB_HOME, "temp",
-                                                  str(int(time.time())))
+                        output_dir = hdfs.join(hdfs.DKB_HOME, "temp",
+                                               str(int(time.time())))
                         hdfs.makedirs(output_dir)
                     self.ARGS.output_dir = output_dir
                     self.log("Output dir set to: %s" % output_dir)
@@ -512,7 +512,7 @@ class AbstractProcessorStage(AbstractStage):
         for f in filenames:
             f = f.strip()
             if self.ARGS.input_dir:
-                f = os.path.join(self.ARGS.input_dir, f)
+                f = hdfs.join(self.ARGS.input_dir, f)
             if not f:
                 continue
             name = hdfs.getfile(f)

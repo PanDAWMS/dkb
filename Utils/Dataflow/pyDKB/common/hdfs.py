@@ -6,6 +6,7 @@ import sys
 import subprocess
 import select
 import os
+import posixpath
 
 from . import HDFSException
 
@@ -75,7 +76,7 @@ def getfile(fname):
     Return value: file name (without directory)
     """
     cmd = ["hadoop", "fs", "-get", fname]
-    name = os.path.basename(fname)
+    name = basename(fname)
     try:
         proc = subprocess.Popen(cmd,
                                 stdin=subprocess.PIPE,
@@ -138,7 +139,7 @@ def listdir(dirname, mode='a'):
 
         # We need to return only the name of the file or subdir
         filename = line[7]
-        filename = os.path.basename(filename)
+        filename = basename(filename)
         if line[0][0] == 'd':
             subdirs.append(filename)
         elif line[0][0] == '-':
@@ -152,3 +153,26 @@ def listdir(dirname, mode='a'):
         result = subdirs
 
     return result
+
+
+def basename(path):
+    """ Return file name without path. """
+    if path is None:
+        path = ''
+    return posixpath.basename(path).strip()
+
+
+def dirname(path):
+    """ Return dirname without filename. """
+    if path is None:
+        path = ''
+    return posixpath.dirname(path).strip()
+
+
+def join(path, filename):
+    """ Join path and filename. """
+    if path is None:
+        path = ''
+    if filename is None:
+        filename = ''
+    return posixpath.join(path, filename).strip()
