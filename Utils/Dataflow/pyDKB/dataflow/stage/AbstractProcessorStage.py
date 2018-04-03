@@ -46,6 +46,7 @@ import time
 
 from . import AbstractStage
 from . import messageType
+from . import logLevel
 from . import Message
 from pyDKB.dataflow import DataflowException
 from pyDKB.common import hdfs
@@ -262,13 +263,13 @@ class AbstractProcessorStage(AbstractStage):
             try:
                 p.close()
             except AttributeError, e:
-                sys.stderr.write("(WARN) Close method is not defined for"
-                                 " %s.\n" % p)
+                self.log("Close method is not defined for %s." % p,
+                         logLevel.WARN)
             except Exception, e:
                 failures.append((p, e))
         if failures:
             for f in failures:
-                sys.stderr.write("(ERROR) Failed to stop %s: %s\n" % f)
+                self.log("Failed to stop %s: %s" % f, logLevel.ERROR)
 
     @staticmethod
     def process(stage, input_message):
@@ -295,10 +296,11 @@ class AbstractProcessorStage(AbstractStage):
             msg.decode()
             return msg
         except (ValueError, TypeError), err:
-            sys.stderr.write("(WARN) Failed to read input message as %s.\n"
-                             "(==) Cause: %s\n"
-                             "(==) Original message: '%s'\n"
-                             % (messageClass.typeName(), err, input_message))
+            self.log("Failed to read input message as %s.\n"
+                     "Cause: %s\n"
+                     "Original message: '%s'"
+                     % (messageClass.typeName(), err, input_message),
+                     logLevel.WARN)
             return None
 
     def input(self):
@@ -399,8 +401,8 @@ class AbstractProcessorStage(AbstractStage):
                 if os.path.isfile(os.path.join(dirname, f)):
                     files.append(f)
         except OSError, err:
-            sys.stderr.write("(ERROR) Failed to get list of files.\n"
-                             "(ERROR) Error message: %s\n" % err)
+            self.log("Failed to get list of files.\n"
+                     "Error message: %s" % err, logLevel.ERROR)
         if not files:
             return []
         self.ARGS.input_files = files
@@ -438,9 +440,8 @@ class AbstractProcessorStage(AbstractStage):
                 try:
                     os.makedirs(output_dir, 0770)
                 except OSError, err:
-                    sys.stderr.write(
-                        "(ERROR) Failed to create output directory\n"
-                        "(ERROR) Error message: %s\n" % err)
+                    self.log("Failed to create output directory\n"
+                             "Error message: %s\n" % err, logLevel.ERROR)
                     raise DataflowException
             else:
                 hdfs.makedirs(output_dir)
@@ -460,8 +461,7 @@ class AbstractProcessorStage(AbstractStage):
                                                   str(int(time.time())))
                         hdfs.makedirs(output_dir)
                     self.ARGS.output_dir = output_dir
-                    sys.stderr.write("(INFO) Output dir set to: %s\n"
-                                     % output_dir)
+                    self.log("Output dir set to: %s" % output_dir)
                 if self.__current_file \
                         and self.__current_file != sys.stdin.name:
                     filename = os.path.splitext(self.__current_file)[0] + ext
@@ -496,8 +496,8 @@ class AbstractProcessorStage(AbstractStage):
         try:
             files = hdfs.listdir(dirname, "f")
         except hdfs.HDFSException, err:
-            sys.stderr.write("(ERROR) Failed to get list of files.\n"
-                             "(ERROR) Error message: %s\n" % err)
+            self.log("Failed to get list of files.\n"
+                     "Error message: %s" % err, logLevel.ERROR)
             files = []
         self.ARGS.input_files = files
         if not files:
@@ -526,8 +526,8 @@ class AbstractProcessorStage(AbstractStage):
                 try:
                     os.remove(name)
                 except OSError:
-                    sys.stderr.write("(WARN) Failed to remove uploaded file:"
-                                     " %s\n" % name)
+                    self.log("Failed to remove uploaded file: %s" % name,
+                             logLevel.WARN)
             self.__current_file = None
             self.__current_file_full = None
 
