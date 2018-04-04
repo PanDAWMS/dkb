@@ -358,9 +358,12 @@ class AbstractProcessorStage(AbstractStage):
                             )
 
     def forward(self):
-        """ Send EOPMessage in the streaming output mode. """
-        if self.ARGS.dest == 's':
-            self.__output.write(self.ARGS.eop)
+        """ Send EOPMarker to the output stream. """
+        if isinstance(self.__output, file):
+            fd = self.__output
+        else:
+            fd = self.__output.next()
+        fd.write(self.ARGS.eop)
 
     def flush_buffer(self):
         """ Flush message buffer to the output. """
