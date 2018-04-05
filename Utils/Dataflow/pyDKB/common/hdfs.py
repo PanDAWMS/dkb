@@ -7,6 +7,7 @@ import subprocess
 import select
 import os
 import posixpath
+import tempfile
 
 from . import HDFSException
 
@@ -70,25 +71,30 @@ def putfile(fname, dest):
                             "Error message: %s\n" % (fname, err))
 
 
-def getfile(fname):
+def File(fname):
     """ Download file from HDFS.
 
     Return value: file name (without directory)
     """
-    cmd = ["hadoop", "fs", "-get", fname]
-    name = basename(fname)
+    cmd = ["hadoop", "fs", "-cat", fname]
+    tmp_file = tempfile.TemporaryFile()
     try:
         proc = subprocess.Popen(cmd,
                                 stdin=subprocess.PIPE,
                                 stderr=subprocess.PIPE,
-                                stdout=DEVNULL)
+                                stdout=tmp_file)
         check_stderr(proc)
+        tmp_file.seek(0)
     except (subprocess.CalledProcessError, OSError), err:
         if isinstance(err, subprocess.CalledProcessError):
             err.cmd = ' '.join(cmd)
+        tmp_file.close()
         raise HDFSException("Failed to get file from HDFS: %s\n"
                             "Error message: %s\n" % (fname, err))
-    return name
+    if tmp_file.closed:
+        return None
+
+    return tmp_file
 
 
 def listdir(dirname, mode='a'):

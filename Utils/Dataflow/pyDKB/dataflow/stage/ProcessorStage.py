@@ -494,19 +494,12 @@ class ProcessorStage(AbstractStage):
                 f = hdfs.join(self.ARGS.input_dir, f)
             if not f:
                 continue
-            name = hdfs.getfile(f)
-            self.__current_file_full = f
-            self.__current_file = name
 
-            try:
-                with open(name, 'r') as infile:
-                    yield infile
-            finally:
-                try:
-                    os.remove(name)
-                except OSError:
-                    self.log("Failed to remove uploaded file: %s" % name,
-                             logLevel.WARN)
+            with hdfs.File(f) as infile:
+                self.__current_file_full = f
+                self.__current_file = hdfs.basename(f)
+                yield infile
+
             self.__current_file = None
             self.__current_file_full = None
 
