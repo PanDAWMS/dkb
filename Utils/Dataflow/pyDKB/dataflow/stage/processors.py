@@ -30,7 +30,7 @@ class JSONProcessorStage(AbstractProcessorStage):
                 yield m
         except ValueError:
             sys.stderr.write("(WARN) failed to read input file %(f)s as"
-                             " Newline Delimeted %(t)s. Will try to read as"
+                             " Newline Delimited %(t)s. Will try to read as"
                              " true %(t)s file.\n" % {
                                  "f": fd.name,
                                  "t": self.input_message_class().typeName()
