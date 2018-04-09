@@ -6,7 +6,7 @@ from types import *
 from dkbID import dkbID
 from exceptions import *
 from cds import *
-from communication import *
+import communication
 import stage
 
 __all__ = []
