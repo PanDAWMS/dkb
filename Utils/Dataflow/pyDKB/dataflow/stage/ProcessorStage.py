@@ -67,9 +67,6 @@ class ProcessorStage(AbstractStage):
     * Iterable object for input data sources (file descriptors)
         __input
 
-    * Output messages buffer:
-        __output_buffer
-
     * Generator object for output file descriptor
       OR file descriptor (for (s)tream mode)
         __output
@@ -79,9 +76,10 @@ class ProcessorStage(AbstractStage):
     """
 
     __input_message_type = None
-    __output_message_class = None
+    __output_message_type = None
 
     __input = None
+    _out_stream = None
 
     def __init__(self, description="DKB Dataflow data processing stage."):
         """ Initialize the stage
@@ -94,7 +92,6 @@ class ProcessorStage(AbstractStage):
         self.__current_file_full = None
         self.__current_file = None
         self.__input = []
-        self.__output_buffer = []
         self.__stoppable = []
         super(ProcessorStage, self).__init__(description)
 
@@ -114,11 +111,11 @@ class ProcessorStage(AbstractStage):
         """ Set output message class. """
         if not messageType.hasMember(Type):
             raise ValueError("Unknown message type: %s" % Type)
-        self.__output_message_class = communication.Message(Type)
+        self.__output_message_type = Type
 
     def output_message_class(self):
         """ Get output message class. """
-        return self.__output_message_class
+        return communication.Message(self.__output_message_type)
 
     def defaultArguments(self):
         """ Default parser configuration. """
@@ -217,6 +214,25 @@ class ProcessorStage(AbstractStage):
             .build()
         self.__stoppable_append(self.__input, consumer.Consumer)
 
+    def get_out_stream(self):
+        """ Get current output stream. """
+        if isinstance(self.__output, file):
+            fd = self.__output
+        else:
+            try:
+                fd = self.__output.next()
+            except DataflowException, err:
+                self.log(str(err), logLevel.ERROR)
+                raise DataflowException("Failed to configure output stream.")
+        if not self._out_stream:
+            self._out_stream = communication.StreamBuilder(fd,
+                                                           vars(self.ARGS)) \
+                .message_type(self.__output_message_type) \
+                .build()
+        else:
+            self._out_stream.reset(fd)
+        return self._out_stream
+
     def run(self):
         """ Run process() for every input() message. """
         exit_code = 0
@@ -225,15 +241,22 @@ class ProcessorStage(AbstractStage):
             for msg in self.input():
                 if msg and self.process(self, msg):
                     self.flush_buffer()
+                else:
+                    self.clear_buffer()
                 self.forward()
-                self.clear_buffer()
         except BaseException, err:
             # Catch everything for uniform exception handling
             # Clear buffer -- just in case someone will decide
             # to reuse the object.
-            self.clear_buffer()
             exit_code = 1
             self.set_error(*sys.exc_info())
+            try:
+                self.clear_buffer()
+            except DataflowException:
+                # In case the previous error is related to the output
+                # stream, we should skip this error here to exit the
+                # program properly
+                pass
             self.stop()
         finally:
             # If something went wrong in `except` clause, we will still
@@ -285,53 +308,19 @@ class ProcessorStage(AbstractStage):
 
     def output(self, message):
         """ Put the (list of) message(s) to the output buffer. """
-        if isinstance(message, self.__output_message_class):
-            self.__output_buffer.append(message)
-        elif type(message) == list:
-            for m in message:
-                self.output(m)
-        else:
-            raise TypeError("Stage.output() expects parameter to be of type"
-                            " %s or %s (got %s)"
-                            % (self.__output_message_class, list,
-                               type(message))
-                            )
+        self.get_out_stream().write(message)
 
     def forward(self):
         """ Send EOPMarker to the output stream. """
-        if isinstance(self.__output, file):
-            fd = self.__output
-        else:
-            fd = self.__output.next()
-        fd.write(self.ARGS.eop)
+        self.get_out_stream().eop()
 
     def flush_buffer(self):
         """ Flush message buffer to the output. """
-        if self.ARGS.dest == 's':
-            self.stream_flush()
-        else:
-            self.file_flush()
-
-    def stream_flush(self, fd=None):
-        """ Flush message buffer as a stream. """
-        if not fd:
-            fd = self.__output
-        for msg in self.__output_buffer:
-            fd.write(msg.encode())
-            fd.write(self.ARGS.eom)
-
-    def file_flush(self):
-        """ Flush message buffer into a file.
-
-        By default writes to file as to a stream.
-        To be implemented individually if needed.
-        """
-        fd = self.__output.next()
-        self.stream_flush(fd)
+        self.get_out_stream().flush()
 
     def clear_buffer(self):
         """ Drop buffered output messages. """
-        self.__output_buffer = []
+        self.get_out_stream().drop()
 
     def __out_files(self, t='l'):
         """ Generator for file descriptors to write data to.

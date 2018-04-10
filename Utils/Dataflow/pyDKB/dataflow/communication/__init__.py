@@ -9,8 +9,9 @@ from .. import DataflowException
 from messages import Message
 from Stream import Stream
 from InputStream import InputStream
+from OutputStream import OutputStream
 
-__all__ = ['Message', 'StreamBuilder', 'Stream', 'InputStream']
+__all__ = ['Message', 'StreamBuilder', 'Stream', 'InputStream', 'OutputStream']
 
 
 class StreamBuilder(object):
