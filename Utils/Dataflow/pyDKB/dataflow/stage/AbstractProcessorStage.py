@@ -175,7 +175,10 @@ class AbstractProcessorStage(AbstractStage):
                           )
 
     def parse_args(self, args):
-        """ Parse arguments and set dependant arguments if neeeded. """
+        """ Parse arguments and set dependant arguments if neeeded.
+
+        Exits with code 2 in case of error (just like ArgumentParser does).
+        """
         super(AbstractProcessorStage, self).parse_args(args)
 
         # HDFS: HDFS file -> local file -> processor -> local file -> HDFS file
@@ -208,14 +211,12 @@ class AbstractProcessorStage(AbstractStage):
             self.__current_file = sys.stdin.name
             self.__current_file_full = sys.stdin.name
         else:
-            raise ValueError("Unrecognized source type: %s" % self.ARGS.source)
+            self.args_error("Unrecognized source type: %s" % self.ARGS.source)
 
         # Check that data source is specified
         if self.ARGS.source == 'f' \
                 and not (self.ARGS.input_files or self.ARGS.input_dir):
-            sys.stderr.write("(ERROR) No input data sources specified.\n")
-            self.print_usage(sys.stderr)
-            raise DataflowException
+            self.args_error("No input data sources specified.")
 
         self.__stoppable_append(self.__input, types.GeneratorType)
 
@@ -234,19 +235,34 @@ class AbstractProcessorStage(AbstractStage):
 
     def run(self):
         """ Run process() for every input() message. """
-        for msg in self.input():
-            try:
+        exit_code = 0
+        err = None
+        try:
+            for msg in self.input():
                 if msg and self.process(self, msg):
                     self.flush_buffer()
-            except Exception:
-                raise
-            else:
                 self.forward()
-            finally:
                 self.clear_buffer()
+        except BaseException, err:
+            # Catch everything for uniform exception handling
+            # Clear buffer -- just in case someone will decide
+            # to reuse the object.
+            self.clear_buffer()
+            exit_code = 1
+            self.set_error(*sys.exc_info())
+            self.stop()
+        finally:
+            # If something went wrong in `except` clause, we will still
+            # get here and return, so the exceptions from there will never
+            # reach the user
+            if not isinstance(err, Exception):
+                sys.exit(exit_code)
+            return exit_code
 
+    # Override
     def stop(self):
         """ Finalize all the processes and prepare to exit. """
+        super(AbstractProcessorStage, self).stop()
         failures = []
         for p in self.__stoppable:
             try:
@@ -286,8 +302,9 @@ class AbstractProcessorStage(AbstractStage):
             return msg
         except (ValueError, TypeError), err:
             sys.stderr.write("(WARN) Failed to read input message as %s.\n"
-                             "(WARN) Cause: %s\n" % (messageClass.typeName(),
-                                                     err))
+                             "(==) Cause: %s\n"
+                             "(==) Original message: '%s'\n"
+                             % (messageClass.typeName(), err, input_message))
             return None
 
     def input(self):
@@ -333,7 +350,7 @@ class AbstractProcessorStage(AbstractStage):
             self.__output_buffer.append(message)
         elif type(message) == list:
             for m in message:
-                self.output.message(m)
+                self.output(m)
         else:
             raise TypeError("Stage.output() expects parameter to be of type"
                             " %s or %s (got %s)"
