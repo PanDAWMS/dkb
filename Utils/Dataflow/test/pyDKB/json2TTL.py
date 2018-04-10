@@ -53,7 +53,7 @@ def main(args):
 
     stage.process = process
 
-    stage.parse_args(args)
+    stage.configure(args)
     if stage.CONFIG:
         str_config = json.dumps(stage.CONFIG, indent=2)
         labeled_config = "(==) " + str_config.replace('\n', '\n(==) ')

@@ -47,7 +47,7 @@ def main(args):
     exit_code = 0
     exc_info = None
     try:
-        stage.parse_args(args)
+        stage.configure(args)
         stage.run()
     except (DataflowException, RuntimeError), err:
         if str(err):

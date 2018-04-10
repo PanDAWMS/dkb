@@ -51,6 +51,7 @@ from pyDKB.dataflow import DataflowException
 from pyDKB.common import hdfs
 from pyDKB.common import custom_readline
 from pyDKB.dataflow import communication
+from pyDKB.dataflow import consumer
 
 
 class ProcessorStage(AbstractStage):
@@ -80,6 +81,8 @@ class ProcessorStage(AbstractStage):
     __input_message_type = None
     __output_message_class = None
 
+    __input = None
+
     def __init__(self, description="DKB Dataflow data processing stage."):
         """ Initialize the stage
 
@@ -100,6 +103,8 @@ class ProcessorStage(AbstractStage):
         if not messageType.hasMember(Type):
             raise ValueError("Unknown message type: %s" % Type)
         self.__input_message_type = Type
+        if self.__input:
+            self.__input.set_message_type(Type)
 
     def input_message_class(self):
         """ Get input message class. """
@@ -180,42 +185,13 @@ class ProcessorStage(AbstractStage):
 
         # HDFS: HDFS file -> local file -> processor -> local file -> HDFS file
         if self.ARGS.hdfs:
-            self.ARGS.source = 'h'
             self.ARGS.dest = 'h'
 
         # Stream (Kafka) and MapReduce mode: STDIN -> processor -> STDOUT
         # If data source is specified as HDFS, files will be taken from HDFS
         #       and filenames -- from stdin
         if self.ARGS.mode in ('s', 'm'):
-            if self.ARGS.source != 'h':
-                self.ARGS.source = 's'
             self.ARGS.dest = 's'
-
-        if self.ARGS.source == 'h':
-            if self.ARGS.input_files or self.ARGS.mode == 'm':
-                # In MapReduce mode
-                # we`re going to get the list of files from STDIN
-                self.__input = self.__hdfs_in_files()
-            else:
-                self.__input = self.__hdfs_in_dir()
-        elif self.ARGS.source == 'f':
-            if self.ARGS.input_files:
-                self.__input = self.__local_in_files()
-            else:
-                self.__input = self.__local_in_dir()
-        elif self.ARGS.source == 's':
-            self.__input = [sys.stdin]
-            self.__current_file = sys.stdin.name
-            self.__current_file_full = sys.stdin.name
-        else:
-            self.args_error("Unrecognized source type: %s" % self.ARGS.source)
-
-        # Check that data source is specified
-        if self.ARGS.source == 'f' \
-                and not (self.ARGS.input_files or self.ARGS.input_dir):
-            self.args_error("No input data sources specified.")
-
-        self.__stoppable_append(self.__input, types.GeneratorType)
 
         # Configure output
         if self.ARGS.dest == 'f':
@@ -227,6 +203,19 @@ class ProcessorStage(AbstractStage):
             self.__output = ustdout
 
         self.__stoppable_append(self.__output, types.GeneratorType)
+
+    def configure(self, args=None):
+        """ Configure stage according to the config parameters.
+
+        If $args specified, arguments will be parsed anew.
+        """
+        if args:
+            self.parse_args(args)
+        # Input
+        self.__input = consumer.ConsumerBuilder(vars(self.ARGS)) \
+            .setType(self.__input_message_type) \
+            .build()
+        self.__stoppable_append(self.__input, consumer.Consumer)
 
     def run(self):
         """ Run process() for every input() message. """
@@ -291,33 +280,8 @@ class ProcessorStage(AbstractStage):
         Returns iterable object.
         Every iteration returns single input message to be processed.
         """
-        for fd in self.__input:
-            if fd == sys.stdin:
-                for r in self.stream_input(fd):
-                    yield r
-            else:
-                for r in self.file_input(fd):
-                    yield r
-
-    def stream_input(self, fd):
-        """ Generator for input messages.
-
-        Read data from STDIN;
-        Split stream into messages;
-        Yield Message object.
-        """
-        s = communication.StreamBuilder(fd, vars(self.ARGS)) \
-            .setType(self.__input_message_type) \
-            .build()
-        return s
-
-    def file_input(self, fd):
-        """ Generator for input messages.
-
-        By default reads file just as stream.
-        To be implemented individually for other cases.
-        """
-        return self.stream_input(fd)
+        for r in self.__input:
+            yield r
 
     def output(self, message):
         """ Put the (list of) message(s) to the output buffer. """
@@ -369,38 +333,6 @@ class ProcessorStage(AbstractStage):
         """ Drop buffered output messages. """
         self.__output_buffer = []
 
-    def __local_in_dir(self):
-        """ Call file descriptors generator for files in local dir. """
-        dirname = self.ARGS.input_dir
-        if not dirname:
-            return []
-        files = []
-        try:
-            for f in os.listdir(dirname):
-                if os.path.isfile(os.path.join(dirname, f)):
-                    files.append(f)
-        except OSError, err:
-            self.log("Failed to get list of files.\n"
-                     "Error message: %s" % err, logLevel.ERROR)
-        if not files:
-            return []
-        self.ARGS.input_files = files
-        return self.__local_in_files()
-
-    def __local_in_files(self):
-        """ Generator for file descriptors to read data from (local files). """
-        filenames = self.ARGS.input_files
-        for f in filenames:
-            name = os.path.basename(f)
-            self.__current_file = name
-            if self.ARGS.input_dir:
-                f = os.path.join(self.ARGS.input_dir, f)
-            self.__current_file_full = f
-            with open(f, 'r') as infile:
-                yield infile
-            self.__current_file = None
-            self.__current_file_full = None
-
     def __out_files(self, t='l'):
         """ Generator for file descriptors to write data to.
 
@@ -425,25 +357,25 @@ class ProcessorStage(AbstractStage):
             else:
                 hdfs.makedirs(output_dir)
         try:
-            while self.__current_file_full:
-                if cf == self.__current_file_full:
+            while self.__input.get_source_info():
+                src = self.__input.get_source_info()
+                if cf == src.get('full_path') and fd:
                     yield fd
                     continue
                 output_dir = self.ARGS.output_dir
                 if not output_dir:
-                    output_dir = os.path.dirname(self.__current_file_full)
+                    output_dir = src.get('dir')
                 if not output_dir:
                     if t == 'l':
                         output_dir = os.getcwd()
                     if t == 'h':
-                        output_dir = os.path.join(hdfs.DKB_HOME, "temp",
-                                                  str(int(time.time())))
+                        output_dir = hdfs.join(hdfs.DKB_HOME, "temp",
+                                               str(int(time.time())))
                         hdfs.makedirs(output_dir)
                     self.ARGS.output_dir = output_dir
                     self.log("Output dir set to: %s" % output_dir)
-                if self.__current_file \
-                        and self.__current_file != sys.stdin.name:
-                    filename = os.path.splitext(self.__current_file)[0] + ext
+                if src.get('name'):
+                    filename = os.path.splitext(src['name'])[0] + ext
                 else:
                     filename = str(int(time.time())) + ext
                 if t == 'l':
@@ -468,40 +400,6 @@ class ProcessorStage(AbstractStage):
                 if t == 'h':
                     hdfs.putfile(fd.name, output_dir)
                     os.remove(fd.name)
-
-    def __hdfs_in_dir(self):
-        """ Call file descriptors generator for files in HDFS dir. """
-        dirname = self.ARGS.input_dir
-        try:
-            files = hdfs.listdir(dirname, "f")
-        except hdfs.HDFSException, err:
-            self.log("Failed to get list of files.\n"
-                     "Error message: %s" % err, logLevel.ERROR)
-            files = []
-        self.ARGS.input_files = files
-        if not files:
-            return []
-        return self.__hdfs_in_files()
-
-    def __hdfs_in_files(self):
-        """ Generator for file descriptors to read data from (HDFS files). """
-        filenames = self.ARGS.input_files
-        if not filenames:
-            filenames = iter(sys.stdin.readline, "")
-        for f in filenames:
-            f = f.strip()
-            if self.ARGS.input_dir:
-                f = hdfs.join(self.ARGS.input_dir, f)
-            if not f:
-                continue
-
-            with hdfs.File(f) as infile:
-                self.__current_file_full = f
-                self.__current_file = hdfs.basename(f)
-                yield infile
-
-            self.__current_file = None
-            self.__current_file_full = None
 
     def __stoppable_append(self, obj, cls):
         """ Appends OBJ (of type CLS) to the list of STOPPABLE. """

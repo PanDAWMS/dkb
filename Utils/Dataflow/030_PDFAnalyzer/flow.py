@@ -98,7 +98,7 @@ if __name__ == "__main__":
     analyzer_stage = pyDKB.dataflow.stage.JSONProcessorStage()
     analyzer_stage.process = process
 
-    analyzer_stage.parse_args(sys.argv[1:])
+    analyzer_stage.configure(sys.argv[1:])
     exit_code = analyzer_stage.run()
 
     if exit_code == 0:
