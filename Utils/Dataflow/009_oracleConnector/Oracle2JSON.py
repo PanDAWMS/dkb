@@ -3,99 +3,304 @@ import os
 import json
 import argparse
 import ConfigParser
-import re
-import DButils
 import sys
 from datetime import datetime, timedelta
+import time
 from collections import defaultdict
 
-try:
-    import cx_Oracle
-except:
-    sys.stderr.write("(ERROR) Failed to import cx_Oracle. Exiting.\n")
-    sys.exit(3)
+from OffsetStorage import FileOffsetStorage
+from dbConnection import OracleConnection
 
 # Policies
 PLAIN_POLICY = 'PLAIN'
 SQUASH_POLICY = 'SQUASH'
 
-
-def connectDEFT_DSN(dsn):
-    try:
-        connect = cx_Oracle.connect(dsn)
-    except cx_Oracle.DatabaseError, err:
-        sys.stderr.write("(ERROR) %s\n" % err)
-        return None
-
-    return connect
+# Global variables
+# ---
+# Operating mode
+mode = None
+# Output stream
+OUT = os.fdopen(sys.stdout.fileno(), 'w', 0)
+# ---
 
 
 def main():
-    """
-    --config <config file> --mode <PLAIN|SQUASH>
-    :return:
+    """ Main program cycle.
 
-     TODO:
-        Obtain the min(timestamp) from t_production_task
-          in case of no `initial_date` specified.
-        Query: SELECT min(timestamp) from t_production_task;
+    USAGE:
+       ./Oracle2JSON.py --config <config file> --mode <PLAIN|SQUASH>
+
+    TODO:
+       Obtain the min(timestamp) from t_production_task
+         in case of no `initial_date` specified.
+       Query: SELECT min(timestamp) from t_production_task;
     """
     args = parsingArguments()
-    global conf
-    conf = args.config
     global mode
     mode = args.mode
 
     # read initial configuration
-    config = ConfigParser.ConfigParser()
-    try:
-        config.read(conf)
-        # unchangeable data
-        dsn = config.get("oracle", "dsn")
-        initial_date = config.get("timestamps", "initial")
-        step = config.get("timestamps", "step")
-        step_seconds = interval_seconds(step)
-        final_date = config.get("timestamps", "final")
-        queries_cfg = config.items("queries")
-        queries = {}
-        for (qname, file) in queries_cfg:
-            queries[qname] = {'file': file}
-        # changeable data
-        offset_date = config.get("timestamps", "offset")
-        if offset_date == '':
-            offset_date = initial_date
-    except (IOError, ConfigParser.Error), e:
-        sys.stderr.write('Failed to read config file (%s): %s\n'
-                         % (conf, e))
+    config = read_config(args.config)
+    if config is None:
         sys.exit(1)
 
-    conn = connectDEFT_DSN(dsn)
-    if not conn:
+    # Offset storage initialization
+    offset_storage = init_offset_storage(config)
+    if not offset_storage:
+        sys.exit(2)
+
+    conn = OracleConnection(config['dsn'])
+    if not conn.establish():
         sys.stderr.write("(ERROR) Failed to connect to Oracle. Exiting.\n")
         sys.exit(3)
 
-    process(conn, offset_date, final_date, step_seconds, queries)
+    if not conn.save_queries(config['queries']):
+        sys.stderr.write("(ERROR) Queries seem to be misconfigured."
+                         " Exiting.\n")
+        sys.exit(1)
+
+    process(conn, offset_storage, config)
 
 
-def plain(conn, queries, offset_date, end_date):
-    tasks = query_executor(conn, queries['tasks']['file'], offset_date,
-                           end_date)
+def read_config(config_file):
+    """ Read configuration file.
+
+    Returns None in case of failure.
+
+    :param config_file: config file name
+    :type config_file: string
+    :return: configuration parameters
+    :rtype: dict|NoneType
+    """
+    result = {'__path__': os.path.dirname(os.path.abspath(config_file))}
+    config = ConfigParser.SafeConfigParser()
+    try:
+        config.read(config_file)
+        # Required parameters (with no defaults)
+        result['dsn'] = config.get('oracle', 'dsn')
+        step = config.get('timestamps', 'step')
+        result['step_seconds'] = interval_seconds(step)
+        if result['step_seconds'] == 0:
+            raise ConfigParser.Error("'timestamps.step': unacceptable value")
+        queries_cfg = config.items('queries')
+        queries = {}
+        for (qname, f) in queries_cfg:
+            queries[qname] = {'file': config_path(f, result)}
+        result['queries'] = queries
+    except (IOError, ConfigParser.Error), e:
+        sys.stderr.write('Failed to read config file (%s): %s\n'
+                         % (config_file, e))
+        return None
+
+    # Optional parameters
+    if result['step_seconds'] > 0:
+        default_initial = datetime.utcfromtimestamp(0)
+        default_final = None
+    else:
+        default_initial = datetime.now()
+        default_final = datetime.utcfromtimestamp(0)
+
+    result['final_date'] = str2date(config_get(config, 'timestamps', 'final',
+                                               default_final))
+    result['initial_date'] = str2date(config_get(config, 'timestamps',
+                                                 'initial', default_initial))
+    result['offset_file'] = config_path(config_get(config, 'logging',
+                                                   'offset_file', '.offset'),
+                                        result)
+
+    return result
+
+
+def config_get(config, section, param, default=None):
+    """ Get $param value from $section of $config with $default value.
+
+    If the parameter (or even section) is not presented in the config,
+      returns default value instead of throwing an exception (as
+      `config.get()` does).
+
+    :param config: config to read from
+    :param section: config section name
+    :param param: config parameter name
+    :param default: default value
+    :type config: ConfigParser object
+    :type section: string
+    :type param: string
+    :param default: object (any type)
+    :return: param value from config or default value
+    :rtype: object
+    """
+    if not isinstance(config, ConfigParser.ConfigParser):
+        raise TypeError("config_get() expects first parameter to be"
+                        " an instance of 'ConfigParser' (get '%s')."
+                        % config.__class__.__name__)
+    if type(section) != str and \
+            (sys.version_info.major > 2 or type(section) != unicode):
+        raise TypeError("config_get() expects second parameter to be"
+                        " string (get '%s')."
+                        % section.__class__.__name__)
+    if type(param) != str and \
+            (sys.version_info.major > 2 or type(param) != unicode):
+        raise TypeError("config_get() expects third parameter to be"
+                        " string (get '%s')."
+                        % section.__class__.__name__)
+
+    try:
+        result = config.get(section, param)
+    except ConfigParser.Error:
+        if default is not None:
+            sys.stderr.write("(INFO) Config: parameter '%s' (section '%s')"
+                             " is not configured. Using default value: %s\n"
+                             % (param, section, default))
+        result = default
+
+    return result
+
+
+def config_path(rel_path, config):
+    """ Turn relative (to config dir) path to absolute.
+
+    :param rel_path: relative (or absolute) path
+    :param config: stage configuration
+    :type rel_path: str
+    :type config: dict
+    :return: absolute path
+    :rtype: str
+    """
+    if os.path.isabs(rel_path):
+        abs_path = rel_path
+    else:
+        config_dir = config['__path__']
+        abs_path = os.path.join(config_dir, rel_path)
+    return abs_path
+
+
+def init_offset_storage(config):
+    """ Get configured (or default) offset file.
+
+    If file does not exist, create file.
+    If the directory for that file does not exist, raise exception.
+
+    If the configured initial date is greater than a stored offset
+      (or if no offset found) it becomes the initial offset value.
+
+    :param config: stage configuration
+    :type config: dict
+    :return: offset storage
+    :rtype: FileOffsetStorage
+    """
+    offset_storage = None
+
+    if not isinstance(config, dict):
+        raise TypeError("get_offset_file: dict object is expected;"
+                        " got %s" % type(config))
+
+    offset_file = config['offset_file']
+    initial_date = config['initial_date']
+    reverse = config['step_seconds'] < 0
+
+    try:
+        offset_storage = FileOffsetStorage(offset_file)
+        current_offset = get_offset(offset_storage)
+        if not current_offset:
+            sys.stderr.write("(INFO) No stored offset found."
+                             " Using initial date.\n")
+            current_offset = initial_date
+        elif not reverse and current_offset < initial_date \
+                or reverse and current_offset > initial_date:
+            sys.stderr.write("(INFO) Stored offset is %s then configured"
+                             " initial date (%s data loading). Using initial"
+                             " date instead.\n"
+                             % ('greater' if reverse else 'less',
+                                'reverse' if reverse else 'normal'))
+            current_offset = initial_date
+        commit_offset(offset_storage, current_offset)
+    except IOError, err:
+        sys.stderr.write("(ERROR) %s\n" % err)
+
+    return offset_storage
+
+
+def commit_offset(offset_storage, new_offset):
+    """ Save current offset to the storage.
+
+    :param offset_storage: the offset storage
+    :param new_offset: offset to commit
+    :type offset_storage: OffsetStorage
+    :type new_offset: datetime.datetime
+    """
+    timestamp = time.mktime(new_offset.timetuple())
+    offset_storage.commit(timestamp)
+
+
+def get_offset(offset_storage):
+    """ Get current offset from the offset storage.
+
+    :param offset_storage: the offset storage
+    :type offset_storage: OffsetStorage
+    :return: current offset
+    :rtype: datetime.datetime
+    """
+    result = offset_storage.get()
+    if result is not None:
+        timestamp = float(result)
+        result = datetime.fromtimestamp(timestamp)
+    return result
+
+
+def plain(conn, queries, start_date, end_date):
+    """ Execute 'tasks' query.
+
+    The only acceptable value for `queries` is ['tasks'].
+
+    :param conn: open connection to Oracle
+    :param queries: names of queries to execute
+    :param start_date: start date
+    :param end_date: end date
+    :type conn: OracleConnection
+    :type queries: list
+    :type start_date: datetime.datetime
+    :type end_date: datetime.datetime
+    """
+    if not conn.execute_saved(queries[0], start_date=start_date,
+                              end_date=end_date):
+        raise StopIteration
+    tasks = conn.results(queries[0], 1000, True)
     for task in tasks:
         yield task
 
 
-def squash(conn, queries, offset_date, end_date):
-    tasks = query_executor(conn, queries['tasks']['file'], offset_date,
-                           end_date)
-    datasets = query_executor(conn, queries['datasets']['file'], offset_date,
-                              end_date)
+def squash(conn, queries, start_date, end_date):
+    """ Execute queries 'tasks' and 'datesets' and squash the results.
+
+    The only acceptable value for `queries` is ['tasks', 'datasets'].
+
+    :param conn: open connection to Oracle
+    :param queries: names of queries to execute
+    :param start_date: start date
+    :param end_date: end date
+    :type conn: OracleConnection
+    :type queries: list
+    :type start_date: datetime.datetime
+    :type end_date: datetime.datetime
+    """
+    if not conn.execute_saved(queries[0], start_date=start_date,
+                              end_date=end_date) \
+            or not conn.execute_saved(queries[1], start_date=start_date,
+                                      end_date=end_date):
+        raise StopIteration
+    tasks = conn.results(queries[0], 1000, True)
+    datasets = conn.results(queries[1], 1000, True)
     return join_results(tasks, squash_records(datasets))
 
 
 def squash_records(rec):
-    """
-    a single-pass iterator (for a generator) restructuring list of datasets:
-    from view:
+    """ Squash multiple records with same 'taskid' value into one.
+
+    The squashing is performed via joining values of 'datasetname'
+      parameter into a lists of dataset names: one list for every
+      'type' value.
+
+    Original structure:
     [
        {"taskid": 1, "type": "output", "datasetname": "First_out"},
        {"taskid": 1, "type": "output", "datasetname": "Second_out"},
@@ -103,7 +308,8 @@ def squash_records(rec):
        {"taskid": 2, "type": "output", "datasetname": "First_out"},
        {"taskid": 2, "type": "output", "datasetname": "Second_out"},
     ...]
-     to
+
+    Result structure:
     [
        {"taskid": 1,
         "output": ["First_out", "Second_out", "Third_out"]
@@ -112,14 +318,58 @@ def squash_records(rec):
         "output": ["First_out","Second_out"]
        },
     ...]
+
+    :param rec: original records
+    :type rec: iterable object
     """
-    grouper = defaultdict(lambda: defaultdict(list))
+    key_fields = ['taskid']
+    fold_fields = [('type', 'datasetname')]
+    result = {}
     for d in rec:
-        grouper[d['taskid']][d['type']].append(d['datasetname'])
-    return [dict(taskid=k, **v) for k, v in grouper.items()]
+        for key_field in key_fields:
+            if not d.get(key_field):
+                # There must not be empty key fields (or how is it "key");
+                # but we better explicitly skip it. Just in case.
+                continue
+            if result.get(key_field) and result[key_field] != d[key_field]:
+                # Squashing is over for given set of values of the key fields
+                yield result
+                result = {}
+                break
+
+        # Fold original record
+        # {'taskid': 1, 'type': 'output', 'datasetname': DSNAME} ->
+        #  -> {'taskid': 1, 'output': DSNAME}
+        for fkey, fval in fold_fields:
+            if fkey in d:
+                new_key = d.pop(fkey)
+                new_val = d.pop(fval, None)
+                d[new_key] = new_val
+
+        for f in d:
+            if f in key_fields:
+                result[f] = d[f]
+                continue
+            if d[f]:
+                if result.get(f):
+                    if type(result[f]) != list:
+                        result[f] = [result[f]]
+                    result[f].append(d[f])
+                else:
+                    result[f] = d[f]
+
+    if result:
+        yield result
 
 
 def join_results(tasks, datasets):
+    """ Join results of two queries by 'taskid'.
+
+    :param tasks: result of query 'tasks'
+    :param datasets: result of query 'datasets'
+    :type tasks: iterable object
+    :type datasets: iterable object
+    """
     d = defaultdict(dict)
     buffers = (tasks, datasets)
     join_buffer = {}
@@ -141,70 +391,64 @@ def join_results(tasks, datasets):
         yield d[tid]
 
 
-def process(conn, offset_date, final_date_cfg, step_seconds, queries):
-    if final_date_cfg:
-        final_date = final_date_cfg
-    else:
-        final_date = date2str(datetime.now())
+def process(conn, offset_storage, config):
+    """ Run the source connector process: extract data from ext. source.
+
+    :param conn: open connection to Oracle
+    :param offset_storage: offset storage
+    :param config: stage configuration
+    :type conn: OracleConnection
+    :type offset_storage: OffsetStorage
+    :type config: dict
+    """
+    reverse = config['step_seconds'] < 0
+    final_date = config['final_date']
+    step_seconds = config['step_seconds']
+    offset_date = get_offset(offset_storage)
+    if not reverse and not final_date:
+        # In case of normal data load 'final_date' may be None:
+        # it means we need to adjust it to current timestamp
+        # before every check
+        final_date = datetime.now()
+    full_interval = {'l': min(final_date, offset_date),
+                     'r': max(final_date, offset_date)}
     break_loop = False
-    while (not break_loop and str2date(offset_date) < str2date(final_date)):
-        end_date = date2str(str2date(offset_date)
-                            + timedelta(seconds=step_seconds))
-        if str2date(end_date) > str2date(final_date):
-            end_date = final_date
+    while full_interval['l'] <= offset_date <= full_interval['r']:
+        new_offset = offset_date + timedelta(seconds=step_seconds)
+        if not full_interval['l'] < new_offset < full_interval['r']:
+            # Get outside the configured full interval:
+            # need to adjust current interval
+            new_offset = full_interval['l'] if reverse else full_interval['r']
+            # and break the loop before next interation
             break_loop = True
+        if new_offset == offset_date:
+            break
+        start_date = min(offset_date, new_offset)
+        end_date = max(offset_date, new_offset)
         sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
-                         % (date2str(datetime.now()), offset_date, end_date))
+                         % (date2str(datetime.now()), date2str(start_date),
+                            date2str(end_date)))
         if mode == SQUASH_POLICY:
-            records = squash(conn, queries, offset_date, end_date)
+            records = squash(conn, ['tasks', 'datasets'], start_date,
+                             end_date)
         elif mode == PLAIN_POLICY:
-            records = plain(conn, queries, offset_date, end_date)
+            records = plain(conn, ['tasks'], start_date, end_date)
         for r in records:
-            r['phys_category'] = get_category(r)
-            sys.stdout.write(json.dumps(r) + '\n')
-        update_offset(end_date)
-        offset_date = end_date
-        if not final_date_cfg:
-            final_date = date2str(datetime.now())
-
-
-def query_executor(conn, sql_file, offset_date, end_date):
-    """
-    Execution of query with offset from file
-    """
-    try:
-        file_handler = open(sql_file)
-        query = file_handler.read().rstrip().rstrip(';') % (offset_date,
-                                                            end_date)
-        return DButils.ResultIter(conn, query, 1000, True)
-    except IOError:
-        sys.stderr.write('File open error. No such file (%s).\n' % sql_file)
-        sys.exit(2)
-
-
-def get_offset():
-    config = ConfigParser.ConfigParser()
-    config.read(conf)
-    return config.get("timestamps", "offset")
-
-
-def update_offset(new_offset):
-    """
-    Updating offset value in configuration file
-    """
-    config = ConfigParser.RawConfigParser()
-    config.optionxform = str
-    config.read(conf)
-    config.set('timestamps', 'offset', new_offset)
-    with open(conf, 'w') as configfile:
-        config.write(configfile)
+            OUT.write(json.dumps(r) + '\n')
+        offset_date = new_offset
+        commit_offset(offset_storage, offset_date)
+        if not config['final_date']:
+            full_interval['r'] = datetime.now()
+        if break_loop:
+            break
 
 
 def interval_seconds(step):
-    """
-    Convert human-readable interval into seconds.
+    """ Convert human-readable interval into seconds.
 
     If no suffix present, take step as seconds.
+    :param step: human-readable time interval (3600, 1h, 1d, 15m....)
+    :type step: str|int
     """
     try:
         return int(step)
@@ -225,114 +469,53 @@ def interval_seconds(step):
 
 
 def str2date(str_date):
-    """ Convert string (%d-%m-%Y %H:%M:%S) to datetime object. """
+    """ Convert string (%d-%m-%Y %H:%M:%S) to datetime object.
+
+    If passed parameter is of type datetime.datetime, it is returned
+    as is.
+
+    :param str_date: string to convert
+    :type str_date: string | datetime.datetime
+    :return: converted value
+    :rtype: datetime.datetime
+    """
+    if not str_date:
+        return None
+    if isinstance(str_date, datetime):
+        return str_date
     return datetime.strptime(str_date, "%d-%m-%Y %H:%M:%S")
 
 
 def date2str(date):
     """ Convert datetime object to string (%d-%m-%Y %H:%M:%S). """
+    if not date:
+        return None
     return datetime.strftime(date, "%d-%m-%Y %H:%M:%S")
 
 
-def get_category(row):
-    """
-    Each task can be associated with a number of Physics Categories.
-    1) search category in hashtags list
-    2) if not found in hashtags, then search category in phys_short
-       field of tasknames
-    :param row
-    :return:
-    """
-    hashtags = row.get('hashtag_list')
-    taskname = row.get('taskname')
-    PHYS_CATEGORIES_MAP = {
-        'BPhysics': ['charmonium', 'jpsi', 'bs', 'bd', 'bminus', 'bplus',
-                     'charm', 'bottom', 'bottomonium', 'b0'],
-        'BTag': ['btagging'],
-        'Diboson': ['diboson', 'zz', 'ww', 'wz', 'wwbb', 'wwll'],
-        'DrellYan': ['drellyan', 'dy'],
-        'Exotic': ['exotic', 'monojet', 'blackhole', 'technicolor',
-                   'randallsundrum', 'wprime', 'zprime', 'magneticmonopole',
-                   'extradimensions', 'warpeded', 'randallsundrum',
-                   'contactinteraction', 'seesaw'],
-        'GammaJets': ['photon', 'diphoton'],
-        'Higgs': ['whiggs', 'zhiggs', 'mh125', 'higgs', 'vbf', 'smhiggs',
-                  'bsmhiggs', 'chargedhiggs'],
-        'Minbias': ['minbias'],
-        'Multijet': ['dijet', 'multijet', 'qcd'],
-        'Performance': ['performance'],
-        'SingleParticle': ['singleparticle'],
-        'SingleTop': ['singletop'],
-        'SUSY': ['bino', 'susy', 'pmssm', 'leptosusy', 'rpv', 'mssm'],
-        'Triboson': ['triplegaugecoupling', 'triboson', 'zzw', 'www'],
-        'TTbar': ['ttbar'],
-        'TTbarX': ['ttw', 'ttz', 'ttv', 'ttvv', '4top', 'ttww'],
-        'Upgrade': ['upgrad'],
-        'Wjets': ['w'],
-        'Zjets': ['z']}
-    match = {}
-    categories = []
-    for phys_category in PHYS_CATEGORIES_MAP:
-        current_map = [x.strip(' ').lower()
-                       for x in PHYS_CATEGORIES_MAP[phys_category]]
-        if hashtags is not None:
-            match[phys_category] = len([x for x in hashtags.lower().split(',')
-                                        if x.strip(' ') in current_map])
-    categories = [cat for cat in match if match[cat] > 0]
-    if not categories and taskname:
-        phys_short = taskname.split('.')[2].lower()
-        if re.search('singletop', phys_short) is not None:
-            categories.append("SingleTop")
-        if re.search('ttbar', phys_short) is not None:
-            categories.append("TTbar")
-        if re.search('jets', phys_short) is not None:
-            categories.append("Multijet")
-        if re.search('h125', phys_short) is not None:
-            categories.append("Higgs")
-        if re.search('ttbb', phys_short) is not None:
-            categories.append("TTbarX")
-        if re.search('ttgamma', phys_short) is not None:
-            categories.append("TTbarX")
-        if re.search('_tt_', phys_short) is not None:
-            categories.append("TTbar")
-        if re.search('upsilon', phys_short) is not None:
-            categories.append("BPhysics")
-        if re.search('tanb', phys_short) is not None:
-            categories.append("SUSY")
-        if re.search('4topci', phys_short) is not None:
-            categories.append("Exotic")
-        if re.search('xhh', phys_short) is not None:
-            categories.append("Higgs")
-        if re.search('3top', phys_short) is not None:
-            categories.append("TTbarX")
-        if re.search('_wt', phys_short) is not None:
-            categories.append("SingleTop")
-        if re.search('_wwbb', phys_short) is not None:
-            categories.append("SingleTop")
-        if re.search('_wenu_', phys_short) is not None:
-            categories.append("Wjets")
-    if not categories:
-        categories = ["Uncategorized"]
-    return categories
-
-
 def parsingArguments():
-    parser = argparse.ArgumentParser(description='Process command line'
-                                     'arguments.')
-    parser.add_argument('--config', help='Configuration file path',
+    """ Parse command line arguments.
+
+    :return: parsed arguments
+    :rtype: argparse.Namespace
+    """
+    parser = argparse.ArgumentParser(description="DKB Dataflow Oracle"
+                                     " connector stage.")
+    parser.add_argument('--config', help="Configuration file path",
                         type=str, required=True)
-    parser.add_argument('--mode', help='Mode of execution: PLAIN | SQUASH',
+    parser.add_argument('--mode', help="Mode of execution: PLAIN | SQUASH",
                         choices=[PLAIN_POLICY, SQUASH_POLICY])
     args = parser.parse_args()
     if not os.access(args.config, os.F_OK):
         sys.stderr.write("argument --config: '%s' file not exists\n"
                          % args.config)
         sys.exit(1)
-    if not os.access(args.config, os.R_OK | os.W_OK):
-        sys.stderr.write("argument --config: '%s' read/write access failed\n"
+    if not os.access(args.config, os.R_OK):
+        sys.stderr.write("argument --config: '%s' read access failed\n"
                          % args.config)
         sys.exit(1)
     return parser.parse_args()
+
 
 if __name__ == '__main__':
     main()

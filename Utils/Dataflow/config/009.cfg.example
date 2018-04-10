@@ -1,0 +1,21 @@
+[oracle]
+dsn: %__ora_user__%/%__ora_password__%@%__ora_tns__%
+
+[queries]
+# absolute (or relative to config file) path to tasks query
+tasks: %__009_query_dir__%/prodsys2ES.sql
+# absolute (or relative to config file) path to datasets query
+datasets: %__009_query_dir__%/datasets.sql
+
+[timestamps]
+# initial timestamp (e.g. 01-05-2016 00:00:00)
+initial = %__009_init_offset__%
+# final timestamp (e.g. 10-05-2016 00:00:00)
+final = %__009_final_offset__%
+# offset from current timestamp (e.g. 86400 <=> 86400s <=> 1d; 8h; 15m)
+step = %__009_step__%
+
+[logging]
+# Current offset file
+# (relative to the dir with the config file or absolute path)
+offset_file = %__009_offset_file__%

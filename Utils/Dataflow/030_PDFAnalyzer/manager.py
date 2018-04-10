@@ -67,8 +67,7 @@ def path_join(a, b):
 if __name__ == "__main__":
     try:
         import Tkinter
-        from tkFileDialog import askdirectory, askopenfilename,\
-            askopenfilenames, asksaveasfile
+        from tkFileDialog import askdirectory, askopenfilenames, asksaveasfile
         import tkMessageBox
     except Exception as e:
         sys.stderr.write("Exception while loading Tkinter: %s\n" % e)
@@ -391,24 +390,24 @@ def process_diapason(d):
     return values
 
 
-def check_all_button(v, l):
+def check_all_button(v, lst):
     """ Command for handling Tkinter global checkbuttons.
 
     Command (un)checks all the checkbuttons in the list
     v - a VarInt variable associated with the global checkbutton.
-    l - a list of VarInt variables associated with checkbuttons in the
+    lst - a list of VarInt variables associated with checkbuttons in the
     list.
     """
     s = 0
-    for i in l:
+    for i in lst:
         s += i.get()
-    if s == len(l):
+    if s == len(lst):
         v.set(0)
-        for i in l:
+        for i in lst:
             i.set(0)
     else:
         v.set(1)
-        for i in l:
+        for i in lst:
             i.set(1)
 
 
@@ -546,71 +545,10 @@ class Paper:
     def delete(self):
         """ Delete all files associated with paper. """
         shutil.rmtree(self.dir)
-# def find_title(self):
-# """ New title determining method, does not works ideally yet.
-# Titles consisting of several lines are problematic to
-# determine.
-# """
-#        lines = self.get_xml_page(1)
-#
-#        d = {}
-# for l in lines:
-#            m = re_xml_symbol.match(l)
-# if m:
-#                size = float(m.group(1))
-#                text = m.group(2)
-# if size in d.keys():
-#                    d[size] += text
-# else:
-#                    d[size] = text
-# elif re_xml_empty_symbol.match(l):
-#                d[size] += " "
-#        xml_title = False
-# print d
-# while True:
-#            size = max(d.keys())
-#            valid = True
-# try:
-# d[size].decode()
-# except:
-#                valid = False
-# if not "atlas note" in d[size].lower() and valid:
-#                xml_title = d[size]
-# break
-# else:
-#                del d[size]
-#
-# print xml_title
-# if not xml_title:
-# return False
-#
-#        lines = self.get_txt_page(1)
-#        title = ""
-# for l in lines:
-# if len(l) <= 4 or l.startswith("Supporting Note")\
-# or l.startswith("ATLAS NOTE"):
-# continue
-#            words = l.split()
-#            i = 0
-# for w in words:
-# try:
-# This throws exception sometimes, something about
-# ascii codec unable to decode.
-#                    w_in = w in xml_title
-# except:
-#                    w_in = False
-# if len(w) > 1 and w_in:
-#                    i += 1
-# if i > 1 or (len(words) == 1 and i == 1):
-#                title += l.replace("\n", " ")
-# elif title:
-# break
-# return title
 
     def find_attributes_general(self):
         """ Find general attributes in a document. """
         attrs = {}
-#        attrs["title"] = self.find_title()
         text = self.get_text()
 
         attrs["campaigns"] = []
@@ -994,8 +932,8 @@ class Manager:
                      self.show_paper_info(False, paper))
             b.grid(row=r, column=0)
             if p.title is not None:
-                l = Tkinter.Label(self.frame, text=p.title)
-                l.grid(row=r, column=1)
+                lbl = Tkinter.Label(self.frame, text=p.title)
+                lbl.grid(row=r, column=1)
             r += 1
 
         self.frame.update_idletasks()
@@ -1021,29 +959,29 @@ class Manager:
 
         frame = Tkinter.Frame(w)
 
-        l = Tkinter.Label(frame, text="Working directory")
-        l.grid(row=0, column=0)
+        lbl = Tkinter.Label(frame, text="Working directory")
+        lbl.grid(row=0, column=0)
         e = Tkinter.Entry(frame, width=100, textvariable=work_dir)
         e.grid(row=0, column=1)
 
-        l = Tkinter.Label(frame, text="Determine papers' titles")
-        l.grid(row=1, column=0)
+        lbl = Tkinter.Label(frame, text="Determine papers' titles")
+        lbl.grid(row=1, column=0)
         b = Tkinter.Checkbutton(frame, variable=determine_title)
         b.grid(row=1, column=1)
 
-        l = Tkinter.Label(frame, text="Open intervals in text")
-        l.grid(row=2, column=0)
+        lbl = Tkinter.Label(frame, text="Open intervals in text")
+        lbl.grid(row=2, column=0)
         b = Tkinter.Checkbutton(frame, variable=open_intervals_text)
         b.grid(row=2, column=1)
 
-        l = Tkinter.Label(frame, text="Open intervals in tables")
-        l.grid(row=3, column=0)
+        lbl = Tkinter.Label(frame, text="Open intervals in tables")
+        lbl.grid(row=3, column=0)
         b = Tkinter.Checkbutton(frame, variable=open_intervals_tables)
         b.grid(row=3, column=1)
 
         txt = "Extract dataset IDs instead of full tables"
-        l = Tkinter.Label(frame, text=txt)
-        l.grid(row=4, column=0)
+        lbl = Tkinter.Label(frame, text=txt)
+        lbl.grid(row=4, column=0)
         b = Tkinter.Checkbutton(frame, variable=tables_ids_only)
         b.grid(row=4, column=1)
 
@@ -1181,8 +1119,8 @@ class Manager:
             for c in window.winfo_children():
                 c.destroy()
         window.title("Info: %s" % paper.fname)
-        l = Tkinter.Label(window, text="File name: %s" % paper.fname)
-        l.grid(row=0, column=1)
+        lbl = Tkinter.Label(window, text="File name: %s" % paper.fname)
+        lbl.grid(row=0, column=1)
         b = Tkinter.Button(window, text="Save",
                            command=lambda paper=paper: self.save_paper(paper))
         b.grid(row=0, column=2)
@@ -1196,13 +1134,13 @@ class Manager:
         b = Tkinter.Button(window, text="Delete", command=lambda window=window,
                            paper=paper: self.delete_paper(window, paper))
         b.grid(row=0, column=5)
-        l = Tkinter.Label(window, text="Title: %s" % paper.title)
-        l.grid(row=1, columnspan=5)
-        l = Tkinter.Label(window, text="Pages: %d" % paper.num_pages)
-        l.grid(row=2, columnspan=5)
-        l = Tkinter.Label(window,
-                          text="Rotated pages: %s" % str(paper.rotated_pages))
-        l.grid(row=3, columnspan=5)
+        lbl = Tkinter.Label(window, text="Title: %s" % paper.title)
+        lbl.grid(row=1, columnspan=5)
+        lbl = Tkinter.Label(window, text="Pages: %d" % paper.num_pages)
+        lbl.grid(row=2, columnspan=5)
+        lbl = Tkinter.Label(window, text="Rotated pages: %s" %
+                            str(paper.rotated_pages))
+        lbl.grid(row=3, columnspan=5)
         b = Tkinter.Button(window, text="Attributes",
                            command=lambda window=window,
                            paper=paper: self.show_paper_attributes(window,
@@ -1248,8 +1186,8 @@ class Manager:
         d = {}
         r = re.compile("^<text[^>]+ size=\"([0-9.]+)\">(.+)</text>$")
         empty = re.compile("^<text> </text>$")
-        for l in lines:
-            m = r.match(l)
+        for line in lines:
+            m = r.match(line)
             if m:
                 size = m.group(1)
                 text = m.group(2)
@@ -1257,20 +1195,16 @@ class Manager:
                     d[size] += text
                 else:
                     d[size] = text
-            elif empty.match(l):
+            elif empty.match(line):
                 d[size] += " "
 
         msg = "Please, select a string which looks like a title of the paper"
-        l = Tkinter.Label(window, text=msg, font=HEADING_FONT)
-        l.grid(row=0, columnspan=2)
+        lbl = Tkinter.Label(window, text=msg, font=HEADING_FONT)
+        lbl.grid(row=0, columnspan=2)
         r = 1
         selection = Tkinter.StringVar()
         for key in d:
             if len(d[key]) > 10:
-                if len(d[key]) > 50:
-                    bt = d[key][:50] + "..."
-                else:
-                    bt = d[key]
                 if r == 1:
                     selection.set(d[key])
                 button = Tkinter.Radiobutton(window, text=d[key],
@@ -1298,28 +1232,29 @@ class Manager:
         possible_title = possible_title_variable.get()
 
         title = ""
-        for l in lines:
-            if len(l) <= 4 or l.startswith("Supporting Note")\
-               or l.startswith("ATLAS NOTE"):
+        for line in lines:
+            if len(line) <= 4 or line.startswith("Supporting Note")\
+               or line.startswith("ATLAS NOTE"):
                 continue
-            words = l.split()
+            words = line.split()
             i = 0
             for w in words:
                 try:
                     # This throws exception sometimes, something about
                     # ascii codec unable to decode.
                     w_in = w in possible_title
-                except:
+                except Exception as e:
                     w_in = False
                 if len(w) > 1 and w_in:
                     i += 1
             if i > 1 or (len(words) == 1 and i == 1):
-                title += l.replace("\n", " ")
+                title += line.replace("\n", " ")
             elif title:
                 break
-        l = Tkinter.Label(window, text="Please, correct the title, if needed.",
-                          font=HEADING_FONT)
-        l.grid(row=0, columnspan=2)
+        lbl = Tkinter.Label(window,
+                            text="Please, correct the title, if needed.",
+                            font=HEADING_FONT)
+        lbl.grid(row=0, columnspan=2)
         e = Tkinter.Entry(window, width=150)
         e.insert(0, title)
         e.grid(row=1, columnspan=2)
@@ -1389,22 +1324,22 @@ class Manager:
             for a in paper.attributes_general:
                 if a == "links":
                     if paper.__dict__[a]:
-                        l = Tkinter.Label(window, text="Links:")
-                        l.grid(row=r, column=0)
+                        lbl = Tkinter.Label(window, text="Links:")
+                        lbl.grid(row=r, column=0)
                         r += 1
                         for key in paper.__dict__[a]:
                             txt = "%s %s" % (key, paper.__dict__[a][key])
-                            l = Tkinter.Label(window, text=txt)
-                            l.grid(row=r, column=0)
+                            lbl = Tkinter.Label(window, text=txt)
+                            lbl.grid(row=r, column=0)
                             r += 1
                     else:
-                        l = Tkinter.Label(window, text="No links")
-                        l.grid(row=r, column=0)
+                        lbl = Tkinter.Label(window, text="No links")
+                        lbl.grid(row=r, column=0)
                         r += 1
                 else:
                     txt = "%s:%s" % (a, str(paper.__dict__[a]))
-                    l = Tkinter.Label(window, text=txt)
-                    l.grid(row=r, column=0)
+                    lbl = Tkinter.Label(window, text=txt)
+                    lbl.grid(row=r, column=0)
                     r += 1
             b = Tkinter.Button(window, text="Back",
                                command=lambda window=window,
@@ -1430,8 +1365,8 @@ class Manager:
                 r = 0
                 dataset_entries = {}
                 for c in datasets:
-                    l = Tkinter.Label(frame, text=c, font=HEADING_FONT)
-                    l.grid(row=r, column=0, columnspan=2)
+                    lbl = Tkinter.Label(frame, text=c, font=HEADING_FONT)
+                    lbl.grid(row=r, column=0, columnspan=2)
                     c_s = Tkinter.IntVar()
                     c_s.set(1)
                     check_category_b = Tkinter.Checkbutton(frame, var=c_s)
@@ -1441,8 +1376,8 @@ class Manager:
                     selected_list = []
                     datasets[c].sort(key=lambda d: d[0])
                     for [name, special] in datasets[c]:
-                        l = Tkinter.Label(frame, text=special)
-                        l.grid(row=r, column=0)
+                        lbl = Tkinter.Label(frame, text=special)
+                        lbl.grid(row=r, column=0)
                         e = Tkinter.Entry(frame, width=150)
                         e.insert(0, name)
                         e.grid(row=r, column=1)
@@ -1458,8 +1393,8 @@ class Manager:
                     # checkbuttons are clicked - therefore, global
                     # checkbox will not change its look.
                     check_category_b.config(command=lambda v=c_s,
-                                            l=selected_list:
-                                            check_all_button(v, l))
+                                            lst=selected_list:
+                                            check_all_button(v, lst))
 
                 scrlbr = Tkinter.Scrollbar(window, command=cnvs.yview)
                 scrlbr.grid(row=0, column=2, rowspan=2, sticky='ns')
@@ -1486,9 +1421,9 @@ class Manager:
                                             datasets)
         else:
             if not paper.datasets:
-                l = Tkinter.Label(window, text="No datasets found",
-                                  font=HEADING_FONT)
-                l.grid(row=0)
+                lbl = Tkinter.Label(window, text="No datasets found",
+                                    font=HEADING_FONT)
+                lbl.grid(row=0)
             else:
                 cnvs = Tkinter.Canvas(window, width=1200, height=800)
                 cnvs.grid(row=0, column=0, columnspan=2)
@@ -1498,13 +1433,13 @@ class Manager:
 
                 r = 0
                 for k in paper.datasets:
-                    l = Tkinter.Label(frame, text=k, font=HEADING_FONT)
-                    l.grid(row=r)
+                    lbl = Tkinter.Label(frame, text=k, font=HEADING_FONT)
+                    lbl.grid(row=r)
                     r += 1
 #                    for [d, special] in paper.datasets[k]:
                     for d in paper.datasets[k]:
-                        l = Tkinter.Label(frame, text=d)
-                        l.grid(row=r)
+                        lbl = Tkinter.Label(frame, text=d)
+                        lbl.grid(row=r)
                         r += 1
 
                 scrlbr = Tkinter.Scrollbar(window, command=cnvs.yview)
@@ -1543,10 +1478,11 @@ class Manager:
                     t_frame = Tkinter.Frame(frame)
                     selected = Tkinter.IntVar()
                     selected.set(1)
-                    l = Tkinter.Label(t_frame, text=header, font=HEADING_FONT)
+                    lbl = Tkinter.Label(t_frame, text=header,
+                                        font=HEADING_FONT)
                     b = Tkinter.Checkbutton(t_frame, var=selected)
                     if isinstance(data, str) or isinstance(data, unicode):
-                        l.grid(row=0, column=0)
+                        lbl.grid(row=0, column=0)
                         b.grid(row=0, column=1)
                         t = Tkinter.Text(t_frame, width=(6 + 1) * 5,
                                          height=data.count(" ") // 5 + 2)
@@ -1555,21 +1491,21 @@ class Manager:
                         datatables_s.append([k, header, t, selected])
                     else:
                         rows = data
-                        l.grid(row=0, column=0, columnspan=len(rows[0]))
+                        lbl.grid(row=0, column=0, columnspan=len(rows[0]))
                         b.grid(row=0, column=len(rows[0]))
                         r = 1
                         for row in rows:
                             c = 0
                             for line in row:
-                                l = Tkinter.Label(t_frame, text=line)
-                                l.grid(row=r, column=c)
+                                lbl = Tkinter.Label(t_frame, text=line)
+                                lbl.grid(row=r, column=c)
                                 c += 1
                             r += 1
                             if r == 50:
                                 msg = "Table is too large, "\
                                       "omitting remaining rows."
-                                l = Tkinter.Label(t_frame, text=msg)
-                                l.grid(row=r, columnspan=c)
+                                lbl = Tkinter.Label(t_frame, text=msg)
+                                lbl.grid(row=r, columnspan=c)
                                 break
                         datatables_s.append([k, header, rows, selected])
                     t_frame.grid(row=num, column=0)
@@ -1601,9 +1537,9 @@ class Manager:
                                             datatables)
         else:
             if not paper.datatables:
-                l = Tkinter.Label(window, text="No datatables found",
-                                  font=HEADING_FONT)
-                l.grid(row=0)
+                lbl = Tkinter.Label(window, text="No datatables found",
+                                    font=HEADING_FONT)
+                lbl.grid(row=0)
                 r = 1
             else:
                 cnvs = Tkinter.Canvas(window, width=1200, height=800)
@@ -1618,27 +1554,28 @@ class Manager:
                 for k in keys:
                     (header, data) = paper.datatables[k]
                     t_frame = Tkinter.Frame(frame)
-                    l = Tkinter.Label(t_frame, text=header, font=HEADING_FONT)
+                    lbl = Tkinter.Label(t_frame, text=header,
+                                        font=HEADING_FONT)
                     if isinstance(data, str) or isinstance(data, unicode):
-                        l.grid(row=0, column=0)
-                        l = Tkinter.Label(t_frame, text=data, wraplength=600)
-                        l.grid(row=1, column=0)
+                        lbl.grid(row=0, column=0)
+                        lbl = Tkinter.Label(t_frame, text=data, wraplength=600)
+                        lbl.grid(row=1, column=0)
                     else:
                         rows = data
-                        l.grid(row=0, column=0, columnspan=len(rows[0]))
+                        lbl.grid(row=0, column=0, columnspan=len(rows[0]))
                         r = 1
                         for row in rows:
                             c = 0
                             for line in row:
-                                l = Tkinter.Label(t_frame, text=line)
-                                l.grid(row=r, column=c)
+                                lbl = Tkinter.Label(t_frame, text=line)
+                                lbl.grid(row=r, column=c)
                                 c += 1
                             r += 1
                             if r == 50:
                                 msg = "Table is too large, "\
                                       "omitting remaining rows."
-                                l = Tkinter.Label(t_frame, text=msg)
-                                l.grid(row=r, columnspan=c)
+                                lbl = Tkinter.Label(t_frame, text=msg)
+                                lbl.grid(row=r, columnspan=c)
                                 break
                     t_frame.grid(row=num, column=0)
                     num += 1
@@ -1663,9 +1600,9 @@ class Manager:
             for c in window.winfo_children():
                 c.destroy()
             window.title("Select page")
-            l = Tkinter.Label(window, text="Page number(1 - %d):"
-                              % paper.num_pages)
-            l.grid(row=0, column=0)
+            lbl = Tkinter.Label(window, text="Page number(1 - %d):"
+                                % paper.num_pages)
+            lbl.grid(row=0, column=0)
             e = Tkinter.Entry(window, width=10)
             e.grid(row=0, column=1)
             e.focus_set()
@@ -1692,23 +1629,23 @@ class Manager:
                 tables = xmltable.get_tables_from_text(text)
                 for table_num in range(0, len(tables)):
                     frame = Tkinter.Frame(window)
-                    l = Tkinter.Label(frame, text="Table %d" % table_num)
-                    l.grid(row=0, column=0,
-                           columnspan=len(tables[table_num].rows[0]))
+                    lbl = Tkinter.Label(frame, text="Table %d" % table_num)
+                    lbl.grid(row=0, column=0,
+                             columnspan=len(tables[table_num].rows[0]))
                     r = 1
                     for row in tables[table_num].rows:
                         c = 0
                         for line in row:
-                            l = Tkinter.Label(frame, text=line.text)
-                            l.grid(row=r, column=c)
+                            lbl = Tkinter.Label(frame, text=line.text)
+                            lbl.grid(row=r, column=c)
                             c += 1
                         r += 1
                     frame.grid(row=table_num, column=0)
                     table_num += 1
                 if not tables:
                     msg = "No tables found on page %d" % number
-                    l = Tkinter.Label(window, text=msg)
-                    l.grid(row=0, column=0)
+                    lbl = Tkinter.Label(window, text=msg)
+                    lbl.grid(row=0, column=0)
                     table_num = 1
                 b = Tkinter.Button(window, text="Back",
                                    command=lambda window=window, paper=paper:
@@ -1724,9 +1661,9 @@ class Manager:
             for c in window.winfo_children():
                 c.destroy()
             window.title("Select page")
-            l = Tkinter.Label(window, text="Page number(1 - %d):"
-                              % paper.num_pages)
-            l.grid(row=0, column=0)
+            lbl = Tkinter.Label(window, text="Page number(1 - %d):"
+                                % paper.num_pages)
+            lbl.grid(row=0, column=0)
             e = Tkinter.Entry(window, width=10)
             e.grid(row=0, column=1)
             e.focus_set()
@@ -1769,9 +1706,10 @@ class Manager:
                     else:
                         header_row = False
                         color = "black"
-                    for l in row:
-                        cnvs.create_rectangle((l.left, l.top + 10, l.right,
-                                               l.bottom + 10), outline=color)
+                    for line in row:
+                        cnvs.create_rectangle((line.left, line.top + 10,
+                                               line.right, line.bottom + 10),
+                                              outline=color)
 
                 b = Tkinter.Button(window, text="Back",
                                    command=lambda window=window, paper=paper:

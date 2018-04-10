@@ -1,0 +1,12 @@
+====================================
+* Config files for Dataflow stages *
+====================================
+
+All the examples for configuration files for Dataflow stages are to be placed
+here.
+
+All the parameters (value placeholders) are to be unique across the repository
+and have the following format: %__parameter_name__%.
+
+To check, where this or that placeholder is used, use following command:
+  git grep '%__parameter_name__%'

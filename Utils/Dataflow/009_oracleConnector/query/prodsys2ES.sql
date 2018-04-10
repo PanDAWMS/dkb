@@ -54,8 +54,8 @@ with tasks as (
       LEFT JOIN ATLAS_DEFT.t_hashtag hashtag
         ON hashtag.ht_id = ht_t.ht_id
     WHERE
-      t.timestamp > to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
-      t.timestamp <= to_date('%s', 'dd-mm-yyyy hh24:mi:ss') AND
+      t.timestamp > :start_date AND
+      t.timestamp <= :end_date AND
       t.pr_id > 300
     GROUP BY
         t.campaign,
@@ -279,9 +279,9 @@ with tasks as (
     sum(jd.neventsused) AS processed_events
   FROM tasks_t_task t
     LEFT JOIN ATLAS_PANDA.jedi_datasets jd
-      ON jd.jeditaskid = t.taskid
-  WHERE jd.type IN ('input')
-        AND jd.masterid IS NULL
+      ON t.taskid = jd.jeditaskid
+      AND jd.type IN ('input')
+      AND jd.masterid IS NULL
   GROUP by
     t.campaign,
     t.subcampaign,

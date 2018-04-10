@@ -6,6 +6,7 @@ import sys
 import traceback
 import ConfigParser
 from collections import defaultdict
+import textwrap
 
 try:
     import argparse
@@ -37,10 +38,32 @@ class AbstractStage(object):
         * define common arguments (--mode, ...)
         * ...
         """
-        self.ARGS = None
-        self.__parser = argparse.ArgumentParser(description=description)
         self.CONFIG = None
         self.__config = ConfigParser.SafeConfigParser()
+        self.ARGS = None
+        self.__parser = argparse.ArgumentParser(
+            formatter_class=argparse.RawDescriptionHelpFormatter,
+            description=description,
+            epilog=textwrap.dedent(
+                '''\
+                NOTES
+
+                Processing mode
+                  is defined as a combination of data source and
+                  destination type (local/HDFS file(s) or standard stream)
+                  and pre-defined EOP and EOM markers:
+
+                  mode | source | dest | eom | eop
+                  -----+--------+------+-----+-----
+                    s  |    s   |   s  |  \\n |  \\0
+                  -----+--------+------+-----+-----
+                    f  |   f/h  |  f/h |  \\n |
+                  -----+--------+------+-----+-----
+                    m  |   s/h  |   s  |  \\n |
+                  -----+--------+------+-----+-----
+                    h  |    h   |  h/f |  \\n |
+                  -----+--------+------+-----+-----''')
+        )
         self.defaultArguments()
 
         self._error = None
@@ -62,6 +85,18 @@ class AbstractStage(object):
                           metavar='CONFIG',
                           dest='config'
                           )
+        self.add_argument('-e', '--end-of-message', action='store', type=str,
+                          help=u'Custom end of message marker.',
+                          nargs='?',
+                          default=None,
+                          dest='eom'
+                          )
+        self.add_argument('-E', '--end-of-process', action='store', type=str,
+                          help=u'Custom end of process marker.',
+                          nargs='?',
+                          default=None,
+                          dest='eop'
+                          )
 
     def add_argument(self, *args, **kwargs):
         """ Add specific (not common) arguments. """
@@ -78,6 +113,31 @@ class AbstractStage(object):
         if not self.ARGS.mode:
             self.args_error("Parameter -m|--mode must be used with value:"
                             " -m MODE.")
+
+        if self.ARGS.eom is None:
+            self.ARGS.eom = '\n'
+        elif self.ARGS.eom == '':
+            raise ValueError("(ERROR) Empty EOM marker specified.")
+        else:
+            try:
+                self.ARGS.eom = self.ARGS.eom.decode('string_escape')
+            except (ValueError), err:
+                sys.stderr.write("(ERROR) Failed to read arguments.\n"
+                                 "(ERROR) Case: %s\n" % (err))
+                sys.exit(1)
+
+        if self.ARGS.eop is None:
+            if self.ARGS.mode == 's':
+                self.ARGS.eop = '\0'
+            else:
+                self.ARGS.eop = ''
+        else:
+            try:
+                self.ARGS.eop = self.ARGS.eop.decode('string_escape')
+            except (ValueError), err:
+                sys.stderr.write("(ERROR) Failed to read arguments.\n"
+                                 "(ERROR) Case: %s\n" % (err))
+                sys.exit(1)
 
         if not self.read_config():
             self.config_error()
