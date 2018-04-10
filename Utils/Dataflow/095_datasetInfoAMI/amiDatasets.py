@@ -40,18 +40,12 @@ def main(argv):
     stage.add_argument('--usercert', help='PEM certificate file',
                        required=True)
 
-    exit_code = 0
-    try:
-        stage.parse_args(argv)
-        stage.process = process
-        init_ami_client(stage.ARGS.userkey, stage.ARGS.usercert)
-        stage.run()
-    except (pyDKB.dataflow.exceptions.DataflowException, RuntimeError), err:
-        if str(err):
-            str_err = str(err).replace("\n", "\n(==) ")
-            sys.stderr.write("(ERROR) %s\n" % str_err)
-        exit_code = 2
-    finally:
+    stage.parse_args(argv)
+    stage.process = process
+    init_ami_client(stage.ARGS.userkey, stage.ARGS.usercert)
+    exit_code = stage.run()
+
+    if exit_code == 0:
         stage.stop()
 
     sys.exit(exit_code)
