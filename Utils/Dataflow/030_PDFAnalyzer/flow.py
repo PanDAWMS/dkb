@@ -98,26 +98,10 @@ if __name__ == "__main__":
     analyzer_stage = pyDKB.dataflow.stage.JSONProcessorStage()
     analyzer_stage.process = process
 
-    exit_code = 0
-    exc_info = None
-    try:
-        analyzer_stage.parse_args(sys.argv[1:])
-        analyzer_stage.run()
-    except (pyDKB.dataflow.DataflowException, RuntimeError), e:
-        if str(e):
-            sys.stderr.write("(ERROR) while running stage 30: %s\n" % e)
-        else:
-            exc_info = sys.exc_info()
-        exit_code = 2
-    except Exception:
-        exc_info = sys.exc_info()
-        exit_code = 1
-    finally:
-        analyzer_stage.stop()
+    analyzer_stage.parse_args(sys.argv[1:])
+    exit_code = analyzer_stage.run()
 
-    if exc_info:
-        trace = traceback.format_exception(*exc_info)
-        for line in trace:
-            sys.stderr.write("(ERROR) %s" % line)
+    if exit_code == 0:
+        analyzer_stage.stop()
 
     exit(exit_code)
