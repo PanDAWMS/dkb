@@ -46,18 +46,13 @@ DS_TYPE = 'output'
 def main(argv):
     """ Program body. """
     stage = pyDKB.dataflow.stage.JSONProcessorStage()
-    exit_code = 0
-    try:
-        stage.parse_args(argv)
-        stage.process = process
-        init_rucio_client()
-        stage.run()
-    except (pyDKB.dataflow.exceptions.DataflowException, RuntimeError), err:
-        if str(err):
-            str_err = str(err).replace("\n", "\n(==) ")
-            sys.stderr.write("(ERROR) %s\n" % str_err)
-        exit_code = 2
-    finally:
+
+    stage.parse_args(argv)
+    stage.process = process
+    init_rucio_client()
+    exit_code = stage.run()
+
+    if exit_code == 0:
         stage.stop()
 
     sys.exit(exit_code)
