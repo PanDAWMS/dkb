@@ -53,7 +53,7 @@ from pyDKB.common import hdfs
 from pyDKB.common import custom_readline
 
 
-class AbstractProcessorStage(AbstractStage):
+class ProcessorStage(AbstractStage):
     """ Abstract class to implement Processor stages
 
     Processor stage -- is a stage for data processing/transfornation.
@@ -93,9 +93,9 @@ class AbstractProcessorStage(AbstractStage):
         self.__input = []
         self.__output_buffer = []
         self.__stoppable = []
-        super(AbstractProcessorStage, self).__init__(description)
+        super(ProcessorStage, self).__init__(description)
 
-    def _set_input_message_class(self, Type=None):
+    def set_input_message_type(self, Type=None):
         """ Set input message type. """
         if not messageType.hasMember(Type):
             raise ValueError("Unknown message type: %s" % Type)
@@ -105,7 +105,7 @@ class AbstractProcessorStage(AbstractStage):
         """ Get input message class. """
         return self.__input_message_class
 
-    def _set_output_message_class(self, Type=None):
+    def set_output_message_type(self, Type=None):
         """ Set output message class. """
         if not messageType.hasMember(Type):
             raise ValueError("Unknown message type: %s" % Type)
@@ -117,7 +117,7 @@ class AbstractProcessorStage(AbstractStage):
 
     def defaultArguments(self):
         """ Default parser configuration. """
-        super(AbstractProcessorStage, self).defaultArguments()
+        super(ProcessorStage, self).defaultArguments()
         self.add_argument('input_files', type=str, nargs='*',
                           help=u'Source data file.',
                           metavar=u'FILE'
@@ -176,7 +176,7 @@ class AbstractProcessorStage(AbstractStage):
 
         Exits with code 2 in case of error (just like ArgumentParser does).
         """
-        super(AbstractProcessorStage, self).parse_args(args)
+        super(ProcessorStage, self).parse_args(args)
 
         # HDFS: HDFS file -> local file -> processor -> local file -> HDFS file
         if self.ARGS.hdfs:
@@ -257,7 +257,7 @@ class AbstractProcessorStage(AbstractStage):
     # Override
     def stop(self):
         """ Finalize all the processes and prepare to exit. """
-        super(AbstractProcessorStage, self).stop()
+        super(ProcessorStage, self).stop()
         failures = []
         for p in self.__stoppable:
             try:
@@ -326,6 +326,8 @@ class AbstractProcessorStage(AbstractStage):
         """
         if self.ARGS.eom == '\n':
             iterator = iter(fd.readline, "")
+        elif self.ARGS.eom == '':
+            iterator = [fd.read()]
         else:
             iterator = custom_readline(fd, self.ARGS.eom)
         try:
