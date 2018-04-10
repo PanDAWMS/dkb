@@ -125,7 +125,7 @@ def get_dataset_info(dataset):
         else:
             ds_dict['bytes'] = bytes
             ds_dict['deleted'] = False
-    except:
+    except RucioException:
         # if dataset wasn't find in Rucio, it means that it was deleted from
         # the Rucio catalog. In this case 'deleted' is set to TRUE and
         # the length of file is set to -1
