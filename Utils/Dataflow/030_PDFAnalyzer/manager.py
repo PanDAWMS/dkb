@@ -303,7 +303,7 @@ re_collisions = re.compile("(proton-proton|heavy-ion|pp) collisions")
 re_year = re.compile("(?:acquired|collected|measured|recorded).{0,100}"
                      r"(20\d\d)", re.DOTALL)
 # Interval must contain at least two numbers, i.e. [1/2] or [3\4\5].
-re_interval = re.compile("\[(?:[0-9][\\/][0-9\\/\n]+|[0-9]+-[0-9]+)\]")
+re_interval = re.compile(r"\[(?:[0-9][\\/][0-9\\/\n]+|[0-9]+-[0-9]+)\]")
 re_link = re.compile(r"(.*)\n? ?(https?://cds\.cern\.ch/record/\d+)")
 
 
