@@ -351,6 +351,7 @@ class ProcessorStage(AbstractStage):
                 if cf == src.get('full_path') and fd:
                     yield fd
                     continue
+                cf = src.get('full_path')
                 output_dir = self.ARGS.output_dir
                 if not output_dir:
                     output_dir = src.get('dir')
