@@ -450,6 +450,7 @@ class AbstractProcessorStage(AbstractStage):
                 if cf == self.__current_file_full:
                     yield fd
                     continue
+                cf = self.__current_file_full
                 output_dir = self.ARGS.output_dir
                 if not output_dir:
                     output_dir = os.path.dirname(self.__current_file_full)
