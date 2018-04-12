@@ -262,7 +262,7 @@ class ProcessorStage(AbstractStage):
             # If something went wrong in `except` clause, we will still
             # get here and return, so the exceptions from there will never
             # reach the user
-            if not isinstance(err, Exception):
+            if err and not isinstance(err, Exception):
                 sys.exit(exit_code)
             return exit_code
 
