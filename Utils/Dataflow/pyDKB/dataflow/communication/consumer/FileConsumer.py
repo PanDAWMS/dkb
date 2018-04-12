@@ -1,5 +1,5 @@
 """
-pyDKB.dataflow.consumer.FileConsumer
+pyDKB.dataflow.communication.consumer.FileConsumer
 
 Data consumer implementation for common (static) files.
 

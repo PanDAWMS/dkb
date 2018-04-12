@@ -11,6 +11,8 @@ from Stream import Stream
 from InputStream import InputStream
 from OutputStream import OutputStream
 
+import consumer
+
 __all__ = ['Message', 'StreamBuilder', 'Stream', 'InputStream', 'OutputStream']
 
 

@@ -1,5 +1,5 @@
 """
-pyDKB.dataflow.consumer.HDFSConsumer
+pyDKB.dataflow.communication.consumer.HDFSConsumer
 """
 
 import sys

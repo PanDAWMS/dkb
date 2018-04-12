@@ -51,7 +51,7 @@ from pyDKB.dataflow import DataflowException
 from pyDKB.common import hdfs
 from pyDKB.common import custom_readline
 from pyDKB.dataflow import communication
-from pyDKB.dataflow import consumer
+from pyDKB.dataflow.communication import consumer
 
 
 class ProcessorStage(AbstractStage):

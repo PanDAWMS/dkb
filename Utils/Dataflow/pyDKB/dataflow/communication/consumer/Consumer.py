@@ -1,5 +1,5 @@
 """
-pyDKB.dataflow.consumer.Consumer
+pyDKB.dataflow.communication.consumer.Consumer
 """
 
 import sys
@@ -9,8 +9,8 @@ from . import messageType
 from . import logLevel
 from . import DataflowException
 
-from pyDKB.dataflow.communication import Message
-from pyDKB.dataflow.communication import InputStream
+from .. import Message
+from .. import InputStream
 
 
 class ConsumerException(DataflowException):

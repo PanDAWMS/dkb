@@ -1,5 +1,5 @@
 """
-pyDKB.dataflow.consumer.StreamConsumer
+pyDKB.dataflow.communication.consumer.StreamConsumer
 
 Data consumer implementation for a single stream.
 
