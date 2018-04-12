@@ -68,7 +68,7 @@ def dataset_format(datasetname):
     if not datasetname:
         return None
     ds_format = datasetname.split('.')[4]
-    if re.match("\w+_\w+", ds_format) is not None:
+    if re.match(r'\w+_\w+', ds_format) is not None:
         result = [ds_format, ds_format.split('_')[0]]
     else:
         result = [ds_format]
