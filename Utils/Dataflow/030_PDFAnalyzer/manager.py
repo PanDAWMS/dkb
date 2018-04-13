@@ -105,15 +105,15 @@ class DatasetCategory:
     size.
     reg_dashes - Same as self.reg, but with dashes instead of
     underscores. Does not works, probably because "-" is a special
-    character, and should be "-" or "\-" in different places of regular
-    expressions.
+    character, and should be "sole dash" or "backslash-dash"
+    in different places of regular expressions.
     """
 
     def __init__(self, name, string):
         self.name = name
         self.reg = re.compile(string, re.X)
-        self.reg_spaces = re.compile(string.replace("_", "\ ")
-                                     .replace("\w", "a-zA-Z0-9 "), re.X)
+        self.reg_spaces = re.compile(string.replace("_", r"\ ")
+                                     .replace(r"\w", "a-zA-Z0-9 "), re.X)
 # self.reg_dashes = re.compile(string.replace("_", "\-")\
 # .replace("\w", "a-zA-Z0-9-"),
 # re.X)
@@ -132,7 +132,7 @@ class DatasetCategory:
             if "INTERVAL" in s:
                 if cfg["OPEN_INTERVALS_TEXT"]:
                     #                print "STRING WITH INTERVALS:", s
-                    nums = re.findall("INTERVAL(\d+)!", s)
+                    nums = re.findall(r"INTERVAL(\d+)!", s)
                     arr = []
                     for n in nums:
                         arr.append(len(intervals[int(n)]))
@@ -251,19 +251,19 @@ category_export_dict = {
 # We don't need group and user datasets for now.
 dataset_categories = [montecarlo, physcont, calibration, realdata, database]
 # Path must have / as separator, not \.
-re_pdfname = re.compile("/([^./]+)\.pdf$")
-re_table_header = re.compile("Table \d+:.*?\n\n", re.DOTALL)
-re_table_header_short = re.compile("Table (\d+):")
+re_pdfname = re.compile(r"/([^./]+)\.pdf$")
+re_table_header = re.compile(r"Table \d+:.*?\n\n", re.DOTALL)
+re_table_header_short = re.compile(r"Table (\d+):")
 re_table_datasets = re.compile("(?:sample|dataset|run)")
 re_column_with_datasets = re.compile("^(?:d[cs]?[-_ ]?|mc[-_ ]?|data ?"
                                      "|dataset ?"
                                      "|period|request ?|run ?|sample ?)(?:id"
                                      "|number|period|range|sample|set)")
-re_dsid = re.compile("^\d{4,8}$")
-re_dsid_diap = re.compile("^\d{4,8}-\d{1,8}$")
+re_dsid = re.compile(r"^\d{4,8}$")
+re_dsid_diap = re.compile(r"^\d{4,8}-\d{1,8}$")
 re_xml_symbol = re.compile("^<text[^>]+ size=\"([0-9.]+)\">(.+)</text>$")
 re_xml_empty_symbol = re.compile("^<text> </text>$")
-re_atlas_name = re.compile("[A-Z0-9-]+-20\d\d-[A-Z0-9-]+")
+re_atlas_name = re.compile(r"[A-Z0-9-]+-20\d\d-[A-Z0-9-]+")
 re_campaign = re.compile(r"""(
                                 mc11(?![abc])
                                 |
@@ -295,16 +295,16 @@ re_campaign = re.compile(r"""(
                                 |
                                 t0proc03_v1
                                 )""", re.X)
-re_energy = re.compile("(\d+\.?\d*) (G|T)eV")
+re_energy = re.compile(r"(\d+\.?\d*) (G|T)eV")
 # WARNING: this "fb-1" is in UTF-8 coding and was copied from miner
 # output. Simple "fb-1" does not works.
-re_luminosity = re.compile("(\d+\.?\d*) ?(m|n|p|f)b(?:−|\(cid:0\))1")
+re_luminosity = re.compile(r"(\d+\.?\d*) ?(m|n|p|f)b(?:−|\(cid:0\))1")
 re_collisions = re.compile("(proton-proton|heavy-ion|pp) collisions")
 re_year = re.compile("(?:acquired|collected|measured|recorded).{0,100}"
-                     "(20\d\d)", re.DOTALL)
+                     r"(20\d\d)", re.DOTALL)
 # Interval must contain at least two numbers, i.e. [1/2] or [3\4\5].
-re_interval = re.compile("\[(?:[0-9][\\/][0-9\\/\n]+|[0-9]+-[0-9]+)\]")
-re_link = re.compile("(.*)\n? ?(https?://cds\.cern\.ch/record/\d+)")
+re_interval = re.compile(r"\[(?:[0-9][\\/][0-9\\/\n]+|[0-9]+-[0-9]+)\]")
+re_link = re.compile(r"(.*)\n? ?(https?://cds\.cern\.ch/record/\d+)")
 
 
 def find_cut_reg(reg, text):
