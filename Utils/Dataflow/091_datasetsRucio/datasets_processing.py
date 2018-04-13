@@ -146,7 +146,7 @@ def extract_scope(dsn):
     """
     pos = dsn.find(':')
     if pos > -1:
-        result = (dsn[:pos], dsn.split[pos+1:])
+        result = (dsn[:pos], dsn.split[(pos + 1):])
     else:
         scope = dsn.split('.')[0]
         if dsn.startswith('user') or dsn.startswith('group'):
