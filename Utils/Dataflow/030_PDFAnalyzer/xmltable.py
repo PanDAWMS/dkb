@@ -363,9 +363,9 @@ class Table:
 
 def get_tables_from_text(text):
     """ Get tables from a xml page text. """
-    re_textbox = re.compile("<textbox id=\"\d+\" bbox=\"([0-9.,]+)\">",
+    re_textbox = re.compile(r"<textbox id=\"\d+\" bbox=\"([0-9.,]+)\">",
                             re.DOTALL)
-    re_table_header = re.compile("Table \d+:")
+    re_table_header = re.compile(r"Table \d+:")
     tlines = re_textline.findall(text)
     lines = []
     table_headers = []
