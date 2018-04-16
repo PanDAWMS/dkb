@@ -17,6 +17,9 @@ OUTPUT
                                 from the pipe.
 				If neither FILE nor PIPE is specified, output
                                 goes to STDOUT.
+MARKERS
+  -e, --eom      EOM            End-of-message marker.
+  -E, --eop      EOP            End-of-process marker.
 KERBEROS
   -u, --username USER           Cern account login.
   -r, --retry                   Try to get new Kerberos ticket in case of
