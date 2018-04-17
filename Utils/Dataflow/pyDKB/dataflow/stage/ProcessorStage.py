@@ -468,6 +468,16 @@ class ProcessorStage(AbstractStage):
             hdfs.makedirs(dirname)
         return dirname
 
+    def get_out_filename(self):
+        """ Get output filename, corresponding current data source. """
+        ext = self.output_message_class().extension()
+        f = self.__current_file
+        if f and f != sys.stdin.name:
+            result = os.path.splitext(f)[0] + ext
+        else:
+            result = str(int(time.time())) + ext
+        return result
+
     def __out_files(self, t='l'):
         """ Generator for file descriptors to write data to.
 
@@ -477,7 +487,6 @@ class ProcessorStage(AbstractStage):
         if t not in ('l', 'h'):
             raise ValueError("parameter t acceptable values: 'l','h'"
                              " (got '%s')" % t)
-        ext = self.output_message_class().extension()
         fd = None
         cf = None
         try:
@@ -487,31 +496,30 @@ class ProcessorStage(AbstractStage):
                     continue
                 cf = self.__current_file_full
                 output_dir = self.ensure_out_dir(t)
-                if self.__current_file \
-                        and self.__current_file != sys.stdin.name:
-                    filename = os.path.splitext(self.__current_file)[0] + ext
-                else:
-                    filename = str(int(time.time())) + ext
+                filename = self.get_out_filename()
                 if t == 'l':
-                    filename = os.path.join(output_dir, filename)
-                if os.path.exists(filename):
-                    if fd and os.path.samefile(filename, fd.name):
+                    local_path = os.path.join(output_dir, filename)
+                else:
+                    local_path = filename
+                    hdfs_path = hdfs.join(output_dir, filename)
+                if os.path.exists(local_path):
+                    if fd and os.path.samefile(local_path, fd.name):
                         yield fd
                         continue
                     else:
                         raise DataflowException("File already exists: %s\n"
-                                                % filename)
+                                                % local_path)
                 if fd:
                     fd.close()
                     if t == 'h':
-                        hdfs.movefile(fd.name, output_dir)
-                fd = open(filename, "w", 0)
+                        hdfs.movefile(fd.name, hdfs_path)
+                fd = open(full_path, "w", 0)
                 yield fd
         finally:
             if fd:
                 fd.close()
                 if t == 'h':
-                    hdfs.movefile(fd.name, output_dir)
+                    hdfs.movefile(fd.name, hdfs_path)
 
     def __hdfs_in_dir(self):
         """ Call file descriptors generator for files in HDFS dir. """
