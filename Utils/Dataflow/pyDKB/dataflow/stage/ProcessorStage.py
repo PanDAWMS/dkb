@@ -330,6 +330,44 @@ class ProcessorStage(AbstractStage):
         """ Drop buffered output messages. """
         self.get_out_stream().drop()
 
+    def get_out_dir(self, t='l'):
+        """ Get current output directory name. """
+        if t not in ('l', 'h'):
+            raise ValueError("get_out_dir() method expects values: 'l','h'"
+                             " (got '%s')" % t)
+        result = self.ARGS.output_dir
+        if not result:
+            src = self.get_source_info()
+            if src:
+                result = src.get('dir')
+        if not result:
+            if t == 'l':
+                result = os.getcwd()
+            else:
+                result = hdfs.join(hdfs.DKB_HOME, 'temp',
+                                   str(int(time.time())))
+            self.log("Output dir set to: %s" % result)
+            self.ARGS.output_dir = result
+        return result
+
+    def ensure_out_dir(self, t='l'):
+        """ Ensure that current output directory exists. """
+        if t not in ('l', 'h'):
+            raise ValueError("ensure_out_dir() method expects values: 'l','h'"
+                             " (got '%s')" % t)
+        dirname = self.get_out_dir(t)
+        if t == 'l':
+            if not os.path.isdir(dirname):
+                try:
+                    os.makedirs(dirname, 0770)
+                except OSError, err:
+                    self.log("Failed to create output directory\n"
+                             "Error message: %s\n" % err, logLevel.ERROR)
+                    raise DataflowException
+        else:
+            hdfs.makedirs(dirname)
+        return dirname
+
     def __out_files(self, t='l'):
         """ Generator for file descriptors to write data to.
 
@@ -342,17 +380,6 @@ class ProcessorStage(AbstractStage):
         ext = self.output_message_class().extension()
         fd = None
         cf = None
-        output_dir = self.ARGS.output_dir
-        if output_dir and not os.path.isdir(output_dir):
-            if t == 'l':
-                try:
-                    os.makedirs(output_dir, 0770)
-                except OSError, err:
-                    self.log("Failed to create output directory\n"
-                             "Error message: %s\n" % err, logLevel.ERROR)
-                    raise DataflowException
-            else:
-                hdfs.makedirs(output_dir)
         try:
             while self.get_source_info():
                 src = self.get_source_info()
@@ -360,18 +387,7 @@ class ProcessorStage(AbstractStage):
                     yield fd
                     continue
                 cf = src.get('full_path')
-                output_dir = self.ARGS.output_dir
-                if not output_dir:
-                    output_dir = src.get('dir')
-                if not output_dir:
-                    if t == 'l':
-                        output_dir = os.getcwd()
-                    if t == 'h':
-                        output_dir = hdfs.join(hdfs.DKB_HOME, "temp",
-                                               str(int(time.time())))
-                        hdfs.makedirs(output_dir)
-                    self.ARGS.output_dir = output_dir
-                    self.log("Output dir set to: %s" % output_dir)
+                output_dir = self.ensure_out_dir(t)
                 if src.get('name'):
                     filename = os.path.splitext(src['name'])[0] + ext
                 else:
