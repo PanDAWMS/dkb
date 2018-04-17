@@ -156,7 +156,7 @@ class TTLMessage(AbstractMessage):
         return self.decoded
 
     def encode(self, code=codeType.STRING):
-        """ Encode JSON as CODE. """
+        """ Encode TTL as CODE. """
         if not self.encoded:
             orig = self.getOriginal()
             if code == codeType.STRING:
