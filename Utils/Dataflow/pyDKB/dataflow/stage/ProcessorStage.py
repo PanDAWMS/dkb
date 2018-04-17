@@ -515,20 +515,22 @@ class ProcessorStage(AbstractStage):
                     # * new local output file is the same as before.
                     current_file['fd'] = prev_file['fd']
                     del prev_file['fd']
-                    yield current_file['fd']
-                    continue
-                if os.path.exists(current_file['local_path']):
+                    result = current_file['fd']
+                elif os.path.exists(current_file['local_path']):
                     raise DataflowException("File already exists: %s\n"
                                             % current_file['local_path'])
-                if prev_file.get('fd'):
-                    prev_file['fd'].close()
-                    if t == 'h':
-                        hdfs.movefile(prev_file['local_path'],
-                                      prev_file['hdfs_path'])
-                    del prev_file['fd']
-                self.ensure_out_dir(t)
-                current_file['fd'] = open(current_file['local_path'], 'w', 0)
-                yield current_file['fd']
+                else:
+                    if prev_file.get('fd'):
+                        prev_file['fd'].close()
+                        if t == 'h':
+                            hdfs.movefile(prev_file['local_path'],
+                                          prev_file['hdfs_path'])
+                        del prev_file['fd']
+                    self.ensure_out_dir(t)
+                    current_file['fd'] = open(current_file['local_path'],
+                                              'w', 0)
+                    result = current_file['fd']
+                yield result
         finally:
             for f in (prev_file, current_file):
                 if f.get('fd'):
