@@ -475,6 +475,19 @@ class ProcessorStage(AbstractStage):
             result = str(int(time.time())) + ext
         return result
 
+    def get_out_file_info(self, t):
+        """ Get metadata for current output file. """
+        f = {}
+        f['src'] = self.__current_file_full
+        f['dir'] = self.get_out_dir(t)
+        f['name'] = self.get_out_filename()
+        if t == 'l':
+            f['local_path'] = os.path.join(f['dir'], f['name'])
+        else:
+            f['local_path'] = f['name']
+            f['hdfs_path'] = hdfs.join(f['dir'], f['name'])
+        return f
+
     def __out_files(self, t='l'):
         """ Generator for file descriptors to write data to.
 
@@ -489,22 +502,13 @@ class ProcessorStage(AbstractStage):
         try:
             while self.__current_file_full:
                 prev_file = current_file
-                current_file = {}
-                src = self.__current_file_full
-                if prev_file.get('src') == src and prev_file.get('fd'):
-                    current_file = prev_file
+                current_file = self.get_out_file_info(t)
+                if prev_file.get('src') == current_file['src'] \
+                        and prev_file.get('fd'):
+                    current_file['fd'] = prev_file['fd']
+                    del prev_file['fd']
                     yield current_file['fd']
                     continue
-                current_file['src'] = src
-                current_file['dir'] = self.ensure_out_dir(t)
-                current_file['name'] = self.get_out_filename()
-                if t == 'l':
-                    current_file['local_path'] = os.path.join(
-                                    current_file['dir'], current_file['name'])
-                else:
-                    current_file['local_path'] = current_file['name']
-                    current_file['hdfs_path'] = hdfs.join(
-                                    current_file['dir'], current_file['name'])
                 if os.path.exists(current_file['local_path']):
                     if prev_file.get('fd') and os.path.samefile(
                             current_file['local_path'], prev_file['fd'].name):
@@ -523,6 +527,7 @@ class ProcessorStage(AbstractStage):
                         hdfs.movefile(prev_file['local_path'],
                                       prev_file['hdfs_path'])
                     del prev_file['fd']
+                self.ensure_out_dir(t)
                 current_file['fd'] = open(current_file['local_path'], 'w', 0)
                 yield current_file['fd']
         finally:
