@@ -368,6 +368,16 @@ class ProcessorStage(AbstractStage):
             hdfs.makedirs(dirname)
         return dirname
 
+    def get_out_filename(self):
+        """ Get output filename, corresponding current data source. """
+        ext = self.output_message_class().extension()
+        src = self.get_source_info()
+        if src and src.get('name'):
+            result = os.path.splitext(src['name'])[0] + ext
+        else:
+            result = str(int(time.time())) + ext
+        return result
+
     def __out_files(self, t='l'):
         """ Generator for file descriptors to write data to.
 
@@ -377,7 +387,6 @@ class ProcessorStage(AbstractStage):
         if t not in ('l', 'h'):
             raise ValueError("parameter t acceptable values: 'l','h'"
                              " (got '%s')" % t)
-        ext = self.output_message_class().extension()
         fd = None
         cf = None
         try:
@@ -388,25 +397,25 @@ class ProcessorStage(AbstractStage):
                     continue
                 cf = src.get('full_path')
                 output_dir = self.ensure_out_dir(t)
-                if src.get('name'):
-                    filename = os.path.splitext(src['name'])[0] + ext
-                else:
-                    filename = str(int(time.time())) + ext
+                filename = self.get_out_filename()
                 if t == 'l':
-                    filename = os.path.join(output_dir, filename)
-                if os.path.exists(filename):
-                    if fd and os.path.samefile(filename, fd.name):
+                    local_path = os.path.join(output_dir, filename)
+                else:
+                    local_path = filename
+                    hdfs_path = hdfs.join(output_dir, filename)
+                if os.path.exists(local_path):
+                    if fd and os.path.samefile(local_path, fd.name):
                         yield fd
                         continue
                     else:
                         raise DataflowException("File already exists: %s\n"
-                                                % filename)
+                                                % local_path)
                 if fd:
                     fd.close()
                     if t == 'h':
-                        hdfs.putfile(fd.name, output_dir)
+                        hdfs.putfile(fd.name, hdfs_path)
                         os.remove(fd.name)
-                fd = open(filename, "w", 0)
+                fd = open(full_path, "w", 0)
                 yield fd
         finally:
             if fd:
