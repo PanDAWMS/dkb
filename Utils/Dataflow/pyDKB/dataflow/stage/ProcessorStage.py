@@ -214,6 +214,14 @@ class ProcessorStage(AbstractStage):
             .build()
         self.__stoppable_append(self.__input, consumer.Consumer)
 
+    def get_source_info(self):
+        """ Get information about current source. """
+        if self.__input:
+            result = self.__input.get_source_info()
+        else:
+            result = None
+        return result
+
     def get_out_stream(self):
         """ Get current output stream. """
         if isinstance(self.__output, file):
@@ -346,8 +354,8 @@ class ProcessorStage(AbstractStage):
             else:
                 hdfs.makedirs(output_dir)
         try:
-            while self.__input.get_source_info():
-                src = self.__input.get_source_info()
+            while self.get_source_info():
+                src = self.get_source_info()
                 if cf == src.get('full_path') and fd:
                     yield fd
                     continue
