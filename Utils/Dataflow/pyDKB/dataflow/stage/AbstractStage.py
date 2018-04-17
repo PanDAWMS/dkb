@@ -226,11 +226,10 @@ class AbstractStage(object):
                 n_lines = len(trace)
                 # List of log levels with number of lines
                 # to be output with this level
-                levels = [(logLevel.TRACE, -1), (logLevel.DEBUG, 8),
-                          (logLevel.ERROR, 3)]
+                levels = [(logLevel.DEBUG, -1), (logLevel.ERROR, 1)]
                 for i in xrange(n_lines):
                     for lvl, N in levels:
-                        if not N - 1 < i < n_lines - N or N < 0:
+                        if i >= n_lines - N or N < 0:
                             cur_lvl = lvl
                     msg = trace[i]
                     self.log(msg, cur_lvl)
