@@ -503,24 +503,20 @@ class ProcessorStage(AbstractStage):
             while self.__current_file_full:
                 prev_file = current_file
                 current_file = self.get_out_file_info(t)
-                if prev_file.get('src') == current_file['src'] \
-                        and prev_file.get('fd'):
+                if prev_file and prev_file.get('fd') and (
+                        prev_file.get('src') == current_file['src']
+                        or (os.path.abspath(current_file['local_path'])
+                            == os.path.abspath(prev_file['local_path']))):
+                    # Save previous open file descriptor, if:
+                    # * data source has not changed OR
+                    # * new local output file is the same as before.
                     current_file['fd'] = prev_file['fd']
                     del prev_file['fd']
                     yield current_file['fd']
                     continue
                 if os.path.exists(current_file['local_path']):
-                    if prev_file.get('fd') and os.path.samefile(
-                            current_file['local_path'], prev_file['fd'].name):
-                        # If previous local file is the same as the current,
-                        # use already opened file descriptor
-                        current_file['fd'] = prev_file['fd']
-                        del prev_file['fd']
-                        yield current_file['fd']
-                        continue
-                    else:
-                        raise DataflowException("File already exists: %s\n"
-                                                % current_file['local_path'])
+                    raise DataflowException("File already exists: %s\n"
+                                            % current_file['local_path'])
                 if prev_file.get('fd'):
                     prev_file['fd'].close()
                     if t == 'h':
