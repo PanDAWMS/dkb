@@ -520,8 +520,15 @@ class ProcessorStage(AbstractStage):
                     if prev_file.get('fd'):
                         prev_file['fd'].close()
                         if t == 'h':
-                            hdfs.movefile(prev_file['local_path'],
-                                          prev_file['hdfs_path'])
+                            l_path = prev_file.get('local_path')
+                            h_path = prev_file.get('hdfs_path')
+                            if l_path and h_path and os.path.exists(l_path):
+                                hdfs.movefile(l_path, h_path)
+                            else:
+                                self.log("Insufficient information to move"
+                                         " file to HDFS: local path (%s)"
+                                         " -> HDFS path (%s)."
+                                         % (l_path, h_path))
                         del prev_file['fd']
                     self.ensure_out_dir(t)
                     current_file['fd'] = open(current_file['local_path'],
@@ -533,11 +540,14 @@ class ProcessorStage(AbstractStage):
                 if f.get('fd'):
                     f['fd'].close()
                     del f['fd']
-                if t == 'h' and f.get('local_path') and f.get('hdfs_path'):
-                    try:
-                        hdfs.movefile(f['local_path'], f['hdfs_path'])
-                    except hdfs.HDFSException, err:
-                        self.log(str(err), logLevel.ERROR)
+                if t == 'h':
+                    l_path = f.get('local_path')
+                    h_path = f.get('hdfs_path')
+                    if l_path and h_path and os.path.exists(l_path):
+                        try:
+                            hdfs.movefile(l_path, h_path)
+                        except hdfs.HDFSException, err:
+                            self.log(str(err), logLevel.ERROR)
 
     def __hdfs_in_dir(self):
         """ Call file descriptors generator for files in HDFS dir. """
