@@ -423,9 +423,16 @@ class ProcessorStage(AbstractStage):
                     if prev_file.get('fd'):
                         prev_file['fd'].close()
                         if t == 'h':
-                            hdfs.putfile(prev_file['local_path'],
-                                         prev_file['hdfs_path'])
-                            os.remove(prev_file['local_path'])
+                            l_path = prev_file.get('local_path')
+                            h_path = prev_file.get('hdfs_path')
+                            if l_path and h_path os.path.exists(l_path):
+                                hdfs.putfile(l_path, h_path)
+                                os.remove(l_path)
+                            else:
+                                self.log("Insufficient information to move"
+                                         " file to HDFS: local path (%s)"
+                                         " -> HDFS path (%s)."
+                                         % (l_path, h_path))
                         del prev_file['fd']
                     self.ensure_out_dir(t)
                     current_file['fd'] = open(current_file['local_path'],
@@ -437,17 +444,20 @@ class ProcessorStage(AbstractStage):
                 if f.get('fd'):
                     f['fd'].close()
                     del f['fd']
-                if t == 'h' and f.get('local_path') and f.get('hdfs_path'):
-                    try:
-                        hdfs.putfile(f['local_path'], f['hdfs_path'])
-                    except hdfs.HDFSException, err:
-                        self.log(str(err), logLevel.ERROR)
-                    try:
-                        os.remove(f['local_path'])
-                    except OSError, err:
-                        self.log("Failed to remove temporary file: %s\n"
-                                 "Reason: %s" % (f['local_path'], err),
-                                 logLevel.ERROR)
+                if t == 'h':
+                    l_path = f.get('local_path')
+                    h_path = f.get('hdfs_path')
+                    if l_path and h_path and os.path.exists(l_path):
+                        try:
+                            hdfs.putfile(l_path, h_path)
+                        except hdfs.HDFSException, err:
+                            self.log(str(err), logLevel.ERROR)
+                        try:
+                            os.remove(l_path)
+                        except OSError, err:
+                            self.log("Failed to remove temporary file: %s\n"
+                                     "Reason: %s" % (l_path, err),
+                                     logLevel.ERROR)
 
     def __stoppable_append(self, obj, cls):
         """ Appends OBJ (of type CLS) to the list of STOPPABLE. """
