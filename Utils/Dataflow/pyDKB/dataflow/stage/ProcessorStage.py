@@ -484,39 +484,57 @@ class ProcessorStage(AbstractStage):
         if t not in ('l', 'h'):
             raise ValueError("parameter t acceptable values: 'l','h'"
                              " (got '%s')" % t)
-        fd = None
-        cf = None
+        current_file = {}
+        prev_file = {}
         try:
             while self.__current_file_full:
-                if cf == self.__current_file_full:
-                    yield fd
+                prev_file = current_file
+                current_file = {}
+                src = self.__current_file_full
+                if prev_file.get('src') == src and prev_file.get('fd'):
+                    current_file = prev_file
+                    yield current_file['fd']
                     continue
-                cf = self.__current_file_full
-                output_dir = self.ensure_out_dir(t)
-                filename = self.get_out_filename()
+                current_file['src'] = src
+                current_file['dir'] = self.ensure_out_dir(t)
+                current_file['name'] = self.get_out_filename()
                 if t == 'l':
-                    local_path = os.path.join(output_dir, filename)
+                    current_file['local_path'] = os.path.join(
+                                    current_file['dir'], current_file['name'])
                 else:
-                    local_path = filename
-                    hdfs_path = hdfs.join(output_dir, filename)
-                if os.path.exists(local_path):
-                    if fd and os.path.samefile(local_path, fd.name):
-                        yield fd
+                    current_file['local_path'] = current_file['name']
+                    current_file['hdfs_path'] = hdfs.join(
+                                    current_file['dir'], current_file['name'])
+                if os.path.exists(current_file['local_path']):
+                    if prev_file.get('fd') and os.path.samefile(
+                            current_file['local_path'], prev_file['fd'].name):
+                        # If previous local file is the same as the current,
+                        # use already opened file descriptor
+                        current_file['fd'] = prev_file['fd']
+                        del prev_file['fd']
+                        yield current_file['fd']
                         continue
                     else:
                         raise DataflowException("File already exists: %s\n"
-                                                % local_path)
-                if fd:
-                    fd.close()
+                                                % current_file['local_path'])
+                if prev_file.get('fd'):
+                    prev_file['fd'].close()
                     if t == 'h':
-                        hdfs.movefile(fd.name, hdfs_path)
-                fd = open(full_path, "w", 0)
-                yield fd
+                        hdfs.movefile(prev_file['local_path'],
+                                      prev_file['hdfs_path'])
+                    del prev_file['fd']
+                current_file['fd'] = open(current_file['local_path'], 'w', 0)
+                yield current_file['fd']
         finally:
-            if fd:
-                fd.close()
-                if t == 'h':
-                    hdfs.movefile(fd.name, hdfs_path)
+            for f in (prev_file, current_file):
+                if f.get('fd'):
+                    f['fd'].close()
+                    del f['fd']
+                if t == 'h' and f.get('local_path') and f.get('hdfs_path'):
+                    try:
+                        hdfs.movefile(f['local_path'], f['hdfs_path'])
+                    except hdfs.HDFSException, err:
+                        self.log(str(err), logLevel.ERROR)
 
     def __hdfs_in_dir(self):
         """ Call file descriptors generator for files in HDFS dir. """
