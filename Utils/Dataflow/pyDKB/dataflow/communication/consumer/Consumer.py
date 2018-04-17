@@ -41,7 +41,9 @@ class Consumer(object):
             lines = message
         else:
             lines = message.splitlines()
-        out_message = "(%s) %s" % (logLevel.memberName(level), lines[0])
+        out_message = "(%s) (%s) %s" % (logLevel.memberName(level),
+                                        self.__class__.__name__,
+                                        lines[0])
         for l in lines[1:]:
             out_message += "\n(==) %s" % l
         out_message += "\n"
