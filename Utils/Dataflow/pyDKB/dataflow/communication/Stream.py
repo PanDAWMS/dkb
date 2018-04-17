@@ -29,13 +29,14 @@ class Stream(object):
             lines = message
         else:
             lines = message.splitlines()
-        out_message = "(%s) (%s) %s" % (logLevel.memberName(level),
-                                        self.__class__.__name__,
-                                        lines[0])
-        for l in lines[1:]:
-            out_message += "\n(==) %s" % l
-        out_message += "\n"
-        sys.stderr.write(out_message)
+        if lines:
+            out_message = "(%s) (%s) %s" % (logLevel.memberName(level),
+                                            self.__class__.__name__,
+                                            lines[0])
+            for l in lines[1:]:
+                out_message += "\n(==) %s" % l
+            out_message += "\n"
+            sys.stderr.write(out_message)
 
     def configure(self, config):
         """ Stream configuration. """
