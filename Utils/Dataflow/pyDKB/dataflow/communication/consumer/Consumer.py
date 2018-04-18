@@ -10,7 +10,7 @@ from . import logLevel
 from . import DataflowException
 
 from .. import Message
-from .. import InputStream
+from ..stream import StreamBuilder
 
 
 class ConsumerException(DataflowException):
@@ -64,13 +64,11 @@ class Consumer(object):
         """ Init input stream. """
         src = self.get_source()
         if src:
-            # Can not use StreamBuilder here, as it defines
-            # Stream class basing on the file descriptor mode,
-            # while TemporaryFile (used for HDFS files) provides
-            # file descriptor opened in 'w+b' mode
-            self._stream = InputStream(src, self.config)
-            if self.message_type:
-                self._stream.set_message_type(self.message_type)
+            self._stream = \
+                StreamBuilder(src, self.config) \
+                .setStream('input') \
+                .setType(self.message_type) \
+                .build()
 
     def get_stream(self):
         """ Get input stream linked to the current source.
