@@ -41,8 +41,6 @@ Definition of an abstract class for Dataflow Data Processing Stages.
 import subprocess
 import os
 import sys
-import types
-import time
 
 from . import AbstractStage
 from . import messageType
@@ -52,6 +50,7 @@ from pyDKB.common import hdfs
 from pyDKB.common import custom_readline
 from pyDKB.dataflow import communication
 from pyDKB.dataflow.communication import consumer
+from pyDKB.dataflow.communication import producer
 
 
 class ProcessorStage(AbstractStage):
@@ -173,34 +172,6 @@ class ProcessorStage(AbstractStage):
                           dest='hdfs'
                           )
 
-    def parse_args(self, args):
-        """ Parse arguments and set dependant arguments if neeeded.
-
-        Exits with code 2 in case of error (just like ArgumentParser does).
-        """
-        super(ProcessorStage, self).parse_args(args)
-
-        # HDFS: HDFS file -> local file -> processor -> local file -> HDFS file
-        if self.ARGS.hdfs:
-            self.ARGS.dest = 'h'
-
-        # Stream (Kafka) and MapReduce mode: STDIN -> processor -> STDOUT
-        # If data source is specified as HDFS, files will be taken from HDFS
-        #       and filenames -- from stdin
-        if self.ARGS.mode in ('s', 'm'):
-            self.ARGS.dest = 's'
-
-        # Configure output
-        if self.ARGS.dest == 'f':
-            self.__output = self.__out_files('l')
-        elif self.ARGS.dest == 'h':
-            self.__output = self.__out_files('h')
-        elif self.ARGS.dest == 's':
-            ustdout = os.fdopen(sys.stdout.fileno(), 'w', 0)
-            self.__output = ustdout
-
-        self.__stoppable_append(self.__output, types.GeneratorType)
-
     def configure(self, args=None):
         """ Configure stage according to the config parameters.
 
@@ -213,6 +184,12 @@ class ProcessorStage(AbstractStage):
             .setType(self.__input_message_type) \
             .build()
         self.__stoppable_append(self.__input, consumer.Consumer)
+        # Output
+        self.__output = producer.ProducerBuilder(vars(self.ARGS)) \
+            .setType(self.__output_message_type) \
+            .setSourceInfoMethod(self.get_source_info) \
+            .build()
+        self.__stoppable_append(self.__output, producer.Producer)
 
     def get_source_info(self):
         """ Get information about current source. """
@@ -316,141 +293,19 @@ class ProcessorStage(AbstractStage):
 
     def output(self, message):
         """ Put the (list of) message(s) to the output buffer. """
-        self.get_out_stream().write(message)
+        self.__output.write(message)
 
     def forward(self):
         """ Send EOPMarker to the output stream. """
-        self.get_out_stream().eop()
+        self.__output.eop()
 
     def flush_buffer(self):
         """ Flush message buffer to the output. """
-        self.get_out_stream().flush()
+        self.__output.flush()
 
     def clear_buffer(self):
         """ Drop buffered output messages. """
-        self.get_out_stream().drop()
-
-    def get_out_dir(self, t='l'):
-        """ Get current output directory name. """
-        if t not in ('l', 'h'):
-            raise ValueError("get_out_dir() method expects values: 'l','h'"
-                             " (got '%s')" % t)
-        result = self.ARGS.output_dir
-        if not result:
-            src = self.get_source_info()
-            if src:
-                result = src.get('dir')
-        if not result:
-            if t == 'l':
-                result = os.getcwd()
-            else:
-                result = hdfs.join(hdfs.DKB_HOME, 'temp',
-                                   str(int(time.time())))
-            self.log("Output dir set to: %s" % result)
-            self.ARGS.output_dir = result
-        return result
-
-    def ensure_out_dir(self, t='l'):
-        """ Ensure that current output directory exists. """
-        if t not in ('l', 'h'):
-            raise ValueError("ensure_out_dir() method expects values: 'l','h'"
-                             " (got '%s')" % t)
-        dirname = self.get_out_dir(t)
-        if t == 'l':
-            if not os.path.isdir(dirname):
-                try:
-                    os.makedirs(dirname, 0770)
-                except OSError, err:
-                    self.log("Failed to create output directory\n"
-                             "Error message: %s\n" % err, logLevel.ERROR)
-                    raise DataflowException
-        else:
-            hdfs.makedirs(dirname)
-        return dirname
-
-    def get_out_filename(self):
-        """ Get output filename, corresponding current data source. """
-        ext = self.output_message_class().extension()
-        src = self.get_source_info()
-        if src and src.get('name'):
-            result = os.path.splitext(src['name'])[0] + ext
-        else:
-            result = str(int(time.time())) + ext
-        return result
-
-    def get_out_file_info(self, t):
-        """ Get metadata for current output file. """
-        f = {}
-        f['src'] = self.get_source_info()
-        f['dir'] = self.get_out_dir(t)
-        f['name'] = self.get_out_filename()
-        if t == 'l':
-            f['local_path'] = os.path.join(f['dir'], f['name'])
-        else:
-            f['local_path'] = f['name']
-            f['hdfs_path'] = hdfs.join(f['dir'], f['name'])
-        return f
-
-    def __out_files(self, t='l'):
-        """ Generator for file descriptors to write data to.
-
-        Parameters:
-            t {'l'|'h'} -- (l)ocal or (h)dfs
-        """
-        if t not in ('l', 'h'):
-            raise ValueError("parameter t acceptable values: 'l','h'"
-                             " (got '%s')" % t)
-        current_file = {}
-        prev_file = {}
-        try:
-            while self.get_source_info():
-                prev_file = current_file
-                current_file = self.get_out_file_info(t)
-                if prev_file and prev_file.get('fd') and (
-                  prev_file.get('src') == current_file['src'] or
-                  os.path.abspath(current_file['local_path']) ==
-                  os.path.abspath(prev_file['local_path'])):
-                    # Save previous open file descriptor, if:
-                    # * data source has not changed OR
-                    # * new local output file is the same as before.
-                    current_file['fd'] = prev_file['fd']
-                    del prev_file['fd']
-                    result = current_file['fd']
-                elif os.path.exists(current_file['local_path']):
-                    raise DataflowException("File already exists: %s\n"
-                                            % current_file['local_path'])
-                else:
-                    if prev_file.get('fd'):
-                        prev_file['fd'].close()
-                        if t == 'h':
-                            l_path = prev_file.get('local_path')
-                            h_path = prev_file.get('hdfs_path')
-                            if l_path and h_path os.path.exists(l_path):
-                                hdfs.movefile(l_path, h_path)
-                            else:
-                                self.log("Insufficient information to move"
-                                         " file to HDFS: local path (%s)"
-                                         " -> HDFS path (%s)."
-                                         % (l_path, h_path))
-                        del prev_file['fd']
-                    self.ensure_out_dir(t)
-                    current_file['fd'] = open(current_file['local_path'],
-                                              'w', 0)
-                    result = current_file['fd']
-                yield result
-        finally:
-            for f in (prev_file, current_file):
-                if f.get('fd'):
-                    f['fd'].close()
-                    del f['fd']
-                if t == 'h':
-                    l_path = f.get('local_path')
-                    h_path = f.get('hdfs_path')
-                    if l_path and h_path and os.path.exists(l_path):
-                        try:
-                            hdfs.movefile(l_path, h_path)
-                        except hdfs.HDFSException, err:
-                            self.log(str(err), logLevel.ERROR)
+        self.__output.drop()
 
     def __stoppable_append(self, obj, cls):
         """ Appends OBJ (of type CLS) to the list of STOPPABLE. """

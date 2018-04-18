@@ -13,5 +13,6 @@ from OutputStream import OutputStream
 from StreamBuilder import StreamBuilder
 
 import consumer
+import producer
 
 __all__ = ['Message', 'StreamBuilder', 'Stream', 'InputStream', 'OutputStream']

@@ -30,7 +30,7 @@ class StreamBuilder(object):
 
     def setType(self, Type):
         """ Set message type for the Stream. """
-        if not messageType.hasMember(Type):
+        if not (Type is None or messageType.hasMember(Type)):
             raise ValueError("Unknown message type: %s" % Type)
         self.message_type = Type
         return self
