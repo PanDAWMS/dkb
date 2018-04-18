@@ -34,9 +34,18 @@ class StreamBuilder(object):
         else:
             raise ValueError("Unknown file mode for the Stream: '%s'" % mode)
 
+    def setType(self, Type):
+        """ Set message type for the Stream. """
+        if not (Type is None or messageType.hasMember(Type)):
+            raise ValueError("Unknown message type: %s" % Type)
+        self.message_type = Type
+        return self
+
     def build(self, config={}):
         """ Create instance of Stream. """
         if not config:
             config = self.config
         instance = self.streamClass(self.fd, config)
+        if self.message_type:
+            instance.set_message_type(self.message_type)
         return instance
