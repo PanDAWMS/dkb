@@ -36,10 +36,11 @@ class StreamBuilder(object):
         """
         self.fd = fd
         self.config = config
-        if fd.mode == 'r':
-            self.setStream('input')
-        elif fd.mode == 'w':
-            self.setStream('output')
+        if fd:
+            if fd.mode == 'r':
+                self.setStream('input')
+            elif fd.mode == 'w':
+                self.setStream('output')
 
     def setStream(self, stream):
         """ Set stream type: 'input' or 'output'. """

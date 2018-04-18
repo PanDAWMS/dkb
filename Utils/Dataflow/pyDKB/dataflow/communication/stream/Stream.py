@@ -13,9 +13,9 @@ class Stream(object):
     """ Abstract class for input/output streams. """
 
     message_type = None
-    fd = None
+    _fd = None
 
-    def __init__(self, fd, config={}):
+    def __init__(self, fd=None, config={}):
         """ Initialization of Stream object. """
         self.reset(fd)
         self.configure(config)
@@ -61,17 +61,23 @@ class Stream(object):
         :param fd: open file descriptor
                    TODO: IOBase objects
         """
-        if not isinstance(fd, file):
+        if not isinstance(fd, (file, None.__class__)):
             raise TypeError("Stream.reset() expects first parameter of type"
                             " 'file' (got '%s')" % fd.__class__.__name__)
-        if close and self.fd != fd:
+        if close and self._fd != fd:
             self.close()
-        self.fd = fd
+        self._fd = fd
+
+    def get_fd(self):
+        """ Return open file descriptor or raise exception. """
+        if not self._fd:
+            raise StreamException("File descriptor is not configured")
+        return self._fd
 
     def close(self):
         """ Close open file descriptors etc. """
-        if self.fd and not self.fd.closed:
-            self.fd.close()
+        if self._fd and not self._fd.closed:
+            self._fd.close()
 
     def __del__(self):
         """ Destructor. """

@@ -35,13 +35,13 @@ class OutputStream(Stream):
     def flush(self):
         """ Flush buffer to the output stream. """
         for msg in self.msg_buffer:
-            self.fd.write(msg.encode())
-            self.fd.write(self.EOM)
+            self.get_fd().write(msg.encode())
+            self.get_fd().write(self.EOM)
         self.drop()
 
     def eop(self):
         """ Signalize Supervisor about end of process. """
-        self.fd.write(self.EOP)
+        self.get_fd().write(self.EOP)
 
     def drop(self):
         """ Drop buffer without sending messages anywhere. """
