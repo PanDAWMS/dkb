@@ -426,8 +426,7 @@ class ProcessorStage(AbstractStage):
                             l_path = prev_file.get('local_path')
                             h_path = prev_file.get('hdfs_path')
                             if l_path and h_path os.path.exists(l_path):
-                                hdfs.putfile(l_path, h_path)
-                                os.remove(l_path)
+                                hdfs.movefile(l_path, h_path)
                             else:
                                 self.log("Insufficient information to move"
                                          " file to HDFS: local path (%s)"
@@ -449,15 +448,9 @@ class ProcessorStage(AbstractStage):
                     h_path = f.get('hdfs_path')
                     if l_path and h_path and os.path.exists(l_path):
                         try:
-                            hdfs.putfile(l_path, h_path)
+                            hdfs.movefile(l_path, h_path)
                         except hdfs.HDFSException, err:
                             self.log(str(err), logLevel.ERROR)
-                        try:
-                            os.remove(l_path)
-                        except OSError, err:
-                            self.log("Failed to remove temporary file: %s\n"
-                                     "Reason: %s" % (l_path, err),
-                                     logLevel.ERROR)
 
     def __stoppable_append(self, obj, cls):
         """ Appends OBJ (of type CLS) to the list of STOPPABLE. """
