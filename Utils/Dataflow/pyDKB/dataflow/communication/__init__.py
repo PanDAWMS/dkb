@@ -10,5 +10,6 @@ from messages import Message
 
 import stream
 import consumer
+import producer
 
 __all__ = ['Message']
