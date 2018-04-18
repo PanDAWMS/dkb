@@ -9,6 +9,11 @@ from messages import Message
 import sys
 
 
+class StreamException(DataflowException):
+    """ Exception for Stream operations. """
+    pass
+
+
 class Stream(object):
     """ Abstract class for input/output streams. """
 
