@@ -7,19 +7,36 @@ from .. import codeType
 from .. import logLevel
 from .. import DataflowException
 from messages import Message
+from Stream import Stream
 from InputStream import InputStream
 
-__all__ = ['Message', 'Stream']
+__all__ = ['Message', 'StreamBuilder', 'Stream', 'InputStream']
 
 
-def Stream(fd, config={}):
-    """ Constructor for Stream object.
+class StreamBuilder(object):
+    """ Constructor for Stream object.  """
+
+    message_type = None
+    streamClass = None
+
+    def __init__(self, fd, config={}):
+        """ Initialize Stream builder.
 
         :param fd: open file descriptor
                    TODO: IOBase objects
-    """
-    if fd.mode == 'r':
-        cls = InputStream
-    else:
-        raise ValueError("Unknown file mode for the Stream: '%s'" % mode)
-    return cls(fd, config)
+        """
+        self.fd = fd
+        self.config = config
+        if fd.mode == 'r':
+            self.streamClass = InputStream
+        elif fd.mode == 'w':
+            self.streamClass = OutputStream
+        else:
+            raise ValueError("Unknown file mode for the Stream: '%s'" % mode)
+
+    def build(self, config={}):
+        """ Create instance of Stream. """
+        if not config:
+            config = self.config
+        instance = self.streamClass(self.fd, config)
+        return instance
