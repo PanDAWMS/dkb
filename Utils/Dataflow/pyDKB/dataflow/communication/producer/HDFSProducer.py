@@ -20,9 +20,10 @@ from pyDKB.common import hdfs
 class HDFSProducer(FileProducer):
     """ Data producer implementation for HDFS data dest. """
 
-    def default_dir(self):
-        """ Return default directory name (used when not configured). """
-        return hdfs.join(hdfs.DKB_HOME, 'temp', str(int(time.time())))
+    def set_default_dir(self):
+        """ Set default directory name. """
+        self._default_dir = hdfs.join(hdfs.DKB_HOME, 'temp',
+                                      str(int(time.time())))
 
     def ensure_dir(self):
         """ Ensure that current directory for output files exists. """

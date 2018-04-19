@@ -19,6 +19,7 @@ from . import logLevel
 class FileProducer(Producer):
     """ Data producer implementation for local file data dest. """
 
+    _default_dir = None
     current_file = None
 
     def get_dest(self):
@@ -42,9 +43,15 @@ class FileProducer(Producer):
             source = {}
         return source
 
+    def set_default_dir(self):
+        """ Set default directory name. """
+        self._default_dir = os.getcwd()
+
     def default_dir(self):
-        """ Return default directory name (used when not configured). """
-        return os.getcwd()
+        """ Get default directory name. """
+        if not self._default_dir:
+            self.set_default_dir()
+        return self._default_dir
 
     def get_dir(self):
         """ Get current directory for output files. """
@@ -55,7 +62,6 @@ class FileProducer(Producer):
                 result = src.get('dir')
         if not result:
             result = self.default_dir()
-            self.config['output_dir'] = result
         return result
 
     def ensure_dir(self):
