@@ -4,6 +4,7 @@ pyDKB.dataflow.commuication.Stream
 
 from . import messageType
 from . import logLevel
+from . import DataflowException
 from messages import Message
 
 import sys

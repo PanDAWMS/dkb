@@ -73,5 +73,4 @@ class ProducerBuilder(object):
             instance.set_message_type(self.message_type)
         if self.src_info and getattr(instance, 'get_source_info', False):
             instance._source_info = self.src_info
-        instance.reconfigure()
         return instance
