@@ -6,7 +6,7 @@ import sys
 import subprocess
 import select
 import os
-import posixpath
+import posixpath as path
 import tempfile
 
 from . import HDFSException
@@ -176,14 +176,14 @@ def basename(path):
     """ Return file name without path. """
     if path is None:
         path = ''
-    return posixpath.basename(path).strip()
+    return path.basename(path).strip()
 
 
 def dirname(path):
     """ Return dirname without filename. """
     if path is None:
         path = ''
-    return posixpath.dirname(path).strip()
+    return path.dirname(path).strip()
 
 
 def join(path, filename):
@@ -192,4 +192,4 @@ def join(path, filename):
         path = ''
     if filename is None:
         filename = ''
-    return posixpath.join(path, filename).strip()
+    return path.join(path, filename).strip()
