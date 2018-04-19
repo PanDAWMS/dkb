@@ -19,8 +19,41 @@ from . import logLevel
 class FileProducer(Producer):
     """ Data producer implementation for local file data dest. """
 
+    _dir = None
     _default_dir = None
     current_file = None
+
+    def reconfigure(self, config={}):
+        """ (Re)configure producer according to the config hash. """
+        if not config:
+            config = self.config
+        self.config_dir(config)
+        super(FileProducer, self).reconfigure(config)
+
+    def config_dir(self, config={}):
+        """ Configure output directory.  """
+        if not config:
+            config = self.config
+        conf_dir = config.get('output_dir', '')
+        cur_dir = os.path.curdir
+        par_dir = os.path.pardir
+        if conf_dir in (base_dir, par_dir) or \
+                os.path.isabs(conf_dir) or \
+                conf_dir.startswith(os.path.join(base_dir, '')) or \
+                conf_dir.startswith(os.path.join(par_dir, '')):
+            # If configured path is specified as a full path
+            # (or relative to the current or parent directory)
+            # it is preferable; else source directory will be used
+            config['output_dir'] = os.path.realpath(conf_dir)
+            self.dirname(config['output_dir'])
+        elif conf_dir:
+            self.log("Output directory is set to subdirectory '%s' of the one"
+                     " containing input files or of the current one (%s)."
+                     % (config['output_dir'], self.default_dir()))
+        else:
+            self.log("Output directory is set to the directory with input"
+                     " files or to the current one (%s)."
+                     % self.default_dir())
 
     def get_dest(self):
         """ Get destination file descriptor. """
@@ -53,15 +86,29 @@ class FileProducer(Producer):
             self.set_default_dir()
         return self._default_dir
 
+    def dirname(self, dirname=None):
+        """ Set/get preferable directory name. """
+        if dirname is not None:
+            self._dir = dirname
+            self.log("Output directory is set to: %s" % dirname)
+        return self._dir
+
+    def subdir(self, base_dir, sub_dir=''):
+        """ Construct full path for $subdir of $base_dir. """
+        return os.path.join(base_dir, sub_dir)
+
     def get_dir(self):
         """ Get current directory for output files. """
-        result = self.config.get('output_dir')
+        result = self.dirname()
         if not result:
+            base_dir = None
             src = self.get_source_info()
             if src is not None:
-                result = src.get('dir')
-        if not result:
-            result = self.default_dir()
+                base_dir = src.get('dir', '')
+            if not base_dir:
+                base_dir = self.default_dir()
+            result = self.subdir(base_dir,
+                                 self.config.get('output_dir', ''))
         return result
 
     def ensure_dir(self):
