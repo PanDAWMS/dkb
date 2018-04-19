@@ -29,6 +29,7 @@ class Producer(object):
     def __init__(self, config={}):
         """ Initialize Producer instance. """
         self.config = config
+        self.reconfigure()
 
     def log(self, message, level=logLevel.INFO):
         """ Output log message with given log level. """
@@ -54,24 +55,25 @@ class Producer(object):
         self.init_stream()
 
     def init_stream(self):
-        """ Init output stream. """
-        dest = self.get_dest()
-        if dest:
-            self._stream = \
-                StreamBuilder(dest, self.config) \
-                .setType(self.message_type) \
-                .build()
+        """ Init output stream (without real destination). """
+        self._stream = \
+            StreamBuilder(None, self.config) \
+            .setStream('output') \
+            .setType(self.message_type) \
+            .build()
 
-    def get_stream(self):
-        """ Get input stream linked to the current dest.
+    def get_stream(self, actualize=True):
+        """ Get output stream linked to the current dest.
 
-        Return value:
-            OutputStream
-            None (no dests left to read from)
+        If $actualize parameter set to True, will try to reset current stream
+        destination; else will use last known destination or None.
         """
-        if self.reset_stream():
-            result = self._stream
-        else:
+        if actualize:
+            self.reset_stream()
+        elif not self._stream:
+            self.init_stream()
+        result = self._stream
+        if not result:
             raise ProducerException("Failed to configure output stream.")
         return result
 
@@ -81,15 +83,14 @@ class Producer(object):
         if dest:
             if not self._stream:
                 self.init_stream()
-            else:
-                self._stream.reset(dest)
+            self._stream.reset(dest)
         return dest
 
     def set_message_type(self, Type):
         """ Set input message type. """
         self.message_type = Type
         try:
-            stream = self.get_stream()
+            stream = self.get_stream(False)
             stream.set_message_type(Type)
         except ProducerException:
             # Stream is not configured yet
@@ -103,13 +104,17 @@ class Producer(object):
             result = None
         return result
 
+    def get_dest(self):
+        """ Return current destination. """
+        raise NotImplementedError
+
     def get_dest_info(self):
         """ Return current dest info. """
         raise NotImplementedError
 
     def write(self, msg):
         """ Put new message to the current dest (buffer). """
-        self.get_stream().write(msg)
+        self.get_stream(False).write(msg)
 
     def eop(self):
         """ Write EOP marker to the current dest. """
@@ -121,7 +126,7 @@ class Producer(object):
 
     def drop(self):
         """ Drop buffered messages. """
-        self.get_stream().drop()
+        self.get_stream(False).drop()
 
     def close(self):
         """ Close opened data stream and data dest. """
