@@ -156,8 +156,7 @@ class ProcessorStage(AbstractStage):
                           nargs='?',
                           help=u'Directory for output files '
                                 '(local or HDFS). ',
-                          default='',
-                          const='output/',
+                          default='out',
                           metavar='DIR',
                           dest='output_dir'
                           )
