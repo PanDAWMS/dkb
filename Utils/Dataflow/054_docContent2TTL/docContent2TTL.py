@@ -12,7 +12,7 @@ try:
     dkb_dir = os.path.join(base_dir, os.pardir)
     sys.path.append(dkb_dir)
     import pyDKB
-    from pyDKB.dataflow import messages
+    from pyDKB.dataflow.communication import messages
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -33,7 +33,7 @@ def process(stage, msg):
         return False
 
     for i in result:
-        stage.output(pyDKB.dataflow.messages.TTLMessage(i))
+        stage.output(messages.TTLMessage(i))
     return True
 
 
@@ -157,7 +157,7 @@ def main(args):
     stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
     stage.process = process
 
-    stage.parse_args(args)
+    stage.configure(args)
     exit_code = stage.run()
 
     if exit_code == 0:

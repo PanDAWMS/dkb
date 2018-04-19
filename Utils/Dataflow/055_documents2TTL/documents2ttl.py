@@ -531,7 +531,7 @@ def main(argv):
                        const=ONTOLOGY,
                        metavar='ONT',
                        dest='ONTOLOGY')
-    stage.parse_args(argv)
+    stage.configure(argv)
     define_globals(stage.ARGS)
     exit_code = stage.run()
 

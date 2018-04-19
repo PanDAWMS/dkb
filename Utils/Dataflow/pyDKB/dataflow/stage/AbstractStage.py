@@ -8,6 +8,8 @@ import ConfigParser
 from collections import defaultdict
 import textwrap
 
+from . import logLevel
+
 try:
     import argparse
 except ImportError, e:
@@ -68,6 +70,24 @@ class AbstractStage(object):
 
         self._error = None
 
+    def log(self, message, level=logLevel.INFO):
+        """ Output log message with given log level. """
+        if not logLevel.hasMember(level):
+            self.log("Unknown log level: %s" % level, logLevel.WARN)
+            level = logLevel.INFO
+        if type(message) == list:
+            lines = message
+        else:
+            lines = message.splitlines()
+        if lines:
+            out_message = "(%s) (%s) %s" % (logLevel.memberName(level),
+                                            self.__class__.__name__,
+                                            lines[0])
+            for l in lines[1:]:
+                out_message += "\n(==) %s" % l
+            out_message += "\n"
+            sys.stderr.write(out_message)
+
     def defaultArguments(self):
         """ Config argument parser with parameters common for all stages. """
         self.add_argument('-m', '--mode', action='store', type=str, nargs='?',
@@ -117,7 +137,7 @@ class AbstractStage(object):
         if self.ARGS.eom is None:
             self.ARGS.eom = '\n'
         elif self.ARGS.eom == '':
-            raise ValueError("(ERROR) Empty EOM marker specified.")
+            self.log("Empty EOM marker specified!", logLevel.WARN)
         else:
             try:
                 self.ARGS.eom = self.ARGS.eom.decode('string_escape')
@@ -129,6 +149,8 @@ class AbstractStage(object):
         if self.ARGS.eop is None:
             if self.ARGS.mode == 's':
                 self.ARGS.eop = '\0'
+            elif self.ARGS.eom == '':
+                self.ARGS.eop = '\n'
             else:
                 self.ARGS.eop = ''
         else:
@@ -190,15 +212,12 @@ class AbstractStage(object):
     def output_error(self, message=None):
         """ Output information about last error or `message`. """
         err = self._error
-        cur_lvl = 'ERROR'
+        cur_lvl = logLevel.ERROR
         if message:
-            messages = message.strip().split('\n')
-            sys.stderr.write("(%s) %s\n" % (cur_lvl, messages[0]))
-            for m in messages[1:]:
-                sys.stderr.write("(==) %s\n" % m)
+            self.log(message, cur_lvl)
         elif err:
             if err['etype'] == KeyboardInterrupt:
-                sys.stderr.write("(INFO) Interrupted by user.\n")
+                self.log("Interrupted by user.")
             else:
                 trace = traceback.format_exception(err['etype'],
                                                    err['exception'],
@@ -206,25 +225,20 @@ class AbstractStage(object):
                 # Label every line in trace with proper level marker
                 labeled_trace = []
                 n_lines = len(trace)
-                levels = [('TRACE', -1), ('DEBUG', 8), ('ERROR', 3)]
+                # List of log levels with number of lines
+                # to be output with this level
+                levels = [(logLevel.DEBUG, -1), (logLevel.ERROR, 1)]
                 for i in xrange(n_lines):
                     for lvl, N in levels:
-                        if not N - 1 < i < n_lines - N or N < 0:
+                        if i >= n_lines - N or N < 0:
                             cur_lvl = lvl
                     msg = trace[i]
-                    # `msg` may contain few lines and ends with '\n'
-                    messages = msg.strip().split('\n')
-                    labeled_trace.append("(%s) %s\n" % (cur_lvl, messages[0]))
-                    for m in messages[1:]:
-                        labeled_trace.append("(==) %s\n" % m)
-                # Output trace
-                for line in labeled_trace:
-                    sys.stderr.write(line)
+                    self.log(msg, cur_lvl)
 
     def stop(self):
         """ Stop running processes and output error information. """
         self.output_error()
-        sys.stderr.write("(INFO) Stopping stage.\n")
+        self.log("Stopping stage.")
 
     def run(self):
         """ Run the stage. """

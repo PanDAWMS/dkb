@@ -31,8 +31,9 @@ try:
     from pyDKB.dataflow import CDSInvenioConnector
     from pyDKB.dataflow import KerberizedCDSInvenioConnector
     from pyDKB.dataflow import dkbID, dataType
-    from pyDKB.dataflow.stage import JSONProcessorStage
+    from pyDKB.dataflow.stage import ProcessorStage
     from pyDKB.dataflow import DataflowException
+    from pyDKB.dataflow import messageType
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -298,7 +299,9 @@ def process(stage, message):
 
 def main(argv):
     """ Program body. """
-    stage = JSONProcessorStage()
+    stage = ProcessorStage()
+    stage.set_input_message_type(messageType.JSON)
+    stage.set_output_message_type(messageType.JSON)
     stage.add_argument("-l", "--login", action="store", type=str, nargs='?',
                        help="CERN account login",
                        default='',
@@ -332,7 +335,7 @@ def main(argv):
 #                       dest='indent'
 #                      )
 
-    stage.parse_args(argv)
+    stage.configure(argv)
     stage.process = process
     # This part remains here, as not every JSON-to-JSON processor need
     # any authentication method
