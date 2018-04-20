@@ -67,3 +67,12 @@ class Stream(object):
         if close and self.fd != fd:
             self.close()
         self.fd = fd
+
+    def close(self):
+        """ Close open file descriptors etc. """
+        if self.fd and not self.fd.closed:
+            self.fd.close()
+
+    def __del__(self):
+        """ Destructor. """
+        self.close()

@@ -310,6 +310,7 @@ class ProcessorStage(AbstractStage):
         s = stream.StreamBuilder(fd, vars(self.ARGS)) \
             .setType(self.__input_message_type) \
             .build()
+        self.__stoppable_append(s, stream.Stream)
         return s
 
     def file_input(self, fd):
