@@ -47,10 +47,10 @@ import time
 from . import AbstractStage
 from . import messageType
 from . import logLevel
-from . import Message
 from pyDKB.dataflow import DataflowException
 from pyDKB.common import hdfs
 from pyDKB.common import custom_readline
+from pyDKB.dataflow import communication
 from pyDKB.dataflow.communication import stream
 
 
@@ -104,13 +104,13 @@ class ProcessorStage(AbstractStage):
 
     def input_message_class(self):
         """ Get input message class. """
-        return Message(self.__input_message_type)
+        return communication.Message(self.__input_message_type)
 
     def set_output_message_type(self, Type=None):
         """ Set output message class. """
         if not messageType.hasMember(Type):
             raise ValueError("Unknown message type: %s" % Type)
-        self.__output_message_class = Message(Type)
+        self.__output_message_class = communication.Message(Type)
 
     def output_message_class(self):
         """ Get output message class. """
