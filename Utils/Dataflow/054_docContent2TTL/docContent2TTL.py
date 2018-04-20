@@ -157,7 +157,7 @@ def main(args):
     stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
     stage.process = process
 
-    stage.parse_args(args)
+    stage.configure(args)
     exit_code = stage.run()
 
     if exit_code == 0:

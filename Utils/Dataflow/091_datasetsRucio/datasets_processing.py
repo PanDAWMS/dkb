@@ -50,7 +50,7 @@ def main(argv):
     stage.set_input_message_type(messageType.JSON)
     stage.set_output_message_type(messageType.JSON)
 
-    stage.parse_args(argv)
+    stage.configure(argv)
     stage.process = process
     init_rucio_client()
     exit_code = stage.run()

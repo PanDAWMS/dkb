@@ -161,7 +161,7 @@ def main(args):
 
     stage.process = process
 
-    stage.parse_args(args)
+    stage.configure(args)
     error_code = stage.run()
 
     if error_code == 0:
