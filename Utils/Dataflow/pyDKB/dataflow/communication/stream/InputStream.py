@@ -58,7 +58,21 @@ class InputStream(Stream):
                      "Original message: '%s'"
                      % (messageClass.typeName(), err, message),
                      logLevel.WARN)
-            return None
+            return False
+
+    def get_message(self):
+        """ Get next message from the input stream.
+
+        Return values:
+            Message object
+            False (failed to parse message)
+            None  (no messages left)
+        """
+        try:
+            result = self.next()
+        except StopIteration:
+            result = None
+        return result
 
     def next(self):
         """ Get next message from the input stream. """
