@@ -55,7 +55,7 @@ class Stream(object):
         """ Get type of the messages in the stream. """
         return self.message_type
 
-    def reset(self, fd):
+    def reset(self, fd, close=True):
         """ Reset file descriptor in operation.
 
         :param fd: open file descriptor
@@ -64,4 +64,6 @@ class Stream(object):
         if not isinstance(fd, file):
             raise TypeError("Stream.reset() expects first parameter of type"
                             " 'file' (got '%s')" % fd.__class__.__name__)
+        if close and self.fd != fd:
+            self.close()
         self.fd = fd
