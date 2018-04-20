@@ -235,8 +235,9 @@ class ProcessorStage(AbstractStage):
             for msg in self.input():
                 if msg and self.process(self, msg):
                     self.flush_buffer()
+                else:
+                    self.clear_buffer()
                 self.forward()
-                self.clear_buffer()
         except BaseException, err:
             # Catch everything for uniform exception handling
             # Clear buffer -- just in case someone will decide
@@ -372,6 +373,7 @@ class ProcessorStage(AbstractStage):
             self.stream_flush()
         else:
             self.file_flush()
+        self.clear_buffer()
 
     def stream_flush(self, fd=None):
         """ Flush message buffer as a stream. """
