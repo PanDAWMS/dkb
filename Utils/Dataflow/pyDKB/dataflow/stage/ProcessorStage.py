@@ -307,7 +307,7 @@ class ProcessorStage(AbstractStage):
         Split stream into messages;
         Yield Message object.
         """
-        s = stream.Stream(fd, vars(self.ARGS))
+        s = stream.StreamBuilder(fd, vars(self.ARGS)).build()
         s.set_message_type(self.__input_message_type)
         return s
 
