@@ -208,6 +208,14 @@ class ProcessorStage(AbstractStage):
             .build()
         self.__stoppable_append(self.__input, consumer.Consumer)
 
+    def get_source_info(self):
+        """ Get information about current source. """
+        if self.__input:
+            result = self.__input.get_source_info()
+        else:
+            result = None
+        return result
+
     def get_out_stream(self):
         """ Get current output stream. """
         if isinstance(self.__output, file):
@@ -321,7 +329,7 @@ class ProcessorStage(AbstractStage):
             raise ValueError("get_out_dir() method expects values: 'l','h'"
                              " (got '%s')" % t)
         result = self.ARGS.output_dir
-        src = self.__input.get_source_info()
+        src = self.get_source_info()
         if not result and src and src.get('dir'):
             result = src['dir']
         if not result:
@@ -355,7 +363,7 @@ class ProcessorStage(AbstractStage):
     def get_out_filename(self):
         """ Get output filename, corresponding current data source. """
         ext = self.output_message_class().extension()
-        src = self.__input.get_source_info()
+        src = self.get_source_info()
         if src and src.get('name'):
             result = src['name'].splitext(f)[0] + ext
         else:
@@ -365,7 +373,7 @@ class ProcessorStage(AbstractStage):
     def get_out_file_info(self, t):
         """ Get metadata for current output file. """
         f = {}
-        f['src'] = self.__input.get_source_info()
+        f['src'] = self.get_source_info()
         f['dir'] = self.get_out_dir(t)
         f['name'] = self.get_out_filename()
         if t == 'l':
@@ -387,7 +395,7 @@ class ProcessorStage(AbstractStage):
         current_file = {}
         prev_file = {}
         try:
-            while self.__input.get_source_info():
+            while self.get_source_info():
                 prev_file = current_file
                 current_file = self.get_out_file_info(t)
                 if prev_file and prev_file.get('fd') and (
