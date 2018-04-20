@@ -88,7 +88,7 @@ def process(stage, message):
     # or not set at all.
     if update or not formats:
         amiPhysValues(data)
-    stage.output(pyDKB.dataflow.messages.JSONMessage(data))
+    stage.output(pyDKB.dataflow.communication.messages.JSONMessage(data))
 
     return True
 

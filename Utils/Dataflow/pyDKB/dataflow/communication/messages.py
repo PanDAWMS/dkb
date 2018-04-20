@@ -1,9 +1,11 @@
 """
+pyDKB.dataflow.communication.messages
+
 Definition of abstract message class and specific message classes
 """
 
 from . import messageType
-from pyDKB.dataflow.types import codeType
+from . import codeType
 
 import json
 import sys

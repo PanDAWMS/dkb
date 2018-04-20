@@ -40,7 +40,7 @@ def process(stage, message):
     """
     msg = message.content()
     msg["data_format"] = dataset_format(msg.get('datasetname'))
-    stage.output(pyDKB.dataflow.messages.JSONMessage(msg))
+    stage.output(pyDKB.dataflow.communication.messages.JSONMessage(msg))
 
     return True
 

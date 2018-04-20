@@ -99,7 +99,7 @@ def process(stage, message):
                              " for ES indexing).\n")
             return True
         del(ds['taskid'])
-        stage.output(pyDKB.dataflow.messages.JSONMessage(ds))
+        stage.output(pyDKB.dataflow.communication.messages.JSONMessage(ds))
 
     return True
 

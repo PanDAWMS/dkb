@@ -20,7 +20,7 @@ try:
     sys.path.append(dkb_dir)
     import pyDKB
     from pyDKB.dataflow.stage import ProcessorStage
-    from pyDKB.dataflow.messages import JSONMessage
+    from pyDKB.dataflow.communication.messages import JSONMessage
     from pyDKB.dataflow import messageType
     from pyDKB.dataflow.exceptions import DataflowException
 except Exception, err:
