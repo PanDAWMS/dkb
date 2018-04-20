@@ -479,16 +479,14 @@ class AbstractProcessorStage(AbstractStage):
                 if fd:
                     fd.close()
                     if t == 'h':
-                        hdfs.putfile(fd.name, output_dir)
-                        os.remove(fd.name)
+                        hdfs.movefile(fd.name, output_dir)
                 fd = open(filename, "w", 0)
                 yield fd
         finally:
             if fd:
                 fd.close()
                 if t == 'h':
-                    hdfs.putfile(fd.name, output_dir)
-                    os.remove(fd.name)
+                    hdfs.movefile(fd.name, output_dir)
 
     def __hdfs_in_dir(self):
         """ Call file descriptors generator for files in HDFS dir. """

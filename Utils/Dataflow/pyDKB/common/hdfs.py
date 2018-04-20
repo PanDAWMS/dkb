@@ -71,6 +71,17 @@ def putfile(fname, dest):
                             "Error message: %s\n" % (fname, err))
 
 
+def movefile(fname, dest):
+    """ Move local file to HDFS. """
+    if os.path.exists(fname):
+        putfile(fname, dest)
+        try:
+            os.remove(fname)
+        except OSError, err:
+            sys.stderr.write("(WARN) Failed to remove local copy of HDFS file"
+                             " (%s): %s" % (fname, err))
+
+
 def getfile(fname):
     """ Download file from HDFS.
 
