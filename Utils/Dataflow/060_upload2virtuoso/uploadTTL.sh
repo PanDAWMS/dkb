@@ -45,7 +45,7 @@ OPTIONS:
                                 Default: $PASSWD
   -g, --graph <graph>           graph to load data to.
                                 Default: http://<host>:<port>/$GRAPH_PATH
-
+ 
  Script parameters:
   -t, --type {t[tl]|s[parql]}   Input files type.
                                 If not specified, try to understand from file
@@ -57,8 +57,15 @@ OPTIONS:
                                   messages are to be delimited by <delimiter>.
   -d, --delimiter <delimiter>   Specifies the delimiter between sets of input
                                 data in the stream mode.
-                                Default: \n
-                                Kafka-style: \0
+                                Default: \4
+  -e, --eom <EOM>               Specifies end-of-message marker.
+                                Default:
+                                * in a (f)ile mode: \n
+                                * in a (s)tream mode: \n
+  -E, --eop <EOP>               Specifies end-of-process marker.
+                                Default:
+                                * in a (f)ile mode: none
+                                * in a (s)tream mode: \0
   -h, --help                    Print this message and exit.
 "
 }
