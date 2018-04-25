@@ -102,27 +102,11 @@ def main(args):
     stage = JSONProcessorStage()
     stage.process = process
 
-    exit_code = 0
-    exc_info = None
-    try:
-        stage.parse_args(args)
-        stage.run()
-    except (DataflowException, RuntimeError), err:
-        if str(err):
-            sys.stderr.write("(ERROR) %s\n" % err)
-        else:
-            exc_info = sys.exc_info()
-        exit_code = 2
-    except Exception:
-        exc_info = sys.exc_info()
-        exit_code = 1
-    finally:
-        stage.stop()
+    stage.parse_args(args)
+    exit_code = stage.run()
 
-    if exc_info:
-        trace = traceback.format_exception(*exc_info)
-        for line in trace:
-            sys.stderr.write("(ERROR) %s" % line)
+    if exit_code == 0:
+        stage.stop()
 
     exit(exit_code)
 

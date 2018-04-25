@@ -45,9 +45,6 @@ def get_page_text(interpreter, page, tmp, rotation=0):
     interpreter.process_page(page)
     tmp.seek(0)
     text = remove_ligatures(tmp.read())
-#    newlines = []
-#    for l in lines:
-#        newlines.append(remove_ligatures(l))
     tmp.seek(0)
     tmp.truncate()
     return text
@@ -101,10 +98,10 @@ def mine_text(infname, page_numbers=False, outtype="text", rotated_pages=[],
                     single = 0
                     normal = 0
                     lines = text.split("\n")
-                    for l in lines:
-                        if not l.isspace():
-                            l = l.strip()
-                            if len(l) == 1:
+                    for line in lines:
+                        if not line.isspace():
+                            line = line.strip()
+                            if len(line) == 1:
                                 single += 1
                             normal += 1
                     coef = float(single) / normal

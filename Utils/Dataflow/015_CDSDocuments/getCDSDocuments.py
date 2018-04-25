@@ -332,34 +332,27 @@ def main(argv):
 #                       dest='indent'
 #                      )
 
-    exit_code = 0
-    try:
-        stage.parse_args(argv)
-        stage.process = process
-        # This part remains here, as not every JSON-to-JSON processor need
-        # any authentication method
-        # Maybe we need a ProcessorWithAuthorization?
-        if not stage.ARGS.login and not stage.ARGS.kerberos:
-            sys.stderr.write(
-                "WARNING: no authentication method will be used.\n")
+    stage.parse_args(argv)
+    stage.process = process
+    # This part remains here, as not every JSON-to-JSON processor need
+    # any authentication method
+    # Maybe we need a ProcessorWithAuthorization?
+    if not stage.ARGS.login and not stage.ARGS.kerberos:
+        sys.stderr.write("WARNING: no authentication method will be used.\n")
 
-        warnings.simplefilter("once", InsecurePlatformWarning)
-        ARGS = stage.ARGS
+    warnings.simplefilter("once", InsecurePlatformWarning)
+    ARGS = stage.ARGS
 
-        if ARGS.kerberos:
-            Connector = KerberizedCDSInvenioConnector
-        else:
-            Connector = CDSInvenioConnector
+    if ARGS.kerberos:
+        Connector = KerberizedCDSInvenioConnector
+    else:
+        Connector = CDSInvenioConnector
 
-        with Connector(ARGS.login, ARGS.password) as cds:
-            ARGS.cds = cds
-            stage.run()
+    with Connector(ARGS.login, ARGS.password) as cds:
+        ARGS.cds = cds
+        exit_code = stage.run()
 
-    except (DataflowException, RuntimeError), err:
-        if str(err):
-            sys.stderr.write("(ERROR) %s\n" % err)
-        exit_code = 1
-    finally:
+    if exit_code == 0:
         stage.stop()
 
     exit(exit_code)
