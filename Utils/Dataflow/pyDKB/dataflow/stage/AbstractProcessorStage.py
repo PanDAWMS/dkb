@@ -453,7 +453,7 @@ class AbstractProcessorStage(AbstractStage):
                 cf = self.__current_file_full
                 output_dir = self.ARGS.output_dir
                 if not output_dir:
-                    output_dir = os.path.dirname(self.__current_file_full)
+                    output_dir = os.path.dirname(cf)
                 if not output_dir:
                     if t == 'l':
                         output_dir = os.getcwd()
