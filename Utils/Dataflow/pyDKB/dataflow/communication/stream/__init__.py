@@ -11,8 +11,9 @@ from InputStream import InputStream
 
 from Stream import Stream
 from InputStream import InputStream
+from OutputStream import OutputStream
 
-__all__ = ['StreamBuilder', 'Stream', 'InputStream']
+__all__ = ['StreamBuilder', 'Stream', 'InputStream', 'OutputStream']
 
 
 class StreamBuilder(object):
