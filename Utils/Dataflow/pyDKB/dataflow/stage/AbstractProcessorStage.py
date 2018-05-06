@@ -457,8 +457,8 @@ class AbstractProcessorStage(AbstractStage):
                     if t == 'l':
                         output_dir = os.getcwd()
                     if t == 'h':
-                        output_dir = os.path.join(hdfs.DKB_HOME, "temp",
-                                                  str(int(time.time())))
+                        output_dir = hdfs.join(hdfs.DKB_HOME, "temp",
+                                               str(int(time.time())))
                         hdfs.makedirs(output_dir)
                     self.ARGS.output_dir = output_dir
                     self.log("Output dir set to: %s" % output_dir)
@@ -479,16 +479,14 @@ class AbstractProcessorStage(AbstractStage):
                 if fd:
                     fd.close()
                     if t == 'h':
-                        hdfs.putfile(fd.name, output_dir)
-                        os.remove(fd.name)
+                        hdfs.movefile(fd.name, output_dir)
                 fd = open(filename, "w", 0)
                 yield fd
         finally:
             if fd:
                 fd.close()
                 if t == 'h':
-                    hdfs.putfile(fd.name, output_dir)
-                    os.remove(fd.name)
+                    hdfs.movefile(fd.name, output_dir)
 
     def __hdfs_in_dir(self):
         """ Call file descriptors generator for files in HDFS dir. """
@@ -512,22 +510,15 @@ class AbstractProcessorStage(AbstractStage):
         for f in filenames:
             f = f.strip()
             if self.ARGS.input_dir:
-                f = os.path.join(self.ARGS.input_dir, f)
+                f = hdfs.join(self.ARGS.input_dir, f)
             if not f:
                 continue
-            name = hdfs.getfile(f)
-            self.__current_file_full = f
-            self.__current_file = name
 
-            try:
-                with open(name, 'r') as infile:
-                    yield infile
-            finally:
-                try:
-                    os.remove(name)
-                except OSError:
-                    self.log("Failed to remove uploaded file: %s" % name,
-                             logLevel.WARN)
+            with hdfs.File(f) as infile:
+                self.__current_file_full = f
+                self.__current_file = hdfs.basename(f)
+                yield infile
+
             self.__current_file = None
             self.__current_file_full = None
 

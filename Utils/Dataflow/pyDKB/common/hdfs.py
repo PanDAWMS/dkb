@@ -6,6 +6,8 @@ import sys
 import subprocess
 import select
 import os
+import posixpath as path
+import tempfile
 
 from . import HDFSException
 
@@ -69,13 +71,24 @@ def putfile(fname, dest):
                             "Error message: %s\n" % (fname, err))
 
 
+def movefile(fname, dest):
+    """ Move local file to HDFS. """
+    if os.path.exists(fname):
+        putfile(fname, dest)
+        try:
+            os.remove(fname)
+        except OSError, err:
+            sys.stderr.write("(WARN) Failed to remove local copy of HDFS file"
+                             " (%s): %s" % (fname, err))
+
+
 def getfile(fname):
     """ Download file from HDFS.
 
     Return value: file name (without directory)
     """
     cmd = ["hadoop", "fs", "-get", fname]
-    name = os.path.basename(fname)
+    name = basename(fname)
     try:
         proc = subprocess.Popen(cmd,
                                 stdin=subprocess.PIPE,
@@ -88,6 +101,32 @@ def getfile(fname):
         raise HDFSException("Failed to get file from HDFS: %s\n"
                             "Error message: %s\n" % (fname, err))
     return name
+
+
+def File(fname):
+    """ Get and open temporary local copy of HDFS file
+
+    Return value: open file object (TemporaryFile).
+    """
+    cmd = ["hadoop", "fs", "-cat", fname]
+    tmp_file = tempfile.TemporaryFile()
+    try:
+        proc = subprocess.Popen(cmd,
+                                stdin=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                stdout=tmp_file)
+        check_stderr(proc)
+        tmp_file.seek(0)
+    except (subprocess.CalledProcessError, OSError), err:
+        if isinstance(err, subprocess.CalledProcessError):
+            err.cmd = ' '.join(cmd)
+        tmp_file.close()
+        raise HDFSException("Failed to get file from HDFS: %s\n"
+                            "Error message: %s\n" % (fname, err))
+    if tmp_file.closed:
+        return None
+
+    return tmp_file
 
 
 def listdir(dirname, mode='a'):
@@ -138,7 +177,7 @@ def listdir(dirname, mode='a'):
 
         # We need to return only the name of the file or subdir
         filename = line[7]
-        filename = os.path.basename(filename)
+        filename = basename(filename)
         if line[0][0] == 'd':
             subdirs.append(filename)
         elif line[0][0] == '-':
@@ -152,3 +191,26 @@ def listdir(dirname, mode='a'):
         result = subdirs
 
     return result
+
+
+def basename(path):
+    """ Return file name without path. """
+    if path is None:
+        path = ''
+    return path.basename(path).strip()
+
+
+def dirname(path):
+    """ Return dirname without filename. """
+    if path is None:
+        path = ''
+    return path.dirname(path).strip()
+
+
+def join(path, filename):
+    """ Join path and filename. """
+    if path is None:
+        path = ''
+    if filename is None:
+        filename = ''
+    return path.join(path, filename).strip()
