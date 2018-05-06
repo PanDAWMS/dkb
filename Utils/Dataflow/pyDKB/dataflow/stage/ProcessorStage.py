@@ -47,10 +47,11 @@ import time
 from . import AbstractStage
 from . import messageType
 from . import logLevel
-from . import Message
 from pyDKB.dataflow import DataflowException
 from pyDKB.common import hdfs
 from pyDKB.common import custom_readline
+from pyDKB.dataflow import communication
+from pyDKB.dataflow.communication import stream
 
 
 class ProcessorStage(AbstractStage):
@@ -77,7 +78,7 @@ class ProcessorStage(AbstractStage):
         __stoppable
     """
 
-    __input_message_class = None
+    __input_message_type = None
     __output_message_class = None
 
     def __init__(self, description="DKB Dataflow data processing stage."):
@@ -99,17 +100,17 @@ class ProcessorStage(AbstractStage):
         """ Set input message type. """
         if not messageType.hasMember(Type):
             raise ValueError("Unknown message type: %s" % Type)
-        self.__input_message_class = Message(Type)
+        self.__input_message_type = Type
 
     def input_message_class(self):
         """ Get input message class. """
-        return self.__input_message_class
+        return communication.Message(self.__input_message_type)
 
     def set_output_message_type(self, Type=None):
         """ Set output message class. """
         if not messageType.hasMember(Type):
             raise ValueError("Unknown message type: %s" % Type)
-        self.__output_message_class = Message(Type)
+        self.__output_message_class = communication.Message(Type)
 
     def output_message_class(self):
         """ Get output message class. """
@@ -285,24 +286,6 @@ class ProcessorStage(AbstractStage):
         """
         raise NotImplementedError("Stage method process() is not implemented")
 
-    def parseMessage(self, input_message):
-        """ Verify and parse input message.
-
-        Is called from input() method.
-        """
-        messageClass = self.__input_message_class
-        try:
-            msg = messageClass(input_message)
-            msg.decode()
-            return msg
-        except (ValueError, TypeError), err:
-            self.log("Failed to read input message as %s.\n"
-                     "Cause: %s\n"
-                     "Original message: '%s'"
-                     % (messageClass.typeName(), err, input_message),
-                     logLevel.WARN)
-            return None
-
     def input(self):
         """ Generator for input messages.
 
@@ -324,18 +307,11 @@ class ProcessorStage(AbstractStage):
         Split stream into messages;
         Yield Message object.
         """
-        if self.ARGS.eom == '\n':
-            iterator = iter(fd.readline, "")
-        elif self.ARGS.eom == '':
-            iterator = [fd.read()]
-        else:
-            iterator = custom_readline(fd, self.ARGS.eom)
-        try:
-            for line in iterator:
-                yield self.parseMessage(line)
-        except KeyboardInterrupt:
-            sys.stderr.write("(INFO) Interrupted by user.\n")
-            sys.exit()
+        s = stream.StreamBuilder(fd, vars(self.ARGS)) \
+            .setType(self.__input_message_type) \
+            .build()
+        self.__stoppable_append(s, stream.Stream)
+        return s
 
     def file_input(self, fd):
         """ Generator for input messages.
