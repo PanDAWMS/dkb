@@ -335,7 +335,7 @@ def main(argv):
 #                       dest='indent'
 #                      )
 
-    stage.parse_args(argv)
+    stage.configure(argv)
     stage.process = process
     # This part remains here, as not every JSON-to-JSON processor need
     # any authentication method

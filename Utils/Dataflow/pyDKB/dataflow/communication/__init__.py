@@ -9,5 +9,6 @@ from .. import DataflowException
 from messages import Message
 
 import stream
+import consumer
 
 __all__ = ['Message']

@@ -43,7 +43,7 @@ def main(argv):
     stage.add_argument('--usercert', help='PEM certificate file',
                        required=True)
 
-    stage.parse_args(argv)
+    stage.configure(argv)
     stage.process = process
     init_ami_client(stage.ARGS.userkey, stage.ARGS.usercert)
     exit_code = stage.run()
