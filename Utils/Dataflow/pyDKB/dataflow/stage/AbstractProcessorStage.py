@@ -250,7 +250,7 @@ class AbstractProcessorStage(AbstractStage):
             # If something went wrong in `except` clause, we will still
             # get here and return, so the exceptions from there will never
             # reach the user
-            if not isinstance(err, Exception):
+            if err and not isinstance(err, Exception):
                 sys.exit(exit_code)
             return exit_code
 
@@ -450,9 +450,10 @@ class AbstractProcessorStage(AbstractStage):
                 if cf == self.__current_file_full:
                     yield fd
                     continue
+                cf = self.__current_file_full
                 output_dir = self.ARGS.output_dir
                 if not output_dir:
-                    output_dir = os.path.dirname(self.__current_file_full)
+                    output_dir = os.path.dirname(cf)
                 if not output_dir:
                     if t == 'l':
                         output_dir = os.getcwd()
