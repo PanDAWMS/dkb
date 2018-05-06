@@ -21,12 +21,13 @@ class InputStream(Stream):
 
     def _reset_iterator(self):
         """ Reset inner iterator on a new file descriptor. """
+        fd = self.get_fd()
         if self.EOM == '\n':
-            self.__iterator = iter(self.fd.readline, "")
+            self.__iterator = iter(fd.readline, "")
         elif self.EOM == '':
-            self.__iterator = iter([self.fd.read()])
+            self.__iterator = iter([fd.read()])
         else:
-            self.__iterator = custom_readline(self.fd, self.EOM)
+            self.__iterator = custom_readline(fd, self.EOM)
 
     def reset(self, fd, close=True):
         """ Reset current stream with new file descriptor.
