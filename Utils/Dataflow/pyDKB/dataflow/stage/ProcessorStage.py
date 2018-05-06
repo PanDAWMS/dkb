@@ -428,6 +428,69 @@ class ProcessorStage(AbstractStage):
             self.__current_file = None
             self.__current_file_full = None
 
+    def get_out_dir(self, t='l'):
+        """ Get current output directory name. """
+        if t not in ('l', 'h'):
+            raise ValueError("get_out_dir() method expects values: 'l','h'"
+                             " (got '%s')" % t)
+        result = self.ARGS.output_dir
+        cf = self.__current_file_full
+        if not result and cf:
+            if t == 'l':
+                result = os.path.dirname(cf)
+            else:
+                result = hdfs.dirname(cf)
+        if not result:
+            if t == 'l':
+                result = os.getcwd()
+            else:
+                result = hdfs.join(hdfs.DKB_HOME, 'temp',
+                                   str(int(time.time())))
+            self.log("Output dir set to: %s" % result)
+            self.ARGS.output_dir = result
+        return result
+
+    def ensure_out_dir(self, t='l'):
+        """ Ensure that current output directory exists. """
+        if t not in ('l', 'h'):
+            raise ValueError("ensure_out_dir() method expects values: 'l','h'"
+                             " (got '%s')" % t)
+        dirname = self.get_out_dir(t)
+        if t == 'l':
+            if not os.path.isdir(dirname):
+                try:
+                    os.makedirs(dirname, 0770)
+                except OSError, err:
+                    self.log("Failed to create output directory\n"
+                             "Error message: %s\n" % err, logLevel.ERROR)
+                    raise DataflowException
+        else:
+            hdfs.makedirs(dirname)
+        return dirname
+
+    def get_out_filename(self):
+        """ Get output filename, corresponding current data source. """
+        ext = self.output_message_class().extension()
+        f = self.__current_file
+        if f and f != sys.stdin.name:
+            result = os.path.splitext(f)[0] + ext
+        else:
+            result = str(int(time.time())) + ext
+        return result
+
+    def get_out_file_info(self, t):
+        """ Get metadata for current output file. """
+        f = {}
+        f['src'] = self.__current_file_full
+        f['dir'] = self.get_out_dir(t)
+        f['name'] = self.get_out_filename()
+        if t == 'l':
+            f['local_path'] = os.path.join(f['dir'], f['name'])
+        else:
+            f['local_path'] = f['name']
+            f['hdfs_path'] = hdfs.join(f['dir'], f['name'])
+        return f
+
     def __out_files(self, t='l'):
         """ Generator for file descriptors to write data to.
 
@@ -437,63 +500,57 @@ class ProcessorStage(AbstractStage):
         if t not in ('l', 'h'):
             raise ValueError("parameter t acceptable values: 'l','h'"
                              " (got '%s')" % t)
-        ext = self.output_message_class().extension()
-        fd = None
-        cf = None
-        output_dir = self.ARGS.output_dir
-        if output_dir and not os.path.isdir(output_dir):
-            if t == 'l':
-                try:
-                    os.makedirs(output_dir, 0770)
-                except OSError, err:
-                    self.log("Failed to create output directory\n"
-                             "Error message: %s\n" % err, logLevel.ERROR)
-                    raise DataflowException
-            else:
-                hdfs.makedirs(output_dir)
+        current_file = {}
+        prev_file = {}
         try:
             while self.__current_file_full:
-                if cf == self.__current_file_full:
-                    yield fd
-                    continue
-                cf = self.__current_file_full
-                output_dir = self.ARGS.output_dir
-                if not output_dir:
-                    output_dir = os.path.dirname(cf)
-                if not output_dir:
-                    if t == 'l':
-                        output_dir = os.getcwd()
-                    if t == 'h':
-                        output_dir = hdfs.join(hdfs.DKB_HOME, "temp",
-                                               str(int(time.time())))
-                        hdfs.makedirs(output_dir)
-                    self.ARGS.output_dir = output_dir
-                    self.log("Output dir set to: %s" % output_dir)
-                if self.__current_file \
-                        and self.__current_file != sys.stdin.name:
-                    filename = os.path.splitext(self.__current_file)[0] + ext
+                prev_file = current_file
+                current_file = self.get_out_file_info(t)
+                if prev_file and prev_file.get('fd') and (
+                        prev_file.get('src') == current_file['src']
+                        or (os.path.abspath(current_file['local_path'])
+                            == os.path.abspath(prev_file['local_path']))):
+                    # Save previous open file descriptor, if:
+                    # * data source has not changed OR
+                    # * new local output file is the same as before.
+                    current_file['fd'] = prev_file['fd']
+                    del prev_file['fd']
+                    result = current_file['fd']
+                elif os.path.exists(current_file['local_path']):
+                    raise DataflowException("File already exists: %s\n"
+                                            % current_file['local_path'])
                 else:
-                    filename = str(int(time.time())) + ext
-                if t == 'l':
-                    filename = os.path.join(output_dir, filename)
-                if os.path.exists(filename):
-                    if fd and os.path.samefile(filename, fd.name):
-                        yield fd
-                        continue
-                    else:
-                        raise DataflowException("File already exists: %s\n"
-                                                % filename)
-                if fd:
-                    fd.close()
-                    if t == 'h':
-                        hdfs.movefile(fd.name, output_dir)
-                fd = open(filename, "w", 0)
-                yield fd
+                    if prev_file.get('fd'):
+                        prev_file['fd'].close()
+                        if t == 'h':
+                            l_path = prev_file.get('local_path')
+                            h_path = prev_file.get('hdfs_path')
+                            if l_path and h_path and os.path.exists(l_path):
+                                hdfs.movefile(l_path, h_path)
+                            else:
+                                self.log("Insufficient information to move"
+                                         " file to HDFS: local path (%s)"
+                                         " -> HDFS path (%s)."
+                                         % (l_path, h_path))
+                        del prev_file['fd']
+                    self.ensure_out_dir(t)
+                    current_file['fd'] = open(current_file['local_path'],
+                                              'w', 0)
+                    result = current_file['fd']
+                yield result
         finally:
-            if fd:
-                fd.close()
+            for f in (prev_file, current_file):
+                if f.get('fd'):
+                    f['fd'].close()
+                    del f['fd']
                 if t == 'h':
-                    hdfs.movefile(fd.name, output_dir)
+                    l_path = f.get('local_path')
+                    h_path = f.get('hdfs_path')
+                    if l_path and h_path and os.path.exists(l_path):
+                        try:
+                            hdfs.movefile(l_path, h_path)
+                        except hdfs.HDFSException, err:
+                            self.log(str(err), logLevel.ERROR)
 
     def __hdfs_in_dir(self):
         """ Call file descriptors generator for files in HDFS dir. """
