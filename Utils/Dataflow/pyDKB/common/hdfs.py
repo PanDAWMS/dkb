@@ -10,9 +10,12 @@ import posixpath as path
 import tempfile
 
 from . import HDFSException
+from . import logging
 
 DEVNULL = open(os.path.devnull, "w")
 DKB_HOME = "/user/DKB/"
+
+logger = logging.getLogger(__name__)
 
 
 def check_stderr(proc, timeout=None, max_lines=1):
@@ -33,7 +36,7 @@ def check_stderr(proc, timeout=None, max_lines=1):
             if err:
                 n_lines += 1
                 if max_lines is None or n_lines <= max_lines:
-                    sys.stderr.write("(INFO) (proc) %s\n" % err)
+                    logger.info("(proc) %s" % err)
     if proc.poll():
         raise subprocess.CalledProcessError(proc.returncode, None)
     return proc.poll()
@@ -78,8 +81,8 @@ def movefile(fname, dest):
         try:
             os.remove(fname)
         except OSError, err:
-            sys.stderr.write("(WARN) Failed to remove local copy of HDFS file"
-                             " (%s): %s" % (fname, err))
+            logger.warn("Failed to remove local copy of HDFS file"
+                        " (%s): %s", fname, err)
 
 
 def getfile(fname):
