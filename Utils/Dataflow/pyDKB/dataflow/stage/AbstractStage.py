@@ -7,14 +7,9 @@ import traceback
 import ConfigParser
 from collections import defaultdict
 import textwrap
+import argparse
 
 from . import logLevel
-
-try:
-    import argparse
-except ImportError, e:
-    sys.stderr.write("(ERROR) argparse package is not installed.\n")
-    raise e
 
 
 class AbstractStage(object):
