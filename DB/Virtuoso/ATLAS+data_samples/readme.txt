@@ -1,1 +1,0 @@
-This folder contains Data Samples ontology as proposed by Maria Grigorieva, and a version of ATLAS ontology with data samples ontology integrated.
