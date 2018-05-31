@@ -300,8 +300,8 @@ re_energy = re.compile(r"(\d+\.?\d*) (G|T)eV")
 # output. Simple "fb-1" does not works.
 re_luminosity = re.compile(r"(\d+\.?\d*) ?(m|n|p|f)b(?:−|\(cid:0\))1")
 re_collisions = re.compile("(proton-proton|heavy-ion|pp) collisions")
-re_year = re.compile("(?:acquired|collected|measured|recorded).{0,100}"
-                     r"(20\d\d)", re.DOTALL)
+re_year = re.compile("(?:acquired|collected|measured|recorded).{0,100}?"
+                     r"(20\d\d((\+|-| and )20\d\d)?)", re.DOTALL)
 # Interval must contain at least two numbers, i.e. [1/2] or [3\4\5].
 re_interval = re.compile(r"\[(?:[0-9][\\/][0-9\\/\n]+|[0-9]+-[0-9]+)\]")
 re_link = re.compile(r"(.*)\n? ?(https?://cds\.cern\.ch/record/\d+)")
