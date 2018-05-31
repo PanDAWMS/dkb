@@ -1772,7 +1772,10 @@ class Manager:
         Quick export: determine metadata first if none is available,
         skipping all user interaction.
         """
-        if n is None:
+        if not self.papers:
+            tkMessageBox.showwarning("Nothing to export",
+                                     "No papers to export.")
+        elif n is None:
             if self.unsaved_papers():
                 msg = "Some papers were changed. "\
                       "These changes will be saved before "\
@@ -1785,7 +1788,7 @@ class Manager:
             n = 1
             n_p = 0
             errors = {}
-            s = "document name,mc datasets, real datasets, other datasets, "\
+            s = "document name,mc datasets,real datasets,other datasets,"\
                 "dataset tables"
             for a in Paper.attributes_general:
                 s += ",%s" % a
@@ -1861,19 +1864,23 @@ class Manager:
                         f.write(msg)
                 with open(STAT_FILE, "w") as f:
                     csv += "TOTAL\n"
+                    if n_p:
+                        m = 100.0 / n_p
+                    else:
+                        m = 100.0
                     s = "%d,%d,%d,%d,%d," % (n_p,
                                              len(attr["mc_datasets"]),
                                              len(attr["real_datasets"]),
                                              len(attr["other_datasets"]),
                                              len(attr["dataset_tables"]))
                     s_p = "100%%,%f%%,%f%%,%f%%,%f%%,"\
-                          % (float(len(attr["mc_datasets"])) / n_p * 100,
-                             float(len(attr["real_datasets"])) / n_p * 100,
-                             float(len(attr["other_datasets"])) / n_p * 100,
-                             float(len(attr["dataset_tables"])) / n_p * 100)
+                          % (float(len(attr["mc_datasets"])) * m,
+                             float(len(attr["real_datasets"])) * m,
+                             float(len(attr["other_datasets"])) * m,
+                             float(len(attr["dataset_tables"])) * m)
                     for a in Paper.attributes_general:
                         s += "%d," % len(attr[a])
-                        s_p += "%f%%," % (float(len(attr[a])) / n_p * 100)
+                        s_p += "%f%%," % (float(len(attr[a])) * m)
                     csv += s.rstrip(",") + "\n"
                     csv += s_p.rstrip(",") + "\n"
                     f.writelines(csv)
