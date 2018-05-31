@@ -761,9 +761,11 @@ class Paper:
                             if cfg["TABLES_IDS_ONLY"]:
                                 ids = []
                                 for row in rows[1:]:
-                                    ids.append(int(row[data_column]))
+                                    dsid = row[data_column]
+                                    if dsid != "EMPTY":
+                                        ids.append(dsid)
                                 ids.sort()
-                                data = " ".join([str(i) for i in ids])
+                                data = " ".join([i for i in ids])
                             else:
                                 data = rows
                             datatables[num] = (headers_data[num], data)
@@ -842,7 +844,7 @@ class Paper:
                 if isinstance(self.datatables[num][1], str)\
                    or isinstance(self.datatables[num][1], unicode):
                     header, ids = self.datatables[num]
-                    data = [header, [int(i) for i in ids.split()]]
+                    data = [header, [i for i in ids.split()]]
                 else:
                     data = self.datatables[num]
                 outp["content"]["table_" + str(num)] = data
@@ -852,7 +854,7 @@ class Paper:
                 if isinstance(tables[num][1], str)\
                    or isinstance(tables[num][1], unicode):
                     header, ids = tables[num]
-                    data = [header, [int(i) for i in ids.split()]]
+                    data = [header, [i for i in ids.split()]]
                 else:
                     data = tables[num]
                 outp["content"]["table_" + str(num)] = data
