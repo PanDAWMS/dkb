@@ -423,6 +423,34 @@ def cmp_papernames(x, y):
         return cmp(x, y)
 
 
+def scrollable_warning(parent, message, title="Warning"):
+    """ Replacement for tkMessageBox.showwarning which is scrollable
+
+    parent - parent window
+    """
+    window = Tkinter.Toplevel()
+    window.title(title)
+    cnvs = Tkinter.Canvas(window)
+    cnvs.grid(row=0, column=0)
+
+    frame = Tkinter.Frame(cnvs)
+    cnvs.create_window(0, 0, window=frame, anchor='nw')
+
+    msg = Tkinter.Message(frame, text=message)
+    msg.grid(row=0, column=0)
+
+    scrlbr = Tkinter.Scrollbar(window, command=cnvs.yview)
+    scrlbr.grid(row=0, column=2, rowspan=2, sticky='ns')
+    cnvs.configure(yscrollcommand=scrlbr.set)
+    frame.update_idletasks()
+    rgn = (0, 0, frame.winfo_width(), frame.winfo_height())
+    cnvs.configure(width=frame.winfo_width(), scrollregion=rgn)
+
+    b = Tkinter.Button(window, text="Done",
+                       command=window.destroy)
+    b.grid(row=1, column=0)
+
+
 class Paper:
     """ Class represents a document which needs to be analyzed. """
     attributes_general = ["atlas_name", "campaigns", "energy", "luminosity",
@@ -1060,10 +1088,13 @@ class Manager:
                 self.status_set("")
                 self.window.update_idletasks()
                 if errors:
+                    keys = errors.keys()
+                    keys.sort(cmp=cmp_papernames)
                     msg = "These papers were not added for some reason:\n\n"
-                    for e in errors:
+                    for e in keys:
                         msg += "%s : %s\n\n" % (e, errors[e])
-                    tkMessageBox.showwarning("Unable to add papers", msg)
+                    scrollable_warning(self.window, msg,
+                                       "Unable to add papers")
                 self.redraw()
 
     def clear_paper(self, window=False, paper=False):
@@ -1821,8 +1852,10 @@ class Manager:
             else:
                 msg = False
                 if errors:
+                    keys = errors.keys()
+                    keys.sort(cmp=cmp_papernames)
                     msg = "These papers were not exported for some reason:\n\n"
-                    for e in errors:
+                    for e in keys:
                         msg += "%s : %s\n\n" % (e, errors[e])
                     with open(ERRORS_FILE, "w") as f:
                         f.write(msg)
@@ -1846,7 +1879,8 @@ class Manager:
                     f.writelines(csv)
                 self.status_set("")
                 if msg:
-                    tkMessageBox.showwarning("Unable to export papers", msg)
+                    scrollable_warning(self.window, msg,
+                                       "Unable to export papers")
 
 
 if __name__ == "__main__":
