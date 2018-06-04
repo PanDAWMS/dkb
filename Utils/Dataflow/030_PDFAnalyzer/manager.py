@@ -414,11 +414,22 @@ def check_all_button(v, lst):
 def cmp_papernames(x, y):
     """ Compare paper names.
 
-    Default cmp function thinks that, for example, "9" > "10"
-    (it compares "9" and "1" first, and "9" > "1").
+    Default cmp function thinks that, for example, "9" > "10".
     """
-    if x.isdigit() and y.isdigit():
-        return int(x) - int(y)
+    xl = x.split("-")
+    yl = y.split("-")
+    if len(xl) == len(yl):
+        for i in range(0, len(xl)):
+            if xl[i].isdigit() and yl[i].isdigit():
+                xi = int(xl[i])
+                yi = int(yl[i])
+                if xi != yi:
+                    return xi - yi
+            else:
+                c = cmp(xl[i], yl[i])
+                if c:
+                    return c
+        return 0
     else:
         return cmp(x, y)
 
