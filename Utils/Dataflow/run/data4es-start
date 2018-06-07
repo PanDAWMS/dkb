@@ -5,21 +5,37 @@ BATCH_SIZE=100
 DEBUG=
 
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
-pidfile=$base_dir/$(basename "$0" | cut -d- -f1).pid
 
 # Directories with configuration files
 [ -n "$DATA4ES_CONFIG_PATH" ] && \
     CONFIG_PATH="$DATA4ES_CONFIG_PATH" || \
     CONFIG_PATH="${base_dir}/../config:${base_dir}/../../Elasticsearch/config"
 
-# Create aux directories
+# Process home dir
+[ -n "$DATA4ES_HOME" ] && \
+    HOME_DIR="$DATA4ES_HOME" || \
+    HOME_DIR="${base_dir}/.data4es"
+
+# Check if process is running
+DATA4ES_HOME=$HOME_DIR ${base_dir}/data4es-status &>/dev/null
+[ $? -eq 0 ] && echo "Process already running." >&2 && exit 1
+
+# Create / clean home directory
+AUX_FILES="pid"
+mkdir -p "$HOME_DIR"
+for f in $AUX_FILES; do
+  rm -rf "$HOME_DIR/$f"
+done
+
+# Create aux directories and files
 # ---
-pipe_dir=$base_dir/.pipe
+pipe_dir=$HOME_DIR/.pipe
 mkdir -p $pipe_dir
 
-buffer_dir=$base_dir/.buffer
+buffer_dir=$HOME_DIR/.buffer
 mkdir -p $buffer_dir
 
+pidfile="$HOME_DIR/pid"
 
 # Define commands to be used as dataflow nodes
 # ---
