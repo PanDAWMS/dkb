@@ -49,7 +49,8 @@ cmd_16="${base_dir}/../016_task2es/task2es.py -m s"
 cmd_19="${base_dir}/../019_esFormat/run.sh"
 
 # Stage 69
-cmd_69="${base_dir}/../069_upload2es/load_data.sh"
+cfg_69=`get_config "es"`
+cmd_69="${base_dir}/../069_upload2es/load_data.sh --config $cfg_69"
 
 # Stage 91
 cmd_91="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
