@@ -7,6 +7,11 @@ DEBUG=
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
 pidfile=$base_dir/$(basename "$0" | cut -d- -f1).pid
 
+# Directories with configuration files
+[ -n "$DATA4ES_CONFIG_PATH" ] && \
+    CONFIG_PATH="$DATA4ES_CONFIG_PATH" || \
+    CONFIG_PATH="${base_dir}/../config:${base_dir}/../../Elasticsearch/config"
+
 # Create aux directories
 # ---
 pipe_dir=$base_dir/.pipe
@@ -15,11 +20,26 @@ mkdir -p $pipe_dir
 buffer_dir=$base_dir/.buffer
 mkdir -p $buffer_dir
 
+
 # Define commands to be used as dataflow nodes
 # ---
+
+# Find configuration file in $CONFIG_PATH
+get_config() {
+  [ -z "$1" ] && echo "get_config(): no argumets passed." && return 1
+  dirs=$CONFIG_PATH
+  while [ -n "$dirs" ]; do
+    dir=${dirs%%:*}
+    [ "$dirs" = "$dir" ] && \
+        dirs='' || \
+        dirs="${dirs#*:}"
+    [ -f "${dir}/${1}" ] && readlink -f "${dir}/${1}" && return 0
+  done
+}
+
 # Oracle Connector
 cmd_09="${base_dir}/../009_oracleConnector/Oracle2JSON.py"
-cfg_09="${base_dir}/../config/009.cfg"
+cfg_09=`get_config "009.cfg"`
 cmd_OC="$cmd_09 --config $cfg_09 --mode SQUASH"
 
 # Stage 16
@@ -38,7 +58,7 @@ cmd_91="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
 cmd_93="${base_dir}/../093_datasetsFormat/datasets_format.py -m s"
 
 # Stage 95
-auth_cfg=${base_dir}/../config/095.cfg
+auth_cfg=`get_config "095.cfg"`
 source $auth_cfg
 [ -r "$AUTH_KEY" -a -r "$AUTH_CRT" ] \
   || { echo "Stage 095: wrong authentication parameters (failed to read certificate files: $AUTH_KEY and $AUTH_CRT)" >&2;
