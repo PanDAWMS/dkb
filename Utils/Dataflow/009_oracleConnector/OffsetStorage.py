@@ -39,8 +39,8 @@ class FileOffsetStorage(OffsetStorage):
             else:
                 self.storage = open(filename, 'w+', 0)
         except IOError:
-            sys.stderr("(ERROR) Failed to initialize offset storage (%s)\n"
-                       % self.__class__.__name__)
+            sys.stderr.write("(ERROR) Failed to initialize offset storage"
+                             " (%s)\n" % self.__class__.__name__)
             raise
 
     def get(self):
