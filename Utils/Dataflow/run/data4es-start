@@ -36,6 +36,7 @@ buffer_dir=$HOME_DIR/.buffer
 mkdir -p $buffer_dir
 
 pidfile="$HOME_DIR/pid"
+echo "$$ main" > $pidfile
 
 # Define commands to be used as dataflow nodes
 # ---
