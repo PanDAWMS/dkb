@@ -1,0 +1,20 @@
+-- select input and output datasets for all tasks
+-- for time period
+-- P.S. mininum value of t_production_task.timestamp is 12-03-2014 14:53:51.33390
+SELECT
+  t.taskid,
+  jd.datasetname,
+  jd.type
+FROM
+  t_production_task t
+  JOIN
+  ATLAS_PANDA.jedi_datasets jd
+  ON jd.jeditaskid = t.taskid
+  LEFT JOIN t_task tt
+  ON t.taskid = tt.taskid
+WHERE
+  jd.type IN ('output') AND
+      t.timestamp > :start_date AND
+      t.timestamp <= :end_date AND
+      t.pr_id = 300
+ORDER BY t.taskid;
