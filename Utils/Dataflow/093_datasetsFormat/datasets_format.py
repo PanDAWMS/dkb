@@ -67,11 +67,22 @@ def dataset_format(datasetname):
     """
     if not datasetname:
         return None
-    ds_format = datasetname.split('.')[4]
-    if re.match(r'\w+_\w+', ds_format) is not None:
+    splitted = datasetname.split('.')
+    N = len(splitted)
+    ds_format = None
+    if N:
+        project = splitted[0]
+        if project in ('user', 'group'):
+            if N > 7:
+                ds_format = splitted[6]
+        elif N > 5:
+            ds_format = splitted[4]
+    if ds_format and re.match(r'\w+_\w+', ds_format) is not None:
         result = [ds_format, ds_format.split('_')[0]]
-    else:
+    elif ds_format:
         result = [ds_format]
+    else:
+        result = []
     return result
 
 
