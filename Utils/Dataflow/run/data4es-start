@@ -62,7 +62,8 @@ cmd_OC="$cmd_09 --config $cfg_09 --mode SQUASH"
 cmd_16="${base_dir}/../016_task2es/task2es.py -m s"
 
 # Stage 19
-cmd_19="${base_dir}/../019_esFormat/run.sh"
+cfg_19=`get_config "es"`
+cmd_19="${base_dir}/../019_esFormat/run.sh --config $cfg_19"
 
 # Stage 69
 cfg_69=`get_config "es"`
