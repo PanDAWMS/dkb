@@ -165,7 +165,7 @@ upload_stream () {
   esac
 
   while true; do
-    while read -r -d "$delimiter" line; do
+    while read -r -d "$delimiter" line || [[ -n "$line" ]]; do
       n=`ps ax | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
       while [ $n -gt $CURL_N_MAX ]; do
         sleep $SLEEP
