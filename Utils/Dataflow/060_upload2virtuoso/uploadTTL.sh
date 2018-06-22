@@ -133,7 +133,7 @@ upload_files () {
 upload_stream () {
   EOProcess="\0"
   
-  local delimiter=$'\n'
+  local delimiter=$'\4'
 
   [ -z "$TYPE" ] && { echo "(ERROR) input data format is not specified. Exiting." >&2; return 2;}
   while [[ $# > 0 ]]
@@ -211,13 +211,13 @@ do
       shift
       ;;
     -d|--delimiter)
-      DELIMITER=`echo -e $2`
+      DELIMITER=`echo -ne $2`
       shift
       ;;
     -E|--eop)
       EOP="$2"
       shift
-      ;;
+      ;;      
     -u|--user)
       USER="$2"
       shift
@@ -245,8 +245,8 @@ done
 [ -z "$HOST" ] && echo "(ERROR) empty host value." >&2 && exit 2
 [ -z "$PORT" ] && echo "(ERROR) empty port value." >&2 && exit 2
 [ -z "$GRAPH" ] && GRAPH=http://$HOST:$PORT/$GRAPH_PATH
-[ -z "$DELIMITER" ]  && DELIMITER=$'\0'
-[ "x$DELIMITER" = "xNOT SPECIFIED" ] && DELIMITER=$'\n'
+[ -z "$DELIMITER" ]  && DELIMITER=$'\4'
+[ "x$DELIMITER" = "xNOT SPECIFIED" ] && DELIMITER=$'\4'
 [ -n "$EOP" ] && EOProcess="$EOP"
 
 cmdTTL="curl --retry 3 -s -f -X POST --digest -u $USER:$PASSWD -H Content-Type:text/turtle -G http://$HOST:$PORT/sparql-graph-crud-auth --data-urlencode graph=$GRAPH"
