@@ -20,6 +20,10 @@ do
       usage
       exit
       ;;
+    -e|--eom)
+      EOM="$3"
+      shift
+      ;;
     -E|--eop)
       EOP="$3"
       shift
@@ -53,6 +57,9 @@ ES_PORT='9200'
 CURL_N_MAX=10
 SLEEP=5
 EOBatch="\x04"
+EOMessage="\n"
+
+[ -n "$EOM" ] && EOMessage="$EOM"
 
 cmd="curl $ES_AUTH http://$ES_HOST:$ES_PORT/_bulk?pretty --data-binary @"
 
@@ -62,7 +69,7 @@ load_files () {
   log "Putting data to ES"
   for INPUTFILE in $*;
   do
-    ${cmd}${INPUTFILE} || exit 3
+    [ ${cmd}${INPUTFILE} ] && echo -ne "$EOMessage" || exit 3
   done
 }
 
@@ -79,6 +86,7 @@ load_stream () {
         n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
       done
       echo "$line" | ${cmd}- &
+      echo -ne "$EOMessage"
       echo -ne "$EOProcess"
     done
   fi
