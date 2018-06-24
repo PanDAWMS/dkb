@@ -10,6 +10,7 @@ GRAPH=
 GRAPH_PATH='DAV/ATLAS'
 MODE="f"
 DELIMITER="NOT SPECIFIED"
+EOMessage='\n'
 
 # File .credentials may contain variable definition for USER and PASSWD
 if [ -f ".credentials" ]; then
@@ -123,6 +124,7 @@ upload_files () {
     esac
 
     eval "$cmd" || { echo "(ERROR) An error occured while uploading file: $INPUTFILE" >&2; continue; } &
+    echo -ne EOMessage
     echo -ne EOProcess
   done
 
@@ -175,6 +177,7 @@ upload_stream () {
         n=`ps axf | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
       done
       echo "$line" | $cmd &>/dev/null || { echo "(ERROR) An error occured while uploading stream data." >&2; continue; } &
+      echo -ne EOMessage
       echo -ne EOProcess
     done
   done
@@ -214,6 +217,10 @@ do
       DELIMITER=`echo -ne $2`
       shift
       ;;
+    -e|--eom)
+      EOM="$2"
+      shift
+      ;;
     -E|--eop)
       EOP="$2"
       shift
@@ -248,6 +255,7 @@ done
 [ -z "$DELIMITER" ]  && DELIMITER=$'\4'
 [ "x$DELIMITER" = "xNOT SPECIFIED" ] && DELIMITER=$'\4'
 [ -n "$EOP" ] && EOProcess="$EOP"
+[ -n "$EOM" ] && EOMessage="$EOM"
 
 cmdTTL="curl --retry 3 -s -f -X POST --digest -u $USER:$PASSWD -H Content-Type:text/turtle -G http://$HOST:$PORT/sparql-graph-crud-auth --data-urlencode graph=$GRAPH"
 cmdSPARQL="curl --retry 3 -s -f -H 'Accept: text/csv' -G http://$HOST:$PORT/sparql --data-urlencode query"
