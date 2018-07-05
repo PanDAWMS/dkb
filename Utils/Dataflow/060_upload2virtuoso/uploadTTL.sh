@@ -124,8 +124,8 @@ upload_files () {
     esac
 
     eval "$cmd" || { echo "(ERROR) An error occured while uploading file: $INPUTFILE" >&2; continue; } &
-    echo -ne EOMessage
-    echo -ne EOProcess
+    echo -ne "$EOMessage"
+    echo -ne "$EOProcess"
   done
 
   return 0;
@@ -177,8 +177,8 @@ upload_stream () {
         n=`ps axf | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
       done
       echo "$line" | $cmd &>/dev/null || { echo "(ERROR) An error occured while uploading stream data." >&2; continue; } &
-      echo -ne EOMessage
-      echo -ne EOProcess
+      echo -ne "$EOMessage"
+      echo -ne "$EOProcess"
     done
   done
 }

@@ -56,7 +56,7 @@ ES_PORT='9200'
 
 CURL_N_MAX=10
 SLEEP=5
-EOBatch=$"\4"
+EOBatch=$'\4'
 EOMessage="\n"
 
 [ -n "$EOM" ] && EOMessage="$EOM"
