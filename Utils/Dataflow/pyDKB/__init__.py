@@ -15,7 +15,7 @@ try:
 # Or, in case of multithreading:
 #                   ' (%(name)s) (%(threadName)s)'
     common.logging.configureRootLogger(msg_format=logMsgFormat,
-                                       level=common.logging.DEBUG)
+                                       level=common.logging.WARN)
     logger = common.logging.getLogger(__name__)
 except (SyntaxError, ImportError), err:
     raise ImportError("%s (in submodule 'common')" % err)
