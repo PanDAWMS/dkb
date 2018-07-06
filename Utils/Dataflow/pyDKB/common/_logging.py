@@ -77,14 +77,28 @@ class MultilineFormatter(logging.Formatter):
             suffix = splitted[-1]
         return suffix
 
-    def formatExtra(self, lines, suffix=None, prefix="  (==) "):
-        """ Format extra lines of the log message (traceback, ...). """
+    def formatExtra(self, lines, suffix=None, prefix="  (==) ", align=False):
+        """ Format extra lines of the log message (traceback, ...).
+
+        Parameter 'align' shows whether the suffix should be aligned
+        to the right (by the longest line), or to the left (as for normal
+        log messages).
+        """
         if suffix is None:
             suffix = self.getSuffix()
         if isinstance(lines, list) and len(lines):
-            extra = prefix + lines[0] + suffix
+            max_len = len(max(lines, key=len))
+            if align:
+                suff = ' ' * (max_len - len(lines[0])) + suffix
+            else:
+                suff = suffix
+            extra = prefix + lines[0] + suff
             for line in lines[1:]:
-                extra += "\n" + prefix + line + suffix
+                if align:
+                    suff = ' ' * (max_len - len(line)) + suffix
+                else:
+                    suff = suffix
+                extra += "\n" + prefix + line + suff
         else:
             extra = ""
         return extra
@@ -93,7 +107,7 @@ class MultilineFormatter(logging.Formatter):
         """ Format traceback as extra lines. """
         s = super(MultilineFormatter, self).formatException(ei)
         lines = s.splitlines()
-        exc_text = self.formatExtra(lines)
+        exc_text = self.formatExtra(lines, align=True)
         return exc_text
 
     def format(self, record):
