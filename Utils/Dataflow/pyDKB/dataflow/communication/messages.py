@@ -40,7 +40,8 @@ def Message(msg_type):
     cls = __message_class.get(msg_type)
     if not cls:
         logger.warn("Message class for type %s is not implemented. "
-                    "Using AbstractMessage instead.")
+                    "Using AbstractMessage instead."
+                    % messageType.memberName(msg_type))
         cls = AbstractMessage
 
     return cls
