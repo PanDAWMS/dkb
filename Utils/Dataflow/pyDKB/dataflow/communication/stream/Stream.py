@@ -5,12 +5,15 @@ pyDKB.dataflow.commuication.stream.Stream
 import sys
 
 from . import messageType
-from . import logLevel
 from . import Message
+
+from pyDKB.common import logging
 
 
 class Stream(object):
     """ Abstract class for input/output streams. """
+
+    logger = logging.getLogger(__name__)
 
     message_type = None
     _fd = None
@@ -20,23 +23,9 @@ class Stream(object):
         self.reset(fd)
         self.configure(config)
 
-    def log(self, message, level=logLevel.INFO):
+    def log(self, message, level=logging.INFO):
         """ Output log message with given log level. """
-        if not logLevel.hasMember(level):
-            self.log("Unknown log level: %s" % level, logLevel.WARN)
-            level = logLevel.INFO
-        if type(message) == list:
-            lines = message
-        else:
-            lines = message.splitlines()
-        if lines:
-            out_message = "(%s) (%s) %s" % (logLevel.memberName(level),
-                                            self.__class__.__name__,
-                                            lines[0])
-            for l in lines[1:]:
-                out_message += "\n(==) %s" % l
-            out_message += "\n"
-            sys.stderr.write(out_message)
+        self.logger.log(level, message)
 
     def configure(self, config):
         """ Stream configuration. """

@@ -4,13 +4,16 @@ pyDKB.dataflow.communication.stream.InputStream
 
 from Stream import Stream
 from . import messageType
-from . import logLevel
 from . import Message
+
 from pyDKB.common import custom_readline
+from pyDKB.common import logging
 
 
 class InputStream(Stream):
     """ Implementation of the input stream. """
+
+    logger = logging.getLogger(__name__)
 
     __iterator = None
 
@@ -58,7 +61,7 @@ class InputStream(Stream):
                      "Cause: %s\n"
                      "Original message: '%s'"
                      % (messageClass.typeName(), err, message),
-                     logLevel.WARN)
+                     logging.WARN)
             return False
 
     def get_message(self):

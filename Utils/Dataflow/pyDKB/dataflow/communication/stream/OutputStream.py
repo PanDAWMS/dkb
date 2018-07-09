@@ -4,13 +4,16 @@ pyDKB.dataflow.communication.stream.OutputStream
 
 from Stream import Stream
 from . import messageType
-from . import logLevel
 from . import Message
+
 from pyDKB.common import custom_readline
+from pyDKB.common import logging
 
 
 class OutputStream(Stream):
     """ Implementation of the output stream. """
+
+    logger = logging.getLogger(__name__)
 
     msg_buffer = []
 
