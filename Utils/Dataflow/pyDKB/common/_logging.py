@@ -54,7 +54,8 @@ class Logger(logging.Logger):
         logger.traceback()
         """
         if self.isEnabledFor(DEBUG):
-            kwargs['exc_info'] = 1
+            if not (kwargs.get('exc_info')):
+                kwargs['exc_info'] = 1
             self.debug('Traceback info:', *args, **kwargs)
 
 
