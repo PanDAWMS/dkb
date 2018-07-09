@@ -12,11 +12,14 @@ import os
 
 import Consumer
 from . import DataflowException
-from . import logLevel
+
+from pyDKB.common import logging
 
 
 class StreamConsumer(Consumer.Consumer):
     """ Data consumer implementation for Stream data source. """
+
+    logger = logging.getLogger(__name__)
 
     fd = None
 

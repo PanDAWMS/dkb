@@ -6,11 +6,12 @@ import sys
 from collections import defaultdict
 
 from . import messageType
-from . import logLevel
 from . import DataflowException
 
 from .. import Message
 from ..stream import StreamBuilder
+
+from pyDKB.common import logging
 
 
 class ConsumerException(DataflowException):
@@ -20,6 +21,8 @@ class ConsumerException(DataflowException):
 
 class Consumer(object):
     """ Data consumer implementation. """
+
+    logger = logging.getLogger(__name__)
 
     config = None
 
@@ -32,23 +35,9 @@ class Consumer(object):
         self.config = config
         self.reconfigure()
 
-    def log(self, message, level=logLevel.INFO):
+    def log(self, message, level=logging.INFO):
         """ Output log message with given log level. """
-        if not logLevel.hasMember(level):
-            self.log("Unknown log level: %s" % level, logLevel.WARN)
-            level = logLevel.INFO
-        if type(message) == list:
-            lines = message
-        else:
-            lines = message.splitlines()
-        if lines:
-            out_message = "(%s) (%s) %s" % (logLevel.memberName(level),
-                                            self.__class__.__name__,
-                                            lines[0])
-            for l in lines[1:]:
-                out_message += "\n(==) %s" % l
-            out_message += "\n"
-            sys.stderr.write(out_message)
+        self.logger.log(level, message)
 
     def __iter__(self):
         """ Initialize iteration. """
