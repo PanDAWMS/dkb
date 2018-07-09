@@ -199,7 +199,7 @@ class AbstractStage(object):
         self.__parser.print_usage(fd)
 
     def set_error(self, err_type, err_val, err_trace):
-        """ Set object `_err` variable from the last error info. """
+        """ Set `_error` attribute from the passed error info. """
         self._error = {'etype': err_type,
                        'exception': err_val,
                        'trace': err_trace}
