@@ -8,6 +8,8 @@ import logging
 from logging import CRITICAL, FATAL, ERROR, WARNING, WARN, INFO, DEBUG, NOTSET
 import sys
 
+__logging_version = int(logging.__version__.split('.')[1])
+
 # ---------------------------------------------------
 # Module variables
 # ---------------------------------------------------
@@ -28,7 +30,7 @@ logging.addLevelName(TRACE, 'TRACE')
 # -------------------------------------------
 
 
-class Logger(logging.Logger):
+class Logger(logging.Logger, object):
     """ Logger implementation, aware of 'TRACE' log level.
 
     New methods:
@@ -59,7 +61,14 @@ class Logger(logging.Logger):
             self.debug('Traceback info:', *args, **kwargs)
 
 
-class MultilineFormatter(logging.Formatter):
+class RootLogger(Logger):
+    """ Same as Logger, but must must have `Level` and be the only one. """
+    def __init__(self, level, name='root'):
+        """ Initialize new root logger. """
+        Logger.__init__(self, name, level)
+
+
+class MultilineFormatter(logging.Formatter, object):
     """ Formatter for multiline messages.
 
     Every extra line (directly in the message body, or the traceback)
@@ -175,16 +184,16 @@ def initRootLogger(**kwargs):
     name = kwargs.get('name')
     if not name:
         name = __name__.split('.')[0]
-    root = logging.getLogger(name)
-    # Cast new root to our custom class
-    root.__class__ = Logger
-    # Separate new 'root' from logging.root (to avoid possible interfere
-    # to/from any other usage of logging module):
-    # 1) prevent log record propagation to parent Handlers, if any;
-    root.propagate = 0
-    # 2) create new manager (object, responsible for new loggers creation);
+    # Create new root logger
+    root = RootLogger(WARNING, name)
+    # Set Logger class 'root' to the new root
+    Logger.root = root
+    # Create new manager (object, responsible for new loggers creation)
     manager = logging.Manager(root)
-    manager.setLoggerClass(Logger)
+    if __logging_version < 5:
+        logging.setLoggerClass(Logger)
+    else:
+        manager.setLoggerClass(Logger)
     Logger.manager = manager
     root.manager = Logger.manager
     # 3) reset root logger for our class.
@@ -204,7 +213,10 @@ def initRootLogger(**kwargs):
         hdlr_name = "stream_%s" % stream.fileno()
         hdlr = logging.StreamHandler(stream)
 
-    hdlr.set_name(hdlr_name)
+    if __logging_version < 5:
+        hdlr._name = hdlr_name
+    else:
+        hdlr.set_name(hdlr_name)
 
     fs = kwargs.get('msg_format', logging.BASIC_FORMAT)
     dfs = kwargs.get('datefmt', None)
@@ -252,13 +264,21 @@ def configureRootLogger(**kwargs):
     else:
         hdlr = old_hdlr
 
-    if not hdlr.get_name():
-        hdlr.set_name(hdlr_name)
+    if __logging_version < 5:
+        if not getattr(hdlr, '_name', None):
+            hdlr._name = hdlr_name
+    else:
+        if not hdlr.get_name():
+            hdlr.set_name(hdlr_name)
 
     # Remove old handler or go on with it instead of the newly created one
     # (if it is configured just the same way).
     if old_hdlr != hdlr:
-        if old_hdlr.get_name() != hdlr.get_name():
+        if __logging_version < 5 \
+                and (getattr(old_hdlr, '_name', None)
+                     != getattr(hdlr, '_name', '')) \
+                or __logging_version >= 5 \
+                and old_hdlr.get_name() != hdlr.get_name():
             old_hdlr.close()
             root.removeHandler(old_hdlr)
             root.addHandler(hdlr)
@@ -296,4 +316,4 @@ def getLogger(name):
     root = _rootLogger
     if name == root.name:
         return root
-    return root.getChild(name)
+    return root.manager.getLogger(name)
