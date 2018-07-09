@@ -9,7 +9,7 @@ from collections import defaultdict
 import textwrap
 import argparse
 
-from . import logLevel
+from pyDKB.common import logging
 
 
 class AbstractStage(object):
@@ -27,6 +27,8 @@ class AbstractStage(object):
     * Stage custom config (defaultdict(defaultdict(str)))
         CONFIG
     """
+
+    logger = logging.getLogger(__name__)
 
     def __init__(self, description="DKB Dataflow stage"):
         """ Initialize the stage
@@ -65,23 +67,9 @@ class AbstractStage(object):
 
         self._error = None
 
-    def log(self, message, level=logLevel.INFO):
+    def log(self, message, level=logging.INFO):
         """ Output log message with given log level. """
-        if not logLevel.hasMember(level):
-            self.log("Unknown log level: %s" % level, logLevel.WARN)
-            level = logLevel.INFO
-        if type(message) == list:
-            lines = message
-        else:
-            lines = message.splitlines()
-        if lines:
-            out_message = "(%s) (%s) %s" % (logLevel.memberName(level),
-                                            self.__class__.__name__,
-                                            lines[0])
-            for l in lines[1:]:
-                out_message += "\n(==) %s" % l
-            out_message += "\n"
-            sys.stderr.write(out_message)
+        self.logger.log(level, message)
 
     def defaultArguments(self):
         """ Config argument parser with parameters common for all stages. """
@@ -132,7 +120,7 @@ class AbstractStage(object):
         if self.ARGS.eom is None:
             self.ARGS.eom = '\n'
         elif self.ARGS.eom == '':
-            self.log("Empty EOM marker specified!", logLevel.WARN)
+            self.log("Empty EOM marker specified!", logging.WARN)
         else:
             try:
                 self.ARGS.eom = self.ARGS.eom.decode('string_escape')
@@ -213,13 +201,12 @@ class AbstractStage(object):
         if not message and exc_info:
             message = str(exc_info[1])
         if message:
-            self.log(message, logLevel.ERROR)
+            self.log(message, logging.ERROR)
         if exc_info:
             if exc_info[0] == KeyboardInterrupt:
                 self.log("Interrupted by user.")
             else:
-                trace = traceback.format_exception(*exc_info)
-                self.log(''.join(trace), logLevel.DEBUG)
+                self.logger.traceback(exc_info=exc_info)
 
     def stop(self):
         """ Stop running processes and output error information. """
