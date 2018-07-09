@@ -3,7 +3,6 @@ Producer submodule init file.
 """
 
 from .. import messageType
-from .. import logLevel
 from .. import DataflowException
 
 from Producer import Producer
@@ -11,11 +10,15 @@ from FileProducer import FileProducer
 from HDFSProducer import HDFSProducer
 from StreamProducer import StreamProducer
 
+from pyDKB.common import logging
+
 __all__ = ['ProducerBuilder']
 
 
 class ProducerBuilder(object):
     """ Constructor for Producer instance. """
+
+    logger = logging.getLogger(__name__)
 
     producerClass = None
     message_type = None

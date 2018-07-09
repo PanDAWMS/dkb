@@ -13,12 +13,15 @@ import os
 
 from Producer import ProducerException
 from FileProducer import FileProducer
-from . import logLevel
+
 from pyDKB.common import hdfs
+from pyDKB.common import logging
 
 
 class HDFSProducer(FileProducer):
     """ Data producer implementation for HDFS data dest. """
+
+    logger = logging.getLogger(__name__)
 
     def config_dir(self, config={}):
         """ Configure output directory. """
