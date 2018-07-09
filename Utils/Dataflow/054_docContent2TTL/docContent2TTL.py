@@ -154,7 +154,9 @@ def main(args):
     """Parsing command line arguments and processing JSON
     string from file or from stream
     """
-    stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
+    stage = pyDKB.dataflow.stage.ProcessorStage()
+    stage.set_input_message_type(messages.messageType.JSON)
+    stage.set_output_message_type(messages.messageType.TTL)
     stage.process = process
 
     stage.configure(args)

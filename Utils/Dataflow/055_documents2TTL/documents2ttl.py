@@ -468,7 +468,7 @@ def fix_list_values(list_vals):
 def process(stage, msg):
     """
     Processing messages from JSON to TTL
-    :param stage: instance of JSON2TTLProcessorStage
+    :param stage: instance of ProcessorStage
     :param msg: input JSON message
     :return:
     """
@@ -513,7 +513,9 @@ def main(argv):
     """
     exit_code = 0
     exc_info = None
-    stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
+    stage = pyDKB.dataflow.stage.ProcessorStage()
+    stage.set_input_message_type(pyDKB.dataflow.messageType.JSON)
+    stage.set_output_message_type(pyDKB.dataflow.messageType.TTL)
     stage.process = process
     stage.add_argument('-g', '--graph', action='store', type=str,
                        nargs='?',
