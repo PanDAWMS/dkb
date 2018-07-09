@@ -27,9 +27,9 @@ public class ExternalProcessLogger implements Runnable {
 
     private BufferedReader STDERR;
 
+    private Pattern lmt_p = Pattern.compile("\\(?(TRACE|DEBUG|INFO|"
+                                            + "WARN(?:ING)?|ERROR)\\)?");
 
-   private Pattern lmt_p = Pattern.compile("\\(?(TRACE|DEBUG|INFO|"
-                                         + "WARN(?:ING)?|ERROR)\\)?");
 
     public ExternalProcessLogger(Process process, String command) {
         this.process = process;
