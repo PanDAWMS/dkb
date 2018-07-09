@@ -53,7 +53,7 @@ public class ExternalProcessLogger implements Runnable {
         String type = "TRACE";
         if (m.lookingAt()) {
             type = m.group(1);
-            line = line.replaceFirst("\\(?" + type + "\\)?", "");
+            line = line.replaceFirst("^(.*)?\\(?" + type + "\\)?", "");
         }
         line = "(" + this.command + ")" + line;
         if (type == "==") {
