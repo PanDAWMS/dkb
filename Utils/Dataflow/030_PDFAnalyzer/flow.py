@@ -95,7 +95,9 @@ def process(stage, msg):
 
 
 if __name__ == "__main__":
-    analyzer_stage = pyDKB.dataflow.stage.JSONProcessorStage()
+    analyzer_stage = pyDKB.dataflow.stage.ProcessorStage()
+    analyzer_stage.set_input_message_type(pyDKB.dataflow.messageType.JSON)
+    analyzer_stage.set_output_message_type(pyDKB.dataflow.messageType.JSON)
     analyzer_stage.process = process
 
     analyzer_stage.configure(sys.argv[1:])
