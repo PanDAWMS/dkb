@@ -50,7 +50,7 @@ class Logger(logging.Logger, object):
         if self.isEnabledFor(TRACE):
             self._log(TRACE, msg, args, **kwargs)
 
-    def traceback(self, *args, **kwargs):
+    def traceback(self, **kwargs):
         """ Log traceback without additionat messages with severity 'DEBUG'.
 
         logger.traceback()
@@ -58,7 +58,7 @@ class Logger(logging.Logger, object):
         if self.isEnabledFor(DEBUG):
             if not (kwargs.get('exc_info')):
                 kwargs['exc_info'] = 1
-            self.debug('Traceback info:', *args, **kwargs)
+            self.debug('Traceback info:', **kwargs)
 
 
 class RootLogger(Logger):
