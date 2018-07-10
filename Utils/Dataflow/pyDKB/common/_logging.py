@@ -114,16 +114,12 @@ class MultilineFormatter(logging.Formatter, object):
         if isinstance(lines, list) and len(lines):
             max_len = len(max(lines, key=len))
             if align:
-                suff = ' ' * (max_len - len(lines[0])) + suffix
+                line_fmt = "%%(line)-%ds" % max_len
             else:
-                suff = suffix
-            extra = prefix + lines[0] + suff
+                line_fmt = "%(line)s"
+            extra = prefix + line_fmt % {'line': lines[0]} + suffix
             for line in lines[1:]:
-                if align:
-                    suff = ' ' * (max_len - len(line)) + suffix
-                else:
-                    suff = suffix
-                extra += "\n" + prefix + line + suff
+                extra += "\n" + prefix + line_fmt % {'line': line} + suffix
         else:
             extra = ""
         return extra
