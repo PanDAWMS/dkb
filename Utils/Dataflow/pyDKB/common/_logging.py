@@ -113,7 +113,7 @@ class MultilineFormatter(logging.Formatter, object):
             suffix = self._suffix
         if isinstance(lines, list) and len(lines):
             max_len = len(max(lines, key=len))
-            if align:
+            if suffix and align:
                 line_fmt = "%%(line)-%ds" % max_len
             else:
                 line_fmt = "%(line)s"
