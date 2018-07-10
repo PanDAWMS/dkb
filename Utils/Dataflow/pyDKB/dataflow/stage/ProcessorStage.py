@@ -181,6 +181,9 @@ class ProcessorStage(AbstractStage):
         """
         if args:
             self.parse_args(args)
+        elif self.ARGS is None:
+            # Need to initialize ARGS to proceed
+            self.parse_args([])
         # Input
         self.__input = consumer.ConsumerBuilder(vars(self.ARGS)) \
             .setType(self.__input_message_type) \
