@@ -102,34 +102,32 @@ class MultilineFormatter(logging.Formatter, object):
             format = fmt
         return format, suffix
 
-    def formatExtra(self, lines, suffix=None, prefix="  (==) ", align=False):
+    def formatSuffix(self, record):
+        """ Return formatted suffix. """
+        return self._suffix % record.__dict__
+
+    def formatExtra(self, lines, prefix="  (==) ", suffix='', align=False):
         """ Format extra lines of the log message (traceback, ...).
 
         Parameter 'align' shows whether the suffix should be aligned
         to the right (by the longest line), or to the left (as for normal
         log messages).
         """
-        if suffix is None:
-            suffix = self._suffix
         if isinstance(lines, list) and len(lines):
             max_len = len(max(lines, key=len))
+            # Need to add prefix len (in case that the longest line is
+            # among those that will be prefixed).
+            max_len += len(prefix)
             if suffix and align:
                 line_fmt = "%%(line)-%ds" % max_len
             else:
                 line_fmt = "%(line)s"
-            extra = prefix + line_fmt % {'line': lines[0]} + suffix
+            extra = line_fmt % {'line': lines[0]} + suffix
             for line in lines[1:]:
-                extra += "\n" + prefix + line_fmt % {'line': line} + suffix
+                extra += "\n" + line_fmt % {'line': prefix + line} + suffix
         else:
             extra = ""
         return extra
-
-    def formatException(self, ei):
-        """ Format traceback as extra lines. """
-        s = super(MultilineFormatter, self).formatException(ei)
-        lines = s.splitlines()
-        exc_text = self.formatExtra(lines, align=True)
-        return exc_text
 
     def format(self, record):
         """ Format multiline message.
@@ -137,20 +135,10 @@ class MultilineFormatter(logging.Formatter, object):
         Second and further lines from initial message are formatted
         'extra' lines.
         """
-        lines = record.msg.splitlines()
-        msg = lines[0] if lines else ''
-        extra = self.formatExtra(lines[1:])
-        if extra and extra[:1] != '\n':
-            extra = '\n' + extra
-        record.msg = msg
         formatted = super(MultilineFormatter, self).format(record)
         lines = formatted.splitlines()
-        msg = (lines[0] + self._suffix) if lines else ''
-        if len(lines) > 1:
-            extra += '\n'
-        # Need to expand suffixes (as they are added after parent`s
-        # 'format()' operation).
-        result = (msg + extra + '\n'.join(lines[1:])) % record.__dict__
+        suffix = self.formatSuffix(record)
+        result = self.formatExtra(lines, suffix=suffix, align=True)
         return result
 
 
