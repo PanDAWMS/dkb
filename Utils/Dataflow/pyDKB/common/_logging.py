@@ -78,14 +78,29 @@ class MultilineFormatter(logging.Formatter, object):
                  '%(message)s' part.
     """
 
-    def getSuffix(self):
-        """ Return format suffix (everything that goes after msg body). """
-        suffix = ''
-        fmt = self._fmt
+    _suffix = None
+
+    def __init__(self, *args):
+        """ Split format string into message format and suffix. """
+        new_args = list(args)
+        if len(args):
+            fmt = args[0]
+            new_args[0], self._suffix = self.splitFormat(fmt)
+        super(MultilineFormatter, self).__init__(*new_args)
+
+    def splitFormat(self, fmt):
+        """ Split format string into msg format and suffix.
+
+        Suffix is everything that goes after the message body.
+        """
+        format, suffix = ('', '')
         splitted = fmt.split("%(message)s")
         if len(splitted) > 1:
+            format = "%(message)s".join(splitted[:-1]) + "%(message)s"
             suffix = splitted[-1]
-        return suffix
+        else:
+            format = fmt
+        return format, suffix
 
     def formatExtra(self, lines, suffix=None, prefix="  (==) ", align=False):
         """ Format extra lines of the log message (traceback, ...).
@@ -95,7 +110,7 @@ class MultilineFormatter(logging.Formatter, object):
         log messages).
         """
         if suffix is None:
-            suffix = self.getSuffix()
+            suffix = self._suffix
         if isinstance(lines, list) and len(lines):
             max_len = len(max(lines, key=len))
             if align:
@@ -134,10 +149,10 @@ class MultilineFormatter(logging.Formatter, object):
         record.msg = msg
         formatted = super(MultilineFormatter, self).format(record)
         lines = formatted.splitlines()
-        msg = lines[0] if lines else ''
+        msg = (lines[0] + self._suffix) if lines else ''
         if len(lines) > 1:
             extra += '\n'
-        # Need to expand suffixes of extra lines (missed parent`s
+        # Need to expand suffixes (as they are added after parent`s
         # 'format()' operation).
         result = (msg + extra + '\n'.join(lines[1:])) % record.__dict__
         return result
