@@ -29,16 +29,19 @@ class InputStream(Stream):
         else:
             self.__iterator = custom_readline(fd, self.EOM)
 
-    def reset(self, fd, close=True):
+    def reset(self, fd, close=True, force=False):
         """ Reset current stream with new file descriptor.
 
         Overrides parent method to reset __iterator property.
         """
         super(InputStream, self).reset(fd, close)
-        # Not _reset_iterator(), as we are not sure someone
-        # will ask for new messages -- then why read the whole file
-        # in advance (if EOM appears to be '')?
-        self.__iterator = None
+        # We do not want to reset iterator if `reset()` was called
+        # with the same `fd` as before.
+        if force or fd != self.get_fd():
+            # Not _reset_iterator(), as we are not sure someone
+            # will ask for new messages -- then why read the whole file
+            # in advance (if EOM appears to be '')?
+            self.__iterator = None
 
     def parse_message(self, message):
         """ Verify and parse input message.
