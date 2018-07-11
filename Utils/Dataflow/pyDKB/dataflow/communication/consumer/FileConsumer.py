@@ -102,9 +102,9 @@ class FileConsumer(Consumer.Consumer):
             for f in dir_content:
                 if os.path.isfile(os.path.join(dirname, f)):
                     files.append(f)
+                    yield f
         except OSError, err:
             raise Consumer.ConsumerException(err)
-        return files
 
     def _adjusted_filenames(self):
         """ Return iterable object, yielding filename and path to file. """
