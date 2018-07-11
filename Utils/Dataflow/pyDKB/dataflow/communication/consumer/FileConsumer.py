@@ -21,9 +21,6 @@ from . import logLevel
 class FileConsumer(Consumer.Consumer):
     """ Data consumer implementation for HDFS data source. """
 
-    # Input file names (iterable object)
-    input_filenames = None
-
     # Current file
     current_file = None
 
