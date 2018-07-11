@@ -209,20 +209,21 @@ class AbstractStage(object):
                        'exception': err_val,
                        'trace': err_trace}
 
-    def output_error(self, message=None):
-        """ Output traceback of the last error with `message`. """
-        err = self._error
-        if not message and err:
-            message = str(err['exception'])
+    def output_error(self, message=None, exc_info=None):
+        """ Output traceback of the passed (or last) error with `message`. """
+        if not exc_info:
+            err = self._error
+            if err:
+                exc_info = (err['etype'], err['exception'], err['trace'])
+        if not message and exc_info:
+            message = str(exc_info[1])
         if message:
             self.log(message, logLevel.ERROR)
-        if err:
-            if err['etype'] == KeyboardInterrupt:
+        if exc_info:
+            if exc_info[0] == KeyboardInterrupt:
                 self.log("Interrupted by user.")
             else:
-                trace = traceback.format_exception(err['etype'],
-                                                   err['exception'],
-                                                   err['trace'])
+                trace = traceback.format_exception(*exc_info)
                 self.log(''.join(trace), logLevel.DEBUG)
 
     def stop(self):
