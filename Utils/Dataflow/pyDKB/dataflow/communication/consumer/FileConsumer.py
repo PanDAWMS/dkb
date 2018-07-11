@@ -48,6 +48,8 @@ class FileConsumer(Consumer.Consumer):
         if not f:
             return None
         fd = f['fd']
+        if not fd or getattr(fd, 'closed', True):
+            return None
         if not f.get('size'):
             stat = os.fstat(fd.fileno())
             f['size'] = stat.st_size
