@@ -16,6 +16,7 @@ import os
 import Consumer
 from . import DataflowException
 from . import logLevel
+from .. import Message
 
 
 class FileConsumer(Consumer.Consumer):
@@ -32,7 +33,7 @@ class FileConsumer(Consumer.Consumer):
 
         if not self.config.get('input_dir'):
             self.config['input_dir'] = os.path.curdir
-        self.init_sources()
+        self.input_files = None
 
         super(FileConsumer, self).reconfigure(config)
 
@@ -77,6 +78,8 @@ class FileConsumer(Consumer.Consumer):
             File descriptor of the new $current_file
             None (no files left)
         """
+        if not self.input_files:
+            self.init_sources()
         try:
             self.current_file = self.input_files.next()
             result = self.get_source()
@@ -102,10 +105,12 @@ class FileConsumer(Consumer.Consumer):
     def _filenames_from_dir(self, dirname):
         """ Return list of files in given local directory. """
         files = []
+        ext = Message(self.message_type).extension()
         try:
             dir_content = os.listdir(dirname)
             for f in dir_content:
-                if os.path.isfile(os.path.join(dirname, f)):
+                if os.path.isfile(os.path.join(dirname, f)) \
+                        and f.lower().endswith(ext):
                     files.append(f)
                     yield f
         except OSError, err:
