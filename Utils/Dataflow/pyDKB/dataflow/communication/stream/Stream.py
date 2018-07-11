@@ -60,13 +60,16 @@ class Stream(object):
 
         :param fd: open file descriptor
                    TODO: IOBase objects
+        :return: previous file descriptor (or None)
         """
         if not isinstance(fd, (file, None.__class__)):
             raise TypeError("Stream.reset() expects first parameter of type"
                             " 'file' (got '%s')" % fd.__class__.__name__)
-        if close and self._fd != fd:
+        old_fd = self._fd
+        if close and old_fd != fd:
             self.close()
         self._fd = fd
+        return old_fd
 
     def get_fd(self):
         """ Return open file descriptor or raise exception. """
