@@ -14,6 +14,7 @@ class Stream(object):
     """ Abstract class for input/output streams. """
 
     message_type = None
+    EOM = None
     _fd = None
 
     def __init__(self, fd=None, config={}):
