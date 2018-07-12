@@ -25,7 +25,7 @@ class InputStream(Stream):
         if self.EOM == '\n':
             self.__iterator = iter(fd.readline, "")
         elif self.EOM == '':
-            self.__iterator = iter([fd.read()])
+            self.__iterator = iter(fd.read, "")
         else:
             self.__iterator = custom_readline(fd, self.EOM)
 
@@ -38,10 +38,7 @@ class InputStream(Stream):
         # We do not want to reset iterator if `reset()` was called
         # with the same `fd` as before.
         if force or fd != self.get_fd():
-            # Not _reset_iterator(), as we are not sure someone
-            # will ask for new messages -- then why read the whole file
-            # in advance (if EOM appears to be '')?
-            self.__iterator = None
+            self._reset_iterator()
 
     def parse_message(self, message):
         """ Verify and parse input message.
