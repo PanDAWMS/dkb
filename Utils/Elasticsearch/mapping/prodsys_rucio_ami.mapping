@@ -184,6 +184,12 @@
               "ignore_above" : 256
             }
           }
+        },
+        "input_bytes": {
+          "type": "long"
+        },
+        "primary_input_deleted": {
+          "type": "boolean"
         }
       }
     },
