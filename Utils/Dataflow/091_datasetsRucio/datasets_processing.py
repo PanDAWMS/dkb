@@ -124,7 +124,7 @@ def get_dataset_info(dataset):
     ds_dict = {}
     ds_dict['datasetname'] = dataset
     try:
-        mdata = get_metadata(dataset, 'bytes')
+        mdata = get_metadata(dataset, ['bytes', 'events'])
         adjust_metadata(mdata)
         ds_dict.update(mdata)
     except RucioException:
