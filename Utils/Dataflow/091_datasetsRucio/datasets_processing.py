@@ -76,11 +76,16 @@ def init_rucio_client():
 
 
 def process(stage, message):
-    """ Process input message.
+    """ Process output datasets from input message.
 
     Generate output JSON document of the following structure:
-        { "taskid": <TASKID>,
-          "output": []
+        { "datasetname": <DSNAME>
+          "deleted": <bool>,
+          "bytes": <...>,
+          ...
+          "_type": "output_dataset",
+          "_parent": <TASKID>,
+          "_id": <DSNAME>
         }
     """
     json_str = message.content()
