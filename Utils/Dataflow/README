@@ -42,8 +42,11 @@ Dataflow 							Description
 (054|055)/output -> 060						upload links, papers, support docs and datasets TTL
 								  files to Virtuoso
 
-009/output ----------> 016/output --------> 019/output -> 069   Task metadata from Oracle to Elasticsearch
-     \--> 091/output -> 093/output -> 095/output --/            Dataset metadata from Rucio and AMI to Elasticsearch
+009/output ---> 091(in)/output ---> *                           Task metadata from Oracle to Elasticsearch
+   \                * ---> 016/output ----> 019/output -> 069   
+    \                                            /
+     \--> 091(out)/output ---> **               /               Dataset metadata from Rucio and AMI to Elasticsearch
+            ** ---> 093/output -> 095/output --/
 
 ==============
 * REFERENCES *
