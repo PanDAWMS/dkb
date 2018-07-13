@@ -119,11 +119,11 @@ def get_dataset_info(dataset):
     ds_dict = {}
     ds_dict['datasetname'] = dataset
     try:
-        bytes = get_metadata_attribute(dataset, 'bytes')
-        if bytes == 'null' or bytes is None:
+        mdata = get_metadata(dataset, 'bytes')
+        if mdata['bytes'] == 'null' or mdata['bytes'] is None:
             ds_dict['bytes'] = -1
         else:
-            ds_dict['bytes'] = bytes
+            ds_dict['bytes'] = mdata['bytes']
             ds_dict['deleted'] = False
     except RucioException:
         # if dataset wasn't find in Rucio, it means that it was deleted from
@@ -155,16 +155,27 @@ def extract_scope(dsn):
     return result
 
 
-def get_metadata_attribute(dsn, attribute_name):
+def get_metadata(dsn, attributes=None):
     """ Get attribute value from Rucio
 
     :param dsn: full dataset name
-    :param attribute_name: name of searchable attribute
-    :return:
+    :param attributes: attribute name OR
+                       list of names of searchable attributes
+                       (None = all attributes)
+    :return: dataset metadata
+    :rtype:  dict
     """
     scope, dataset = extract_scope(dsn)
     metadata = rucio_client.get_metadata(scope=scope, name=dataset)
-    return metadata.get(attribute_name, None)
+    if attributes is None:
+        result = metadata
+    else:
+        result = {}
+        if not isinstance(attributes, list):
+            attributes = [attributes]
+        for attribute_name in attributes:
+            result[attribute_name] = metadata.get(attribute_name, None)
+    return result
 
 
 def add_es_index_info(data):
