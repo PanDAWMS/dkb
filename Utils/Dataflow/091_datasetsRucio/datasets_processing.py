@@ -120,11 +120,8 @@ def get_dataset_info(dataset):
     ds_dict['datasetname'] = dataset
     try:
         mdata = get_metadata(dataset, 'bytes')
-        if mdata['bytes'] == 'null' or mdata['bytes'] is None:
-            ds_dict['bytes'] = -1
-        else:
-            ds_dict['bytes'] = mdata['bytes']
-            ds_dict['deleted'] = False
+        adjust_metadata(mdata)
+        ds_dict.update(mdata)
     except RucioException:
         # if dataset wasn't find in Rucio, it means that it was deleted from
         # the Rucio catalog. In this case 'deleted' is set to TRUE and
@@ -176,6 +173,26 @@ def get_metadata(dsn, attributes=None):
         for attribute_name in attributes:
             result[attribute_name] = metadata.get(attribute_name, None)
     return result
+
+
+def adjust_metadata(mdata):
+    """ Update metadata taken from Rucio with values required to proceed. """
+    if not mdata:
+        return mdata
+    if not isinstance(mdata, dict):
+        sys.stderr.write("(ERROR) adjust_metadata() expects parameter of type "
+                         " 'dict' (get '%s')" % mdata.__class__.__name__)
+    for key in mdata:
+        if mdata[key] == 'null':
+            mdata[key] = None
+    if 'bytes' in mdata.keys():
+        val = mdata['bytes']
+        if val is None:
+            mdata['bytes'] = -1
+            mdata['deleted'] = True
+        else:
+            mdata['deleted'] = False
+    return mdata
 
 
 def add_es_index_info(data):
