@@ -58,7 +58,6 @@ class Consumer(object):
         """ (Re)initialize consumer with stage config arguments. """
         if config:
             self.config = config
-        self.init_stream()
 
     def init_stream(self):
         """ Init input stream. """
@@ -70,6 +69,18 @@ class Consumer(object):
                 .setType(self.message_type) \
                 .build()
 
+    def stream_is_empty(self):
+        """ Check if current stream is empty.
+
+        Return value:
+            True  (empty)
+            False (not empty)
+            None  (_stream is not defined or not initialized)
+        """
+        if not self._stream:
+            return None
+        return self._stream.is_empty()
+
     def get_stream(self):
         """ Get input stream linked to the current source.
 
@@ -77,7 +88,9 @@ class Consumer(object):
             InputStream
             None (no sources left to read from)
         """
-        if self.reset_stream():
+        if not self.stream_is_empty():
+            result = self._stream
+        elif self.reset_stream():
             result = self._stream
         else:
             result = None

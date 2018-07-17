@@ -16,13 +16,11 @@ import os
 import Consumer
 from . import DataflowException
 from . import logLevel
+from .. import Message
 
 
 class FileConsumer(Consumer.Consumer):
     """ Data consumer implementation for HDFS data source. """
-
-    # Input file names (iterable object)
-    input_filenames = None
 
     # Current file
     current_file = None
@@ -35,7 +33,7 @@ class FileConsumer(Consumer.Consumer):
 
         if not self.config.get('input_dir'):
             self.config['input_dir'] = os.path.curdir
-        self.input_files = self._input_files()
+        self.input_files = None
 
         super(FileConsumer, self).reconfigure(config)
 
@@ -44,17 +42,12 @@ class FileConsumer(Consumer.Consumer):
 
         Return value:
             True  (empty)
-            False (not empty)
+            False (not empty or stream for given source is not defined)
             None  (no source)
         """
-        f = self.current_file
-        if not f:
+        if not self.current_file:
             return None
-        fd = f['fd']
-        if not f.get('size'):
-            stat = os.fstat(fd.fileno())
-            f['size'] = stat.st_size
-        return fd.tell() == f['size']
+        return bool(self.stream_is_empty())
 
     def get_source_info(self):
         """ Return current source info. """
@@ -75,6 +68,8 @@ class FileConsumer(Consumer.Consumer):
             File descriptor of the new $current_file
             None (no files left)
         """
+        if not self.input_files:
+            self.input_files = self._input_files()
         try:
             self.current_file = self.input_files.next()
             result = self.get_source()
@@ -90,6 +85,8 @@ class FileConsumer(Consumer.Consumer):
         elif self.config.get('input_dir'):
             files = self._filenames_from_dir(self.config['input_dir'])
         else:
+            self.log("No input files configured; reading filenames from"
+                     " STDIN.", logLevel.WARN)
             files = self._filenames_from_stdin()
         return files
 
@@ -100,14 +97,16 @@ class FileConsumer(Consumer.Consumer):
     def _filenames_from_dir(self, dirname):
         """ Return list of files in given local directory. """
         files = []
+        ext = Message(self.message_type).extension()
         try:
             dir_content = os.listdir(dirname)
             for f in dir_content:
-                if os.path.isfile(os.path.join(dirname, f)):
+                if os.path.isfile(os.path.join(dirname, f)) \
+                        and f.lower().endswith(ext):
                     files.append(f)
+                    yield f
         except OSError, err:
             raise Consumer.ConsumerException(err)
-        return files
 
     def _adjusted_filenames(self):
         """ Return iterable object, yielding filename and path to file. """

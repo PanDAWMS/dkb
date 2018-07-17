@@ -8,6 +8,9 @@ from . import logLevel
 from . import Message
 from pyDKB.common import custom_readline
 
+import os
+import sys
+
 
 class InputStream(Stream):
     """ Implementation of the input stream. """
@@ -24,21 +27,44 @@ class InputStream(Stream):
         fd = self.get_fd()
         if self.EOM == '\n':
             self.__iterator = iter(fd.readline, "")
+            self.is_empty = self._is_fd_empty
         elif self.EOM == '':
-            self.__iterator = iter([fd.read()])
+            self.__iterator = iter(fd.read, "")
+            self.is_empty = self._is_fd_empty
         else:
             self.__iterator = custom_readline(fd, self.EOM)
+            self.is_empty = self._is_generator_empty
 
-    def reset(self, fd, close=True):
+    def reset(self, fd, close=True, force=False):
         """ Reset current stream with new file descriptor.
 
         Overrides parent method to reset __iterator property.
         """
         super(InputStream, self).reset(fd, close)
-        # Not _reset_iterator(), as we are not sure someone
-        # will ask for new messages -- then why read the whole file
-        # in advance (if EOM appears to be '')?
-        self.__iterator = None
+        # We do not want to reset iterator if `reset()` was called
+        # with the same `fd` as before.
+        if force or fd != self.get_fd():
+            self._reset_iterator()
+
+    def _is_unknown_empty(self):
+        """ Implementation of `is_empty()` for not initialized iterator. """
+        return None
+
+    is_empty = _is_unknown_empty
+
+    def _is_fd_empty(self):
+        """ Implement `is_empty()` method for read/readline iterator. """
+        fd = self._fd
+        if not fd or getattr(fd, 'closed', True):
+            return False
+        if fd.fileno() == sys.stdin.fileno():
+            return False
+        stat = os.fstat(fd.fileno())
+        return fd.tell() == stat.st_size
+
+    def _is_generator_empty(self):
+        """ Implement `is_empty()` method for generator. """
+        return self.__iterator.send(True)
 
     def parse_message(self, message):
         """ Verify and parse input message.
