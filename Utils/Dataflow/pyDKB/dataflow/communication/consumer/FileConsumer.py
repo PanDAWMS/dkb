@@ -42,19 +42,12 @@ class FileConsumer(Consumer.Consumer):
 
         Return value:
             True  (empty)
-            False (not empty)
+            False (not empty or stream for given source is not defined)
             None  (no source)
         """
-        f = self.current_file
-        if not f:
+        if not self.current_file:
             return None
-        fd = f['fd']
-        if not fd or getattr(fd, 'closed', True):
-            return None
-        if not f.get('size'):
-            stat = os.fstat(fd.fileno())
-            f['size'] = stat.st_size
-        return fd.tell() == f['size']
+        return bool(self.stream_is_empty())
 
     def get_source_info(self):
         """ Return current source info. """

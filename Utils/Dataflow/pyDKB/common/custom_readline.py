@@ -11,6 +11,9 @@ def custom_readline(f, newline):
     The last line can be incomplete, if the input data flow is interrupted
     in the middle of data writing.
 
+    To check if iteration is over without reading next value, one may
+    `send(True)` to the generator.
+
     Keyword arguments:
     f -- file/stream to read
     newline -- custom delimiter
@@ -24,10 +27,18 @@ def custom_readline(f, newline):
         if poller.poll(500):
             chunk = f.read()
             if not chunk:
-                yield buf
+                if (yield buf):
+                    # `send(True)` was called
+                    is_empty = True
+                    while (yield is_empty):
+                        pass
                 break
             buf += chunk
         while newline in buf:
             pos = buf.index(newline)
-            yield buf[:pos]
+            if (yield buf[:pos]):
+                # `send(True)` was called
+                is_empty = (pos + len(newline) == len(buf))
+                while (yield is_empty):
+                    pass
             buf = buf[pos + len(newline):]
