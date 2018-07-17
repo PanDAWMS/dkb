@@ -8,6 +8,9 @@ from . import logLevel
 from . import Message
 from pyDKB.common import custom_readline
 
+import os
+import sys
+
 
 class InputStream(Stream):
     """ Implementation of the input stream. """
@@ -24,10 +27,13 @@ class InputStream(Stream):
         fd = self.get_fd()
         if self.EOM == '\n':
             self.__iterator = iter(fd.readline, "")
+            self.is_empty = self._is_fd_empty
         elif self.EOM == '':
             self.__iterator = iter(fd.read, "")
+            self.is_empty = self._is_fd_empty
         else:
             self.__iterator = custom_readline(fd, self.EOM)
+            self.is_empty = self._is_generator_empty
 
     def reset(self, fd, close=True, force=False):
         """ Reset current stream with new file descriptor.
@@ -40,6 +46,38 @@ class InputStream(Stream):
         if force or (old_fd and fd != old_fd):
             self._reset_iterator()
         return old_fd
+
+    def is_empty(self):
+        """ Check if current input stream is fully read.
+
+        Return values:
+            None  -- not defined
+            False -- not empty
+            True  -- empty
+        """
+        return self._is_unknown_empty()
+
+    def _is_unknown_empty(self):
+        """ Implementation of `is_empty()` for not initialized iterator. """
+        return None
+
+    def _is_fd_empty(self):
+        """ Implement `is_empty()` method for read/readline iterator. """
+        fd = self.get_fd()
+        if not fd:
+            result = None
+        elif getattr(fd, 'closed', True):
+            result = True
+        elif fd.fileno() == sys.stdin.fileno():
+            result = False
+        else:
+            stat = os.fstat(fd.fileno())
+            result = (fd.tell() == stat.st_size)
+        return result
+
+    def _is_generator_empty(self):
+        """ Implement `is_empty()` method for generator. """
+        return self.__iterator.send(True)
 
     def parse_message(self, message):
         """ Verify and parse input message.
