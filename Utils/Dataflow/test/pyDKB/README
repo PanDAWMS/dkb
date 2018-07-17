@@ -46,8 +46,9 @@ Test cases:
   ./json2TTL.py -d s input/EOMDjson.json
   ./json2TTL.py -d s -e EOM input/NDjson.json
 
-(-) read with custom EOM from file
-    (expected: output file(s) content)
+(+) read with custom EOM from file(s)
+    (expected: output file(s) content, re-formatted so that all JSONs
+     are one-line)
 
   ./json2TTL.py -d s -e EOM input/EOMDjson.json && echo ''
   ./json2TTL.py -d s -e EOM input/EOMDjson.json input/EOMDjson.json && echo ''
