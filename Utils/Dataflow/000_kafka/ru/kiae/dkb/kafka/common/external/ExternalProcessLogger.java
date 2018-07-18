@@ -27,9 +27,10 @@ public class ExternalProcessLogger implements Runnable {
 
     private BufferedReader STDERR;
 
+    private Pattern lmt_p = Pattern.compile("\\(?(TRACE|DEBUG|INFO|"
+                                            + "WARN(?:ING)?|ERROR|==)\\)?");
 
-   private Pattern lmt_p = Pattern.compile("\\(?(TRACE|DEBUG|INFO|"
-                                         + "WARN(?:ING)?|ERROR)\\)?");
+    private String prev_type = "";
 
     public ExternalProcessLogger(Process process, String command) {
         this.process = process;
@@ -52,9 +53,12 @@ public class ExternalProcessLogger implements Runnable {
         String type = "TRACE";
         if (m.lookingAt()) {
             type = m.group(1);
-            line = line.replaceFirst("\\(?" + type + "\\)?", "");
+            line = line.replaceFirst("^(.*)?\\(?" + type + "\\)?", "");
         }
         line = "(" + this.command + ")" + line;
+        if (type == "==") {
+            type = prev_type;
+        }
         switch (type) {
             case "TRACE":
                 log.trace(line);
@@ -75,6 +79,6 @@ public class ExternalProcessLogger implements Runnable {
             default:
                 log.trace(line);
         }
-
+        prev_type = type;
     }
 }

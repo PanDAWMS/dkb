@@ -3,7 +3,6 @@ Consumer submodule init file.
 """
 
 from .. import messageType
-from .. import logLevel
 from .. import DataflowException
 
 from Consumer import Consumer
@@ -11,11 +10,15 @@ from FileConsumer import FileConsumer
 from HDFSConsumer import HDFSConsumer
 from StreamConsumer import StreamConsumer
 
+from pyDKB.common import logging
+
 __all__ = ['ConsumerBuilder']
 
 
 class ConsumerBuilder(object):
     """ Constructor for Consumer instance. """
+
+    logger = logging.getLogger(__name__)
 
     consumerClass = None
 

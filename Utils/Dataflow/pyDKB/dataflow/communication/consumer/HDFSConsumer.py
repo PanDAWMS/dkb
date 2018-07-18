@@ -7,13 +7,16 @@ import sys
 import FileConsumer
 import Consumer
 from . import DataflowException
+
 from pyDKB.common import hdfs
 from pyDKB.common import HDFSException
-from . import logLevel
+from pyDKB.common import logging
 
 
 class HDFSConsumer(FileConsumer.FileConsumer):
     """ Data consumer implementation for HDFS data source. """
+
+    logger = logging.getLogger(__name__)
 
     # Override
     def reconfigure(self, config={}):

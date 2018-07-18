@@ -4,7 +4,6 @@ pyDKB.dataflow.communication.stream
 
 from .. import messageType
 from .. import codeType
-from .. import logLevel
 from .. import DataflowException
 from .. import Message
 from InputStream import InputStream
@@ -12,6 +11,8 @@ from InputStream import InputStream
 from Stream import Stream
 from InputStream import InputStream
 from OutputStream import OutputStream
+
+from pyDKB.common import logging
 
 __all__ = ['StreamBuilder', 'StreamException', 'Stream', 'InputStream',
            'OutputStream']
@@ -24,6 +25,8 @@ class StreamException(DataflowException):
 
 class StreamBuilder(object):
     """ Constructor for Stream object.  """
+
+    logger = logging.getLogger(__name__)
 
     message_type = None
     streamClass = None

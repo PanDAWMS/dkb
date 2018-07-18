@@ -44,10 +44,10 @@ import sys
 
 from . import AbstractStage
 from . import messageType
-from . import logLevel
 from pyDKB.dataflow import DataflowException
 from pyDKB.common import hdfs
 from pyDKB.common import custom_readline
+from pyDKB.common import logging
 from pyDKB.dataflow import communication
 from pyDKB.dataflow.communication import stream
 from pyDKB.dataflow.communication import consumer
@@ -71,6 +71,8 @@ class ProcessorStage(AbstractStage):
     * List of objects to be "stopped"
         __stoppable
     """
+
+    logger = logging.getLogger(__name__)
 
     __input_message_type = None
     __output_message_type = None
@@ -204,7 +206,7 @@ class ProcessorStage(AbstractStage):
             try:
                 fd = self.__output.next()
             except DataflowException, err:
-                self.log(str(err), logLevel.ERROR)
+                self.log(str(err), logging.ERROR)
                 raise DataflowException("Failed to configure output stream.")
         if not self._out_stream:
             self._out_stream = stream.StreamBuilder(fd, vars(self.ARGS)) \
@@ -257,13 +259,13 @@ class ProcessorStage(AbstractStage):
                 p.close()
             except AttributeError, e:
                 self.log("Close method is not defined for %s." % p,
-                         logLevel.WARN)
+                         logging.WARN)
             except Exception, e:
                 failures.append((p, sys.exc_info()))
         if failures:
             for f in failures:
                 self.log("Failed to stop %s: %s" % (f[0], f[1][1]),
-                         logLevel.ERROR)
+                         logging.ERROR)
                 self.output_error(exc_info=f[1])
 
     @staticmethod

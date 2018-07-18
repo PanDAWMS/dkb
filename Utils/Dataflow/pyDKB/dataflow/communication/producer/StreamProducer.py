@@ -11,11 +11,14 @@ import sys
 
 from Producer import Producer
 from . import DataflowException
-from . import logLevel
+
+from pyDKB.common import logging
 
 
 class StreamProducer(Producer):
     """ Data producer implementation for Stream data dest. """
+
+    logger = logging.getLogger(__name__)
 
     fd = None
 

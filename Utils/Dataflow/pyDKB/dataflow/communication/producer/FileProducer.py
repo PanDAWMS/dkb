@@ -13,11 +13,14 @@ import os
 import time
 
 from Producer import Producer, ProducerException
-from . import logLevel
+
+from pyDKB.common import logging
 
 
 class FileProducer(Producer):
     """ Data producer implementation for local file data dest. """
+
+    logger = logging.getLogger(__name__)
 
     _dir = None
     _default_dir = None
@@ -119,7 +122,7 @@ class FileProducer(Producer):
                 os.makedirs(path, 0770)
             except OSError, err:
                 self.log("Failed to create output directory\n"
-                         "Error message: %s\n" % err, logLevel.ERROR)
+                         "Error message: %s\n" % err, logging.ERROR)
                 raise ProducerException
         return path
 

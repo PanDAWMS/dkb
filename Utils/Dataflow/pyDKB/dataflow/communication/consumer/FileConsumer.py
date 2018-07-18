@@ -15,12 +15,15 @@ import os
 
 import Consumer
 from . import DataflowException
-from . import logLevel
 from .. import Message
+
+from pyDKB.common import logging
 
 
 class FileConsumer(Consumer.Consumer):
     """ Data consumer implementation for HDFS data source. """
+
+    logger = logging.getLogger(__name__)
 
     # Current file
     current_file = None
@@ -86,7 +89,7 @@ class FileConsumer(Consumer.Consumer):
             files = self._filenames_from_dir(self.config['input_dir'])
         else:
             self.log("No input files configured; reading filenames from"
-                     " STDIN.", logLevel.WARN)
+                     " STDIN.", logging.WARN)
             files = self._filenames_from_stdin()
         return files
 
