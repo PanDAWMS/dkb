@@ -184,6 +184,9 @@
               "ignore_above" : 256
             }
           }
+        },
+        "hs06": {
+          "type": "long"
         }
       }
     },

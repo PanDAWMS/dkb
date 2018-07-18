@@ -58,6 +58,9 @@ cmd_09="${base_dir}/../009_oracleConnector/Oracle2JSON.py"
 cfg_09=`get_config "009.cfg"`
 cmd_OC="$cmd_09 --config $cfg_09 --mode SQUASH"
 
+# Stage 25
+cmd_25="${base_dir}/../025_chicagoES/stage.py -m s"
+
 # Stage 16
 cmd_16="${base_dir}/../016_task2es/task2es.py -m s"
 
@@ -180,7 +183,10 @@ source_chain() {
 
 # Parallel subchains: 16 and 91
 chain_16() {
-  cat $b_16 | $cmd_16 | eop_filter
+  [ -n DEBUG ] \
+    && out_25='25.out'
+  cat $b_16 | $cmd_25 | eop_filter | tee $out_25 \
+            | $cmd_16 | eop_filter
 }
 
 chain_91() {
@@ -215,7 +221,7 @@ chain_16 | tee $out | sink_chain b16 &
 chain_91 | tee $out | sink_chain b91 &
 
 ps ax | grep "$cmd_OC" | grep -v grep | awk '{print $1 " source"}' >> $pidfile
-for cmd in "$cmd_16" "$cmd_91" "$cmd_93" "$cmd_95" "$cmd_19" "$cmd_69"; do
+for cmd in "$cmd_25" "$cmd_16" "$cmd_91" "$cmd_93" "$cmd_95" "$cmd_19" "$cmd_69"; do
   ps ax | grep "$cmd" | awk '{print $1}' >> $pidfile
 done
 
