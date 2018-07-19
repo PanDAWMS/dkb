@@ -13,6 +13,8 @@ import os
 import sys
 import traceback
 
+import time
+
 try:
     base_dir = os.path.dirname(__file__)
     dkb_dir = os.path.join(base_dir, os.pardir)
@@ -27,6 +29,7 @@ except Exception, err:
 
 try:
     import elasticsearch
+    from elasticsearch.exceptions import ElasticsearchException
 except ImportError, err:
     sys.stderr.write("(FATAL) Failed to import elasticsearch module: %s\n"
                      % err)
@@ -51,7 +54,7 @@ def init_es_client():
     chicago_es = elasticsearch.Elasticsearch(chicago_hosts)
 
 
-def task_metadata(taskid, fields=[]):
+def task_metadata(taskid, fields=[], retry=3):
     """ Get additional metadata for given task. """
     if not chicago_es:
         sys.stderr.write("(ERROR) Connection to Chicago ES is not"
@@ -66,7 +69,17 @@ def task_metadata(taskid, fields=[]):
         'body': '{ "query": { "term": {"_id": "%s"} } }' % taskid,
         '_source': fields
     }
-    r = chicago_es.search(**kwargs)
+    try:
+        r = chicago_es.search(**kwargs)
+    except ElasticsearchException, err:
+        sys.stderr.write("(ERROR) ES search error: %s\n" % err)
+        if retry > 0:
+            sys.stderr.write("(INFO) Sleep 5 sec before retry...\n")
+            time.sleep(5)
+            return task_metadata(taskid, fields, retry - 1)
+        else:
+            sys.stderr.write("(FATAL) Failed to get task metadata.\n")
+            raise
     if not r['hits']['hits']:
         result = {}
     else:
