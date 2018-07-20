@@ -1,5 +1,5 @@
 {
-  "template": "analysis",
+  "template": "tasks_*",
   "settings": {
     "number_of_shards": 4,
     "analysis": {
