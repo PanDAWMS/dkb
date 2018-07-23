@@ -133,9 +133,7 @@ class DatasetCategory:
                 if cfg["OPEN_INTERVALS_TEXT"]:
                     #                print "STRING WITH INTERVALS:", s
                     nums = re.findall(r"INTERVAL(\d+)!", s)
-                    arr = []
-                    for n in nums:
-                        arr.append(len(intervals[int(n)]))
+                    arr = [len(intervals[int(n)]) for n in nums]
                     size = min(arr)
                     # TO DO: If some intervals are shorter then it
                     # should be raised as a warning somewhere...
@@ -355,19 +353,13 @@ def organize_intervals(intervals):
             if len(e) <= len(s):
                 e = s[:-len(e)] + e
                 if s <= e:
-                    ni1 = []
-                    for i1 in range(int(s), int(e) + 1):
-                        ni1.append(str(i1))
+                    ni1 = [str(i1) for i1 in range(int(s), int(e) + 1)]
                     maxlen = len(max(ni1, key=lambda num: len(num)))
                     if len(min(ni1, key=lambda num: len(num))) != maxlen:
                         # TO DO: improve this.
                         ni2 = []
                         for i1 in ni1:
-                            add_zeros = maxlen - len(i1)
-                            i2 = ""
-                            for j in range(0, add_zeros):
-                                i2 += "0"
-                            i2 += i1
+                            i2 = "0" * (maxlen - len(i1)) + i1
                             ni2.append(i2)
                         ni1 = ni2
                     ni.append(ni1)
@@ -385,8 +377,7 @@ def process_diapason(d):
     if len(e) <= len(s):
         e = s[:-len(e)] + e
         if s <= e:
-            for i in range(int(s), int(e) + 1):
-                values.append(str(i))
+            values = [str(i) for i in range(int(s), int(e) + 1)]
     return values
 
 
@@ -591,11 +582,7 @@ class Paper:
         attrs = {}
         text = self.get_text()
 
-        attrs["campaigns"] = []
-        tmp = re_campaign.findall(text.lower())
-        for c in tmp:
-            attrs["campaigns"].append(c)
-        attrs["campaigns"] = list(set(attrs["campaigns"]))
+        attrs["campaigns"] = list(set(re_campaign.findall(text.lower())))
 
         pages = self.get_txt_page(1, True) + self.get_txt_page(2, True)
 
@@ -777,7 +764,7 @@ class Paper:
                                     if dsid != "EMPTY":
                                         ids.append(dsid)
                                 ids.sort()
-                                data = " ".join([i for i in ids])
+                                data = " ".join(ids)
                             else:
                                 data = rows
                             datatables[num] = (captions_data[num], data)
@@ -846,17 +833,16 @@ class Paper:
         elif quick:
             (text, datasets) = self.find_datasets()
             for category in datasets:
-                d = []
-                for [name, special] in datasets[category]:
-                    d.append(name)
                 outp["content"][category_export_dict[category]
-                                + "_datasets"] = d
+                                + "_datasets"] = [name for
+                                                  [name, special] in
+                                                  datasets[category]]
         if self.datatables is not None:
             for num in self.datatables:
                 if isinstance(self.datatables[num][1], str)\
                    or isinstance(self.datatables[num][1], unicode):
                     caption, ids = self.datatables[num]
-                    data = [caption, [i for i in ids.split()]]
+                    data = [caption, ids.split()]
                 else:
                     data = self.datatables[num]
                 outp["content"]["table_" + str(num)] = data
@@ -866,7 +852,7 @@ class Paper:
                 if isinstance(tables[num][1], str)\
                    or isinstance(tables[num][1], unicode):
                     caption, ids = tables[num]
-                    data = [caption, [i for i in ids.split()]]
+                    data = [caption, ids.split()]
                 else:
                     data = tables[num]
                 outp["content"]["table_" + str(num)] = data
@@ -1829,10 +1815,9 @@ class Manager:
             n_p = 0
             errors = {}
             s = "document name,mc datasets,real datasets,other datasets,"\
-                "dataset tables"
-            for a in Paper.attributes_general:
-                s += ",%s" % a
-            csv = [s + "\n"]
+                "dataset tables,"
+            s += ",".join(Paper.attributes_general)
+            csv = [s.rstrip(",") + "\n"]
             attr = {}
             attr["mc_datasets"] = []
             attr["real_datasets"] = []
