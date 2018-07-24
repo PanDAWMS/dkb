@@ -16,7 +16,8 @@
 
 -- RESTRICTIONS:
 -- 1. taskID must be more than 4 000 000 OR from the date > 12-03-2014
--- 2. we collecting only PRODUCTION tasks
+-- 2. we collecting only PRODUCTION tasks OR only ANALYSIS tasks
+--    ('pr_id > 300' or 'pr_id = 300')
 with tasks as (
     SELECT
       t.campaign,
@@ -56,7 +57,7 @@ with tasks as (
     WHERE
       t.timestamp > :start_date AND
       t.timestamp <= :end_date AND
-      t.pr_id > 300
+      t.pr_id %(production_or_analysis_cond)s 300
     GROUP BY
         t.campaign,
         t.taskid,

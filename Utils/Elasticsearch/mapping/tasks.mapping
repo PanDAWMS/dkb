@@ -1,5 +1,5 @@
 {
-  "template": "prodsys_rucio_ami",
+  "template": "tasks_*",
   "settings": {
     "number_of_shards": 4,
     "analysis": {

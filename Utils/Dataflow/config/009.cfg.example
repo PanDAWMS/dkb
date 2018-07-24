@@ -7,6 +7,19 @@ tasks: %__009_query_dir__%/prodsys2ES.sql
 # absolute (or relative to config file) path to datasets query
 datasets: %__009_query_dir__%/datasets.sql
 
+[queries.params]
+# Parametric values for all queries:
+# string '%(<param_name>)s' in sql file will be replaced
+# with the value of <param_name> (if value is quoted, quotes
+# will appear in the query as well).
+# NOTE: when this section is presented, make sure SQL queries does
+# not contain other percent signs ('%'), or that they all are escaped ('%%').
+
+# Production or analysis condition:
+# * > -- production,
+# * = -- analysis
+production_or_analysis_cond = >
+
 [timestamps]
 # initial timestamp (e.g. 01-05-2016 00:00:00)
 initial = %__009_init_offset__%

@@ -86,6 +86,16 @@ def read_config(config_file):
         queries = {}
         for (qname, f) in queries_cfg:
             queries[qname] = {'file': config_path(f, result)}
+        if 'queries.params' in config.sections():
+            qparams = {}
+            for (param, val) in config.items('queries.params'):
+                qparams[param] = val
+            for q in queries:
+                # As for now we have a common set of parameters for all
+                # queries, we reuse same `dict` instead of copying it.
+                # But if we need different parameters for different queries,
+                # it must be changed to `dict(qparams)` or smth like this.
+                queries[q]['params'] = qparams
         result['queries'] = queries
     except (IOError, ConfigParser.Error), e:
         sys.stderr.write('Failed to read config file (%s): %s\n'
