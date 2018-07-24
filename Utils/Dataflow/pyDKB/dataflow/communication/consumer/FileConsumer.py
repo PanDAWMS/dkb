@@ -36,18 +36,6 @@ class FileConsumer(Consumer.Consumer):
 
         super(FileConsumer, self).reconfigure(config)
 
-    def source_is_empty(self):
-        """ Check if current source is empty.
-
-        Return value:
-            True  (empty)
-            False (not empty or stream for given source is not defined)
-            None  (no source)
-        """
-        if not self.current_file:
-            return None
-        return bool(self.stream_is_empty())
-
     def get_source_info(self):
         """ Return current source info. """
         return self.current_file
@@ -58,15 +46,20 @@ class FileConsumer(Consumer.Consumer):
             self.input_files = self._input_files()
 
     def get_source(self):
-        """ Get nearest non-empty source (current or next). """
-        if self.source_is_empty() is not False:
+        """ Return current source or None if no sources left.
+
+        Return values:
+            fd    -- open file descriptor for current data source
+            None  -- current source is not defined
+        """
+        if not self.current_file:
             result = self.next_source()
         else:
             result = self.current_file['fd']
         return result
 
     def next_source(self):
-        """ Reset $current_file to the next non-empty file.
+        """ Reset $current_file to the next file.
 
         Return value:
             File descriptor of the new $current_file
@@ -74,7 +67,7 @@ class FileConsumer(Consumer.Consumer):
         """
         try:
             self.current_file = self.input_files.next()
-            result = self.get_source()
+            result = self.current_file['fd']
         except StopIteration:
             self.current_file = None
             result = None

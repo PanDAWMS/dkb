@@ -78,9 +78,10 @@ class Consumer(object):
             False (not empty)
             None  (_stream is not defined or not initialized)
         """
-        if not self._stream:
+        s = self.get_stream()
+        if not s:
             return None
-        return self._stream.is_empty()
+        return s.is_empty()
 
     def get_stream(self):
         """ Get input stream linked to the current source.
@@ -89,23 +90,36 @@ class Consumer(object):
             InputStream
             None (no sources left to read from)
         """
-        if not self.stream_is_empty():
-            result = self._stream
-        elif self.reset_stream():
-            result = self._stream
-        else:
-            result = None
-        return result
+        if not self._stream:
+            self.init_stream()
+        return self._stream
 
     def reset_stream(self):
-        """ Reset input stream to the current source. """
-        src = self.get_source()
-        if src:
-            if not self._stream:
-                self.init_stream()
-            else:
+        """ Reset input stream to the next source. """
+        if not self._stream:
+            self.init_stream()
+        else:
+            src = self.next_source()
+            if src:
                 self._stream.reset(src)
-        return src
+            else:
+                self._stream = None
+        return self._stream
+
+    def get_readable_stream(self):
+        """ Get nearest non-empty input stream.
+
+        Return value:
+            InputStream -- non-empty input stream
+            None        -- no input sources left
+        """
+        s = self.get_stream()
+        while s:
+            if s.is_empty():
+                s = self.reset_stream()
+            else:
+                break
+        return s
 
     def set_message_type(self, Type):
         """ Set input message type. """
@@ -130,7 +144,7 @@ class Consumer(object):
             False (failed to parse message)
             None  (all input sources are empty)
         """
-        s = self.get_stream()
+        s = self.get_readable_stream()
         if not s:
             msg = None
         else:
