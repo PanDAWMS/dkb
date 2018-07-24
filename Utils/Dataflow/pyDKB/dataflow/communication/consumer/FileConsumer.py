@@ -32,7 +32,7 @@ class FileConsumer(Consumer.Consumer):
 
         if not self.config.get('input_dir'):
             self.config['input_dir'] = os.path.curdir
-        self.input_files = self._input_files()
+        self.init_sources()
 
         super(FileConsumer, self).reconfigure(config)
 
@@ -56,6 +56,11 @@ class FileConsumer(Consumer.Consumer):
     def get_source_info(self):
         """ Return current source info. """
         return self.current_file
+
+    def init_sources(self):
+        """ Initialize sources iterator if not initialized yet. """
+        if not self.input_files:
+            self.input_files = self._input_files()
 
     def get_source(self):
         """ Get nearest non-empty source (current or next). """
