@@ -203,6 +203,9 @@
             }
           }
         },
+        "events": {
+          "type": "long"
+        },
         "bytes" : {
           "type" : "long"
         },
