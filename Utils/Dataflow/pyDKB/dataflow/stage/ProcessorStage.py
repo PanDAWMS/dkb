@@ -213,6 +213,7 @@ class ProcessorStage(AbstractStage):
 
     def run(self):
         """ Run process() for every input() message. """
+        self.log("Starting stage execution.")
         exit_code = 0
         err = None
         try:
