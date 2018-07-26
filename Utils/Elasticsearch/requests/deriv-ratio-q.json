@@ -16,18 +16,14 @@ GET tasks_production/task/_search
         {"term": {"primary_input": "aod"}},
         {"term": {"project": %%PROJECT_LOWERCASE%%}},
         {"term": {"ctag": %%AMI_TAG_LOWERCASE%%}},
-        {"term": {"status": "done"}}
+        {"term": {"status": "done"}},
+        {"range": {"input_bytes": {"gt": 0}}}   /* input dataset size > 0 */
        ]
      }
    },
   "aggs": {
-    "input": {
-      "filter": {"term": {"primary_input_deleted": false}},
-      "aggs": {
-        "bytes": {
-          "sum": {"field": "input_bytes"}
-        }
-      }
+    "input_bytes": {
+       "sum": {"field": "input_bytes"}
     },
     "output_datasets": {
       "children": {"type": "output_dataset"},

@@ -12,12 +12,6 @@
     "hits" : [ ]
   },
   "aggregations" : {
-    "input" : {
-      "doc_count" : 43,
-      "bytes" : {
-        "value" : 1.96896993909273E14
-      }
-    },
     "output_datasets" : {
       "doc_count" : 43,
       "not_removed" : {
@@ -29,6 +23,9 @@
           }
         }
       }
+    },
+    "input_bytes" : {
+      "value" : 1.96896993909273E14
     }
   }
 }
