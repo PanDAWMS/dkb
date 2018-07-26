@@ -15,7 +15,8 @@ GET tasks_production/task/_search
       "must": [
         {"term": {"primary_input": "aod"}},
         {"term": {"project": %%PROJECT_LOWERCASE%%}},
-        {"term": {"ctag": %%AMI_TAG_LOWERCASE%%}}
+        {"term": {"ctag": %%AMI_TAG_LOWERCASE%%}},
+        {"term": {"status": "done"}}
        ]
      }
    },

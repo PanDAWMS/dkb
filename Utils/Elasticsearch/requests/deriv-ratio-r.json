@@ -7,21 +7,21 @@
     "failed" : 0
   },
   "hits" : {
-    "total" : 4618,
+    "total" : 43,
     "max_score" : 0.0,
     "hits" : [ ]
   },
   "aggregations" : {
     "input" : {
-      "doc_count" : 4618,
+      "doc_count" : 43,
       "bytes" : {
-        "value" : 8.144762603257576E15
+        "value" : 1.96896993909273E14
       }
     },
     "output_datasets" : {
-      "doc_count" : 4618,
+      "doc_count" : 43,
       "not_removed" : {
-        "doc_count" : 4547,
+        "doc_count" : 43,
         "format" : {
           "doc_count" : 3,
           "sum_bytes" : {
