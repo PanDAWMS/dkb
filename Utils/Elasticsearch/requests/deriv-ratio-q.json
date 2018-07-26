@@ -1,0 +1,50 @@
+/*
+Get total size of task input and output datasets.
+
+Parameter values:
+  PROJECT_LOWERCASE -- project name ("mc16_13tev")
+  AMI_TAG_LOWERCASE -- current AMI tag for the task ("p3585")
+  FORMAT_UPPERCASE  -- output dataset data format ("DAOD_BPHY8")
+
+GET tasks_production/task/_search
+*/
+{
+  "size": 0,
+  "query": {
+    "bool": {
+      "must": [
+        {"term": {"primary_input": "aod"}},
+        {"term": {"project": %%PROJECT_LOWERCASE%%}},
+        {"term": {"ctag": %%AMI_TAG_LOWERCASE%%}}
+       ]
+     }
+   },
+  "aggs": {
+    "input": {
+      "filter": {"term": {"primary_input_deleted": false}},
+      "aggs": {
+        "bytes": {
+          "sum": {"field": "input_bytes"}
+        }
+      }
+    },
+    "output_datasets": {
+      "children": {"type": "output_dataset"},
+      "aggs": {
+        "not_removed": {
+          "filter": {"term": {"deleted": false}},
+          "aggs": {
+            "format": {
+              "filter": {"term": {"data_format": %%FORMAT_UPPERCASE%%}},
+              "aggs": {
+                "sum_bytes": {
+                  "sum": {"field": "bytes"}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

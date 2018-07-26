@@ -1,0 +1,34 @@
+{
+  "took" : 13,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 4,
+    "successful" : 4,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 4618,
+    "max_score" : 0.0,
+    "hits" : [ ]
+  },
+  "aggregations" : {
+    "input" : {
+      "doc_count" : 4618,
+      "bytes" : {
+        "value" : 8.144762603257576E15
+      }
+    },
+    "output_datasets" : {
+      "doc_count" : 4618,
+      "not_removed" : {
+        "doc_count" : 4547,
+        "format" : {
+          "doc_count" : 3,
+          "sum_bytes" : {
+            "value" : 4.995767597E9
+          }
+        }
+      }
+    }
+  }
+}
