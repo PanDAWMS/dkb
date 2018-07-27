@@ -36,6 +36,9 @@ GET tasks_production/task/_search
     "input_bytes": {
        "sum": {"field": "input_bytes"}
     },
+    "input_events": {
+       "sum": {"field": "requested_events"}
+    },
     "output_datasets": {
       "children": {"type": "output_dataset"},
       "aggs": {
@@ -47,6 +50,9 @@ GET tasks_production/task/_search
               "aggs": {
                 "sum_bytes": {
                   "sum": {"field": "bytes"}
+                },
+                "sum_events": {
+                  "sum": {"field": "events"}
                 }
               }
             }

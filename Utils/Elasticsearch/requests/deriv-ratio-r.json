@@ -18,6 +18,9 @@
         "doc_count" : 3,
         "format" : {
           "doc_count" : 3,
+          "sum_events" : {
+            "value" : 590447.0
+          },
           "sum_bytes" : {
             "value" : 4.995767597E9
           }
@@ -26,6 +29,9 @@
     },
     "input_bytes" : {
       "value" : 1.91329808543E11
+    },
+    "input_events" : {
+      "value" : 1000000.0
     }
   }
 }
