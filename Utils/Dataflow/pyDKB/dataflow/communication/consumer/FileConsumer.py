@@ -90,6 +90,8 @@ class FileConsumer(Consumer.Consumer):
         elif self.config.get('input_dir'):
             files = self._filenames_from_dir(self.config['input_dir'])
         else:
+            self.log("No input files configured; reading filenames from"
+                     " STDIN.", logLevel.WARN)
             files = self._filenames_from_stdin()
         return files
 

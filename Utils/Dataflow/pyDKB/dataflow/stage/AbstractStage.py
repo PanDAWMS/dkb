@@ -209,31 +209,22 @@ class AbstractStage(object):
                        'exception': err_val,
                        'trace': err_trace}
 
-    def output_error(self, message=None):
-        """ Output information about last error or `message`. """
-        err = self._error
-        cur_lvl = logLevel.ERROR
+    def output_error(self, message=None, exc_info=None):
+        """ Output traceback of the passed (or last) error with `message`. """
+        if not exc_info:
+            err = self._error
+            if err:
+                exc_info = (err['etype'], err['exception'], err['trace'])
+        if not message and exc_info:
+            message = str(exc_info[1])
         if message:
-            self.log(message, cur_lvl)
-        elif err:
-            if err['etype'] == KeyboardInterrupt:
+            self.log(message, logLevel.ERROR)
+        if exc_info:
+            if exc_info[0] == KeyboardInterrupt:
                 self.log("Interrupted by user.")
             else:
-                trace = traceback.format_exception(err['etype'],
-                                                   err['exception'],
-                                                   err['trace'])
-                # Label every line in trace with proper level marker
-                labeled_trace = []
-                n_lines = len(trace)
-                # List of log levels with number of lines
-                # to be output with this level
-                levels = [(logLevel.DEBUG, -1), (logLevel.ERROR, 1)]
-                for i in xrange(n_lines):
-                    for lvl, N in levels:
-                        if i >= n_lines - N or N < 0:
-                            cur_lvl = lvl
-                    msg = trace[i]
-                    self.log(msg, cur_lvl)
+                trace = traceback.format_exception(*exc_info)
+                self.log(''.join(trace), logLevel.DEBUG)
 
     def stop(self):
         """ Stop running processes and output error information. """

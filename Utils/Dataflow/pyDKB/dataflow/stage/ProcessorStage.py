@@ -213,6 +213,7 @@ class ProcessorStage(AbstractStage):
 
     def run(self):
         """ Run process() for every input() message. """
+        self.log("Starting stage execution.")
         exit_code = 0
         err = None
         try:
@@ -256,10 +257,12 @@ class ProcessorStage(AbstractStage):
                 self.log("Close method is not defined for %s." % p,
                          logLevel.WARN)
             except Exception, e:
-                failures.append((p, e))
+                failures.append((p, sys.exc_info()))
         if failures:
             for f in failures:
-                self.log("Failed to stop %s: %s" % f, logLevel.ERROR)
+                self.log("Failed to stop %s: %s" % (f[0], f[1][1]),
+                         logLevel.ERROR)
+                self.output_error(exc_info=f[1])
 
     @staticmethod
     def process(stage, input_message):
