@@ -13,13 +13,9 @@ from Stream import Stream
 from InputStream import InputStream
 from OutputStream import OutputStream
 
-__all__ = ['StreamBuilder', 'StreamException', 'Stream', 'InputStream',
-           'OutputStream']
+from exceptions import StreamException
 
-
-class StreamException(DataflowException):
-    """ Exception for Stream operations. """
-    pass
+__all__ = ['StreamBuilder', 'Stream', 'InputStream', 'OutputStream']
 
 
 class StreamBuilder(object):
