@@ -21,9 +21,6 @@ from . import logLevel
 class FileConsumer(Consumer.Consumer):
     """ Data consumer implementation for HDFS data source. """
 
-    # Input file names (iterable object)
-    input_filenames = None
-
     # Current file
     current_file = None
 
@@ -35,7 +32,7 @@ class FileConsumer(Consumer.Consumer):
 
         if not self.config.get('input_dir'):
             self.config['input_dir'] = os.path.curdir
-        self.input_files = self._input_files()
+        self.init_sources()
 
         super(FileConsumer, self).reconfigure(config)
 
@@ -59,6 +56,11 @@ class FileConsumer(Consumer.Consumer):
     def get_source_info(self):
         """ Return current source info. """
         return self.current_file
+
+    def init_sources(self):
+        """ Initialize sources iterator if not initialized yet. """
+        if not self.input_files:
+            self.input_files = self._input_files()
 
     def get_source(self):
         """ Get nearest non-empty source (current or next). """
@@ -107,9 +109,9 @@ class FileConsumer(Consumer.Consumer):
             for f in dir_content:
                 if os.path.isfile(os.path.join(dirname, f)):
                     files.append(f)
+                    yield f
         except OSError, err:
             raise Consumer.ConsumerException(err)
-        return files
 
     def _adjusted_filenames(self):
         """ Return iterable object, yielding filename and path to file. """
