@@ -58,7 +58,6 @@ class Consumer(object):
         """ (Re)initialize consumer with stage config arguments. """
         if config:
             self.config = config
-        self.init_stream()
 
     def init_stream(self):
         """ Init input stream. """
