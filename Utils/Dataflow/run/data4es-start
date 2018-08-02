@@ -72,8 +72,11 @@ cmd_19="${base_dir}/../019_esFormat/run.sh --config $cfg_19"
 cfg_69=`get_config "es"`
 cmd_69="${base_dir}/../069_upload2es/load_data.sh --config $cfg_69"
 
-# Stage 91
-cmd_91="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
+# Stage 91 (input)
+cmd_91_in="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s -t i"
+
+# Stage 91 (output)
+cmd_91_out="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
 
 # Stage 93
 cmd_93="${base_dir}/../093_datasetsFormat/datasets_format.py -m s"
@@ -184,17 +187,19 @@ source_chain() {
 # Parallel subchains: 16 and 91
 chain_16() {
   [ -n DEBUG ] \
+    && out_91='91_in.out' \
     && out_25='25.out'
-  cat $b_16 | $cmd_25 | eop_filter | tee $out_25 \
+  cat $b_16 | $cmd_91_in | eop_filter | tee $out_91 \
+            | $cmd_25 | eop_filter | tee $out_25 \
             | $cmd_16 | eop_filter
 }
 
 chain_91() {
   out=/dev/null
   [ -n "$DEBUG" ] \
-    && out_91='91.out' \
+    && out_91='91_out.out' \
     && out_93='93.out'
-  cat $b_91 | $cmd_91 | eop_filter | tee $out_91 \
+  cat $b_91 | $cmd_91_out | eop_filter | tee $out_91 \
             | $cmd_93 | eop_filter | tee $out_93 \
             | $cmd_95 | eop_filter
 }
@@ -221,7 +226,8 @@ chain_16 | tee $out | sink_chain b16 &
 chain_91 | tee $out | sink_chain b91 &
 
 ps ax | grep "$cmd_OC" | grep -v grep | awk '{print $1 " source"}' >> $pidfile
-for cmd in "$cmd_25" "$cmd_16" "$cmd_91" "$cmd_93" "$cmd_95" "$cmd_19" "$cmd_69"; do
+for cmd in "$cmd_25" "$cmd_16" "$cmd_91_in" "$cmd_91_out" "$cmd_93" \
+           "$cmd_95" "$cmd_19" "$cmd_69"; do
   ps ax | grep "$cmd" | awk '{print $1}' >> $pidfile
 done
 

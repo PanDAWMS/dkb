@@ -187,6 +187,12 @@
         },
         "hs06": {
           "type": "long"
+        },
+        "input_bytes": {
+          "type": "long"
+        },
+        "primary_input_deleted": {
+          "type": "boolean"
         }
       }
     },

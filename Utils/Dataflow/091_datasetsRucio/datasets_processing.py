@@ -40,16 +40,39 @@ except Exception, err:
     sys.exit(1)
 
 rucio_client = None
-DS_TYPE = 'output'
+
+OUTPUT = 'o'
+INPUT = 'i'
+
+META_FIELDS = {
+    OUTPUT: {'bytes': 'bytes', 'events': 'events', 'deleted': 'deleted'},
+    INPUT: {'bytes': 'input_bytes', 'deleted': 'primary_input_deleted'}
+}
+
+SRC_FIELD = {
+    OUTPUT: 'output',
+    INPUT: 'primary_input'
+}
 
 
 def main(argv):
     """ Program body. """
     stage = pyDKB.dataflow.stage.JSONProcessorStage()
+    stage.add_argument('-t', '--dataset-type', action='store', type=str,
+                       help=u'Type of datasets to work with: (i)nput'
+                             ' or (o)utput',
+                       nargs='?',
+                       default=OUTPUT,
+                       choices=[INPUT, OUTPUT],
+                       dest='ds_type'
+                       )
     exit_code = 0
     try:
         stage.parse_args(argv)
-        stage.process = process
+        if stage.ARGS.ds_type == OUTPUT:
+            stage.process = process_output_ds
+        elif stage.ARGS.ds_type == INPUT:
+            stage.process = process_input_ds
         init_rucio_client()
         stage.run()
     except (pyDKB.dataflow.exceptions.DataflowException, RuntimeError), err:
@@ -75,7 +98,7 @@ def init_rucio_client():
         sys.exit(1)
 
 
-def process(stage, message):
+def process_output_ds(stage, message):
     """ Process output datasets from input message.
 
     Generate output JSON document of the following structure:
@@ -90,16 +113,16 @@ def process(stage, message):
     """
     json_str = message.content()
 
-    if not json_str.get(DS_TYPE):
+    if not json_str.get(SRC_FIELD[OUTPUT]):
         # Nothing to process; over.
         return True
 
-    datasets = json_str[DS_TYPE]
+    datasets = json_str[SRC_FIELD[OUTPUT]]
     if type(datasets) != list:
         datasets = [datasets]
 
     for dataset in datasets:
-        ds = get_dataset_info(dataset)
+        ds = get_output_ds_info(dataset)
         ds['taskid'] = json_str.get('taskid')
         if not add_es_index_info(ds):
             sys.stderr.write("(WARN) Skip message (not enough info"
@@ -111,7 +134,31 @@ def process(stage, message):
     return True
 
 
-def get_dataset_info(dataset):
+def process_input_ds(stage, message):
+    """ Process input dataset from input message.
+
+    Add to original JSON fields:
+     * bytes
+     * deleted
+    """
+    data = message.content()
+    mfields = META_FIELDS[INPUT]
+    ds_name = data.get(SRC_FIELD[INPUT])
+    if ds_name:
+        try:
+            mdata = get_metadata(ds_name, mfields.keys())
+            adjust_metadata(mdata)
+            for mkey in mdata:
+                data[mfields[mkey]] = mdata[mkey]
+        except RucioException:
+            data[mfields['bytes']] = -1
+            data[mfields['deleted']] = -1
+    stage.output(pyDKB.dataflow.messages.JSONMessage(data))
+
+    return True
+
+
+def get_output_ds_info(dataset):
     """ Construct dictionary with dataset info.
 
     Dict format:
@@ -124,15 +171,17 @@ def get_dataset_info(dataset):
     ds_dict = {}
     ds_dict['datasetname'] = dataset
     try:
-        mdata = get_metadata(dataset, ['bytes', 'events'])
+        mfields = META_FIELDS[OUTPUT]
+        mdata = get_metadata(dataset, mfields.keys())
         adjust_metadata(mdata)
-        ds_dict.update(mdata)
+        for mkey in mfields:
+            ds_dict[mfields[mkey]] = mdata[mkey]
     except RucioException:
         # if dataset wasn't find in Rucio, it means that it was deleted from
         # the Rucio catalog. In this case 'deleted' is set to TRUE and
         # the length of file is set to -1
-        ds_dict['bytes'] = -1
-        ds_dict['deleted'] = True
+        ds_dict[mfields['bytes']] = -1
+        ds_dict[mfields['deleted']] = True
     return ds_dict
 
 
