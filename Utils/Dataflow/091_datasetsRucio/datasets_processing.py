@@ -2,7 +2,7 @@
 """
 DKB Dataflow Stage 091 (datasetsRucio)
 
-Get metadata abourt datasets from Rucio.
+Get dataset metadata from Rucio.
 Input: from Stage 009.
 Output: to Stage 019.
 
@@ -177,8 +177,8 @@ def get_output_ds_info(dataset):
         for mkey in mfields:
             ds_dict[mfields[mkey]] = mdata[mkey]
     except RucioException:
-        # if dataset wasn't find in Rucio, it means that it was deleted from
-        # the Rucio catalog. In this case 'deleted' is set to TRUE and
+        # if dataset wasn't found in Rucio, it means that it has been deleted
+        # from the Rucio catalog. In this case 'deleted' is set to TRUE and
         # the length of file is set to -1
         ds_dict[mfields['bytes']] = -1
         ds_dict[mfields['deleted']] = True
