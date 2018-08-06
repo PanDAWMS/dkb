@@ -10,6 +10,7 @@ GRAPH=
 GRAPH_PATH='DAV/ATLAS'
 MODE="f"
 DELIMITER="NOT SPECIFIED"
+EOMessage='\n'
 
 # File .credentials may contain variable definition for USER and PASSWD
 if [ -f ".credentials" ]; then
@@ -45,7 +46,7 @@ OPTIONS:
                                 Default: $PASSWD
   -g, --graph <graph>           graph to load data to.
                                 Default: http://<host>:<port>/$GRAPH_PATH
-
+ 
  Script parameters:
   -t, --type {t[tl]|s[parql]}   Input files type.
                                 If not specified, try to understand from file
@@ -57,14 +58,22 @@ OPTIONS:
                                   messages are to be delimited by <delimiter>.
   -d, --delimiter <delimiter>   Specifies the delimiter between sets of input
                                 data in the stream mode.
-                                Default: \n
-                                Kafka-style: \0
+                                Default: \4
+  -e, --eom <EOM>               Specifies end-of-message marker.
+                                Default:
+                                * in a (f)ile mode: \n
+                                * in a (s)tream mode: \n
+  -E, --eop <EOP>               Specifies end-of-process marker.
+                                Default:
+                                * in a (f)ile mode: none
+                                * in a (s)tream mode: \0
   -h, --help                    Print this message and exit.
 "
 }
 
 upload_files () {
-
+  EOProcess=""
+  
   if [ -z "$1" ] ; then
     echo "(ERROR) Input file is not specified." >&2
     usage
@@ -114,8 +123,9 @@ upload_files () {
         ;;
     esac
 
-    eval "$cmd" || { echo "(ERROR) An error occured while uploading file: $INPUTFILE" >&2; continue; }
-
+    eval "$cmd" || { echo "(ERROR) An error occured while uploading file: $INPUTFILE" >&2; continue; } &
+    echo -ne "$EOMessage"
+    echo -ne "$EOProcess"
   done
 
   return 0;
@@ -123,7 +133,9 @@ upload_files () {
 }
 
 upload_stream () {
-  local delimiter=$'\n'
+  EOProcess="\0"
+  
+  local delimiter=$'\4'
 
   [ -z "$TYPE" ] && { echo "(ERROR) input data format is not specified. Exiting." >&2; return 2;}
   while [[ $# > 0 ]]
@@ -158,14 +170,15 @@ upload_stream () {
   esac
 
   while true; do
-    while read -r -d "$delimiter" line; do
+    while read -r -d "$delimiter" line || [[ -n "$line" ]]; do
       n=`ps ax | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
       while [ $n -gt $CURL_N_MAX ]; do
         sleep $SLEEP
         n=`ps axf | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
       done
       echo "$line" | $cmd &>/dev/null || { echo "(ERROR) An error occured while uploading stream data." >&2; continue; } &
-      echo -n $'\6'
+      echo -ne "$EOMessage"
+      echo -ne "$EOProcess"
     done
   done
 }
@@ -201,9 +214,17 @@ do
       shift
       ;;
     -d|--delimiter)
-      DELIMITER=`echo -e $2`
+      DELIMITER=`echo -ne $2`
       shift
       ;;
+    -e|--eom)
+      EOM="$2"
+      shift
+      ;;
+    -E|--eop)
+      EOP="$2"
+      shift
+      ;;      
     -u|--user)
       USER="$2"
       shift
@@ -231,8 +252,10 @@ done
 [ -z "$HOST" ] && echo "(ERROR) empty host value." >&2 && exit 2
 [ -z "$PORT" ] && echo "(ERROR) empty port value." >&2 && exit 2
 [ -z "$GRAPH" ] && GRAPH=http://$HOST:$PORT/$GRAPH_PATH
-[ -z "$DELIMITER" ]  && DELIMITER=$'\0'
-[ "x$DELIMITER" = "xNOT SPECIFIED" ] && DELIMITER=$'\n'
+[ -z "$DELIMITER" ]  && DELIMITER=$'\4'
+[ "x$DELIMITER" = "xNOT SPECIFIED" ] && DELIMITER=$'\4'
+[ -n "$EOP" ] && EOProcess="$EOP"
+[ -n "$EOM" ] && EOMessage="$EOM"
 
 cmdTTL="curl --retry 3 -s -f -X POST --digest -u $USER:$PASSWD -H Content-Type:text/turtle -G http://$HOST:$PORT/sparql-graph-crud-auth --data-urlencode graph=$GRAPH"
 cmdSPARQL="curl --retry 3 -s -f -H 'Accept: text/csv' -G http://$HOST:$PORT/sparql --data-urlencode query"

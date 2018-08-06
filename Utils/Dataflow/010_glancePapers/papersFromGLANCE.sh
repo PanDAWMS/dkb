@@ -17,6 +17,10 @@ OUTPUT
                                 from the pipe.
 				If neither FILE nor PIPE is specified, output
                                 goes to STDOUT.
+MARKERS
+  -e, --eom      EOM            End-of-message marker.
+  -E, --eop      EOP            End-of-process marker.
+
 KERBEROS
   -u, --username USER           Cern account login.
   -r, --retry                   Try to get new Kerberos ticket in case of
@@ -26,6 +30,8 @@ GENERAL
   -h, --help                    Print this message and exit.
 "
 }
+
+EOMessage="\n"
 
 while [[ $# > 0 ]]
 do
@@ -53,8 +59,16 @@ do
     -t|--tmp)
       CLEAN="NO"
       ;;
+    -e|--eom)
+      EOM="$2"
+      shift
+      ;;
+    -E|--eop)
+      EOP="$2"
+      shift
+      ;;
     -*)
-      echo "Unknown option: $key" >&2
+      echo "(ERROR) Unknown option: $key" >&2
       usage >&2
       exit 1
       ;;
@@ -67,17 +81,32 @@ done
 
 [ -z "$CLEAN" ] && CLEAN="YES"
 if [ -z "$USR" ] ; then
-  echo "Username is not specified." >&2
+  echo "(ERROR) Username is not specified." >&2
   usage >&2
   exit 1
 fi
  
 if [ -n "$PIPE" ]; then
   if ! ( [ -p "$PIPE" ] || mkfifo "$PIPE" 2>&1 > /dev/null ) ; then
-    echo "Can not create a FIFO named pipe: $PIPE. Exiting." >&2
+    echo "(ERROR) Can not create a FIFO named pipe: $PIPE. Exiting." >&2
     exit 2
   fi
   FILE="$PIPE"
+fi
+
+if [ -n "$FILE" ] || [ -n "$PIPE" ]
+then
+  EOProcess=""
+else
+  EOProcess="\0"
+fi
+
+[ -n "$EOM" ] && EOMessage="$EOM"
+[ -n "$EOP" ] && EOProcess="$EOP"
+
+if [ -z "$EOMessage" ] ; then
+  echo "(ERROR) EOM marker is not specified. Exiting." >&2
+  exit 1
 fi
 
 GLANCE_REQUEST="https://glance-stage.cern.ch/api/atlas/analysis/papers"
@@ -93,25 +122,25 @@ if ! krenew -H 60 ; then
   if [ -n "$RETRY" ]; then
     kinit "$USR@CERN.CH"
   else
-   echo "No Kerberos ticket for CERN.CH realm found. Exiting." >&2
+   echo "(ERROR) No Kerberos ticket for CERN.CH realm found. Exiting." >&2
    exit 3 
   fi
 fi
-klist | grep 'CERN.CH' >/dev/null || { echo "No Kerberos ticket for CERN.CH realm found. Exiting." >&2; exit 3; }
+klist | grep 'CERN.CH' >/dev/null || { echo "(ERROR) No Kerberos ticket for CERN.CH realm found. Exiting." >&2; exit 3; }
 
 # Lxplus address
 lxplus=lxplus.cern.ch
 
 option="-q -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes -o GSSAPITrustDNS=yes"
 ssh $option -K $USR@$lxplus "( $cmd1; $cmd2; ) 2>&1 >/dev/null" 2>&1 > /dev/null
-[ $? ] || { echo "Can not execute remote commands. Exiting." >&2; exit 4; }
+[ $? ] || { echo "(ERROR) Can not execute remote commands. Exiting." >&2; exit 4; }
 
 tmp=/tmp/list_of_papers.json
 scp $option $USR@$lxplus:$json $tmp >&2
 
-[ $? ] || { echo "Can not copy file from remote. Exiting." >&2; exit 4; }
+[ $? ] || { echo "(ERROR) Can not copy file from remote. Exiting." >&2; exit 4; }
 
-echo -ne "\n" >> $tmp
+echo -ne "$EOMessage" >> $tmp
 
 if [ -n "$FILE" ] ; then
   cat $tmp > $FILE
@@ -119,8 +148,9 @@ else
   cat $tmp
 fi
 
+echo -ne "$EOProcess"
 
 [ "$xCLEAN" = "xYES" ] && rm $tmp >&2
 
 ssh $option -K $USR@$lxplus "$cmd4;" 2>&1 > /dev/null 
-[ $? ] || { echo "Can not execute remote commands. Exiting." >&2; exit 4; }
+[ $? ] || { echo "(ERROR) Can not execute remote commands. Exiting." >&2; exit 4; }
