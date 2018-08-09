@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 log() {
-  echo "$(date): $*" >&2
+  echo "$(date): ($1): ${@:2}" >&2
 }
 
 usage() {
@@ -29,8 +29,7 @@ do
       shift
       ;;
     -*)
-      echo "(ERROR) Unknown option: $key" >&2
-      usage >&2
+      log ERROR "Unknown option: $key" $(usage)
       exit 1
       ;;
     *)
@@ -43,7 +42,7 @@ done
 base_dir=$( cd "$( dirname "$( readlink -f "$0" )" )" && pwd )
 
 ES_CONFIG="${base_dir}/../../Elasticsearch/config/es"
-log "Loading defaults and config $ES_CONFIG if any"
+log INFO "Loading defaults and config $ES_CONFIG if any"
 ES_HOST='127.0.0.1'
 ES_PORT='9200'
 
@@ -57,9 +56,9 @@ EOBatch=$'\4'
 cmd="curl $ES_AUTH http://$ES_HOST:$ES_PORT/_bulk?pretty --data-binary @"
 
 load_files () {
-  [ -z "$1" -o ! -f "$1" ] && log $(usage) && exit 1
+  [ -z "$1" -o ! -f "$1" ] && log NOTSET $(usage) && exit 1
 
-  log "Putting data to ES"
+  log INFO "Putting data to ES"
   for INPUTFILE in $*;
   do
     ${cmd}${INPUTFILE} || exit 3
@@ -68,10 +67,10 @@ load_files () {
 
 load_stream () {
   if ((`echo -ne "$EOBatch" | wc -c` > 1)) ; then
-    log "Fail: switch to the stream mode."
-    echo "(ERROR) End-of-batch: too large."  >&2
+    log ERROR "Fail to switch to the stream mode. "`
+               `"End-of-batch marker is too long (> 1 byte)."
   else
-    log "Switched to the stream mode."
+    log INFO "Switched to the stream mode."
     while read -r -d `echo -ne "$EOBatch"` line; do
       n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
       while [ $n -gt $CURL_N_MAX ]; do
