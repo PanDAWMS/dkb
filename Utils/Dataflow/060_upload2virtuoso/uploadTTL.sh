@@ -69,7 +69,8 @@ OPTIONS:
 }
 
 upload_files () {
-
+  EOProcess=""
+  
   if [ -z "$1" ] ; then
     echo "(ERROR) Input file is not specified." >&2
     usage
@@ -119,7 +120,8 @@ upload_files () {
         ;;
     esac
 
-    eval "$cmd" || { echo "(ERROR) An error occured while uploading file: $INPUTFILE" >&2; continue; }
+    eval "$cmd" || { echo "(ERROR) An error occured while uploading file: $INPUTFILE" >&2; } &
+    echo -ne "$EOProcess"
 
   done
 
@@ -128,6 +130,8 @@ upload_files () {
 }
 
 upload_stream () {
+  EOProcess="\0"
+  
   local delimiter=$'\n'
 
   [ -z "$TYPE" ] && { echo "(ERROR) input data format is not specified. Exiting." >&2; return 2;}
@@ -170,7 +174,7 @@ upload_stream () {
         n=`ps axf | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
       done
       echo "$line" | $cmd &>/dev/null || { echo "(ERROR) An error occured while uploading stream data." >&2; continue; } &
-      echo -n $'\6'
+      echo -ne "$EOProcess"
     done
   done
 }
@@ -209,6 +213,10 @@ do
       DELIMITER=`echo -e $2`
       shift
       ;;
+    -E|--eop)
+      EOP="$2"
+      shift
+      ;;
     -u|--user)
       USER="$2"
       shift
@@ -238,6 +246,7 @@ done
 [ -z "$GRAPH" ] && GRAPH=http://$HOST:$PORT/$GRAPH_PATH
 [ -z "$DELIMITER" ]  && DELIMITER=$'\0'
 [ "x$DELIMITER" = "xNOT SPECIFIED" ] && DELIMITER=$'\n'
+[ -n "$EOP" ] && EOProcess="$EOP"
 
 cmdTTL="curl --retry 3 -s -f -X POST --digest -u $USER:$PASSWD -H Content-Type:text/turtle -G http://$HOST:$PORT/sparql-graph-crud-auth --data-urlencode graph=$GRAPH"
 cmdSPARQL="curl --retry 3 -s -f -H 'Accept: text/csv' -G http://$HOST:$PORT/sparql --data-urlencode query"
