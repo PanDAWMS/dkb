@@ -134,7 +134,7 @@ scp $option $USR@$lxplus:$json $tmp >&2
 
 [ $? ] || { echo "Can not copy file from remote. Exiting." >&2; exit 4; }
 
-echo -ne "\n" >> $tmp
+echo -ne "$EOM" >> $tmp
 
 if [ -n "$FILE" ] ; then
   cat $tmp > $FILE
@@ -142,6 +142,7 @@ else
   cat $tmp
 fi
 
+echo -ne "$EOP"
 
 [ "$xCLEAN" = "xYES" ] && rm $tmp >&2
 
