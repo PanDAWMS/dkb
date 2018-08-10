@@ -69,7 +69,7 @@ do
       shift
       ;;
     -*)
-      echo "Unknown option: $key" >&2
+      echo "(ERROR) Unknown option: $key" >&2
       usage >&2
       exit 1
       ;;
@@ -82,14 +82,14 @@ done
 
 [ -z "$CLEAN" ] && CLEAN="YES"
 if [ -z "$USR" ] ; then
-  echo "Username is not specified." >&2
+  echo "(ERROR) Username is not specified." >&2
   usage >&2
   exit 1
 fi
  
 if [ -n "$PIPE" ]; then
   if ! ( [ -p "$PIPE" ] || mkfifo "$PIPE" 2>&1 > /dev/null ) ; then
-    echo "Can not create a FIFO named pipe: $PIPE. Exiting." >&2
+    echo "(ERROR) Can not create a FIFO named pipe: $PIPE. Exiting." >&2
     exit 2
   fi
   FILE="$PIPE"
@@ -104,7 +104,7 @@ fi
 [ -n "$EOM" ] && EOMessage="$EOM"
 [ -n "$EOP" ] && EOProcess="$EOP"
 if [ -z "$EOMessage" ] ; then
-  echo "EOM marker is not specified. Exiting." >&2
+  echo "(ERROR) EOM marker is not specified. Exiting." >&2
   exit 1
 fi
 
@@ -121,23 +121,23 @@ if ! krenew -H 60 ; then
   if [ -n "$RETRY" ]; then
     kinit "$USR@CERN.CH"
   else
-   echo "No Kerberos ticket for CERN.CH realm found. Exiting." >&2
+   echo "(ERROR) No Kerberos ticket for CERN.CH realm found. Exiting." >&2
    exit 3 
   fi
 fi
-klist | grep 'CERN.CH' >/dev/null || { echo "No Kerberos ticket for CERN.CH realm found. Exiting." >&2; exit 3; }
+klist | grep 'CERN.CH' >/dev/null || { echo "(ERROR) No Kerberos ticket for CERN.CH realm found. Exiting." >&2; exit 3; }
 
 # Lxplus address
 lxplus=lxplus.cern.ch
 
 option="-q -o StrictHostKeyChecking=no -o GSSAPIAuthentication=yes -o GSSAPIDelegateCredentials=yes -o GSSAPITrustDNS=yes"
 ssh $option -K $USR@$lxplus "( $cmd1; $cmd2; ) 2>&1 >/dev/null" 2>&1 > /dev/null
-[ $? ] || { echo "Can not execute remote commands. Exiting." >&2; exit 4; }
+[ $? ] || { echo "(ERROR) Can not execute remote commands. Exiting." >&2; exit 4; }
 
 tmp=/tmp/list_of_papers.json
 scp $option $USR@$lxplus:$json $tmp >&2
 
-[ $? ] || { echo "Can not copy file from remote. Exiting." >&2; exit 4; }
+[ $? ] || { echo "(ERROR) Can not copy file from remote. Exiting." >&2; exit 4; }
 
 echo -ne "$EOMessage" >> $tmp
 
@@ -152,4 +152,4 @@ echo -ne "$EOProcess"
 [ "$xCLEAN" = "xYES" ] && rm $tmp >&2
 
 ssh $option -K $USR@$lxplus "$cmd4;" 2>&1 > /dev/null 
-[ $? ] || { echo "Can not execute remote commands. Exiting." >&2; exit 4; }
+[ $? ] || { echo "(ERROR) Can not execute remote commands. Exiting." >&2; exit 4; }
