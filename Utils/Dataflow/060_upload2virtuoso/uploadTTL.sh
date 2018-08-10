@@ -55,10 +55,15 @@ OPTIONS:
                                 * in a (s)tream mode waits for input from STDIN,
                                   sending data to Virtuoso;
                                   messages are to be delimited by <delimiter>.
-  -d, --delimiter <delimiter>   Specifies the delimiter between sets of input
+  -b, --batch {e[abled]|d[isabled]} Specifies batch-mode: (e)nabled|(d)isabled.
+  -B, --eob <EOB>               Specifies the delimiter between sets of input
                                 data in the stream mode.
                                 Default: \n
-                                Kafka-style: \0
+                                Kafka-style: \x17
+  -E, --eop <EOP>               Specifies end-of-process marker.
+                                Default:
+                                * in a (f)ile mode: none
+                                * in a (s)tream mode: \0
   -h, --help                    Print this message and exit.
 "
 }
