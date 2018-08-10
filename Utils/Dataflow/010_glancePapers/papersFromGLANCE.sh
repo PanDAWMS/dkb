@@ -53,6 +53,14 @@ do
     -t|--tmp)
       CLEAN="NO"
       ;;
+    -e|--eom)
+      EOM="$2"
+      shift
+      ;;
+    -E|--eop)
+      EOP="$2"
+      shift
+      ;;
     -*)
       echo "Unknown option: $key" >&2
       usage >&2
@@ -69,6 +77,16 @@ done
 if [ -z "$USR" ] ; then
   echo "Username is not specified." >&2
   usage >&2
+  exit 1
+fi
+
+if [ -z "$EOM" ] ; then
+  echo "EOM marker is not specified. Exiting." >&2
+  exit 1
+fi
+
+if [ -z "$EOP" ] ; then
+  echo "EOP marker is not specified. Exiting." >&2
   exit 1
 fi
  
