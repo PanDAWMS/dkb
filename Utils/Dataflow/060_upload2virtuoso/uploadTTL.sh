@@ -9,7 +9,8 @@ PORT='8890'
 GRAPH=
 GRAPH_PATH='DAV/ATLAS'
 MODE="f"
-DELIMITER="NOT SPECIFIED"
+BATCHMODE="d"
+EOBatch='\x17'
 
 # File .credentials may contain variable definition for USER and PASSWD
 if [ -f ".credentials" ]; then
@@ -132,8 +133,7 @@ upload_files () {
 upload_stream () {
   EOProcess="\0"
   
-  local delimiter=$'\n'
-
+  local delimiter=''
   [ -z "$TYPE" ] && { echo "(ERROR) input data format is not specified. Exiting." >&2; return 2;}
   while [[ $# > 0 ]]
   do
@@ -152,6 +152,8 @@ upload_stream () {
       esac
       shift
   done
+
+  [ -z "$delimiter" ] && { echo "(ERROR) Delimiter is not specified. Exiting." >&2; return 2;}
 
   case $TYPE in
     t|ttl)
@@ -209,8 +211,12 @@ do
       MODE="${2,,}"
       shift
       ;;
-    -d|--delimiter)
-      DELIMITER=`echo -e $2`
+    -b|--batch
+      BATCHMODE="${2,,}"
+      shift
+      ;;
+    -B|--eob)
+      EOBatch=`echo -ne $2`
       shift
       ;;
     -E|--eop)
@@ -244,9 +250,23 @@ done
 [ -z "$HOST" ] && echo "(ERROR) empty host value." >&2 && exit 2
 [ -z "$PORT" ] && echo "(ERROR) empty port value." >&2 && exit 2
 [ -z "$GRAPH" ] && GRAPH=http://$HOST:$PORT/$GRAPH_PATH
-[ -z "$DELIMITER" ]  && DELIMITER=$'\0'
-[ "x$DELIMITER" = "xNOT SPECIFIED" ] && DELIMITER=$'\n'
+
+[ -n "$EOB" ] && EOBatch="$EOB"
 [ -n "$EOP" ] && EOProcess="$EOP"
+
+case $BATCHMODE in
+  e|enabled)
+    [ -z "$EOB" ] && EOBatch="\n"
+    ;;
+  d|disabled)
+    ( [ -z "$EOB" ] || [ $EOB == "\x17" ] || [ $EOBatch == "\x17" ] ) && EOBatch="\n"
+    ( [ -n "$EOB" ] && [ ! $EOB == "\x17" ] ) && EOBatch="$EOB"
+    ;;
+  *)
+    echo "(ERROR) Unexpected batch-mode parameter." >&2 && { [ -n "$BATCHMODE" ] && usage && return 2; }
+    break
+    ;;
+esac
 
 cmdTTL="curl --retry 3 -s -f -X POST --digest -u $USER:$PASSWD -H Content-Type:text/turtle -G http://$HOST:$PORT/sparql-graph-crud-auth --data-urlencode graph=$GRAPH"
 cmdSPARQL="curl --retry 3 -s -f -H 'Accept: text/csv' -G http://$HOST:$PORT/sparql --data-urlencode query"
@@ -256,7 +276,7 @@ case $MODE in
     upload_files $*;
     ;;
   s)
-    upload_stream -d "$DELIMITER";
+    upload_stream -d "$EOBatch";
     ;;
   *)
     echo "(ERROR) $MODE: unsupported mode."  >&2
