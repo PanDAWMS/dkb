@@ -7,7 +7,7 @@
     "failed" : 0
   },
   "hits" : {
-    "total" : 464,
+    "total" : 15956,
     "max_score" : 0.0,
     "hits" : [ ]
   },
@@ -17,91 +17,191 @@
       "sum_other_doc_count" : 0,
       "buckets" : [
         {
-          "key" : "Reco",
-          "doc_count" : 214,
+          "key" : "Evgen",
+          "doc_count" : 3192,
           "output" : {
-            "doc_count" : 214,
+            "doc_count" : 3192,
             "not_removed" : {
-              "doc_count" : 0,
+              "doc_count" : 3192,
               "bytes" : {
-                "value" : 0.0
+                "value" : 2.700194325E9
               },
               "events" : {
-                "value" : 0.0
+                "value" : 2.5871E7
               }
             }
           },
           "input_events" : {
-            "value" : 2.9716E8
+            "value" : 0.0
           },
           "input_bytes" : {
-            "value" : 2.11976417118351E14
-          }
-        },
-        {
-          "key" : "Deriv",
-          "doc_count" : 126,
-          "output" : {
-            "doc_count" : 126,
-            "not_removed" : {
-              "doc_count" : 0,
-              "bytes" : {
-                "value" : 0.0
+            "value" : 0.0
+          },
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "done",
+                "doc_count" : 3191
               },
-              "events" : {
-                "value" : 0.0
+              {
+                "key" : "submitting",
+                "doc_count" : 1
               }
-            }
-          },
-          "input_events" : {
-            "value" : 1.541E8
-          },
-          "input_bytes" : {
-            "value" : 3.6577966348884E13
-          }
-        },
-        {
-          "key" : "Simul",
-          "doc_count" : 92,
-          "output" : {
-            "doc_count" : 92,
-            "not_removed" : {
-              "doc_count" : 88,
-              "bytes" : {
-                "value" : 8.8762676532185E13
-              },
-              "events" : {
-                "value" : 1.284325E8
-              }
-            }
-          },
-          "input_events" : {
-            "value" : 1.30813E8
-          },
-          "input_bytes" : {
-            "value" : 3.513445272751E12
+            ]
           }
         },
         {
           "key" : "Evgen Merge",
-          "doc_count" : 32,
+          "doc_count" : 3192,
           "output" : {
-            "doc_count" : 32,
+            "doc_count" : 3192,
             "not_removed" : {
-              "doc_count" : 32,
+              "doc_count" : 3192,
               "bytes" : {
-                "value" : 8.27471114712E11
+                "value" : 2.536129042E9
               },
               "events" : {
-                "value" : 2.7988E7
+                "value" : 2.5873E7
               }
             }
           },
           "input_events" : {
-            "value" : 2.7993E7
+            "value" : 2.5873E7
           },
           "input_bytes" : {
-            "value" : 8.31437218336E11
+            "value" : 2.700102371E9
+          },
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "done",
+                "doc_count" : 3192
+              }
+            ]
+          }
+        },
+        {
+          "key" : "Reco",
+          "doc_count" : 3191,
+          "output" : {
+            "doc_count" : 3191,
+            "not_removed" : {
+              "doc_count" : 3190,
+              "bytes" : {
+                "value" : 5.57884150685E12
+              },
+              "events" : {
+                "value" : 2.58686E7
+              }
+            }
+          },
+          "input_events" : {
+            "value" : 2.58706E7
+          },
+          "input_bytes" : {
+            "value" : 3.478883059238E12
+          },
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "done",
+                "doc_count" : 3186
+              },
+              {
+                "key" : "finished",
+                "doc_count" : 4
+              },
+              {
+                "key" : "running",
+                "doc_count" : 1
+              }
+            ]
+          }
+        },
+        {
+          "key" : "Simul",
+          "doc_count" : 3191,
+          "output" : {
+            "doc_count" : 3191,
+            "not_removed" : {
+              "doc_count" : 3191,
+              "bytes" : {
+                "value" : 3.46991560003E12
+              },
+              "events" : {
+                "value" : 2.58706E7
+              }
+            }
+          },
+          "input_events" : {
+            "value" : 2.5871E7
+          },
+          "input_bytes" : {
+            "value" : 2.535908959E9
+          },
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "done",
+                "doc_count" : 3187
+              },
+              {
+                "key" : "finished",
+                "doc_count" : 4
+              }
+            ]
+          }
+        },
+        {
+          "key" : "Deriv",
+          "doc_count" : 3190,
+          "output" : {
+            "doc_count" : 3189,
+            "not_removed" : {
+              "doc_count" : 3188,
+              "bytes" : {
+                "value" : 1.737231647933E12
+              },
+              "events" : {
+                "value" : 0.0
+              }
+            }
+          },
+          "input_events" : {
+            "value" : 2.643E7
+          },
+          "input_bytes" : {
+            "value" : 5.576948660775E12
+          },
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "done",
+                "doc_count" : 3184
+              },
+              {
+                "key" : "finished",
+                "doc_count" : 4
+              },
+              {
+                "key" : "registered",
+                "doc_count" : 1
+              },
+              {
+                "key" : "running",
+                "doc_count" : 1
+              }
+            ]
           }
         }
       ]
