@@ -211,12 +211,12 @@ do
       MODE="${2,,}"
       shift
       ;;
-    -b|--batch
-      BATCHMODE="${2,,}"
+    -b|--batch)
+      BATCHMODE="$2"
       shift
       ;;
     -B|--eob)
-      EOBatch=`echo -ne $2`
+      EOB=`echo -ne $2`
       shift
       ;;
     -E|--eop)
