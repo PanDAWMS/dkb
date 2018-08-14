@@ -10,14 +10,14 @@ GRAPH=
 GRAPH_PATH='DAV/ATLAS'
 MODE="f"
 BATCHMODE="d"
-EOBatch='\x17'
+EOB='\x17'
+EOBatch="$EOB"
 
 # File .credentials may contain variable definition for USER and PASSWD
 if [ -f ".credentials" ]; then
   USER=`sed -n 1p .credentials`
   PASSWD=`sed -n 2p .credentials`
 fi
-
 
 SLEEP=1
 CURL_N_MAX=10
@@ -59,8 +59,8 @@ OPTIONS:
   -b, --batch {e[abled]|d[isabled]} Specifies batch-mode: (e)nabled|(d)isabled.
   -B, --eob <EOB>               Specifies the delimiter between sets of input
                                 data in the stream mode.
-                                Default: \n
-                                Kafka-style: \x17
+                                Default: \x17
+                                No batch-mode: \n
   -E, --eop <EOP>               Specifies end-of-process marker.
                                 Default:
                                 * in a (f)ile mode: none
@@ -169,7 +169,7 @@ upload_stream () {
   esac
 
   while true; do
-    while read -r -d "$delimiter" line || [[ -n "$line" ]]; do
+    while read -r -d $(echo -ne "$delimiter") line || [[ -n "$line" ]]; do
       n=`ps ax | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
       while [ $n -gt $CURL_N_MAX ]; do
         sleep $SLEEP
@@ -216,7 +216,7 @@ do
       shift
       ;;
     -B|--eob)
-      EOB=`echo -ne $2`
+      EOB="$2"
       shift
       ;;
     -E|--eop)
@@ -255,10 +255,10 @@ done
 [ -n "$EOP" ] && EOProcess="$EOP"
 
 case $BATCHMODE in
-  e|enabled)
+  "e"|"enabled")
     [ -z "$EOB" ] && EOBatch="\n"
     ;;
-  d|disabled)
+  "d"|"disabled")
     ( [ -z "$EOB" ] || [ $EOB == "\x17" ] || [ $EOBatch == "\x17" ] ) && EOBatch="\n"
     ( [ -n "$EOB" ] && [ ! $EOB == "\x17" ] ) && EOBatch="$EOB"
     ;;
