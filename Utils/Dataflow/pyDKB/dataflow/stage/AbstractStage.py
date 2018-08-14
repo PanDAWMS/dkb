@@ -77,6 +77,21 @@ class AbstractStage(object):
                           default=None,
                           dest='eop'
                           )
+        self.add_argument('-B', '--end-of-batch', action='store', type=str,
+                          help=u'Custom end of batch marker.',
+                          nargs='?',
+                          default=None,
+                          dest='eob'
+                         )
+        self.add_argument('-b', '--batch-mode', action='store', type=str,
+                          help=u'Batch mode switch: (e)nabled, (d)isabled'
+                                '  (default: %(default)s).',
+                          default='d',
+                          metavar='BATCHMODE',
+                          choices=['d','e'],
+                          dest='batchmode'
+                         )
+                          
 
     def add_argument(self, *args, **kwargs):
         """ Add specific (not common) arguments. """
