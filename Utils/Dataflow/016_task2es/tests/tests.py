@@ -9,6 +9,22 @@ import unittest
 import task2es
 
 
+class add_es_index_infoTestCase(unittest.TestCase):
+    def test_wrong_type(self):
+        data = 1
+        self.assertEqual(task2es.add_es_index_info(data), False)
+
+    def test_no_taskid(self):
+        data = {}
+        self.assertEqual(task2es.add_es_index_info(data), False)
+
+    def test_normal(self):
+        data = {'taskid': '123'}
+        self.assertEqual(task2es.add_es_index_info(data), True)
+        self.assertEqual(data['_id'], data['taskid'])
+        self.assertEqual(data['_type'], 'task')
+
+
 class get_categoryTestCase(unittest.TestCase):
     def setUp(self):
         self.task = {'hashtag_list': [], 'taskname': ''}
@@ -121,7 +137,7 @@ for category in PHYS_CATEGORIES_PHYS_SHORTS_MAP:
         add_phys_short_test(category, phys_short)
 
 
-test_cases = (get_categoryTestCase, )
+test_cases = (add_es_index_infoTestCase, get_categoryTestCase)
 
 
 def load_tests(loader, tests, pattern):
