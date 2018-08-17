@@ -42,51 +42,101 @@
 <div class="section" id="module-pyDKB.common.Type">
 <span id="pydkb-common-type-module"></span><h2>pyDKB.common.Type module<a class="headerlink" href="#module-pyDKB.common.Type" title="Permalink to this headline">¶</a></h2>
 <p>Abstract class for type definitions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Example:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">myType</span> <span class="o">=</span> <span class="n">Type</span><span class="p">(</span><span class="s2">&quot;Orange&quot;</span><span class="p">,</span> <span class="s2">&quot;Apple&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">myType</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;Plum&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">t</span> <span class="o">=</span> <span class="n">myType</span><span class="o">.</span><span class="n">Orange</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="n">t</span> <span class="o">==</span> <span class="n">myType</span><span class="o">.</span><span class="n">Orange</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span> <span class="s2">&quot;Orange!&quot;</span>
+<span class="gp">... </span><span class="k">elif</span> <span class="n">t</span> <span class="o">==</span> <span class="n">myType</span><span class="o">.</span><span class="n">member</span><span class="p">(</span><span class="s2">&quot;Apple&quot;</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span> <span class="s2">&quot;Apple!&quot;</span>
+<span class="gp">...</span>
+<span class="go">Orange!</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">if</span> <span class="ow">not</span> <span class="n">myType</span><span class="o">.</span><span class="n">member</span><span class="p">(</span><span class="s2">&quot;Walnut&quot;</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span> <span class="s2">&quot;Wrong type!&quot;</span>
+<span class="gp">...</span>
+<span class="go">Wrong type!</span>
+</pre></div>
+</div>
 <dl class="class">
 <dt id="pyDKB.common.Type.Type">
 <em class="property">class </em><code class="descclassname">pyDKB.common.Type.</code><code class="descname">Type</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/Type.html#Type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.Type.Type" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Abstract class for type definitions.
-Usage:</p>
-<blockquote>
-<div><p>myType = Type(“Orange”, “Apple”)</p>
-<p>myType.add(“Plum”)</p>
-<p>t = myType.Orange</p>
-<dl class="docutils">
-<dt>if t == myType.Orange:</dt>
-<dd># Oranges stuff</dd>
-<dt>elif t == myType.member(“Apple”):</dt>
-<dd># Apples stuff</dd>
-</dl>
-<p>…</p>
-<dl class="docutils">
-<dt>if not myType.hasMember(t):</dt>
-<dd>print “Wrong type!”</dd>
-</dl>
-</div></blockquote>
+<p>Abstract class for type definitions.</p>
+<p>Member names (<em>str</em>) are passed to the constructor as positional arguments.</p>
 <dl class="method">
 <dt id="pyDKB.common.Type.Type.add">
 <code class="descname">add</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/Type.html#Type.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.Type.Type.add" title="Permalink to this definition">¶</a></dt>
-<dd><p>Add new Type member.</p>
+<dd><p>Add member.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – name of the member to be added</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyDKB.common.Type.Type.hasMember">
 <code class="descname">hasMember</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/Type.html#Type.hasMember"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.Type.Type.hasMember" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the member exists (by value).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>val</strong> (<em>int</em>) – member to be checked</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True/False</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyDKB.common.Type.Type.member">
 <code class="descname">member</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/Type.html#Type.member"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.Type.Type.member" title="Permalink to this definition">¶</a></dt>
 <dd><p>Check if the member exists (by name).</p>
-<p>Return member value or False.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>name</strong> (<em>str</em>) – name to be checked</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">member value or False if member does not exist</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int, bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyDKB.common.Type.Type.memberName">
 <code class="descname">memberName</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/Type.html#Type.memberName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.Type.Type.memberName" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return string name of the member.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>val</strong> (<em>int</em>) – member to retrieve name for</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">member name of False if member does not exist</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str, bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

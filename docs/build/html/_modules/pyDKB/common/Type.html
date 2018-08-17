@@ -34,37 +34,44 @@
   <h1>Source code for pyDKB.common.Type</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">Abstract class for type definitions.</span>
+
+<span class="sd">:Example:</span>
+
+<span class="sd">&gt;&gt;&gt; myType = Type(&quot;Orange&quot;, &quot;Apple&quot;)</span>
+<span class="sd">&gt;&gt;&gt; myType.add(&quot;Plum&quot;)</span>
+<span class="sd">&gt;&gt;&gt; t = myType.Orange</span>
+<span class="sd">&gt;&gt;&gt; if t == myType.Orange:</span>
+<span class="sd">...     print &quot;Orange!&quot;</span>
+<span class="sd">... elif t == myType.member(&quot;Apple&quot;):</span>
+<span class="sd">...     print &quot;Apple!&quot;</span>
+<span class="sd">...</span>
+<span class="sd">Orange!</span>
+<span class="sd">&gt;&gt;&gt; if not myType.member(&quot;Walnut&quot;):</span>
+<span class="sd">...     print &quot;Wrong type!&quot;</span>
+<span class="sd">...</span>
+<span class="sd">Wrong type!</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 
 <div class="viewcode-block" id="Type"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.html#pyDKB.common.Type.Type">[docs]</a><span class="k">class</span> <span class="nc">Type</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Abstract class for type definitions.</span>
-<span class="sd">    Usage:</span>
-<span class="sd">        myType = Type(&quot;Orange&quot;, &quot;Apple&quot;)</span>
+    <span class="sd">&quot;&quot;&quot; Abstract class for type definitions.</span>
 
-<span class="sd">        myType.add(&quot;Plum&quot;)</span>
-
-<span class="sd">        t = myType.Orange</span>
-
-<span class="sd">        if t == myType.Orange:</span>
-<span class="sd">            # Oranges stuff</span>
-<span class="sd">        elif t == myType.member(&quot;Apple&quot;):</span>
-<span class="sd">            # Apples stuff</span>
-<span class="sd">        ...</span>
-
-<span class="sd">        if not myType.hasMember(t):</span>
-<span class="sd">            print &quot;Wrong type!&quot;</span>
+<span class="sd">    Member names (*str*) are passed to the constructor as positional arguments.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initialize Type object. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ind</span> <span class="o">=</span> <span class="mi">1</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hash</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">arg</span><span class="p">)</span>
 
 <div class="viewcode-block" id="Type.add"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.html#pyDKB.common.Type.Type.add">[docs]</a>    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Add new Type member.  &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Add member.</span>
+
+<span class="sd">        :param name: name of the member to be added</span>
+<span class="sd">        :type name: str</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="nb">setattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">ind</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">hash</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">ind</span><span class="p">]</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ind</span> <span class="o">+=</span> <span class="mi">1</span></div>
@@ -72,16 +79,34 @@
 <div class="viewcode-block" id="Type.member"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.html#pyDKB.common.Type.Type.member">[docs]</a>    <span class="k">def</span> <span class="nf">member</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Check if the member exists (by name).</span>
 
-<span class="sd">        Return member value or False.</span>
+<span class="sd">        :param name: name to be checked</span>
+<span class="sd">        :type name: str</span>
+
+<span class="sd">        :return: member value or False if member does not exist</span>
+<span class="sd">        :rtype: int, bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Type.hasMember"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.html#pyDKB.common.Type.Type.hasMember">[docs]</a>    <span class="k">def</span> <span class="nf">hasMember</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Check if the member exists (by value). &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Check if the member exists (by value).</span>
+
+<span class="sd">        :param val: member to be checked</span>
+<span class="sd">        :type val: int</span>
+
+<span class="sd">        :return: True/False</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">memberName</span><span class="p">(</span><span class="n">val</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">False</span></div>
 
 <div class="viewcode-block" id="Type.memberName"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.html#pyDKB.common.Type.Type.memberName">[docs]</a>    <span class="k">def</span> <span class="nf">memberName</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Return string name of the member. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Return string name of the member.</span>
+
+<span class="sd">        :param val: member to retrieve name for</span>
+<span class="sd">        :type val: int</span>
+
+<span class="sd">        :return: member name of False if member does not exist</span>
+<span class="sd">        :rtype: str, bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">hash</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span></div></div>
 </pre></div>
 
