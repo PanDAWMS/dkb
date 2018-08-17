@@ -1,0 +1,36 @@
+pyDKB.dataflow.stage package
+============================
+
+.. automodule:: pyDKB.dataflow.stage
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Submodules
+----------
+
+pyDKB.dataflow.stage.AbstractProcessorStage module
+--------------------------------------------------
+
+.. automodule:: pyDKB.dataflow.stage.AbstractProcessorStage
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyDKB.dataflow.stage.AbstractStage module
+-----------------------------------------
+
+.. automodule:: pyDKB.dataflow.stage.AbstractStage
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyDKB.dataflow.stage.processors module
+--------------------------------------
+
+.. automodule:: pyDKB.dataflow.stage.processors
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+

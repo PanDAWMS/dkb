@@ -1,0 +1,264 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pyDKB.dataflow.messages &#8212; Data Knowledge Base  documentation</title>
+    <link rel="stylesheet" href="../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../" src="../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pyDKB.dataflow.messages</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Definition of abstract message class and specific message classes</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">messageType</span>
+<span class="kn">from</span> <span class="nn">pyDKB.dataflow.types</span> <span class="k">import</span> <span class="n">codeType</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="n">__message_class</span> <span class="o">=</span> <span class="p">{}</span>
+
+
+<div class="viewcode-block" id="DecodeUnknownType"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.DecodeUnknownType">[docs]</a><span class="k">class</span> <span class="nc">DecodeUnknownType</span><span class="p">(</span><span class="ne">NotImplementedError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Exception to be thrown when message type is not decodable. &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> can`t be decoded from </span><span class="si">%s</span><span class="s2">&quot;</span> \
+                  <span class="o">%</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">codeType</span><span class="o">.</span><span class="n">memberName</span><span class="p">(</span><span class="n">code</span><span class="p">))</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DecodeUnknownType</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="EncodeUnknownType"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.EncodeUnknownType">[docs]</a><span class="k">class</span> <span class="nc">EncodeUnknownType</span><span class="p">(</span><span class="ne">NotImplementedError</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Exception to be thrown when message type is not encodable. &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">,</span> <span class="bp">cls</span><span class="p">):</span>
+        <span class="n">message</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%s</span><span class="s2"> can`t be encoded into </span><span class="si">%s</span><span class="s2">&quot;</span> \
+                  <span class="o">%</span> <span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">codeType</span><span class="o">.</span><span class="n">memberName</span><span class="p">(</span><span class="n">code</span><span class="p">))</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">EncodeUnknownType</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Message"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.Message">[docs]</a><span class="k">def</span> <span class="nf">Message</span><span class="p">(</span><span class="n">msg_type</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Return class XXXMessage, where XXX is the passed type. &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">messageType</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="n">msg_type</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Message type must be a member of messageType&quot;</span><span class="p">)</span>
+    <span class="bp">cls</span> <span class="o">=</span> <span class="n">__message_class</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">msg_type</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="p">:</span>
+        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+            <span class="s2">&quot;(WARN) Message class for type </span><span class="si">%s</span><span class="s2"> is not implemented. &quot;</span>
+            <span class="s2">&quot;Using AbstractMessage instead.&quot;</span><span class="p">)</span>
+        <span class="bp">cls</span> <span class="o">=</span> <span class="n">AbstractMessage</span>
+
+    <span class="k">return</span> <span class="bp">cls</span></div>
+
+
+<div class="viewcode-block" id="AbstractMessage"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.AbstractMessage">[docs]</a><span class="k">class</span> <span class="nc">AbstractMessage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Abstract message &quot;&quot;&quot;</span>
+
+    <span class="n">msg_type</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">native_types</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="n">_ext</span> <span class="o">=</span> <span class="s2">&quot;.out&quot;</span>
+
+    <span class="n">decoded</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">encoded</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Save initial message. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__orig</span> <span class="o">=</span> <span class="n">message</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">native_types</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">decoded</span> <span class="o">=</span> <span class="n">message</span>
+
+<div class="viewcode-block" id="AbstractMessage.getOriginal"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.AbstractMessage.getOriginal">[docs]</a>    <span class="k">def</span> <span class="nf">getOriginal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return original message. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__orig</span></div>
+
+<div class="viewcode-block" id="AbstractMessage.decode"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.AbstractMessage.decode">[docs]</a>    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Decode original from CODE to TYPE-specific format.</span>
+
+<span class="sd">        Raises ValueError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">DecodeUnknownType</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractMessage.encode"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.AbstractMessage.encode">[docs]</a>    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Encode original message from TYPE-specific format to CODE.</span>
+
+<span class="sd">        Raises ValueError</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="n">EncodeUnknownType</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractMessage.typeName"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.AbstractMessage.typeName">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">typeName</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return message type name as string. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">messageType</span><span class="o">.</span><span class="n">memberName</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">msg_type</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractMessage.content"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.AbstractMessage.content">[docs]</a>    <span class="k">def</span> <span class="nf">content</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return message content. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="AbstractMessage.extension"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.AbstractMessage.extension">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">extension</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return file extension corresponding this message type. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_ext</span></div></div>
+
+
+<div class="viewcode-block" id="JSONMessage"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.JSONMessage">[docs]</a><span class="k">class</span> <span class="nc">JSONMessage</span><span class="p">(</span><span class="n">AbstractMessage</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Message in JSON format. &quot;&quot;&quot;</span>
+    <span class="n">msg_type</span> <span class="o">=</span> <span class="n">messageType</span><span class="o">.</span><span class="n">JSON</span>
+    <span class="n">native_types</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
+
+    <span class="n">_ext</span> <span class="o">=</span> <span class="s2">&quot;.json&quot;</span>
+
+<div class="viewcode-block" id="JSONMessage.decode"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.JSONMessage.decode">[docs]</a>    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="n">codeType</span><span class="o">.</span><span class="n">STRING</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Decode original data as JSON. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoded</span><span class="p">:</span>
+            <span class="n">orig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOriginal</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="n">codeType</span><span class="o">.</span><span class="n">STRING</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">decoded</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">orig</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">DecodeUnknownType</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">encoded</span> <span class="o">=</span> <span class="n">orig</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoded</span></div>
+
+<div class="viewcode-block" id="JSONMessage.encode"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.JSONMessage.encode">[docs]</a>    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="n">codeType</span><span class="o">.</span><span class="n">STRING</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Encode JSON as CODE. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoded</span><span class="p">:</span>
+            <span class="n">orig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOriginal</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="n">codeType</span><span class="o">.</span><span class="n">STRING</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">encoded</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">orig</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">EncodeUnknownType</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">decoded</span> <span class="o">=</span> <span class="n">orig</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoded</span></div></div>
+
+
+<span class="n">__message_class</span><span class="p">[</span><span class="n">messageType</span><span class="o">.</span><span class="n">JSON</span><span class="p">]</span> <span class="o">=</span> <span class="n">JSONMessage</span>
+
+
+<div class="viewcode-block" id="TTLMessage"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.TTLMessage">[docs]</a><span class="k">class</span> <span class="nc">TTLMessage</span><span class="p">(</span><span class="n">AbstractMessage</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Messages in TTL format</span>
+
+<span class="sd">    Single message = single TTL statement</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">msg_type</span> <span class="o">=</span> <span class="n">messageType</span><span class="o">.</span><span class="n">TTL</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">native_types</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
+        <span class="n">native_types</span> <span class="o">=</span> <span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+    <span class="n">_ext</span> <span class="o">=</span> <span class="s2">&quot;.ttl&quot;</span>
+
+<div class="viewcode-block" id="TTLMessage.decode"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.TTLMessage.decode">[docs]</a>    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="n">codeType</span><span class="o">.</span><span class="n">STRING</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Decode original data as TTL.</span>
+
+<span class="sd">        Currently takes text as it is.</span>
+<span class="sd">        TODO: check some formal matter to confirm the string is TTL.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoded</span><span class="p">:</span>
+            <span class="n">orig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOriginal</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="n">codeType</span><span class="o">.</span><span class="n">STRING</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">decoded</span> <span class="o">=</span> <span class="n">orig</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">DecodeUnknownType</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">encoded</span> <span class="o">=</span> <span class="n">orig</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">decoded</span></div>
+
+<div class="viewcode-block" id="TTLMessage.encode"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.html#pyDKB.dataflow.messages.TTLMessage.encode">[docs]</a>    <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="n">codeType</span><span class="o">.</span><span class="n">STRING</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Encode JSON as CODE. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoded</span><span class="p">:</span>
+            <span class="n">orig</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">getOriginal</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">code</span> <span class="o">==</span> <span class="n">codeType</span><span class="o">.</span><span class="n">STRING</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">encoded</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">orig</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">EncodeUnknownType</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">decoded</span> <span class="o">=</span> <span class="n">orig</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoded</span></div></div>
+
+
+<span class="n">__message_class</span><span class="p">[</span><span class="n">messageType</span><span class="o">.</span><span class="n">TTL</span><span class="p">]</span> <span class="o">=</span> <span class="n">TTLMessage</span>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../index.html">Data Knowledge Base</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../pyDKB/pyDKB.html">pyDKB package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, DKB team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

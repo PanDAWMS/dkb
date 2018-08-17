@@ -1,0 +1,59 @@
+pyDKB.dataflow package
+======================
+
+.. automodule:: pyDKB.dataflow
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    pyDKB.dataflow.stage
+
+Submodules
+----------
+
+pyDKB.dataflow.cds module
+-------------------------
+
+.. automodule:: pyDKB.dataflow.cds
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyDKB.dataflow.dkbID module
+---------------------------
+
+.. automodule:: pyDKB.dataflow.dkbID
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyDKB.dataflow.exceptions module
+--------------------------------
+
+.. automodule:: pyDKB.dataflow.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyDKB.dataflow.messages module
+------------------------------
+
+.. automodule:: pyDKB.dataflow.messages
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+pyDKB.dataflow.types module
+---------------------------
+
+.. automodule:: pyDKB.dataflow.types
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+

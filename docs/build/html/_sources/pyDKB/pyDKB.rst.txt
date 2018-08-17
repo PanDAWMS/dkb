@@ -1,0 +1,16 @@
+pyDKB package
+=============
+
+.. automodule:: pyDKB
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    pyDKB.common
+    pyDKB.dataflow
+

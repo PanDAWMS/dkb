@@ -1,0 +1,269 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pyDKB.common package &#8212; Data Knowledge Base  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyDKB.dataflow package" href="pyDKB.dataflow.html" />
+    <link rel="prev" title="pyDKB package" href="pyDKB.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-pyDKB.common">
+<span id="pydkb-common-package"></span><h1>pyDKB.common package<a class="headerlink" href="#module-pyDKB.common" title="Permalink to this headline">¶</a></h1>
+<p>Common modules.</p>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pyDKB.common.Type">
+<span id="pydkb-common-type-module"></span><h2>pyDKB.common.Type module<a class="headerlink" href="#module-pyDKB.common.Type" title="Permalink to this headline">¶</a></h2>
+<p>Abstract class for type definitions.</p>
+<dl class="class">
+<dt id="pyDKB.common.Type.Type">
+<em class="property">class </em><code class="descclassname">pyDKB.common.Type.</code><code class="descname">Type</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/Type.html#Type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.Type.Type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Abstract class for type definitions.
+Usage:</p>
+<blockquote>
+<div><p>myType = Type(“Orange”, “Apple”)</p>
+<p>myType.add(“Plum”)</p>
+<p>t = myType.Orange</p>
+<dl class="docutils">
+<dt>if t == myType.Orange:</dt>
+<dd># Oranges stuff</dd>
+<dt>elif t == myType.member(“Apple”):</dt>
+<dd># Apples stuff</dd>
+</dl>
+<p>…</p>
+<dl class="docutils">
+<dt>if not myType.hasMember(t):</dt>
+<dd>print “Wrong type!”</dd>
+</dl>
+</div></blockquote>
+<dl class="method">
+<dt id="pyDKB.common.Type.Type.add">
+<code class="descname">add</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/Type.html#Type.add"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.Type.Type.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add new Type member.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.common.Type.Type.hasMember">
+<code class="descname">hasMember</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/Type.html#Type.hasMember"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.Type.Type.hasMember" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the member exists (by value).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.common.Type.Type.member">
+<code class="descname">member</code><span class="sig-paren">(</span><em>name</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/Type.html#Type.member"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.Type.Type.member" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if the member exists (by name).</p>
+<p>Return member value or False.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.common.Type.Type.memberName">
+<code class="descname">memberName</code><span class="sig-paren">(</span><em>val</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/Type.html#Type.memberName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.Type.Type.memberName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return string name of the member.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyDKB.common.custom_readline">
+<span id="pydkb-common-custom-readline-module"></span><h2>pyDKB.common.custom_readline module<a class="headerlink" href="#module-pyDKB.common.custom_readline" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="pyDKB.common.custom_readline.custom_readline">
+<code class="descclassname">pyDKB.common.custom_readline.</code><code class="descname">custom_readline</code><span class="sig-paren">(</span><em>f</em>, <em>newline</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/custom_readline.html#custom_readline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.custom_readline.custom_readline" title="Permalink to this definition">¶</a></dt>
+<dd><p>Custom readline() function.</p>
+<p>Custom_readline() separates content from a text file ‘f’
+by delimiter ‘newline’ to distinct messages.
+The last line can be incomplete, if the input data flow is interrupted
+in the middle of data writing.</p>
+<p>Keyword arguments:
+f – file/stream to read
+newline – custom delimiter</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyDKB.common.exceptions">
+<span id="pydkb-common-exceptions-module"></span><h2>pyDKB.common.exceptions module<a class="headerlink" href="#module-pyDKB.common.exceptions" title="Permalink to this headline">¶</a></h2>
+<p>Definition of common modules exceptions</p>
+<dl class="exception">
+<dt id="pyDKB.common.exceptions.HDFSException">
+<em class="property">exception </em><code class="descclassname">pyDKB.common.exceptions.</code><code class="descname">HDFSException</code><a class="reference internal" href="../_modules/pyDKB/common/exceptions.html#HDFSException"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.exceptions.HDFSException" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">exceptions.RuntimeError</span></code></p>
+<p>Base Exception for HDFS module.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyDKB.common.hdfs">
+<span id="pydkb-common-hdfs-module"></span><h2>pyDKB.common.hdfs module<a class="headerlink" href="#module-pyDKB.common.hdfs" title="Permalink to this headline">¶</a></h2>
+<p>Utils to interact with HDFS.</p>
+<dl class="function">
+<dt id="pyDKB.common.hdfs.check_stderr">
+<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">check_stderr</code><span class="sig-paren">(</span><em>proc</em>, <em>timeout=None</em>, <em>max_lines=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#check_stderr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.check_stderr" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait till the end of the subprocess and send its STDERR to STDERR.</p>
+<p>Output only MAX_LINES of the STDERR to the current STDERR;
+if MAX_LINES == None, output all the STDERR.</p>
+<p>Return value is the subprocess` return code.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyDKB.common.hdfs.getfile">
+<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">getfile</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#getfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.getfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Download file from HDFS.</p>
+<p>Return value: file name (without directory)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyDKB.common.hdfs.listdir">
+<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">listdir</code><span class="sig-paren">(</span><em>dirname</em>, <em>mode='a'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#listdir"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.listdir" title="Permalink to this definition">¶</a></dt>
+<dd><p>List files and/or subdirectories of HDFS directory.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><p class="first">dirname – directory to list
+mode    – ‘a’: list all objects</p>
+<blockquote class="last">
+<div>‘f’: list files
+‘d’: list subdirectories</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyDKB.common.hdfs.makedirs">
+<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">makedirs</code><span class="sig-paren">(</span><em>dirname</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#makedirs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.makedirs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Try to create directory (with parents).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyDKB.common.hdfs.putfile">
+<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">putfile</code><span class="sig-paren">(</span><em>fname</em>, <em>dest</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#putfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.putfile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Upload file to HDFS.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyDKB.common.json_utils">
+<span id="pydkb-common-json-utils-module"></span><h2>pyDKB.common.json_utils module<a class="headerlink" href="#module-pyDKB.common.json_utils" title="Permalink to this headline">¶</a></h2>
+<p>Utils to work with JSON (dict) objects.</p>
+<dl class="function">
+<dt id="pyDKB.common.json_utils.nestedKeys">
+<code class="descclassname">pyDKB.common.json_utils.</code><code class="descname">nestedKeys</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/json_utils.html#nestedKeys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.json_utils.nestedKeys" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform STRING with nested keys into LIST.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><dl class="first last docutils">
+<dt>STRING key – dot-separated list of nested keys.</dt>
+<dd>If a key contains dot itself, the key must be put between
+quotation marks.</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyDKB.common.json_utils.valueByKey">
+<code class="descclassname">pyDKB.common.json_utils.</code><code class="descname">valueByKey</code><span class="sig-paren">(</span><em>json_data</em>, <em>key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/json_utils.html#valueByKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.json_utils.valueByKey" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return value by a chain (list) of nested keys.</p>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd>DICT   json_data – to search in
+STRING key       – dot-separated list of nested keys</dd>
+</dl>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Data Knowledge Base</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="pyDKB.html">pyDKB package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pyDKB.html#subpackages">Subpackages</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="pyDKB.html">pyDKB package</a><ul>
+      <li>Previous: <a href="pyDKB.html" title="previous chapter">pyDKB package</a></li>
+      <li>Next: <a href="pyDKB.dataflow.html" title="next chapter">pyDKB.dataflow package</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, DKB team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="../_sources/pyDKB/pyDKB.common.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
