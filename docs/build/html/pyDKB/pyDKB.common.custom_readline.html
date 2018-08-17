@@ -35,17 +35,57 @@
             
   <div class="section" id="module-pyDKB.common.custom_readline">
 <span id="pydkb-common-custom-readline-module"></span><h1>pyDKB.common.custom_readline module<a class="headerlink" href="#module-pyDKB.common.custom_readline" title="Permalink to this headline">¶</a></h1>
+<p>Implementation of “readline”-like functionality for custom separator.</p>
+<div class="admonition-todo admonition" id="index-0">
+<p class="first admonition-title">Todo</p>
+<p class="last">make import of <code class="docutils literal notranslate"><span class="pre">fcntl</span></code> (or of this module) optional
+to avoid errors when library is used under Windows.</p>
+</div>
 <dl class="function">
 <dt id="pyDKB.common.custom_readline.custom_readline">
 <code class="descclassname">pyDKB.common.custom_readline.</code><code class="descname">custom_readline</code><span class="sig-paren">(</span><em>f</em>, <em>newline</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/custom_readline.html#custom_readline"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.custom_readline.custom_readline" title="Permalink to this definition">¶</a></dt>
-<dd><p>Custom readline() function.</p>
-<p>Custom_readline() separates content from a text file ‘f’
-by delimiter ‘newline’ to distinct messages.
-The last line can be incomplete, if the input data flow is interrupted
-in the middle of data writing.</p>
-<p>Keyword arguments:
-f – file/stream to read
-newline – custom delimiter</p>
+<dd><p>Read lines with custom line separator.</p>
+<p>Construct generator with readline-like functionality:
+with every call of <code class="docutils literal notranslate"><span class="pre">next()</span></code> method it will read data from <code class="docutils literal notranslate"><span class="pre">f</span></code>
+untill the <code class="docutils literal notranslate"><span class="pre">newline</span></code> separator is found; then yields what was read.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">the last line can be incomplete, if the input data flow
+is interrupted in the middle of data writing.</p>
+</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>f</strong> (<em>file</em>) – readable file object</li>
+<li><strong>newline</strong> (<em>str</em>) – delimeter to be used instead of <code class="docutils literal notranslate"><span class="pre">\n</span></code></li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">iterable object</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">generator</p>
+</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition-todo admonition" id="index-1">
+<p class="first admonition-title">Todo</p>
+<ul class="last simple">
+<li>make last “line” handling more strict: no <code class="docutils literal notranslate"><span class="pre">newline</span></code> == no line;</li>
+<li>rethink function name (as “line” is actually a “message”);</li>
+<li>move functionality to <code class="docutils literal notranslate"><span class="pre">pyDKB.dataflow.communication</span></code> <a class="footnote-reference" href="#id2" id="id1">[1]</a>
+submodule)</li>
+</ul>
+</div>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://github.com/PanDAWMS/dkb/pull/129">https://github.com/PanDAWMS/dkb/pull/129</a></td></tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

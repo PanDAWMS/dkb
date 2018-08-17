@@ -32,22 +32,43 @@
           <div class="body" role="main">
             
   <h1>Source code for pyDKB.common.custom_readline</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">select</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Implementation of &quot;readline&quot;-like functionality for custom separator.</span>
+
+<span class="sd">.. todo:: make import of ``fcntl`` (or of this module) optional</span>
+<span class="sd">  to avoid errors when library is used under Windows.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">select</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">fcntl</span>
 
 
 <div class="viewcode-block" id="custom_readline"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.custom_readline.html#pyDKB.common.custom_readline.custom_readline">[docs]</a><span class="k">def</span> <span class="nf">custom_readline</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">newline</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;Custom readline() function.</span>
+    <span class="sd">&quot;&quot;&quot; Read lines with custom line separator.</span>
 
-<span class="sd">    Custom_readline() separates content from a text file &#39;f&#39;</span>
-<span class="sd">    by delimiter &#39;newline&#39; to distinct messages.</span>
-<span class="sd">    The last line can be incomplete, if the input data flow is interrupted</span>
-<span class="sd">    in the middle of data writing.</span>
+<span class="sd">    Construct generator with readline-like functionality:</span>
+<span class="sd">    with every call of ``next()`` method it will read data from ``f``</span>
+<span class="sd">    untill the ``newline`` separator is found; then yields what was read.</span>
 
-<span class="sd">    Keyword arguments:</span>
-<span class="sd">    f -- file/stream to read</span>
-<span class="sd">    newline -- custom delimiter</span>
+<span class="sd">    .. warning:: the last line can be incomplete, if the input data flow</span>
+<span class="sd">      is interrupted in the middle of data writing.</span>
+
+<span class="sd">    :param f: readable file object</span>
+<span class="sd">    :type f: file</span>
+<span class="sd">    :param newline: delimeter to be used instead of ``\\n``</span>
+<span class="sd">    :type newline: str</span>
+
+<span class="sd">    :return: iterable object</span>
+<span class="sd">    :rtype: generator</span>
+
+<span class="sd">    .. todo::</span>
+<span class="sd">      * make last &quot;line&quot; handling more strict: no ``newline`` == no line;</span>
+<span class="sd">      * rethink function name (as &quot;line&quot; is actually a &quot;message&quot;);</span>
+<span class="sd">      * move functionality to ``pyDKB.dataflow.communication`` [1]_</span>
+<span class="sd">        submodule)</span>
+
+<span class="sd">    .. [1] https://github.com/PanDAWMS/dkb/pull/129</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">poller</span> <span class="o">=</span> <span class="n">select</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span>
     <span class="n">poller</span><span class="o">.</span><span class="n">register</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">select</span><span class="o">.</span><span class="n">POLLIN</span><span class="p">)</span>
