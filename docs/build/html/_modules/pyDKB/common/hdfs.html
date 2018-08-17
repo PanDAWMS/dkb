@@ -47,7 +47,7 @@
 <span class="n">DKB_HOME</span> <span class="o">=</span> <span class="s2">&quot;/user/DKB/&quot;</span>
 
 
-<div class="viewcode-block" id="check_stderr"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.html#pyDKB.common.hdfs.check_stderr">[docs]</a><span class="k">def</span> <span class="nf">check_stderr</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_lines</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+<div class="viewcode-block" id="check_stderr"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.hdfs.html#pyDKB.common.hdfs.check_stderr">[docs]</a><span class="k">def</span> <span class="nf">check_stderr</span><span class="p">(</span><span class="n">proc</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">max_lines</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Wait till the end of the subprocess and send its STDERR to STDERR.</span>
 
 <span class="sd">    Output only MAX_LINES of the STDERR to the current STDERR;</span>
@@ -71,7 +71,7 @@
     <span class="k">return</span> <span class="n">proc</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span></div>
 
 
-<div class="viewcode-block" id="makedirs"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.html#pyDKB.common.hdfs.makedirs">[docs]</a><span class="k">def</span> <span class="nf">makedirs</span><span class="p">(</span><span class="n">dirname</span><span class="p">):</span>
+<div class="viewcode-block" id="makedirs"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.hdfs.html#pyDKB.common.hdfs.makedirs">[docs]</a><span class="k">def</span> <span class="nf">makedirs</span><span class="p">(</span><span class="n">dirname</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Try to create directory (with parents). &quot;&quot;&quot;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hadoop&quot;</span><span class="p">,</span> <span class="s2">&quot;fs&quot;</span><span class="p">,</span> <span class="s2">&quot;-mkdir&quot;</span><span class="p">,</span> <span class="s2">&quot;-p&quot;</span><span class="p">,</span> <span class="n">dirname</span><span class="p">]</span>
     <span class="k">try</span><span class="p">:</span>
@@ -87,7 +87,7 @@
                             <span class="s2">&quot;Error message: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">err</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="putfile"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.html#pyDKB.common.hdfs.putfile">[docs]</a><span class="k">def</span> <span class="nf">putfile</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
+<div class="viewcode-block" id="putfile"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.hdfs.html#pyDKB.common.hdfs.putfile">[docs]</a><span class="k">def</span> <span class="nf">putfile</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">dest</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Upload file to HDFS. &quot;&quot;&quot;</span>
     <span class="n">cmd</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hadoop&quot;</span><span class="p">,</span> <span class="s2">&quot;fs&quot;</span><span class="p">,</span> <span class="s2">&quot;-put&quot;</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">dest</span><span class="p">]</span>
     <span class="k">try</span><span class="p">:</span>
@@ -103,7 +103,7 @@
                             <span class="s2">&quot;Error message: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="n">err</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="getfile"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.html#pyDKB.common.hdfs.getfile">[docs]</a><span class="k">def</span> <span class="nf">getfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+<div class="viewcode-block" id="getfile"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.hdfs.html#pyDKB.common.hdfs.getfile">[docs]</a><span class="k">def</span> <span class="nf">getfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Download file from HDFS.</span>
 
 <span class="sd">    Return value: file name (without directory)</span>
@@ -124,7 +124,7 @@
     <span class="k">return</span> <span class="n">name</span></div>
 
 
-<div class="viewcode-block" id="listdir"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.html#pyDKB.common.hdfs.listdir">[docs]</a><span class="k">def</span> <span class="nf">listdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="listdir"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.hdfs.html#pyDKB.common.hdfs.listdir">[docs]</a><span class="k">def</span> <span class="nf">listdir</span><span class="p">(</span><span class="n">dirname</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;a&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; List files and/or subdirectories of HDFS directory.</span>
 
 <span class="sd">    Parameters:</span>

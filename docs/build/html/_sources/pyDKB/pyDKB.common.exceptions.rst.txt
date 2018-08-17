@@ -1,0 +1,7 @@
+pyDKB.common.exceptions module
+==============================
+
+.. automodule:: pyDKB.common.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:

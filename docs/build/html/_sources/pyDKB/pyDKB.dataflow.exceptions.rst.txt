@@ -1,0 +1,7 @@
+pyDKB.dataflow.exceptions module
+================================
+
+.. automodule:: pyDKB.dataflow.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:

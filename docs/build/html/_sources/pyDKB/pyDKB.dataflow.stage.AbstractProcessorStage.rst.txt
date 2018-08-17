@@ -1,0 +1,7 @@
+pyDKB.dataflow.stage.AbstractProcessorStage module
+==================================================
+
+.. automodule:: pyDKB.dataflow.stage.AbstractProcessorStage
+    :members:
+    :undoc-members:
+    :show-inheritance:

@@ -46,7 +46,7 @@
     <span class="k">raise</span> <span class="n">e</span>
 
 
-<div class="viewcode-block" id="AbstractStage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage">[docs]</a><span class="k">class</span> <span class="nc">AbstractStage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractStage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage">[docs]</a><span class="k">class</span> <span class="nc">AbstractStage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Class/instance variable description:</span>
 <span class="sd">    * Argument parser (argparse.ArgumentParser)</span>
@@ -89,7 +89,7 @@
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">defaultArguments</span><span class="p">()</span>
 
-<div class="viewcode-block" id="AbstractStage.defaultArguments"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.defaultArguments">[docs]</a>    <span class="k">def</span> <span class="nf">defaultArguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractStage.defaultArguments"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.defaultArguments">[docs]</a>    <span class="k">def</span> <span class="nf">defaultArguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Config argument parser with parameters common for all stages. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--mode&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span>
                           <span class="n">help</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;Processing mode: (f)ile, (s)tream&#39;</span>
@@ -112,11 +112,11 @@
                           <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;eop&#39;</span>
                           <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractStage.add_argument"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.add_argument">[docs]</a>    <span class="k">def</span> <span class="nf">add_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractStage.add_argument"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.add_argument">[docs]</a>    <span class="k">def</span> <span class="nf">add_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Add specific (not common) arguments. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractStage.parse_args"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.parse_args">[docs]</a>    <span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractStage.parse_args"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.parse_args">[docs]</a>    <span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Parse arguments and set dependant arguments if needed. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">mode</span><span class="p">:</span>
@@ -148,11 +148,11 @@
                                  <span class="s2">&quot;(ERROR) Case: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">err</span><span class="p">))</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractStage.print_usage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.print_usage">[docs]</a>    <span class="k">def</span> <span class="nf">print_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractStage.print_usage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.print_usage">[docs]</a>    <span class="k">def</span> <span class="nf">print_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Print usage message. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span><span class="o">.</span><span class="n">print_usage</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractStage.run"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractStage.run"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Run the stage. &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Stage method run() is not implemented&quot;</span><span class="p">)</span></div></div>
 </pre></div>

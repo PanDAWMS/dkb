@@ -26,7 +26,7 @@ pdf: latexpdf
 	cp build/latex/*.pdf build/pdf
 
 source/pyDKB:
-	$(APIDOC) -T -f -M -o source/pyDKB ../Utils/Dataflow/pyDKB
+	$(APIDOC) -T -f -M -e -o source/pyDKB ../Utils/Dataflow/pyDKB
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

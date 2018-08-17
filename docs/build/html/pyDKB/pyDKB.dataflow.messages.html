@@ -1,0 +1,257 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pyDKB.dataflow.messages module &#8212; Data Knowledge Base  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyDKB.dataflow.types module" href="pyDKB.dataflow.types.html" />
+    <link rel="prev" title="pyDKB.dataflow.exceptions module" href="pyDKB.dataflow.exceptions.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-pyDKB.dataflow.messages">
+<span id="pydkb-dataflow-messages-module"></span><h1>pyDKB.dataflow.messages module<a class="headerlink" href="#module-pyDKB.dataflow.messages" title="Permalink to this headline">¶</a></h1>
+<p>Definition of abstract message class and specific message classes</p>
+<dl class="class">
+<dt id="pyDKB.dataflow.messages.AbstractMessage">
+<em class="property">class </em><code class="descclassname">pyDKB.dataflow.messages.</code><code class="descname">AbstractMessage</code><span class="sig-paren">(</span><em>message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#AbstractMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.AbstractMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Abstract message</p>
+<dl class="method">
+<dt id="pyDKB.dataflow.messages.AbstractMessage.content">
+<code class="descname">content</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#AbstractMessage.content"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.AbstractMessage.content" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return message content.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.messages.AbstractMessage.decode">
+<code class="descname">decode</code><span class="sig-paren">(</span><em>code</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#AbstractMessage.decode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.AbstractMessage.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode original from CODE to TYPE-specific format.</p>
+<p>Raises ValueError</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyDKB.dataflow.messages.AbstractMessage.decoded">
+<code class="descname">decoded</code><em class="property"> = None</em><a class="headerlink" href="#pyDKB.dataflow.messages.AbstractMessage.decoded" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.messages.AbstractMessage.encode">
+<code class="descname">encode</code><span class="sig-paren">(</span><em>code</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#AbstractMessage.encode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.AbstractMessage.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode original message from TYPE-specific format to CODE.</p>
+<p>Raises ValueError</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyDKB.dataflow.messages.AbstractMessage.encoded">
+<code class="descname">encoded</code><em class="property"> = None</em><a class="headerlink" href="#pyDKB.dataflow.messages.AbstractMessage.encoded" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="pyDKB.dataflow.messages.AbstractMessage.extension">
+<em class="property">classmethod </em><code class="descname">extension</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#AbstractMessage.extension"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.AbstractMessage.extension" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return file extension corresponding this message type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.messages.AbstractMessage.getOriginal">
+<code class="descname">getOriginal</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#AbstractMessage.getOriginal"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.AbstractMessage.getOriginal" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return original message.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyDKB.dataflow.messages.AbstractMessage.msg_type">
+<code class="descname">msg_type</code><em class="property"> = None</em><a class="headerlink" href="#pyDKB.dataflow.messages.AbstractMessage.msg_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyDKB.dataflow.messages.AbstractMessage.native_types">
+<code class="descname">native_types</code><em class="property"> = []</em><a class="headerlink" href="#pyDKB.dataflow.messages.AbstractMessage.native_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="classmethod">
+<dt id="pyDKB.dataflow.messages.AbstractMessage.typeName">
+<em class="property">classmethod </em><code class="descname">typeName</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#AbstractMessage.typeName"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.AbstractMessage.typeName" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return message type name as string.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="exception">
+<dt id="pyDKB.dataflow.messages.DecodeUnknownType">
+<em class="property">exception </em><code class="descclassname">pyDKB.dataflow.messages.</code><code class="descname">DecodeUnknownType</code><span class="sig-paren">(</span><em>code</em>, <em>cls</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#DecodeUnknownType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.DecodeUnknownType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">exceptions.NotImplementedError</span></code></p>
+<p>Exception to be thrown when message type is not decodable.</p>
+</dd></dl>
+
+<dl class="exception">
+<dt id="pyDKB.dataflow.messages.EncodeUnknownType">
+<em class="property">exception </em><code class="descclassname">pyDKB.dataflow.messages.</code><code class="descname">EncodeUnknownType</code><span class="sig-paren">(</span><em>code</em>, <em>cls</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#EncodeUnknownType"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.EncodeUnknownType" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">exceptions.NotImplementedError</span></code></p>
+<p>Exception to be thrown when message type is not encodable.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyDKB.dataflow.messages.JSONMessage">
+<em class="property">class </em><code class="descclassname">pyDKB.dataflow.messages.</code><code class="descname">JSONMessage</code><span class="sig-paren">(</span><em>message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#JSONMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.JSONMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyDKB.dataflow.messages.AbstractMessage" title="pyDKB.dataflow.messages.AbstractMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyDKB.dataflow.messages.AbstractMessage</span></code></a></p>
+<p>Message in JSON format.</p>
+<dl class="method">
+<dt id="pyDKB.dataflow.messages.JSONMessage.decode">
+<code class="descname">decode</code><span class="sig-paren">(</span><em>code=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#JSONMessage.decode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.JSONMessage.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode original data as JSON.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.messages.JSONMessage.encode">
+<code class="descname">encode</code><span class="sig-paren">(</span><em>code=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#JSONMessage.encode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.JSONMessage.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode JSON as CODE.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyDKB.dataflow.messages.JSONMessage.msg_type">
+<code class="descname">msg_type</code><em class="property"> = 2</em><a class="headerlink" href="#pyDKB.dataflow.messages.JSONMessage.msg_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyDKB.dataflow.messages.JSONMessage.native_types">
+<code class="descname">native_types</code><em class="property"> = [&lt;type 'dict'&gt;]</em><a class="headerlink" href="#pyDKB.dataflow.messages.JSONMessage.native_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="pyDKB.dataflow.messages.Message">
+<code class="descclassname">pyDKB.dataflow.messages.</code><code class="descname">Message</code><span class="sig-paren">(</span><em>msg_type</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#Message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.Message" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return class XXXMessage, where XXX is the passed type.</p>
+</dd></dl>
+
+<dl class="class">
+<dt id="pyDKB.dataflow.messages.TTLMessage">
+<em class="property">class </em><code class="descclassname">pyDKB.dataflow.messages.</code><code class="descname">TTLMessage</code><span class="sig-paren">(</span><em>message=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#TTLMessage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.TTLMessage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyDKB.dataflow.messages.AbstractMessage" title="pyDKB.dataflow.messages.AbstractMessage"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyDKB.dataflow.messages.AbstractMessage</span></code></a></p>
+<p>Messages in TTL format</p>
+<p>Single message = single TTL statement</p>
+<dl class="method">
+<dt id="pyDKB.dataflow.messages.TTLMessage.decode">
+<code class="descname">decode</code><span class="sig-paren">(</span><em>code=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#TTLMessage.decode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.TTLMessage.decode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Decode original data as TTL.</p>
+<p>Currently takes text as it is.
+TODO: check some formal matter to confirm the string is TTL.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.messages.TTLMessage.encode">
+<code class="descname">encode</code><span class="sig-paren">(</span><em>code=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/messages.html#TTLMessage.encode"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.messages.TTLMessage.encode" title="Permalink to this definition">¶</a></dt>
+<dd><p>Encode JSON as CODE.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyDKB.dataflow.messages.TTLMessage.msg_type">
+<code class="descname">msg_type</code><em class="property"> = 3</em><a class="headerlink" href="#pyDKB.dataflow.messages.TTLMessage.msg_type" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyDKB.dataflow.messages.TTLMessage.native_types">
+<code class="descname">native_types</code><em class="property"> = [&lt;type 'str'&gt;, &lt;type 'unicode'&gt;]</em><a class="headerlink" href="#pyDKB.dataflow.messages.TTLMessage.native_types" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Data Knowledge Base</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="pyDKB.html">pyDKB package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="pyDKB.html#subpackages">Subpackages</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="pyDKB.html">pyDKB package</a><ul>
+  <li><a href="pyDKB.dataflow.html">pyDKB.dataflow package</a><ul>
+      <li>Previous: <a href="pyDKB.dataflow.exceptions.html" title="previous chapter">pyDKB.dataflow.exceptions module</a></li>
+      <li>Next: <a href="pyDKB.dataflow.types.html" title="next chapter">pyDKB.dataflow.types module</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, DKB team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="../_sources/pyDKB/pyDKB.dataflow.messages.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

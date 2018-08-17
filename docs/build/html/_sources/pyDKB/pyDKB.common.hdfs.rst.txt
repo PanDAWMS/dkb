@@ -1,0 +1,7 @@
+pyDKB.common.hdfs module
+========================
+
+.. automodule:: pyDKB.common.hdfs
+    :members:
+    :undoc-members:
+    :show-inheritance:

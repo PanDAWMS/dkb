@@ -86,7 +86,7 @@
 <span class="kn">from</span> <span class="nn">pyDKB.common</span> <span class="k">import</span> <span class="n">custom_readline</span>
 
 
-<div class="viewcode-block" id="AbstractProcessorStage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage">[docs]</a><span class="k">class</span> <span class="nc">AbstractProcessorStage</span><span class="p">(</span><span class="n">AbstractStage</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage">[docs]</a><span class="k">class</span> <span class="nc">AbstractProcessorStage</span><span class="p">(</span><span class="n">AbstractStage</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Abstract class to implement Processor stages</span>
 
 <span class="sd">    Processor stage -- is a stage for data processing/transfornation.</span>
@@ -134,7 +134,7 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown message type: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">Type</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__input_message_class</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="n">Type</span><span class="p">)</span>
 
-<div class="viewcode-block" id="AbstractProcessorStage.input_message_class"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.input_message_class">[docs]</a>    <span class="k">def</span> <span class="nf">input_message_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.input_message_class"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.input_message_class">[docs]</a>    <span class="k">def</span> <span class="nf">input_message_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Get input message class. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__input_message_class</span></div>
 
@@ -144,11 +144,11 @@
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown message type: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">Type</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__output_message_class</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="n">Type</span><span class="p">)</span>
 
-<div class="viewcode-block" id="AbstractProcessorStage.output_message_class"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.output_message_class">[docs]</a>    <span class="k">def</span> <span class="nf">output_message_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.output_message_class"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.output_message_class">[docs]</a>    <span class="k">def</span> <span class="nf">output_message_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Get output message class. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">__output_message_class</span></div>
 
-<div class="viewcode-block" id="AbstractProcessorStage.defaultArguments"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.defaultArguments">[docs]</a>    <span class="k">def</span> <span class="nf">defaultArguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.defaultArguments"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.defaultArguments">[docs]</a>    <span class="k">def</span> <span class="nf">defaultArguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Default parser configuration. &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">AbstractProcessorStage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">defaultArguments</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;input_files&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;*&#39;</span><span class="p">,</span>
@@ -204,7 +204,7 @@
                           <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;hdfs&#39;</span>
                           <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractProcessorStage.parse_args"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.parse_args">[docs]</a>    <span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.parse_args"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.parse_args">[docs]</a>    <span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Parse arguments and set dependant arguments if neeeded. &quot;&quot;&quot;</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">AbstractProcessorStage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
 
@@ -260,7 +260,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">__stoppable_append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">__output</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">GeneratorType</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractProcessorStage.run"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.run"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Run process() for every input() message. &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">():</span>
             <span class="k">try</span><span class="p">:</span>
@@ -273,7 +273,7 @@
             <span class="k">finally</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">clear_buffer</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="AbstractProcessorStage.stop"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.stop"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.stop">[docs]</a>    <span class="k">def</span> <span class="nf">stop</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Finalize all the processes and prepare to exit. &quot;&quot;&quot;</span>
         <span class="n">failures</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">__stoppable</span><span class="p">:</span>
@@ -288,7 +288,7 @@
             <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">failures</span><span class="p">:</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(ERROR) Failed to stop </span><span class="si">%s</span><span class="s2">: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">f</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractProcessorStage.process"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.process">[docs]</a>    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="AbstractProcessorStage.process"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.process">[docs]</a>    <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">input_message</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Transform input_message -&gt; output_message.</span>
 
@@ -302,7 +302,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Stage method process() is not implemented&quot;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractProcessorStage.parseMessage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.parseMessage">[docs]</a>    <span class="k">def</span> <span class="nf">parseMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_message</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.parseMessage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.parseMessage">[docs]</a>    <span class="k">def</span> <span class="nf">parseMessage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">input_message</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Verify and parse input message.</span>
 
 <span class="sd">        Is called from input() method.</span>
@@ -318,7 +318,7 @@
                                                      <span class="n">err</span><span class="p">))</span>
             <span class="k">return</span> <span class="kc">None</span></div>
 
-<div class="viewcode-block" id="AbstractProcessorStage.input"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.input">[docs]</a>    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.input"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.input">[docs]</a>    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Generator for input messages.</span>
 
 <span class="sd">        Returns iterable object.</span>
@@ -332,7 +332,7 @@
                 <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_input</span><span class="p">(</span><span class="n">fd</span><span class="p">):</span>
                     <span class="k">yield</span> <span class="n">r</span></div>
 
-<div class="viewcode-block" id="AbstractProcessorStage.stream_input"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.stream_input">[docs]</a>    <span class="k">def</span> <span class="nf">stream_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.stream_input"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.stream_input">[docs]</a>    <span class="k">def</span> <span class="nf">stream_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Generator for input messages.</span>
 
 <span class="sd">        Read data from STDIN;</span>
@@ -350,7 +350,7 @@
             <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(INFO) Interrupted by user.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="AbstractProcessorStage.file_input"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.file_input">[docs]</a>    <span class="k">def</span> <span class="nf">file_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.file_input"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.file_input">[docs]</a>    <span class="k">def</span> <span class="nf">file_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Generator for input messages.</span>
 
 <span class="sd">        By default reads file just as stream.</span>
@@ -358,7 +358,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">stream_input</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractProcessorStage.output"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.output"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Put the (list of) message(s) to the output buffer. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">__output_message_class</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__output_buffer</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
@@ -372,19 +372,19 @@
                                <span class="nb">type</span><span class="p">(</span><span class="n">message</span><span class="p">))</span>
                             <span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractProcessorStage.forward"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.forward"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.forward">[docs]</a>    <span class="k">def</span> <span class="nf">forward</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Send EOPMessage in the streaming output mode. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">dest</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">__output</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">eop</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractProcessorStage.flush_buffer"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.flush_buffer">[docs]</a>    <span class="k">def</span> <span class="nf">flush_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.flush_buffer"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.flush_buffer">[docs]</a>    <span class="k">def</span> <span class="nf">flush_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Flush message buffer to the output. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">dest</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stream_flush</span><span class="p">()</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">file_flush</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="AbstractProcessorStage.stream_flush"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.stream_flush">[docs]</a>    <span class="k">def</span> <span class="nf">stream_flush</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.stream_flush"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.stream_flush">[docs]</a>    <span class="k">def</span> <span class="nf">stream_flush</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Flush message buffer as a stream. &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">fd</span><span class="p">:</span>
             <span class="n">fd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__output</span>
@@ -392,7 +392,7 @@
             <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">msg</span><span class="o">.</span><span class="n">encode</span><span class="p">())</span>
             <span class="n">fd</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">eom</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractProcessorStage.file_flush"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.file_flush">[docs]</a>    <span class="k">def</span> <span class="nf">file_flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.file_flush"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.file_flush">[docs]</a>    <span class="k">def</span> <span class="nf">file_flush</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Flush message buffer into a file.</span>
 
 <span class="sd">        By default writes to file as to a stream.</span>
@@ -401,7 +401,7 @@
         <span class="n">fd</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__output</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stream_flush</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="AbstractProcessorStage.clear_buffer"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.clear_buffer">[docs]</a>    <span class="k">def</span> <span class="nf">clear_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="AbstractProcessorStage.clear_buffer"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.clear_buffer">[docs]</a>    <span class="k">def</span> <span class="nf">clear_buffer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Drop buffered output messages. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__output_buffer</span> <span class="o">=</span> <span class="p">[]</span></div>
 

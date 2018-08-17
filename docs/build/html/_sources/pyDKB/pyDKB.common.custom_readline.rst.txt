@@ -1,0 +1,7 @@
+pyDKB.common.custom\_readline module
+====================================
+
+.. automodule:: pyDKB.common.custom_readline
+    :members:
+    :undoc-members:
+    :show-inheritance:

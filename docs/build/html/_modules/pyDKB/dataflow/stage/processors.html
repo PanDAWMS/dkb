@@ -45,7 +45,7 @@
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;JSONProcessorStage&quot;</span><span class="p">,</span> <span class="s2">&quot;TTLProcessorStage&quot;</span><span class="p">,</span> <span class="s2">&quot;JSON2TTLProcessorStage&quot;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="JSONProcessorStage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.JSONProcessorStage">[docs]</a><span class="k">class</span> <span class="nc">JSONProcessorStage</span><span class="p">(</span><span class="n">AbstractProcessorStage</span><span class="p">):</span>
+<div class="viewcode-block" id="JSONProcessorStage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.JSONProcessorStage">[docs]</a><span class="k">class</span> <span class="nc">JSONProcessorStage</span><span class="p">(</span><span class="n">AbstractProcessorStage</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; JSON2JSON Processor Stage</span>
 
 <span class="sd">    Input message: JSON</span>
@@ -57,7 +57,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_input_message_class</span><span class="p">(</span><span class="n">messageType</span><span class="o">.</span><span class="n">JSON</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_output_message_class</span><span class="p">(</span><span class="n">messageType</span><span class="o">.</span><span class="n">JSON</span><span class="p">)</span>
 
-<div class="viewcode-block" id="JSONProcessorStage.file_input"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.JSONProcessorStage.file_input">[docs]</a>    <span class="k">def</span> <span class="nf">file_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="p">):</span>
+<div class="viewcode-block" id="JSONProcessorStage.file_input"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.JSONProcessorStage.file_input">[docs]</a>    <span class="k">def</span> <span class="nf">file_input</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Override AbstractProcessorStage.file_input&quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_nd_json</span><span class="p">(</span><span class="n">fd</span><span class="p">):</span>
@@ -73,7 +73,7 @@
             <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_true_json</span><span class="p">(</span><span class="n">fd</span><span class="p">):</span>
                 <span class="k">yield</span> <span class="n">m</span></div>
 
-<div class="viewcode-block" id="JSONProcessorStage.file_nd_json"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.JSONProcessorStage.file_nd_json">[docs]</a>    <span class="k">def</span> <span class="nf">file_nd_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="p">):</span>
+<div class="viewcode-block" id="JSONProcessorStage.file_nd_json"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.JSONProcessorStage.file_nd_json">[docs]</a>    <span class="k">def</span> <span class="nf">file_nd_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Read file as NDJSON file.</span>
 
 <span class="sd">        Raises ValueError if can`t read the first line.</span>
@@ -87,7 +87,7 @@
         <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
             <span class="k">yield</span> <span class="n">m</span></div>
 
-<div class="viewcode-block" id="JSONProcessorStage.file_true_json"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.JSONProcessorStage.file_true_json">[docs]</a>    <span class="k">def</span> <span class="nf">file_true_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="p">):</span>
+<div class="viewcode-block" id="JSONProcessorStage.file_true_json"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.JSONProcessorStage.file_true_json">[docs]</a>    <span class="k">def</span> <span class="nf">file_true_json</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Read file as true JSON file. &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">data</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span>
@@ -102,7 +102,7 @@
             <span class="k">yield</span> <span class="kc">None</span></div></div>
 
 
-<div class="viewcode-block" id="TTLProcessorStage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.TTLProcessorStage">[docs]</a><span class="k">class</span> <span class="nc">TTLProcessorStage</span><span class="p">(</span><span class="n">AbstractProcessorStage</span><span class="p">):</span>
+<div class="viewcode-block" id="TTLProcessorStage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.TTLProcessorStage">[docs]</a><span class="k">class</span> <span class="nc">TTLProcessorStage</span><span class="p">(</span><span class="n">AbstractProcessorStage</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; TTL2TTL Processor Stage</span>
 
 <span class="sd">    Input message: TTL</span>
@@ -115,11 +115,11 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_output_message_class</span><span class="p">(</span><span class="n">messageType</span><span class="o">.</span><span class="n">JSON</span><span class="p">)</span>
 
     <span class="c1"># Override</span>
-<div class="viewcode-block" id="TTLProcessorStage.output"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.TTLProcessorStage.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+<div class="viewcode-block" id="TTLProcessorStage.output"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.TTLProcessorStage.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">TTLProcessorStage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div></div>
 
 
-<div class="viewcode-block" id="JSON2TTLProcessorStage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.JSON2TTLProcessorStage">[docs]</a><span class="k">class</span> <span class="nc">JSON2TTLProcessorStage</span><span class="p">(</span><span class="n">JSONProcessorStage</span><span class="p">,</span> <span class="n">TTLProcessorStage</span><span class="p">):</span>
+<div class="viewcode-block" id="JSON2TTLProcessorStage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.JSON2TTLProcessorStage">[docs]</a><span class="k">class</span> <span class="nc">JSON2TTLProcessorStage</span><span class="p">(</span><span class="n">JSONProcessorStage</span><span class="p">,</span> <span class="n">TTLProcessorStage</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; JSON2TTL Processor Stage</span>
 
 <span class="sd">    Input message: JSON</span>
@@ -132,12 +132,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_input_message_class</span><span class="p">(</span><span class="n">messageType</span><span class="o">.</span><span class="n">JSON</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_output_message_class</span><span class="p">(</span><span class="n">messageType</span><span class="o">.</span><span class="n">TTL</span><span class="p">)</span>
 
-<div class="viewcode-block" id="JSON2TTLProcessorStage.input"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.JSON2TTLProcessorStage.input">[docs]</a>    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="JSON2TTLProcessorStage.input"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.JSON2TTLProcessorStage.input">[docs]</a>    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Override: Falls back to JSONProcessorStage.input&quot;&quot;&quot;</span>
         <span class="c1"># Pick the method of the first parent</span>
         <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">JSON2TTLProcessorStage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">input</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="JSON2TTLProcessorStage.output"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.JSON2TTLProcessorStage.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+<div class="viewcode-block" id="JSON2TTLProcessorStage.output"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.JSON2TTLProcessorStage.output">[docs]</a>    <span class="k">def</span> <span class="nf">output</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;Override: Falls back to TTLProcessorStage.output&quot;&quot;&quot;</span>
         <span class="c1"># Skip first parent, pick the second</span>
         <span class="nb">super</span><span class="p">(</span><span class="n">JSONProcessorStage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">message</span><span class="p">)</span></div></div>

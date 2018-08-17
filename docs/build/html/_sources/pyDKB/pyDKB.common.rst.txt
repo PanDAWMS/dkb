@@ -9,44 +9,11 @@ pyDKB.common package
 Submodules
 ----------
 
-pyDKB.common.Type module
-------------------------
+.. toctree::
 
-.. automodule:: pyDKB.common.Type
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyDKB.common.custom\_readline module
-------------------------------------
-
-.. automodule:: pyDKB.common.custom_readline
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyDKB.common.exceptions module
-------------------------------
-
-.. automodule:: pyDKB.common.exceptions
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyDKB.common.hdfs module
-------------------------
-
-.. automodule:: pyDKB.common.hdfs
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-pyDKB.common.json\_utils module
--------------------------------
-
-.. automodule:: pyDKB.common.json_utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
+   pyDKB.common.Type
+   pyDKB.common.custom_readline
+   pyDKB.common.exceptions
+   pyDKB.common.hdfs
+   pyDKB.common.json_utils
 
