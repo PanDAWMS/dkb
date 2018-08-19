@@ -206,7 +206,7 @@ stop_www() {
   [ -f "$pidfile" ] \
     && pid=`cat "$pidfile"` \
     && kill "$pid" &>/dev/null
-  rm "$pidfile"
+  rm -f "$pidfile"
 }
 
 start_www() {
