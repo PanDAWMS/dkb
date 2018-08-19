@@ -2,6 +2,7 @@
 
 import logging
 import json
+import urlparse
 
 logging.basicConfig(format="%(asctime)s (%(levelname)s) %(message)s",
                     level=logging.DEBUG)
@@ -10,11 +11,17 @@ logging.basicConfig(format="%(asctime)s (%(levelname)s) %(message)s",
 def dkb_app(environ, start_response):
     path = environ.get('SCRIPT_NAME')
     logging.debug('REQUEST: %s' % path)
+    params = urlparse.parse_qs(environ.get('QUERY_STRING', ''), True)
     response = {'text_info': 'DKB API server. Status: WIP'}
     start_response('200 OK', [('Content-Type', 'application/json')])
     result = {}
     result['response'] = response
-    result = json.dumps(result).encode('utf-8')
+    indent = None
+    newline = ''
+    if params.get('pretty'):
+        indent = 2
+        newline = '\n'
+    result = json.dumps(result, indent=indent).encode('utf-8') + newline
     return [result]
 
 
