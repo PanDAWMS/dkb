@@ -1,0 +1,131 @@
+"""
+Service functions for DKB API methods.
+
+Every method belongs to some 'category' of methods.
+E.g. there can be category '/task' for all methods concerning tasks;
+and method 'chain' in this category: '/task/chain'.
+Base category ('/') is for server methods, like 'servier info' or 'status'.
+
+To add new method:
+```
+
+import methods
+
+def my_method_handler(path, **kwargs):
+    \""" My method description.
+
+    ...
+    \"""
+    <method code>
+
+
+methods.add('/path/to/category', 'method_name', my_method_handler)
+```
+"""
+
+from exceptions import (CategoryNotFound,
+                        MethodNotFound,
+                        DkbApiException,
+                        DkbApiNotImplemented,
+                        NotFoundException)
+
+# Hash of categories and methods
+API_METHODS = {}
+
+
+def category(category, create=False):
+    """ Get category definition.
+
+    If category is not defined and ``create`` is False, raise
+    ``CategoryNotFound`` exception.
+
+    :param category: full path to a category
+    :type category: str
+    :param create: if ``True``, create category if missed.
+    :type create: bool
+
+    :return: hash with category methods and subcategories
+    :rtype: dict
+    """
+    raise DkbApiNotImplemented
+
+
+def list_category(path):
+    """ Get available methods and subcategories for given path.
+
+    If category is not defined, raise ``CategoryNotFound`` exception.
+
+    :param path: full path (starts with '/')  to method or category
+    :type path: str
+
+    :return: {'methods': {<name>: <callable>}, 'categories': [...],
+              'path': '/path/to/category/'}
+    :rtype: dict
+    """
+    raise DkbApiNotImplemented
+
+
+def add(category, name, handler):
+    """ Add method ``name`` with given ``handler`` to ``category``.
+
+    If category does not exist, create category.
+    If method already exists, raise ``MethodAlreadyExists`` exception.
+
+    :param category: full path to a category ('/*' can be used for 'all
+                     (sub)categories'.
+    :type category: str
+    :param name: method name (if None or empty string, method becomes
+                'root' method of the category)
+    :type name: str, None
+    :param handler: method handler function
+    :type handler: callable
+
+    :return: True on success, False on failure
+    :rtype: bool
+    """
+    raise DkbApiNotImplemented
+
+
+def handler(path, method=None):
+    """ Get handler for given method.
+
+    If method is not found, raise ``MethodNotFound`` exception.
+
+    :param path: full path to method or category (if second parameter
+                 specified)
+    :type path: str
+    :param method: method name
+    :type method: str
+
+    :return: method handler function
+    :rtype: callable
+    """
+    raise DkbApiNotImplemented
+
+
+def error_handler(err):
+    """ Generate response with error info.
+
+    :param err: error details
+    :type err: Exception
+    """
+    response = {
+        'exception': err.__class__.__name__,
+    }
+    if isinstance(err, DkbApiException):
+        response['_status'] = err.code
+        response['details'] = err.details
+    elif isinstance(err, DkbApiNotImplemented):
+        response['_status'] = 501
+    if isinstance(err, NotFoundException):
+        response['text_info'] = NotFoundException.description
+    return response
+
+
+def configure():
+    """ Configure API methods.
+
+    Raise exceptions: MethodAlreadyExists, DkbApiNotImplemented
+    """
+    global handlers
+    import handlers

@@ -171,7 +171,11 @@ build_www() {
     && exit 1
   files=`cat "$base_dir/.files"`
   for f in $files; do
-    build_file "$base_dir/$f" > "$build_dir/$f"
+    if [ -d "$base_dir/$f" ]; then
+      mkdir -p "$build_dir/$f"
+    else
+      build_file "$base_dir/$f" > "$build_dir/$f"
+    fi
   done
 }
 
@@ -187,7 +191,11 @@ install_www() {
   echo "Installing www files..." >&2
   for f in $files; do
     echo "> $WWW_DIR/$f" >&2
-    cp "$build_dir/$f" -t "$WWW_DIR"
+    if [ -d "$build_dir/$f" ]; then
+      mkdir -p "$WWW_DIR/$f"
+    else
+      cp "$build_dir/$f" -T "$WWW_DIR/$f"
+    fi
   done
   chown -R "$APP_USER" "$WWW_DIR"
   echo "...done." >&2
