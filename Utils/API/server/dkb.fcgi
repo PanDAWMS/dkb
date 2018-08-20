@@ -25,7 +25,7 @@ def dkb_app(environ, start_response):
         response = handler(path, **params)
         status = response.pop('_status', 200)
     except Exception, err:
-        error = methods.error_handler(err)
+        error = methods.error_handler(sys.exc_info())
         status = error.pop('_status', 500)
     status_line = "%(code)d %(reason)s" % {'code': status,
                                            'reason': STATUS_CODES[status]}
