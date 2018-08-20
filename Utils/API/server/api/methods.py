@@ -103,7 +103,14 @@ def handler(path, method=None):
     :return: method handler function
     :rtype: callable
     """
-    raise DkbApiNotImplemented
+    try:
+        handlers
+    except NameError:
+        logging.error('Handlers not configured.')
+        raise MethodNotFound(path)
+    if path == '/task/chain':
+        return handlers.task_chain
+    raise MethodNotFound(path)
 
 
 def error_handler(exc_info):

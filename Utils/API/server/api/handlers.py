@@ -19,6 +19,8 @@ def my_method_handler(path, **kwargs):
 ```
 """
 
+import logging
+
 import methods
 from exceptions import DkbApiNotImplemented
 
@@ -46,5 +48,30 @@ def server_info(path, **kwargs):
 
 try:
     methods.add('/', None, server_info)
+except DkbApiNotImplemented:
+    pass
+
+
+# ===================
+# API method handlers
+# ===================
+
+def task_chain(path, **kwargs):
+    """ Get list of tasks belonging to same chain as ``tid``.
+
+    :param path: full path to the method
+    :type path: str
+    :param tid: task id
+    :type tid: str, int
+
+    :return: list of Task IDs, ordered from first to last task in chain
+    :rtype: dict
+    """
+    logging.debug("'/task/chain' handler called.")
+    raise DkbApiNotImplemented
+
+
+try:
+    methods.add('/task', 'chain', task_chain)
 except DkbApiNotImplemented:
     pass
