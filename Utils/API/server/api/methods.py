@@ -23,6 +23,9 @@ methods.add('/path/to/category', 'method_name', my_method_handler)
 ```
 """
 
+import traceback
+import logging
+
 from exceptions import (CategoryNotFound,
                         MethodNotFound,
                         DkbApiException,
@@ -103,12 +106,13 @@ def handler(path, method=None):
     raise DkbApiNotImplemented
 
 
-def error_handler(err):
+def error_handler(exc_info):
     """ Generate response with error info.
 
     :param err: error details
     :type err: Exception
     """
+    err = exc_info[1]
     response = {
         'exception': err.__class__.__name__,
     }
@@ -119,6 +123,11 @@ def error_handler(err):
         response['_status'] = 501
     if isinstance(err, NotFoundException):
         response['text_info'] = NotFoundException.description
+    trace = traceback.format_exception(*exc_info)
+    for lines in trace:
+        for line in lines.split('\n'):
+            if line:
+                logging.debug(line)
     return response
 
 
