@@ -14,10 +14,41 @@ import api
 from api import methods
 from api import STATUS_CODES
 
+
+def parse_params(qs):
+    """ Parse query string to get parameters hash.
+
+    Parse rules:
+     * parameter without value (``?key1&...``) has value ``True``;
+     * parameter with value 'false' (case insensitive: ``?key=FaLsE&...``)
+       has value ``False``;
+     * parameter with single value (``?key=val&...``) has value passed
+       as ``val``;
+     * parameters with number of values (``?key[]=val1&key[]=val2&...``)
+       has value of type ``list``: ``['val1', 'val2', ..]``.
+
+    :param qs: query string
+    :type qs: str
+
+    :return: parsed parameters with values
+    :rtype: hash
+    """
+    params = urlparse.parse_qs(qs, True)
+    for key in params:
+        if len(params[key]) == 1:
+            params[key] = params[key][0]
+        if params[key] == '':
+            params[key] = True
+        elif params[key].lower() == 'false':
+            params[key] = False
+    return params
+
+
 def dkb_app(environ, start_response):
     path = environ.get('SCRIPT_NAME')
     logging.debug('REQUEST: %s' % path)
-    params = urlparse.parse_qs(environ.get('QUERY_STRING', ''), True)
+    params = parse_params(environ.get('QUERY_STRING', ''))
+    logging.debug('PARAMS: %s' % params)
     response = None
     error = None
     try:
