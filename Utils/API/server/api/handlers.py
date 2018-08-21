@@ -23,6 +23,7 @@ import logging
 
 import methods
 from exceptions import DkbApiNotImplemented, InvalidArgument, MissedArgument
+import storages
 
 
 # =================
@@ -76,7 +77,9 @@ def task_chain(path, **kwargs):
         int(tid)
     except ValueError:
         raise InvalidArgument(method_name, ('tid', tid, int))
-    raise DkbApiNotImplemented
+    chain = storages.task_chain(tid)
+    response = {'chain': chain}
+    return response
 
 
 try:

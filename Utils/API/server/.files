@@ -1,3 +1,5 @@
 dkb.fcgi
 api/
 api/*.py
+api/storages/
+api/storages/*.py
