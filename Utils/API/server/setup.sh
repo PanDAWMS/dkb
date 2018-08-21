@@ -182,9 +182,6 @@ build_www() {
 }
 
 install_www() {
-  [ ! $# -eq 0 ] \
-    && echo "Failed to ensure directory configuration ($WWW_DIR)" \
-    && exit 1
   build_dir="$base_dir/build"
   [ ! -d "$build_dir" ] && _build
   [ ! -r "$base_dir/.files" ] \
