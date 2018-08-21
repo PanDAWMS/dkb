@@ -180,9 +180,6 @@ build_www() {
 }
 
 install_www() {
-  [ ! $# -eq 0 ] \
-    && echo "Failed to ensure directory configuration ($WWW_DIR)" \
-    && exit 1
   [ ! -d "$build_dir" ] && _build
   [ ! -r "$base_dir/.files" ] \
     && echo "Config file '.files' is missed in '$base_dir'." \
