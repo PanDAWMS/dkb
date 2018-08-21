@@ -20,6 +20,7 @@ USAGE
   $(basename "$0") [options] command ...
 
 COMMANDS
+  clean     clean up /build and WWW directories
   build     extend files with parameter values
   install   build and copy files to system directories
   start     start application
@@ -224,6 +225,11 @@ start_www() {
      echo \$! > '$pidfile'"
 }
 
+_clean() {
+  dirs="$WWW_DIR $base_dir/build"
+  rm -rf $dirs
+}
+
 _build() {
   build_dir="$base_dir/build"
   rm -rf "$build_dir"
@@ -244,6 +250,9 @@ _install() {
 
 while [ $# -gt 0 ]; do
   case "$1" in
+    clean)
+      _clean
+      ;;
     build)
       _build
       ;;
