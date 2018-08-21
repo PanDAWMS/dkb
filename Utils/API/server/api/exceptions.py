@@ -2,6 +2,8 @@
 Exception definitions for DKB API server.
 """
 
+import inspect
+
 from . import ADDR
 
 
@@ -57,3 +59,60 @@ class MethodAlreadyExists(DkbApiException):
                   " (handler function: %s)" % (method, category, handler)
         self.details = message
         super(MethodAlreadyExists, self).__init__(message)
+
+
+class MethodException(DkbApiException):
+    """ Base exception for method failures. """
+    code = 570
+
+    def __init__(self, method, reason=None):
+        message = "Method failed"
+        if method:
+            message += ": '%s'" % method
+        if reason:
+            message += ". Reason: %s" % reason
+        self.details = message
+        super(MethodException, self).__init__(message)
+
+
+class MissedArgument(MethodException):
+    """ Exception indicating that method required argument(s) are missed. """
+    code = 471
+
+    def __init__(self, method, *args):
+        if not args:
+            super(MissedArgument, self).__init__(method)
+        else:
+            args_str = "'" + "', '".join(args) + "'"
+            reason = "required arguments are missed (%s)." % args_str
+            super(MissedArgument, self).__init__(method, reason)
+
+
+class InvalidArgument(MethodException):
+    """ Exception indicating that passed argument has wrong value. """
+    code = 472
+
+    def __init__(self, method, *args):
+        if not args:
+            super(InvalidArgument, self).__init__(method)
+        else:
+            args_keyval = []
+            for arg in args:
+                if not isinstance(arg, (list, tuple)):
+                    raise ValueError("InvalidArgument exception expects 'arg'"
+                                     " to be list or tuple: (name, [value,"
+                                     " [expected_value/type/class]]).")
+                keyval = "%s" % arg[0]
+                if len(arg) > 1:
+                    keyval += "='%s'" % arg[1]
+                if len(arg) > 2:
+                    exp = arg[2]
+                    if isinstance(exp, (list, tuple)):
+                        keyval += "(expected one of: '%s')" \
+                            % ("', '".join(exp))
+                    else:
+                        keyval += "(expected: '%s')" % exp
+                args_keyval += [keyval]
+            reason = "invalid argument value. Get: %s" \
+                     % ('; '.join(args_keyval))
+            super(InvalidArgument, self).__init__(method, reason)

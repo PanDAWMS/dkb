@@ -22,7 +22,7 @@ def my_method_handler(path, **kwargs):
 import logging
 
 import methods
-from exceptions import DkbApiNotImplemented
+from exceptions import DkbApiNotImplemented, InvalidArgument, MissedArgument
 
 
 # =================
@@ -67,7 +67,15 @@ def task_chain(path, **kwargs):
     :return: list of Task IDs, ordered from first to last task in chain
     :rtype: dict
     """
+    method_name = '/task/chain'
     logging.debug("'/task/chain' handler called.")
+    tid = kwargs.get('tid', None)
+    if tid is None:
+        raise MissedArgument(method_name, 'tid')
+    try:
+        int(tid)
+    except ValueError:
+        raise InvalidArgument(method_name, ('tid', tid, int))
     raise DkbApiNotImplemented
 
 

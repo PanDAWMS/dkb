@@ -17,8 +17,11 @@ STATUS_CODES = {
     400: 'Bad Request',
     461: 'Category Not Found',
     462: 'Method Not Found',
+    471: 'Missed Argument',
+    472: 'Invalid Argument',
     500: 'Internal Server Error',
-    501: 'Not Implemented'
+    501: 'Not Implemented',
+    570: 'Method Failed'
 }
 
 
