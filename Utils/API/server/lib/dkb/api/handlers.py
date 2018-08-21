@@ -124,6 +124,14 @@ def task_chain(path, **kwargs):
     :return: list of Task IDs, ordered from first to last task in chain
     :rtype: dict
     """
+    method_name = '/task/chain'
+    tid = kwargs.get('tid', None)
+    if tid is None:
+        raise MissedArgument(method_name, 'tid')
+    try:
+        int(tid)
+    except ValueError:
+        raise InvalidArgument(method_name, ('tid', tid, int))
     raise DkbApiNotImplemented
 
 
