@@ -32,6 +32,8 @@ GENERAL
 "
 }
 
+EOMessage="\n"
+
 while [[ $# > 0 ]]
 do
   key="$1"
@@ -85,22 +87,25 @@ if [ -z "$USR" ] ; then
   exit 1
 fi
 
-if [ -z "$EOM" ] ; then
-  echo "EOM marker is not specified. Exiting." >&2
-  exit 1
-fi
-
-if [ -z "$EOP" ] ; then
-  echo "EOP marker is not specified. Exiting." >&2
-  exit 1
-fi
-
 if [ -n "$PIPE" ]; then
   if ! ( [ -p "$PIPE" ] || mkfifo "$PIPE" 2>&1 > /dev/null ) ; then
     echo "Can not create a FIFO named pipe: $PIPE. Exiting." >&2
     exit 2
   fi
   FILE="$PIPE"
+fi
+
+if [ -n "$FILE" ] || [ -n "$PIPE" ]
+then
+  EOProcess=""
+else
+  EOProcess="\0"
+fi
+[ -n "$EOM" ] && EOMessage="$EOM"
+[ -n "$EOP" ] && EOProcess="$EOP"
+if [ -z "$EOMessage" ] ; then
+  echo "EOM marker is not specified. Exiting." >&2
+  exit 1
 fi
 
 GLANCE_REQUEST="https://glance-stage.cern.ch/api/atlas/analysis/papers"
@@ -134,7 +139,7 @@ scp $option $USR@$lxplus:$json $tmp >&2
 
 [ $? ] || { echo "Can not copy file from remote. Exiting." >&2; exit 4; }
 
-echo -ne "$EOM" >> $tmp
+echo -ne "$EOMessage" >> $tmp
 
 if [ -n "$FILE" ] ; then
   cat $tmp > $FILE
@@ -142,7 +147,7 @@ else
   cat $tmp
 fi
 
-echo -ne "$EOP"
+echo -ne "$EOProcess"
 
 [ "$xCLEAN" = "xYES" ] && rm $tmp >&2
 
