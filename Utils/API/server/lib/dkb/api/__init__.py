@@ -7,6 +7,8 @@ import logging
 from exceptions import DkbApiException
 import methods
 
+CONFIG_DIR = '%%CFG_DIR%%'
+
 
 STATUS_CODES = {
     200: 'OK',
@@ -22,6 +24,8 @@ STATUS_CODES = {
     570: 'Method Failed',
     580: 'Storage Failure',
     581: 'Storage Client Failure'
+    590: 'Configuration Error',
+    591: 'Configuration Not Found'
 }
 
 

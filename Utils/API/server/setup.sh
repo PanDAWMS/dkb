@@ -15,6 +15,8 @@ NGINX_GROUP=
 MANAGE_SERVICE=
 MANAGE_SEL=
 
+CFG_DIR="$WWW_DIR/conf"
+
 base_dir=$(readlink -f $(cd $(dirname "$0"); pwd))
 
 usage() {
@@ -167,6 +169,7 @@ build_file() {
   sed -e "s#%%SOCK%%#$SOCK#g" \
       -e "s#%%ADDR%%#$ADDR#g" \
       -e "s#%%WWW_DIR%%#$WWW_DIR#g" \
+      -e "s#%%CFG_DIR%%#$CFG_DIR#g" \
       "$1"
 }
 
