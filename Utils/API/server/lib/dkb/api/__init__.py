@@ -7,6 +7,8 @@ import logging
 from exceptions import DkbApiException
 import methods
 
+CONFIG_DIR = '%%CFG_DIR%%'
+
 
 __version__ = '0.1'
 
@@ -27,7 +29,9 @@ STATUS_CODES = {
     500: 'Internal Server Error',
     501: 'Not Implemented',
     580: 'Storage Failure',
-    581: 'Storage Client Failure'
+    581: 'Storage Client Failure',
+    590: 'Configuration Error',
+    591: 'Configuration Not Found'
 }
 
 

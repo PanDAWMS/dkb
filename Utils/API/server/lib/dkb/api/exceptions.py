@@ -163,3 +163,24 @@ class StorageClientException(StorageException):
             message += " Reason: %s" % reason
         self.details = message
         super(StorageClientException, self).__init__(message)
+
+
+class ConfigurationError(DkbApiException):
+    """ Base exception for server configuration errors. """
+    code = 590
+
+    def __init__(self, reason=None):
+        message = "Configuration failure"
+        if reason:
+            message += ": %s" % reason
+        self.details = message
+        super(ConfigurationError, self).__init__(message)
+
+
+class ConfigurationNotFound(ConfigurationError, NotFoundException):
+    """ Exception indicating that configuration file is not found. """
+    code = 591
+
+    def __init__(self, path):
+        reason = "file not found (%s)" % path
+        super(ConfigurationNotFound, self).__init__(reason)
