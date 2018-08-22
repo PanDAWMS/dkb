@@ -3,12 +3,15 @@ Interaction with DKB ES storage.
 """
 
 import logging
+import sys
+import traceback
 
 from ..exceptions import DkbApiNotImplemented, StorageClientException
 from .. import config
 
 # To ensure storages are named same way in all messages
-STORAGE_NAME = 'Elasticsearch'
+STORAGE_NAME = config.STORAGES['ES']
+
 
 try:
     import elasticsearch
@@ -34,9 +37,30 @@ def init():
     :rtype: elasticsearch.client.Elasticsearch
     """
     global CONFIG
+    global es
+    if es and es.ping():
+        return es
+    try:
+        elasticsearch
+    except NameError:
+        raise StorageClientException(STORAGE_NAME,
+                                     "driver module is not loaded")
     if not CONFIG:
         CONFIG = config.read_config('storage', STORAGE_NAME)
-    raise DkbApiNotImplemented
+    hosts = CONFIG.get('hosts', None)
+    user = CONFIG.get('user', '')
+    passwd = CONFIG.get('passwd', '')
+    try:
+        es = elasticsearch.Elasticsearch(hosts, http_auth=(user, passwd),
+                                         sniff_on_start=True)
+    except Exception, err:
+        trace = traceback.format_exception(*sys.exc_info())
+        for lines in trace:
+            for line in lines.split('\n'):
+                if line:
+                    logging.debug(line)
+        raise StorageClientException(str(err))
+    return es
 
 
 def task_steps_hist(**kwargs):
