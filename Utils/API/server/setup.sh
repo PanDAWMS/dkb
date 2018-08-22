@@ -19,6 +19,9 @@ CFG_DIR="$WWW_DIR/conf"
 
 base_dir=$(readlink -f $(cd $(dirname "$0"); pwd))
 
+# Load ES config parameters (temporary)
+source "$base_dir/es_params"
+
 usage() {
   echo "
 USAGE
@@ -170,6 +173,9 @@ build_file() {
       -e "s#%%ADDR%%#$ADDR#g" \
       -e "s#%%WWW_DIR%%#$WWW_DIR#g" \
       -e "s#%%CFG_DIR%%#$CFG_DIR#g" \
+      -e "s#%%ES_ADDR%%#$ES_ADDR#g" \
+      -e "s#%%ES_USER%%#$ES_USER#g" \
+      -e "s#%%ES_PASSWD%%#$ES_PASSWD#g" \
       "$1"
 }
 
