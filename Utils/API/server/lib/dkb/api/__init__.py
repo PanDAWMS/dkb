@@ -19,7 +19,9 @@ STATUS_CODES = {
     472: 'Invalid Argument',
     500: 'Internal Server Error',
     501: 'Not Implemented',
-    570: 'Method Failed'
+    570: 'Method Failed',
+    580: 'Storage Failure',
+    581: 'Storage Client Failure'
 }
 
 

@@ -120,13 +120,13 @@ class InvalidArgument(MethodException):
 
 class StorageException(DkbApiException):
     """ Base exception for storage failures. """
-    code = 570
+    code = 580
     details = "Failed to get data from DKB storage."
 
 
 class StorageClientException(StorageException):
     """ Exception indicating failure when creating storage client. """
-    code = 571
+    code = 581
 
     def __init__(self, storage, reason=None):
         message = "Failed to initialize storage client for '%s'." % storage
