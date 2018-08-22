@@ -22,6 +22,9 @@ while [ -n "$1" ]; do
     -c|--config)
       [ -n "$2" ] && ES_CONFIG="$2" || { usage >&2 && exit 1; }
       shift;;
+    -E|--eop)
+      EOP="$2"
+      shift;;
     --)
       shift
       break;;
@@ -45,7 +48,6 @@ ES_PORT='9200'
 CURL_N_MAX=10
 SLEEP=5
 DELIMITER='\x00'
-EOProcess='\x06'
 
 cmd="curl $ES_AUTH http://$ES_HOST:$ES_PORT/_bulk?pretty --data-binary @"
 
@@ -57,6 +59,7 @@ load_files () {
   do
     ${cmd}${INPUTFILE} || exit 3
   done
+  echo -ne "$EOProcess"
 }
 
 load_stream () {
@@ -73,7 +76,17 @@ load_stream () {
 }
 
 if [ -z "$1" ] ; then
+  if [ -z "$EOP" ] ; then
+    EOProcess="\0"
+  else
+    EOProcess="$EOP"
+  fi
   load_stream
 else
+  if [ -z "$EOP" ] ; then
+    EOProcess=""
+  else
+    EOProcess="$EOP"
+  fi
   load_files $*
 fi
