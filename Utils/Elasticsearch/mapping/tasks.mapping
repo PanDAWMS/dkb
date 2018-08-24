@@ -72,6 +72,10 @@
           "type" : "keyword",
           "ignore_above" : 256
         },
+        "parent_tid":{
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
         "taskname" : {
           "type" : "text",
           "analyzer": "task_dataset_analyzer",
