@@ -13,6 +13,10 @@ PARAMETERS:
 "
 }
 
+BATCHMODE="d"
+EOB="NOT_SPECIFIED"
+EOBatch='\x17'
+
 base_dir=$( cd "$( dirname "$( readlink -f "$0" )" )" && pwd )
 
 ES_CONFIG="${base_dir}/../../Elasticsearch/config/es"
@@ -24,6 +28,17 @@ while [ -n "$1" ]; do
       shift;;
     -E|--eop)
       EOP="$2"
+      shift;;
+    -b|--batch)
+      if [ -z "$2" ] || [[ "$2" == -* ]];
+      then
+        BATCHMODE="e"
+      else
+        BATCHMODE="$2"
+      shift
+      fi;;
+    -B|--eob)
+      EOB="$2"
       shift;;
     --)
       shift
@@ -38,6 +53,21 @@ while [ -n "$1" ]; do
   shift
 done
 
+[ -n "$EOB" ] && EOBatch="$EOB"
+[ -z "$EOB" ] && EOBatch='\n'
+
+case $BATCHMODE in
+  "e"|"enabled")
+    [ "$EOB" == "NOT_SPECIFIED" ] && EOBatch='\x17'
+    ;;
+  "d"|"disabled")
+    [ "$EOB" == "NOT_SPECIFIED" ] && EOBatch='\n'
+    ;;
+  *)
+    log "Unexpected batch-mode parameter."
+    ;;
+esac
+
 log "Loading defaults and config $ES_CONFIG if any"
 ES_HOST='127.0.0.1'
 ES_PORT='9200'
@@ -47,7 +77,6 @@ ES_PORT='9200'
 
 CURL_N_MAX=10
 SLEEP=5
-DELIMITER='\x00'
 
 cmd="curl $ES_AUTH http://$ES_HOST:$ES_PORT/_bulk?pretty --data-binary @"
 
@@ -64,7 +93,7 @@ load_files () {
 
 load_stream () {
   log "Switched to the stream mode."
-  while read -r -d $(echo -ne "$DELIMITER") line; do
+  while read -r -d $(echo -ne "$EOBatch") line; do
     n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
     while [ $n -gt $CURL_N_MAX ]; do
       sleep $SLEEP
