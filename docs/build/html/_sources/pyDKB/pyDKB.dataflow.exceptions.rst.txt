@@ -1,3 +1,5 @@
+.. _pyDKB.dataflow.exceptions:
+
 pyDKB.dataflow.exceptions module
 ================================
 

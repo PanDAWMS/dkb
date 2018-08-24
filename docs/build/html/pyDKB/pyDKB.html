@@ -34,8 +34,122 @@
           <div class="body" role="main">
             
   <div class="section" id="module-pyDKB">
-<span id="pydkb-package"></span><h1>pyDKB package<a class="headerlink" href="#module-pyDKB" title="Permalink to this headline">¶</a></h1>
-<p>Common library for Data Knowledge Base development.</p>
+<span id="pydkb-package"></span><span id="pydkb"></span><h1>pyDKB package<a class="headerlink" href="#module-pyDKB" title="Permalink to this headline">¶</a></h1>
+<p>Common library for Data Knowledge Base Dataflow stages development.</p>
+<dl class="docutils">
+<dt>Dataflow</dt>
+<dd>ETL process (extract-transform-load) for populating internal DKB
+storages and keeping them up to date</dd>
+<dt>Dataflow stage</dt>
+<dd>Logical step of ETL process, implemented as standalone executable
+program (worker)</dd>
+</dl>
+<p>Dataflow stages are standalone programs, but can be combined into a
+pipeline by means of Kafka-based supervising program. For details about
+program compatibility with the supervisor please check documentation
+for the Metadata Integration Topology Management System (MInT MS)
+workers <a class="footnote-reference" href="#id3" id="id1">[1]</a>. Worker program can be written in any language; <code class="docutils literal notranslate"><span class="pre">pyDKB</span></code>
+is intended to simplify this process for Python.</p>
+<p>There are three types of stages corresponding three types of ETL
+operations:  <em>source connector</em> (data extraction), <em>processor</em>
+(transformation) and <em>sink connector</em> (load to internal DKB storage).
+Currently <code class="docutils literal notranslate"><span class="pre">pyDKB</span></code> library can be used only for <em>processor</em> stages, but
+in future versions <em>connector</em> stages will also be supported.</p>
+<div class="section" id="quickstart-guide">
+<h2>Quickstart guide<a class="headerlink" href="#quickstart-guide" title="Permalink to this headline">¶</a></h2>
+<p>To create simple processor stage application first decide input and
+output data format. In following examples we will work with data in JSON
+format (for the full list of supported formats check
+<a class="reference internal" href="pyDKB.dataflow.messages.html#pydkb-dataflow-messages"><span class="std std-ref">pyDKB.dataflow.messages module</span></a> section of this documentation).</p>
+<p>Now let`s start writing example processor <code class="docutils literal notranslate"><span class="pre">welcome.py</span></code> and implement
+message handler – functional part of the stage (operations to be
+performed on data flow units):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyDKB.dataflow.messages</span> <span class="k">import</span> <span class="n">JSONMessage</span>
+
+<span class="k">def</span> <span class="nf">my_process</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Single message processing. &quot;&quot;&quot;</span>
+    <span class="n">input_data</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">input_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+        <span class="n">out_data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s2">&quot;Welcome, </span><span class="si">%s</span><span class="s2">!&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">}</span>
+        <span class="n">out_message</span> <span class="o">=</span> <span class="n">JSONMessage</span><span class="p">(</span><span class="n">out_data</span><span class="p">)</span>
+        <span class="n">stage</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">out_message</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>Function must take two arguments: <code class="docutils literal notranslate"><span class="pre">stage</span></code> (stage context object) and
+<code class="docutils literal notranslate"><span class="pre">message</span></code> (input message, which should be transformed by our stage).
+Message is a smallest data unit in the data flow running through the
+processor, and every message is to be processed independently of
+previous or following ones. <code class="docutils literal notranslate"><span class="pre">message.content()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">JSONMessage(out_data)</span></code> statements are used to decode/encode message
+to/from Python <code class="docutils literal notranslate"><span class="pre">dict</span></code> object.
+Message, passed to the function, is taken from the input data flow; to
+write new message(s) to the output data flow,
+<code class="docutils literal notranslate"><span class="pre">stage.output(out_message)</span></code> is used. It can be used as many times as
+many output messages were generated (or once with the list of messages).
+In our example, messages without key <code class="docutils literal notranslate"><span class="pre">'name'</span></code> will produce no output
+messages, so <code class="docutils literal notranslate"><span class="pre">stage.output()</span></code> will not be called at all.
+In terms of data flow it means that the input message is filtered out
+and will not reach the <em>sink connector</em>.</p>
+<p>Boolean return value of <code class="docutils literal notranslate"><span class="pre">my_process()</span></code> indicates if the processing was
+successful or not.
+If processing failed (<code class="docutils literal notranslate"><span class="pre">False</span></code> is returned), produced output messages
+will be dropped to avoid loading sketchy information into the DKB
+storages.</p>
+<p>Now as we have processing logic implemented, we need to turn it into
+fully functional application:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">pyDKB.dataflow.stage</span> <span class="k">import</span> <span class="n">JSONProcessorStage</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">stage</span> <span class="o">=</span> <span class="n">JSONProcessorStage</span><span class="p">()</span>
+    <span class="n">stage</span><span class="o">.</span><span class="n">process</span> <span class="o">=</span> <span class="n">my_process</span>
+    <span class="n">stage</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+    <span class="n">stage</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>First we create stage object and indicate that input and output message
+format is JSON: <code class="docutils literal notranslate"><span class="pre">stage</span> <span class="pre">=</span> <span class="pre">JSONProcessorStage()</span></code> (for full list of
+processors check <a class="reference internal" href="pyDKB.dataflow.stage.html#pydkb-dataflow-stage"><span class="std std-ref">pyDKB.dataflow.stage package</span></a> section of this documentation);
+then set stage processing function to our function <code class="docutils literal notranslate"><span class="pre">my_process()</span></code>,
+parse command line arguments (<code class="docutils literal notranslate"><span class="pre">stage.parse_args(sys.argv[1:])</span></code>) and
+start the stage execution.</p>
+<p>Easy, right?</p>
+<p>It`s time to run our application. Create input data sample
+<code class="docutils literal notranslate"><span class="pre">input.ndjson</span></code> with following lines:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;James&quot;</span><span class="p">,</span> <span class="s2">&quot;city&quot;</span><span class="p">:</span> <span class="s2">&quot;New York&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;Jonathan&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;support&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;John Smith&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>and type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python welcome.py --dest s input.ndjson
+{&quot;message&quot;: &quot;Welcome, James!&quot;}
+{&quot;message&quot;: &quot;Welcome, John Smith!&quot;}
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--dest</span> <span class="pre">s</span></code> indicates that output destination is (s)tdout (default
+destination is file).
+For full information about modes in which the stage application can be
+used, run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">welcome.py</span> <span class="pre">-h</span></code>.</p>
+<p>That`s it, your first application is ready to be integrated into an ETL
+process as data processing node.
+For details about ETL process creation check <cite>MInT Supervisor</cite> <a class="footnote-reference" href="#id4" id="id2">[2]</a>
+documentation.</p>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>WIP</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>WIP</td></tr>
+</tbody>
+</table>
+</div>
 <div class="section" id="subpackages">
 <h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
@@ -99,6 +213,7 @@
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul class="current">
 <li class="toctree-l1 current"><a class="current reference internal" href="#">pyDKB package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quickstart-guide">Quickstart guide</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a></li>
 </ul>
 </li>

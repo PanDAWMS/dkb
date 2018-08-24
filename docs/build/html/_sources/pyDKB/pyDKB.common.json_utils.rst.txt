@@ -1,3 +1,5 @@
+.. _pyDKB.common.json_utils:
+
 pyDKB.common.json\_utils module
 ===============================
 

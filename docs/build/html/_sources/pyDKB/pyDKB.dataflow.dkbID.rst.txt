@@ -1,3 +1,5 @@
+.. _pyDKB.dataflow.dkbID:
+
 pyDKB.dataflow.dkbID module
 ===========================
 

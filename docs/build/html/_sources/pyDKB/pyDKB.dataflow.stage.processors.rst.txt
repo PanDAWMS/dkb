@@ -1,3 +1,5 @@
+.. _pyDKB.dataflow.stage.processors:
+
 pyDKB.dataflow.stage.processors module
 ======================================
 

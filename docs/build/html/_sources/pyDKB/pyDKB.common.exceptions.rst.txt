@@ -1,3 +1,5 @@
+.. _pyDKB.common.exceptions:
+
 pyDKB.common.exceptions module
 ==============================
 

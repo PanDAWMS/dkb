@@ -1,3 +1,5 @@
+.. _pyDKB.dataflow.stage.AbstractStage:
+
 pyDKB.dataflow.stage.AbstractStage module
 =========================================
 

@@ -1,3 +1,5 @@
+.. _pyDKB.dataflow.cds:
+
 pyDKB.dataflow.cds module
 =========================
 

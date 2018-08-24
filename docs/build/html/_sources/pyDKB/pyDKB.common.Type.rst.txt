@@ -1,3 +1,5 @@
+.. _pyDKB.common.Type:
+
 pyDKB.common.Type module
 ========================
 

@@ -1,3 +1,5 @@
+.. _pyDKB.common.hdfs:
+
 pyDKB.common.hdfs module
 ========================
 

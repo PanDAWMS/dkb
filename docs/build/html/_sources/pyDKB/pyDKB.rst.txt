@@ -1,3 +1,5 @@
+.. _pyDKB:
+
 pyDKB package
 =============
 

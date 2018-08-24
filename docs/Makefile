@@ -27,6 +27,10 @@ pdf: latexpdf
 
 source/pyDKB:
 	$(APIDOC) -T -f -M -e -o source/pyDKB ../Utils/Dataflow/pyDKB
+	for f in $$(ls source/pyDKB/*.rst); do \
+	  refline=".. _$$(basename $${f%.rst}):" ;\
+	  sed -i "1i$${refline}\n" $$f; \
+	done
 
 # Catch-all target: route all unknown targets to Sphinx using the new
 # "make mode" option.  $(O) is meant as a shortcut for $(SPHINXOPTS).

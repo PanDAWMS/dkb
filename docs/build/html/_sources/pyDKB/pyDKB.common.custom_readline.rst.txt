@@ -1,3 +1,5 @@
+.. _pyDKB.common.custom_readline:
+
 pyDKB.common.custom\_readline module
 ====================================
 

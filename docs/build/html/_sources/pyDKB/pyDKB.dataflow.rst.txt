@@ -1,3 +1,5 @@
+.. _pyDKB.dataflow:
+
 pyDKB.dataflow package
 ======================
 
