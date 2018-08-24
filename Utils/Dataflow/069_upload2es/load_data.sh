@@ -10,6 +10,17 @@ $(basename "$0") [-c CONFIG] [FILE...]
 PARAMETERS:
   CONFIG -- configuration file
   FILE   -- file in NDJSON format for loading to Elasticsearch via bulk interface
+
+OPTIONS:
+  -b, --batch {e[abled]|d[isabled]} Specifies batch-mode: (e)nabled|(d)isabled.
+  -B, --eob <EOB>                   Specifies the delimiter between sets of input
+                                    data in the stream mode.
+                                    Default: \x17
+                                    No batch-mode: \n
+  -E, --eop <EOP>                   Specifies end-of-process marker.
+                                    Default:
+                                    * in a (f)ile mode: none
+                                    * in a (s)tream mode: \0
 "
 }
 
