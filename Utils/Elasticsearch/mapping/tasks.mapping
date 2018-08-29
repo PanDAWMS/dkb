@@ -197,6 +197,15 @@
         },
         "primary_input_deleted": {
           "type": "boolean"
+        },
+        "n_files_per_job": {
+          "type": "long"
+        },
+        "n_events_per_job": {
+          "type": "long"
+        },
+        "n_files_to_be_used": {
+          "type": "long"
         }
       }
     },
