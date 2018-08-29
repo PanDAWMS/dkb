@@ -7,6 +7,8 @@ set_error_handler("exception_error_handler");
 
 $DEFAULT_INDEX = 'tasks_production';
 $ES_INDEX = NULL;
+$EOP_MARKER = '';
+$EOM_MARKER = "\n";
 
 function check_input($row) {
   $required_fields = array('_id', '_type');
@@ -82,7 +84,9 @@ if ($h) {
     $index = constructIndexJson($row);
 
     echo json_encode($index)."\n";
-    echo json_encode($row)."\n";
+    echo json_encode($row);
+    echo $EOM_MARKER;
+    echo $EOP_MARKER;
   }
 }
 
