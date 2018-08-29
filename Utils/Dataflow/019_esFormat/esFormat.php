@@ -7,7 +7,7 @@ set_error_handler("exception_error_handler");
 
 $DEFAULT_INDEX = 'tasks_production';
 $ES_INDEX = NULL;
-$EOP_MARKER = '';
+$EOP_MARKER = chr(0);
 $EOM_MARKER = "\n";
 
 function check_input($row) {

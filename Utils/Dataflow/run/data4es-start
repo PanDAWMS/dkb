@@ -209,7 +209,7 @@ sink_chain() {
   [ -n "$DEBUG" ] \
     && cmd="tee 69.$1.inp" \
     || cmd=$cmd_69
-  $cmd_19 | mediator "$1" | $cmd > /dev/null
+  $cmd_19 | eop_filter | mediator "$1" | $cmd > /dev/null
 }
 
 out=/dev/null
