@@ -70,10 +70,17 @@ will be dropped to avoid loading sketchy information into the DKB
 storages.
 
 Now as we have processing logic implemented, we need to turn it into
-fully functional application::
+fully functional application. Add following lines to ``welcome.py``:
+
+.. code-block:: python
+  :emphasize-lines: 1-2,8-
 
   import sys
   from pyDKB.dataflow.stage import JSONProcessorStage
+  from pyDKB.dataflow.messages import JSONMessage
+
+  def my_process(stage, message):
+      <...function code...>
 
   if __name__ == '__main__':
       stage = JSONProcessorStage()

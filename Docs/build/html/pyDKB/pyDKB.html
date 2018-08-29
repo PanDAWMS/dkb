@@ -101,16 +101,20 @@ If processing failed (<code class="docutils literal notranslate"><span class="pr
 will be dropped to avoid loading sketchy information into the DKB
 storages.</p>
 <p>Now as we have processing logic implemented, we need to turn it into
-fully functional application:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">from</span> <span class="nn">pyDKB.dataflow.stage</span> <span class="k">import</span> <span class="n">JSONProcessorStage</span>
+fully functional application. Add following lines to <code class="docutils literal notranslate"><span class="pre">welcome.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="kn">import</span> <span class="nn">sys</span>
+</span><span class="hll"><span class="kn">from</span> <span class="nn">pyDKB.dataflow.stage</span> <span class="kn">import</span> <span class="n">JSONProcessorStage</span>
+</span><span class="kn">from</span> <span class="nn">pyDKB.dataflow.messages</span> <span class="kn">import</span> <span class="n">JSONMessage</span>
 
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-    <span class="n">stage</span> <span class="o">=</span> <span class="n">JSONProcessorStage</span><span class="p">()</span>
-    <span class="n">stage</span><span class="o">.</span><span class="n">process</span> <span class="o">=</span> <span class="n">my_process</span>
-    <span class="n">stage</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
-    <span class="n">stage</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-</pre></div>
+<span class="k">def</span> <span class="nf">my_process</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="o">&lt;...</span><span class="n">function</span> <span class="n">code</span><span class="o">...&gt;</span>
+
+<span class="hll"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+</span><span class="hll">    <span class="n">stage</span> <span class="o">=</span> <span class="n">JSONProcessorStage</span><span class="p">()</span>
+</span><span class="hll">    <span class="n">stage</span><span class="o">.</span><span class="n">process</span> <span class="o">=</span> <span class="n">my_process</span>
+</span><span class="hll">    <span class="n">stage</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</span><span class="hll">    <span class="n">stage</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span></pre></div>
 </div>
 <p>First we create stage object and indicate that input and output message
 format is JSON: <code class="docutils literal notranslate"><span class="pre">stage</span> <span class="pre">=</span> <span class="pre">JSONProcessorStage()</span></code> (for full list of
