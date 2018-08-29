@@ -16,11 +16,12 @@ for the Metadata Integration Topology Management System (MInT MS)
 workers [#]_. Worker program can be written in any language; ``pyDKB``
 is intended to simplify this process for Python.
 
-There are three types of stages corresponding three types of ETL
-operations:  *source connector* (data extraction), *processor*
-(transformation) and *sink connector* (load to internal DKB storage).
-Currently ``pyDKB`` library can be used only for *processor* stages, but
-in future versions *connector* stages will also be supported.
+.. warning::
+  There are three types of stages corresponding three types of ETL
+  operations:  *source connector* (data extraction), *processor*
+  (transformation) and *sink connector* (load to internal DKB storage).
+  Currently ``pyDKB`` library can be used only for *processor* stages, but
+  in future versions *connector* stages will also be supported.
 
 Quickstart guide
 ----------------

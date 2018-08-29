@@ -50,11 +50,14 @@ program compatibility with the supervisor please check documentation
 for the Metadata Integration Topology Management System (MInT MS)
 workers <a class="footnote-reference" href="#id3" id="id1">[1]</a>. Worker program can be written in any language; <code class="docutils literal notranslate"><span class="pre">pyDKB</span></code>
 is intended to simplify this process for Python.</p>
-<p>There are three types of stages corresponding three types of ETL
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">There are three types of stages corresponding three types of ETL
 operations:  <em>source connector</em> (data extraction), <em>processor</em>
 (transformation) and <em>sink connector</em> (load to internal DKB storage).
 Currently <code class="docutils literal notranslate"><span class="pre">pyDKB</span></code> library can be used only for <em>processor</em> stages, but
 in future versions <em>connector</em> stages will also be supported.</p>
+</div>
 <div class="section" id="quickstart-guide">
 <h2>Quickstart guide<a class="headerlink" href="#quickstart-guide" title="Permalink to this headline">¶</a></h2>
 <p>To create simple processor stage application first decide input and
