@@ -119,40 +119,34 @@ class ProcessorStage(AbstractStage):
                           metavar=u'FILE'
                           )
         self.add_argument('-s', '--source', action='store', type=str,
-                          nargs='?',
                           help=u'where to get data from:\n'
                                 '    f -- local files\n'
                                 '    s -- stdin\n'
                                 '    h -- hdfs files',
                           default='f',
-                          const='f',
                           choices=['f', 's', 'h'],
                           dest='source'
                           )
         self.add_argument('-i', '--input-dir', action='store', type=str,
-                          nargs='?',
                           help=u'base directory in local file system '
                                 'or in HDFS (for relative FILE names). '
                                 'If no FILE specified, all files with '
                                 'extension matching input message type will '
                                 'be taken from %(metavar)s',
                           default=os.curdir,
-                          const='',
                           metavar='DIR',
                           dest='input_dir'
                           )
-        self.add_argument('-d', '--dest', action='store', type=str, nargs='?',
+        self.add_argument('-d', '--dest', action='store', type=str,
                           help=u'where to write results:\n'
                                 '    f -- local files\n'
                                 '    s -- stdout\n'
                                 '    h -- hdfs files',
                           default='f',
-                          const='f',
                           choices=['f', 's', 'h'],
                           dest='dest'
                           )
         self.add_argument('-o', '--output-dir', action='store', type=str,
-                          nargs='?',
                           help=u'directory for output files '
                                 '(local or HDFS)',
                           default='out',
