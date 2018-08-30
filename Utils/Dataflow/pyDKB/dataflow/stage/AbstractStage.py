@@ -123,7 +123,8 @@ class AbstractStage(object):
         """ Add specific (not common) arguments. """
         wrapper = textwrap.TextWrapper(width=55, replace_whitespace=False)
         msg = textwrap.dedent(kwargs.get('help', ''))
-        if kwargs.get('default', None) is not None:
+        if kwargs.get('default', None) is not None \
+                and not kwargs.get('action', '').startswith('store_'):
             msg += '\nDEFAULT: \'%(default)s\''
         msg_lines = msg.split('\n')
         wrapped_lines = [wrapper.fill(line) for line in msg_lines]
