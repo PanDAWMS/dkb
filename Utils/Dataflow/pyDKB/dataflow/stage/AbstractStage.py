@@ -44,7 +44,7 @@ class AbstractStage(object):
         self.__config = ConfigParser.SafeConfigParser()
         self.ARGS = None
         self.__parser = argparse.ArgumentParser(
-            formatter_class=argparse.RawDescriptionHelpFormatter,
+            formatter_class=argparse.RawTextHelpFormatter,
             description=description,
             epilog=textwrap.dedent(
                 '''\
@@ -120,6 +120,12 @@ class AbstractStage(object):
 
     def add_argument(self, *args, **kwargs):
         """ Add specific (not common) arguments. """
+        wrapper = textwrap.TextWrapper(width=55, replace_whitespace=False)
+        msg = textwrap.dedent(kwargs.get('help',''))
+        msg_lines = msg.split('\n')
+        wrapped_lines = [ wrapper.fill(line) for line in msg_lines ]
+        msg = '\n'.join(wrapped_lines)
+        kwargs['help'] = msg
         self.__parser.add_argument(*args, **kwargs)
 
     def parse_args(self, args):
