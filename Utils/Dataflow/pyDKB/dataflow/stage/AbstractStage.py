@@ -91,8 +91,8 @@ class AbstractStage(object):
     def defaultArguments(self):
         """ Config argument parser with parameters common for all stages. """
         self.add_argument('-m', '--mode', action='store', type=str, nargs='?',
-                          help=u'Processing mode: (f)ile, (s)tream'
-                                ' or (m)ap-reduce (default: %(default)s).',
+                          help=u'processing mode: (f)ile, (s)tream'
+                                ' or (m)ap-reduce (default: %(default)s)',
                           default='f',
                           metavar='MODE',
                           choices=['f', 's', 'm'],
@@ -100,19 +100,19 @@ class AbstractStage(object):
                           )
         self.add_argument('-c', '--config', action='store',
                           type=argparse.FileType('r'), nargs='?',
-                          help=u'Stage configuration file.',
+                          help=u'stage configuration file',
                           default=None,
                           metavar='CONFIG',
                           dest='config'
                           )
         self.add_argument('-e', '--end-of-message', action='store', type=str,
-                          help=u'Custom end of message marker.',
+                          help=u'custom end of message marker',
                           nargs='?',
                           default=None,
                           dest='eom'
                           )
         self.add_argument('-E', '--end-of-process', action='store', type=str,
-                          help=u'Custom end of process marker.',
+                          help=u'custom end of process marker',
                           nargs='?',
                           default=None,
                           dest='eop'
