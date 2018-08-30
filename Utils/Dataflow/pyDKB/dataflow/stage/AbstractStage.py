@@ -45,26 +45,7 @@ class AbstractStage(object):
         self.ARGS = None
         self.__parser = argparse.ArgumentParser(
             formatter_class=argparse.RawTextHelpFormatter,
-            description=description,
-            epilog=textwrap.dedent(
-                '''\
-                NOTES
-
-                Processing mode
-                  is defined as a combination of data source and
-                  destination type (local/HDFS file(s) or standard stream)
-                  and pre-defined EOP and EOM markers:
-
-                  mode | source | dest | eom | eop
-                  -----+--------+------+-----+-----
-                    s  |    s   |   s  |  \\n |  \\0
-                  -----+--------+------+-----+-----
-                    f  |   f/h  |  f/h |  \\n |
-                  -----+--------+------+-----+-----
-                    m  |   s/h  |   s  |  \\n |
-                  -----+--------+------+-----+-----
-                    h  |    h   |  h/f |  \\n |
-                  -----+--------+------+-----+-----''')
+            description=description
         )
         self.defaultArguments()
 
@@ -92,7 +73,26 @@ class AbstractStage(object):
         """ Config argument parser with parameters common for all stages. """
         self.add_argument('-m', '--mode', action='store', type=str,
                           help=u'processing mode: (f)ile, (s)tream'
-                                ' or (m)ap-reduce',
+                                ' or (m)ap-reduce.\n'
+                                'Processing mode is defined as a combination '
+                                'of four parameters: '
+                                '"-s SRC -d DEST -e EOM -E EOP", '
+                                'where:\n'
+                                ' \n'
+                                ' mode || -s | -d | -e | -E\n'
+                                '===========================\n'
+                                '  s   ||  s |  s | \\n | \\0\n'
+                                '---------------------------\n'
+                                '  f   ||  f |  f | \\n | \'\'\n'
+                                '---------------------------\n'
+                                '  m   ||  s |  s | \\n | \'\'\n'
+                                ' \n'
+                                'Any of these parameters can be rewritten by '
+                                'its explicit specification.\n'
+                                'NOTE: for (m)ap-reduce mode, if --source is '
+                                'set to (h)dfs (via "-s" or "--hdfs"), names '
+                                'of files to be processed will be taken from '
+                                'STDIN.',
                           default='f',
                           metavar='MODE',
                           choices=['f', 's', 'm'],
