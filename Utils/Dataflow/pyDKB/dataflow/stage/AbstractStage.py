@@ -92,7 +92,7 @@ class AbstractStage(object):
         """ Config argument parser with parameters common for all stages. """
         self.add_argument('-m', '--mode', action='store', type=str, nargs='?',
                           help=u'processing mode: (f)ile, (s)tream'
-                                ' or (m)ap-reduce (default: %(default)s)',
+                                ' or (m)ap-reduce',
                           default='f',
                           metavar='MODE',
                           choices=['f', 's', 'm'],
@@ -106,13 +106,14 @@ class AbstractStage(object):
                           dest='config'
                           )
         self.add_argument('-e', '--end-of-message', action='store', type=str,
-                          help=u'custom end of message marker',
-                          nargs='?',
+                          help=u'custom end of message marker.\n'
+                                'DEFAULT: \'\\n\'',
                           default=None,
                           dest='eom'
                           )
         self.add_argument('-E', '--end-of-process', action='store', type=str,
-                          help=u'custom end of process marker',
+                          help=u'custom end of process marker.\n'
+                                'DEFAULT: \'\'',
                           nargs='?',
                           default=None,
                           dest='eop'
@@ -121,9 +122,11 @@ class AbstractStage(object):
     def add_argument(self, *args, **kwargs):
         """ Add specific (not common) arguments. """
         wrapper = textwrap.TextWrapper(width=55, replace_whitespace=False)
-        msg = textwrap.dedent(kwargs.get('help',''))
+        msg = textwrap.dedent(kwargs.get('help', ''))
+        if kwargs.get('default', None) is not None:
+            msg += '\nDEFAULT: \'%(default)s\''
         msg_lines = msg.split('\n')
-        wrapped_lines = [ wrapper.fill(line) for line in msg_lines ]
+        wrapped_lines = [wrapper.fill(line) for line in msg_lines]
         msg = '\n'.join(wrapped_lines)
         kwargs['help'] = msg
         self.__parser.add_argument(*args, **kwargs)

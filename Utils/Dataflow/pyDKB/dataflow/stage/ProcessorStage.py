@@ -121,9 +121,9 @@ class ProcessorStage(AbstractStage):
         self.add_argument('-s', '--source', action='store', type=str,
                           nargs='?',
                           help=u'where to get data from:\n'
-                                ' f -- local files\n'
-                                ' s -- stdin\n'
-                                ' h -- hdfs files\n',
+                                '    f -- local files\n'
+                                '    s -- stdin\n'
+                                '    h -- hdfs files',
                           default='f',
                           const='f',
                           choices=['f', 's', 'h'],
@@ -143,9 +143,9 @@ class ProcessorStage(AbstractStage):
                           )
         self.add_argument('-d', '--dest', action='store', type=str, nargs='?',
                           help=u'where to write results:\n'
-                                ' f -- local files\n'
-                                ' s -- stdout\n'
-                                ' h -- hdfs files\n',
+                                '    f -- local files\n'
+                                '    s -- stdout\n'
+                                '    h -- hdfs files',
                           default='f',
                           const='f',
                           choices=['f', 's', 'h'],
