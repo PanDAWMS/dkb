@@ -132,8 +132,9 @@ class ProcessorStage(AbstractStage):
                           nargs='?',
                           help=u'Base directory in local file system '
                                 'or in HDFS (for relative FILE names). '
-                                'If no FILE specified, all files from the '
-                                'directory will be taken.',
+                                'If no FILE specified, all files with '
+                                'extension matching input message type will '
+                                'be taken from %(metavar)s.',
                           default='',
                           const='',
                           metavar='DIR',
