@@ -90,7 +90,7 @@ class AbstractStage(object):
 
     def defaultArguments(self):
         """ Config argument parser with parameters common for all stages. """
-        self.add_argument('-m', '--mode', action='store', type=str, nargs='?',
+        self.add_argument('-m', '--mode', action='store', type=str,
                           help=u'processing mode: (f)ile, (s)tream'
                                 ' or (m)ap-reduce',
                           default='f',
@@ -99,7 +99,7 @@ class AbstractStage(object):
                           dest='mode'
                           )
         self.add_argument('-c', '--config', action='store',
-                          type=argparse.FileType('r'), nargs='?',
+                          type=argparse.FileType('r'),
                           help=u'stage configuration file',
                           default=None,
                           metavar='CONFIG',
@@ -114,7 +114,6 @@ class AbstractStage(object):
         self.add_argument('-E', '--end-of-process', action='store', type=str,
                           help=u'custom end of process marker.\n'
                                 'DEFAULT: \'\'',
-                          nargs='?',
                           default=None,
                           dest='eop'
                           )
@@ -141,9 +140,6 @@ class AbstractStage(object):
             3 -- failed to read config file
         """
         self.ARGS = self.__parser.parse_args(args)
-        if not self.ARGS.mode:
-            self.args_error("Parameter -m|--mode must be used with value:"
-                            " -m MODE.")
 
         if self.ARGS.eom is None:
             self.ARGS.eom = '\n'
