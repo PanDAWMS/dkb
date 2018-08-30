@@ -136,7 +136,7 @@ class ProcessorStage(AbstractStage):
                                 'If no FILE specified, all files with '
                                 'extension matching input message type will '
                                 'be taken from %(metavar)s',
-                          default='',
+                          default=os.curdir,
                           const='',
                           metavar='DIR',
                           dest='input_dir'
