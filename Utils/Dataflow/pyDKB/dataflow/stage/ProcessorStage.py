@@ -115,12 +115,12 @@ class ProcessorStage(AbstractStage):
         """ Default parser configuration. """
         super(ProcessorStage, self).defaultArguments()
         self.add_argument('input_files', type=str, nargs='*',
-                          help=u'Source data file.',
+                          help=u'source data file',
                           metavar=u'FILE'
                           )
         self.add_argument('-s', '--source', action='store', type=str,
                           nargs='?',
-                          help=u'Where to get data from:\n'
+                          help=u'where to get data from:\n'
                                 ' f -- local files\n'
                                 ' s -- stdin\n'
                                 ' h -- hdfs files\n',
@@ -131,18 +131,18 @@ class ProcessorStage(AbstractStage):
                           )
         self.add_argument('-i', '--input-dir', action='store', type=str,
                           nargs='?',
-                          help=u'Base directory in local file system '
+                          help=u'base directory in local file system '
                                 'or in HDFS (for relative FILE names). '
                                 'If no FILE specified, all files with '
                                 'extension matching input message type will '
-                                'be taken from %(metavar)s.',
+                                'be taken from %(metavar)s',
                           default='',
                           const='',
                           metavar='DIR',
                           dest='input_dir'
                           )
         self.add_argument('-d', '--dest', action='store', type=str, nargs='?',
-                          help=u'Where to write results:\n'
+                          help=u'where to write results:\n'
                                 ' f -- local files\n'
                                 ' s -- stdout\n'
                                 ' h -- hdfs files\n',
@@ -153,18 +153,18 @@ class ProcessorStage(AbstractStage):
                           )
         self.add_argument('-o', '--output-dir', action='store', type=str,
                           nargs='?',
-                          help=u'Directory for output files '
-                                '(local or HDFS).',
+                          help=u'directory for output files '
+                                '(local or HDFS)',
                           default='out',
                           metavar='DIR',
                           dest='output_dir'
                           )
         self.add_argument('--hdfs', action='store_true',
-                          help=u'Equivalent to "--source h --dest h".\n'
+                          help=u'equivalent to "--source h --dest h".\n'
                           'Explicit specification of '
                           '"--source" and "--dest" as well as the default '
                           'values for current processing mode ("--mode") will '
-                          'be ignored.',
+                          'be ignored',
                           default=False,
                           dest='hdfs'
                           )
