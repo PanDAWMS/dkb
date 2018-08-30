@@ -122,7 +122,7 @@ class ProcessorStage(AbstractStage):
                           nargs='?',
                           help=u'Where to get data from: '
                                 'local (f)iles, (s)tdin, '
-                                '(h)dfs (same as --hdfs).',
+                                '(h)dfs.',
                           default='f',
                           const='f',
                           choices=['f', 's', 'h'],
@@ -142,7 +142,7 @@ class ProcessorStage(AbstractStage):
         self.add_argument('-d', '--dest', action='store', type=str, nargs='?',
                           help=u'Where to send results: '
                                 'local (f)iles, (s)tdout, '
-                                '(h)dfs (same as --hdfs).',
+                                '(h)dfs.',
                           default='f',
                           const='f',
                           choices=['f', 's', 'h'],
@@ -157,11 +157,11 @@ class ProcessorStage(AbstractStage):
                           dest='output_dir'
                           )
         self.add_argument('--hdfs', action='store_true',
-                          help=u'Source files are stored in HDFS; '
-                          'if no input FILE specified, filenames will '
-                          'come to stdin. '
-                          'This option is equivalent to '
-                          '"--source h --dest h"',
+                          help=u'Equivalent to '
+                          '"--source h --dest h"; explicit specification of '
+                          '"--source" and "--dest", as well as the default '
+                          'values for current processing mode ("--mode") will '
+                          'be ignored.',
                           default=False,
                           dest='hdfs'
                           )
