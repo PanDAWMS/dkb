@@ -120,9 +120,10 @@ class ProcessorStage(AbstractStage):
                           )
         self.add_argument('-s', '--source', action='store', type=str,
                           nargs='?',
-                          help=u'Where to get data from: '
-                                'local (f)iles, (s)tdin, '
-                                '(h)dfs.',
+                          help=u'Where to get data from:\n'
+                                ' f -- local files\n'
+                                ' s -- stdin\n'
+                                ' h -- hdfs files\n',
                           default='f',
                           const='f',
                           choices=['f', 's', 'h'],
@@ -141,9 +142,10 @@ class ProcessorStage(AbstractStage):
                           dest='input_dir'
                           )
         self.add_argument('-d', '--dest', action='store', type=str, nargs='?',
-                          help=u'Where to send results: '
-                                'local (f)iles, (s)tdout, '
-                                '(h)dfs.',
+                          help=u'Where to write results:\n'
+                                ' f -- local files\n'
+                                ' s -- stdout\n'
+                                ' h -- hdfs files\n',
                           default='f',
                           const='f',
                           choices=['f', 's', 'h'],
@@ -152,15 +154,15 @@ class ProcessorStage(AbstractStage):
         self.add_argument('-o', '--output-dir', action='store', type=str,
                           nargs='?',
                           help=u'Directory for output files '
-                                '(local or HDFS). ',
+                                '(local or HDFS).',
                           default='out',
                           metavar='DIR',
                           dest='output_dir'
                           )
         self.add_argument('--hdfs', action='store_true',
-                          help=u'Equivalent to '
-                          '"--source h --dest h"; explicit specification of '
-                          '"--source" and "--dest", as well as the default '
+                          help=u'Equivalent to "--source h --dest h".\n'
+                          'Explicit specification of '
+                          '"--source" and "--dest" as well as the default '
                           'values for current processing mode ("--mode") will '
                           'be ignored.',
                           default=False,
