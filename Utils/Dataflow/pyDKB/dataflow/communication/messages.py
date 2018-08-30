@@ -89,7 +89,7 @@ class AbstractMessage(object):
 
     @classmethod
     def extension(cls):
-        """ Return file extension corresponding this message type. """
+        """ Return file extension corresponding to this message type. """
         return cls._ext
 
 
