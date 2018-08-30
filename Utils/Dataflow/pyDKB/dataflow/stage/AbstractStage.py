@@ -129,6 +129,7 @@ class AbstractStage(object):
         msg_lines = msg.split('\n')
         wrapped_lines = [wrapper.fill(line) for line in msg_lines]
         msg = '\n'.join(wrapped_lines)
+        msg += '\n '
         kwargs['help'] = msg
         self.__parser.add_argument(*args, **kwargs)
 
