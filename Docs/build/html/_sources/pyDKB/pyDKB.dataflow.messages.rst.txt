@@ -1,0 +1,9 @@
+.. _pyDKB.dataflow.messages:
+
+pyDKB.dataflow.messages module
+==============================
+
+.. automodule:: pyDKB.dataflow.messages
+    :members:
+    :undoc-members:
+    :show-inheritance:

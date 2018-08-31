@@ -1,0 +1,9 @@
+.. _pyDKB.common.Type:
+
+pyDKB.common.Type module
+========================
+
+.. automodule:: pyDKB.common.Type
+    :members:
+    :undoc-members:
+    :show-inheritance:
