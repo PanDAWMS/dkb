@@ -41,7 +41,7 @@ with tasks as (
       r.description,
       r.energy_gev,
       LISTAGG(hashtag.hashtag, ', ')
-        WITHIN GROUP (ORDER BY t.taskid)
+        WITHIN GROUP (ORDER BY hashtag.hashtag)
         OVER (PARTITION BY t.taskid) AS hashtag_list
     FROM
       ATLAS_DEFT.t_production_task t
