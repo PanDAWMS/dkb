@@ -201,6 +201,9 @@
         "primary_input_deleted": {
           "type": "boolean"
         },
+        "input_events": {  /* derived value based on primary_input_events, requested_events, */
+          "type": "long"   /* n_files_per_job, n_events_per_job, n_files_to_be_used */
+        },
         "n_files_per_job": {
           "type": "long"
         },
