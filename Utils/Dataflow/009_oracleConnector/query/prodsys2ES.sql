@@ -19,7 +19,7 @@
 -- 2. we collecting only PRODUCTION tasks OR only ANALYSIS tasks
 --    ('pr_id > 300' or 'pr_id = 300')
 with tasks as (
-    SELECT
+    SELECT DISTINCT
       t.campaign,
       t.taskid,
       t.parent_tid,
@@ -41,8 +41,8 @@ with tasks as (
       r.description,
       r.energy_gev,
       LISTAGG(hashtag.hashtag, ', ')
-        WITHIN GROUP (
-          ORDER BY t.taskid) AS hashtag_list
+        WITHIN GROUP (ORDER BY t.taskid)
+        OVER (PARTITION BY t.taskid) AS hashtag_list
     FROM
       ATLAS_DEFT.t_production_task t
       JOIN ATLAS_DEFT.t_prodmanager_request r
@@ -59,27 +59,7 @@ with tasks as (
       t.timestamp > :start_date AND
       t.timestamp <= :end_date AND
       t.pr_id %(production_or_analysis_cond)s 300
-    GROUP BY
-        t.campaign,
-        t.taskid,
-        t.parent_tid,
-        t.step_id,
-        t.taskname,
-        TO_CHAR(t.timestamp, 'dd-mm-yyyy hh24:mi:ss'),
-        NVL(TO_CHAR(t.start_time, 'dd-mm-yyyy hh24:mi:ss'), ''),
-        NVL(TO_CHAR(t.endtime, 'dd-mm-yyyy hh24:mi:ss'), ''),
-        t.subcampaign,
-        t.project,
-        t.phys_group,
-        t.status,
-        t.pr_id,
-        t.primary_input,
-        t.ctag,
-        t.output_formats,
-        t.username,
-        s_t.step_name,
-        r.description,
-        r.energy_gev),
+  ),
   tasks_t_task as (
       SELECT
         t.campaign,
@@ -151,7 +131,7 @@ with tasks as (
         tasks t LEFT JOIN t_task tt
           ON t.taskid = tt.taskid
   )
-  SELECT
+  SELECT DISTINCT
     t.campaign,
     t.subcampaign,
     t.phys_group,
@@ -187,48 +167,14 @@ with tasks as (
     t.primary_input,
     t.ctag,
     t.output_formats,
-    sum(jd.nevents) AS requested_events,
-    sum(jd.neventsused) AS processed_events
+    sum(jd.nevents)
+      OVER (PARTITION BY t.taskid) AS requested_events,
+    sum(jd.neventsused)
+      OVER (PARTITION BY t.taskid) AS processed_events
   FROM tasks_t_task t
     LEFT JOIN ATLAS_PANDA.jedi_datasets jd
       ON t.taskid = jd.jeditaskid
       AND jd.type IN ('input')
       AND jd.masterid IS NULL
-  GROUP by
-    t.campaign,
-    t.subcampaign,
-    t.phys_group,
-    t.project,
-    t.pr_id,
-    t.step_name,
-    t.status,
-    t.taskid,
-    t.parent_tid,
-    t.taskname,
-    t.task_timestamp,
-    t.start_time,
-    t.end_time,
-    t.hashtag_list,
-    t.description,
-    t.energy_gev,
-    t.architecture,
-    t.core_count,
-    t.conditions_tags,
-    t.geometry_version,
-    t.ticket_id,
-    t.trans_home,
-    t.trans_path,
-    t.trans_uses,
-    t.user_name,
-    t.vo,
-    t.run_number,
-    t.trigger_config,
-    t.job_config,
-    t.evgen_job_opts,
-    t.cloud,
-    t.site,
-    t.primary_input,
-    t.ctag,
-    t.output_formats
   ORDER BY
     t.taskid;
