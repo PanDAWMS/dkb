@@ -195,6 +195,9 @@
         "input_bytes": {
           "type": "long"
         },
+        "primary_input_events": {
+          "type": "long"
+        },
         "primary_input_deleted": {
           "type": "boolean"
         },

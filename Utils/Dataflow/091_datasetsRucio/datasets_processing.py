@@ -46,7 +46,10 @@ INPUT = 'i'
 
 META_FIELDS = {
     OUTPUT: {'bytes': 'bytes', 'events': 'events', 'deleted': 'deleted'},
-    INPUT: {'bytes': 'input_bytes', 'deleted': 'primary_input_deleted'}
+    INPUT: {'bytes': 'input_bytes',
+            'events': 'primary_input_events',
+            'deleted': 'primary_input_deleted'
+            }
 }
 
 SRC_FIELD = {
