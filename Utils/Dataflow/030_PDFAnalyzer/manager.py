@@ -1104,20 +1104,12 @@ class Manager:
                            paper=paper: self.show_paper_datatables(window,
                                                                    paper))
         b.grid(row=6, columnspan=5)
-        b = Tkinter.Button(window, text="Tables", command=lambda window=window,
-                           paper=paper: self.show_paper_page_tables(window,
-                                                                    paper))
-        b.grid(row=7, columnspan=5)
-        b = Tkinter.Button(window, text="Visualize",
-                           command=lambda window=window,
-                           paper=paper: self.show_paper_visual(window, paper))
-        b.grid(row=8, columnspan=5)
         b = Tkinter.Button(window, text="Export text",
                            command=lambda paper=paper:
                            self.export_paper_text(paper))
-        b.grid(row=9, columnspan=5)
+        b.grid(row=7, columnspan=5)
         b = Tkinter.Button(window, text="Close", command=window.destroy)
-        b.grid(row=10, columnspan=5)
+        b.grid(row=8, columnspan=5)
 
     def determine_paper_title_step_1(self, window, paper):
         """ Search the first xml page for a possible paper titles.
@@ -1539,131 +1531,6 @@ class Manager:
                                command=lambda window=window, paper=paper:
                                self.show_paper_info(window, paper))
             b.grid(row=1)
-
-    def show_paper_page_tables(self, window, paper, e=False):
-        """ Extract tables from a page and display them.
-
-        Debug function.
-        """
-        if not e:
-            for c in window.winfo_children():
-                c.destroy()
-            window.title("Select page")
-            lbl = Tkinter.Label(window, text="Page number(1 - %d):"
-                                % paper.num_pages)
-            lbl.grid(row=0, column=0)
-            e = Tkinter.Entry(window, width=10)
-            e.grid(row=0, column=1)
-            e.focus_set()
-            b = Tkinter.Button(window, text="Proceed",
-                               command=lambda window=window, paper=paper, e=e:
-                               self.show_paper_page_tables(window, paper, e))
-            b.grid(row=1, column=0)
-            b = Tkinter.Button(window, text="Cancel",
-                               command=lambda window=window, paper=paper:
-                               self.show_paper_info(window, paper))
-            b.grid(row=1, column=1)
-        else:
-            number = e.get()
-            if not number.isdigit():
-                return 0
-            else:
-                number = int(number)
-                if number < 1 or number > paper.num_pages:
-                    return 0
-                for c in window.winfo_children():
-                    c.destroy()
-                window.title("Tables")
-                text = paper.get_xml_page(number, True)
-                tables = xmltable.get_tables_from_text(text)
-                for table_num in range(0, len(tables)):
-                    frame = Tkinter.Frame(window)
-                    lbl = Tkinter.Label(frame, text="Table %d" % table_num)
-                    lbl.grid(row=0, column=0,
-                             columnspan=len(tables[table_num].rows[0]))
-                    r = 1
-                    for row in tables[table_num].rows:
-                        c = 0
-                        for line in row:
-                            lbl = Tkinter.Label(frame, text=line.text)
-                            lbl.grid(row=r, column=c)
-                            c += 1
-                        r += 1
-                    frame.grid(row=table_num, column=0)
-                    table_num += 1
-                if not tables:
-                    msg = "No tables found on page %d" % number
-                    lbl = Tkinter.Label(window, text=msg)
-                    lbl.grid(row=0, column=0)
-                    table_num = 1
-                b = Tkinter.Button(window, text="Back",
-                                   command=lambda window=window, paper=paper:
-                                   self.show_paper_info(window, paper))
-                b.grid(row=table_num, column=0)
-
-    def show_paper_visual(self, window, paper, e=False):
-        """ Visualize a page.
-
-        Debug function.
-        """
-        if not e:
-            for c in window.winfo_children():
-                c.destroy()
-            window.title("Select page")
-            lbl = Tkinter.Label(window, text="Page number(1 - %d):"
-                                % paper.num_pages)
-            lbl.grid(row=0, column=0)
-            e = Tkinter.Entry(window, width=10)
-            e.grid(row=0, column=1)
-            e.focus_set()
-            b = Tkinter.Button(window, text="Proceed",
-                               command=lambda window=window, paper=paper, e=e:
-                               self.show_paper_visual(window, paper, e))
-            b.grid(row=1, column=0)
-            b = Tkinter.Button(window, text="Cancel",
-                               command=lambda window=window, paper=paper:
-                               self.show_paper_info(window, paper))
-            b.grid(row=1, column=1)
-        else:
-            number = e.get()
-            if not number.isdigit():
-                return 0
-            else:
-                number = int(number)
-                if number < 1 or number > paper.num_pages:
-                    return 0
-                for c in window.winfo_children():
-                    c.destroy()
-                window.title("Visualization of %s (page %d)" % (paper.fname,
-                                                                number))
-                cnvs = Tkinter.Canvas(window, width=1200, height=800)
-                cnvs.grid(row=0, column=0, columnspan=2)
-
-                text = paper.get_xml_page(number, True)
-                rows = xmltable.analyze_page(text)
-                max_width = max([row[-1].right - row[0].left for row in rows])
-                header_row = False
-                for row in rows:
-                    if len(row) == 1 and row[0].text.startswith("Table "):
-                        header_row = row
-                        color = "red"
-                    elif header_row and len(row) == 1 and\
-                            abs(row[0].left - header_row[0].left) < 1.0:
-                        color = "red"
-                    elif abs(row[-1].right - row[0].left - max_width) < 1.0:
-                        color = "blue"
-                    else:
-                        header_row = False
-                        color = "black"
-                    for line in row:
-                        cnvs.create_rectangle((line.left, line.top + 10,
-                                               line.right, line.bottom + 10),
-                                              outline=color)
-
-                b = Tkinter.Button(window, text="Back",
-                                   command=lambda window=window, paper=paper:
-                                   self.show_paper_info(window, paper))
-                b.grid(row=1, column=0)
 
     def export_paper_text(self, paper):
         """ Export full text of a paper into a file. """
