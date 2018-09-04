@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
-pidfile=$base_dir/$(basename "$0" | cut -d- -f1).pid
+
+# Process home dir
+[ -n "$DATA4ES_HOME" ] && \
+    HOME_DIR="$DATA4ES_HOME" || \
+    HOME_DIR="${base_dir}/.data4es"
+
+
+pidfile="$HOME_DIR/pid"
 
 [ -r "$pidfile" ] || exit 0
 pids=`cat $pidfile`

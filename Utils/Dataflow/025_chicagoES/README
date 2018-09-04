@@ -1,0 +1,27 @@
+=============
+* Stage 025 *
+=============
+
+1. Description
+--------------
+Get task metadata from Chicago ES.
+Fields:
+* cputime -> HS06
+
+
+2. Input
+--------
+E.g. from stage 009 (or 091 (input ds case), or any other stage with similar
+output):
+{{{
+{
+  "taskid": <TASK_ID>,
+  ...
+}
+}}}
+
+
+3. Output
+---------
+Goes to stage 016.
+Contain same fields as input data, with additional fields.

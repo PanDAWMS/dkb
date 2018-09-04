@@ -1,5 +1,5 @@
 {
-  "template": "prodsys_rucio_ami",
+  "template": "tasks_*",
   "settings": {
     "number_of_shards": 4,
     "analysis": {
@@ -69,6 +69,10 @@
           "ignore_above" : 256
         },
         "taskid":{
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
+        "parent_tid":{
           "type" : "keyword",
           "ignore_above" : 256
         },
@@ -184,6 +188,15 @@
               "ignore_above" : 256
             }
           }
+        },
+        "hs06": {
+          "type": "long"
+        },
+        "input_bytes": {
+          "type": "long"
+        },
+        "primary_input_deleted": {
+          "type": "boolean"
         }
       }
     },
@@ -202,6 +215,9 @@
               "ignore_above" : 256
             }
           }
+        },
+        "events": {
+          "type": "long"
         },
         "bytes" : {
           "type" : "long"

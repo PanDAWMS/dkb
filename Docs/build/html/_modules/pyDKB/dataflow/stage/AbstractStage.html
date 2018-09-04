@@ -1,0 +1,219 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pyDKB.dataflow.stage.AbstractStage &#8212; Data Knowledge Base  documentation</title>
+    <link rel="stylesheet" href="../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pyDKB.dataflow.stage.AbstractStage</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Definition of an abstract class for Dataflow Stages.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">textwrap</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">argparse</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(ERROR) argparse package is not installed.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="n">e</span>
+
+
+<div class="viewcode-block" id="AbstractStage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage">[docs]</a><span class="k">class</span> <span class="nc">AbstractStage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Class/instance variable description:</span>
+<span class="sd">    * Argument parser (argparse.ArgumentParser)</span>
+<span class="sd">        __parser</span>
+
+<span class="sd">    * Parsed arguments (argparse.Namespace)</span>
+<span class="sd">        ARGS</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;DKB Dataflow stage&quot;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initialize the stage</span>
+
+<span class="sd">        * set description</span>
+<span class="sd">        * define common arguments (--mode, ...)</span>
+<span class="sd">        * ...</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span>
+            <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawDescriptionHelpFormatter</span><span class="p">,</span>
+            <span class="n">description</span><span class="o">=</span><span class="n">description</span><span class="p">,</span>
+            <span class="n">epilog</span><span class="o">=</span><span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span>
+                <span class="sd">&#39;&#39;&#39;\</span>
+<span class="sd">                NOTES</span>
+
+<span class="sd">                Processing mode</span>
+<span class="sd">                  is defined as a combination of data source and</span>
+<span class="sd">                  destination type (local/HDFS file(s) or standard stream)</span>
+<span class="sd">                  and pre-defined EOP and EOM markers:</span>
+
+<span class="sd">                  mode | source | dest | eom | eop</span>
+<span class="sd">                  -----+--------+------+-----+-----</span>
+<span class="sd">                    s  |    s   |   s  |  \\n |  \\0</span>
+<span class="sd">                  -----+--------+------+-----+-----</span>
+<span class="sd">                    f  |   f/h  |  f/h |  \\n |</span>
+<span class="sd">                  -----+--------+------+-----+-----</span>
+<span class="sd">                    m  |   s/h  |   s  |  \\n |</span>
+<span class="sd">                  -----+--------+------+-----+-----</span>
+<span class="sd">                    h  |    h   |  h/f |  \\n |</span>
+<span class="sd">                  -----+--------+------+-----+-----&#39;&#39;&#39;</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">defaultArguments</span><span class="p">()</span>
+
+<div class="viewcode-block" id="AbstractStage.defaultArguments"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.defaultArguments">[docs]</a>    <span class="k">def</span> <span class="nf">defaultArguments</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Config argument parser with parameters common for all stages. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-m&#39;</span><span class="p">,</span> <span class="s1">&#39;--mode&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;Processing mode: (f)ile, (s)tream&#39;</span>
+                                <span class="s1">&#39; or (m)ap-reduce (default: </span><span class="si">%(default)s</span><span class="s1">).&#39;</span><span class="p">,</span>
+                          <span class="n">default</span><span class="o">=</span><span class="s1">&#39;f&#39;</span><span class="p">,</span>
+                          <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;MODE&#39;</span><span class="p">,</span>
+                          <span class="n">choices</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;f&#39;</span><span class="p">,</span> <span class="s1">&#39;s&#39;</span><span class="p">,</span> <span class="s1">&#39;m&#39;</span><span class="p">],</span>
+                          <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;mode&#39;</span>
+                          <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-e&#39;</span><span class="p">,</span> <span class="s1">&#39;--end-of-message&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;Custom end of message marker.&#39;</span><span class="p">,</span>
+                          <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span>
+                          <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;eom&#39;</span>
+                          <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-E&#39;</span><span class="p">,</span> <span class="s1">&#39;--end-of-process&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;Custom end of process marker.&#39;</span><span class="p">,</span>
+                          <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span>
+                          <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                          <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;eop&#39;</span>
+                          <span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractStage.add_argument"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.add_argument">[docs]</a>    <span class="k">def</span> <span class="nf">add_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Add specific (not common) arguments. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractStage.parse_args"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.parse_args">[docs]</a>    <span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Parse arguments and set dependant arguments if needed. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">mode</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;Parameter -m|--mode must be used with value: -m MODE.&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">eom</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">eom</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">eom</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;(ERROR) Empty EOM marker specified.&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">eom</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">eom</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;string_escape&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">),</span> <span class="n">err</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(ERROR) Failed to read arguments.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                 <span class="s2">&quot;(ERROR) Case: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">err</span><span class="p">))</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">eop</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">mode</span> <span class="o">==</span> <span class="s1">&#39;s&#39;</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">eop</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\0</span><span class="s1">&#39;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">eop</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">eop</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">eop</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;string_escape&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">),</span> <span class="n">err</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(ERROR) Failed to read arguments.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                                 <span class="s2">&quot;(ERROR) Case: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">err</span><span class="p">))</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractStage.print_usage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.print_usage">[docs]</a>    <span class="k">def</span> <span class="nf">print_usage</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fd</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Print usage message. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span><span class="o">.</span><span class="n">print_usage</span><span class="p">(</span><span class="n">fd</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractStage.run"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Run the stage. &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Stage method run() is not implemented&quot;</span><span class="p">)</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../index.html">Data Knowledge Base</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../pyDKB/pyDKB.html">pyDKB package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, DKB team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

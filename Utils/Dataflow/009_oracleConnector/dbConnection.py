@@ -104,18 +104,22 @@ class OracleConnection(dbConnection):
                                 " is expected; got: '%s'" % (
                                     self.__class__.__name__, type(queries)))
             if queries[qname].get('file'):
-                if not self.save_query_file(qname, queries[qname]['file']):
+                if not self.save_query_file(qname, queries[qname]['file'],
+                                            queries[qname].get('params',
+                                                               None)):
                     sys.stderr.write("(WARN) Failed to save query '%s'\n"
                                      % qname)
                     succeed = False
 
         return succeed
 
-    def save_query_file(self, qname, src_filename):
+    def save_query_file(self, qname, src_filename, params=None):
         """ Read query from file and save it in query hash. """
         try:
             f = open(src_filename)
             q = f.read().rstrip().rstrip(';')
+            if isinstance(params, dict):
+                q = q % params
             self.queries[qname]['query'] = q
         except IOError, err:
             sys.stderr.write("(ERROR) Failed to read query file: %s\n" % err)

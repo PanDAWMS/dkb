@@ -460,8 +460,7 @@ def fix_list_values(list_vals):
     :param list_vals:
     :return:
     """
-    for item in list_vals:
-        item = fix_string(item)
+    list_vals = [fix_string(item) for item in list_vals]
     return list_vals
 
 

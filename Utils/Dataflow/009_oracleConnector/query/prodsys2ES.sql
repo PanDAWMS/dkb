@@ -16,11 +16,13 @@
 
 -- RESTRICTIONS:
 -- 1. taskID must be more than 4 000 000 OR from the date > 12-03-2014
--- 2. we collecting only PRODUCTION tasks
+-- 2. we collecting only PRODUCTION tasks OR only ANALYSIS tasks
+--    ('pr_id > 300' or 'pr_id = 300')
 with tasks as (
     SELECT
       t.campaign,
       t.taskid,
+      t.parent_tid,
       t.step_id,
       t.taskname,
       TO_CHAR(t.timestamp, 'dd-mm-yyyy hh24:mi:ss')           AS task_timestamp,
@@ -56,10 +58,11 @@ with tasks as (
     WHERE
       t.timestamp > :start_date AND
       t.timestamp <= :end_date AND
-      t.pr_id > 300
+      t.pr_id %(production_or_analysis_cond)s 300
     GROUP BY
         t.campaign,
         t.taskid,
+        t.parent_tid,
         t.step_id,
         t.taskname,
         TO_CHAR(t.timestamp, 'dd-mm-yyyy hh24:mi:ss'),
@@ -87,6 +90,7 @@ with tasks as (
         t.step_name,
         t.status,
         t.taskid,
+        t.parent_tid,
         t.taskname,
         t.task_timestamp,
         t.start_time,
@@ -249,6 +253,7 @@ with tasks as (
     t.step_name,
     t.status,
     t.taskid,
+    t.parent_tid,
     t.taskname,
     t.task_timestamp,
     t.start_time,
@@ -291,6 +296,7 @@ with tasks as (
     t.step_name,
     t.status,
     t.taskid,
+    t.parent_tid,
     t.taskname,
     t.task_timestamp,
     t.start_time,
