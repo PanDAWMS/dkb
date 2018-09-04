@@ -1,0 +1,287 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pyDKB.dataflow.communication.producer.FileProducer &#8212; Data Knowledge Base  documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pyDKB.dataflow.communication.producer.FileProducer</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">pyDKB.dataflow.communication.producer.FileProducer</span>
+
+<span class="sd">Data producer implementation for common (static) files.</span>
+
+<span class="sd">TODO: think about:</span>
+<span class="sd">      * pipes (better, from the point of StreamProducer)</span>
+<span class="sd">      * multiple parallel dests</span>
+<span class="sd">      * ...</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="kn">from</span> <span class="nn">Producer</span> <span class="k">import</span> <span class="n">Producer</span><span class="p">,</span> <span class="n">ProducerException</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">logLevel</span>
+
+
+<div class="viewcode-block" id="FileProducer"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer">[docs]</a><span class="k">class</span> <span class="nc">FileProducer</span><span class="p">(</span><span class="n">Producer</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Data producer implementation for local file data dest. &quot;&quot;&quot;</span>
+
+    <span class="n">_dir</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">_default_dir</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">current_file</span> <span class="o">=</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="FileProducer.reconfigure"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.reconfigure">[docs]</a>    <span class="k">def</span> <span class="nf">reconfigure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="sd">&quot;&quot;&quot; (Re)configure producer according to the config hash. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config_dir</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FileProducer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">reconfigure</span><span class="p">(</span><span class="n">config</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FileProducer.config_dir"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.config_dir">[docs]</a>    <span class="k">def</span> <span class="nf">config_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="sd">&quot;&quot;&quot; Configure output directory.  &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span>
+        <span class="n">conf_dir</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;output_dir&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+        <span class="n">cur_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">curdir</span>
+        <span class="n">par_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">pardir</span>
+        <span class="k">if</span> <span class="n">conf_dir</span> <span class="ow">in</span> <span class="p">(</span><span class="n">cur_dir</span><span class="p">,</span> <span class="n">par_dir</span><span class="p">)</span> <span class="ow">or</span> \
+                <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isabs</span><span class="p">(</span><span class="n">conf_dir</span><span class="p">)</span> <span class="ow">or</span> \
+                <span class="n">conf_dir</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">cur_dir</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span> <span class="ow">or</span> \
+                <span class="n">conf_dir</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">par_dir</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)):</span>
+            <span class="c1"># If configured path is specified as a full path</span>
+            <span class="c1"># (or relative to the current or parent directory)</span>
+            <span class="c1"># it is preferable; else source directory will be used</span>
+            <span class="n">config</span><span class="p">[</span><span class="s1">&#39;output_dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">realpath</span><span class="p">(</span><span class="n">conf_dir</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;output_dir&#39;</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">conf_dir</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Output directory is set to subdirectory &#39;</span><span class="si">%s</span><span class="s2">&#39; of the one&quot;</span>
+                     <span class="s2">&quot; containing input files or of the current one (</span><span class="si">%s</span><span class="s2">).&quot;</span>
+                     <span class="o">%</span> <span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;output_dir&#39;</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_dir</span><span class="p">()))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Output directory is set to the directory with input&quot;</span>
+                     <span class="s2">&quot; files or to the current one (</span><span class="si">%s</span><span class="s2">).&quot;</span>
+                     <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_dir</span><span class="p">())</span></div>
+
+<div class="viewcode-block" id="FileProducer.get_dest"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.get_dest">[docs]</a>    <span class="k">def</span> <span class="nf">get_dest</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get destination file descriptor. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reset_file</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_file</span><span class="p">[</span><span class="s1">&#39;fd&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="FileProducer.get_dest_info"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.get_dest_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_dest_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get current destination info. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_file</span></div>
+
+    <span class="k">def</span> <span class="nf">_source_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get information about current source. &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+
+<div class="viewcode-block" id="FileProducer.get_source_info"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.get_source_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_source_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set current data source, if any. &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_source_info</span><span class="p">()</span>
+        <span class="k">except</span> <span class="ne">NotImplementedError</span><span class="p">:</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">return</span> <span class="n">source</span></div>
+
+<div class="viewcode-block" id="FileProducer.set_default_dir"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.set_default_dir">[docs]</a>    <span class="k">def</span> <span class="nf">set_default_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set default directory name. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="FileProducer.default_dir"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.default_dir">[docs]</a>    <span class="k">def</span> <span class="nf">default_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get default directory name. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_dir</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_default_dir</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_dir</span></div>
+
+<div class="viewcode-block" id="FileProducer.dirname"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.dirname">[docs]</a>    <span class="k">def</span> <span class="nf">dirname</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dirname</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set/get preferable directory name. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">dirname</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_dir</span> <span class="o">=</span> <span class="n">dirname</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Output directory is set to: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">dirname</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_dir</span></div>
+
+<div class="viewcode-block" id="FileProducer.subdir"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.subdir">[docs]</a>    <span class="k">def</span> <span class="nf">subdir</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base_dir</span><span class="p">,</span> <span class="n">sub_dir</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Construct full path for $subdir of $base_dir. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span> <span class="n">sub_dir</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="FileProducer.get_dir"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.get_dir">[docs]</a>    <span class="k">def</span> <span class="nf">get_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get current directory for output files. &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dirname</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">base_dir</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source_info</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">src</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">base_dir</span> <span class="o">=</span> <span class="n">src</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dir&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">base_dir</span><span class="p">:</span>
+                <span class="n">base_dir</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_dir</span><span class="p">()</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">subdir</span><span class="p">(</span><span class="n">base_dir</span><span class="p">,</span>
+                                 <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;output_dir&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="FileProducer.ensure_dir"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.ensure_dir">[docs]</a>    <span class="k">def</span> <span class="nf">ensure_dir</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Ensure that current directory for output files exists. &quot;&quot;&quot;</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dir</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="mi">0770</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">OSError</span><span class="p">,</span> <span class="n">err</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Failed to create output directory</span><span class="se">\n</span><span class="s2">&quot;</span>
+                         <span class="s2">&quot;Error message: </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">err</span><span class="p">,</span> <span class="n">logLevel</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="n">ProducerException</span>
+        <span class="k">return</span> <span class="n">path</span></div>
+
+<div class="viewcode-block" id="FileProducer.get_filename"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.get_filename">[docs]</a>    <span class="k">def</span> <span class="nf">get_filename</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return filename, corresponding the source, or timestamp-based. &quot;&quot;&quot;</span>
+        <span class="n">ext</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="n">msgClass</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">message_class</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">msgClass</span><span class="p">:</span>
+            <span class="n">ext</span> <span class="o">=</span> <span class="n">msgClass</span><span class="o">.</span><span class="n">extension</span><span class="p">()</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source_info</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">src</span> <span class="ow">and</span> <span class="n">src</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">):</span>
+            <span class="n">src_name</span> <span class="o">=</span> <span class="n">src</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">splitext</span><span class="p">(</span><span class="n">src_name</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">ext</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()))</span> <span class="o">+</span> <span class="n">ext</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="FileProducer.file_info"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.file_info">[docs]</a>    <span class="k">def</span> <span class="nf">file_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return output file metadata (name, directory, ...). &quot;&quot;&quot;</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">f</span><span class="p">[</span><span class="s1">&#39;src&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source_info</span><span class="p">()</span>
+        <span class="n">f</span><span class="p">[</span><span class="s1">&#39;dir&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_dir</span><span class="p">()</span>
+        <span class="n">f</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_filename</span><span class="p">()</span>
+        <span class="n">f</span><span class="p">[</span><span class="s1">&#39;local_path&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">f</span><span class="p">[</span><span class="s1">&#39;dir&#39;</span><span class="p">],</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">f</span></div>
+
+<div class="viewcode-block" id="FileProducer.reset_file"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.reset_file">[docs]</a>    <span class="k">def</span> <span class="nf">reset_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Resets current file according to the current source info.</span>
+
+<span class="sd">        Metadata include:</span>
+<span class="sd">          * fd         -- open file descriptor</span>
+<span class="sd">          * name       -- file name</span>
+<span class="sd">          * dir        -- directory name</span>
+<span class="sd">          * local_path -- local path to the file</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">prev</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_file</span>
+        <span class="n">cur</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">file_info</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">prev</span> <span class="ow">and</span> <span class="n">prev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fd&#39;</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span>
+                <span class="n">prev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;src&#39;</span><span class="p">)</span> <span class="o">==</span> <span class="n">cur</span><span class="p">[</span><span class="s1">&#39;src&#39;</span><span class="p">]</span>
+                <span class="ow">or</span> <span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">prev</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;local_path&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
+                    <span class="o">==</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">cur</span><span class="p">[</span><span class="s1">&#39;local_path&#39;</span><span class="p">]))):</span>
+            <span class="c1"># Save previous open file descriptor, if:</span>
+            <span class="c1"># * data source has not changed OR</span>
+            <span class="c1"># * new local output file is the same as before.</span>
+            <span class="n">cur</span><span class="p">[</span><span class="s1">&#39;fd&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prev</span><span class="p">[</span><span class="s1">&#39;fd&#39;</span><span class="p">]</span>
+            <span class="k">del</span> <span class="n">prev</span><span class="p">[</span><span class="s1">&#39;fd&#39;</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">cur</span><span class="p">[</span><span class="s1">&#39;local_path&#39;</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="n">ProducerException</span><span class="p">(</span><span class="s2">&quot;File already exists: </span><span class="si">%s</span><span class="s2">&quot;</span>
+                                    <span class="o">%</span> <span class="n">cur</span><span class="p">[</span><span class="s1">&#39;local_path&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">close_file</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">ensure_dir</span><span class="p">()</span>
+            <span class="n">cur</span><span class="p">[</span><span class="s1">&#39;fd&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">cur</span><span class="p">[</span><span class="s1">&#39;local_path&#39;</span><span class="p">],</span> <span class="s1">&#39;w&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_file</span> <span class="o">=</span> <span class="n">cur</span>
+        <span class="k">return</span> <span class="n">cur</span></div>
+
+<div class="viewcode-block" id="FileProducer.close_file"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.close_file">[docs]</a>    <span class="k">def</span> <span class="nf">close_file</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Close current file. &quot;&quot;&quot;</span>
+        <span class="n">f</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_file</span>
+        <span class="k">if</span> <span class="n">f</span> <span class="ow">and</span> <span class="n">f</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;fd&#39;</span><span class="p">):</span>
+            <span class="n">f</span><span class="p">[</span><span class="s1">&#39;fd&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">del</span> <span class="n">f</span><span class="p">[</span><span class="s1">&#39;fd&#39;</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="FileProducer.close"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Close opened files and remove temporary one. &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">FileProducer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close_file</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../../index.html">Data Knowledge Base</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pyDKB/pyDKB.html">pyDKB package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  <li><a href="../producer.html">pyDKB.dataflow.communication.producer</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, DKB team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

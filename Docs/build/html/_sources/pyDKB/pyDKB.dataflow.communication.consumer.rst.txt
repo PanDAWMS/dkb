@@ -1,0 +1,20 @@
+.. _pyDKB.dataflow.communication.consumer:
+
+pyDKB.dataflow.communication.consumer package
+=============================================
+
+.. automodule:: pyDKB.dataflow.communication.consumer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+
+   pyDKB.dataflow.communication.consumer.Consumer
+   pyDKB.dataflow.communication.consumer.FileConsumer
+   pyDKB.dataflow.communication.consumer.HDFSConsumer
+   pyDKB.dataflow.communication.consumer.StreamConsumer
+

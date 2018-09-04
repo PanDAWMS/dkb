@@ -37,6 +37,7 @@
 
 <div class="genindex-jumpbox">
  <a href="#A"><strong>A</strong></a>
+ | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
  | <a href="#E"><strong>E</strong></a>
@@ -54,23 +55,40 @@
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#V"><strong>V</strong></a>
+ | <a href="#W"><strong>W</strong></a>
  
 </div>
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.AbstractMessage">AbstractMessage (class in pyDKB.dataflow.messages)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.AbstractMessage">AbstractMessage (class in pyDKB.dataflow.communication.messages)</a>
 </li>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage">AbstractProcessorStage (class in pyDKB.dataflow.stage.AbstractProcessorStage)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage">AbstractStage (class in pyDKB.dataflow.stage.AbstractStage)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage">AbstractStage (class in pyDKB.dataflow.stage.AbstractStage)</a>
-</li>
       <li><a href="pyDKB/pyDKB.common.Type.html#pyDKB.common.Type.Type.add">add() (pyDKB.common.Type.Type method)</a>
 </li>
       <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.add_argument">add_argument() (pyDKB.dataflow.stage.AbstractStage.AbstractStage method)</a>
 </li>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.args_error">args_error() (pyDKB.dataflow.stage.AbstractStage.AbstractStage method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="B">B</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pyDKB/pyDKB.common.hdfs.html#pyDKB.common.hdfs.basename">basename() (in module pyDKB.common.hdfs)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.html#pyDKB.dataflow.communication.consumer.ConsumerBuilder.build">build() (pyDKB.dataflow.communication.consumer.ConsumerBuilder method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.html#pyDKB.dataflow.communication.producer.ProducerBuilder.build">(pyDKB.dataflow.communication.producer.ProducerBuilder method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.StreamBuilder.build">(pyDKB.dataflow.communication.stream.StreamBuilder method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -79,12 +97,76 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pyDKB/pyDKB.common.hdfs.html#pyDKB.common.hdfs.check_stderr">check_stderr() (in module pyDKB.common.hdfs)</a>
 </li>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.clear_buffer">clear_buffer() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.clear_buffer">clear_buffer() (pyDKB.dataflow.stage.ProcessorStage method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.clear_buffer">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage method)</a>
 </li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.close">close() (pyDKB.dataflow.communication.consumer.Consumer.Consumer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.close">(pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.close">(pyDKB.dataflow.communication.producer.Producer.Producer method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.Stream.close">(pyDKB.dataflow.communication.stream.Stream method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.Stream.html#pyDKB.dataflow.communication.stream.Stream.Stream.close">(pyDKB.dataflow.communication.stream.Stream.Stream method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.close_file">close_file() (pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.HDFSProducer.html#pyDKB.dataflow.communication.producer.HDFSProducer.HDFSProducer.close_file">(pyDKB.dataflow.communication.producer.HDFSProducer.HDFSProducer method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.config">config (pyDKB.dataflow.communication.consumer.Consumer.Consumer attribute)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.config">(pyDKB.dataflow.communication.producer.Producer.Producer attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.config_dir">config_dir() (pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.HDFSProducer.html#pyDKB.dataflow.communication.producer.HDFSProducer.HDFSProducer.config_dir">(pyDKB.dataflow.communication.producer.HDFSProducer.HDFSProducer method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.AbstractMessage.content">content() (pyDKB.dataflow.messages.AbstractMessage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.config_error">config_error() (pyDKB.dataflow.stage.AbstractStage.AbstractStage method)</a>
 </li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.OutputStream.configure">configure() (pyDKB.dataflow.communication.stream.OutputStream method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.OutputStream.html#pyDKB.dataflow.communication.stream.OutputStream.OutputStream.configure">(pyDKB.dataflow.communication.stream.OutputStream.OutputStream method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.Stream.configure">(pyDKB.dataflow.communication.stream.Stream method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.Stream.html#pyDKB.dataflow.communication.stream.Stream.Stream.configure">(pyDKB.dataflow.communication.stream.Stream.Stream method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.configure">(pyDKB.dataflow.stage.ProcessorStage method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.configure">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer">Consumer (class in pyDKB.dataflow.communication.consumer.Consumer)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.html#pyDKB.dataflow.communication.consumer.ConsumerBuilder">ConsumerBuilder (class in pyDKB.dataflow.communication.consumer)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.html#pyDKB.dataflow.communication.consumer.ConsumerBuilder.consumerClass">consumerClass (pyDKB.dataflow.communication.consumer.ConsumerBuilder attribute)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.ConsumerException">ConsumerException</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.AbstractMessage.content">content() (pyDKB.dataflow.communication.messages.AbstractMessage method)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.FileConsumer.html#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.current_file">current_file (pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer attribute)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.current_file">(pyDKB.dataflow.communication.producer.FileProducer.FileProducer attribute)</a>
+</li>
+      </ul></li>
       <li><a href="pyDKB/pyDKB.common.custom_readline.html#pyDKB.common.custom_readline.custom_readline">custom_readline() (in module pyDKB.common.custom_readline)</a>
 </li>
   </ul></td>
@@ -95,49 +177,81 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pyDKB/pyDKB.dataflow.exceptions.html#pyDKB.dataflow.exceptions.DataflowException">DataflowException</a>
 </li>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.AbstractMessage.decode">decode() (pyDKB.dataflow.messages.AbstractMessage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.AbstractMessage.decode">decode() (pyDKB.dataflow.communication.messages.AbstractMessage method)</a>
 
       <ul>
-        <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.JSONMessage.decode">(pyDKB.dataflow.messages.JSONMessage method)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.JSONMessage.decode">(pyDKB.dataflow.communication.messages.JSONMessage method)</a>
 </li>
-        <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.TTLMessage.decode">(pyDKB.dataflow.messages.TTLMessage method)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.TTLMessage.decode">(pyDKB.dataflow.communication.messages.TTLMessage method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.AbstractMessage.decoded">decoded (pyDKB.dataflow.communication.messages.AbstractMessage attribute)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.DecodeUnknownType">DecodeUnknownType</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.default_dir">default_dir() (pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.defaultArguments">defaultArguments() (pyDKB.dataflow.stage.AbstractStage.AbstractStage method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.defaultArguments">(pyDKB.dataflow.stage.ProcessorStage method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.defaultArguments">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.AbstractMessage.decoded">decoded (pyDKB.dataflow.messages.AbstractMessage attribute)</a>
-</li>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.DecodeUnknownType">DecodeUnknownType</a>
-</li>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.defaultArguments">defaultArguments() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
+      <li><a href="pyDKB/pyDKB.common.hdfs.html#pyDKB.common.hdfs.dirname">dirname() (in module pyDKB.common.hdfs)</a>
 
       <ul>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.defaultArguments">(pyDKB.dataflow.stage.AbstractStage.AbstractStage method)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.dirname">(pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
 </li>
       </ul></li>
       <li><a href="pyDKB/pyDKB.dataflow.dkbID.html#pyDKB.dataflow.dkbID.dkbID">dkbID() (in module pyDKB.dataflow.dkbID)</a>
 </li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.drop">drop() (pyDKB.dataflow.communication.producer.Producer.Producer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.OutputStream.drop">(pyDKB.dataflow.communication.stream.OutputStream method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.OutputStream.html#pyDKB.dataflow.communication.stream.OutputStream.OutputStream.drop">(pyDKB.dataflow.communication.stream.OutputStream.OutputStream method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.AbstractMessage.encode">encode() (pyDKB.dataflow.messages.AbstractMessage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.AbstractMessage.encode">encode() (pyDKB.dataflow.communication.messages.AbstractMessage method)</a>
 
       <ul>
-        <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.JSONMessage.encode">(pyDKB.dataflow.messages.JSONMessage method)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.JSONMessage.encode">(pyDKB.dataflow.communication.messages.JSONMessage method)</a>
 </li>
-        <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.TTLMessage.encode">(pyDKB.dataflow.messages.TTLMessage method)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.TTLMessage.encode">(pyDKB.dataflow.communication.messages.TTLMessage method)</a>
 </li>
       </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.AbstractMessage.encoded">encoded (pyDKB.dataflow.communication.messages.AbstractMessage attribute)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.EncodeUnknownType">EncodeUnknownType</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.AbstractMessage.encoded">encoded (pyDKB.dataflow.messages.AbstractMessage attribute)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.ensure_dir">ensure_dir() (pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.HDFSProducer.html#pyDKB.dataflow.communication.producer.HDFSProducer.HDFSProducer.ensure_dir">(pyDKB.dataflow.communication.producer.HDFSProducer.HDFSProducer method)</a>
 </li>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.EncodeUnknownType">EncodeUnknownType</a>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.eop">eop() (pyDKB.dataflow.communication.producer.Producer.Producer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.OutputStream.eop">(pyDKB.dataflow.communication.stream.OutputStream method)</a>
 </li>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.AbstractMessage.extension">extension() (pyDKB.dataflow.messages.AbstractMessage class method)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.OutputStream.html#pyDKB.dataflow.communication.stream.OutputStream.OutputStream.eop">(pyDKB.dataflow.communication.stream.OutputStream.OutputStream method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.AbstractMessage.extension">extension() (pyDKB.dataflow.communication.messages.AbstractMessage class method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -145,45 +259,123 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.file_flush">file_flush() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
-</li>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.file_input">file_input() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.StreamConsumer.html#pyDKB.dataflow.communication.consumer.StreamConsumer.StreamConsumer.fd">fd (pyDKB.dataflow.communication.consumer.StreamConsumer.StreamConsumer attribute)</a>
 
       <ul>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.JSONProcessorStage.file_input">(pyDKB.dataflow.stage.JSONProcessorStage method)</a>
-</li>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.processors.JSONProcessorStage.file_input">(pyDKB.dataflow.stage.processors.JSONProcessorStage method)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.StreamProducer.html#pyDKB.dataflow.communication.producer.StreamProducer.StreamProducer.fd">(pyDKB.dataflow.communication.producer.StreamProducer.StreamProducer attribute)</a>
 </li>
       </ul></li>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.JSONProcessorStage.file_nd_json">file_nd_json() (pyDKB.dataflow.stage.JSONProcessorStage method)</a>
+      <li><a href="pyDKB/pyDKB.common.hdfs.html#pyDKB.common.hdfs.File">File() (in module pyDKB.common.hdfs)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.file_info">file_info() (pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
 
       <ul>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.processors.JSONProcessorStage.file_nd_json">(pyDKB.dataflow.stage.processors.JSONProcessorStage method)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.HDFSProducer.html#pyDKB.dataflow.communication.producer.HDFSProducer.HDFSProducer.file_info">(pyDKB.dataflow.communication.producer.HDFSProducer.HDFSProducer method)</a>
 </li>
       </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.FileConsumer.html#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer">FileConsumer (class in pyDKB.dataflow.communication.consumer.FileConsumer)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer">FileProducer (class in pyDKB.dataflow.communication.producer.FileProducer)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.JSONProcessorStage.file_true_json">file_true_json() (pyDKB.dataflow.stage.JSONProcessorStage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.flush">flush() (pyDKB.dataflow.communication.producer.Producer.Producer method)</a>
 
       <ul>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.processors.JSONProcessorStage.file_true_json">(pyDKB.dataflow.stage.processors.JSONProcessorStage method)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.OutputStream.flush">(pyDKB.dataflow.communication.stream.OutputStream method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.OutputStream.html#pyDKB.dataflow.communication.stream.OutputStream.OutputStream.flush">(pyDKB.dataflow.communication.stream.OutputStream.OutputStream method)</a>
 </li>
       </ul></li>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.flush_buffer">flush_buffer() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.flush_buffer">flush_buffer() (pyDKB.dataflow.stage.ProcessorStage method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.flush_buffer">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage method)</a>
 </li>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.forward">forward() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.forward">forward() (pyDKB.dataflow.stage.ProcessorStage method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.forward">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage method)</a>
 </li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.common.hdfs.html#pyDKB.common.hdfs.getfile">getfile() (in module pyDKB.common.hdfs)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.get_dest">get_dest() (pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.get_dest">(pyDKB.dataflow.communication.producer.Producer.Producer method)</a>
 </li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.StreamProducer.html#pyDKB.dataflow.communication.producer.StreamProducer.StreamProducer.get_dest">(pyDKB.dataflow.communication.producer.StreamProducer.StreamProducer method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.get_dest_info">get_dest_info() (pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.get_dest_info">(pyDKB.dataflow.communication.producer.Producer.Producer method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.StreamProducer.html#pyDKB.dataflow.communication.producer.StreamProducer.StreamProducer.get_dest_info">(pyDKB.dataflow.communication.producer.StreamProducer.StreamProducer method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.get_dir">get_dir() (pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.Stream.get_fd">get_fd() (pyDKB.dataflow.communication.stream.Stream method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.Stream.html#pyDKB.dataflow.communication.stream.Stream.Stream.get_fd">(pyDKB.dataflow.communication.stream.Stream.Stream method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.get_filename">get_filename() (pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.get_message">get_message() (pyDKB.dataflow.communication.consumer.Consumer.Consumer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.InputStream.get_message">(pyDKB.dataflow.communication.stream.InputStream method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.InputStream.html#pyDKB.dataflow.communication.stream.InputStream.InputStream.get_message">(pyDKB.dataflow.communication.stream.InputStream.InputStream method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.AbstractMessage.getOriginal">getOriginal() (pyDKB.dataflow.messages.AbstractMessage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.get_out_stream">get_out_stream() (pyDKB.dataflow.stage.ProcessorStage method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.get_out_stream">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.FileConsumer.html#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.get_source">get_source() (pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.StreamConsumer.html#pyDKB.dataflow.communication.consumer.StreamConsumer.StreamConsumer.get_source">(pyDKB.dataflow.communication.consumer.StreamConsumer.StreamConsumer method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.get_source_info">get_source_info() (pyDKB.dataflow.communication.consumer.Consumer.Consumer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.FileConsumer.html#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.get_source_info">(pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.StreamConsumer.html#pyDKB.dataflow.communication.consumer.StreamConsumer.StreamConsumer.get_source_info">(pyDKB.dataflow.communication.consumer.StreamConsumer.StreamConsumer method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.get_source_info">(pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.get_source_info">(pyDKB.dataflow.stage.ProcessorStage method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.get_source_info">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.get_stream">get_stream() (pyDKB.dataflow.communication.consumer.Consumer.Consumer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.get_stream">(pyDKB.dataflow.communication.producer.Producer.Producer method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.common.hdfs.html#pyDKB.common.hdfs.getfile">getfile() (in module pyDKB.common.hdfs)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.AbstractMessage.getOriginal">getOriginal() (pyDKB.dataflow.communication.messages.AbstractMessage method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -193,9 +385,13 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pyDKB/pyDKB.common.Type.html#pyDKB.common.Type.Type.hasMember">hasMember() (pyDKB.common.Type.Type method)</a>
 </li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.HDFSConsumer.html#pyDKB.dataflow.communication.consumer.HDFSConsumer.HDFSConsumer">HDFSConsumer (class in pyDKB.dataflow.communication.consumer.HDFSConsumer)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pyDKB/pyDKB.common.exceptions.html#pyDKB.common.exceptions.HDFSException">HDFSException</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.HDFSProducer.html#pyDKB.dataflow.communication.producer.HDFSProducer.HDFSProducer">HDFSProducer (class in pyDKB.dataflow.communication.producer.HDFSProducer)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -203,40 +399,46 @@
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.input">input() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.FileConsumer.html#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.init_sources">init_sources() (pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer method)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.init_stream">init_stream() (pyDKB.dataflow.communication.consumer.Consumer.Consumer method)</a>
 
       <ul>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.JSON2TTLProcessorStage.input">(pyDKB.dataflow.stage.JSON2TTLProcessorStage method)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.init_stream">(pyDKB.dataflow.communication.producer.Producer.Producer method)</a>
 </li>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.processors.JSON2TTLProcessorStage.input">(pyDKB.dataflow.stage.processors.JSON2TTLProcessorStage method)</a>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.input">input() (pyDKB.dataflow.stage.ProcessorStage method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.input">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage method)</a>
 </li>
       </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.input_message_class">input_message_class() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.input_message_class">input_message_class() (pyDKB.dataflow.stage.ProcessorStage method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.input_message_class">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage method)</a>
 </li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.InputStream">InputStream (class in pyDKB.dataflow.communication.stream)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.InputStream.html#pyDKB.dataflow.communication.stream.InputStream.InputStream">(class in pyDKB.dataflow.communication.stream.InputStream)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="J">J</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.JSON2TTLProcessorStage">JSON2TTLProcessorStage (class in pyDKB.dataflow.stage)</a>
-
-      <ul>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.processors.JSON2TTLProcessorStage">(class in pyDKB.dataflow.stage.processors)</a>
+      <li><a href="pyDKB/pyDKB.common.hdfs.html#pyDKB.common.hdfs.join">join() (in module pyDKB.common.hdfs)</a>
 </li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.JSONMessage">JSONMessage (class in pyDKB.dataflow.messages)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.JSONMessage">JSONMessage (class in pyDKB.dataflow.communication.messages)</a>
 </li>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.JSONProcessorStage">JSONProcessorStage (class in pyDKB.dataflow.stage)</a>
-
-      <ul>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.processors.JSONProcessorStage">(class in pyDKB.dataflow.stage.processors)</a>
-</li>
-      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -245,6 +447,18 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pyDKB/pyDKB.common.hdfs.html#pyDKB.common.hdfs.listdir">listdir() (in module pyDKB.common.hdfs)</a>
 </li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.log">log() (pyDKB.dataflow.communication.consumer.Consumer.Consumer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.log">(pyDKB.dataflow.communication.producer.Producer.Producer method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.Stream.log">(pyDKB.dataflow.communication.stream.Stream method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.Stream.html#pyDKB.dataflow.communication.stream.Stream.Stream.log">(pyDKB.dataflow.communication.stream.Stream.Stream method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.log">(pyDKB.dataflow.stage.AbstractStage.AbstractStage method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
@@ -257,16 +471,50 @@
 </li>
       <li><a href="pyDKB/pyDKB.common.Type.html#pyDKB.common.Type.Type.memberName">memberName() (pyDKB.common.Type.Type method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.Message">Message() (in module pyDKB.dataflow.messages)</a>
-</li>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.AbstractMessage.msg_type">msg_type (pyDKB.dataflow.messages.AbstractMessage attribute)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.html#pyDKB.dataflow.communication.Message">Message() (in module pyDKB.dataflow.communication)</a>
 
       <ul>
-        <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.JSONMessage.msg_type">(pyDKB.dataflow.messages.JSONMessage attribute)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.Message">(in module pyDKB.dataflow.communication.messages)</a>
 </li>
-        <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.TTLMessage.msg_type">(pyDKB.dataflow.messages.TTLMessage attribute)</a>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.message_class">message_class() (pyDKB.dataflow.communication.consumer.Consumer.Consumer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.message_class">(pyDKB.dataflow.communication.producer.Producer.Producer method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.message_type">message_type (pyDKB.dataflow.communication.consumer.Consumer.Consumer attribute)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.message_type">(pyDKB.dataflow.communication.producer.Producer.Producer attribute)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.html#pyDKB.dataflow.communication.producer.ProducerBuilder.message_type">(pyDKB.dataflow.communication.producer.ProducerBuilder attribute)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.StreamBuilder.message_type">(pyDKB.dataflow.communication.stream.StreamBuilder attribute)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.Stream.message_type">message_type() (pyDKB.dataflow.communication.stream.Stream method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.Stream.html#pyDKB.dataflow.communication.stream.Stream.Stream.message_type">(pyDKB.dataflow.communication.stream.Stream.Stream method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.common.hdfs.html#pyDKB.common.hdfs.movefile">movefile() (in module pyDKB.common.hdfs)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.OutputStream.msg_buffer">msg_buffer (pyDKB.dataflow.communication.stream.OutputStream attribute)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.OutputStream.html#pyDKB.dataflow.communication.stream.OutputStream.OutputStream.msg_buffer">(pyDKB.dataflow.communication.stream.OutputStream.OutputStream attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.AbstractMessage.msg_type">msg_type (pyDKB.dataflow.communication.messages.AbstractMessage attribute)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.JSONMessage.msg_type">(pyDKB.dataflow.communication.messages.JSONMessage attribute)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.TTLMessage.msg_type">(pyDKB.dataflow.communication.messages.TTLMessage attribute)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -275,57 +523,95 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.AbstractMessage.native_types">native_types (pyDKB.dataflow.messages.AbstractMessage attribute)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.AbstractMessage.native_types">native_types (pyDKB.dataflow.communication.messages.AbstractMessage attribute)</a>
 
       <ul>
-        <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.JSONMessage.native_types">(pyDKB.dataflow.messages.JSONMessage attribute)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.JSONMessage.native_types">(pyDKB.dataflow.communication.messages.JSONMessage attribute)</a>
 </li>
-        <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.TTLMessage.native_types">(pyDKB.dataflow.messages.TTLMessage attribute)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.TTLMessage.native_types">(pyDKB.dataflow.communication.messages.TTLMessage attribute)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pyDKB/pyDKB.common.json_utils.html#pyDKB.common.json_utils.nestedKeys">nestedKeys() (in module pyDKB.common.json_utils)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.next">next() (pyDKB.dataflow.communication.consumer.Consumer.Consumer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.InputStream.next">(pyDKB.dataflow.communication.stream.InputStream method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.InputStream.html#pyDKB.dataflow.communication.stream.InputStream.InputStream.next">(pyDKB.dataflow.communication.stream.InputStream.InputStream method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.FileConsumer.html#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.next_source">next_source() (pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.StreamConsumer.html#pyDKB.dataflow.communication.consumer.StreamConsumer.StreamConsumer.next_source">(pyDKB.dataflow.communication.consumer.StreamConsumer.StreamConsumer method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="O">O</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.output">output() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.output">output() (pyDKB.dataflow.stage.ProcessorStage method)</a>
 
       <ul>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.JSON2TTLProcessorStage.output">(pyDKB.dataflow.stage.JSON2TTLProcessorStage method)</a>
-</li>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.TTLProcessorStage.output">(pyDKB.dataflow.stage.TTLProcessorStage method)</a>
-</li>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.processors.JSON2TTLProcessorStage.output">(pyDKB.dataflow.stage.processors.JSON2TTLProcessorStage method)</a>
-</li>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.processors.TTLProcessorStage.output">(pyDKB.dataflow.stage.processors.TTLProcessorStage method)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.output">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage method)</a>
 </li>
       </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.output_error">output_error() (pyDKB.dataflow.stage.AbstractStage.AbstractStage method)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.output_message_class">output_message_class() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.output_message_class">output_message_class() (pyDKB.dataflow.stage.ProcessorStage method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.output_message_class">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage method)</a>
 </li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.OutputStream">OutputStream (class in pyDKB.dataflow.communication.stream)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.OutputStream.html#pyDKB.dataflow.communication.stream.OutputStream.OutputStream">(class in pyDKB.dataflow.communication.stream.OutputStream)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.parse_args">parse_args() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.parse_args">parse_args() (pyDKB.dataflow.stage.AbstractStage.AbstractStage method)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.InputStream.parse_message">parse_message() (pyDKB.dataflow.communication.stream.InputStream method)</a>
 
       <ul>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.parse_args">(pyDKB.dataflow.stage.AbstractStage.AbstractStage method)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.InputStream.html#pyDKB.dataflow.communication.stream.InputStream.InputStream.parse_message">(pyDKB.dataflow.communication.stream.InputStream.InputStream method)</a>
 </li>
       </ul></li>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.parseMessage">parseMessage() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
-</li>
       <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.print_usage">print_usage() (pyDKB.dataflow.stage.AbstractStage.AbstractStage method)</a>
 </li>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.process">process() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage static method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.process">process() (pyDKB.dataflow.stage.ProcessorStage static method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.process">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage static method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage">ProcessorStage (class in pyDKB.dataflow.stage)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage">(class in pyDKB.dataflow.stage.ProcessorStage)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer">Producer (class in pyDKB.dataflow.communication.producer.Producer)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.html#pyDKB.dataflow.communication.producer.ProducerBuilder">ProducerBuilder (class in pyDKB.dataflow.communication.producer)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.html#pyDKB.dataflow.communication.producer.ProducerBuilder.producerClass">producerClass (pyDKB.dataflow.communication.producer.ProducerBuilder attribute)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.ProducerException">ProducerException</a>
 </li>
       <li><a href="pyDKB/pyDKB.common.hdfs.html#pyDKB.common.hdfs.putfile">putfile() (in module pyDKB.common.hdfs)</a>
 </li>
@@ -339,8 +625,6 @@
 </li>
       <li><a href="pyDKB/pyDKB.common.hdfs.html#module-pyDKB.common.hdfs">pyDKB.common.hdfs (module)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pyDKB/pyDKB.common.json_utils.html#module-pyDKB.common.json_utils">pyDKB.common.json_utils (module)</a>
 </li>
       <li><a href="pyDKB/pyDKB.common.Type.html#module-pyDKB.common.Type">pyDKB.common.Type (module)</a>
@@ -349,19 +633,51 @@
 </li>
       <li><a href="pyDKB/pyDKB.dataflow.cds.html#module-pyDKB.dataflow.cds">pyDKB.dataflow.cds (module)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.html#module-pyDKB.dataflow.communication">pyDKB.dataflow.communication (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.html#module-pyDKB.dataflow.communication.consumer">pyDKB.dataflow.communication.consumer (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#module-pyDKB.dataflow.communication.consumer.Consumer">pyDKB.dataflow.communication.consumer.Consumer (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.FileConsumer.html#module-pyDKB.dataflow.communication.consumer.FileConsumer">pyDKB.dataflow.communication.consumer.FileConsumer (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.HDFSConsumer.html#module-pyDKB.dataflow.communication.consumer.HDFSConsumer">pyDKB.dataflow.communication.consumer.HDFSConsumer (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.StreamConsumer.html#module-pyDKB.dataflow.communication.consumer.StreamConsumer">pyDKB.dataflow.communication.consumer.StreamConsumer (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#module-pyDKB.dataflow.communication.messages">pyDKB.dataflow.communication.messages (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.html#module-pyDKB.dataflow.communication.producer">pyDKB.dataflow.communication.producer (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#module-pyDKB.dataflow.communication.producer.FileProducer">pyDKB.dataflow.communication.producer.FileProducer (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.HDFSProducer.html#module-pyDKB.dataflow.communication.producer.HDFSProducer">pyDKB.dataflow.communication.producer.HDFSProducer (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#module-pyDKB.dataflow.communication.producer.Producer">pyDKB.dataflow.communication.producer.Producer (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.StreamProducer.html#module-pyDKB.dataflow.communication.producer.StreamProducer">pyDKB.dataflow.communication.producer.StreamProducer (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#module-pyDKB.dataflow.communication.stream">pyDKB.dataflow.communication.stream (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.exceptions.html#module-pyDKB.dataflow.communication.stream.exceptions">pyDKB.dataflow.communication.stream.exceptions (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.InputStream.html#module-pyDKB.dataflow.communication.stream.InputStream">pyDKB.dataflow.communication.stream.InputStream (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.OutputStream.html#module-pyDKB.dataflow.communication.stream.OutputStream">pyDKB.dataflow.communication.stream.OutputStream (module)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.Stream.html#module-pyDKB.dataflow.communication.stream.Stream">pyDKB.dataflow.communication.stream.Stream (module)</a>
+</li>
       <li><a href="pyDKB/pyDKB.dataflow.dkbID.html#module-pyDKB.dataflow.dkbID">pyDKB.dataflow.dkbID (module)</a>
 </li>
       <li><a href="pyDKB/pyDKB.dataflow.exceptions.html#module-pyDKB.dataflow.exceptions">pyDKB.dataflow.exceptions (module)</a>
 </li>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#module-pyDKB.dataflow.messages">pyDKB.dataflow.messages (module)</a>
-</li>
       <li><a href="pyDKB/pyDKB.dataflow.stage.html#module-pyDKB.dataflow.stage">pyDKB.dataflow.stage (module)</a>
-</li>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#module-pyDKB.dataflow.stage.AbstractProcessorStage">pyDKB.dataflow.stage.AbstractProcessorStage (module)</a>
 </li>
       <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#module-pyDKB.dataflow.stage.AbstractStage">pyDKB.dataflow.stage.AbstractStage (module)</a>
 </li>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.processors.html#module-pyDKB.dataflow.stage.processors">pyDKB.dataflow.stage.processors (module)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#module-pyDKB.dataflow.stage.ProcessorStage">pyDKB.dataflow.stage.ProcessorStage (module)</a>
 </li>
       <li><a href="pyDKB/pyDKB.dataflow.types.html#module-pyDKB.dataflow.types">pyDKB.dataflow.types (module)</a>
 </li>
@@ -371,10 +687,50 @@
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.run">run() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.read_config">read_config() (pyDKB.dataflow.stage.AbstractStage.AbstractStage method)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.reconfigure">reconfigure() (pyDKB.dataflow.communication.consumer.Consumer.Consumer method)</a>
 
       <ul>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.run">(pyDKB.dataflow.stage.AbstractStage.AbstractStage method)</a>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.FileConsumer.html#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.reconfigure">(pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.HDFSConsumer.html#pyDKB.dataflow.communication.consumer.HDFSConsumer.HDFSConsumer.reconfigure">(pyDKB.dataflow.communication.consumer.HDFSConsumer.HDFSConsumer method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.StreamConsumer.html#pyDKB.dataflow.communication.consumer.StreamConsumer.StreamConsumer.reconfigure">(pyDKB.dataflow.communication.consumer.StreamConsumer.StreamConsumer method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.reconfigure">(pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.reconfigure">(pyDKB.dataflow.communication.producer.Producer.Producer method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.StreamProducer.html#pyDKB.dataflow.communication.producer.StreamProducer.StreamProducer.reconfigure">(pyDKB.dataflow.communication.producer.StreamProducer.StreamProducer method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.InputStream.reset">reset() (pyDKB.dataflow.communication.stream.InputStream method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.InputStream.html#pyDKB.dataflow.communication.stream.InputStream.InputStream.reset">(pyDKB.dataflow.communication.stream.InputStream.InputStream method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.Stream.reset">(pyDKB.dataflow.communication.stream.Stream method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.Stream.html#pyDKB.dataflow.communication.stream.Stream.Stream.reset">(pyDKB.dataflow.communication.stream.Stream.Stream method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.reset_file">reset_file() (pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.reset_stream">reset_stream() (pyDKB.dataflow.communication.consumer.Consumer.Consumer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.reset_stream">(pyDKB.dataflow.communication.producer.Producer.Producer method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.run">run() (pyDKB.dataflow.stage.AbstractStage.AbstractStage method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.run">(pyDKB.dataflow.stage.ProcessorStage method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.run">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -383,33 +739,101 @@
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.stop">stop() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.set_default_dir">set_default_dir() (pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.HDFSProducer.html#pyDKB.dataflow.communication.producer.HDFSProducer.HDFSProducer.set_default_dir">(pyDKB.dataflow.communication.producer.HDFSProducer.HDFSProducer method)</a>
 </li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.set_error">set_error() (pyDKB.dataflow.stage.AbstractStage.AbstractStage method)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.set_input_message_type">set_input_message_type() (pyDKB.dataflow.stage.ProcessorStage method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.set_input_message_type">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.set_message_type">set_message_type() (pyDKB.dataflow.communication.consumer.Consumer.Consumer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.set_message_type">(pyDKB.dataflow.communication.producer.Producer.Producer method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.Stream.set_message_type">(pyDKB.dataflow.communication.stream.Stream method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.Stream.html#pyDKB.dataflow.communication.stream.Stream.Stream.set_message_type">(pyDKB.dataflow.communication.stream.Stream.Stream method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.set_output_message_type">set_output_message_type() (pyDKB.dataflow.stage.ProcessorStage method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.set_output_message_type">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.html#pyDKB.dataflow.communication.producer.ProducerBuilder.setDest">setDest() (pyDKB.dataflow.communication.producer.ProducerBuilder method)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.html#pyDKB.dataflow.communication.consumer.ConsumerBuilder.setSource">setSource() (pyDKB.dataflow.communication.consumer.ConsumerBuilder method)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.html#pyDKB.dataflow.communication.producer.ProducerBuilder.setSourceInfoMethod">setSourceInfoMethod() (pyDKB.dataflow.communication.producer.ProducerBuilder method)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.StreamBuilder.setStream">setStream() (pyDKB.dataflow.communication.stream.StreamBuilder method)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.html#pyDKB.dataflow.communication.consumer.ConsumerBuilder.setType">setType() (pyDKB.dataflow.communication.consumer.ConsumerBuilder method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.html#pyDKB.dataflow.communication.producer.ProducerBuilder.setType">(pyDKB.dataflow.communication.producer.ProducerBuilder method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.StreamBuilder.setType">(pyDKB.dataflow.communication.stream.StreamBuilder method)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.stream_flush">stream_flush() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.FileConsumer.html#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.source_is_empty">source_is_empty() (pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer method)</a>
 </li>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.stream_input">stream_input() (pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.html#pyDKB.dataflow.communication.producer.ProducerBuilder.src_info">src_info (pyDKB.dataflow.communication.producer.ProducerBuilder attribute)</a>
 </li>
+      <li><a href="pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.stop">stop() (pyDKB.dataflow.stage.AbstractStage.AbstractStage method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.ProcessorStage.stop">(pyDKB.dataflow.stage.ProcessorStage method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.stop">(pyDKB.dataflow.stage.ProcessorStage.ProcessorStage method)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.Stream">Stream (class in pyDKB.dataflow.communication.stream)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.Stream.html#pyDKB.dataflow.communication.stream.Stream.Stream">(class in pyDKB.dataflow.communication.stream.Stream)</a>
+</li>
+      </ul></li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.StreamBuilder">StreamBuilder (class in pyDKB.dataflow.communication.stream)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.StreamBuilder.streamClass">streamClass (pyDKB.dataflow.communication.stream.StreamBuilder attribute)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.consumer.StreamConsumer.html#pyDKB.dataflow.communication.consumer.StreamConsumer.StreamConsumer">StreamConsumer (class in pyDKB.dataflow.communication.consumer.StreamConsumer)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.stream.exceptions.html#pyDKB.dataflow.communication.stream.exceptions.StreamException">StreamException</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.StreamProducer.html#pyDKB.dataflow.communication.producer.StreamProducer.StreamProducer">StreamProducer (class in pyDKB.dataflow.communication.producer.StreamProducer)</a>
+</li>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.FileProducer.html#pyDKB.dataflow.communication.producer.FileProducer.FileProducer.subdir">subdir() (pyDKB.dataflow.communication.producer.FileProducer.FileProducer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.producer.HDFSProducer.html#pyDKB.dataflow.communication.producer.HDFSProducer.HDFSProducer.subdir">(pyDKB.dataflow.communication.producer.HDFSProducer.HDFSProducer method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.TTLMessage">TTLMessage (class in pyDKB.dataflow.messages)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.TTLMessage">TTLMessage (class in pyDKB.dataflow.communication.messages)</a>
 </li>
-      <li><a href="pyDKB/pyDKB.dataflow.stage.html#pyDKB.dataflow.stage.TTLProcessorStage">TTLProcessorStage (class in pyDKB.dataflow.stage)</a>
-
-      <ul>
-        <li><a href="pyDKB/pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.processors.TTLProcessorStage">(class in pyDKB.dataflow.stage.processors)</a>
-</li>
-      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pyDKB/pyDKB.common.Type.html#pyDKB.common.Type.Type">Type (class in pyDKB.common.Type)</a>
 </li>
-      <li><a href="pyDKB/pyDKB.dataflow.messages.html#pyDKB.dataflow.messages.AbstractMessage.typeName">typeName() (pyDKB.dataflow.messages.AbstractMessage class method)</a>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.AbstractMessage.typeName">typeName() (pyDKB.dataflow.communication.messages.AbstractMessage class method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -419,6 +843,20 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="pyDKB/pyDKB.common.json_utils.html#pyDKB.common.json_utils.valueByKey">valueByKey() (in module pyDKB.common.json_utils)</a>
 </li>
+  </ul></td>
+</tr></table>
+
+<h2 id="W">W</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.write">write() (pyDKB.dataflow.communication.producer.Producer.Producer method)</a>
+
+      <ul>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.html#pyDKB.dataflow.communication.stream.OutputStream.write">(pyDKB.dataflow.communication.stream.OutputStream method)</a>
+</li>
+        <li><a href="pyDKB/pyDKB.dataflow.communication.stream.OutputStream.html#pyDKB.dataflow.communication.stream.OutputStream.OutputStream.write">(pyDKB.dataflow.communication.stream.OutputStream.OutputStream method)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
