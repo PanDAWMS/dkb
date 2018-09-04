@@ -114,12 +114,8 @@ class DatasetCategory:
         self.reg = re.compile(string, re.X)
         self.reg_spaces = re.compile(string.replace("_", r"\ ")
                                      .replace(r"\w", "a-zA-Z0-9 "), re.X)
-# self.reg_dashes = re.compile(string.replace("_", "\-")\
-# .replace("\w", "a-zA-Z0-9-"),
-# re.X)
 
     def find(self, text, intervals, datasets):
-        #        print "INTERVALS", intervals
         strings = []
         (results, text) = find_cut_reg(self.reg, text)
         strings += results
@@ -131,7 +127,6 @@ class DatasetCategory:
             s = s.strip()
             if "INTERVAL" in s:
                 if cfg["OPEN_INTERVALS_TEXT"]:
-                    #                print "STRING WITH INTERVALS:", s
                     nums = re.findall(r"INTERVAL(\d+)!", s)
                     arr = []
                     for n in nums:
@@ -142,18 +137,13 @@ class DatasetCategory:
                     for i in range(0, size):
                         ns = s
                         for n in nums:
-                            #                        print intervals[int(n)]
                             ns = re.sub("INTERVAL" + n + "!",
                                         intervals[int(n)][i], ns)
-    #                    print "NEW_STRING:", ns
                         if self.reg.match(ns):
                             datasets[self.name].append([ns, False])
                         elif self.reg_spaces.match(ns):
                             datasets[self.name].append([ns.replace(" ", "_"),
                                                         "spaces"])
-    # elif self.reg_dashes.match(ns):
-    # datasets[self.name].append([ns.replace("-", "_"),
-    # "dashes"])
                 else:
                     res = 0
                     if self.reg.match(s):
@@ -173,9 +163,6 @@ class DatasetCategory:
                 elif self.reg_spaces.match(s):
                     datasets[self.name].append([s.replace(" ", "_"),
                                                 "spaces"])
-# elif self.reg_dashes.match(s):
-# datasets[self.name].append([s.replace("-", "_"),
-# "dashes"])
         return (text, datasets)
 
 
@@ -297,7 +284,7 @@ re_campaign = re.compile(r"""(
                                 )""", re.X)
 re_energy = re.compile(r"(\d+\.?\d*) (G|T)eV")
 # WARNING: this "fb-1" is in UTF-8 coding and was copied from miner
-# output. Simple "fb-1" does not works.
+# output. Simple "fb-1" does not work.
 re_luminosity = re.compile(r"(\d+\.?\d*) ?(m|n|p|f)b(?:−|\(cid:0\))1")
 re_collisions = re.compile("(proton-proton|heavy-ion|pp) collisions")
 re_year = re.compile("(?:acquired|collected|measured|recorded).{0,100}"
@@ -335,7 +322,6 @@ def mask_intervals(text):
             text = text.replace(m.group(0), "INTERVAL%d!" % i)
             intervals.append(m.group(0))
             i += 1
-#            print "Interval %d:%s" % (i, m.group(0).strip())
     return text, intervals
 
 
@@ -637,7 +623,6 @@ class Paper:
         # Find pages containing table headers.
         while n <= self.num_pages:
             text = self.get_txt_page(n, True)
-#            print n, re_table_header.findall(text.lower())
             page_headers = re_table_header.findall(text)
             page_headers_data = {}
             # Among the headers find ones which may hint that their
@@ -652,8 +637,6 @@ class Paper:
                 headers_data.update(page_headers_data)
             n += 1
 
-#        print "PAGES WITH DATASETS TABLES", pages_with_tables
-
         datatables = {}
         # Extract all tables from selected pages.
         for n in pages_with_tables:
@@ -664,8 +647,6 @@ class Paper:
             for table in tables:
                 num = int(re_table_header_short.match(table.header).group(1))
                 if num in headers_data:
-                    # print "TABLE WITH HEADER", headers_data[num].strip(),\
-                    #                          "MAY CONTAIN DATASETS"
                     data_column = -1
                     skip_first = False
                     # Save headers and tables matching selected numbers
@@ -674,8 +655,6 @@ class Paper:
                         for i in range(0, len(table.rows[rnum])):
                             txt = table.rows[rnum][i].text.lower()
                             if re_column_with_datasets.match(txt):
-                                # print "COLUMN", txt, "IN TABLE", num,\
-                                #     "HINTS THAT IT CONTAINS DATASETS"
                                 data_column = i
                                 if rnum == 1:
                                     # This means that first row contains
@@ -683,12 +662,11 @@ class Paper:
                                     # or something else, and columns are
                                     # defined in the second one. First
                                     # one must be skipped in such case.
-                                    # print "SKIPPING FIRST ROW"
                                     skip_first = True
                                 break
                         if data_column >= 0:
                             break
-                    # Here: insert check that dataset column contains
+                    # TODO: insert check that dataset column contains
                     # mostly \d\d\d\d\d\d. Also: duplicate rows in case
                     # of diapasones.
                     if data_column >= 0:
@@ -703,7 +681,6 @@ class Paper:
                                 skip_first = False
                                 continue
                             row = [line.text.strip() for line in row]
-#                            print row[data_column]
                             if re_dsid.match(row[data_column]):
                                 rows_with_proper_id += 1
                             elif re_dsid_diap.match(row[data_column]):
@@ -711,13 +688,8 @@ class Paper:
                                 diaps = True
                             rows.append(row)
                         coef = float(rows_with_proper_id) / len(rows)
-# print rows_with_proper_id, "OUT OF", len(rows),\
-#                              "ROWS HAVE PROPER DATASET ID. COEFFICIENT:",\
-# coef
                         if coef >= 0.7 and coef <= 1:
                             if cfg["OPEN_INTERVALS_TABLES"] and diaps:
-                                # print "TABLE CONTAINS DATASET DIAPASONS,\
-                                # PROCESSING THEM AND MULTIPLYING ROWS"
                                 rows_new = []
                                 for row in rows:
                                     r_dc = row[data_column]
@@ -739,9 +711,6 @@ class Paper:
                             else:
                                 data = rows
                             datatables[num] = (headers_data[num], data)
-# elif coef < 0.7:
-# print "COEFFICIENT IS LOWER THAN 0.7.\
-# SKIPPING TABLE", num
 
         return datatables
 
@@ -752,27 +721,6 @@ class Paper:
         corresponding procedure would be used with all user interaction
         skipped.
         """
-
-# print self.fname
-# paper_date = re.search("((?:january|february|march|april|may|june\
-# |july|august|september|october|november\
-# |december).*20\d\d)",
-# self.get_txt_page(1, True).lower())
-# if paper_date:
-#             d = paper_date.group(1)
-# print "date:", d
-#
-#        text = self.get_text()
-#        m = re_year.findall(text)
-# if m:
-# print m
-# for t in m:
-# if d not in t.lower():
-# print t
-# else:
-# print "None"
-# print "\n"
-# return True
 
         outp = {}
         if not outf:
@@ -1436,7 +1384,8 @@ class Manager:
                     lbl = Tkinter.Label(frame, text=k, font=HEADING_FONT)
                     lbl.grid(row=r)
                     r += 1
-#                    for [d, special] in paper.datasets[k]:
+                    # for [d, special] in paper.datasets[k]:
+                    # special is not needed. Maybe temporary.
                     for d in paper.datasets[k]:
                         lbl = Tkinter.Label(frame, text=d)
                         lbl.grid(row=r)

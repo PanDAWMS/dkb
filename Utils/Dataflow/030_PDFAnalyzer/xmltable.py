@@ -84,7 +84,6 @@ class TextLine:
         elif isinstance(params, list):
             [self.left, self.top, self.right, self.bottom,
              self.text, self.spaces_coords] = params
-#        print self.text
 
             self.center = [(self.left + self.right) / 2,
                            (self.top + self.bottom) / 2]
@@ -154,8 +153,6 @@ class Table:
         # table text lines
         self.lines = lines
 
-#        print "\nTABLE WITH HEADER", header
-
         rows = []
         t = []
         # Construct rows out of lines
@@ -192,8 +189,6 @@ class Table:
             else:
                 diff = row_centery(self.rows[r]) - \
                     row_centery(self.rows[r - 1])
-#                print "DIFF BETWEEN", self.row_text(num = r), "AND",\
-#                      self.row_text(num = r - 1), ":", diff
                 if diff > 1.4 * max_diff:
                     del self.rows[0:r]
                     break
@@ -202,7 +197,6 @@ class Table:
             n += 1
             r -= 1
 
-#        print "ROWS"
         # Find overlapping (by X coordinate) lines and merge them. So
         # far this was required to deal with rows where several lines
         # are above each other. No additional spaces are added.
@@ -215,8 +209,6 @@ class Table:
                     new_row.append(line)
                     line = row[i]
                 else:
-                    # print "LINES WITH TEXT", line.text, "AND",\
-                    #     row[i].text, "OVERLAP - MERGING"
                     line = line.merge(row[i])
             new_row.append(line)
             rows.append(new_row)
@@ -231,11 +223,10 @@ class Table:
                 if len_min == len_max:
                     break
                 else:
-                    # print "ATTEMPTING TO BREAK SHORT ROWS"
                     self.break_short_rows(len_max)
                     i += 1
                 if i == 2:
-                    # print "MAXIMUM BREAKING ATTEMPTS REACHED"
+                    # Too much breaking attempts.
                     break
 
     def construct_row(self, first_line, used_lines):
@@ -266,8 +257,7 @@ class Table:
         """ Attempt to break lines in rows which are too short. """
         normal_rows = []
         short_rows = []
-#        print "ROWS"
-        # Divide rows on short and normal.
+        # Divide rows into short and normal.
         for row in self.rows:
             if len(row) == max_elements:
                 normal_rows.append(row)
@@ -288,20 +278,16 @@ class Table:
             # Most right point in a column.
             boundaries.append(max(normal_rows,
                                   key=lambda row: row[i].right)[i].right)
-#        print "BOUNDARIES", boundaries
         del boundaries[0]
         del boundaries[-1]
         # Transform boundaries into spaces between columns.
         column_spaces = []
         for i in range(0, len(boundaries) / 2):
             column_spaces.append([boundaries[2 * i], boundaries[2 * i + 1]])
-#        for cs in column_spaces:
-#            print "COLUMN SPACE", column_spaces.index(cs), cs
         self.rows = normal_rows
         # Attempt to break some of the lines in short rows.
         for row in short_rows:
             new_row = []
-#            print "SHORT ROW", self.row_text(row = row)
             for line in row:
                 for cs in column_spaces:
                     # If line crosses the space entirely, attempt to
@@ -310,7 +296,6 @@ class Table:
                         # We cannot break a line if there are no spaces.
                         # This means that line is, most likely, not needed.
                         if not line.spaces_coords:
-                            # print "LINE HAS NO SPACES TO BREAK ON, REMOVING"
                             line = None
                             break
                         else:
@@ -320,13 +305,11 @@ class Table:
                                       key=lambda space:
                                       abs((space[1] + space[0]) / 2 - cs2))
                             if abs((cls[1] + cls[0]) / 2 - cs2) > 5000:
+                                # Line's spaces are too far from the
+                                # column boundaries, so it is removed.
                                 # TO DO: fix this.
-                                # print "LINE ONLY HAS SPACES TOO FAR\
-                                # FROM COLUMN BOUNDARIES, REMOVING"
                                 line = None
                                 break
-#                            print "BREAKING ON SPACE", \
-#                                  closest_space  # min_x[0]
                             [nl1, nl2] = line.split(cls)
                             new_row.append(nl1)
                             line = nl2
@@ -334,7 +317,6 @@ class Table:
                     new_row.append(line)
             # Make sure that new row has enough members.
             if new_row:
-                #                print "NEW_ROW", self.row_text(row = new_row)
                 num_lines = len(new_row)
                 # Try to find a line corresponding each main center.
                 for c in main_centers:
@@ -350,8 +332,6 @@ class Table:
                     # If there is no line corresponding a center, add
                     # an "EMPTY" line to row.
                     if not existing_column:
-                        # print "ADDING EMPTY LINE", c - 1,
-                        # new_row[0].top, c + 1, new_row[0].bottom
                         nl = TextLine([c - 1, new_row[0].top, c + 1,
                                        new_row[0].bottom, "EMPTY", []])
                         new_row.append(nl)
