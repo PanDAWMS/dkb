@@ -341,6 +341,36 @@ class Table:
         self.rows.sort(key=lambda row: row_centery(row))
 
 
+def analyze_page(text):
+    tlines = re_textline.findall(text)
+    lines = []
+    for line in tlines:
+        tl = TextLine(line)
+        lines.append(tl)
+
+    # Find the highest top coordinate possible and use it as a zero
+    # point for new Y axis.
+    top = max(lines, key=lambda line: line.top).top
+    for line in lines:
+        line.swap_y(top)
+
+    t = []
+    rows = []
+    # Construct rows out of lines
+    for line in lines:
+        if line not in t:
+            row = [line]
+            for nline in lines:
+                if nline != line and nline not in t and line.same_row(nline):
+                    row.append(nline)
+            row.sort(key=lambda nline: nline.center[0])
+            rows.append(row)
+            t += row
+    rows.sort(key=lambda row: row_centery(row))
+
+    return rows
+
+
 def get_tables_from_text(text):
     """ Get tables from a xml page text. """
     re_textbox = re.compile(r"<textbox id=\"\d+\" bbox=\"([0-9.,]+)\">",
@@ -380,33 +410,3 @@ def get_tables_from_text(text):
             tables.append(table)
         lines = remaining_lines
     return tables
-
-
-def analyze_page(text):
-    tlines = re_textline.findall(text)
-    lines = []
-    for line in tlines:
-        tl = TextLine(line)
-        lines.append(tl)
-
-    # Find the highest top coordinate possible and use it as a zero
-    # point for new Y axis.
-    top = max(lines, key=lambda line: line.top).top
-    for line in lines:
-        line.swap_y(top)
-
-    t = []
-    rows = []
-    # Construct rows out of lines
-    for line in lines:
-        if line not in t:
-            row = [line]
-            for nline in lines:
-                if nline != line and nline not in t and line.same_row(nline):
-                    row.append(nline)
-            row.sort(key=lambda nline: nline.center[0])
-            rows.append(row)
-            t += row
-    rows.sort(key=lambda row: row_centery(row))
-
-    return rows
