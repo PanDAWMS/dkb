@@ -148,7 +148,17 @@ class ProcessorStage(AbstractStage):
                           )
         self.add_argument('-o', '--output-dir', action='store', type=str,
                           help=u'directory for output files '
-                                '(local or HDFS)',
+                                '(local or HDFS). %%(metavar)s can be:\n'
+                                ' * absolute path\n'
+                                ' * relative path (for local files)\n'
+                                ' * subpath (not absolute nor relative).\n'
+                                'In case of subpath (or relative path for '
+                                'HDFS output) %%(metavar)s is taken '
+                                'as relative to the one of:\n'
+                                ' * directory with input files\n'
+                                ' * current directory (for local files)\n'
+                                ' * \'%stemp\' (for HDFS)'
+                                % hdfs.DKB_HOME,
                           default='out',
                           metavar='DIR',
                           dest='output_dir'
