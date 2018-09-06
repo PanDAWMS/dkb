@@ -152,7 +152,7 @@ def process_input_ds(stage, message):
                 data[mfields[mkey]] = mdata[mkey]
         except RucioException:
             data[mfields['bytes']] = -1
-            data[mfields['deleted']] = -1
+            data[mfields['deleted']] = True
     stage.output(pyDKB.dataflow.messages.JSONMessage(data))
 
     return True
@@ -217,7 +217,10 @@ def get_metadata(dsn, attributes=None):
     :rtype:  dict
     """
     scope, dataset = extract_scope(dsn)
-    metadata = rucio_client.get_metadata(scope=scope, name=dataset)
+    try:
+        metadata = rucio_client.get_metadata(scope=scope, name=dataset)
+    except ValueError, err:
+        raise RucioException(err)
     if attributes is None:
         result = metadata
     else:
