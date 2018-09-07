@@ -10,7 +10,11 @@ import json
 from datetime import date
 
 from ..exceptions import DkbApiNotImplemented
-from exceptions import StorageClientException, QueryNotFound, MissedParameter, NoDataFound
+from exceptions import (StorageClientException,
+                        QueryNotFound,
+                        MissedParameter,
+                        NoDataFound
+                        )
 from .. import config
 
 # To ensure storages are named same way in all messages
