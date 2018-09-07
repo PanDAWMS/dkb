@@ -132,7 +132,7 @@ def task_chain(path, **kwargs):
         int(tid)
     except ValueError:
         raise InvalidArgument(method_name, ('tid', tid, int))
-    raise DkbApiNotImplemented
+    return storages.task_chain(**kwargs)
 
 
 methods.add('/task', 'chain', task_chain)

@@ -35,3 +35,20 @@ def task_steps_hist(**kwargs):
     :rtype: dict
     """
     return es.task_steps_hist(**kwargs)
+
+
+def task_chain(**kwargs):
+    """ Reconstruct task chain form given task ID.
+
+    :param tid: task ID
+    :type tid: int, str
+
+    :return: task chain:
+             {
+                 ...,
+                 taskidN: [childN1_id, childN2_id, ...],
+                 ...
+             }
+    :rtype: dict
+    """
+    return es.task_chain(**kwargs)
