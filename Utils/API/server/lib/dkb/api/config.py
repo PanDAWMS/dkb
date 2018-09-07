@@ -25,4 +25,4 @@ def read_config(cfg_type, cfg_name):
         hosts = '%%ES_ADDR%%'.split(',')
         return {'hosts': hosts, 'user': '%%ES_USER%%',
                 'passwd': '%%ES_PASSWD%%'}
-    raise ConfigurationNotFound('unknown')
+    raise DkbApiNotImplemented
