@@ -1,0 +1,53 @@
+"""
+Interaction with storages for DKB API methods.
+"""
+
+import logging
+
+from exceptions import DkbApiNotImplemented, StorageClientExeption
+
+try:
+    import elasticsearch
+except ImportError:
+    logging.warn("Failed to import module 'elasticsearch'. All methods"
+                 " communicating with ES will fail.")
+
+# Dictionary (to ensure storages are named same way in all messages)
+ES = 'Elasticsearch'
+es_client = None
+
+
+def es_init(config):
+    """ Configure and initialize DKB ElasticSearch client.
+
+    If connection is already established, do nothing.
+
+    Raise StorageClientException in case of failure
+
+    :param config:
+    :type config:
+
+    :return: ES client
+    :rtype: elasticsearch.client.Elasticsearch
+    """
+    global es_client
+    try:
+        elasticsearch
+    except NameError:
+        reason = "'elasticsearch' module not loaded"
+        logging.warn("Failed to initialize ES client: %s" % reason)
+        raise StorageClientException(ES, reason)
+
+def es_task_chain(tid):
+    """ Get task IDs belonging to the same chain as passed ``tid``.
+
+    :param tid: task ID
+    :type tid: int, str
+
+    :return: list of TaskIDs, or None if task with ``tid`` was not found.
+    :rtype: list, None
+    """
+    es = es_init()
+    if not es:
+        raise 
+    raise DkbApiNotImplemented
