@@ -48,12 +48,12 @@ def nestedKeys(key):
         if k[0] in ("'", '"'):
             i1 = i
             while k[-1] not in ("'", '"'):
-                i += 1
+                i1 += 1
                 if i1 >= len(splitted_key):
                     raise ValueError("Failed to decode dot-splitted "
                                      "configuration key: %s" % key)
                 k1 = splitted_key[i1]
-                k += k1
+                k += '.' + k1
                 skip += [i1]
         nested_keys.append(k)
 
