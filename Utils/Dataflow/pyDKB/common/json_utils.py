@@ -27,10 +27,13 @@ def valueByKey(json_data, key):
     nested in other dictionaries -- this function extracts the data from
     such constructions according to given string or list with keys.
 
-    **Parameters:**
-        DICT   json_data -- to search in
+    :param json_data: to search in
+    :type json_data: dict
+    :param key: nested keys
+    :type key: str
 
-        STRING key       -- dot-separated list of nested keys
+    :return: value (None if failed)
+    :rtype: depends on value, NoneType
     """
     nested_keys = nestedKeys(key)
     val = json_data
@@ -50,13 +53,16 @@ def valueByKey(json_data, key):
 
 
 def nestedKeys(key):
-    """ Transform STRING with nested keys into LIST.
+    """ Transform string with nested keys into list.
 
-    **Parameters:**
-        STRING key -- dot-separated list of nested keys.
-                      If a key contains dot itself, the key must be put
-                      between quotation marks.
+    String should contain keys separated by dot. If a key contains
+    dot itself, the key must be put between matching quotation marks.
 
+    :param key: nested keys
+    :type key: str
+
+    :return: nested keys
+    :rtype: list
     """
     if type(key) == list:
         return key
