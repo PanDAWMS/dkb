@@ -33,16 +33,41 @@
             
   <h1>Source code for pyDKB.common.json_utils</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Utils to work with JSON (dict) objects.</span>
+<span class="sd">Utils to work with JSON objects.</span>
+
+<span class="sd">In context of Python, JSON [#]_ objects may be considered as structures</span>
+<span class="sd">consisting of six types of elements:</span>
+
+<span class="sd">- dictionaries,</span>
+<span class="sd">- lists,</span>
+<span class="sd">- strings,</span>
+<span class="sd">- numbers,</span>
+<span class="sd">- True/False,</span>
+<span class="sd">- Null.</span>
+
+<span class="sd">DKB project uses JSON for storing various information and transferring it</span>
+<span class="sd">between stages. This module contains functions which simplify some aspects</span>
+<span class="sd">of retrieving data from JSON objects.</span>
+
+<span class="sd">.. [#] https://www.json.org/</span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 
 <div class="viewcode-block" id="valueByKey"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.json_utils.html#pyDKB.common.json_utils.valueByKey">[docs]</a><span class="k">def</span> <span class="nf">valueByKey</span><span class="p">(</span><span class="n">json_data</span><span class="p">,</span> <span class="n">key</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Return value by a chain (list) of nested keys.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        DICT   json_data -- to search in</span>
-<span class="sd">        STRING key       -- dot-separated list of nested keys</span>
+<span class="sd">    It is common for JSON objects to contain many layers of dictionaries</span>
+<span class="sd">    nested in other dictionaries -- this function extracts the data from</span>
+<span class="sd">    such constructions according to given string or list with keys.</span>
+
+<span class="sd">    :param json_data: to search in</span>
+<span class="sd">    :type json_data: dict</span>
+<span class="sd">    :param key: nested keys</span>
+<span class="sd">    :type key: str</span>
+
+<span class="sd">    :return: value (None if failed)</span>
+<span class="sd">    :rtype: depends on value, NoneType</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">nested_keys</span> <span class="o">=</span> <span class="n">nestedKeys</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
     <span class="n">val</span> <span class="o">=</span> <span class="n">json_data</span>
@@ -62,12 +87,18 @@
 
 
 <div class="viewcode-block" id="nestedKeys"><a class="viewcode-back" href="../../../pyDKB/pyDKB.common.json_utils.html#pyDKB.common.json_utils.nestedKeys">[docs]</a><span class="k">def</span> <span class="nf">nestedKeys</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Transform STRING with nested keys into LIST.</span>
+    <span class="sd">&quot;&quot;&quot; Transform string with nested keys into list.</span>
 
-<span class="sd">    Parameters:</span>
-<span class="sd">        STRING key -- dot-separated list of nested keys.</span>
-<span class="sd">                      If a key contains dot itself, the key must be put between</span>
-<span class="sd">                      quotation marks.</span>
+<span class="sd">    String should contain keys separated by dot. If a key contains</span>
+<span class="sd">    dot itself, the key must be put between matching quotation marks.</span>
+<span class="sd">    Quotation marks inside the keys (not preceding or following a dot)</span>
+<span class="sd">    are ignored.</span>
+
+<span class="sd">    :param key: nested keys</span>
+<span class="sd">    :type key: str</span>
+
+<span class="sd">    :return: nested keys</span>
+<span class="sd">    :rtype: list</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">key</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">key</span>
