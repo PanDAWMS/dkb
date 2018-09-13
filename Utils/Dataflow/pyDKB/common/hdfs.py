@@ -1,5 +1,6 @@
 """
 Utils to interact with HDFS.
+
 """
 
 import sys
@@ -22,6 +23,16 @@ def check_stderr(proc, timeout=None, max_lines=1):
     if MAX_LINES == None, output all the STDERR.
 
     Return value is the subprocess` return code.
+    
+    :param proc: subrocess
+    :type proc: subprocess
+    :param timeout: time limit for operation
+    :type timeout: number (int)
+    :param max_lines: maximum quantity of lines
+    :type max_lines: number (int)
+    
+    :return: subprocess return code, set by poll()
+    :rtype: int
     """
     if not isinstance(proc, subprocess.Popen):
         raise TypeError("proc must be an instance of subprocess.Popen")
@@ -40,7 +51,14 @@ def check_stderr(proc, timeout=None, max_lines=1):
 
 
 def makedirs(dirname):
-    """ Try to create directory (with parents). """
+    """ Try to create directory (with parents).
+    
+    :param dirname: a name of a created directory
+    :type dirname: string
+    
+    :return: 
+    :rtype: 
+    """
     cmd = ["hadoop", "fs", "-mkdir", "-p", dirname]
     try:
         proc = subprocess.Popen(cmd,
@@ -56,7 +74,16 @@ def makedirs(dirname):
 
 
 def putfile(fname, dest):
-    """ Upload file to HDFS. """
+    """ Upload file to HDFS.
+    
+    :param fname: file name
+    :type fname: string
+    :param dest: destination for uploaded file
+    :type dest: string
+    
+    :return:
+    :rtype:
+    """
     cmd = ["hadoop", "fs", "-put", fname, dest]
     try:
         proc = subprocess.Popen(cmd,
@@ -72,7 +99,16 @@ def putfile(fname, dest):
 
 
 def movefile(fname, dest):
-    """ Move local file to HDFS. """
+    """ Move local file to HDFS.
+    
+    :param fname: file name
+    :type fname: string
+    :param dest: destination for moved file
+    :type dest: string
+    
+    :return:
+    :rtype:
+    """
     if os.path.exists(fname):
         putfile(fname, dest)
         try:
@@ -84,8 +120,12 @@ def movefile(fname, dest):
 
 def getfile(fname):
     """ Download file from HDFS.
-
-    Return value: file name (without directory)
+    
+    :param fname: file name of a downloaded file
+    :type fname: string
+    
+    :return: file name without its directory
+    :rtype: string
     """
     cmd = ["hadoop", "fs", "-get", fname]
     name = basename(fname)
@@ -105,8 +145,12 @@ def getfile(fname):
 
 def File(fname):
     """ Get and open temporary local copy of HDFS file
-
-    Return value: open file object (TemporaryFile).
+    
+    :param fname: name of a temporary file
+    :type fname: string
+    
+    :return: open file object (TemporaryFile)
+    :rtype: file
     """
     cmd = ["hadoop", "fs", "-cat", fname]
     tmp_file = tempfile.TemporaryFile()
@@ -137,6 +181,14 @@ def listdir(dirname, mode='a'):
         mode    -- 'a': list all objects
                    'f': list files
                    'd': list subdirectories
+    
+    :param dirname: name of HDFS directory
+    :type dirname: string
+    :param mode: type of a list of files
+    :type mode: string
+    
+    :return: a list of files' names/subdirectories inside HDFS
+    :rtype: list
     """
     cmd = ["hadoop", "fs", "-ls", dirname]
     out = []
@@ -194,21 +246,44 @@ def listdir(dirname, mode='a'):
 
 
 def basename(path):
-    """ Return file name without path. """
+    """ Return file name without path.
+    
+    :param path: path to a file
+    :type path: string
+    
+    :return: file name without path
+    :rtype: string
+    """
     if path is None:
         path = ''
     return path.basename(path).strip()
 
 
 def dirname(path):
-    """ Return dirname without filename. """
+    """ Return dirname without filename.
+    
+    :param path: path to a file
+    :type path: string
+    
+    :return: name of directory
+    :rtype: string
+    """
     if path is None:
         path = ''
     return path.dirname(path).strip()
 
 
 def join(path, filename):
-    """ Join path and filename. """
+    """ Join path and filename.
+    
+    :param path: path to a file
+    :type path: string
+    :param filename: file name
+    :type filename: string
+    
+    :return: full path with file name
+    :rtype: string
+    """
     if path is None:
         path = ''
     if filename is None:
