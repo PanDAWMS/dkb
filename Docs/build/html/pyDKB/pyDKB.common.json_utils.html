@@ -62,12 +62,13 @@ of retrieving data from JSON objects.</p>
 <p>String should contain keys separated by dot. If a key contains
 dot itself, the key must be put between matching quotation marks.
 Quotation marks inside the keys (not preceding or following a dot)
-are ignored.</p>
+are treated as ordinary symbols. If a list is given instead of str,
+it is returned without changes.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em>) – nested keys</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em><em>, </em><em>list</em>) – nested keys</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">nested keys</td>
 </tr>
@@ -90,7 +91,7 @@ such constructions according to given string or list with keys.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>json_data</strong> (<em>dict</em>) – to search in</li>
-<li><strong>key</strong> (<em>str</em>) – nested keys</li>
+<li><strong>key</strong> (<em>str</em><em>, </em><em>list</em>) – nested keys</li>
 </ul>
 </td>
 </tr>

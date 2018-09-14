@@ -64,7 +64,7 @@
 <span class="sd">    :param json_data: to search in</span>
 <span class="sd">    :type json_data: dict</span>
 <span class="sd">    :param key: nested keys</span>
-<span class="sd">    :type key: str</span>
+<span class="sd">    :type key: str, list</span>
 
 <span class="sd">    :return: value (None if failed)</span>
 <span class="sd">    :rtype: depends on value, NoneType</span>
@@ -92,10 +92,11 @@
 <span class="sd">    String should contain keys separated by dot. If a key contains</span>
 <span class="sd">    dot itself, the key must be put between matching quotation marks.</span>
 <span class="sd">    Quotation marks inside the keys (not preceding or following a dot)</span>
-<span class="sd">    are ignored.</span>
+<span class="sd">    are treated as ordinary symbols. If a list is given instead of str,</span>
+<span class="sd">    it is returned without changes.</span>
 
 <span class="sd">    :param key: nested keys</span>
-<span class="sd">    :type key: str</span>
+<span class="sd">    :type key: str, list</span>
 
 <span class="sd">    :return: nested keys</span>
 <span class="sd">    :rtype: list</span>
