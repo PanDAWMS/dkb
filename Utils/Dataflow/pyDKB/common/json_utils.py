@@ -58,8 +58,8 @@ def nestedKeys(key):
     String should contain keys separated by dot. If a key contains
     dot itself, the key must be put between matching quotation marks.
     Quotation marks inside the keys (not preceding or following a dot)
-    are ignored. If a list is given instead of str, it is returned
-    without changes.
+    are treated as ordinary symbols. If a list is given instead of str,
+    it is returned without changes.
 
     :param key: nested keys
     :type key: str, list
