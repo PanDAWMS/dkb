@@ -30,7 +30,7 @@ def valueByKey(json_data, key):
     :param json_data: to search in
     :type json_data: dict
     :param key: nested keys
-    :type key: str
+    :type key: str, list
 
     :return: value (None if failed)
     :rtype: depends on value, NoneType
@@ -58,10 +58,11 @@ def nestedKeys(key):
     String should contain keys separated by dot. If a key contains
     dot itself, the key must be put between matching quotation marks.
     Quotation marks inside the keys (not preceding or following a dot)
-    are ignored.
+    are ignored. If a list is given instead of str, it is returned
+    without changes.
 
     :param key: nested keys
-    :type key: str
+    :type key: str, list
 
     :return: nested keys
     :rtype: list
