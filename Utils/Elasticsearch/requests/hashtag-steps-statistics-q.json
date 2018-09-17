@@ -20,7 +20,7 @@ GET <index>/task/_search
       "terms": {"field": "step_name.keyword"},
       "aggs": {
         "input_events": {
-          "sum": {"field": "requested_events"}
+          "sum": {"field": "input_events"}
         },
         "input_bytes": {
           "sum": {"field": "input_bytes"}
