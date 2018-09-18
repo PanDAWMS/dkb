@@ -1643,23 +1643,26 @@ class Manager:
                     else:
                         s += ","
                     other = ""
-                    tables = ""
+                    tables = []
                     for c in outp["content"]:
                         if not other and c.endswith("datasets") and\
                            not c.startswith("mc") and not c.startswith("real"):
                             attr["other_datasets"].append(p.fname)
                             other = "1"
-                        if not tables and c.startswith("table"):
-                            attr["dataset_tables"].append(p.fname)
-                            tables = "1"
+                        if c.startswith("table"):
+                            tables.append(c[len("table_"):])
+                    tables.sort()
+                    tables = " ".join(tables)
+                    if tables:
+                        attr["dataset_tables"].append(p.fname)
                     s += "%s,%s," % (other, tables)
                     for a in Paper.attributes_general:
                         if outp["content"]["plain_text"][a]:
                             attr[a].append(p.fname)
-                            if a == "atlas_name":
-                                s += "%s," % outp["content"]["plain_text"][a]
-                            else:
-                                s += "1,"
+                            add = outp["content"]["plain_text"][a]
+                            if isinstance(add, list):
+                                add = " ".join(add)
+                            s += "%s," % add
                         else:
                             s += ","
                     csv += s.rstrip(",") + "\n"
