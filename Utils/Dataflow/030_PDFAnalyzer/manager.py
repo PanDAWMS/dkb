@@ -1605,7 +1605,7 @@ class Manager:
             n = 1
             n_p = 0
             errors = {}
-            s = "document name,mc datasets, real datasets, other datasets, "\
+            s = "document name,mc datasets,real datasets,other datasets,"\
                 "dataset tables"
             for a in Paper.attributes_general:
                 s += ",%s" % a
