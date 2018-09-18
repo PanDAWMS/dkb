@@ -239,8 +239,8 @@ category_export_dict = {
 dataset_categories = [montecarlo, physcont, calibration, realdata, database]
 # Path must have / as separator, not \.
 re_pdfname = re.compile(r"/([^./]+)\.pdf$")
-re_table_header = re.compile(r"Table \d+:.*?\n\n", re.DOTALL)
-re_table_header_short = re.compile(r"Table (\d+):")
+re_table_caption = re.compile(r"Table \d+:.*?\n\n", re.DOTALL)
+re_table_caption_short = re.compile(r"Table (\d+):")
 re_table_datasets = re.compile("(?:sample|dataset|run)")
 re_column_with_datasets = re.compile("^(?:d[cs]?[-_ ]?|mc[-_ ]?|data ?"
                                      "|dataset ?"
@@ -618,23 +618,23 @@ class Paper:
     def find_datatables(self):
         """ Find tables in the document which may contain datasets. """
         pages_with_tables = []
-        headers_data = {}
+        captions_data = {}
         n = 1
-        # Find pages containing table headers.
+        # Find pages containing table captions.
         while n <= self.num_pages:
             text = self.get_txt_page(n, True)
-            page_headers = re_table_header.findall(text)
-            page_headers_data = {}
-            # Among the headers find ones which may hint that their
-            # tables contain datasets. Store these headers, their
+            page_captions = re_table_caption.findall(text)
+            page_captions_data = {}
+            # Among the captions find ones which may hint that their
+            # tables contain datasets. Store these captions, their
             # numbers and their pages.
-            for h in page_headers:
+            for h in page_captions:
                 if re_table_datasets.search(h.lower()):
-                    num = int(re_table_header_short.match(h).group(1))
-                    page_headers_data[num] = h
-            if page_headers_data:
+                    num = int(re_table_caption_short.match(h).group(1))
+                    page_captions_data[num] = h
+            if page_captions_data:
                 pages_with_tables.append(n)
-                headers_data.update(page_headers_data)
+                captions_data.update(page_captions_data)
             n += 1
 
         datatables = {}
@@ -642,14 +642,14 @@ class Paper:
         for n in pages_with_tables:
             text = self.get_xml_page(n, True)
             tables = xmltable.get_tables_from_text(text)
-            # Save headers and tables matching selected numbers and
+            # Save captions and tables matching selected numbers and
             # having dataset-related columns.
             for table in tables:
-                num = int(re_table_header_short.match(table.header).group(1))
-                if num in headers_data:
+                num = int(re_table_caption_short.match(table.caption).group(1))
+                if num in captions_data:
                     data_column = -1
                     skip_first = False
-                    # Save headers and tables matching selected numbers
+                    # Save captions and tables matching selected numbers
                     # and having dataset-related columns.
                     for rnum in range(0, min(2, len(table.rows))):
                         for i in range(0, len(table.rows[rnum])):
@@ -658,7 +658,7 @@ class Paper:
                                 data_column = i
                                 if rnum == 1:
                                     # This means that first row contains
-                                    # some kind of header, or rubbish,
+                                    # some kind of caption, or rubbish,
                                     # or something else, and columns are
                                     # defined in the second one. First
                                     # one must be skipped in such case.
@@ -710,7 +710,7 @@ class Paper:
                                 data = " ".join([str(i) for i in ids])
                             else:
                                 data = rows
-                            datatables[num] = (headers_data[num], data)
+                            datatables[num] = (captions_data[num], data)
 
         return datatables
 
@@ -761,8 +761,8 @@ class Paper:
             for num in self.datatables:
                 if isinstance(self.datatables[num][1], str)\
                    or isinstance(self.datatables[num][1], unicode):
-                    header, ids = self.datatables[num]
-                    data = [header, [int(i) for i in ids.split()]]
+                    caption, ids = self.datatables[num]
+                    data = [caption, [int(i) for i in ids.split()]]
                 else:
                     data = self.datatables[num]
                 outp["content"]["table_" + str(num)] = data
@@ -771,8 +771,8 @@ class Paper:
             for num in tables:
                 if isinstance(tables[num][1], str)\
                    or isinstance(tables[num][1], unicode):
-                    header, ids = tables[num]
-                    data = [header, [int(i) for i in ids.split()]]
+                    caption, ids = tables[num]
+                    data = [caption, [int(i) for i in ids.split()]]
                 else:
                     data = tables[num]
                 outp["content"]["table_" + str(num)] = data
@@ -1239,12 +1239,12 @@ class Manager:
             self.show_paper_datasets(window, paper)
         elif param == "datatables":
             paper.datatables = {}
-            for [num, header, data, selected] in value:
+            for [num, caption, data, selected] in value:
                 if selected.get():
                     if isinstance(data, list):
-                        paper.datatables[num] = (header, data)
+                        paper.datatables[num] = (caption, data)
                     else:
-                        paper.datatables[num] = (header,
+                        paper.datatables[num] = (caption,
                                                  data.get("0.0",
                                                           "end").strip())
             self.show_paper_datatables(window, paper)
@@ -1415,11 +1415,11 @@ class Manager:
                 keys.sort()
                 datatables_s = []
                 for k in keys:
-                    (header, data) = datatables[k]
+                    (caption, data) = datatables[k]
                     t_frame = Tkinter.Frame(frame)
                     selected = Tkinter.IntVar()
                     selected.set(1)
-                    lbl = Tkinter.Label(t_frame, text=header,
+                    lbl = Tkinter.Label(t_frame, text=caption,
                                         font=HEADING_FONT)
                     b = Tkinter.Checkbutton(t_frame, var=selected)
                     if isinstance(data, str) or isinstance(data, unicode):
@@ -1429,7 +1429,7 @@ class Manager:
                                          height=data.count(" ") // 5 + 2)
                         t.insert(Tkinter.END, data)
                         t.grid(row=1, column=0)
-                        datatables_s.append([k, header, t, selected])
+                        datatables_s.append([k, caption, t, selected])
                     else:
                         rows = data
                         lbl.grid(row=0, column=0, columnspan=len(rows[0]))
@@ -1448,7 +1448,7 @@ class Manager:
                                 lbl = Tkinter.Label(t_frame, text=msg)
                                 lbl.grid(row=r, columnspan=c)
                                 break
-                        datatables_s.append([k, header, rows, selected])
+                        datatables_s.append([k, caption, rows, selected])
                     t_frame.grid(row=num, column=0)
                     # TO DO: checkbuttons for "(un)select all".
                     num += 1
@@ -1493,9 +1493,9 @@ class Manager:
                 keys = paper.datatables.keys()
                 keys.sort()
                 for k in keys:
-                    (header, data) = paper.datatables[k]
+                    (caption, data) = paper.datatables[k]
                     t_frame = Tkinter.Frame(frame)
-                    lbl = Tkinter.Label(t_frame, text=header,
+                    lbl = Tkinter.Label(t_frame, text=caption,
                                         font=HEADING_FONT)
                     if isinstance(data, str) or isinstance(data, unicode):
                         lbl.grid(row=0, column=0)

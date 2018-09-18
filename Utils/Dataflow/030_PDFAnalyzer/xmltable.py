@@ -147,9 +147,9 @@ class Table:
     re_month = re.compile("(january|february|march|april|may|june|july|august"
                           "|september|october|november|december)")
 
-    def __init__(self, header, lines):
+    def __init__(self, caption, lines):
         # table description
-        self.header = header
+        self.caption = caption
         # table text lines
         self.lines = lines
 
@@ -375,37 +375,37 @@ def get_tables_from_text(text):
     """ Get tables from a xml page text. """
     re_textbox = re.compile(r"<textbox id=\"\d+\" bbox=\"([0-9.,]+)\">",
                             re.DOTALL)
-    re_table_header = re.compile(r"Table \d+:")
+    re_table_caption = re.compile(r"Table \d+:")
     tlines = re_textline.findall(text)
     lines = []
-    table_headers = []
+    table_captions = []
     for line in tlines:
         tl = TextLine(line)
-        if re_table_header.match(tl.text):
-            table_headers.append(tl)
+        if re_table_caption.match(tl.text):
+            table_captions.append(tl)
         else:
             lines.append(tl)
 
     # Find the highest top coordinate possible and use it as a zero
     # point for new Y axis.
-    top = max(table_headers + lines, key=lambda line: line.top).top
-    for line in table_headers + lines:
+    top = max(table_captions + lines, key=lambda line: line.top).top
+    for line in table_captions + lines:
         line.swap_y(top)
 
-    table_headers.sort(key=lambda x: x.center[1])
+    table_captions.sort(key=lambda x: x.center[1])
 
     table_lines = []
     tables = []
-    for header in table_headers:
+    for caption in table_captions:
         table_lines = []
         remaining_lines = []
         for line in lines:
-            if line.center[1] < header.center[1]:
+            if line.center[1] < caption.center[1]:
                 table_lines.append(line)
             else:
                 remaining_lines.append(line)
 
-        table = Table(header.text, table_lines)
+        table = Table(caption.text, table_lines)
         if table.rows:
             tables.append(table)
         lines = remaining_lines
