@@ -116,51 +116,50 @@ class ProcessorStage(AbstractStage):
         super(ProcessorStage, self).defaultArguments()
         self.add_argument('input_files', type=str, nargs='*',
                           help=u'source data file\n'
-                                'NOTE: required in (f)ile, '
-                                'ignored in other modes',
+                          'NOTE: required in (f)ile, '
+                          'ignored in other modes',
                           metavar=u'FILE'
                           )
         self.add_argument('-s', '--source', action='store', type=str,
                           help=u'where to get data from:\n'
-                                '    f -- local files\n'
-                                '    s -- stdin\n'
-                                '    h -- hdfs files',
+                          '    f -- local files\n'
+                          '    s -- stdin\n'
+                          '    h -- hdfs files',
                           default='f',
                           choices=['f', 's', 'h'],
                           dest='source'
                           )
         self.add_argument('-i', '--input-dir', action='store', type=str,
                           help=u'base directory in local file system '
-                                'or in HDFS (for relative FILE names). '
-                                'If no FILE specified, all files with '
-                                'extension matching input message type will '
-                                'be taken from %(metavar)s',
+                          'or in HDFS (for relative FILE names). '
+                          'If no FILE specified, all files with '
+                          'extension matching input message type will '
+                          'be taken from %(metavar)s',
                           default=os.curdir,
                           metavar='DIR',
                           dest='input_dir'
                           )
         self.add_argument('-d', '--dest', action='store', type=str,
                           help=u'where to write results:\n'
-                                '    f -- local files\n'
-                                '    s -- stdout\n'
-                                '    h -- hdfs files',
+                          '    f -- local files\n'
+                          '    s -- stdout\n'
+                          '    h -- hdfs files',
                           default='f',
                           choices=['f', 's', 'h'],
                           dest='dest'
                           )
         self.add_argument('-o', '--output-dir', action='store', type=str,
                           help=u'directory for output files '
-                                '(local or HDFS). %%(metavar)s can be:\n'
-                                ' * absolute path\n'
-                                ' * relative path (for local files)\n'
-                                ' * subpath (not absolute nor relative).\n'
-                                'In case of subpath (or relative path for '
-                                'HDFS output) %%(metavar)s is taken '
-                                'as relative to the one of:\n'
-                                ' * directory with input files\n'
-                                ' * current directory (for local files)\n'
-                                ' * \'%stemp\' (for HDFS)'
-                                % hdfs.DKB_HOME,
+                          '(local or HDFS). %%(metavar)s can be:\n'
+                          ' * absolute path\n'
+                          ' * relative path (for local files)\n'
+                          ' * subpath (not absolute nor relative).\n'
+                          'In case of subpath (or relative path for '
+                          'HDFS output) %%(metavar)s is taken '
+                          'as relative to the one of:\n'
+                          ' * directory with input files\n'
+                          ' * current directory (for local files)\n'
+                          ' * \'%stemp\' (for HDFS)' % hdfs.DKB_HOME,
                           default='out',
                           metavar='DIR',
                           dest='output_dir'

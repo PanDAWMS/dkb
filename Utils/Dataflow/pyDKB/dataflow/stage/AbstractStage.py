@@ -73,32 +73,32 @@ class AbstractStage(object):
         """ Config argument parser with parameters common for all stages. """
         self.add_argument('-m', '--mode', action='store', type=str,
                           help=u'processing mode: (f)ile, (s)tream'
-                                ' or (m)ap-reduce.\n'
-                                'Processing mode is defined as a combination '
-                                'of four parameters: '
-                                '"-s SRC -d DEST -e EOM -E EOP", '
-                                'where:\n'
-                                ' \n'
-                                ' mode || -s | -d | -e | -E\n'
-                                '===========================\n'
-                                '  s   ||  s |  s | \\n | \\0\n'
-                                '---------------------------\n'
-                                '  f   ||  f |  f | \\n | \'\'\n'
-                                '---------------------------\n'
-                                '  m   ||  s |  s | \\n | \'\'\n'
-                                ' \n'
-                                'Any of these parameters can be rewritten by '
-                                'its explicit specification.\n'
-                                'NOTE: for (m)ap-reduce mode:\n'
-                                ' * if --source is '
-                                'set to (h)dfs (via "-s" or "--hdfs"), names '
-                                'of files to be processed will be taken from '
-                                'STDIN;\n'
-                                ' * custom value of EOM will only affect '
-                                'output (input messages still should '
-                                'be separated by "\\n");\n'
-                                ' * source and/or destination '
-                                'can not be (f)ile',
+                          ' or (m)ap-reduce.\n'
+                          'Processing mode is defined as a combination '
+                          'of four parameters: '
+                          '"-s SRC -d DEST -e EOM -E EOP", '
+                          'where:\n'
+                          ' \n'
+                          ' mode || -s | -d | -e | -E\n'
+                          '===========================\n'
+                          '  s   ||  s |  s | \\n | \\0\n'
+                          '---------------------------\n'
+                          '  f   ||  f |  f | \\n | \'\'\n'
+                          '---------------------------\n'
+                          '  m   ||  s |  s | \\n | \'\'\n'
+                          ' \n'
+                          'Any of these parameters can be rewritten by '
+                          'its explicit specification.\n'
+                          'NOTE: for (m)ap-reduce mode:\n'
+                          ' * if --source is '
+                          'set to (h)dfs (via "-s" or "--hdfs"), names '
+                          'of files to be processed will be taken from '
+                          'STDIN;\n'
+                          ' * custom value of EOM will only affect '
+                          'output (input messages still should '
+                          'be separated by "\\n");\n'
+                          ' * source and/or destination '
+                          'can not be (f)ile',
                           default='f',
                           metavar='MODE',
                           choices=['f', 's', 'm'],
@@ -113,18 +113,18 @@ class AbstractStage(object):
                           )
         self.add_argument('-e', '--end-of-message', action='store', type=str,
                           help=u'custom end of message marker.\n'
-                                'NOTE: in (f)ile mode for JSON messages EOM '
-                                'can be set to empty string to read input '
-                                'file as single JSON object, not as NDJSON. '
-                                'In this case output will also be formatted '
-                                'as a single JSON object (array or hash)\n'
-                                'DEFAULT: \'\\n\'',
+                          'NOTE: in (f)ile mode for JSON messages EOM '
+                          'can be set to empty string to read input '
+                          'file as single JSON object, not as NDJSON. '
+                          'In this case output will also be formatted '
+                          'as a single JSON object (array or hash)\n'
+                          'DEFAULT: \'\\n\'',
                           default=None,
                           dest='eom'
                           )
         self.add_argument('-E', '--end-of-process', action='store', type=str,
                           help=u'custom end of process marker\n'
-                                'DEFAULT: \'\'',
+                          'DEFAULT: \'\'',
                           default=None,
                           dest='eop'
                           )
