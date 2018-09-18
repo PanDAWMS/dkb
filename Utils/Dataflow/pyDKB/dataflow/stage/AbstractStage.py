@@ -89,10 +89,16 @@ class AbstractStage(object):
                                 ' \n'
                                 'Any of these parameters can be rewritten by '
                                 'its explicit specification.\n'
-                                'NOTE: for (m)ap-reduce mode, if --source is '
+                                'NOTE: for (m)ap-reduce mode:\n'
+                                ' * if --source is '
                                 'set to (h)dfs (via "-s" or "--hdfs"), names '
                                 'of files to be processed will be taken from '
-                                'STDIN.',
+                                'STDIN;\n'
+                                ' * custom value of EOM will only affect '
+                                'output (input messages still should '
+                                'be separated by "\\n");\n'
+                                ' * source and/or destination '
+                                'can not be (f)ile',
                           default='f',
                           metavar='MODE',
                           choices=['f', 's', 'm'],
