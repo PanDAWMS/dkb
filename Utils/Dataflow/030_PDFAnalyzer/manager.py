@@ -287,8 +287,8 @@ re_energy = re.compile(r"(\d+\.?\d*) (G|T)eV")
 # output. Simple "fb-1" does not work.
 re_luminosity = re.compile(r"(\d+\.?\d*) ?(m|n|p|f)b(?:−|\(cid:0\))1")
 re_collisions = re.compile("(proton-proton|heavy-ion|pp) collisions")
-re_year = re.compile("(?:acquired|collected|measured|recorded).{0,100}"
-                     r"(20\d\d)", re.DOTALL)
+re_year = re.compile("(?:acquired|collected|measured|recorded).{0,100}?"
+                     r"(20\d\d((\+|-| and )20\d\d)?)", re.DOTALL)
 # Interval must contain at least two numbers, i.e. [1/2] or [3\4\5].
 re_interval = re.compile(r"\[(?:[0-9][\\/][0-9\\/\n]+|[0-9]+-[0-9]+)\]")
 re_link = re.compile(r"(.*)\n? ?(https?://cds\.cern\.ch/record/\d+)")
@@ -441,7 +441,7 @@ def scrollable_warning(parent, message, title="Warning"):
 class Paper:
     """ Class represents a document which needs to be analyzed. """
     attributes_general = ["atlas_name", "campaigns", "energy", "luminosity",
-                          "collisions", "data taking year",
+                          "collisions", "data taking years",
                           "possible_project_montecarlo",
                           "possible_project_realdata", "links"]
     # Paper attributes which are needed but cannot be determined
@@ -604,11 +604,23 @@ class Paper:
             if attrs["collisions"] == "pp":
                 attrs["collisions"] = "proton-proton"
 
-        attrs["data taking year"] = False
+        attrs["data taking years"] = False
         tmp = re_year.search(text)
         if tmp:
-            attrs["data taking year"] = tmp.group(1)
-
+            if len(tmp.group(1)) == 4:
+                attrs["data taking years"] = [tmp.group(1)]
+            else:
+                # Construct a list of all years, for example,
+                # [2015, 2016, 2017] for "2015-2017". The same result will
+                # be produced for "2015 and 2017", but no papers with such
+                # interruptions in data collection were encountered. It is
+                # also presumed that years are listed in correct order -
+                # "2015 and 2016", but not "2016 and 2015".
+                start = int(tmp.group(1)[:4])
+                end = int(tmp.group(1)[-4:])
+                attrs["data taking years"] = []
+                for i in range(start, end + 1):
+                    attrs["data taking years"].append(str(i))
         if attrs["campaigns"] and attrs["energy"]:
             mcc = False
             for c in attrs["campaigns"]:
@@ -623,10 +635,13 @@ class Paper:
         else:
             attrs["possible_project_montecarlo"] = False
 
-        if attrs["data taking year"] and attrs["energy"]:
-            y = attrs["data taking year"][2:4]
+        if attrs["data taking years"] and attrs["energy"]:
+            attrs["possible_project_realdata"] = []
             nrg = attrs["energy"].replace(" ", "")
-            attrs["possible_project_realdata"] = "data%s_%s" % (y, nrg)
+            for year in attrs["data taking years"]:
+                y = year[2:4]
+                proj = "data%s_%s" % (y, nrg)
+                attrs["possible_project_realdata"].append(proj)
         else:
             attrs["possible_project_realdata"] = False
 
