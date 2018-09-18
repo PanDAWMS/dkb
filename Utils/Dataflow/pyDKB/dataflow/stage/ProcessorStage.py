@@ -115,7 +115,9 @@ class ProcessorStage(AbstractStage):
         """ Default parser configuration. """
         super(ProcessorStage, self).defaultArguments()
         self.add_argument('input_files', type=str, nargs='*',
-                          help=u'source data file',
+                          help=u'source data file\n'
+                                'NOTE: required in (f)ile, '
+                                'ignored in other modes',
                           metavar=u'FILE'
                           )
         self.add_argument('-s', '--source', action='store', type=str,
