@@ -64,6 +64,9 @@
             }
           }
         },
+        "step_id": {
+          "type": "long"
+        },
         "status" : {
           "type" : "keyword",
           "ignore_above" : 256
