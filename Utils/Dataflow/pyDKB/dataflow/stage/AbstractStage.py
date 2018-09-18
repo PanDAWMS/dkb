@@ -117,13 +117,13 @@ class AbstractStage(object):
                                 'can be set to empty string to read input '
                                 'file as single JSON object, not as NDJSON. '
                                 'In this case output will also be formatted '
-                                'as a single JSON object (array or hash).\n'
+                                'as a single JSON object (array or hash)\n'
                                 'DEFAULT: \'\\n\'',
                           default=None,
                           dest='eom'
                           )
         self.add_argument('-E', '--end-of-process', action='store', type=str,
-                          help=u'custom end of process marker.\n'
+                          help=u'custom end of process marker\n'
                                 'DEFAULT: \'\'',
                           default=None,
                           dest='eop'
