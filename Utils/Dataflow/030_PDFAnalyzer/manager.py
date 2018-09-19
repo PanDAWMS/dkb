@@ -876,8 +876,10 @@ class Manager:
         if not os.access(EXPORT_DIR, os.F_OK):
             os.mkdir(EXPORT_DIR)
 
-        self.cnvs = Tkinter.Canvas(self.window, width=1200, height=800)
-        self.cnvs.grid(row=1, column=0)
+        self.cnvs = Tkinter.Canvas(self.window,
+                                   width=self.window.winfo_screenwidth(),
+                                   height=self.window.winfo_screenheight())
+        self.cnvs.grid(row=0, column=0, sticky='nw')
         self.frame = Tkinter.Frame(self.cnvs)
         self.cnvs.create_window(0, 0, window=self.frame, anchor='nw')
         scrlbr = Tkinter.Scrollbar(self.window, command=self.cnvs.yview)
@@ -886,11 +888,21 @@ class Manager:
 
         self.status = Tkinter.Label(self.window, text="", bd=1,
                                     relief=Tkinter.SUNKEN)
-        self.status.grid(row=2, sticky='we')
+        self.status.grid(row=1, sticky='we')
 
         # Intercept closing the program via Alt + F4 or other methods to
         # perform a clean exit.
         self.window.protocol("WM_DELETE_WINDOW", self.finish)
+
+        # First row and column (canvas) should resize when window does.
+        self.window.columnconfigure(0, weight=1)
+        self.window.rowconfigure(0, weight=1)
+
+        # Canvas is as big as screen, to account for possible resizing,
+        # but the window does not needs to take that much space immediately.
+        s = "%dx%d" % (int(0.66 * self.window.winfo_screenwidth()),
+                       int(0.66 * self.window.winfo_screenheight()))
+        self.window.geometry(s)
 
         self.redraw()
         self.window.mainloop()
@@ -949,6 +961,7 @@ class Manager:
         """ Show preferences window. """
         w = Tkinter.Toplevel()
         w.title("Preferences")
+        w.wm_resizable(False, False)
         w.transient(self.window)
         w.grab_set()
         determine_title = Tkinter.BooleanVar()
@@ -1127,6 +1140,7 @@ class Manager:
             for c in window.winfo_children():
                 c.destroy()
         window.title("Info: %s" % paper.fname)
+        window.wm_resizable(False, False)
         lbl = Tkinter.Label(window, text="File name: %s" % paper.fname)
         lbl.grid(row=0, column=1)
         b = Tkinter.Button(window, text="Save",
@@ -1181,6 +1195,7 @@ class Manager:
             for c in window.winfo_children():
                 c.destroy()
         window.title("Determine paper title")
+        window.wm_resizable(False, False)
         lines = paper.get_xml_page(1)
 
         d = {}
