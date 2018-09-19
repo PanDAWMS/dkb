@@ -137,11 +137,7 @@ class TextLine:
 
 def row_centery(row):
     """ Calculate average y-center in a row. """
-    c = 0
-    for line in row:
-        c += line.center[1]
-    c /= len(row)
-    return c
+    return sum([line.center[1] for line in row]) / len(row)
 
 
 class Table:
@@ -251,10 +247,7 @@ class Table:
         """
         if num is not None or num == 0:
             row = self.rows[num]
-        text = ""
-        for line in row:
-            text += line.text + "!"
-        return text
+        return "!".join([line.text for line in row])
 
     def break_short_rows(self, max_elements):
         """ Attempt to break lines in rows which are too short. """
@@ -269,9 +262,7 @@ class Table:
         main_row = normal_rows[0]
         # Calculate x coord for centers of each column in first normal
         # row.
-        main_centers = []
-        for line in main_row:
-            main_centers.append((line.left + line.right) / 2)
+        main_centers = [(line.left + line.right) / 2 for line in main_row]
         # Calculate x boundaries of each column.
         boundaries = []
         for i in range(0, max_elements):
@@ -345,11 +336,7 @@ class Table:
 
 
 def analyze_page(text):
-    tlines = re_textline.findall(text)
-    lines = []
-    for line in tlines:
-        tl = TextLine(line)
-        lines.append(tl)
+    lines = [TextLine(line) for line in re_textline.findall(text)]
 
     # Find the highest top coordinate possible and use it as a zero
     # point for new Y axis.
