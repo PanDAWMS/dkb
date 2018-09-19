@@ -9,6 +9,7 @@ PAGE_SIZE = 1000
 
 re_textline = re.compile("<textline bbox=\"[0-9.,]+\">.+?</textline>",
                          re.DOTALL)
+re_table_caption_short = re.compile(r"Table (\d+):")
 
 
 class TextLine:
@@ -147,21 +148,9 @@ class Table:
     re_month = re.compile("(january|february|march|april|may|june|july|august"
                           "|september|october|november|december)")
 
-    def __init__(self, caption, lines):
-        # table description
+    def __init__(self, caption, rows, caption_position):
+        # Table description
         self.caption = caption
-        # table text lines
-        self.lines = lines
-
-        rows = []
-        t = []
-        # Construct rows out of lines
-        for line in self.lines:
-            if line not in t:
-                row = self.construct_row(line, t)
-                rows.append(row)
-                t += row
-        rows.sort(key=lambda row: row_centery(row))
 
         # Remove rows which contain date - this is used because
         # sometimes date stamped on a page gets caught while we are
@@ -177,25 +166,39 @@ class Table:
                 row.sort(key=lambda line: line.center[0])
                 self.rows.append(row)
 
-        r = len(self.rows) - 1
         # Separate table lines from text above table. This is done by
         # looking for a space between rows which is too large.
         max_diff = False
-        n = 1
-        while r > 0:
-            if not max_diff:
-                max_diff = row_centery(self.rows[r])\
-                    - row_centery(self.rows[r - 1])
-            else:
-                diff = row_centery(self.rows[r]) - \
-                    row_centery(self.rows[r - 1])
-                if diff > 1.4 * max_diff:
-                    del self.rows[0:r]
-                    break
-                elif diff > max_diff:
-                    max_diff = diff
-            n += 1
-            r -= 1
+        if caption_position < 0:
+            r = 0
+            while r < len(self.rows) - 1:
+                if not max_diff:
+                    max_diff = row_centery(self.rows[r + 1])\
+                        - row_centery(self.rows[r])
+                else:
+                    diff = row_centery(self.rows[r + 1]) - \
+                        row_centery(self.rows[r])
+                    if diff > 1.4 * max_diff:
+                        del self.rows[r + 1:]
+                        break
+                    elif diff > max_diff:
+                        max_diff = diff
+                r += 1
+        else:
+            r = len(self.rows) - 1
+            while r > 0:
+                if not max_diff:
+                    max_diff = row_centery(self.rows[r])\
+                        - row_centery(self.rows[r - 1])
+                else:
+                    diff = row_centery(self.rows[r]) - \
+                        row_centery(self.rows[r - 1])
+                    if diff > 1.4 * max_diff:
+                        del self.rows[:r]
+                        break
+                    elif diff > max_diff:
+                        max_diff = diff
+                r -= 1
 
         # Find overlapping (by X coordinate) lines and merge them. So
         # far this was required to deal with rows where several lines
@@ -367,46 +370,109 @@ def analyze_page(text):
             rows.append(row)
             t += row
     rows.sort(key=lambda row: row_centery(row))
+    # Discard the top row if it contains "DRAFT" line. Such line is sometimes
+    # placed on top of each page of the document and may interfere with
+    # reconstruction when the caption is below the tables.
+    for line in rows[0]:
+        if line.text == "DRAFT":
+            rows = rows[1:]
+            break
 
     return rows
 
 
 def get_tables_from_text(text):
     """ Get tables from a xml page text. """
-    re_textbox = re.compile(r"<textbox id=\"\d+\" bbox=\"([0-9.,]+)\">",
-                            re.DOTALL)
-    re_table_caption = re.compile(r"Table \d+:")
-    tlines = re_textline.findall(text)
-    lines = []
-    table_captions = []
-    for line in tlines:
-        tl = TextLine(line)
-        if re_table_caption.match(tl.text):
-            table_captions.append(tl)
+    rows = analyze_page(text)
+    caption_start = False
+    caption_rows = []
+    text_rows = []
+    # Determine the type of each row, if possible.
+    # Caption rows are related to the table - notably, they contain the table
+    # number.
+    # Text rows contain parts of the document's main text body.
+    # The tables cannot include rows from any of these two types - therefore,
+    # such rows (and document borders) can be used to determine whether the
+    # table captions are positioned above or below their tables.
+    for (i, row) in enumerate(rows):
+        if re_table_caption_short.match(row[0].text):
+            caption_start = row
+            caption_rows.append(i)
+        elif caption_start and len(row) == 1 and\
+                abs(row[0].left - caption_start[0].left) < 1.0:
+            caption_rows.append(i)
         else:
-            lines.append(tl)
-
-    # Find the highest top coordinate possible and use it as a zero
-    # point for new Y axis.
-    top = max(table_captions + lines, key=lambda line: line.top).top
-    for line in table_captions + lines:
-        line.swap_y(top)
-
-    table_captions.sort(key=lambda x: x.center[1])
-
-    table_lines = []
-    tables = []
-    for caption in table_captions:
-        table_lines = []
-        remaining_lines = []
-        for line in lines:
-            if line.center[1] < caption.center[1]:
-                table_lines.append(line)
+            caption_start = False
+            if len(row) > 1 and row[0].right - row[0].left < 10.0:
+                f = row[1]
             else:
-                remaining_lines.append(line)
-
-        table = Table(caption.text, table_lines)
-        if table.rows:
-            tables.append(table)
-        lines = remaining_lines
+                f = row[0]
+            # Magic number - text rows in most of the documents are positioned
+            # in such way that PDFMiner determines their left coordinate to
+            # be ~76. Non-rotated pages only.
+            if f.left - 76.0 < 1.0 and len(row) < 3:
+                text_rows.append(i)
+    # Tables' captions position on the page
+    # -1 - above tables
+    # 0 - unknown
+    # 1 - below tables
+    caption_position = 0
+    if 0 in caption_rows:
+        caption_position = -1
+    elif len(rows) - 1 in caption_rows:
+        caption_position = 1
+    else:
+        for i in caption_rows:
+            if i - 1 in text_rows:
+                caption_position = -1
+                break
+            elif i + 1 in text_rows:
+                caption_position = 1
+                break
+    tables = []
+    if caption_position < 0:
+        i = len(rows) - 1
+        last_unused = i
+        while i >= 0:
+            if i in caption_rows:
+                table_rows = rows[i + 1:last_unused + 1]
+                while i - 1 in caption_rows:
+                    i -= 1
+                caption = "".join([line.text for line in rows[i]])
+                while i + 1 in caption_rows:
+                    i += 1
+                    caption += "".join([line.text for line in rows[i]])
+                while i - 1 in caption_rows:
+                    i -= 1
+                # Row after table cannot be another caption and is first unused
+                # row for the next table.
+                i -= 1
+                last_unused = i
+                i -= 1
+                table = Table(caption, table_rows, caption_position)
+                if table.rows:
+                    tables.append(table)
+            else:
+                i -= 1
+        tables = list(reversed(tables))
+    else:
+        i = 0
+        last_unused = i
+        while i < len(rows):
+            if i in caption_rows:
+                table_rows = rows[last_unused:i]
+                caption = "".join([line.text for line in rows[i]])
+                while i + 1 in caption_rows:
+                    i += 1
+                    caption += "".join([line.text for line in rows[i]])
+                # Row after table cannot be another caption and is first unused
+                # row for the next table.
+                i += 1
+                last_unused = i
+                i += 1
+                table = Table(caption, table_rows, caption_position)
+                if table.rows:
+                    tables.append(table)
+            else:
+                i += 1
     return tables
