@@ -62,6 +62,28 @@ class dataflow_stage_ProcessorStageArgsTestCase(unittest.TestCase):
         param_vals = self.get_param_vals()
         self.assertEqual(param_vals, self.param_defaults)
 
+    def _test_mode(self, mode):
+        if mode not in self.mode_defaults:
+            raise ValueError("_test_mode() expected 'mode' parameter value"
+                             " to be one of: %s (got '%s')."
+                             % (self.mode_defaults.keys(), mode))
+        args = ['-m', mode]
+        self.stage.configure(args)
+        param_vals = self.get_param_vals()
+        expected_vals = dict(self.param_defaults)
+        expected_vals.update(self.mode_defaults[mode])
+        expected_vals.update({'mode': mode})
+        self.assertEqual(param_vals, expected_vals)
+
+    def test_mode_f(self):
+        self._test_mode('f')
+
+    def test_mode_s(self):
+        self._test_mode('s')
+
+    def test_mode_m(self):
+        self._test_mode('m')
+
 
 test_cases = (dataflow_stage_ProcessorStageArgsTestCase, )
 
