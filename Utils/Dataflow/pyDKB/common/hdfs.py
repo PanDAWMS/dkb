@@ -21,16 +21,14 @@ def check_stderr(proc, timeout=None, max_lines=1):
 
     Output only MAX_LINES of the STDERR to the current STDERR;
     if MAX_LINES == None, output all the STDERR.
-
-    Return value is the subprocess` return code.
-
+    
     :param proc: subrocess
     :type proc: subprocess
     :param timeout: time limit for operation
     :type timeout: number (int)
     :param max_lines: maximum quantity of lines
     :type max_lines: number (int)
-
+    
     :return: subprocess return code, set by poll()
     :rtype: int
     """
@@ -52,12 +50,15 @@ def check_stderr(proc, timeout=None, max_lines=1):
 
 def makedirs(dirname):
     """ Try to create directory (with parents).
-
+    
+    Create directory and check status of process
+    with subprocess.Popen.
+    
     :param dirname: a name of a created directory
     :type dirname: string
-
-    :return:
-    :rtype:
+    
+    :return: 
+    :rtype: 
     """
     cmd = ["hadoop", "fs", "-mkdir", "-p", dirname]
     try:
@@ -75,12 +76,15 @@ def makedirs(dirname):
 
 def putfile(fname, dest):
     """ Upload file to HDFS.
-
-    :param fname: file name
+    
+    Upload file into particular directory and check status of
+    process with subprocess.Popen.
+    
+    :param fname: file path
     :type fname: string
     :param dest: destination for uploaded file
     :type dest: string
-
+    
     :return:
     :rtype:
     """
@@ -100,12 +104,15 @@ def putfile(fname, dest):
 
 def movefile(fname, dest):
     """ Move local file to HDFS.
-
-    :param fname: file name
+    
+    Check if a file exists, put a copy of it to a particular
+    directory. Remove a local copy.
+    
+    :param fname: file path
     :type fname: string
     :param dest: destination for moved file
     :type dest: string
-
+    
     :return:
     :rtype:
     """
@@ -120,10 +127,13 @@ def movefile(fname, dest):
 
 def getfile(fname):
     """ Download file from HDFS.
-
-    :param fname: file name of a downloaded file
+    
+    Get file from HDFS and check status of process with
+    subprocess.Popen.
+    
+    :param fname: path of a downloaded file
     :type fname: string
-
+    
     :return: file name without its directory
     :rtype: string
     """
@@ -144,11 +154,11 @@ def getfile(fname):
 
 
 def File(fname):
-    """ Get and open temporary local copy of HDFS file
-
-    :param fname: name of a temporary file
+    """ Get and open temporary local copy of HDFS file.
+    
+    :param fname: path of a temporary file
     :type fname: string
-
+    
     :return: open file object (TemporaryFile)
     :rtype: file
     """
@@ -181,12 +191,12 @@ def listdir(dirname, mode='a'):
         mode    -- 'a': list all objects
                    'f': list files
                    'd': list subdirectories
-
+    
     :param dirname: name of HDFS directory
     :type dirname: string
     :param mode: type of a list of files
     :type mode: string
-
+    
     :return: a list of files' names/subdirectories inside HDFS
     :rtype: list
     """
@@ -247,10 +257,10 @@ def listdir(dirname, mode='a'):
 
 def basename(path):
     """ Return file name without path.
-
+    
     :param path: path to a file
     :type path: string
-
+    
     :return: file name without path
     :rtype: string
     """
@@ -261,10 +271,10 @@ def basename(path):
 
 def dirname(path):
     """ Return dirname without filename.
-
+    
     :param path: path to a file
     :type path: string
-
+    
     :return: name of directory
     :rtype: string
     """
@@ -275,12 +285,12 @@ def dirname(path):
 
 def join(path, filename):
     """ Join path and filename.
-
+    
     :param path: path to a file
     :type path: string
     :param filename: file name
     :type filename: string
-
+    
     :return: full path with file name
     :rtype: string
     """
