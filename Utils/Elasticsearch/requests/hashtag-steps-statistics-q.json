@@ -25,6 +25,9 @@ GET <index>/task/_search
         "input_bytes": {
           "sum": {"field": "input_bytes"}
         },
+        "processed_events": {
+          "sum": {"field": "processed_events"}
+        },
         "output": {
           "children": {"type": "output_dataset"},
           "aggs": {
@@ -33,9 +36,6 @@ GET <index>/task/_search
               "aggs": {
                 "bytes": {
                   "sum": {"field": "bytes"}
-                },
-                "events": {
-                  "sum": {"field": "events"}
                 }
               }
             }
