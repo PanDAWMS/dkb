@@ -1037,8 +1037,10 @@ class Manager:
                 self.status_set("")
                 self.window.update_idletasks()
                 if errors:
+                    keys = errors.keys()
+                    keys.sort(cmp=cmp_papernames)
                     msg = "These papers were not added for some reason:\n\n"
-                    for e in errors:
+                    for e in keys:
                         msg += "%s : %s\n\n" % (e, errors[e])
                     scrollable_warning(self.window, msg,
                                        "Unable to add papers")
@@ -1667,8 +1669,10 @@ class Manager:
             else:
                 msg = False
                 if errors:
+                    keys = errors.keys()
+                    keys.sort(cmp=cmp_papernames)
                     msg = "These papers were not exported for some reason:\n\n"
-                    for e in errors:
+                    for e in keys:
                         msg += "%s : %s\n\n" % (e, errors[e])
                     with open(ERRORS_FILE, "w") as f:
                         f.write(msg)
