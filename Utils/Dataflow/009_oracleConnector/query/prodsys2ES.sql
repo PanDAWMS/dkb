@@ -32,6 +32,7 @@ with tasks as (
       t.project,
       t.phys_group,
       t.status,
+      t.total_events,
       t.pr_id,
       t.username as user_name,
       t.primary_input,
@@ -116,8 +117,9 @@ with tasks as (
     t.*,
     sum(jd.nevents)
       OVER (PARTITION BY t.taskid) AS requested_events,
-    sum(jd.neventsused)
-      OVER (PARTITION BY t.taskid) AS processed_events
+    NVL(
+      sum(jd.neventsused) OVER (PARTITION BY t.taskid),
+      t.total_events) AS processed_events
   FROM tasks_t_task t
     LEFT JOIN ATLAS_PANDA.jedi_datasets jd
       ON t.taskid = jd.jeditaskid
