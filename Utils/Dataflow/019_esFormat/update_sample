@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+base_dir=$(readlink -f $(dirname "$0"))
+
+for name in datasets tasks; do
+  sample=$base_dir/output/$name.ndjson
+  mv $sample{,.bak}
+  cat $base_dir/input/$name.ndjson | $base_dir/run.sh > $sample
+done
