@@ -1589,7 +1589,10 @@ class Manager:
         Quick export: determine metadata first if none is available,
         skipping all user interaction.
         """
-        if n is None:
+        if not self.papers:
+            tkMessageBox.showwarning("Nothing to export",
+                                     "No papers to export.")
+        elif n is None:
             if self.unsaved_papers():
                 msg = "Some papers were changed. "\
                       "These changes will be saved before "\
