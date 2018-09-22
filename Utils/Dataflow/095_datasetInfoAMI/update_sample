@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+base_dir=$(readlink -f $(dirname "$0"))
+
+sample=$base_dir/output/datasets.ndjson
+
+mv $sample{,.bak}
+
+key=$RUCIO_HOME/auth/key.pem
+crt=$RUCIO_HOME/auth/crt.pem
+$base_dir/amiDatasets.py --userkey $key --usercert $crt -d s $base_dir/input/datasets.ndjson > $sample
