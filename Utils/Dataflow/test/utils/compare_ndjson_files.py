@@ -34,19 +34,19 @@ def main(file1, file2):
                 continue
             uid = parsed[UID_KEY]
             if not r1.get(uid):
-                sys.stderr.write("Record missed in %s (uid=%s)\n"
+                sys.stdout.write("Record missed in %s (uid=%s)\n"
                                  % (file1, uid))
                 line = f.readline()
                 continue
             stored = r1.pop(uid)
             if stored != parsed:
-                sys.stderr.write("Record seem to differ for uid=%s\n" % uid)
+                sys.stdout.write("Record seem to differ for uid=%s\n" % uid)
                 for key in stored.keys():
                     v1 = stored.pop(key)
                     try:
                         v2 = parsed.pop(key)
                     except KeyError:
-                        sys.stderr.write("Item missed in (2): '%s'\n" % key)
+                        sys.stdout.write("Item missed in (2): '%s'\n" % key)
                         continue
                     if v1 != v2:
                         header1 = "key = %s:\n" % key
@@ -57,22 +57,22 @@ def main(file1, file2):
                         header2 = "Items missed in (2):\n"
                         for v in v1:
                             if v not in v2:
-                                sys.stderr.write("%s%s(1) %s\n"
+                                sys.stdout.write("%s%s(1) %s\n"
                                                  % (header1, header2, v))
                                 header1 = ''
                                 header2 = ''
                         header2 = "Items missed in (1):\n"
                         for v in v2:
                             if v not in v1:
-                                sys.stderr.write("%s%s(2) %s\n"
+                                sys.stdout.write("%s%s(2) %s\n"
                                                  % (header1, header2, v))
                                 header1 = ''
                                 header2 = ''
                 for key in parsed:
-                    sys.stderr.write("Key missed in (1): '%s'\n" % key)
+                    sys.stdout.write("Key missed in (1): '%s'\n" % key)
             line = f.readline()
     for uid in r1:
-        sys.stderr.write("Record missed in %s (uid=%s)\n" % (file2, uid))
+        sys.stdout.write("Record missed in %s (uid=%s)\n" % (file2, uid))
 
 
 if __name__ == '__main__':

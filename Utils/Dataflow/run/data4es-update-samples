@@ -8,11 +8,13 @@
 #   \                                     /
 #    \---> 091(out) ---> 093 ---> 095 ---/
 
+[ -z "$COMPARE" ] && COMPARE=YES
+
 base_dir=$(readlink -f $(dirname "$0"))
 
 echo "Updating samples for:"
 for stage in 009 091 016 019 093 095; do
     echo "Stage ${stage}..."
-    $base_dir/../${stage}_*/update_sample \
+    COMPARE=$COMPARE $base_dir/../${stage}_*/update_sample \
       || { echo "Failed to update sample for Stage $stage." >&2 && exit 1; }
 done

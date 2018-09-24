@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+[ -z "$COMPARE" ] && COMPARE=YES
+
 base_dir=$(readlink -f $(dirname "$0"))
 
 lib=$base_dir/../shell_lib
 . $lib/update_sample
+COMPARE_SAMPLES=$COMPARE
 
 cfg=$base_dir/../config/009.cfg
 offset=$base_dir/../config/009.offset

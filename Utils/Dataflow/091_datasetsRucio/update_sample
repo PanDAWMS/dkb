@@ -1,9 +1,12 @@
 #!/usr/bin/env bash
 
+[ -z "$COMPARE" ] && COMPARE=YES
+
 base_dir=$(readlink -f $(dirname "$0"))
 
 lib=$base_dir/../shell_lib
 . $lib/update_sample
+COMPARE_SAMPLES=$COMPARE
 
 for type in input output; do
   sample=$base_dir/output/${type}_datasets.ndjson

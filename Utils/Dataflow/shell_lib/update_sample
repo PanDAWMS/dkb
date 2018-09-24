@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+COMPARE_SAMPLES=
+
 base_dir=$(readlink -f $(dirname "$0"))
 
 update_sample() {
@@ -9,4 +11,9 @@ update_sample() {
   git checkout "$sample"
   mv "$sample"{,.bak}
   mv "$2" "$sample"
+
+  [ "x$COMPARE_SAMPLES" = "xYES" ] \
+    && $base_dir/../test/utils/compare_ndjson_files.py $sample{.bak,} > $sample.cmp.log
+
+  return 0
 }
