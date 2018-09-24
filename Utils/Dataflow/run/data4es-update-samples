@@ -13,7 +13,7 @@
 base_dir=$(readlink -f $(dirname "$0"))
 
 echo "Updating samples for:"
-for stage in 009 091 016 019 093 095; do
+for stage in 009 091 016 093 095 019; do
     echo "Stage ${stage}..."
     COMPARE=$COMPARE $base_dir/../${stage}_*/update_sample \
       || { echo "Failed to update sample for Stage $stage." >&2 && exit 1; }
