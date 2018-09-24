@@ -12,6 +12,7 @@ sed -e's/^initial = .*$/initial = 09-05-2016 12:12:00/' \
 
 rm -f $offset
 
+git checkout $sample
 mv $sample{,.bak}
 
 $base_dir/Oracle2JSON.py --config $cfg --mode SQUASH > $sample

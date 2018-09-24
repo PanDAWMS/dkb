@@ -4,6 +4,7 @@ base_dir=$(readlink -f $(dirname "$0"))
 
 sample=$base_dir/output/datasets.ndjson
 
+git checkout $sample
 mv $sample{,.bak}
 
 key=$RUCIO_HOME/auth/key.pem
