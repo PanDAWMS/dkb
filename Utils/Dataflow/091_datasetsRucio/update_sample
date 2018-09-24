@@ -10,6 +10,6 @@ COMPARE_SAMPLES=$COMPARE
 
 for type in input output; do
   sample=$base_dir/output/${type}_datasets.ndjson
-  $base_dir/datasets_processing.py -d s $base_dir/input/sample.ndjson > $sample.new
+  $base_dir/datasets_processing.py -d s -t $(head -c 1 <<<"$type") $base_dir/input/sample.ndjson > $sample.new
   update_sample $sample{,.new}
 done
