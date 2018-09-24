@@ -2,9 +2,11 @@
 
 base_dir=$(readlink -f $(dirname "$0"))
 
+lib=$base_dir/../shell_lib
+. $lib/update_sample
+
 sample=$base_dir/output/sample.ndjson
 
-git checkout $sample
-mv $sample{,.bak}
+$base_dir/stage.py -d s $base_dir/input/sample.ndjson > $sample.new
 
-$base_dir/stage.py -d s $base_dir/input/sample.ndjson > $sample
+update_sample $sample{,.new}

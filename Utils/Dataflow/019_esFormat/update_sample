@@ -2,9 +2,11 @@
 
 base_dir=$(readlink -f $(dirname "$0"))
 
+lib=$base_dir/../shell_lib
+. $lib/update_sample
+
 for name in datasets tasks; do
   sample=$base_dir/output/$name.ndjson
-  git checkout $sample
-  mv $sample{,.bak}
-  cat $base_dir/input/$name.ndjson | $base_dir/run.sh > $sample
+  cat $base_dir/input/$name.ndjson | $base_dir/run.sh > $sample.new
+  update_sample $sample{,.new}
 done

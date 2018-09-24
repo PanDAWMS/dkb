@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+base_dir=$(readlink -f $(dirname "$0"))
+
+update_sample() {
+  # To be called as:
+  #   update_sample <sample_name> <new_sample>
+  sample="$1"
+  git checkout "$sample"
+  mv "$sample"{,.bak}
+  mv "$2" "$sample"
+}

@@ -2,6 +2,9 @@
 
 base_dir=$(readlink -f $(dirname "$0"))
 
+lib=$base_dir/../shell_lib
+. $lib/update_sample
+
 cfg=$base_dir/../config/009.cfg
 offset=$base_dir/../config/009.offset
 sample=$base_dir/output/sample.ndjson
@@ -12,7 +15,6 @@ sed -e's/^initial = .*$/initial = 09-05-2016 12:12:00/' \
 
 rm -f $offset
 
-git checkout $sample
-mv $sample{,.bak}
+$base_dir/Oracle2JSON.py --config $cfg --mode SQUASH > $sample.new
 
-$base_dir/Oracle2JSON.py --config $cfg --mode SQUASH > $sample
+update_sample $sample{,.new}
