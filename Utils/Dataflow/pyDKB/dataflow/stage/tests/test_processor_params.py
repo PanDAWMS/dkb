@@ -37,6 +37,7 @@ class dataflow_stage_ProcessorStageArgsTestCase(unittest.TestCase):
 
     def setUp(self):
         self.stage = stage.ProcessorStage()
+        self.expected_params = dict(self.param_defaults)
 
     def tearDown(self):
         self.stage = None
@@ -57,10 +58,12 @@ class dataflow_stage_ProcessorStageArgsTestCase(unittest.TestCase):
                 raise KeyError("Failed to get value of parameter: '%s'" % p)
         return vals
 
+    def _test_params(self):
+        self.asserEqual(self.get_param_vals(), self.expected_params)
+
     def test_defaults(self):
         self.stage.configure()
-        param_vals = self.get_param_vals()
-        self.assertEqual(param_vals, self.param_defaults)
+        self._test_params()
 
     def _test_mode(self, mode):
         if mode not in self.mode_defaults:
@@ -69,11 +72,9 @@ class dataflow_stage_ProcessorStageArgsTestCase(unittest.TestCase):
                              % (self.mode_defaults.keys(), mode))
         args = ['-m', mode]
         self.stage.configure(args)
-        param_vals = self.get_param_vals()
-        expected_vals = dict(self.param_defaults)
-        expected_vals.update(self.mode_defaults[mode])
-        expected_vals.update({'mode': mode})
-        self.assertEqual(param_vals, expected_vals)
+        self.expected_params.update(self.mode_defaults[mode])
+        self.expected_params.update({'mode': mode})
+        self._test_params()
 
     def test_mode_f(self):
         self._test_mode('f')
@@ -84,6 +85,26 @@ class dataflow_stage_ProcessorStageArgsTestCase(unittest.TestCase):
     def test_mode_m(self):
         self._test_mode('m')
 
+    def _test_mode_rewrite(self, mode, args, expected_vals):
+        if not isinstance(args, list):
+            args = args.split()
+        args = ['-m', mode] + args
+        self.stage.configure()
+        self.expected_params.update({'mode': mode})
+        self.expected_params.update(expected_vals)
+        self._test_params()
+
+    def test_mode_f_rewrite_src(self):
+        self._test_mode_rewrite('f', '-s s', ['source': 's'])
+
+    def test_mode_f_rewrite_dest(self):
+        self._test_mode_rewrite('f', '-d s', ['dest': 's'])
+
+    def test_mode_f_rewrite_eom(self):
+        self._test_mode_rewrite('f', '-e EOM', ['eom': 'EOM'])
+
+    def test_mode_f_rewrite_eop(self):
+        self._test_mode_rewrite('f', '-E EOP', ['eop': 'EOP'])
 
 test_cases = (dataflow_stage_ProcessorStageArgsTestCase, )
 
