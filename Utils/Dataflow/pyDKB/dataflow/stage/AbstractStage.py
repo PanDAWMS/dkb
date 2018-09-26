@@ -131,12 +131,16 @@ class AbstractStage(object):
                           dest='eop'
                           )
 
+    def _is_flag_option(self, **kwargs):
+        """ Check if added argument is a flag option. """
+        return kwargs.get('action', '').startswith('store_')
+
     def add_argument(self, *args, **kwargs):
         """ Add specific (not common) arguments. """
         wrapper = textwrap.TextWrapper(width=55, replace_whitespace=False)
         msg = textwrap.dedent(kwargs.get('help', ''))
         if kwargs.get('default', None) is not None \
-                and not kwargs.get('action', '').startswith('store_'):
+                and not self._is_flag_option(**kwargs):
             msg += '\nDEFAULT: \'%(default)s\''
         msg_lines = msg.split('\n')
         wrapped_lines = [wrapper.fill(line) for line in msg_lines]
