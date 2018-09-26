@@ -44,11 +44,11 @@ Dataflow 							Description
 								  files to Virtuoso
 
 009/output ---> 091(in)/output ---> *                           Task metadata from Oracle to Elasticsearch
-  \       * ---> 025/output ---> 016/output ---> *
-   \                            * ----> 019/output -> 069
+  \       * ---> 025/output ---> 016/output ---> **
+   \                           ** ----> 019/output -> 069
     \                                         /
-     \--> 091(out)/output ---> **            /                  Dataset metadata from Rucio and AMI to Elasticsearch
-          ** --> 093/output -> 095/output --/
+     \--> 091(out)/output ---> ***           /                  Dataset metadata from Rucio and AMI to Elasticsearch
+         *** --> 093/output -> 095/output --/
 
 ==============
 * REFERENCES *
