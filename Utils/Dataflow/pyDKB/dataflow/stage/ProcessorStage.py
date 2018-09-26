@@ -130,9 +130,9 @@ class ProcessorStage(AbstractStage):
                           dest='source'
                           )
         self.add_argument('-i', '--input-dir', action='store', type=str,
-                          help=u'base directory in local file system '
-                          'or in HDFS (for relative FILE names). '
-                          'If no FILE specified, all files with '
+                          help=u'directory with input files (local or HDFS), '
+                          'or initial directory for relative FILE names. '
+                          'If no FILE is specified, all files with '
                           'extension matching input message type will '
                           'be taken from %(metavar)s',
                           default=os.curdir,
