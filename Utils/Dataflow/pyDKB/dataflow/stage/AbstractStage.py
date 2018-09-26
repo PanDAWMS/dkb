@@ -114,7 +114,7 @@ class AbstractStage(object):
                           dest='config'
                           )
         self.add_argument('-e', '--end-of-message', action='store', type=str,
-                          help=u'custom end of message marker.\n'
+                          help=u'custom end of message marker\n'
                           'NOTE: in (f)ile mode for JSON messages EOM '
                           'can be set to empty string to read input '
                           'file as single JSON object, not as NDJSON. '
