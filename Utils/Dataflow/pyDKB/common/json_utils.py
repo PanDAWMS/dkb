@@ -26,6 +26,8 @@ def valueByKey(json_data, key):
     It is common for JSON objects to contain many layers of dictionaries
     nested in other dictionaries -- this function extracts the data from
     such constructions according to given string or list with keys.
+    String should be in the format intended for nestedKeys() - nested
+    keys separated by dots.
 
     :param json_data: to search in
     :type json_data: dict
