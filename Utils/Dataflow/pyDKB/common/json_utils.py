@@ -1,14 +1,41 @@
 """
-Utils to work with JSON (dict) objects.
+Utils to work with JSON objects.
+
+In context of Python, JSON [#]_ objects may be considered as structures
+consisting of six types of elements:
+
+- dictionaries,
+- lists,
+- strings,
+- numbers,
+- True/False,
+- Null.
+
+DKB project uses JSON for storing various information and transferring it
+between stages. This module contains functions which simplify some aspects
+of retrieving data from JSON objects.
+
+.. [#] https://www.json.org/
+
 """
 
 
 def valueByKey(json_data, key):
     """ Return value by a chain (list) of nested keys.
 
-    Parameters:
-        DICT   json_data -- to search in
-        STRING key       -- dot-separated list of nested keys
+    It is common for JSON objects to contain many layers of dictionaries
+    nested in other dictionaries -- this function extracts the data from
+    such constructions according to given string or list with keys.
+    String should be in the format intended for nestedKeys() - nested
+    keys separated by dots.
+
+    :param json_data: to search in
+    :type json_data: dict
+    :param key: nested keys
+    :type key: str, list
+
+    :return: value (None if failed)
+    :rtype: depends on value, NoneType
     """
     nested_keys = nestedKeys(key)
     val = json_data
@@ -28,12 +55,19 @@ def valueByKey(json_data, key):
 
 
 def nestedKeys(key):
-    """ Transform STRING with nested keys into LIST.
+    """ Transform string with nested keys into list.
 
-    Parameters:
-        STRING key -- dot-separated list of nested keys.
-                      If a key contains dot itself, the key must be put between
-                      quotation marks.
+    String should contain keys separated by dot. If a key contains
+    dot itself, the key must be put between matching quotation marks.
+    Quotation marks inside the keys (not preceding or following a dot)
+    are treated as ordinary symbols. If a list is given instead of str,
+    it is returned without changes.
+
+    :param key: nested keys
+    :type key: str, list
+
+    :return: nested keys
+    :rtype: list
     """
     if type(key) == list:
         return key

@@ -35,31 +35,76 @@
             
   <div class="section" id="module-pyDKB.common.json_utils">
 <span id="pydkb-common-json-utils-module"></span><span id="pydkb-common-json-utils"></span><h1>pyDKB.common.json_utils module<a class="headerlink" href="#module-pyDKB.common.json_utils" title="Permalink to this headline">¶</a></h1>
-<p>Utils to work with JSON (dict) objects.</p>
+<p>Utils to work with JSON objects.</p>
+<p>In context of Python, JSON <a class="footnote-reference" href="#id2" id="id1">[1]</a> objects may be considered as structures
+consisting of six types of elements:</p>
+<ul class="simple">
+<li>dictionaries,</li>
+<li>lists,</li>
+<li>strings,</li>
+<li>numbers,</li>
+<li>True/False,</li>
+<li>Null.</li>
+</ul>
+<p>DKB project uses JSON for storing various information and transferring it
+between stages. This module contains functions which simplify some aspects
+of retrieving data from JSON objects.</p>
+<table class="docutils footnote" frame="void" id="id2" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td><a class="reference external" href="https://www.json.org/">https://www.json.org/</a></td></tr>
+</tbody>
+</table>
 <dl class="function">
 <dt id="pyDKB.common.json_utils.nestedKeys">
 <code class="descclassname">pyDKB.common.json_utils.</code><code class="descname">nestedKeys</code><span class="sig-paren">(</span><em>key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/json_utils.html#nestedKeys"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.json_utils.nestedKeys" title="Permalink to this definition">¶</a></dt>
-<dd><p>Transform STRING with nested keys into LIST.</p>
-<dl class="docutils">
-<dt>Parameters:</dt>
-<dd><dl class="first last docutils">
-<dt>STRING key – dot-separated list of nested keys.</dt>
-<dd>If a key contains dot itself, the key must be put between
-quotation marks.</dd>
-</dl>
-</dd>
-</dl>
+<dd><p>Transform string with nested keys into list.</p>
+<p>String should contain keys separated by dot. If a key contains
+dot itself, the key must be put between matching quotation marks.
+Quotation marks inside the keys (not preceding or following a dot)
+are treated as ordinary symbols. If a list is given instead of str,
+it is returned without changes.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>key</strong> (<em>str</em><em>, </em><em>list</em>) – nested keys</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">nested keys</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">list</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="pyDKB.common.json_utils.valueByKey">
 <code class="descclassname">pyDKB.common.json_utils.</code><code class="descname">valueByKey</code><span class="sig-paren">(</span><em>json_data</em>, <em>key</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/json_utils.html#valueByKey"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.json_utils.valueByKey" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return value by a chain (list) of nested keys.</p>
-<dl class="docutils">
-<dt>Parameters:</dt>
-<dd>DICT   json_data – to search in
-STRING key       – dot-separated list of nested keys</dd>
-</dl>
+<p>It is common for JSON objects to contain many layers of dictionaries
+nested in other dictionaries – this function extracts the data from
+such constructions according to given string or list with keys.
+String should be in the format intended for nestedKeys() - nested
+keys separated by dots.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>json_data</strong> (<em>dict</em>) – to search in</li>
+<li><strong>key</strong> (<em>str</em><em>, </em><em>list</em>) – nested keys</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">value (None if failed)</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">depends on value, NoneType</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>
