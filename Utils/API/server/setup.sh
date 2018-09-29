@@ -171,15 +171,18 @@ build_www() {
   [ ! -r "$base_dir/.files" ] \
     && echo "Config file '.files' is missed in '$base_dir'." \
     && exit 1
-  files=`cat "$base_dir/.files"`
-  build_dir="$base_dir/build"
+  old_pwd=`pwd`
+  cd "$base_dir"
+  files=`cat .files`
+  build_dir=./build
   for f in $files; do
-    if [ -d "$base_dir/$f" ]; then
+    if [ -d "$f" ]; then
       mkdir -p "$build_dir/$f"
     else
-      build_file "$base_dir/$f" > "$build_dir/$f"
+      build_file "$f" > "$build_dir/$f"
     fi
   done
+  cd "$old_pwd"
 }
 
 install_www() {
