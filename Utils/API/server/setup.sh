@@ -26,6 +26,7 @@ COMMANDS
   start     start application
   stop      stop application
   restart   restart application
+  status    check application status
 
 OPTIONS
   GENERAL
@@ -205,6 +206,22 @@ install_www() {
   echo "...done." >&2
 }
 
+status_www() {
+  pidfile="$RUN_DIR/.pid"
+  if ! [ -f "$pidfile" ]; then
+    echo "API server is not running."
+    return 3
+  fi
+  pid=`cat "$pidfile"`
+  ps p $pid &>/dev/null
+  if [ $? -ne 0 ]; then
+    echo "API server is not running, but pid file exists."
+    return 1
+  fi
+  echo "API server is running."
+  return 0
+}
+
 stop_www() {
   pidfile="$RUN_DIR/.pid"
   [ -f "$pidfile" ] \
@@ -217,7 +234,7 @@ start_www() {
   pidfile="$RUN_DIR/.pid"
   logfile="$LOG_DIR/api-server.log"
   app_file="$WWW_DIR/dkb.fcgi"
-  [ -f "$pidfile" ] \
+  status_www &>/dev/null \
     && echo "Application is already running." >&2 \
     && exit 1
   [ ! -f "$app_file" ] \
@@ -271,6 +288,10 @@ while [ $# -gt 0 ]; do
     restart)
       stop_www
       start_www
+      ;;
+    status)
+      status_www
+      exit $?
       ;;
     *)
       echo "Unknown command: $1" >&2
