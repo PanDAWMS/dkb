@@ -187,12 +187,14 @@ build_www() {
 }
 
 install_www() {
-  build_dir="$base_dir/build"
+  old_dir=`pwd`
+  cd "$base_dir"
+  build_dir=./build
   [ ! -d "$build_dir" ] && _build
-  [ ! -r "$base_dir/.files" ] \
+  [ ! -r ".files" ] \
     && echo "Config file '.files' is missed in '$base_dir'." \
-    && exit 1
-  files=`cat "$base_dir/.files"`
+    && cd "$old_dir" && exit 1
+  files=`cat .files`
   echo "Installing www files..." >&2
   for f in $files; do
     echo "> $WWW_DIR/$f" >&2
@@ -204,6 +206,7 @@ install_www() {
   done
   chown -R "$APP_USER" "$WWW_DIR"
   echo "...done." >&2
+  cd "$old_dir"
 }
 
 status_www() {
