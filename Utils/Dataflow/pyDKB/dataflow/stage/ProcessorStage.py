@@ -115,53 +115,61 @@ class ProcessorStage(AbstractStage):
         """ Default parser configuration. """
         super(ProcessorStage, self).defaultArguments()
         self.add_argument('input_files', type=str, nargs='*',
-                          help=u'Source data file.',
+                          help=u'source data file\n'
+                          'NOTE: required in (f)ile, '
+                          'ignored in other modes',
                           metavar=u'FILE'
                           )
         self.add_argument('-s', '--source', action='store', type=str,
-                          nargs='?',
-                          help=u'Where to get data from: '
-                                'local (f)iles, (s)tdin, '
-                                '(h)dfs (same as --hdfs).',
+                          help=u'where to get data from:\n'
+                          '    f -- local files\n'
+                          '    s -- stdin\n'
+                          '    h -- hdfs files',
                           default='f',
-                          const='f',
                           choices=['f', 's', 'h'],
                           dest='source'
                           )
         self.add_argument('-i', '--input-dir', action='store', type=str,
-                          nargs='?',
-                          help=u'Base directory in local file system '
-                                'or in HDFS (for relative FILE names). '
-                                'If no FILE specified, all files from the '
-                                'directory will be taken.',
-                          default='',
-                          const='',
+                          help=u'directory with input files (local or HDFS), '
+                          'or initial directory for relative FILE names. '
+                          'If no FILE is specified, all files with '
+                          'extension matching input message type will '
+                          'be taken from %(metavar)s',
+                          default=os.curdir,
                           metavar='DIR',
                           dest='input_dir'
                           )
-        self.add_argument('-d', '--dest', action='store', type=str, nargs='?',
-                          help=u'Where to send results: '
-                                'local (f)iles, (s)tdout, '
-                                '(h)dfs (same as --hdfs).',
+        self.add_argument('-d', '--dest', action='store', type=str,
+                          help=u'where to write results:\n'
+                          '    f -- local files\n'
+                          '    s -- stdout\n'
+                          '    h -- hdfs files',
                           default='f',
-                          const='f',
                           choices=['f', 's', 'h'],
                           dest='dest'
                           )
         self.add_argument('-o', '--output-dir', action='store', type=str,
-                          nargs='?',
-                          help=u'Directory for output files '
-                                '(local or HDFS). ',
+                          help=u'directory for output files '
+                          '(local or HDFS). %%(metavar)s can be:\n'
+                          ' * absolute path\n'
+                          ' * relative path (for local files)\n'
+                          ' * subpath (not absolute nor relative).\n'
+                          'In case of subpath (or relative path for '
+                          'HDFS output) %%(metavar)s is taken '
+                          'as relative to the one of:\n'
+                          ' * directory with input files\n'
+                          ' * current directory (for local files)\n'
+                          ' * \'%stemp\' (for HDFS)' % hdfs.DKB_HOME,
                           default='out',
                           metavar='DIR',
                           dest='output_dir'
                           )
         self.add_argument('--hdfs', action='store_true',
-                          help=u'Source files are stored in HDFS; '
-                          'if no input FILE specified, filenames will '
-                          'come to stdin. '
-                          'This option is equivalent to '
-                          '"--source h --dest h"',
+                          help=u'equivalent to "--source h --dest h".\n'
+                          'Explicit specification of '
+                          '"--source" and "--dest" as well as the default '
+                          'values for current processing mode ("--mode") will '
+                          'be ignored',
                           default=False,
                           dest='hdfs'
                           )

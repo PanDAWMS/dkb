@@ -44,27 +44,8 @@ class AbstractStage(object):
         self.__config = ConfigParser.SafeConfigParser()
         self.ARGS = None
         self.__parser = argparse.ArgumentParser(
-            formatter_class=argparse.RawDescriptionHelpFormatter,
-            description=description,
-            epilog=textwrap.dedent(
-                '''\
-                NOTES
-
-                Processing mode
-                  is defined as a combination of data source and
-                  destination type (local/HDFS file(s) or standard stream)
-                  and pre-defined EOP and EOM markers:
-
-                  mode | source | dest | eom | eop
-                  -----+--------+------+-----+-----
-                    s  |    s   |   s  |  \\n |  \\0
-                  -----+--------+------+-----+-----
-                    f  |   f/h  |  f/h |  \\n |
-                  -----+--------+------+-----+-----
-                    m  |   s/h  |   s  |  \\n |
-                  -----+--------+------+-----+-----
-                    h  |    h   |  h/f |  \\n |
-                  -----+--------+------+-----+-----''')
+            formatter_class=argparse.RawTextHelpFormatter,
+            description=description
         )
         self.defaultArguments()
 
@@ -90,36 +71,82 @@ class AbstractStage(object):
 
     def defaultArguments(self):
         """ Config argument parser with parameters common for all stages. """
-        self.add_argument('-m', '--mode', action='store', type=str, nargs='?',
-                          help=u'Processing mode: (f)ile, (s)tream'
-                                ' or (m)ap-reduce (default: %(default)s).',
+        self.add_argument('-m', '--mode', action='store', type=str,
+                          help=u'processing mode: (f)ile, (s)tream'
+                          ' or (m)ap-reduce.\n'
+                          'Processing mode is a shortcut for a combination '
+                          'of four parameters: '
+                          '"-s SRC -d DEST -e EOM -E EOP", '
+                          'where:\n'
+                          ' \n'
+                          ' mode || -s | -d | -e | -E\n'
+                          '===========================\n'
+                          '  s   ||  s |  s | \\n | \\0\n'
+                          '---------------------------\n'
+                          '  f   ||  f |  f | \\n | \'\'\n'
+                          '---------------------------\n'
+                          '  m   ||  s |  s | \\n | \'\'\n'
+                          ' \n'
+                          'If both MODE and an individual parameter are used, '
+                          'the individually specified value will override '
+                          'the MODE value\n'
+                          'NOTE: for (m)ap-reduce mode:\n'
+                          ' * if --source is '
+                          'set to (h)dfs (via "-s" or "--hdfs"), names '
+                          'of files to be processed will be taken from '
+                          'STDIN;\n'
+                          ' * if --source is set to (s)tream (by default '
+                          'or via "-s"), custom value of EOM will only affect '
+                          'output (input messages still should '
+                          'be separated by "\\n");\n'
+                          ' * source and/or destination '
+                          'can not be (f)ile',
                           default='f',
                           metavar='MODE',
                           choices=['f', 's', 'm'],
                           dest='mode'
                           )
         self.add_argument('-c', '--config', action='store',
-                          type=argparse.FileType('r'), nargs='?',
-                          help=u'Stage configuration file.',
+                          type=argparse.FileType('r'),
+                          help=u'stage configuration file',
                           default=None,
                           metavar='CONFIG',
                           dest='config'
                           )
         self.add_argument('-e', '--end-of-message', action='store', type=str,
-                          help=u'Custom end of message marker.',
-                          nargs='?',
+                          help=u'custom end of message marker\n'
+                          'NOTE: in (f)ile mode for JSON messages EOM '
+                          'can be set to empty string to read input '
+                          'file as single JSON object, not as NDJSON. '
+                          'In this case output will also be formatted '
+                          'as a single JSON object (array or hash)\n'
+                          'DEFAULT: \'\\n\'',
                           default=None,
                           dest='eom'
                           )
         self.add_argument('-E', '--end-of-process', action='store', type=str,
-                          help=u'Custom end of process marker.',
-                          nargs='?',
+                          help=u'custom end of process marker\n'
+                          'DEFAULT: \'\'',
                           default=None,
                           dest='eop'
                           )
 
+    def _is_flag_option(self, **kwargs):
+        """ Check if added argument is a flag option. """
+        return kwargs.get('action', '').startswith('store_')
+
     def add_argument(self, *args, **kwargs):
         """ Add specific (not common) arguments. """
+        wrapper = textwrap.TextWrapper(width=55, replace_whitespace=False)
+        msg = textwrap.dedent(kwargs.get('help', ''))
+        if kwargs.get('default', None) is not None \
+                and not self._is_flag_option(**kwargs):
+            msg += '\nDEFAULT: \'%(default)s\''
+        msg_lines = msg.split('\n')
+        wrapped_lines = [wrapper.fill(line) for line in msg_lines]
+        msg = '\n'.join(wrapped_lines)
+        msg += '\n '
+        kwargs['help'] = msg
         self.__parser.add_argument(*args, **kwargs)
 
     def parse_args(self, args):
@@ -130,9 +157,6 @@ class AbstractStage(object):
             3 -- failed to read config file
         """
         self.ARGS = self.__parser.parse_args(args)
-        if not self.ARGS.mode:
-            self.args_error("Parameter -m|--mode must be used with value:"
-                            " -m MODE.")
 
         if self.ARGS.eom is None:
             self.ARGS.eom = '\n'
