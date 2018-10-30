@@ -1,3 +1,4 @@
-dkb.fcgi
-api/
-api/*.py
+cgi-bin/
+cgi-bin/dkb.fcgi
+lib/dkb/api/
+lib/dkb/api/*.py

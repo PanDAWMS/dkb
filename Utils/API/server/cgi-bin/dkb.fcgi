@@ -4,11 +4,13 @@ import logging
 import json
 import urlparse
 import sys
+import os
 
 logging.basicConfig(format="%(asctime)s (%(levelname)s) %(message)s",
                     level=logging.DEBUG)
 
-sys.path.append("%%WWW_DIR%%")
+sys.path.append(os.path.join("%%WWW_DIR%%", "lib", "dkb"))
+
 
 import api
 from api import methods

@@ -233,7 +233,7 @@ stop_www() {
 start_www() {
   pidfile="$RUN_DIR/.pid"
   logfile="$LOG_DIR/api-server.log"
-  app_file="$WWW_DIR/dkb.fcgi"
+  app_file="$WWW_DIR/cgi-bin/dkb.fcgi"
   status_www &>/dev/null \
     && echo "Application is already running." >&2 \
     && exit 1
