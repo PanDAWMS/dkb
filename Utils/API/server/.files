@@ -1,5 +1,6 @@
-dkb.fcgi
-api/
-api/*.py
-api/storages/
-api/storages/*.py
+cgi-bin/
+cgi-bin/dkb.fcgi
+lib/dkb/api/
+lib/dkb/api/*.py
+lib/dkb/api/storages/
+lib/dkb/api/storages/*.py
