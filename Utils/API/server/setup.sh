@@ -203,8 +203,8 @@ install_www() {
     else
       cp "$build_dir/$f" -T "$WWW_DIR/$f"
     fi
+    chown "$APP_USER" "$WWW_DIR/$f"
   done
-  chown -R "$APP_USER" "$WWW_DIR"
   echo "...done." >&2
   cd "$old_dir"
 }
