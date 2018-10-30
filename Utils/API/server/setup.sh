@@ -199,6 +199,9 @@ install_www() {
       mkdir -p "$WWW_DIR/$f"
     else
       cp "$build_dir/$f" -T "$WWW_DIR/$f"
+      [[ "$f" =~ "bin/" ]] \
+        && chmod 500 "$WWW_DIR/$f" \
+        || chmod 400 "$WWW_DIR/$f"
     fi
     chown "$APP_USER" "$WWW_DIR/$f"
   done
@@ -241,7 +244,7 @@ start_www() {
     && echo "Failed to restart application: file not found ($app_file)." >&2 \
     && exit 1
   su "$APP_USER" -c \
-    "nohup /usr/bin/env python '$app_file' >> '$logfile' &
+    "nohup '$app_file' >> '$logfile' &
      echo \$! > '$pidfile'"
 }
 
