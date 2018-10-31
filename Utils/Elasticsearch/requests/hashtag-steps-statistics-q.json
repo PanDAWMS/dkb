@@ -22,8 +22,13 @@ GET <index>/task/_search
         "input_events": {
           "sum": {"field": "input_events"}
         },
-        "input_bytes": {
-          "sum": {"field": "input_bytes"}
+        "not_deleted": {
+          "filter": {"term": {"primary_input_deleted": false}},
+          "aggs": {
+            "input_bytes": {
+              "sum": {"field": "input_bytes"}
+            }
+          }
         },
         "processed_events": {
           "sum": {"field": "processed_events"}

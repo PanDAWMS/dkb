@@ -1,5 +1,5 @@
 {
-  "took" : 68,
+  "took" : 58,
   "timed_out" : false,
   "_shards" : {
     "total" : 4,
@@ -34,8 +34,11 @@
           "input_events" : {
             "value" : 2.5873E7
           },
-          "input_bytes" : {
-            "value" : 0.0
+          "not_deleted" : {
+            "doc_count" : 0,
+            "input_bytes" : {
+              "value" : 0.0
+            }
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
@@ -66,8 +69,11 @@
           "input_events" : {
             "value" : 2.5873E7
           },
-          "input_bytes" : {
-            "value" : -3192.0
+          "not_deleted" : {
+            "doc_count" : 0,
+            "input_bytes" : {
+              "value" : 0.0
+            }
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
@@ -98,8 +104,11 @@
           "input_events" : {
             "value" : 2.58726E7
           },
-          "input_bytes" : {
-            "value" : 3.478790311594E12
+          "not_deleted" : {
+            "doc_count" : 3192,
+            "input_bytes" : {
+              "value" : 3.478790311594E12
+            }
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
@@ -134,8 +143,11 @@
           "input_events" : {
             "value" : 2.5873E7
           },
-          "input_bytes" : {
-            "value" : 2.536129042E9
+          "not_deleted" : {
+            "doc_count" : 3192,
+            "input_bytes" : {
+              "value" : 2.536129042E9
+            }
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
@@ -170,8 +182,11 @@
           "input_events" : {
             "value" : 2.58726E7
           },
-          "input_bytes" : {
-            "value" : 5.591388107287E12
+          "not_deleted" : {
+            "doc_count" : 3192,
+            "input_bytes" : {
+              "value" : 5.591388107287E12
+            }
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
