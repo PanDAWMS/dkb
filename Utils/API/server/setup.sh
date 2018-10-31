@@ -11,6 +11,7 @@ MANAGE_NGINX=
 NGINX_DIR=/etc/nginx
 NGINX_USER=
 NGINX_GROUP=
+MANAGE_SERVICE=
 
 base_dir=$(readlink -f $(cd $(dirname "$0"); pwd))
 build_dir="${base_dir}/build"
@@ -35,6 +36,7 @@ OPTIONS
 
     -n, --nginx      manage Nginx config file
 
+    -S, --service    manage Linux service
 
   APPLICATION
     -d, --dest DIR   destination directory for installation
@@ -84,6 +86,9 @@ while [ $# -gt 0 ]; do
     -l|--listen)
       ADDR="$2"
       shift
+      ;;
+    -S|--service)
+      MANAGE_SERVICE=1
       ;;
     --)
       break
@@ -167,6 +172,37 @@ install_nginx_cfg() {
   echo "...done." >&2
 }
 
+check_systemd() {
+  first=`ps -o comm= 1`
+  [[ "$first" =~ "systemd" ]] && return 0 || return 1
+}
+
+build_service_cfg() {
+  file="dkb-api.service"
+  [ ! -f "$file" ] \
+    && echo "Source file with service configuration not found ($file)." >&2 \
+    && exit 1
+  build_dir="$base_dir/build"
+  build_file "$base_dir/$file" > "$build_dir/$file"
+}
+
+install_service() {
+  check_systemd \
+    || { echo "Can not install service (not systemd-managed OS)." >&2; return 1; }
+  build_dir="$base_dir/build"
+  file="dkb-api.service"
+  src_file="$build_dir/$file"
+  tgt_file="/etc/systemd/system/$file"
+  echo "Installing service file..." >&2
+  echo "> $tgt_file" >&2
+  cp "$src_file" "$tgt_file"
+  chown "root:root" "$tgt_file"
+  chmod 0400 "$tgt_file"
+  echo "...done." >&2
+  echo "Enabling service..." >&2
+  systemctl reenable ${file%.service} && echo "...done." >&2
+}
+
 build_www() {
   [ ! -r "$base_dir/.files" ] \
     && echo "Config file '.files' is missed in '$base_dir'." \
@@ -209,7 +245,16 @@ install_www() {
   cd "$old_dir"
 }
 
+status_www_service() {
+  check_systemd && systemctl status dkb-api
+}
+
 status_www() {
+  if [ -n "$MANAGE_SERVICE" ]; then
+    status_www_service
+    ret=$?
+    [ $ret -ne -1 ] && return $ret
+  fi
   pidfile="$RUN_DIR/.pid"
   if ! [ -f "$pidfile" ]; then
     echo "API server is not running."
@@ -225,7 +270,16 @@ status_www() {
   return 0
 }
 
+stop_www_service() {
+  check_systemd && systemctl stop dkb-api
+}
+
 stop_www() {
+  if [ -n "$MANAGE_SERVICE" ]; then
+    stop_www_service
+    ret=$?
+    [ $ret -ne -1 ] && return $ret
+  fi
   pidfile="$RUN_DIR/.pid"
   [ -f "$pidfile" ] \
     && pid=`cat "$pidfile"` \
@@ -233,7 +287,16 @@ stop_www() {
   rm -f "$pidfile"
 }
 
+start_www_service() {
+  check_systemd && systemctl start dkb-api
+}
+
 start_www() {
+  if [ -n "$MANAGE_SERVICE" ]; then
+    start_www_service
+    ret=$?
+    [ $ret -ne -1 ] && return $ret
+  fi
   pidfile="$RUN_DIR/.pid"
   logfile="$LOG_DIR/api-server.log"
   app_file="$WWW_DIR/cgi-bin/dkb.fcgi"
@@ -258,6 +321,7 @@ _build() {
   mkdir -p "$build_dir"
   build_www
   [ -n "$MANAGE_NGINX" ] && build_nginx_cfg
+  [ -n "$MANAGE_SERVICE" ] && build_service_cfg
 }
 
 _install() {
@@ -266,6 +330,7 @@ _install() {
   && ensure_dirs || exit 1
   install_www
   [ -n "$MANAGE_NGINX" ] && install_nginx_cfg
+  [ -n "$MANAGE_SERVICE" ] && install_service
 }
 
 [ -z "$1" ] && usage >&2 && exit 1
