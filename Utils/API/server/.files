@@ -1,5 +1,7 @@
 cgi-bin/
 cgi-bin/dkb.fcgi
+lib/
+lib/dkb/
 lib/dkb/api/
 lib/dkb/api/*.py
 lib/dkb/api/storages/
