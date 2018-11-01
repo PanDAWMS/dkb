@@ -22,6 +22,9 @@ from .. import Message
 class FileConsumer(Consumer.Consumer):
     """ Data consumer implementation for HDFS data source. """
 
+    # Input file names (iterable object)
+    input_filenames = None
+
     # Current file
     current_file = None
 
@@ -58,11 +61,6 @@ class FileConsumer(Consumer.Consumer):
         """ Return current source info. """
         return self.current_file
 
-    def init_sources(self):
-        """ Initialize sources iterator if not initialized yet. """
-        if not self.input_files:
-            self.input_files = self._input_files()
-
     def get_source(self):
         """ Get nearest non-empty source (current or next). """
         if self.source_is_empty() is not False:
@@ -79,7 +77,7 @@ class FileConsumer(Consumer.Consumer):
             None (no files left)
         """
         if not self.input_files:
-            self.init_sources()
+            self.input_files = self._input_files()
         try:
             self.current_file = self.input_files.next()
             result = self.get_source()
@@ -114,9 +112,9 @@ class FileConsumer(Consumer.Consumer):
                 if os.path.isfile(os.path.join(dirname, f)) \
                         and f.lower().endswith(ext):
                     files.append(f)
-                    yield f
         except OSError, err:
             raise Consumer.ConsumerException(err)
+        return files
 
     def _adjusted_filenames(self):
         """ Return iterable object, yielding filename and path to file. """
