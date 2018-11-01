@@ -12,6 +12,7 @@ NGINX_DIR=/etc/nginx
 NGINX_USER=
 NGINX_GROUP=
 MANAGE_SERVICE=
+MANAGE_SEL=
 
 base_dir=$(readlink -f $(cd $(dirname "$0"); pwd))
 
@@ -36,6 +37,8 @@ OPTIONS
     -n, --nginx      manage Nginx config file
 
     -S, --service    manage Linux service
+
+    --sel            manage SELinux settings
 
   APPLICATION
     -d, --dest DIR   destination directory for installation
@@ -88,6 +91,9 @@ while [ $# -gt 0 ]; do
       ;;
     -S|--service)
       MANAGE_SERVICE=1
+      ;;
+    --sel)
+      MANAGE_SEL=1
       ;;
     --)
       break
@@ -253,6 +259,14 @@ status_www_service() {
   check_systemd && systemctl status dkb-api
 }
 
+customize_sel() {
+  f="$WWW_DIR/cgi-bin/dkb.fcgi"
+  echo "Adding and applying SELinux rule..." >&2
+  semanage fcontext -a -t httpd_exec_t "$f"
+  restorecon "$f"
+  echo "...done" >&2
+}
+
 status_www() {
   if [ -n "$MANAGE_SERVICE" ]; then
     status_www_service
@@ -336,6 +350,7 @@ _install() {
   install_www
   [ -n "$MANAGE_NGINX" ] && install_nginx_cfg
   [ -n "$MANAGE_SERVICE" ] && install_service
+  [ -n "$MANAGE_SEL" ] && customize_sel
 }
 
 [ -z "$1" ] && usage >&2 && exit 1
