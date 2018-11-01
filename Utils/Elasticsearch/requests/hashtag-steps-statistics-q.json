@@ -38,6 +38,9 @@ GET <index>/task/_search
         "cpu": {
           "sum": {"field": "hs06"}
         },
+        "walltime": {
+         "sum": {"script": {"inline":"doc['end_time'].value - doc['start_time'].value"}}
+        },
         "output": {
           "children": {"type": "output_dataset"},
           "aggs": {
