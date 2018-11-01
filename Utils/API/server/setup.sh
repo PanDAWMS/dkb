@@ -233,6 +233,7 @@ install_www() {
     echo "> $WWW_DIR/$f" >&2
     if [ -d "$build_dir/$f" ]; then
       mkdir -p "$WWW_DIR/$f"
+      chown "$APP_USER:$NGINX_GROUP" "$WWW_DIR/$f"
     else
       cp "$build_dir/$f" -T "$WWW_DIR/$f"
       [[ "$f" =~ "bin/" ]] \
