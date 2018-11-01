@@ -11,6 +11,8 @@ GET <index>/task/_search
     "bool": {
       "must": [
         {"term": {"hashtag_list": %%HASHTAG_LOWERCASE%%}},
+        {"exists": {"field": "start_time"}},
+        {"exists": {"field": "end_time"}},
         {"bool": {"must_not": [{"terms": {"status": ["aborted", "failed", "broken", "obsolete"]}}]}}
       ]
     }
