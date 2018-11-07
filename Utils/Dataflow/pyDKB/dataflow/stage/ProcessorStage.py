@@ -57,7 +57,7 @@ from pyDKB.dataflow.communication import producer
 class ProcessorStage(AbstractStage):
     """ Abstract class to implement Processor stages
 
-    Processor stage -- is a stage for data processing/transfornation.
+    Processor stage -- is a stage for data processing/transformation.
 
     Class/instance variable description:
 
