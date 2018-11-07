@@ -133,7 +133,7 @@ def input_events(data):
     """ Calculate derived value 'input_events'.
 
     For EVNT tasks:
-     * n_files_to_be_used  -> nFilesToBeUsed * (nEventsPerJob|1) / nFilesPerJob
+     * n_files_to_be_used  -> nFilesToBeUsed * nEventsPerJob / (nFilesPerJob|1)
      * !n_files_to_be_used -> processed_events
 
     For other tasks:
