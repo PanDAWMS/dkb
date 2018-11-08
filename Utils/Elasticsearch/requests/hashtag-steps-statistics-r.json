@@ -1,5 +1,5 @@
 {
-  "took" : 58,
+  "took" : 81,
   "timed_out" : false,
   "_shards" : {
     "total" : 4,
@@ -40,6 +40,15 @@
               "value" : 0.0
             }
           },
+          "timestamp_defined" : {
+            "doc_count" : 3192,
+            "walltime" : {
+              "value" : 1.584503477443609E7
+            }
+          },
+          "cpu" : {
+            "value" : 0.0
+          },
           "status" : {
             "doc_count_error_upper_bound" : 0,
             "sum_other_doc_count" : 0,
@@ -75,6 +84,15 @@
               "value" : 0.0
             }
           },
+          "timestamp_defined" : {
+            "doc_count" : 3192,
+            "walltime" : {
+              "value" : 9654426.065162906
+            }
+          },
+          "cpu" : {
+            "value" : 0.0
+          },
           "status" : {
             "doc_count_error_upper_bound" : 0,
             "sum_other_doc_count" : 0,
@@ -109,6 +127,15 @@
             "input_bytes" : {
               "value" : 3.478790311594E12
             }
+          },
+          "timestamp_defined" : {
+            "doc_count" : 3192,
+            "walltime" : {
+              "value" : 2.058583865914787E7
+            }
+          },
+          "cpu" : {
+            "value" : 2.2972E8
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
@@ -149,6 +176,15 @@
               "value" : 2.536129042E9
             }
           },
+          "timestamp_defined" : {
+            "doc_count" : 3192,
+            "walltime" : {
+              "value" : 7.758874436090225E7
+            }
+          },
+          "cpu" : {
+            "value" : 2.72266837E10
+          },
           "status" : {
             "doc_count_error_upper_bound" : 0,
             "sum_other_doc_count" : 0,
@@ -187,6 +223,15 @@
             "input_bytes" : {
               "value" : 5.591388107287E12
             }
+          },
+          "timestamp_defined" : {
+            "doc_count" : 3192,
+            "walltime" : {
+              "value" : 1.5688471804511279E7
+            }
+          },
+          "cpu" : {
+            "value" : 0.0
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
