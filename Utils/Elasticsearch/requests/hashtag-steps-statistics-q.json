@@ -34,7 +34,7 @@ GET <index>/task/_search
           "sum": {"field": "processed_events"}
         },
         "cpu": {
-          "sum": {"field": "hs06"}
+          "sum": {"script": {"inline":"doc['hs06'].value * doc['total_events'].value"}}
         },
         "output": {
           "children": {"type": "output_dataset"},
