@@ -64,6 +64,9 @@
             }
           }
         },
+        "step_id": {
+          "type": "long"
+        },
         "status" : {
           "type" : "keyword",
           "ignore_above" : 256
@@ -159,6 +162,9 @@
         "trigger_config" : {
           "type" : "keyword",
           "ignore_above" : 256
+        },
+        "total_events": {
+          "type": "long"
         },
         "requested_events" : {
           "type" : "long"

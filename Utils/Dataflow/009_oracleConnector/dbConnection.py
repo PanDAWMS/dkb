@@ -3,6 +3,7 @@ Classes representing connection to a database.
 """
 
 import sys
+import time
 from collections import defaultdict
 
 try:
@@ -151,7 +152,10 @@ class OracleConnection(dbConnection):
             return False
 
         try:
+            t1 = time.time()
             c.execute(None, params)
+            t2 = time.time()
+            sys.stderr.write("(TIMING) (%s) (sec): %s\n" % (qname, t2 - t1))
         except cx_Oracle.DatabaseError, err:
             sys.stderr.write("(WARN) Failed to execute query '%s': %s\n"
                              % (qname, err))
@@ -191,6 +195,7 @@ class OracleConnection(dbConnection):
         if not c:
             raise StopIteration
 
+        rc1 = c.rowcount
         if rows_as_dict and not self.queries[qname].get('columns') \
                 and c.description:
             self.queries[qname]['columns'] = \
@@ -210,3 +215,6 @@ class OracleConnection(dbConnection):
                 else:
                     yield row
             results = c.fetchmany(arraysize)
+
+        rc2 = c.rowcount
+        sys.stderr.write("(TIMING) (%s) (n_rows): %s\n" % (qname, rc2 - rc1))
