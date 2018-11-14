@@ -105,7 +105,7 @@ PHYS_CATEGORIES_PHYS_SHORTS_MAP = {
 
 
 '''
-Functions for adding tests in a cycle. They are required avoid f() being
+Functions for adding tests in a cycle. They are required to avoid f() being
 stuck on the last value in the loop.
 '''
 
