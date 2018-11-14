@@ -7,8 +7,8 @@ set_error_handler("exception_error_handler");
 
 $DEFAULT_INDEX = 'tasks_production';
 $ES_INDEX = NULL;
-$EOP_MARKER = chr(0);
-$EOM_MARKER = "\n";
+$EOP_DEFAULTS = Array("stream" => chr(0), "file" => "");
+$EOM_DEFAULTS = Array("stream" => "\n", "file" => "\n");
 
 function check_input($row) {
   $required_fields = array('_id', '_type');
@@ -91,8 +91,20 @@ foreach ($opts as $key => $val) {
 
 $args = array_values($args);
 
+if (isset($args[1])) {
+  $h = fopen($args[1], "r");
+  $mode = "file";
+} else {
+  $h = fopen('php://stdin', 'r');
+  $mode = "stream";
+}
+
+if (!(isset($EOM_MARKER))) $EOM_MARKER = $EOM_DEFAULTS[$mode];
+if (!(isset($EOP_MARKER))) $EOP_MARKER = $EOP_DEFAULTS[$mode];
+
 $EOM_HEX = implode(unpack("H*", $EOM_MARKER));
 $EOP_HEX = implode(unpack("H*", $EOP_MARKER));
+
 if ($EOM_MARKER == '') {
   fwrite(STDERR, "(ERROR) EOM marker can not be empty string.\n");
   exit(1);
@@ -101,11 +113,6 @@ if ($EOM_MARKER == '') {
 fwrite(STDERR, "(DEBUG) End-of-message marker: '" . $EOM_MARKER . "' (hex: " . $EOM_HEX . ").\n");
 fwrite(STDERR, "(DEBUG) End-of-process marker: '" . $EOP_MARKER . "' (hex: " . $EOP_HEX . ").\n");
 
-if (isset($args[1])) {
-  $h = fopen($args[1], "r");
-} else {
-  $h = fopen('php://stdin', 'r');
-}
 
 $ES_INDEX = getenv('ES_INDEX');
 if (!$ES_INDEX) {
