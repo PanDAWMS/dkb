@@ -59,8 +59,50 @@ function constructIndexJson(&$row) {
   return $index;
 }
 
-if (isset($argv[1])) {
-  $h = fopen($argv[1], "r");
+function decode_escaped($string) {
+  return preg_replace('/\\\\([nrtvf\\\\$"]|[0-7]{1,3}|x[0-9A-Fa-f]{1,2})/e',
+                      'stripcslashes("$0")', $string);
+}
+
+$opts = getopt("e:E:", Array("end-of-message:", "end-of-process:"));
+$args = $argv;
+
+foreach ($opts as $key => $val) {
+  $match = preg_grep("/^-(-)?".$key."$/", $args);
+  foreach ($match as $mkey => $mval) {
+    unset($args[$mkey]);
+    unset($args[$mkey+1]);
+  }
+  $match = preg_grep("/^".$key."=/", $args);
+  foreach ($match as $mkey => $mval) {
+    unset($args[$mkey]);
+  }
+  switch ($key) {
+    case "e":
+    case "end-of-message":
+      $EOM_MARKER = decode_escaped($val);
+      break;
+    case "E":
+    case "end-of-process":
+      $EOP_MARKER = decode_escaped($val);
+      break;
+  }
+}
+
+$args = array_values($args);
+
+$EOM_HEX = implode(unpack("H*", $EOM_MARKER));
+$EOP_HEX = implode(unpack("H*", $EOP_MARKER));
+if ($EOM_MARKER == '') {
+  fwrite(STDERR, "(ERROR) EOM marker can not be empty string.\n");
+  exit(1);
+}
+
+fwrite(STDERR, "(DEBUG) End-of-message marker: '" . $EOM_MARKER . "' (hex: " . $EOM_HEX . ").\n");
+fwrite(STDERR, "(DEBUG) End-of-process marker: '" . $EOP_MARKER . "' (hex: " . $EOP_HEX . ").\n");
+
+if (isset($args[1])) {
+  $h = fopen($args[1], "r");
 } else {
   $h = fopen('php://stdin', 'r');
 }
