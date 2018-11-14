@@ -73,7 +73,7 @@ foreach ($opts as $key => $val) {
     unset($args[$mkey]);
     unset($args[$mkey+1]);
   }
-  $match = preg_grep("/^".$key."=/", $args);
+  $match = preg_grep("/^-(-)?".$key."=/", $args);
   foreach ($match as $mkey => $mval) {
     unset($args[$mkey]);
   }
