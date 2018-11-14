@@ -156,7 +156,7 @@ test_cases = (
     arxiv_extractionTestCase,
     generate_journal_idTestCase,
     fix_stringTestCase
-    )
+)
 
 
 def load_tests(loader, tests, pattern):

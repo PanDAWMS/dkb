@@ -85,7 +85,8 @@ PHYS_CATEGORIES_MAP = {
     'TTbarX': ['ttw', 'ttz', 'ttv', 'ttvv', '4top', 'ttww'],
     'Upgrade': ['upgrad'],
     'Wjets': ['w'],
-    'Zjets': ['z']}
+    'Zjets': ['z']
+}
 
 '''
 This dictionary is used for testing a bunch of 'if' calls. Isn't it better to
@@ -101,7 +102,7 @@ PHYS_CATEGORIES_PHYS_SHORTS_MAP = {
     'SUSY': ['tanb'],
     'Exotic': ['4topci'],
     'Wjets': ['_wenu_']
-    }
+}
 
 
 '''
