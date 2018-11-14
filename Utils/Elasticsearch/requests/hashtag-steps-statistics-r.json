@@ -1,5 +1,5 @@
 {
-  "took" : 58,
+  "took" : 81,
   "timed_out" : false,
   "_shards" : {
     "total" : 4,
@@ -18,77 +18,88 @@
       "buckets" : [
         {
           "key" : "Evgen",
-          "doc_count" : 130129,
+          "doc_count" : 3192,
           "output" : {
-            "doc_count" : 132907,
+            "doc_count" : 3192,
             "not_removed" : {
-              "doc_count" : 57165,
+              "doc_count" : 0,
               "bytes" : {
-                "value" : 1.797450983459059E15
+                "value" : 0.0
               }
             }
           },
           "processed_events" : {
-            "value" : 1.31664811534E11
+            "value" : 2.5873E7
           },
           "input_events" : {
-            "value" : 5.8857884909E10
+            "value" : 2.5873E7
           },
           "not_deleted" : {
-            "doc_count" : 4256,
+            "doc_count" : 0,
             "input_bytes" : {
-              "value" : 1.901422022159628E15
+              "value" : 0.0
+            }
+          },
+          "timestamp_defined" : {
+            "doc_count" : 3192,
+            "walltime" : {
+              "value" : 1.584503477443609E7
             }
           },
           "cpu" : {
-            "value" : 7.8337119E7
-          },
-          "walltime" : {
-            "value" : -9.91461307068E14
+            "value" : 0.0
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
-            "sum_other_doc_count" : 3,
+            "sum_other_doc_count" : 0,
             "buckets" : [
               {
                 "key" : "done",
-                "doc_count" : 94393
-              },
+                "doc_count" : 3192
+              }
+            ]
+          }
+        },
+        {
+          "key" : "Evgen Merge",
+          "doc_count" : 3192,
+          "output" : {
+            "doc_count" : 3192,
+            "not_removed" : {
+              "doc_count" : 3192,
+              "bytes" : {
+                "value" : 2.536129042E9
+              }
+            }
+          },
+          "processed_events" : {
+            "value" : 2.5873E7
+          },
+          "input_events" : {
+            "value" : 2.5873E7
+          },
+          "not_deleted" : {
+            "doc_count" : 0,
+            "input_bytes" : {
+              "value" : 0.0
+            }
+          },
+          "timestamp_defined" : {
+            "doc_count" : 3192,
+            "walltime" : {
+              "value" : 9654426.065162906
+            }
+          },
+          "cpu" : {
+            "value" : 0.0
+          },
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
               {
-                "key" : "aborted",
-                "doc_count" : 9670
-              },
-              {
-                "key" : "failed",
-                "doc_count" : 9003
-              },
-              {
-                "key" : "finished",
-                "doc_count" : 7393
-              },
-              {
-                "key" : "broken",
-                "doc_count" : 5917
-              },
-              {
-                "key" : "obsolete",
-                "doc_count" : 3199
-              },
-              {
-                "key" : "running",
-                "doc_count" : 477
-              },
-              {
-                "key" : "submitting",
-                "doc_count" : 49
-              },
-              {
-                "key" : "paused",
-                "doc_count" : 19
-              },
-              {
-                "key" : "exhausted",
-                "doc_count" : 6
+                "key" : "done",
+                "doc_count" : 3192
               }
             ]
           }
@@ -117,6 +128,15 @@
               "value" : 3.478790311594E12
             }
           },
+          "timestamp_defined" : {
+            "doc_count" : 3192,
+            "walltime" : {
+              "value" : 2.058583865914787E7
+            }
+          },
+          "cpu" : {
+            "value" : 2.2972E8
+          },
           "status" : {
             "doc_count_error_upper_bound" : 0,
             "sum_other_doc_count" : 0,
@@ -134,187 +154,84 @@
         },
         {
           "key" : "Simul",
-          "doc_count" : 117069,
+          "doc_count" : 3192,
           "output" : {
-            "doc_count" : 115646,
+            "doc_count" : 3192,
             "not_removed" : {
-              "doc_count" : 42411,
+              "doc_count" : 3192,
               "bytes" : {
-                "value" : 2.392175038136018E16
+                "value" : 3.478790311594E12
               }
             }
           },
           "processed_events" : {
-            "value" : 3.564416608E10
+            "value" : 2.58726E7
           },
           "input_events" : {
-            "value" : 4.555270907E10
+            "value" : 2.5873E7
           },
           "not_deleted" : {
-            "doc_count" : 68743,
+            "doc_count" : 3192,
             "input_bytes" : {
-              "value" : 1.598201430403393E15
+              "value" : 2.536129042E9
+            }
+          },
+          "timestamp_defined" : {
+            "doc_count" : 3192,
+            "walltime" : {
+              "value" : 7.758874436090225E7
             }
           },
           "cpu" : {
-            "value" : 3.26223164E8
-          },
-          "walltime" : {
-            "value" : -4.795058958008E15
+            "value" : 2.72266837E10
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
-            "sum_other_doc_count" : 117,
+            "sum_other_doc_count" : 0,
             "buckets" : [
               {
                 "key" : "done",
-                "doc_count" : 78523
+                "doc_count" : 3188
               },
               {
                 "key" : "finished",
-                "doc_count" : 21864
-              },
-              {
-                "key" : "aborted",
-                "doc_count" : 8667
-              },
-              {
-                "key" : "obsolete",
-                "doc_count" : 2444
-              },
-              {
-                "key" : "running",
-                "doc_count" : 2103
-              },
-              {
-                "key" : "broken",
-                "doc_count" : 1925
-              },
-              {
-                "key" : "failed",
-                "doc_count" : 581
-              },
-              {
-                "key" : "submitting",
-                "doc_count" : 417
-              },
-              {
-                "key" : "registered",
-                "doc_count" : 249
-              },
-              {
-                "key" : "ready",
-                "doc_count" : 179
+                "doc_count" : 4
               }
             ]
           }
         },
         {
           "key" : "Deriv",
-          "doc_count" : 53732,
+          "doc_count" : 3192,
           "output" : {
-            "doc_count" : 45607,
+            "doc_count" : 3192,
             "not_removed" : {
-              "doc_count" : 25450,
+              "doc_count" : 3192,
               "bytes" : {
-                "value" : 1.1114858672875E13
+                "value" : 1.749292089875E12
               }
             }
           },
           "processed_events" : {
-            "value" : 3.1916773E10
+            "value" : 2.6436E7
           },
           "input_events" : {
-            "value" : 3.4395468667E10
+            "value" : 2.58726E7
           },
           "not_deleted" : {
-            "doc_count" : 44468,
+            "doc_count" : 3192,
             "input_bytes" : {
-              "value" : 1.6790555201307984E16
+              "value" : 5.591388107287E12
+            }
+          },
+          "timestamp_defined" : {
+            "doc_count" : 3192,
+            "walltime" : {
+              "value" : 1.5688471804511279E7
             }
           },
           "cpu" : {
-            "value" : 12277.0
-          },
-          "walltime" : {
-            "value" : -5.213173467114E15
-          },
-          "status" : {
-            "doc_count_error_upper_bound" : 0,
-            "sum_other_doc_count" : 3,
-            "buckets" : [
-              {
-                "key" : "done",
-                "doc_count" : 32950
-              },
-              {
-                "key" : "finished",
-                "doc_count" : 10528
-              },
-              {
-                "key" : "aborted",
-                "doc_count" : 5661
-              },
-              {
-                "key" : "registered",
-                "doc_count" : 3082
-              },
-              {
-                "key" : "obsolete",
-                "doc_count" : 844
-              },
-              {
-                "key" : "failed",
-                "doc_count" : 300
-              },
-              {
-                "key" : "running",
-                "doc_count" : 234
-              },
-              {
-                "key" : "broken",
-                "doc_count" : 85
-              },
-              {
-                "key" : "submitting",
-                "doc_count" : 33
-              },
-              {
-                "key" : "ready",
-                "doc_count" : 12
-              }
-            ]
-          }
-        },
-        {
-          "key" : "Merge",
-          "doc_count" : 45085,
-          "output" : {
-            "doc_count" : 43416,
-            "not_removed" : {
-              "doc_count" : 33030,
-              "bytes" : {
-                "value" : 4.856967711834187E15
-              }
-            }
-          },
-          "processed_events" : {
-            "value" : 3.912850506E9
-          },
-          "input_events" : {
-            "value" : 7.032687983E9
-          },
-          "not_deleted" : {
-            "doc_count" : 573,
-            "input_bytes" : {
-              "value" : 1.227933089216151E15
-            }
-          },
-          "cpu" : {
-            "value" : 183822.0
-          },
-          "walltime" : {
-            "value" : 1.03734013636E14
+            "value" : 0.0
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
@@ -322,380 +239,11 @@
             "buckets" : [
               {
                 "key" : "done",
-                "doc_count" : 38347
-              },
-              {
-                "key" : "aborted",
-                "doc_count" : 2974
+                "doc_count" : 3188
               },
               {
                 "key" : "finished",
-                "doc_count" : 2607
-              },
-              {
-                "key" : "obsolete",
-                "doc_count" : 739
-              },
-              {
-                "key" : "broken",
-                "doc_count" : 369
-              },
-              {
-                "key" : "failed",
-                "doc_count" : 38
-              },
-              {
-                "key" : "running",
-                "doc_count" : 7
-              },
-              {
-                "key" : "registered",
                 "doc_count" : 4
-              }
-            ]
-          }
-        },
-        {
-          "key" : "Rec Merge",
-          "doc_count" : 83986,
-          "output" : {
-            "doc_count" : 74444,
-            "not_removed" : {
-              "doc_count" : 58098,
-              "bytes" : {
-                "value" : 2.044452188510708E16
-              }
-            }
-          },
-          "processed_events" : {
-            "value" : 4.5638499979E10
-          },
-          "input_events" : {
-            "value" : 5.0261039416E10
-          },
-          "not_deleted" : {
-            "doc_count" : 23171,
-            "input_bytes" : {
-              "value" : 9.391306684327684E15
-            }
-          },
-          "cpu" : {
-            "value" : 348519.0
-          },
-          "walltime" : {
-            "value" : -5.249273435925E15
-          },
-          "status" : {
-            "doc_count_error_upper_bound" : 0,
-            "sum_other_doc_count" : 4,
-            "buckets" : [
-              {
-                "key" : "done",
-                "doc_count" : 45224
-              },
-              {
-                "key" : "finished",
-                "doc_count" : 17644
-              },
-              {
-                "key" : "aborted",
-                "doc_count" : 13416
-              },
-              {
-                "key" : "registered",
-                "doc_count" : 2793
-              },
-              {
-                "key" : "obsolete",
-                "doc_count" : 2427
-              },
-              {
-                "key" : "failed",
-                "doc_count" : 999
-              },
-              {
-                "key" : "broken",
-                "doc_count" : 939
-              },
-              {
-                "key" : "running",
-                "doc_count" : 423
-              },
-              {
-                "key" : "submitting",
-                "doc_count" : 107
-              },
-              {
-                "key" : "ready",
-                "doc_count" : 10
-              }
-            ]
-          }
-        },
-        {
-          "key" : "Atlf Merge",
-          "doc_count" : 57437,
-          "output" : {
-            "doc_count" : 56360,
-            "not_removed" : {
-              "doc_count" : 45568,
-              "bytes" : {
-                "value" : 2.162948678672749E15
-              }
-            }
-          },
-          "processed_events" : {
-            "value" : 4.166819E9
-          },
-          "input_events" : {
-            "value" : 5.440077688E9
-          },
-          "not_deleted" : {
-            "doc_count" : 796,
-            "input_bytes" : {
-              "value" : 3.107240844717E13
-            }
-          },
-          "cpu" : {
-            "value" : 37347.0
-          },
-          "walltime" : {
-            "value" : 3.558617953E12
-          },
-          "status" : {
-            "doc_count_error_upper_bound" : 0,
-            "sum_other_doc_count" : 0,
-            "buckets" : [
-              {
-                "key" : "done",
-                "doc_count" : 51161
-              },
-              {
-                "key" : "finished",
-                "doc_count" : 4019
-              },
-              {
-                "key" : "aborted",
-                "doc_count" : 1652
-              },
-              {
-                "key" : "obsolete",
-                "doc_count" : 341
-              },
-              {
-                "key" : "broken",
-                "doc_count" : 145
-              },
-              {
-                "key" : "failed",
-                "doc_count" : 117
-              },
-              {
-                "key" : "submitting",
-                "doc_count" : 2
-              }
-            ]
-          }
-        },
-        {
-          "key" : "Atlfast",
-          "doc_count" : 57336,
-          "output" : {
-            "doc_count" : 57046,
-            "not_removed" : {
-              "doc_count" : 884,
-              "bytes" : {
-                "value" : 2.32165604914612E14
-              }
-            }
-          },
-          "processed_events" : {
-            "value" : 4.2317708E9
-          },
-          "input_events" : {
-            "value" : 5.740664531E9
-          },
-          "not_deleted" : {
-            "doc_count" : 27158,
-            "input_bytes" : {
-              "value" : 1.307719627307263E15
-            }
-          },
-          "cpu" : {
-            "value" : 1.7150962E7
-          },
-          "walltime" : {
-            "value" : 4.0941234087E13
-          },
-          "status" : {
-            "doc_count_error_upper_bound" : 0,
-            "sum_other_doc_count" : 0,
-            "buckets" : [
-              {
-                "key" : "done",
-                "doc_count" : 51242
-              },
-              {
-                "key" : "finished",
-                "doc_count" : 4128
-              },
-              {
-                "key" : "aborted",
-                "doc_count" : 1439
-              },
-              {
-                "key" : "obsolete",
-                "doc_count" : 351
-              },
-              {
-                "key" : "broken",
-                "doc_count" : 140
-              },
-              {
-                "key" : "failed",
-                "doc_count" : 34
-              },
-              {
-                "key" : "running",
-                "doc_count" : 2
-              }
-            ]
-          }
-        },
-        {
-          "key" : "Atlf TAG",
-          "doc_count" : 34444,
-          "output" : {
-            "doc_count" : 33767,
-            "not_removed" : {
-              "doc_count" : 813,
-              "bytes" : {
-                "value" : 2.9106784873E10
-              }
-            }
-          },
-          "processed_events" : {
-            "value" : 3.01015E8
-          },
-          "input_events" : {
-            "value" : 9.85336776E8
-          },
-          "not_deleted" : {
-            "doc_count" : 26306,
-            "input_bytes" : {
-              "value" : 4.21459386115728E14
-            }
-          },
-          "cpu" : {
-            "value" : 588.0
-          },
-          "walltime" : {
-            "value" : 8.49569467E11
-          },
-          "status" : {
-            "doc_count_error_upper_bound" : 0,
-            "sum_other_doc_count" : 0,
-            "buckets" : [
-              {
-                "key" : "done",
-                "doc_count" : 33092
-              },
-              {
-                "key" : "aborted",
-                "doc_count" : 780
-              },
-              {
-                "key" : "finished",
-                "doc_count" : 526
-              },
-              {
-                "key" : "broken",
-                "doc_count" : 25
-              },
-              {
-                "key" : "obsolete",
-                "doc_count" : 17
-              },
-              {
-                "key" : "failed",
-                "doc_count" : 4
-              }
-            ]
-          }
-        },
-        {
-          "key" : "Deriv Merge",
-          "doc_count" : 33340,
-          "output" : {
-            "doc_count" : 26218,
-            "not_removed" : {
-              "doc_count" : 25283,
-              "bytes" : {
-                "value" : 8.741430987E9
-              }
-            }
-          },
-          "processed_events" : {
-            "value" : 3.128789E10
-          },
-          "input_events" : {
-            "value" : 3.3082290417E10
-          },
-          "not_deleted" : {
-            "doc_count" : 13773,
-            "input_bytes" : {
-              "value" : 1.04032395605E11
-            }
-          },
-          "cpu" : {
-            "value" : 3.0
-          },
-          "walltime" : {
-            "value" : -5.266174916965E15
-          },
-          "status" : {
-            "doc_count_error_upper_bound" : 0,
-            "sum_other_doc_count" : 3,
-            "buckets" : [
-              {
-                "key" : "done",
-                "doc_count" : 18135
-              },
-              {
-                "key" : "finished",
-                "doc_count" : 7126
-              },
-              {
-                "key" : "aborted",
-                "doc_count" : 4228
-              },
-              {
-                "key" : "registered",
-                "doc_count" : 3248
-              },
-              {
-                "key" : "obsolete",
-                "doc_count" : 362
-              },
-              {
-                "key" : "running",
-                "doc_count" : 139
-              },
-              {
-                "key" : "failed",
-                "doc_count" : 56
-              },
-              {
-                "key" : "broken",
-                "doc_count" : 31
-              },
-              {
-                "key" : "ready",
-                "doc_count" : 9
-              },
-              {
-                "key" : "assigning",
-                "doc_count" : 3
               }
             ]
           }
