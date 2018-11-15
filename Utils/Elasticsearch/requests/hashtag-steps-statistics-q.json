@@ -1,7 +1,7 @@
 /* Get statistics for tasks with given hashtag by steps.
 
 Parameter values:
-  HASHTAG_LOWERCASE -- hashtag ("newfastcalosim")
+  HASHTAGS_LOWERCASE -- list of hashtags (["gammajets", "mc16c_cp"])
 
 GET <index>/task/_search
 */
@@ -10,7 +10,7 @@ GET <index>/task/_search
   "query": {
     "bool": {
       "must": [
-        {"term": {"hashtag_list": %%HASHTAG_LOWERCASE%%}},
+        {"terms": {"hashtag_list": %%HASHTAGS_LOWERCASE%%}},
         {"bool": {"must_not": [{"terms": {"status": ["aborted", "failed", "broken", "obsolete"]}}]}}
       ]
     }

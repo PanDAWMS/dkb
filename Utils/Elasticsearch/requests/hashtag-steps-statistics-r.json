@@ -1,5 +1,5 @@
 {
-  "took" : 81,
+  "took" : 36,
   "timed_out" : false,
   "_shards" : {
     "total" : 4,
@@ -7,7 +7,7 @@
     "failed" : 0
   },
   "hits" : {
-    "total" : 15960,
+    "total" : 5047,
     "max_score" : 0.0,
     "hits" : [ ]
   },
@@ -17,173 +17,181 @@
       "sum_other_doc_count" : 0,
       "buckets" : [
         {
-          "key" : "Evgen",
-          "doc_count" : 3192,
+          "key" : "Simul",
+          "doc_count" : 890,
           "output" : {
-            "doc_count" : 3192,
+            "doc_count" : 890,
             "not_removed" : {
-              "doc_count" : 0,
+              "doc_count" : 802,
               "bytes" : {
-                "value" : 0.0
+                "value" : 1.843975252907852E15
               }
             }
           },
           "processed_events" : {
-            "value" : 2.5873E7
+            "value" : 3.11532E9
           },
           "input_events" : {
-            "value" : 2.5873E7
+            "value" : 3.12086314E9
           },
           "not_deleted" : {
-            "doc_count" : 0,
+            "doc_count" : 731,
             "input_bytes" : {
-              "value" : 0.0
+              "value" : 9.2578323257809E13
             }
           },
           "timestamp_defined" : {
-            "doc_count" : 3192,
+            "doc_count" : 890,
             "walltime" : {
-              "value" : 1.584503477443609E7
+              "value" : 1.665009702247191E9
             }
           },
           "cpu" : {
-            "value" : 0.0
+            "value" : 2.325882592729E13
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
             "sum_other_doc_count" : 0,
             "buckets" : [
               {
+                "key" : "finished",
+                "doc_count" : 466
+              },
+              {
                 "key" : "done",
-                "doc_count" : 3192
+                "doc_count" : 424
               }
             ]
           }
         },
         {
-          "key" : "Evgen Merge",
-          "doc_count" : 3192,
+          "key" : "Rec Merge",
+          "doc_count" : 874,
           "output" : {
-            "doc_count" : 3192,
+            "doc_count" : 874,
             "not_removed" : {
-              "doc_count" : 3192,
+              "doc_count" : 873,
               "bytes" : {
-                "value" : 2.536129042E9
+                "value" : 1.611510871873012E15
               }
             }
           },
           "processed_events" : {
-            "value" : 2.5873E7
+            "value" : 3.08715E9
           },
           "input_events" : {
-            "value" : 2.5873E7
+            "value" : 3.08856748E9
           },
           "not_deleted" : {
-            "doc_count" : 0,
+            "doc_count" : 69,
             "input_bytes" : {
-              "value" : 0.0
+              "value" : 1.25602037876142E14
             }
           },
           "timestamp_defined" : {
-            "doc_count" : 3192,
+            "doc_count" : 874,
             "walltime" : {
-              "value" : 9654426.065162906
+              "value" : 6.655076041189932E8
             }
           },
           "cpu" : {
-            "value" : 0.0
+            "value" : 2.899493302E10
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
             "sum_other_doc_count" : 0,
             "buckets" : [
               {
+                "key" : "finished",
+                "doc_count" : 479
+              },
+              {
                 "key" : "done",
-                "doc_count" : 3192
+                "doc_count" : 395
               }
             ]
           }
         },
         {
           "key" : "Reco",
-          "doc_count" : 3192,
+          "doc_count" : 874,
           "output" : {
-            "doc_count" : 3192,
+            "doc_count" : 874,
             "not_removed" : {
-              "doc_count" : 3192,
+              "doc_count" : 69,
               "bytes" : {
-                "value" : 5.591388107287E12
+                "value" : 1.25602037876142E14
               }
             }
           },
           "processed_events" : {
-            "value" : 2.58726E7
+            "value" : 3.08833E9
           },
           "input_events" : {
-            "value" : 2.58726E7
+            "value" : 3.08202245E9
           },
           "not_deleted" : {
-            "doc_count" : 3192,
+            "doc_count" : 874,
             "input_bytes" : {
-              "value" : 3.478790311594E12
+              "value" : 2.037608485347529E15
             }
           },
           "timestamp_defined" : {
-            "doc_count" : 3192,
+            "doc_count" : 874,
             "walltime" : {
-              "value" : 2.058583865914787E7
+              "value" : 1.0340005377574371E9
             }
           },
           "cpu" : {
-            "value" : 2.2972E8
+            "value" : 4.86700169899E12
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
             "sum_other_doc_count" : 0,
             "buckets" : [
               {
-                "key" : "done",
-                "doc_count" : 3188
+                "key" : "finished",
+                "doc_count" : 476
               },
               {
-                "key" : "finished",
-                "doc_count" : 4
+                "key" : "done",
+                "doc_count" : 398
               }
             ]
           }
         },
         {
-          "key" : "Simul",
-          "doc_count" : 3192,
+          "key" : "Evgen",
+          "doc_count" : 655,
           "output" : {
-            "doc_count" : 3192,
+            "doc_count" : 660,
             "not_removed" : {
-              "doc_count" : 3192,
+              "doc_count" : 346,
               "bytes" : {
-                "value" : 3.478790311594E12
+                "value" : 5.3438348330422E13
               }
             }
           },
           "processed_events" : {
-            "value" : 2.58726E7
+            "value" : 2.72312326E9
           },
           "input_events" : {
-            "value" : 2.5873E7
+            "value" : 2.72912464E9
           },
           "not_deleted" : {
-            "doc_count" : 3192,
+            "doc_count" : 0,
             "input_bytes" : {
-              "value" : 2.536129042E9
+              "value" : 0.0
             }
           },
           "timestamp_defined" : {
-            "doc_count" : 3192,
+            "doc_count" : 655,
             "walltime" : {
-              "value" : 7.758874436090225E7
+              "value" : 1.367617403053435E9
             }
           },
           "cpu" : {
-            "value" : 2.72266837E10
+            "value" : 9.70349375508E12
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
@@ -191,43 +199,43 @@
             "buckets" : [
               {
                 "key" : "done",
-                "doc_count" : 3188
+                "doc_count" : 383
               },
               {
                 "key" : "finished",
-                "doc_count" : 4
+                "doc_count" : 272
               }
             ]
           }
         },
         {
           "key" : "Deriv",
-          "doc_count" : 3192,
+          "doc_count" : 603,
           "output" : {
-            "doc_count" : 3192,
+            "doc_count" : 603,
             "not_removed" : {
-              "doc_count" : 3192,
+              "doc_count" : 281,
               "bytes" : {
-                "value" : 1.749292089875E12
+                "value" : 1.39618809E8
               }
             }
           },
           "processed_events" : {
-            "value" : 2.6436E7
+            "value" : 2.307705E9
           },
           "input_events" : {
-            "value" : 2.58726E7
+            "value" : 2.30159525E9
           },
           "not_deleted" : {
-            "doc_count" : 3192,
+            "doc_count" : 603,
             "input_bytes" : {
-              "value" : 5.591388107287E12
+              "value" : 1.184385227092671E15
             }
           },
           "timestamp_defined" : {
-            "doc_count" : 3192,
+            "doc_count" : 603,
             "walltime" : {
-              "value" : 1.5688471804511279E7
+              "value" : 1.8828026036484244E8
             }
           },
           "cpu" : {
@@ -238,12 +246,156 @@
             "sum_other_doc_count" : 0,
             "buckets" : [
               {
+                "key" : "finished",
+                "doc_count" : 334
+              },
+              {
                 "key" : "done",
-                "doc_count" : 3188
+                "doc_count" : 269
+              }
+            ]
+          }
+        },
+        {
+          "key" : "Deriv Merge",
+          "doc_count" : 603,
+          "output" : {
+            "doc_count" : 603,
+            "not_removed" : {
+              "doc_count" : 603,
+              "bytes" : {
+                "value" : 3.0760037E7
+              }
+            }
+          },
+          "processed_events" : {
+            "value" : 2.3465E9
+          },
+          "input_events" : {
+            "value" : 2.3465E9
+          },
+          "not_deleted" : {
+            "doc_count" : 281,
+            "input_bytes" : {
+              "value" : 1.39618809E8
+            }
+          },
+          "timestamp_defined" : {
+            "doc_count" : 603,
+            "walltime" : {
+              "value" : 2.2072077943615258E7
+            }
+          },
+          "cpu" : {
+            "value" : 0.0
+          },
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "finished",
+                "doc_count" : 334
+              },
+              {
+                "key" : "done",
+                "doc_count" : 269
+              }
+            ]
+          }
+        },
+        {
+          "key" : "Evgen Merge",
+          "doc_count" : 456,
+          "output" : {
+            "doc_count" : 456,
+            "not_removed" : {
+              "doc_count" : 456,
+              "bytes" : {
+                "value" : 4.7421588396214E13
+              }
+            }
+          },
+          "processed_events" : {
+            "value" : 1.99189304E9
+          },
+          "input_events" : {
+            "value" : 1.99189804E9
+          },
+          "not_deleted" : {
+            "doc_count" : 142,
+            "input_bytes" : {
+              "value" : 2.4121442024259E13
+            }
+          },
+          "timestamp_defined" : {
+            "doc_count" : 456,
+            "walltime" : {
+              "value" : 2.708991030701754E8
+            }
+          },
+          "cpu" : {
+            "value" : 2.44529493E9
+          },
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "done",
+                "doc_count" : 308
               },
               {
                 "key" : "finished",
-                "doc_count" : 4
+                "doc_count" : 148
+              }
+            ]
+          }
+        },
+        {
+          "key" : "Merge",
+          "doc_count" : 92,
+          "output" : {
+            "doc_count" : 92,
+            "not_removed" : {
+              "doc_count" : 92,
+              "bytes" : {
+                "value" : 1.97013536056331E14
+              }
+            }
+          },
+          "processed_events" : {
+            "value" : 3.2440795E8
+          },
+          "input_events" : {
+            "value" : 3.2461535E8
+          },
+          "not_deleted" : {
+            "doc_count" : 4,
+            "input_bytes" : {
+              "value" : 7.743374148466E12
+            }
+          },
+          "timestamp_defined" : {
+            "doc_count" : 92,
+            "walltime" : {
+              "value" : 1.375414695652174E9
+            }
+          },
+          "cpu" : {
+            "value" : 2.76126855E9
+          },
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "finished",
+                "doc_count" : 72
+              },
+              {
+                "key" : "done",
+                "doc_count" : 20
               }
             ]
           }
