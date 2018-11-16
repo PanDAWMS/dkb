@@ -402,7 +402,7 @@ _clean() {
 }
 
 _build() {
-  rm -rf "$build_dir"
+  _clean
   mkdir -p "$build_dir"
   build_www
   [ -n "$MANAGE_NGINX" ] && build_nginx_cfg
