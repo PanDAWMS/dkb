@@ -129,6 +129,60 @@ def get_category(row):
     return categories
 
 
+def input_events(data):
+    """ Calculate derived value 'input_events'.
+
+    For EVNT tasks:
+     * n_files_to_be_used  -> n_files_to_be_used *
+                                * n_events_per_job / (n_files_per_job|1)
+     * !n_files_to_be_used -> processed_events
+
+    For other tasks:
+     * min(requested_events, primary_input_events)
+
+    :param data: task metadata
+    :type data: dict
+
+    :return: derived value 'input_events'
+             (None if input data do not provide enough information)
+    :rtype: int, NoneType
+    """
+    result = None
+    if data.get('step_name', '').lower() == 'evgen':
+        try:
+            to_be_used = int(data.get('n_files_to_be_used'))
+        except TypeError:
+            result = data.get('processed_events')
+        else:
+            try:
+                files_per_job = int(data.get('n_files_per_job'))
+            except TypeError:
+                files_per_job = 1
+            try:
+                events_per_job = int(data.get('n_events_per_job'))
+            except TypeError:
+                events_per_job = 0
+            result = to_be_used * events_per_job / files_per_job
+    else:
+        try:
+            requested = int(data.get('requested_events'))
+        except TypeError:
+            requested = -1
+        try:
+            ds_events = int(data.get('primary_input_events'))
+        except TypeError:
+            ds_events = requested
+        if requested < 0:
+            result = ds_events
+        elif ds_events < 0:
+            result = requested
+        else:
+            result = min(requested, ds_events)
+    if result < 0:
+        result = None
+    return result
+
+
 def process(stage, message):
     """ Single message processing. """
     data = message.content()
@@ -143,6 +197,10 @@ def process(stage, message):
     output_formats = data.get('output_formats')
     if output_formats:
         data['output_formats'] = output_formats.split('.')
+    # 4. Produce derived value 'input_events'
+    inp_events = input_events(data)
+    if inp_events:
+        data['input_events'] = inp_events
     if not add_es_index_info(data):
         sys.stderr.write("(WARN) Skip message (not enough info"
                          " for ES indexing.\n")

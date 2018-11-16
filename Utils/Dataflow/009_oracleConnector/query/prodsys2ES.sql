@@ -12,7 +12,8 @@
 -- architecture, campaign, cloud, conditions_tags, core_count, description, end_time,
 -- energy_gev, evgen_job_opts, geometry_version, hashtag_list, job_config, physics_list, processed_events,
 -- phys_group, project, pr_id, requested_events, run_number, site, start_time, step_name, status, subcampaign,
--- taskid, taskname, task_timestamp,  ticket_id, trans_home, trans_path, trans_uses, trigger_config, user_name, vo
+-- taskid, taskname, task_timestamp,  ticket_id, trans_home, trans_path, trans_uses, trigger_config, user_name, vo,
+-- n_files_per_job, n_events_per_job, n_files_to_be_used,
 
 -- RESTRICTIONS:
 -- 1. taskID must be more than 4 000 000 OR from the date > 12-03-2014
@@ -38,6 +39,7 @@ with tasks as (
       t.primary_input,
       t.ctag,
       t.output_formats,
+      t.nfilestobeused as n_files_to_be_used,
       s_t.step_name,
       r.description,
       r.energy_gev,
@@ -108,7 +110,13 @@ with tasks as (
                     '')) AS cloud,
         to_char(NVL(replace(regexp_substr(tt.jedi_task_parameters, '"site": "(.[^",])+'),
                             '"site": "', ''),
-                    '')) AS site
+                    '')) AS site,
+        to_char(NVL(replace(regexp_substr(tt.jedi_task_parameters, '"nEventsPerJob": [0-9]+'),
+                            '"nEventsPerJob": ', ''),
+                    '')) AS n_events_per_job,
+        to_char(NVL(replace(regexp_substr(tt.jedi_task_parameters, '"nFilesPerJob": [0-9]+'),
+                            '"nFilesPerJob": ', ''),
+                    '')) AS n_files_per_job
       FROM
         tasks t LEFT JOIN t_task tt
           ON t.taskid = tt.taskid
