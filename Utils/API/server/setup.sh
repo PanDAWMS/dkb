@@ -7,6 +7,7 @@ SOCK="$RUN_DIR"/api-fcgi.socket
 APP_USER=www
 APP_GROUP=
 ADDR=127.0.0.1:5080
+MANAGE_WWW=1
 MANAGE_NGINX=
 NGINX_DIR=/etc/nginx
 NGINX_USER=
@@ -34,6 +35,10 @@ COMMANDS
 OPTIONS
   GENERAL
     -h, --help       show this message and exit
+
+    -w, --www        manage www files (default)
+
+    -W, --no-www     do not manage www files
 
     -n, --nginx      manage Nginx config file
 
@@ -78,6 +83,12 @@ while [ $# -gt 0 ]; do
     -u|--user)
       APP_USER="$2"
       shift
+      ;;
+    -w|--www)
+      MANAGE_WWW=1
+      ;;
+    -W|--no-www)
+      MANAGE_WWW=
       ;;
     -n|--nginx)
       MANAGE_NGINX=1
@@ -401,7 +412,7 @@ _build() {
   build_dir="$base_dir/build"
   rm -rf "$build_dir"
   mkdir -p "$build_dir"
-  build_www
+  [ -n "$MANAGE_WWW" ] && build_www
   [ -n "$MANAGE_NGINX" ] && build_nginx_cfg
   [ -n "$MANAGE_SERVICE" ] && build_service_cfg
 }
@@ -410,20 +421,27 @@ _install() {
   get_nginx_user \
   && ensure_user \
   && ensure_dirs || exit 1
-  install_www
+  [ -n "$MANAGE_WWW" ] && install_www
   [ -n "$MANAGE_NGINX" ] && install_nginx_cfg
   [ -n "$MANAGE_SERVICE" ] && install_service
   [ -n "$MANAGE_SEL" ] && customize_sel
 }
 
 _uninstall() {
-  uninstall_www
+  [ -n "$MANAGE_WWW" ] && uninstall_www
   [ -n "$MANAGE_NGINX" ] && uninstall_nginx_cfg
   [ -n "$MANAGE_SERVICE" ] && uninstall_service
   [ -n "$MANAGE_SEL" ] && clean_sel
 }
 
 [ -z "$1" ] && usage >&2 && exit 1
+
+[ -z "$MANAGE_WWW" ] \
+  && [ -z "$MANAGE_NGINX" ] \
+  && [ -z "$MANAGE_SERVICE" ] \
+  && [ -z "$MANAGE_SEL" ] \
+  && echo "Nothing to do." >&2 \
+  && exit 1
 
 while [ $# -gt 0 ]; do
   case "$1" in
