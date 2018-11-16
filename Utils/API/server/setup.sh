@@ -22,7 +22,6 @@ USAGE
   $(basename "$0") [options] command ...
 
 COMMANDS
-  clean     clean up build directory
   build     extend files with parameter values
   install   build and copy files to system directories
   uninstall remove WWW files, remove service,
@@ -398,10 +397,6 @@ start_www() {
      echo \$! > '$pidfile'"
 }
 
-_clean() {
-  rm -rf "$base_dir/build"
-}
-
 _build() {
   build_dir="$base_dir/build"
   rm -rf "$build_dir"
@@ -432,9 +427,6 @@ _uninstall() {
 
 while [ $# -gt 0 ]; do
   case "$1" in
-    clean)
-      _clean
-      ;;
     build)
       _build
       ;;
