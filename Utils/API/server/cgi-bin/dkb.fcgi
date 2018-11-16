@@ -5,9 +5,18 @@ import json
 import urlparse
 import sys
 import os
+import signal
 
 logging.basicConfig(format="%(asctime)s (%(levelname)s) %(message)s",
                     level=logging.DEBUG)
+
+def signal_handler(sig, frame):
+    logging.info('Stopping server.')
+    os.remove('%%SOCK%%')
+    sys.exit(0)
+
+signal.signal(signal.SIGINT, signal_handler)
+signal.signal(signal.SIGQUIT, signal_handler)
 
 sys.path.append(os.path.join("%%WWW_DIR%%", "lib", "dkb"))
 
