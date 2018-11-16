@@ -46,6 +46,9 @@ OPTIONS
 
     --sel            manage SELinux settings
 
+    -a, --all        manage all of the above:
+                     equivalent to '-w -n -S --sel'
+
   APPLICATION
     -d, --dest DIR   destination directory for installation
                      Default: $WWW_DIR
@@ -106,6 +109,12 @@ while [ $# -gt 0 ]; do
       ;;
     --sel)
       MANAGE_SEL=1
+      ;;
+    -a|--all)
+      MANAGE_WWW=1
+      MANAGE_NGINX=1
+      MANAGE_SEL=1
+      MANAGE_SERVICE=1
       ;;
     --)
       break
