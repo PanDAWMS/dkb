@@ -22,9 +22,11 @@ USAGE
   $(basename "$0") [options] command ...
 
 COMMANDS
-  clean     clean up /build and WWW directories
+  clean     clean up build directory
   build     extend files with parameter values
   install   build and copy files to system directories
+  uninstall remove WWW files, remove service,
+              undo changes in SELinux policy
   start     start application
   stop      stop application
   restart   restart application
@@ -180,6 +182,17 @@ install_nginx_cfg() {
   echo "...done." >&2
 }
 
+uninstall_nginx_cfg() {
+  cfg="$NGINX_DIR/conf.d/dkb.conf"
+  echo "Removing Nginx config file..." >&2
+  echo "> $cfg" >&2
+  rm -f "$cfg"
+  echo "...done." >&2
+  echo "Restarting Nginx service..."
+  service nginx restart
+  echo "...done." >&2
+}
+
 check_systemd() {
   first=`ps -o comm= 1`
   [[ "$first" =~ "systemd" ]] && return 0 || return -1
@@ -209,6 +222,18 @@ install_service() {
   echo "...done." >&2
   echo "Enabling service..." >&2
   systemctl reenable ${file%.service} && echo "...done." >&2
+}
+
+uninstall_service() {
+  check_systemd || return 0
+  echo "Stopping and disabling service..." >&2
+  systemctl stop dkb-api
+  systemctl disable dkb-api
+  echo "...done." >&2
+  echo "Removing service file..." >&2
+  rm -f /etc/systemd/system/dkb-api.service
+  systemctl daemon-reload
+  echo "...done." >&2
 }
 
 build_www() {
@@ -258,6 +283,39 @@ install_www() {
   cd "$old_dir"
 }
 
+uninstall_www() {
+  old_dir=`pwd`
+  cd "$base_dir"
+  [ ! -r ".files" ] \
+    && echo "Config file '.files' is missed in '$base_dir'." \
+    && cd "$old_dir" && exit 1
+  files=`cat .files`
+  dirs=""
+  echo "Removing www files..." >&2
+  for f in $files; do
+    if [ -d "$WWW_DIR/$f" ]; then
+      dirs="$dirs $WWW_DIR/$f"
+    else
+      echo "> $WWW_DIR/$f" >&2
+      rm -f "$WWW_DIR/$f"
+      rm -f "$WWW_DIR/${f%.py}.pyc"
+    fi
+  done
+  for d in $dirs; do
+    # Remove directory if it still exists...
+    if [ -d "$d" ]; then
+      # ...and does not contain files.
+      nfiles=`find $d -type f ! -name "*.pyc" | wc -l`
+      [ $nfiles -eq 0 ] \
+        && echo "> $d" >&2 \
+        && rm -rf "$d" >/dev/null \
+        || echo "> $d (skipped: not empty)" >&2
+    fi
+  done
+  echo "...done." >&2
+  cd "$old_dir"
+}
+
 status_www_service() {
   check_systemd && systemctl status dkb-api
 }
@@ -267,6 +325,14 @@ customize_sel() {
   echo "Adding and applying SELinux rule..." >&2
   semanage fcontext -a -t httpd_exec_t "$f"
   restorecon "$f"
+  echo "...done" >&2
+}
+
+clean_sel() {
+  f="$WWW_DIR/cgi-bin/dkb.fcgi"
+  echo "Removing SELinux rule..." >&2
+  semanage fcontext -d -t httpd_exec_t "$f" &>/dev/null
+  restorecon "$f" &>/dev/null
   echo "...done" >&2
 }
 
@@ -333,8 +399,7 @@ start_www() {
 }
 
 _clean() {
-  dirs="$WWW_DIR $base_dir/build"
-  rm -rf $dirs
+  rm -rf "$base_dir/build"
 }
 
 _build() {
@@ -356,6 +421,13 @@ _install() {
   [ -n "$MANAGE_SEL" ] && customize_sel
 }
 
+_uninstall() {
+  uninstall_www
+  [ -n "$MANAGE_NGINX" ] && uninstall_nginx_cfg
+  [ -n "$MANAGE_SERVICE" ] && uninstall_service
+  [ -n "$MANAGE_SEL" ] && clean_sel
+}
+
 [ -z "$1" ] && usage >&2 && exit 1
 
 while [ $# -gt 0 ]; do
@@ -368,6 +440,9 @@ while [ $# -gt 0 ]; do
       ;;
     install)
       _install
+      ;;
+    uninstall)
+      _uninstall
       ;;
     start)
       start_www
