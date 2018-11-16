@@ -241,6 +241,7 @@ install_www() {
     if [ -d "$build_dir/$f" ]; then
       mkdir -p "$WWW_DIR/$f"
       chown "$APP_USER:$NGINX_GROUP" "$WWW_DIR/$f"
+      chmod 0744 "$WWW_DIR/$f"
     else
       cp "$build_dir/$f" -T "$WWW_DIR/$f"
       [[ "$f" =~ "bin/" ]] \
@@ -249,6 +250,9 @@ install_www() {
     fi
     chown "$APP_USER" "$WWW_DIR/$f"
   done
+  sudo -u "$APP_USER" python -m compileall "$WWW_DIR/lib"
+  echo "Compiling $WWW_DIR/cgi-bin/dkb.fcgi ..." >&2
+  sudo -u "$APP_USER" python -m py_compile "$WWW_DIR/cgi-bin/dkb.fcgi"
   echo "...done." >&2
   cd "$old_dir"
 }
