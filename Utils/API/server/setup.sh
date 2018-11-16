@@ -133,6 +133,7 @@ ensure_dirs() {
   dirs="$WWW_DIR $LOG_DIR $RUN_DIR"
   for dir in $dirs; do
     echo "Creating dir: $dir" >&2
+    [ -d "$dir" ] && continue
     mkdir -p "$dir" &>/dev/null
     chown "$APP_USER:$NGINX_GROUP" "$dir"
     chmod 2750 "$dir"
