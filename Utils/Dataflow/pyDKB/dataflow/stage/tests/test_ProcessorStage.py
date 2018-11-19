@@ -26,6 +26,20 @@ except Exception, err:
     sys.exit(1)
 
 
+args_to_add = {
+    'source': ['f', 's', 'h'],
+    'dest': ['f', 's', 'h'],
+}
+
+
+# mode: source, dest, EOM, EOP
+modes = {
+    's': ['s', 's', '\n', '\0'],
+    'f': ['f', 'f', '\n', ''],
+    'm': ['s', 's', '\n', ''],
+}
+
+
 class ProcessorStageArgsTestCase(unittest.TestCase):
     default_args = {
         'mode': 'f',
@@ -103,11 +117,6 @@ class ProcessorStageArgsTestCase(unittest.TestCase):
         self.check_args(args)
 
 
-args_to_add = {
-    'source': ['f', 's', 'h'],
-    'dest': ['f', 's', 'h'],
-    'mode': ['f', 's', 'm'],
-}
 
 
 def add_arg(arg, val, short=False):
@@ -125,10 +134,32 @@ def add_arg(arg, val, short=False):
         setattr(ProcessorStageArgsTestCase, 'test_%s_%s' % (arg, val), f)
 
 
+def add_mode(val, short=False):
+    def f(self):
+        if short:
+            self.stage.parse_args(['-m', val])
+        else:
+            self.stage.parse_args(['--mode', val])
+        args = dict(self.default_args)
+        args['mode'] = val
+        args['source'] = modes[val][0]
+        args['dest'] = modes[val][1]
+        args['eom'] = modes[val][2]
+        args['eop'] = modes[val][3]
+        self.check_args(args)
+    if short:
+        setattr(ProcessorStageArgsTestCase, 'test_m_%s' % (val), f)
+    else:
+        setattr(ProcessorStageArgsTestCase, 'test_mode_%s' % (val), f)
+
+
 for a in args_to_add:
     for v in args_to_add[a]:
         add_arg(a, v)
         add_arg(a, v, True)
+for m in modes:
+    add_mode(m)
+    add_mode(m, True)
 
 
 test_cases = (
