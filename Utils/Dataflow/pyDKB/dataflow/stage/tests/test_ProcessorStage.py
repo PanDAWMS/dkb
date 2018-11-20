@@ -126,30 +126,6 @@ class ProcessorStageArgsTestCase(unittest.TestCase):
         self.check_args(args)
 
 # hdfs >> source-dest >> mode
-    def test_override_hdfs_m_s(self):
-        self.stage.parse_args(['-m', 's', '--hdfs'])
-        args = dict(self.default_args)
-        args['hdfs'] = True
-        args['source'] = 'h'
-        args['dest'] = 'h'
-        self.check_args(args)
-
-    def test_override_hdfs_m_f(self):
-        self.stage.parse_args(['-m', 'f', '--hdfs'])
-        args = dict(self.default_args)
-        args['hdfs'] = True
-        args['source'] = 'h'
-        args['dest'] = 'h'
-        self.check_args(args)
-
-    def test_override_hdfs_m_m(self):
-        self.stage.parse_args(['-m', 'm', '--hdfs'])
-        args = dict(self.default_args)
-        args['hdfs'] = True
-        args['source'] = 'h'
-        args['dest'] = 'h'
-        self.check_args(args)
-
     def test_override_hdfs_mode_s(self):
         self.stage.parse_args(['--mode', 's', '--hdfs'])
         args = dict(self.default_args)
@@ -211,51 +187,35 @@ def add_mode(val, short=False):
         setattr(ProcessorStageArgsTestCase, 'test_mode_%s' % (val), f)
 
 
-def add_override_hdfs(arg, val, short=False):
+def add_override_hdfs(arg, val):
     def f(self):
-        if short:
-            self.stage.parse_args(['--hdfs', '-' + arg[0], val])
-        else:
-            self.stage.parse_args(['--hdfs', '--' + arg, val])
+        self.stage.parse_args(['--hdfs', '--' + arg, val])
         args = dict(self.default_args)
         args['hdfs'] = True
         args['source'] = 'h'
         args['dest'] = 'h'
         self.check_args(args)
-    if short:
-        setattr(ProcessorStageArgsTestCase,
-                'test_override_hdfs_%s_%s' % (arg[0], val), f)
-    else:
-        setattr(ProcessorStageArgsTestCase,
-                'test_override_hdfs_%s_%s' % (arg, val), f)
+    setattr(ProcessorStageArgsTestCase,
+            'test_override_hdfs_%s_%s' % (arg, val), f)
 
 
-def add_override_mode(arg, val, mode_val, short=False):
+def add_override_mode(arg, val, mode_val):
     def f(self):
-        if short:
-            self.stage.parse_args(['-' + arg[0], val, '--mode', mode_val])
-        else:
-            self.stage.parse_args(['--' + arg, val, '--mode', mode_val])
+        self.stage.parse_args(['--' + arg, val, '--mode', mode_val])
         args = dict(self.default_args)
         args.update(modes[mode_val])
         args[arg] = val
         self.check_args(args)
-    if short:
-        setattr(ProcessorStageArgsTestCase,
-                'test_override_%s_%s_mode_%s' % (arg[0], val, mode_val), f)
-    else:
-        setattr(ProcessorStageArgsTestCase,
-                'test_override_%s_%s_mode_%s' % (arg, val, mode_val), f)
+    setattr(ProcessorStageArgsTestCase,
+            'test_override_%s_%s_mode_%s' % (arg, val, mode_val), f)
 
 
 for a in args_to_add:
     for v in args_to_add[a]:
         add_arg(a, v, True)
         add_arg(a, v)
-        add_override_hdfs(a, v, True)
         add_override_hdfs(a, v)
         for m in modes:
-            add_override_mode(a, v, m, True)
             add_override_mode(a, v, m)
 
 
