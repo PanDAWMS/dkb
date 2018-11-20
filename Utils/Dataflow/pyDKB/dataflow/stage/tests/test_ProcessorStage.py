@@ -32,11 +32,10 @@ args_to_add = {
 }
 
 
-# mode: source, dest, EOM, EOP
 modes = {
-    's': ['s', 's', '\n', '\0'],
-    'f': ['f', 'f', '\n', ''],
-    'm': ['s', 's', '\n', ''],
+    's': {'mode': 's', 'source': 's', 'dest': 's', 'eom': '\n', 'eop': '\0'},
+    'f': {'mode': 'f', 'source': 'f', 'dest': 'f', 'eom': '\n', 'eop': ''},
+    'm': {'mode': 'm', 'source': 's', 'dest': 's', 'eom': '\n', 'eop': ''},
 }
 
 
@@ -186,11 +185,7 @@ def add_mode(val, short=False):
         else:
             self.stage.parse_args(['--mode', val])
         args = dict(self.default_args)
-        args['mode'] = val
-        args['source'] = modes[val][0]
-        args['dest'] = modes[val][1]
-        args['eom'] = modes[val][2]
-        args['eop'] = modes[val][3]
+        args.update(modes[val])
         self.check_args(args)
     if short:
         setattr(ProcessorStageArgsTestCase, 'test_m_%s' % (val), f)
@@ -224,11 +219,7 @@ def add_override_mode(arg, val, mode_val, short=False):
         else:
             self.stage.parse_args(['--' + arg, val, '--mode', mode_val])
         args = dict(self.default_args)
-        args['mode'] = mode_val
-        args['source'] = modes[mode_val][0]
-        args['dest'] = modes[mode_val][1]
-        args['eom'] = modes[mode_val][2]
-        args['eop'] = modes[mode_val][3]
+        args.update(modes[mode_val])
         args[arg] = val
         self.check_args(args)
     if short:
