@@ -101,26 +101,26 @@ class ProcessorStageArgsTestCase(unittest.TestCase):
         args['eop'] = '\t'
         self.check_args(args)
 
-    def test_input_dir(self):
-        self.stage.parse_args(['--input-dir', 'something'])
-        args = dict(self.default_args)
-        args['input_dir'] = 'something'
-        self.check_args(args)
-
     def test_i(self):
         self.stage.parse_args(['-i', 'something'])
         args = dict(self.default_args)
         args['input_dir'] = 'something'
         self.check_args(args)
 
-    def test_output_dir(self):
-        self.stage.parse_args(['--output-dir', 'something'])
+    def test_input_dir(self):
+        self.stage.parse_args(['--input-dir', 'something'])
         args = dict(self.default_args)
-        args['output_dir'] = 'something'
+        args['input_dir'] = 'something'
         self.check_args(args)
 
     def test_o(self):
         self.stage.parse_args(['-o', 'something'])
+        args = dict(self.default_args)
+        args['output_dir'] = 'something'
+        self.check_args(args)
+
+    def test_output_dir(self):
+        self.stage.parse_args(['--output-dir', 'something'])
         args = dict(self.default_args)
         args['output_dir'] = 'something'
         self.check_args(args)
@@ -244,18 +244,18 @@ def add_override_mode(arg, val, mode_val, short=False):
 
 for a in args_to_add:
     for v in args_to_add[a]:
-        add_arg(a, v)
         add_arg(a, v, True)
-        add_override_hdfs(a, v)
+        add_arg(a, v)
         add_override_hdfs(a, v, True)
+        add_override_hdfs(a, v)
         for m in modes:
-            add_override_mode(a, v, m)
             add_override_mode(a, v, m, True)
+            add_override_mode(a, v, m)
 
 
 for m in modes:
-    add_mode(m)
     add_mode(m, True)
+    add_mode(m)
 
 
 test_cases = (
