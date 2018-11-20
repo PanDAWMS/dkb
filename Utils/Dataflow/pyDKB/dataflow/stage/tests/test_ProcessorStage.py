@@ -77,14 +77,26 @@ class ProcessorStageArgsTestCase(unittest.TestCase):
         args['dest'] = 'h'
         self.check_args(args)
 
-    def test_eom(self):
+    def test_e(self):
         self.stage.parse_args(['-e', '\t'])
         args = dict(self.default_args)
         args['eom'] = '\t'
         self.check_args(args)
 
-    def test_eop(self):
+    def test_end_of_message(self):
+        self.stage.parse_args(['--end-of-message', '\t'])
+        args = dict(self.default_args)
+        args['eom'] = '\t'
+        self.check_args(args)
+
+    def test_E(self):
         self.stage.parse_args(['-E', '\t'])
+        args = dict(self.default_args)
+        args['eop'] = '\t'
+        self.check_args(args)
+
+    def test_end_of_process(self):
+        self.stage.parse_args(['--end-of-process', '\t'])
         args = dict(self.default_args)
         args['eop'] = '\t'
         self.check_args(args)
