@@ -245,7 +245,7 @@ for a in args_to_add:
         add_arg(a, v, True)
         add_override_hdfs(a, v)
         add_override_hdfs(a, v, True)
-        for m in ('s', 'f', 'm'):
+        for m in modes:
             add_override_mode(a, v, m)
             add_override_mode(a, v, m, True)
 
