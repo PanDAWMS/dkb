@@ -174,6 +174,12 @@ class ProcessorStageArgsTestCase(unittest.TestCase):
         args['dest'] = 'h'
         self.check_args(args)
 
+    def test_input_files(self):
+        self.stage.parse_args(['something', 'something_else'])
+        args = dict(self.default_args)
+        args['input_files'] = ['something', 'something_else']
+        self.check_args(args)
+
 
 def add_arg(arg, val, short=False):
     def f(self):
