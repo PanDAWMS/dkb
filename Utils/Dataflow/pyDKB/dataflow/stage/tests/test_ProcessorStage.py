@@ -125,31 +125,6 @@ class ProcessorStageArgsTestCase(unittest.TestCase):
         args['output_dir'] = 'something'
         self.check_args(args)
 
-# hdfs >> source-dest >> mode
-    def test_override_hdfs_mode_s(self):
-        self.stage.parse_args(['--mode', 's', '--hdfs'])
-        args = dict(self.default_args)
-        args['hdfs'] = True
-        args['source'] = 'h'
-        args['dest'] = 'h'
-        self.check_args(args)
-
-    def test_override_hdfs_mode_f(self):
-        self.stage.parse_args(['--mode', 'f', '--hdfs'])
-        args = dict(self.default_args)
-        args['hdfs'] = True
-        args['source'] = 'h'
-        args['dest'] = 'h'
-        self.check_args(args)
-
-    def test_override_hdfs_mode_m(self):
-        self.stage.parse_args(['--mode', 'm', '--hdfs'])
-        args = dict(self.default_args)
-        args['hdfs'] = True
-        args['source'] = 'h'
-        args['dest'] = 'h'
-        self.check_args(args)
-
     def test_input_files(self):
         self.stage.parse_args(['something', 'something_else'])
         args = dict(self.default_args)
@@ -187,6 +162,7 @@ def add_mode(val, short=False):
         setattr(ProcessorStageArgsTestCase, 'test_mode_%s' % (val), f)
 
 
+# hdfs >> source-dest >> mode
 def add_override_hdfs(arg, val):
     def f(self):
         self.stage.parse_args(['--hdfs', '--' + arg, val])
@@ -210,6 +186,19 @@ def add_override_mode(arg, val, mode_val):
             'test_override_%s_%s_mode_%s' % (arg, val, mode_val), f)
 
 
+def add_override_hdfs_mode(val):
+    def f(self):
+        self.stage.parse_args(['--hdfs', '--mode', val])
+        args = dict(self.default_args)
+        args.update(modes[val])
+        args['hdfs'] = True
+        args['source'] = 'h'
+        args['dest'] = 'h'
+        self.check_args(args)
+    setattr(ProcessorStageArgsTestCase,
+            'test_override_hdfs_mode_%s' % (val), f)
+
+
 for a in args_to_add:
     for v in args_to_add[a]:
         add_arg(a, v, True)
@@ -222,6 +211,7 @@ for a in args_to_add:
 for m in modes:
     add_mode(m, True)
     add_mode(m)
+    add_override_hdfs_mode(m)
 
 
 test_cases = (
