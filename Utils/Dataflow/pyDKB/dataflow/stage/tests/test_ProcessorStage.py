@@ -63,12 +63,8 @@ class ProcessorStageArgsTestCase(unittest.TestCase):
     def check_args(self, args):
         for a in args:
             # Such kind of testing does not display the argument's name,
-            # hence the "a + '_'" addition.
-            if isinstance(args[a], str):
-                self.assertEqual(a + '_' + getattr(self.stage.ARGS, a),
-                                 a + '_' + args[a])
-            else:
-                self.assertEqual(getattr(self.stage.ARGS, a), args[a])
+            # hence the {a: ...} addition.
+            self.assertEqual({a: getattr(self.stage.ARGS, a)}, {a: args[a]})
 
     def test_default(self):
         self.stage.parse_args('')
