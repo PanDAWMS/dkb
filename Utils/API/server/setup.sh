@@ -218,12 +218,15 @@ check_systemd() {
 }
 
 build_service_cfg() {
+  old_dir=`pwd`
+  cd "$base_dir"
   file="dkb-api.service"
   [ ! -f "$file" ] \
     && echo "Source file with service configuration not found ($file)." >&2 \
     && exit 1
   build_dir="$base_dir/build"
   build_file "$base_dir/$file" > "$build_dir/$file"
+  cd "$old_dir"
 }
 
 install_service() {
