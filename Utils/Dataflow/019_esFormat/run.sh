@@ -4,10 +4,11 @@ base_dir=$(cd "$(dirname "$(readlink -f "$0")")"; pwd)
 
 usage() {
   echo "USAGE:
-$(basename "$0") [-c CONFIG]
+$(basename "$0") [-c CONFIG] [--] [ARGS]
   
 PARAMETERS:
   CONFIG -- configuration file
+  ARGS   -- arguments to be passed to the PHP script
 "
 }
 
@@ -21,10 +22,6 @@ while [ -n "$1" ]; do
     --)
       shift
       break;;
-    -*)
-      echo "Unknown option: $1" >&2
-      usage >&2
-      exit 1;;
     *)
       break;;
   esac
@@ -39,4 +36,4 @@ set -a
   . "$ES_CONFIG"
 set +a
 
-$base_dir/esFormat.php
+$base_dir/esFormat.php "$@"
