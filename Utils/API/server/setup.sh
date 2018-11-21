@@ -1,7 +1,7 @@
 #!/bin/bash
 
 WWW_DIR=/data/www/dkb
-RUN_DIR=/var/run/nginx/dkb
+RUN_DIR=/var/run/wsgi
 LOG_DIR=/var/log/dkb
 SOCK="$RUN_DIR"/api-fcgi.socket
 APP_USER=www
