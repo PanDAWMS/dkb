@@ -167,6 +167,7 @@ def add_override_hdfs(arg, val):
     def f(self):
         self.stage.parse_args(['--hdfs', '--' + arg, val])
         args = dict(self.default_args)
+        args[arg] = val
         args['hdfs'] = True
         args['source'] = 'h'
         args['dest'] = 'h'
