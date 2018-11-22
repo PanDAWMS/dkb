@@ -39,19 +39,18 @@ def make_report(diff):
     deleted = len([v for v in events if v == jsondiff.delete])
     updated = len([v for v in events if v == jsondiff.update])
 
-    report_str = """Records summary:
+    rep_str = """Records summary:
   Changed: {}
   Deleted: {}
   Added: {}
-  
+
 Details:
 """.format(updated, deleted, inserted)
 
     for v in report:
-        report_str = "  " + report_str + v + \
-        ": " + str(report[v]) + " records\n"
+        rep_str = "  " + report_str + v + ": " + str(report[v]) + " records\n"
 
-    return report_str
+    return rep_str
 
 
 if __name__ == "__main__":
