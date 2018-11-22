@@ -26,7 +26,7 @@ def make_report(diff):
     """Turns results of jsondiff.diff into a readable format.
 
     Result is a string with a report summary.
-	"""
+    """
     report = {}
     for v in diff.values():
         if str(v) in report:
@@ -48,12 +48,11 @@ Details:
 """.format(updated, deleted, inserted)
 
     for v in report:
-        report_str = "  " + report_str + v + ": " + str(report[v]) + " records\n"
+        report_str = "  " + report_str + v + \
+        ": " + str(report[v]) + " records\n"
 
     return report_str
 
 
 if __name__ == "__main__":
     sys.stderr.write(str(make_report(diff_json(*sys.argv[1:]))))
-
-
