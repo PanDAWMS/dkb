@@ -55,81 +55,74 @@ class ProcessorStageArgsTestCase(unittest.TestCase):
 
     def setUp(self):
         self.stage = pyDKB.dataflow.stage.ProcessorStage()
+        self.args = dict(self.default_args)
 
     def tearDown(self):
         self.stage = None
+        self.args = None
 
-    def check_args(self, args):
-        for a in args:
+    def check_args(self):
+        for a in self.args:
             # Such kind of testing does not display the argument's name,
             # hence the {a: ...} addition.
-            self.assertEqual({a: getattr(self.stage.ARGS, a)}, {a: args[a]})
+            self.assertEqual({a: getattr(self.stage.ARGS, a)},
+                             {a: self.args[a]})
 
     def test_default(self):
         self.stage.parse_args('')
-        self.check_args(self.default_args)
+        self.check_args()
 
     def test_hdfs(self):
         self.stage.parse_args(['--hdfs'])
-        args = dict(self.default_args)
-        args['hdfs'] = True
-        args['source'] = 'h'
-        args['dest'] = 'h'
-        self.check_args(args)
+        self.args['hdfs'] = True
+        self.args['source'] = 'h'
+        self.args['dest'] = 'h'
+        self.check_args()
 
     def test_e(self):
         self.stage.parse_args(['-e', '\t'])
-        args = dict(self.default_args)
-        args['eom'] = '\t'
-        self.check_args(args)
+        self.args['eom'] = '\t'
+        self.check_args()
 
     def test_end_of_message(self):
         self.stage.parse_args(['--end-of-message', '\t'])
-        args = dict(self.default_args)
-        args['eom'] = '\t'
-        self.check_args(args)
+        self.args['eom'] = '\t'
+        self.check_args()
 
     def test_E(self):
         self.stage.parse_args(['-E', '\t'])
-        args = dict(self.default_args)
-        args['eop'] = '\t'
-        self.check_args(args)
+        self.args['eop'] = '\t'
+        self.check_args()
 
     def test_end_of_process(self):
         self.stage.parse_args(['--end-of-process', '\t'])
-        args = dict(self.default_args)
-        args['eop'] = '\t'
-        self.check_args(args)
+        self.args['eop'] = '\t'
+        self.check_args()
 
     def test_i(self):
         self.stage.parse_args(['-i', 'something'])
-        args = dict(self.default_args)
-        args['input_dir'] = 'something'
-        self.check_args(args)
+        self.args['input_dir'] = 'something'
+        self.check_args()
 
     def test_input_dir(self):
         self.stage.parse_args(['--input-dir', 'something'])
-        args = dict(self.default_args)
-        args['input_dir'] = 'something'
-        self.check_args(args)
+        self.args['input_dir'] = 'something'
+        self.check_args()
 
     def test_o(self):
         self.stage.parse_args(['-o', 'something'])
-        args = dict(self.default_args)
-        args['output_dir'] = 'something'
-        self.check_args(args)
+        self.args['output_dir'] = 'something'
+        self.check_args()
 
     def test_output_dir(self):
         self.stage.parse_args(['--output-dir', 'something'])
-        args = dict(self.default_args)
-        args['output_dir'] = 'something'
-        self.check_args(args)
+        self.args['output_dir'] = 'something'
+        self.check_args()
 
     def test_input_files(self):
         self.stage.parse_args(['something', 'something_else'])
-        args = dict(self.default_args)
-        args['input_files'] = ['something', 'something_else']
-        self.check_args(args)
+        self.args['input_files'] = ['something', 'something_else']
+        self.check_args()
 
 
 def add_arg(arg, val, short=False):
@@ -138,9 +131,8 @@ def add_arg(arg, val, short=False):
             self.stage.parse_args(['-' + arg[0], val])
         else:
             self.stage.parse_args(['--' + arg, val])
-        args = dict(self.default_args)
-        args[arg] = val
-        self.check_args(args)
+        self.args[arg] = val
+        self.check_args()
     if short:
         setattr(ProcessorStageArgsTestCase, 'test_%s_%s' % (arg[0], val), f)
     else:
@@ -153,9 +145,8 @@ def add_mode(val, short=False):
             self.stage.parse_args(['-m', val])
         else:
             self.stage.parse_args(['--mode', val])
-        args = dict(self.default_args)
-        args.update(modes[val])
-        self.check_args(args)
+        self.args.update(modes[val])
+        self.check_args()
     if short:
         setattr(ProcessorStageArgsTestCase, 'test_m_%s' % (val), f)
     else:
@@ -166,12 +157,11 @@ def add_mode(val, short=False):
 def add_override_hdfs(arg, val):
     def f(self):
         self.stage.parse_args(['--hdfs', '--' + arg, val])
-        args = dict(self.default_args)
-        args[arg] = val
-        args['hdfs'] = True
-        args['source'] = 'h'
-        args['dest'] = 'h'
-        self.check_args(args)
+        self.args[arg] = val
+        self.args['hdfs'] = True
+        self.args['source'] = 'h'
+        self.args['dest'] = 'h'
+        self.check_args()
     setattr(ProcessorStageArgsTestCase,
             'test_override_hdfs_%s_%s' % (arg, val), f)
 
@@ -179,10 +169,9 @@ def add_override_hdfs(arg, val):
 def add_override_mode(arg, val, mode_val):
     def f(self):
         self.stage.parse_args(['--' + arg, val, '--mode', mode_val])
-        args = dict(self.default_args)
-        args.update(modes[mode_val])
-        args[arg] = val
-        self.check_args(args)
+        self.args.update(modes[mode_val])
+        self.args[arg] = val
+        self.check_args()
     setattr(ProcessorStageArgsTestCase,
             'test_override_%s_%s_mode_%s' % (arg, val, mode_val), f)
 
@@ -190,12 +179,11 @@ def add_override_mode(arg, val, mode_val):
 def add_override_hdfs_mode(val):
     def f(self):
         self.stage.parse_args(['--hdfs', '--mode', val])
-        args = dict(self.default_args)
-        args.update(modes[val])
-        args['hdfs'] = True
-        args['source'] = 'h'
-        args['dest'] = 'h'
-        self.check_args(args)
+        self.args.update(modes[val])
+        self.args['hdfs'] = True
+        self.args['source'] = 'h'
+        self.args['dest'] = 'h'
+        self.check_args()
     setattr(ProcessorStageArgsTestCase,
             'test_override_hdfs_mode_%s' % (val), f)
 
