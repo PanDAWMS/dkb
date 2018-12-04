@@ -1,5 +1,8 @@
 #!/usr/bin/env python
 """
+Stage for converting JSON files(output of stage 015) into TTL files(input for
+stage 060).
+
 Module document2ttl.py
 - input from step 015 JSON:
             {
