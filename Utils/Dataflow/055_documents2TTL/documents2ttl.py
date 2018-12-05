@@ -124,21 +124,30 @@ def define_globals(args):
 
 
 def get_document_iri(doc_id):
-    """
-    :param doc_id:
-    :return Document IRI for current graph:
+    """ Construct an IRI for a document.
+
+    :param doc_id: document id
+    :type doc_id: str
+
+    :return: IRI
+    :rtype: str
     """
     obj = "document/%s" % doc_id
     return "<%s/%s>" % (GRAPH, obj)
 
 
 def document_glance(data, doc_iri, glance_attrs):
-    """
-    converting document GLANCE metadata from JSON to TTL (Turtle)
+    """ Convert GLANCE metadata from JSON to TTL.
+
     :param data: JSON data from file or stream
-    :param doc_iri: document IRI
+    :type data: dict
+    :param doc_iri: document IRI for current graph
+    :type doc_iri: str
     :param glance_attrs: PAPER_GLANCE_ATTRS | NOTE_GLANCE_ATTRS
-    :return ttl string with GLANCE metadata:
+    :type glance_attrs: list
+
+    :return: TTL string with GLANCE metadata
+    :rtype: str
     """
     # if isinstance(data, dict):
     #     raise ValueError("expected parameter of type %s,"
@@ -156,11 +165,16 @@ def document_glance(data, doc_iri, glance_attrs):
 
 
 def documents_links(data):
-    """
-    Convert documents links to TTL
-    :param data: metadata fro JSON file or stream
-    :return ttl: ttl string with links
-    PAPER atlas:isBasedOn SUPPORTING_DOCUMENT .
+    """ Convert links from JSON to TTL.
+
+    The result looks as following:
+    PAPER atlas:isBasedOn SUPPORTING_DOCUMENT
+
+    :param data: JSON data from file or stream
+    :type data: dict
+
+    :return: TTL string with links
+    :rtype: str
     """
     ttl = ''
     paper_iri = get_document_iri(data.get('dkbID'))
@@ -172,12 +186,17 @@ def documents_links(data):
 
 
 def document_cds(data, doc_iri, cds_attrs):
-    """
-    Read JSON document with supporting document metadata and generating TTL
-    :param data: metadata fro JSON file or stream
+    """ Convert CDS metadata from JSON to TTL.
+
+    :param data: JSON data from file or stream
+    :type data: dict
     :param doc_iri: document IRI for current graph
+    :type doc_iri: str
     :param cds_attrs: PAPER_CDS_ATTRS | NOTE_CDS_ATTRS
-    :return ttl: string with metadata
+    :type cds_attrs: list
+
+    :return: TTL string with CDS metadata
+    :rtype: str
     """
     ttl = ''
     for param in cds_attrs:
@@ -202,11 +221,15 @@ def document_cds(data, doc_iri, cds_attrs):
 
 
 def doi2ttl(doi, doc_iri):
-    """
-    Converting DOI parameter to TTL
+    """ Convert DOI parameter to TTL.
+
     :param doi: doi from JSON string
+    :type doi: str, unicode or list
     :param doc_iri: document IRI for current graph
-    :return ttl: ttl string with DOIs
+    :type doc_iri: str
+
+    :return: TTL string with DOI
+    :rtype: str
     """
     ttl = ''
     dois = []
@@ -221,11 +244,15 @@ def doi2ttl(doi, doc_iri):
 
 
 def keywords2ttl(keywords, doc_iri):
-    """
-    Converting keywords from JSON string to TTL
+    """ Convert keywords from JSON string to TTL.
+
     :param keywords: keywords parameters from JSON string
+    :type keywords: dict or list of dicts
     :param doc_iri: document IRI for current graph
-    :return ttl: ttl string with keywords
+    :type doc_iri: str
+
+    :return: TTL string with keywords
+    :rtype: str
     """
     ttl = ''
     keyword = []

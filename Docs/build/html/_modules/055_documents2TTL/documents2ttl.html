@@ -158,21 +158,30 @@
 
 
 <div class="viewcode-block" id="get_document_iri"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.get_document_iri">[docs]</a><span class="k">def</span> <span class="nf">get_document_iri</span><span class="p">(</span><span class="n">doc_id</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    :param doc_id:</span>
-<span class="sd">    :return Document IRI for current graph:</span>
+    <span class="sd">&quot;&quot;&quot; Construct an IRI for a document.</span>
+
+<span class="sd">    :param doc_id: document id</span>
+<span class="sd">    :type doc_id: str</span>
+
+<span class="sd">    :return: IRI</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">obj</span> <span class="o">=</span> <span class="s2">&quot;document/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">doc_id</span>
     <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">GRAPH</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="document_glance"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.document_glance">[docs]</a><span class="k">def</span> <span class="nf">document_glance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">,</span> <span class="n">glance_attrs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    converting document GLANCE metadata from JSON to TTL (Turtle)</span>
+    <span class="sd">&quot;&quot;&quot; Convert GLANCE metadata from JSON to TTL.</span>
+
 <span class="sd">    :param data: JSON data from file or stream</span>
-<span class="sd">    :param doc_iri: document IRI</span>
+<span class="sd">    :type data: dict</span>
+<span class="sd">    :param doc_iri: document IRI for current graph</span>
+<span class="sd">    :type doc_iri: str</span>
 <span class="sd">    :param glance_attrs: PAPER_GLANCE_ATTRS | NOTE_GLANCE_ATTRS</span>
-<span class="sd">    :return ttl string with GLANCE metadata:</span>
+<span class="sd">    :type glance_attrs: list</span>
+
+<span class="sd">    :return: TTL string with GLANCE metadata</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># if isinstance(data, dict):</span>
     <span class="c1">#     raise ValueError(&quot;expected parameter of type %s,&quot;</span>
@@ -190,11 +199,16 @@
 
 
 <div class="viewcode-block" id="documents_links"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.documents_links">[docs]</a><span class="k">def</span> <span class="nf">documents_links</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert documents links to TTL</span>
-<span class="sd">    :param data: metadata fro JSON file or stream</span>
-<span class="sd">    :return ttl: ttl string with links</span>
-<span class="sd">    PAPER atlas:isBasedOn SUPPORTING_DOCUMENT .</span>
+    <span class="sd">&quot;&quot;&quot; Convert links from JSON to TTL.</span>
+
+<span class="sd">    The result looks as following:</span>
+<span class="sd">    PAPER atlas:isBasedOn SUPPORTING_DOCUMENT</span>
+
+<span class="sd">    :param data: JSON data from file or stream</span>
+<span class="sd">    :type data: dict</span>
+
+<span class="sd">    :return: TTL string with links</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ttl</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="n">paper_iri</span> <span class="o">=</span> <span class="n">get_document_iri</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dkbID&#39;</span><span class="p">))</span>
@@ -206,12 +220,17 @@
 
 
 <div class="viewcode-block" id="document_cds"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.document_cds">[docs]</a><span class="k">def</span> <span class="nf">document_cds</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">,</span> <span class="n">cds_attrs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Read JSON document with supporting document metadata and generating TTL</span>
-<span class="sd">    :param data: metadata fro JSON file or stream</span>
+    <span class="sd">&quot;&quot;&quot; Convert CDS metadata from JSON to TTL.</span>
+
+<span class="sd">    :param data: JSON data from file or stream</span>
+<span class="sd">    :type data: dict</span>
 <span class="sd">    :param doc_iri: document IRI for current graph</span>
+<span class="sd">    :type doc_iri: str</span>
 <span class="sd">    :param cds_attrs: PAPER_CDS_ATTRS | NOTE_CDS_ATTRS</span>
-<span class="sd">    :return ttl: string with metadata</span>
+<span class="sd">    :type cds_attrs: list</span>
+
+<span class="sd">    :return: TTL string with CDS metadata</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ttl</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">cds_attrs</span><span class="p">:</span>
@@ -236,11 +255,15 @@
 
 
 <div class="viewcode-block" id="doi2ttl"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.doi2ttl">[docs]</a><span class="k">def</span> <span class="nf">doi2ttl</span><span class="p">(</span><span class="n">doi</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Converting DOI parameter to TTL</span>
+    <span class="sd">&quot;&quot;&quot; Convert DOI parameter to TTL.</span>
+
 <span class="sd">    :param doi: doi from JSON string</span>
+<span class="sd">    :type doi: str, unicode or list</span>
 <span class="sd">    :param doc_iri: document IRI for current graph</span>
-<span class="sd">    :return ttl: ttl string with DOIs</span>
+<span class="sd">    :type doc_iri: str</span>
+
+<span class="sd">    :return: TTL string with DOI</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ttl</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="n">dois</span> <span class="o">=</span> <span class="p">[]</span>
@@ -255,11 +278,15 @@
 
 
 <div class="viewcode-block" id="keywords2ttl"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.keywords2ttl">[docs]</a><span class="k">def</span> <span class="nf">keywords2ttl</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Converting keywords from JSON string to TTL</span>
+    <span class="sd">&quot;&quot;&quot; Convert keywords from JSON string to TTL.</span>
+
 <span class="sd">    :param keywords: keywords parameters from JSON string</span>
+<span class="sd">    :type keywords: dict or list of dicts</span>
 <span class="sd">    :param doc_iri: document IRI for current graph</span>
-<span class="sd">    :return ttl: ttl string with keywords</span>
+<span class="sd">    :type doc_iri: str</span>
+
+<span class="sd">    :return: TTL string with keywords</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ttl</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="n">keyword</span> <span class="o">=</span> <span class="p">[]</span>

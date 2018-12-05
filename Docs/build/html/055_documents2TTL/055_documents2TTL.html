@@ -147,39 +147,95 @@ stage 060).</p>
 <dl class="function">
 <dt id="055_documents2TTL.documents2ttl.document_cds">
 <code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">document_cds</code><span class="sig-paren">(</span><em>data</em>, <em>doc_iri</em>, <em>cds_attrs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#document_cds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.document_cds" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read JSON document with supporting document metadata and generating TTL
-:param data: metadata fro JSON file or stream
-:param doc_iri: document IRI for current graph
-:param cds_attrs: PAPER_CDS_ATTRS | NOTE_CDS_ATTRS
-:return ttl: string with metadata</p>
+<dd><p>Convert CDS metadata from JSON to TTL.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>dict</em>) – JSON data from file or stream</li>
+<li><strong>doc_iri</strong> (<em>str</em>) – document IRI for current graph</li>
+<li><strong>cds_attrs</strong> (<em>list</em>) – PAPER_CDS_ATTRS | NOTE_CDS_ATTRS</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">TTL string with CDS metadata</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="055_documents2TTL.documents2ttl.document_glance">
 <code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">document_glance</code><span class="sig-paren">(</span><em>data</em>, <em>doc_iri</em>, <em>glance_attrs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#document_glance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.document_glance" title="Permalink to this definition">¶</a></dt>
-<dd><p>converting document GLANCE metadata from JSON to TTL (Turtle)
-:param data: JSON data from file or stream
-:param doc_iri: document IRI
-:param glance_attrs: PAPER_GLANCE_ATTRS | NOTE_GLANCE_ATTRS
-:return ttl string with GLANCE metadata:</p>
+<dd><p>Convert GLANCE metadata from JSON to TTL.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>data</strong> (<em>dict</em>) – JSON data from file or stream</li>
+<li><strong>doc_iri</strong> (<em>str</em>) – document IRI for current graph</li>
+<li><strong>glance_attrs</strong> (<em>list</em>) – PAPER_GLANCE_ATTRS | NOTE_GLANCE_ATTRS</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">TTL string with GLANCE metadata</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="055_documents2TTL.documents2ttl.documents_links">
 <code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">documents_links</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#documents_links"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.documents_links" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert documents links to TTL
-:param data: metadata fro JSON file or stream
-:return ttl: ttl string with links
-PAPER atlas:isBasedOn SUPPORTING_DOCUMENT .</p>
+<dd><p>Convert links from JSON to TTL.</p>
+<p>The result looks as following:
+PAPER atlas:isBasedOn SUPPORTING_DOCUMENT</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – JSON data from file or stream</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">TTL string with links</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
 <dt id="055_documents2TTL.documents2ttl.doi2ttl">
 <code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">doi2ttl</code><span class="sig-paren">(</span><em>doi</em>, <em>doc_iri</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#doi2ttl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.doi2ttl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converting DOI parameter to TTL
-:param doi: doi from JSON string
-:param doc_iri: document IRI for current graph
-:return ttl: ttl string with DOIs</p>
+<dd><p>Convert DOI parameter to TTL.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>doi</strong> (<em>str</em><em>, </em><em>unicode</em><em> or </em><em>list</em>) – doi from JSON string</li>
+<li><strong>doc_iri</strong> (<em>str</em>) – document IRI for current graph</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">TTL string with DOI</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -209,14 +265,16 @@ PAPER atlas:isBasedOn SUPPORTING_DOCUMENT .</p>
 <dl class="function">
 <dt id="055_documents2TTL.documents2ttl.get_document_iri">
 <code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">get_document_iri</code><span class="sig-paren">(</span><em>doc_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#get_document_iri"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.get_document_iri" title="Permalink to this definition">¶</a></dt>
-<dd><table class="docutils field-list" frame="void" rules="none">
+<dd><p>Construct an IRI for a document.</p>
+<table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>doc_id</strong> – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>doc_id</strong> (<em>str</em>) – document id</td>
 </tr>
-<tr class="field-even field"><th class="field-name" colspan="2">Return Document IRI for current graph:</th></tr>
-<tr class="field-even field"><td>&#160;</td><td class="field-body"></td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">IRI</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
 </tr>
 </tbody>
 </table>
@@ -234,10 +292,25 @@ PAPER atlas:isBasedOn SUPPORTING_DOCUMENT .</p>
 <dl class="function">
 <dt id="055_documents2TTL.documents2ttl.keywords2ttl">
 <code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">keywords2ttl</code><span class="sig-paren">(</span><em>keywords</em>, <em>doc_iri</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#keywords2ttl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.keywords2ttl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converting keywords from JSON string to TTL
-:param keywords: keywords parameters from JSON string
-:param doc_iri: document IRI for current graph
-:return ttl: ttl string with keywords</p>
+<dd><p>Convert keywords from JSON string to TTL.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>keywords</strong> (<em>dict</em><em> or </em><em>list of dicts</em>) – keywords parameters from JSON string</li>
+<li><strong>doc_iri</strong> (<em>str</em>) – document IRI for current graph</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">TTL string with keywords</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
