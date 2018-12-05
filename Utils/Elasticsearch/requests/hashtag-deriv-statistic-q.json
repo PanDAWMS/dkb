@@ -1,0 +1,96 @@
+/* Get statistics for derivation tasks with given hashtag and AMI tag by output formats.
+
+Parameter values:
+  HASHTAGS_LOWERCASE -- list of hashtags (["gammajets", "newfastcalosim"])
+  AMI_TAGS_LOWERCASE -- list of AMI tags (["p3127", "p3126"])
+  FORMAT_* -- formats, fitting given AMI tag(s) ("NTUP_PILEUP", "NTUP_FCS")
+
+GET <index>/task/_search
+*/
+{
+  "size": 0,
+  "query": {
+    "bool": {
+      "must": [
+        {"terms": {"hashtag_list": %%HASHTAGS_LOWERCASE%%}},
+        {"terms": {"ctag": %%AMI_TAGS_LOWERCASE%%}},
+        {"bool": {"must_not": [{"terms": {"status": ["aborted", "failed", "broken", "obsolete"]}}]}},
+        {"term": {"primary_input": "aod"}}
+      ]
+    }
+  },
+  "aggs": {
+    "formats": {
+      "filters": {
+        "filters": {
+          %%FORMAT_1%%: {
+            "has_child": {
+              "type": "output_dataset",
+              "query": {"term": {"data_format": %%FORMAT_1%%}}
+            }
+          },
+          %%FORMAT_2%%: {
+            "has_child": {
+              "type": "output_dataset",
+              "query": {"term": {"data_format": %%FORMAT_2%%}}
+            }
+          }
+/*        , %%FORMAT_3%% { ... }, ...
+*/
+        }
+      },
+      "aggs": {
+        "status": {
+          "terms": {"field": "status"},
+          "aggs": {
+            "input_events": {
+              "sum": {"field": "input_events"}
+            },
+            "not_deleted": {
+              "filter": {"term": {"primary_input_deleted": false}},
+              "aggs": {
+                "input_bytes": {
+                  "sum": {"field": "input_bytes"}
+                }
+              }
+            },
+            "processed_events": {
+              "sum": {"field": "processed_events"}
+            },
+            "cpu": {
+              "sum": {"script": {"inline":"doc['hs06'].value * doc['total_events'].value"}}
+            },
+            "timestamp_defined": {
+              "filter": {
+                "bool": {
+                  "must": [
+                    {"exists": {"field": "start_time"}},
+                    {"exists": {"field": "end_time"}}
+                  ]
+                }
+              },
+              "aggs": {
+                "walltime": {
+                  "avg": {"script": {"inline": "doc['end_time'].value - doc['start_time'].value"}}
+                }
+              }
+            },
+            "output": {
+              "children": {"type": "output_dataset"},
+              "aggs": {
+                "not_removed": {
+                  "filter": {"term": {"deleted": false}},
+                  "aggs": {
+                    "bytes": {
+                      "sum": {"field": "bytes"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
