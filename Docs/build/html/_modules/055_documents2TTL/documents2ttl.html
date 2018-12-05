@@ -37,8 +37,8 @@
 <span class="sd">Stage for converting JSON files(output of stage 015) into TTL files(input for</span>
 <span class="sd">stage 060).</span>
 
-<span class="sd">Module document2ttl.py</span>
-<span class="sd">- input from step 015 JSON:</span>
+<span class="sd">JSON file should have the following structure::</span>
+
 <span class="sd">            {</span>
 <span class="sd">              &quot;GLANCE&quot;: {},</span>
 <span class="sd">              &quot;CDS&quot; : {},</span>
@@ -54,7 +54,9 @@
 <span class="sd">                    }</span>
 <span class="sd">              ]</span>
 <span class="sd">            }</span>
-<span class="sd">- output to TTL format</span>
+
+<span class="sd">Resulting TTL file has the following structure::</span>
+
 <span class="sd">            PAPER a atlas:Paper .</span>
 <span class="sd">            PAPER atlas:hasGLANCE_ID __ .</span>
 <span class="sd">            PAPER atlas:hasShortTitle __ .</span>

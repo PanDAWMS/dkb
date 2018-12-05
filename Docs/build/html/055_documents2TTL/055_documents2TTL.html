@@ -36,69 +36,56 @@
 <span id="stage-055"></span><span id="documents2ttl"></span><h1>Stage 055<a class="headerlink" href="#module-055_documents2TTL.documents2ttl" title="Permalink to this headline">¶</a></h1>
 <p>Stage for converting JSON files(output of stage 015) into TTL files(input for
 stage 060).</p>
-<p>Module document2ttl.py
-- input from step 015 JSON:</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>{</dt>
-<dd><p class="first">“GLANCE”: {},
-“CDS” : {},
-“dkbID” : …,
-“supporting_notes”: [</p>
-<blockquote>
-<div><dl class="docutils">
-<dt>{</dt>
-<dd>“GLANCE”: {},
-“CDS”: {},
-“dkbID”: …,</dd>
-</dl>
-<p>},
-{</p>
-<blockquote>
-<div>…</div></blockquote>
-<p>}</p>
-</div></blockquote>
-<p class="last">]</p>
-</dd>
-</dl>
-<p>}</p>
-</div></blockquote>
-<ul>
-<li><dl class="first docutils">
-<dt>output to TTL format</dt>
-<dd><p class="first last">PAPER a atlas:Paper .
-PAPER atlas:hasGLANCE_ID __ .
-PAPER atlas:hasShortTitle __ .
-PAPER atlas:hasFullTitle __ .
-PAPER atlas:hasRefCode __ .
-PAPER atlas:hasCreationDate __ .
-PAPER atlas:hasCDSReportNumber __ .
-PAPER atlas:hasCDSInternal __ .
-PAPER atlas:hasCDS_ID __ .
-PAPER atlas:hasAbstract __ .
-PAPER atlas:hasArXivCode __ .
-PAPER atlas:hasFullTitle __ .
-PAPER atlas:hasDOI __ .
-PAPER atlas:hasKeyword __ .
-JOURNAL_ISSUE a atlas:JournalIssue .
-JOURNAL_ISSUE atlas:hasTitle __ .
-JOURNAL_ISSUE atlas:hasVolume __ .
-JOURNAL_ISSUE atlas:hasYear __ .
-JOURNAL_ISSUE atlas:containsPublication&gt; PAPER .
-SUPPORTING_DOCUMENT a atlas:SupportingDocument .
-SUPPORTING_DOCUMENT atlas:hasGLANCE_ID __ .
-SUPPORTING_DOCUMENT atlas:hasLabel __ .
-SUPPORTING_DOCUMENT atlas:hasURL __ .
-SUPPORTING_DOCUMENT atlas:hasCreationDate __ .
-SUPPORTING_DOCUMENT atlas:hasCDSInternal __ .
-SUPPORTING_DOCUMENT atlas:hasCDS_ID __ .
-SUPPORTING_DOCUMENT atlas:hasAbstract __ .
-SUPPORTING_DOCUMENT atlas:hasKeyword __ .
-PAPER atlas:isBasedOn SUPPORTING_DOCUMENT .</p>
-</dd>
-</dl>
-</li>
-</ul>
+<p>JSON file should have the following structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+  <span class="s2">&quot;GLANCE&quot;</span><span class="p">:</span> <span class="p">{},</span>
+  <span class="s2">&quot;CDS&quot;</span> <span class="p">:</span> <span class="p">{},</span>
+  <span class="s2">&quot;dkbID&quot;</span> <span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+  <span class="s2">&quot;supporting_notes&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;GLANCE&quot;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="s2">&quot;CDS&quot;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="s2">&quot;dkbID&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="o">...</span>
+        <span class="p">}</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Resulting TTL file has the following structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PAPER</span> <span class="n">a</span> <span class="n">atlas</span><span class="p">:</span><span class="n">Paper</span> <span class="o">.</span>
+<span class="n">PAPER</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasGLANCE_ID</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">PAPER</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasShortTitle</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">PAPER</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasFullTitle</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">PAPER</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasRefCode</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">PAPER</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasCreationDate</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">PAPER</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasCDSReportNumber</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">PAPER</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasCDSInternal</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">PAPER</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasCDS_ID</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">PAPER</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasAbstract</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">PAPER</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasArXivCode</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">PAPER</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasFullTitle</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">PAPER</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasDOI</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">PAPER</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasKeyword</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">JOURNAL_ISSUE</span> <span class="n">a</span> <span class="n">atlas</span><span class="p">:</span><span class="n">JournalIssue</span> <span class="o">.</span>
+<span class="n">JOURNAL_ISSUE</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasTitle</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">JOURNAL_ISSUE</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasVolume</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">JOURNAL_ISSUE</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasYear</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">JOURNAL_ISSUE</span> <span class="n">atlas</span><span class="p">:</span><span class="n">containsPublication</span><span class="o">&gt;</span> <span class="n">PAPER</span> <span class="o">.</span>
+<span class="n">SUPPORTING_DOCUMENT</span> <span class="n">a</span> <span class="n">atlas</span><span class="p">:</span><span class="n">SupportingDocument</span> <span class="o">.</span>
+<span class="n">SUPPORTING_DOCUMENT</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasGLANCE_ID</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">SUPPORTING_DOCUMENT</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasLabel</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">SUPPORTING_DOCUMENT</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasURL</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">SUPPORTING_DOCUMENT</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasCreationDate</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">SUPPORTING_DOCUMENT</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasCDSInternal</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">SUPPORTING_DOCUMENT</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasCDS_ID</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">SUPPORTING_DOCUMENT</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasAbstract</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">SUPPORTING_DOCUMENT</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasKeyword</span> <span class="n">__</span> <span class="o">.</span>
+<span class="n">PAPER</span> <span class="n">atlas</span><span class="p">:</span><span class="n">isBasedOn</span> <span class="n">SUPPORTING_DOCUMENT</span> <span class="o">.</span>
+</pre></div>
+</div>
 <dl class="docutils">
 <dt>TODO: This module doesn’t convert authors metadata.</dt>
 <dd>This task is still under consideration.</dd>
