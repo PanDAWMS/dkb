@@ -178,7 +178,7 @@
 <div class="viewcode-block" id="document_glance"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.document_glance">[docs]</a><span class="k">def</span> <span class="nf">document_glance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">,</span> <span class="n">glance_attrs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Convert GLANCE metadata from JSON to TTL.</span>
 
-<span class="sd">    :param data: JSON data from file or stream</span>
+<span class="sd">    :param data: &#39;GLANCE&#39; part of the initial JSON</span>
 <span class="sd">    :type data: dict</span>
 <span class="sd">    :param doc_iri: document IRI for current graph</span>
 <span class="sd">    :type doc_iri: str</span>
@@ -209,7 +209,7 @@
 <span class="sd">    The result looks as following:</span>
 <span class="sd">    PAPER atlas:isBasedOn SUPPORTING_DOCUMENT</span>
 
-<span class="sd">    :param data: JSON data from file or stream</span>
+<span class="sd">    :param data: initial JSON</span>
 <span class="sd">    :type data: dict</span>
 
 <span class="sd">    :return: TTL string with links</span>
@@ -227,7 +227,7 @@
 <div class="viewcode-block" id="document_cds"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.document_cds">[docs]</a><span class="k">def</span> <span class="nf">document_cds</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">,</span> <span class="n">cds_attrs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Convert CDS metadata from JSON to TTL.</span>
 
-<span class="sd">    :param data: JSON data from file or stream</span>
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 <span class="sd">    :type data: dict</span>
 <span class="sd">    :param doc_iri: document IRI for current graph</span>
 <span class="sd">    :type doc_iri: str</span>
@@ -260,9 +260,9 @@
 
 
 <div class="viewcode-block" id="doi2ttl"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.doi2ttl">[docs]</a><span class="k">def</span> <span class="nf">doi2ttl</span><span class="p">(</span><span class="n">doi</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Convert DOI parameter to TTL.</span>
+    <span class="sd">&quot;&quot;&quot; Convert DOI parameter from JSON to TTL.</span>
 
-<span class="sd">    :param doi: doi from JSON string</span>
+<span class="sd">    :param doi: &#39;doi&#39; part of the initial JSON</span>
 <span class="sd">    :type doi: str, unicode or list</span>
 <span class="sd">    :param doc_iri: document IRI for current graph</span>
 <span class="sd">    :type doc_iri: str</span>
@@ -283,9 +283,9 @@
 
 
 <div class="viewcode-block" id="keywords2ttl"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.keywords2ttl">[docs]</a><span class="k">def</span> <span class="nf">keywords2ttl</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Convert keywords from JSON string to TTL.</span>
+    <span class="sd">&quot;&quot;&quot; Convert keywords from JSON to TTL.</span>
 
-<span class="sd">    :param keywords: keywords parameters from JSON string</span>
+<span class="sd">    :param keywords: &#39;keywords&#39; part of the initial JSON</span>
 <span class="sd">    :type keywords: dict or list of dicts</span>
 <span class="sd">    :param doc_iri: document IRI for current graph</span>
 <span class="sd">    :type doc_iri: str</span>
@@ -312,9 +312,9 @@
 
 
 <div class="viewcode-block" id="cds_internal_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.cds_internal_extraction">[docs]</a><span class="k">def</span> <span class="nf">cds_internal_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Extract CDS internal report number parameter from JSON string.</span>
+    <span class="sd">&quot;&quot;&quot; Extract CDS internal report number parameter from JSON.</span>
 
-<span class="sd">    :param data: JSON data from file or stream</span>
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 <span class="sd">    :type data: dict</span>
 
 <span class="sd">    :return: CDS internal report number</span>
@@ -335,9 +335,9 @@
 
 
 <div class="viewcode-block" id="report_number_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.report_number_extraction">[docs]</a><span class="k">def</span> <span class="nf">report_number_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Extract report number from JSON string.</span>
+    <span class="sd">&quot;&quot;&quot; Extract report number from JSON.</span>
 
-<span class="sd">    :param data: JSON data from file or stream</span>
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 
 <span class="sd">    :return: report number</span>
 <span class="sd">    :rtype: unicode</span>
@@ -354,11 +354,11 @@
 
 
 <div class="viewcode-block" id="glance_parameter_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.glance_parameter_extraction">[docs]</a><span class="k">def</span> <span class="nf">glance_parameter_extraction</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="n">json_data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Extract a parameter value from GLANCE JSON.</span>
+    <span class="sd">&quot;&quot;&quot; Extract a parameter value from JSON.</span>
 
 <span class="sd">    :param param_name: name of the parameter</span>
 <span class="sd">    :type param_name: str</span>
-<span class="sd">    :param json_data: JSON with GLANCE metadata</span>
+<span class="sd">    :param json_data: &#39;GLANCE&#39; part of the initial JSON</span>
 <span class="sd">    :type json_data: dict</span>
 
 <span class="sd">    :return: parameter value</span>
@@ -379,11 +379,11 @@
 
 
 <div class="viewcode-block" id="cds_parameter_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.cds_parameter_extraction">[docs]</a><span class="k">def</span> <span class="nf">cds_parameter_extraction</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="n">json_data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot; Extract CDS parameter value from CDS JSON.</span>
+    <span class="sd">&quot;&quot;&quot; Extract CDS parameter value from JSON.</span>
 
 <span class="sd">    :param param_name: name of the parameter, defined in *_CDS_ATTRS dict</span>
 <span class="sd">    :type param_name: str</span>
-<span class="sd">    :param json_data: JSON with CDS parameters</span>
+<span class="sd">    :param json_data: &#39;CDS&#39; part of the initial JSON</span>
 
 <span class="sd">    :return: parameter value</span>
 <span class="sd">    :rtype: int, str</span>
@@ -407,7 +407,7 @@
 <div class="viewcode-block" id="abstract_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.abstract_extraction">[docs]</a><span class="k">def</span> <span class="nf">abstract_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Extract abstract from JSON.</span>
 
-<span class="sd">    :param data: JSON string</span>
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 <span class="sd">    :type data: dict</span>
 
 <span class="sd">    :return: abstract</span>
@@ -431,7 +431,7 @@
 <div class="viewcode-block" id="title_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.title_extraction">[docs]</a><span class="k">def</span> <span class="nf">title_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Extracting title from JSON.</span>
 
-<span class="sd">    :param data: JSON string</span>
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 <span class="sd">    :type data: dict</span>
 
 <span class="sd">    :return: title</span>
@@ -444,7 +444,7 @@
 <div class="viewcode-block" id="cds_id_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.cds_id_extraction">[docs]</a><span class="k">def</span> <span class="nf">cds_id_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Extract CDS id from JSON.</span>
 
-<span class="sd">    :param data: JSON string</span>
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 <span class="sd">    :type data: dict</span>
 
 <span class="sd">    :return: CDS id</span>
@@ -457,7 +457,7 @@
 <div class="viewcode-block" id="creation_date_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.creation_date_extraction">[docs]</a><span class="k">def</span> <span class="nf">creation_date_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Extract creation date from JSON.</span>
 
-<span class="sd">    :param data: JSON string</span>
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 <span class="sd">    :type data: dict</span>
 
 <span class="sd">    :return: creation date</span>
@@ -470,7 +470,7 @@
 <div class="viewcode-block" id="arxiv_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.arxiv_extraction">[docs]</a><span class="k">def</span> <span class="nf">arxiv_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Extract arXiv code from JSON.</span>
 
-<span class="sd">    :param data: JSON string</span>
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 <span class="sd">    :type data: dict</span>
 
 <span class="sd">    :return: arXiv code</span>
@@ -513,7 +513,7 @@
 <div class="viewcode-block" id="process_journals"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.process_journals">[docs]</a><span class="k">def</span> <span class="nf">process_journals</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Convert journal data from JSON to TTL.</span>
 
-<span class="sd">    :param data: JSON</span>
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 <span class="sd">    :type data: list, dict</span>
 <span class="sd">    :param doc_iri: document IRI for current graph</span>
 <span class="sd">    :type doc_iri: str</span>

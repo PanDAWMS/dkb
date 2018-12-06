@@ -98,7 +98,7 @@ stage 060).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – JSON string</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – ‘CDS’ part of the initial JSON</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">abstract</td>
 </tr>
@@ -116,7 +116,7 @@ stage 060).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – JSON string</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – ‘CDS’ part of the initial JSON</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">arXiv code</td>
 </tr>
@@ -134,7 +134,7 @@ stage 060).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – JSON string</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – ‘CDS’ part of the initial JSON</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">CDS id</td>
 </tr>
@@ -147,12 +147,12 @@ stage 060).</p>
 <dl class="function">
 <dt id="055_documents2TTL.documents2ttl.cds_internal_extraction">
 <code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">cds_internal_extraction</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#cds_internal_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.cds_internal_extraction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract CDS internal report number parameter from JSON string.</p>
+<dd><p>Extract CDS internal report number parameter from JSON.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – JSON data from file or stream</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – ‘CDS’ part of the initial JSON</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">CDS internal report number</td>
 </tr>
@@ -165,14 +165,14 @@ stage 060).</p>
 <dl class="function">
 <dt id="055_documents2TTL.documents2ttl.cds_parameter_extraction">
 <code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">cds_parameter_extraction</code><span class="sig-paren">(</span><em>param_name</em>, <em>json_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#cds_parameter_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.cds_parameter_extraction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract CDS parameter value from CDS JSON.</p>
+<dd><p>Extract CDS parameter value from JSON.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>param_name</strong> (<em>str</em>) – name of the parameter, defined in <a href="#id1"><span class="problematic" id="id2">*</span></a>_CDS_ATTRS dict</li>
-<li><strong>json_data</strong> – JSON with CDS parameters</li>
+<li><strong>json_data</strong> – ‘CDS’ part of the initial JSON</li>
 </ul>
 </td>
 </tr>
@@ -194,7 +194,7 @@ stage 060).</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – JSON string</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – ‘CDS’ part of the initial JSON</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">creation date</td>
 </tr>
@@ -227,7 +227,7 @@ stage 060).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data</strong> (<em>dict</em>) – JSON data from file or stream</li>
+<li><strong>data</strong> (<em>dict</em>) – ‘CDS’ part of the initial JSON</li>
 <li><strong>doc_iri</strong> (<em>str</em>) – document IRI for current graph</li>
 <li><strong>cds_attrs</strong> (<em>list</em>) – PAPER_CDS_ATTRS | NOTE_CDS_ATTRS</li>
 </ul>
@@ -252,7 +252,7 @@ stage 060).</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data</strong> (<em>dict</em>) – JSON data from file or stream</li>
+<li><strong>data</strong> (<em>dict</em>) – ‘GLANCE’ part of the initial JSON</li>
 <li><strong>doc_iri</strong> (<em>str</em>) – document IRI for current graph</li>
 <li><strong>glance_attrs</strong> (<em>list</em>) – PAPER_GLANCE_ATTRS | NOTE_GLANCE_ATTRS</li>
 </ul>
@@ -278,7 +278,7 @@ PAPER atlas:isBasedOn SUPPORTING_DOCUMENT</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – JSON data from file or stream</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – initial JSON</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">TTL string with links</td>
 </tr>
@@ -291,13 +291,13 @@ PAPER atlas:isBasedOn SUPPORTING_DOCUMENT</p>
 <dl class="function">
 <dt id="055_documents2TTL.documents2ttl.doi2ttl">
 <code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">doi2ttl</code><span class="sig-paren">(</span><em>doi</em>, <em>doc_iri</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#doi2ttl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.doi2ttl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert DOI parameter to TTL.</p>
+<dd><p>Convert DOI parameter from JSON to TTL.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>doi</strong> (<em>str</em><em>, </em><em>unicode</em><em> or </em><em>list</em>) – doi from JSON string</li>
+<li><strong>doi</strong> (<em>str</em><em>, </em><em>unicode</em><em> or </em><em>list</em>) – ‘doi’ part of the initial JSON</li>
 <li><strong>doc_iri</strong> (<em>str</em>) – document IRI for current graph</li>
 </ul>
 </td>
@@ -387,14 +387,14 @@ PAPER atlas:isBasedOn SUPPORTING_DOCUMENT</p>
 <dl class="function">
 <dt id="055_documents2TTL.documents2ttl.glance_parameter_extraction">
 <code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">glance_parameter_extraction</code><span class="sig-paren">(</span><em>param_name</em>, <em>json_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#glance_parameter_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.glance_parameter_extraction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract a parameter value from GLANCE JSON.</p>
+<dd><p>Extract a parameter value from JSON.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>param_name</strong> (<em>str</em>) – name of the parameter</li>
-<li><strong>json_data</strong> (<em>dict</em>) – JSON with GLANCE metadata</li>
+<li><strong>json_data</strong> (<em>dict</em>) – ‘GLANCE’ part of the initial JSON</li>
 </ul>
 </td>
 </tr>
@@ -411,13 +411,13 @@ PAPER atlas:isBasedOn SUPPORTING_DOCUMENT</p>
 <dl class="function">
 <dt id="055_documents2TTL.documents2ttl.keywords2ttl">
 <code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">keywords2ttl</code><span class="sig-paren">(</span><em>keywords</em>, <em>doc_iri</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#keywords2ttl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.keywords2ttl" title="Permalink to this definition">¶</a></dt>
-<dd><p>Convert keywords from JSON string to TTL.</p>
+<dd><p>Convert keywords from JSON to TTL.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>keywords</strong> (<em>dict</em><em> or </em><em>list of dicts</em>) – keywords parameters from JSON string</li>
+<li><strong>keywords</strong> (<em>dict</em><em> or </em><em>list of dicts</em>) – ‘keywords’ part of the initial JSON</li>
 <li><strong>doc_iri</strong> (<em>str</em>) – document IRI for current graph</li>
 </ul>
 </td>
@@ -473,7 +473,7 @@ PAPER atlas:isBasedOn SUPPORTING_DOCUMENT</p>
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
-<li><strong>data</strong> (<em>list</em><em>, </em><em>dict</em>) – JSON</li>
+<li><strong>data</strong> (<em>list</em><em>, </em><em>dict</em>) – ‘CDS’ part of the initial JSON</li>
 <li><strong>doc_iri</strong> (<em>str</em>) – document IRI for current graph</li>
 </ul>
 </td>
@@ -491,12 +491,12 @@ PAPER atlas:isBasedOn SUPPORTING_DOCUMENT</p>
 <dl class="function">
 <dt id="055_documents2TTL.documents2ttl.report_number_extraction">
 <code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">report_number_extraction</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#report_number_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.report_number_extraction" title="Permalink to this definition">¶</a></dt>
-<dd><p>Extract report number from JSON string.</p>
+<dd><p>Extract report number from JSON.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> – JSON data from file or stream</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> – ‘CDS’ part of the initial JSON</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">report number</td>
 </tr>
@@ -514,7 +514,7 @@ PAPER atlas:isBasedOn SUPPORTING_DOCUMENT</p>
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – JSON string</td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – ‘CDS’ part of the initial JSON</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">title</td>
 </tr>

@@ -144,7 +144,7 @@ def get_document_iri(doc_id):
 def document_glance(data, doc_iri, glance_attrs):
     """ Convert GLANCE metadata from JSON to TTL.
 
-    :param data: JSON data from file or stream
+    :param data: 'GLANCE' part of the initial JSON
     :type data: dict
     :param doc_iri: document IRI for current graph
     :type doc_iri: str
@@ -175,7 +175,7 @@ def documents_links(data):
     The result looks as following:
     PAPER atlas:isBasedOn SUPPORTING_DOCUMENT
 
-    :param data: JSON data from file or stream
+    :param data: initial JSON
     :type data: dict
 
     :return: TTL string with links
@@ -193,7 +193,7 @@ def documents_links(data):
 def document_cds(data, doc_iri, cds_attrs):
     """ Convert CDS metadata from JSON to TTL.
 
-    :param data: JSON data from file or stream
+    :param data: 'CDS' part of the initial JSON
     :type data: dict
     :param doc_iri: document IRI for current graph
     :type doc_iri: str
@@ -226,9 +226,9 @@ def document_cds(data, doc_iri, cds_attrs):
 
 
 def doi2ttl(doi, doc_iri):
-    """ Convert DOI parameter to TTL.
+    """ Convert DOI parameter from JSON to TTL.
 
-    :param doi: doi from JSON string
+    :param doi: 'doi' part of the initial JSON
     :type doi: str, unicode or list
     :param doc_iri: document IRI for current graph
     :type doc_iri: str
@@ -249,9 +249,9 @@ def doi2ttl(doi, doc_iri):
 
 
 def keywords2ttl(keywords, doc_iri):
-    """ Convert keywords from JSON string to TTL.
+    """ Convert keywords from JSON to TTL.
 
-    :param keywords: keywords parameters from JSON string
+    :param keywords: 'keywords' part of the initial JSON
     :type keywords: dict or list of dicts
     :param doc_iri: document IRI for current graph
     :type doc_iri: str
@@ -278,9 +278,9 @@ def keywords2ttl(keywords, doc_iri):
 
 
 def cds_internal_extraction(data):
-    """ Extract CDS internal report number parameter from JSON string.
+    """ Extract CDS internal report number parameter from JSON.
 
-    :param data: JSON data from file or stream
+    :param data: 'CDS' part of the initial JSON
     :type data: dict
 
     :return: CDS internal report number
@@ -301,9 +301,9 @@ def cds_internal_extraction(data):
 
 
 def report_number_extraction(data):
-    """ Extract report number from JSON string.
+    """ Extract report number from JSON.
 
-    :param data: JSON data from file or stream
+    :param data: 'CDS' part of the initial JSON
 
     :return: report number
     :rtype: unicode
@@ -320,11 +320,11 @@ def report_number_extraction(data):
 
 
 def glance_parameter_extraction(param_name, json_data):
-    """ Extract a parameter value from GLANCE JSON.
+    """ Extract a parameter value from JSON.
 
     :param param_name: name of the parameter
     :type param_name: str
-    :param json_data: JSON with GLANCE metadata
+    :param json_data: 'GLANCE' part of the initial JSON
     :type json_data: dict
 
     :return: parameter value
@@ -345,11 +345,11 @@ def glance_parameter_extraction(param_name, json_data):
 
 
 def cds_parameter_extraction(param_name, json_data):
-    """ Extract CDS parameter value from CDS JSON.
+    """ Extract CDS parameter value from JSON.
 
     :param param_name: name of the parameter, defined in *_CDS_ATTRS dict
     :type param_name: str
-    :param json_data: JSON with CDS parameters
+    :param json_data: 'CDS' part of the initial JSON
 
     :return: parameter value
     :rtype: int, str
@@ -373,7 +373,7 @@ def cds_parameter_extraction(param_name, json_data):
 def abstract_extraction(data):
     """ Extract abstract from JSON.
 
-    :param data: JSON string
+    :param data: 'CDS' part of the initial JSON
     :type data: dict
 
     :return: abstract
@@ -397,7 +397,7 @@ def abstract_extraction(data):
 def title_extraction(data):
     """ Extracting title from JSON.
 
-    :param data: JSON string
+    :param data: 'CDS' part of the initial JSON
     :type data: dict
 
     :return: title
@@ -410,7 +410,7 @@ def title_extraction(data):
 def cds_id_extraction(data):
     """ Extract CDS id from JSON.
 
-    :param data: JSON string
+    :param data: 'CDS' part of the initial JSON
     :type data: dict
 
     :return: CDS id
@@ -423,7 +423,7 @@ def cds_id_extraction(data):
 def creation_date_extraction(data):
     """ Extract creation date from JSON.
 
-    :param data: JSON string
+    :param data: 'CDS' part of the initial JSON
     :type data: dict
 
     :return: creation date
@@ -436,7 +436,7 @@ def creation_date_extraction(data):
 def arxiv_extraction(data):
     """ Extract arXiv code from JSON.
 
-    :param data: JSON string
+    :param data: 'CDS' part of the initial JSON
     :type data: dict
 
     :return: arXiv code
@@ -479,7 +479,7 @@ def generate_journal_id(journal_dict):
 def process_journals(data, doc_iri):
     """ Convert journal data from JSON to TTL.
 
-    :param data: JSON
+    :param data: 'CDS' part of the initial JSON
     :type data: list, dict
     :param doc_iri: document IRI for current graph
     :type doc_iri: str
