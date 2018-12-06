@@ -284,7 +284,7 @@ def cds_internal_extraction(data):
     :type data: dict
 
     :return: CDS internal report number
-    :rtype: str
+    :rtype: unicode
     """
     if 'report_number' in data:
         report_number = data.get('report_number')
@@ -306,7 +306,7 @@ def report_number_extraction(data):
     :param data: JSON data from file or stream
 
     :return: report number
-    :rtype: str
+    :rtype: unicode
     """
     if 'report_number' in data:
         report_number = data.get('report_number')
@@ -328,7 +328,7 @@ def glance_parameter_extraction(param_name, json_data):
     :type json_data: dict
 
     :return: parameter value
-    :rtype: str
+    :rtype: str, unicode
     """
     if param_name == 'id':
         return json_data['id']
@@ -352,7 +352,7 @@ def cds_parameter_extraction(param_name, json_data):
     :param json_data: JSON with CDS parameters
 
     :return: parameter value
-    :rtype: str
+    :rtype: int, str
     """
     if param_name == 'abstract':
         return abstract_extraction(json_data)
@@ -414,7 +414,7 @@ def cds_id_extraction(data):
     :type data: dict
 
     :return: CDS id
-    :rtype: str
+    :rtype: int
     """
     if 'recid' in data:
         return int(data.get('recid'))

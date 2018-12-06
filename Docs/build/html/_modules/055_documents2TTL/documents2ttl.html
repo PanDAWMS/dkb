@@ -318,7 +318,7 @@
 <span class="sd">    :type data: dict</span>
 
 <span class="sd">    :return: CDS internal report number</span>
-<span class="sd">    :rtype: str</span>
+<span class="sd">    :rtype: unicode</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;report_number&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="n">report_number</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report_number&#39;</span><span class="p">)</span>
@@ -340,7 +340,7 @@
 <span class="sd">    :param data: JSON data from file or stream</span>
 
 <span class="sd">    :return: report number</span>
-<span class="sd">    :rtype: str</span>
+<span class="sd">    :rtype: unicode</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;report_number&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="n">report_number</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report_number&#39;</span><span class="p">)</span>
@@ -362,7 +362,7 @@
 <span class="sd">    :type json_data: dict</span>
 
 <span class="sd">    :return: parameter value</span>
-<span class="sd">    :rtype: str</span>
+<span class="sd">    :rtype: str, unicode</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">param_name</span> <span class="o">==</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">json_data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
@@ -386,7 +386,7 @@
 <span class="sd">    :param json_data: JSON with CDS parameters</span>
 
 <span class="sd">    :return: parameter value</span>
-<span class="sd">    :rtype: str</span>
+<span class="sd">    :rtype: int, str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">param_name</span> <span class="o">==</span> <span class="s1">&#39;abstract&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">abstract_extraction</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
@@ -448,7 +448,7 @@
 <span class="sd">    :type data: dict</span>
 
 <span class="sd">    :return: CDS id</span>
-<span class="sd">    :rtype: str</span>
+<span class="sd">    :rtype: int</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;recid&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;recid&#39;</span><span class="p">))</span></div>
