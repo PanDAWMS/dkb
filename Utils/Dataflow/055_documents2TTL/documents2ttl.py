@@ -116,6 +116,11 @@ NOTE_CDS_ATTRS = [
 
 
 def define_globals(args):
+    """ Define global variables for further usage in other functions.
+
+    :param args: stage arguments
+    :type args: argparse.Namespace
+    """
     global GRAPH
     GRAPH = args.GRAPH
 
@@ -273,10 +278,13 @@ def keywords2ttl(keywords, doc_iri):
 
 
 def cds_internal_extraction(data):
-    """
-    Extracting cds internal report number parameter from JSON string
-    :param data: JSON string
-    :return report number:
+    """ Extract CDS internal report number parameter from JSON string.
+
+    :param data: JSON data from file or stream
+    :type data: dict
+
+    :return: CDS internal report number
+    :rtype: str
     """
     if 'report_number' in data:
         report_number = data.get('report_number')
@@ -293,10 +301,12 @@ def cds_internal_extraction(data):
 
 
 def report_number_extraction(data):
-    """
-    Exracting report number from JSON string
-    :param data:
-    :return:
+    """ Extract report number from JSON string.
+
+    :param data: JSON data from file or stream
+
+    :return: report number
+    :rtype: str
     """
     if 'report_number' in data:
         report_number = data.get('report_number')
@@ -310,11 +320,15 @@ def report_number_extraction(data):
 
 
 def glance_parameter_extraction(param_name, json_data):
-    """
-    Extracting single value parameters from GLANCE json
-    :param param_name:
+    """ Extract a parameter value from GLANCE JSON.
+
+    :param param_name: name of the parameter
+    :type param_name: str
     :param json_data: JSON with GLANCE metadata
-    :return:
+    :type json_data: dict
+
+    :return: parameter value
+    :rtype: str
     """
     if param_name == 'id':
         return json_data['id']
@@ -331,11 +345,14 @@ def glance_parameter_extraction(param_name, json_data):
 
 
 def cds_parameter_extraction(param_name, json_data):
-    """
-    Extracting parameters from json string with CDS parameters
-    :param param_name: name of parameter, defined in *_CDS_ATTRS dict
-    :param json_data: json string with CDS parameters
-    :return:
+    """ Extract CDS parameter value from CDS JSON.
+
+    :param param_name: name of the parameter, defined in *_CDS_ATTRS dict
+    :type param_name: str
+    :param json_data: JSON with CDS parameters
+
+    :return: parameter value
+    :rtype: str
     """
     if param_name == 'abstract':
         return abstract_extraction(json_data)
@@ -354,10 +371,13 @@ def cds_parameter_extraction(param_name, json_data):
 
 
 def abstract_extraction(data):
-    """
-    Extracting abstract from json string
-    :param data: json string
-    :return: string with abstract
+    """ Extract abstract from JSON.
+
+    :param data: JSON string
+    :type data: dict
+
+    :return: abstract
+    :rtype: str
     """
     result = None
     if 'abstract' in data:
@@ -375,40 +395,52 @@ def abstract_extraction(data):
 
 
 def title_extraction(data):
-    """
-    Extracting title from json string
-    :param data: json string
-    :return: string with title
+    """ Extracting title from JSON.
+
+    :param data: JSON string
+    :type data: dict
+
+    :return: title
+    :rtype: str
     """
     if 'title' in data:
         return fix_string(data.get('title').get('title'))
 
 
 def cds_id_extraction(data):
-    """
-    Extracting CDS_ID from json string
-    :param data: json string
-    :return: string with CDS_ID
+    """ Extract CDS id from JSON.
+
+    :param data: JSON string
+    :type data: dict
+
+    :return: CDS id
+    :rtype: str
     """
     if 'recid' in data:
         return int(data.get('recid'))
 
 
 def creation_date_extraction(data):
-    """
-    Extracting creation date from json string
-    :param data: json string
-    :return: string with date
+    """ Extract creation date from JSON.
+
+    :param data: JSON string
+    :type data: dict
+
+    :return: creation date
+    :rtype: str
     """
     if 'creation_date' in data:
         return fix_string(data.get('creation_date'))
 
 
 def arxiv_extraction(data):
-    """
-    Extracting of arXiv from json string
-    :param data: json string
-    :return: string with arXiv
+    """ Extract arXiv code from JSON.
+
+    :param data: JSON string
+    :type data: dict
+
+    :return: arXiv code
+    :rtype: str
     """
     if 'primary_report_number' in data:
         report_number = data.get('primary_report_number')
@@ -426,10 +458,13 @@ def arxiv_extraction(data):
 
 
 def generate_journal_id(journal_dict):
-    """
-    Generating journal issue ID based on title, volume and year
-    :param journal_dict: dictionary with journal parameters
+    """ Generate a journal issue ID based on title, volume and year.
+
+    :param journal_dict: journal parameters
+    :type journal_dict: dict
+
     :return: journal ID
+    :rtype: str
     """
     journal_id = ''
     if 'title' in journal_dict:
@@ -442,11 +477,15 @@ def generate_journal_id(journal_dict):
 
 
 def process_journals(data, doc_iri):
-    """
-    Convert journal data from json string to TTL
-    :param data: json string
+    """ Convert journal data from JSON to TTL.
+
+    :param data: JSON
+    :type data: list, dict
     :param doc_iri: document IRI for current graph
-    :return: ttl string with journal issue with connection to paper
+    :type doc_iri: str
+
+    :return: TTL string with journal issue with connection to paper
+    :rtype: str
     """
     journals = []
     if isinstance(data, list):
@@ -475,10 +514,13 @@ def process_journals(data, doc_iri):
 
 
 def fix_string(wrong_string):
-    """
-    fix escape sequences in strings
-    :param wrong_string:
-    :return:
+    """ Fix escape sequences in a string.
+
+    :param wrong_string: string to be fixed
+    :type wrong_string: str, unicode
+
+    :return: fixed string
+    :rtype: str
     """
     if type(wrong_string) not in (str, unicode):
         return wrong_string
@@ -487,21 +529,25 @@ def fix_string(wrong_string):
 
 
 def fix_list_values(list_vals):
-    """
-    Fixing list values with fix_string
-    :param list_vals:
-    :return:
+    """ Apply fix_string to each item in a list.
+
+    :param list_vals: list with strings to be fixed
+    :type list_vals: list
+
+    :return: list with fixed strings
+    :rtype: list
     """
     list_vals = [fix_string(item) for item in list_vals]
     return list_vals
 
 
 def process(stage, msg):
-    """
-    Processing messages from JSON to TTL
-    :param stage: instance of ProcessorStage
-    :param msg: input JSON message
-    :return:
+    """ Process a message. Convert the message's contents from JSON to TTL.
+
+    :param stage: stage instance
+    :type stage: pyDKB.dataflow.stage.ProcessorStage
+    :param msg: input message with JSON data
+    :type msg: pyDKB.dataflow.Message
     """
     data = msg.content()
     paper_id = data.get('dkbID')
@@ -535,12 +581,10 @@ def process(stage, msg):
 
 
 def main(argv):
-    """
-    Parsing command line arguments and processing JSON string
-    from file or from stream
+    """ Parse command line arguments and run the stage.
 
     :param argv: arguments
-    :return:
+    :type argv: list
     """
     exit_code = 0
     exc_info = None
