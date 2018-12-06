@@ -15,7 +15,10 @@ GET <index>/task/_search
       "children": {"type": "output_dataset"},
       "aggs": {
         "format": {
-          "terms": {"field": "data_format"}
+          "terms": {
+            "field": "data_format",
+            "size": 1000
+          }
         }
       }
     }
