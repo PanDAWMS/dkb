@@ -1,5 +1,5 @@
 {
-  "took" : 100,
+  "took" : 77,
   "timed_out" : false,
   "_shards" : {
     "total" : 4,
@@ -7,7 +7,7 @@
     "failed" : 0
   },
   "hits" : {
-    "total" : 164,
+    "total" : 58,
     "max_score" : 0.0,
     "hits" : [ ]
   },
@@ -23,16 +23,16 @@
           }
         },
         "NTUP_PILEUP" : {
-          "doc_count" : 164,
+          "doc_count" : 58,
           "status" : {
             "doc_count_error_upper_bound" : 0,
             "sum_other_doc_count" : 0,
             "buckets" : [
               {
                 "key" : "done",
-                "doc_count" : 120,
+                "doc_count" : 49,
                 "output" : {
-                  "doc_count" : 120,
+                  "doc_count" : 49,
                   "not_removed" : {
                     "doc_count" : 0,
                     "bytes" : {
@@ -41,21 +41,21 @@
                   }
                 },
                 "processed_events" : {
-                  "value" : 1.5128E8
+                  "value" : 1.452E7
                 },
                 "input_events" : {
-                  "value" : 1.4622544E8
+                  "value" : 1.452E7
                 },
                 "not_deleted" : {
-                  "doc_count" : 120,
+                  "doc_count" : 49,
                   "input_bytes" : {
-                    "value" : 3.583454135229E13
+                    "value" : 3.822591483227E12
                   }
                 },
                 "timestamp_defined" : {
-                  "doc_count" : 120,
+                  "doc_count" : 49,
                   "walltime" : {
-                    "value" : 8.519630833333333E7
+                    "value" : 3.091687755102041E7
                   }
                 },
                 "cpu" : {
@@ -64,9 +64,9 @@
               },
               {
                 "key" : "finished",
-                "doc_count" : 44,
+                "doc_count" : 9,
                 "output" : {
-                  "doc_count" : 44,
+                  "doc_count" : 9,
                   "not_removed" : {
                     "doc_count" : 0,
                     "bytes" : {
@@ -75,21 +75,21 @@
                   }
                 },
                 "processed_events" : {
-                  "value" : 1.842E8
+                  "value" : 8750000.0
                 },
                 "input_events" : {
-                  "value" : 1.8513315E8
+                  "value" : 8730900.0
                 },
                 "not_deleted" : {
-                  "doc_count" : 44,
+                  "doc_count" : 9,
                   "input_bytes" : {
-                    "value" : 3.9453061823527E13
+                    "value" : 2.274068365716E12
                   }
                 },
                 "timestamp_defined" : {
-                  "doc_count" : 44,
+                  "doc_count" : 9,
                   "walltime" : {
-                    "value" : 5.562912045454545E8
+                    "value" : 1.383718888888889E8
                   }
                 },
                 "cpu" : {

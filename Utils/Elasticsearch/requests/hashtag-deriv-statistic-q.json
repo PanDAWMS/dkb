@@ -1,7 +1,7 @@
 /* Get statistics for derivation tasks with given hashtag and AMI tag by output formats.
 
 Parameter values:
-  HASHTAGS_LOWERCASE -- list of hashtags (["gammajets", "newfastcalosim"])
+  PR_ID -- production request ID (13009)
   AMI_TAGS_LOWERCASE -- list of AMI tags (["p3127", "p3126"])
   FORMAT_* -- formats, fitting given AMI tag(s) ("NTUP_PILEUP", "NTUP_FCS")
 
@@ -12,7 +12,7 @@ GET <index>/task/_search
   "query": {
     "bool": {
       "must": [
-        {"terms": {"hashtag_list": %%HASHTAGS_LOWERCASE%%}},
+        {"term": {"pr_id": %%PR_ID%%}},
         {"terms": {"ctag": %%AMI_TAGS_LOWERCASE%%}},
         {"bool": {"must_not": [{"terms": {"status": ["aborted", "failed", "broken", "obsolete"]}}]}},
         {"term": {"primary_input": "aod"}}
