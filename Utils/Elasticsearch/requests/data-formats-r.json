@@ -1,0 +1,65 @@
+{
+  "took" : 1,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 4,
+    "successful" : 4,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 3145,
+    "max_score" : 0.0,
+    "hits" : [ ]
+  },
+  "aggregations" : {
+    "dataset" : {
+      "doc_count" : 16179,
+      "format" : {
+        "doc_count_error_upper_bound" : 217,
+        "sum_other_doc_count" : 15092,
+        "buckets" : [
+          {
+            "key" : "DAOD",
+            "doc_count" : 16179
+          },
+          {
+            "key" : "DAOD_JETM9",
+            "doc_count" : 125
+          },
+          {
+            "key" : "DAOD_TOPQ4",
+            "doc_count" : 125
+          },
+          {
+            "key" : "DAOD_STDM4",
+            "doc_count" : 124
+          },
+          {
+            "key" : "DAOD_EGAM4",
+            "doc_count" : 120
+          },
+          {
+            "key" : "DAOD_BPHY5",
+            "doc_count" : 119
+          },
+          {
+            "key" : "DAOD_BPHY7",
+            "doc_count" : 119
+          },
+          {
+            "key" : "DAOD_HIGG4D4",
+            "doc_count" : 119
+          },
+          {
+            "key" : "DAOD_EGAM7",
+            "doc_count" : 118
+          },
+          {
+            "key" : "DAOD_EXOT17",
+            "doc_count" : 118
+          }
+        ]
+      }
+    }
+  }
+}
