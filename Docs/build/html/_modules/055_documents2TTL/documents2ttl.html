@@ -54,7 +54,11 @@
 <span class="sd">                    }</span>
 <span class="sd">              ]</span>
 <span class="sd">            }</span>
-<span class="sd">            </span>
+
+<span class="sd">This is called &#39;initial JSON&#39;. Some functions accept specific parts of this</span>
+<span class="sd">JSON - for example, if &#39;data&#39; variable contains the initial JSON then</span>
+<span class="sd">&quot;&#39;CDS&#39; part of the initial JSON&quot; means &quot;data.get(&#39;CDS&#39;)&quot;.</span>
+
 <span class="sd">Resulting TTL file has the following structure::</span>
 
 <span class="sd">            PAPER a atlas:Paper .</span>
@@ -150,6 +154,11 @@
 
 
 <div class="viewcode-block" id="define_globals"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.define_globals">[docs]</a><span class="k">def</span> <span class="nf">define_globals</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Define global variables for further usage in other functions.</span>
+
+<span class="sd">    :param args: stage arguments</span>
+<span class="sd">    :type args: argparse.Namespace</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">global</span> <span class="n">GRAPH</span>
     <span class="n">GRAPH</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">GRAPH</span>
 
@@ -158,21 +167,30 @@
 
 
 <div class="viewcode-block" id="get_document_iri"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.get_document_iri">[docs]</a><span class="k">def</span> <span class="nf">get_document_iri</span><span class="p">(</span><span class="n">doc_id</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    :param doc_id:</span>
-<span class="sd">    :return Document IRI for current graph:</span>
+    <span class="sd">&quot;&quot;&quot; Construct an IRI for a document.</span>
+
+<span class="sd">    :param doc_id: document id</span>
+<span class="sd">    :type doc_id: str</span>
+
+<span class="sd">    :return: IRI</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">obj</span> <span class="o">=</span> <span class="s2">&quot;document/</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">doc_id</span>
     <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">GRAPH</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="document_glance"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.document_glance">[docs]</a><span class="k">def</span> <span class="nf">document_glance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">,</span> <span class="n">glance_attrs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    converting document GLANCE metadata from JSON to TTL (Turtle)</span>
-<span class="sd">    :param data: JSON data from file or stream</span>
-<span class="sd">    :param doc_iri: document IRI</span>
+    <span class="sd">&quot;&quot;&quot; Convert GLANCE metadata from JSON to TTL.</span>
+
+<span class="sd">    :param data: &#39;GLANCE&#39; part of the initial JSON</span>
+<span class="sd">    :type data: dict</span>
+<span class="sd">    :param doc_iri: document IRI for current graph</span>
+<span class="sd">    :type doc_iri: str</span>
 <span class="sd">    :param glance_attrs: PAPER_GLANCE_ATTRS | NOTE_GLANCE_ATTRS</span>
-<span class="sd">    :return ttl string with GLANCE metadata:</span>
+<span class="sd">    :type glance_attrs: list</span>
+
+<span class="sd">    :return: TTL string with GLANCE metadata</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># if isinstance(data, dict):</span>
     <span class="c1">#     raise ValueError(&quot;expected parameter of type %s,&quot;</span>
@@ -190,11 +208,16 @@
 
 
 <div class="viewcode-block" id="documents_links"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.documents_links">[docs]</a><span class="k">def</span> <span class="nf">documents_links</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert documents links to TTL</span>
-<span class="sd">    :param data: metadata fro JSON file or stream</span>
-<span class="sd">    :return ttl: ttl string with links</span>
-<span class="sd">    PAPER atlas:isBasedOn SUPPORTING_DOCUMENT .</span>
+    <span class="sd">&quot;&quot;&quot; Convert links from JSON to TTL.</span>
+
+<span class="sd">    The result looks as following:</span>
+<span class="sd">    PAPER atlas:isBasedOn SUPPORTING_DOCUMENT</span>
+
+<span class="sd">    :param data: initial JSON</span>
+<span class="sd">    :type data: dict</span>
+
+<span class="sd">    :return: TTL string with links</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ttl</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="n">paper_iri</span> <span class="o">=</span> <span class="n">get_document_iri</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dkbID&#39;</span><span class="p">))</span>
@@ -206,12 +229,17 @@
 
 
 <div class="viewcode-block" id="document_cds"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.document_cds">[docs]</a><span class="k">def</span> <span class="nf">document_cds</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">,</span> <span class="n">cds_attrs</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Read JSON document with supporting document metadata and generating TTL</span>
-<span class="sd">    :param data: metadata fro JSON file or stream</span>
+    <span class="sd">&quot;&quot;&quot; Convert CDS metadata from JSON to TTL.</span>
+
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
+<span class="sd">    :type data: dict</span>
 <span class="sd">    :param doc_iri: document IRI for current graph</span>
+<span class="sd">    :type doc_iri: str</span>
 <span class="sd">    :param cds_attrs: PAPER_CDS_ATTRS | NOTE_CDS_ATTRS</span>
-<span class="sd">    :return ttl: string with metadata</span>
+<span class="sd">    :type cds_attrs: list</span>
+
+<span class="sd">    :return: TTL string with CDS metadata</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ttl</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">cds_attrs</span><span class="p">:</span>
@@ -236,11 +264,15 @@
 
 
 <div class="viewcode-block" id="doi2ttl"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.doi2ttl">[docs]</a><span class="k">def</span> <span class="nf">doi2ttl</span><span class="p">(</span><span class="n">doi</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Converting DOI parameter to TTL</span>
-<span class="sd">    :param doi: doi from JSON string</span>
+    <span class="sd">&quot;&quot;&quot; Convert DOI parameter from JSON to TTL.</span>
+
+<span class="sd">    :param doi: &#39;doi&#39; part of the initial JSON</span>
+<span class="sd">    :type doi: str, unicode or list</span>
 <span class="sd">    :param doc_iri: document IRI for current graph</span>
-<span class="sd">    :return ttl: ttl string with DOIs</span>
+<span class="sd">    :type doc_iri: str</span>
+
+<span class="sd">    :return: TTL string with DOI</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ttl</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="n">dois</span> <span class="o">=</span> <span class="p">[]</span>
@@ -255,11 +287,15 @@
 
 
 <div class="viewcode-block" id="keywords2ttl"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.keywords2ttl">[docs]</a><span class="k">def</span> <span class="nf">keywords2ttl</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Converting keywords from JSON string to TTL</span>
-<span class="sd">    :param keywords: keywords parameters from JSON string</span>
+    <span class="sd">&quot;&quot;&quot; Convert keywords from JSON to TTL.</span>
+
+<span class="sd">    :param keywords: &#39;keywords&#39; part of the initial JSON</span>
+<span class="sd">    :type keywords: dict or list of dicts</span>
 <span class="sd">    :param doc_iri: document IRI for current graph</span>
-<span class="sd">    :return ttl: ttl string with keywords</span>
+<span class="sd">    :type doc_iri: str</span>
+
+<span class="sd">    :return: TTL string with keywords</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">ttl</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="n">keyword</span> <span class="o">=</span> <span class="p">[]</span>
@@ -280,10 +316,13 @@
 
 
 <div class="viewcode-block" id="cds_internal_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.cds_internal_extraction">[docs]</a><span class="k">def</span> <span class="nf">cds_internal_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracting cds internal report number parameter from JSON string</span>
-<span class="sd">    :param data: JSON string</span>
-<span class="sd">    :return report number:</span>
+    <span class="sd">&quot;&quot;&quot; Extract CDS internal report number parameter from JSON.</span>
+
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
+<span class="sd">    :type data: dict</span>
+
+<span class="sd">    :return: CDS internal report number</span>
+<span class="sd">    :rtype: unicode</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;report_number&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="n">report_number</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report_number&#39;</span><span class="p">)</span>
@@ -300,10 +339,12 @@
 
 
 <div class="viewcode-block" id="report_number_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.report_number_extraction">[docs]</a><span class="k">def</span> <span class="nf">report_number_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Exracting report number from JSON string</span>
-<span class="sd">    :param data:</span>
-<span class="sd">    :return:</span>
+    <span class="sd">&quot;&quot;&quot; Extract report number from JSON.</span>
+
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
+
+<span class="sd">    :return: report number</span>
+<span class="sd">    :rtype: unicode</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;report_number&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="n">report_number</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report_number&#39;</span><span class="p">)</span>
@@ -317,11 +358,15 @@
 
 
 <div class="viewcode-block" id="glance_parameter_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.glance_parameter_extraction">[docs]</a><span class="k">def</span> <span class="nf">glance_parameter_extraction</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="n">json_data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracting single value parameters from GLANCE json</span>
-<span class="sd">    :param param_name:</span>
-<span class="sd">    :param json_data: JSON with GLANCE metadata</span>
-<span class="sd">    :return:</span>
+    <span class="sd">&quot;&quot;&quot; Extract a parameter value from JSON.</span>
+
+<span class="sd">    :param param_name: name of the parameter</span>
+<span class="sd">    :type param_name: str</span>
+<span class="sd">    :param json_data: &#39;GLANCE&#39; part of the initial JSON</span>
+<span class="sd">    :type json_data: dict</span>
+
+<span class="sd">    :return: parameter value</span>
+<span class="sd">    :rtype: str, unicode</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">param_name</span> <span class="o">==</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">json_data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
@@ -338,11 +383,14 @@
 
 
 <div class="viewcode-block" id="cds_parameter_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.cds_parameter_extraction">[docs]</a><span class="k">def</span> <span class="nf">cds_parameter_extraction</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="n">json_data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracting parameters from json string with CDS parameters</span>
-<span class="sd">    :param param_name: name of parameter, defined in *_CDS_ATTRS dict</span>
-<span class="sd">    :param json_data: json string with CDS parameters</span>
-<span class="sd">    :return:</span>
+    <span class="sd">&quot;&quot;&quot; Extract CDS parameter value from JSON.</span>
+
+<span class="sd">    :param param_name: name of the parameter, defined in *_CDS_ATTRS dict</span>
+<span class="sd">    :type param_name: str</span>
+<span class="sd">    :param json_data: &#39;CDS&#39; part of the initial JSON</span>
+
+<span class="sd">    :return: parameter value</span>
+<span class="sd">    :rtype: int, str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">param_name</span> <span class="o">==</span> <span class="s1">&#39;abstract&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">abstract_extraction</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
@@ -361,10 +409,13 @@
 
 
 <div class="viewcode-block" id="abstract_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.abstract_extraction">[docs]</a><span class="k">def</span> <span class="nf">abstract_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracting abstract from json string</span>
-<span class="sd">    :param data: json string</span>
-<span class="sd">    :return: string with abstract</span>
+    <span class="sd">&quot;&quot;&quot; Extract abstract from JSON.</span>
+
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
+<span class="sd">    :type data: dict</span>
+
+<span class="sd">    :return: abstract</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="s1">&#39;abstract&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
@@ -382,40 +433,52 @@
 
 
 <div class="viewcode-block" id="title_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.title_extraction">[docs]</a><span class="k">def</span> <span class="nf">title_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracting title from json string</span>
-<span class="sd">    :param data: json string</span>
-<span class="sd">    :return: string with title</span>
+    <span class="sd">&quot;&quot;&quot; Extracting title from JSON.</span>
+
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
+<span class="sd">    :type data: dict</span>
+
+<span class="sd">    :return: title</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;title&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">fix_string</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="cds_id_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.cds_id_extraction">[docs]</a><span class="k">def</span> <span class="nf">cds_id_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracting CDS_ID from json string</span>
-<span class="sd">    :param data: json string</span>
-<span class="sd">    :return: string with CDS_ID</span>
+    <span class="sd">&quot;&quot;&quot; Extract CDS id from JSON.</span>
+
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
+<span class="sd">    :type data: dict</span>
+
+<span class="sd">    :return: CDS id</span>
+<span class="sd">    :rtype: int</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;recid&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;recid&#39;</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="creation_date_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.creation_date_extraction">[docs]</a><span class="k">def</span> <span class="nf">creation_date_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracting creation date from json string</span>
-<span class="sd">    :param data: json string</span>
-<span class="sd">    :return: string with date</span>
+    <span class="sd">&quot;&quot;&quot; Extract creation date from JSON.</span>
+
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
+<span class="sd">    :type data: dict</span>
+
+<span class="sd">    :return: creation date</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;creation_date&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">fix_string</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;creation_date&#39;</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="arxiv_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.arxiv_extraction">[docs]</a><span class="k">def</span> <span class="nf">arxiv_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Extracting of arXiv from json string</span>
-<span class="sd">    :param data: json string</span>
-<span class="sd">    :return: string with arXiv</span>
+    <span class="sd">&quot;&quot;&quot; Extract arXiv code from JSON.</span>
+
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
+<span class="sd">    :type data: dict</span>
+
+<span class="sd">    :return: arXiv code</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;primary_report_number&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="n">report_number</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;primary_report_number&#39;</span><span class="p">)</span>
@@ -433,10 +496,13 @@
 
 
 <div class="viewcode-block" id="generate_journal_id"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.generate_journal_id">[docs]</a><span class="k">def</span> <span class="nf">generate_journal_id</span><span class="p">(</span><span class="n">journal_dict</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Generating journal issue ID based on title, volume and year</span>
-<span class="sd">    :param journal_dict: dictionary with journal parameters</span>
+    <span class="sd">&quot;&quot;&quot; Generate a journal issue ID based on title, volume and year.</span>
+
+<span class="sd">    :param journal_dict: journal parameters</span>
+<span class="sd">    :type journal_dict: dict</span>
+
 <span class="sd">    :return: journal ID</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">journal_id</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
     <span class="k">if</span> <span class="s1">&#39;title&#39;</span> <span class="ow">in</span> <span class="n">journal_dict</span><span class="p">:</span>
@@ -449,11 +515,15 @@
 
 
 <div class="viewcode-block" id="process_journals"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.process_journals">[docs]</a><span class="k">def</span> <span class="nf">process_journals</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Convert journal data from json string to TTL</span>
-<span class="sd">    :param data: json string</span>
+    <span class="sd">&quot;&quot;&quot; Convert journal data from JSON to TTL.</span>
+
+<span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
+<span class="sd">    :type data: list, dict</span>
 <span class="sd">    :param doc_iri: document IRI for current graph</span>
-<span class="sd">    :return: ttl string with journal issue with connection to paper</span>
+<span class="sd">    :type doc_iri: str</span>
+
+<span class="sd">    :return: TTL string with journal issue with connection to paper</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">journals</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="nb">list</span><span class="p">):</span>
@@ -482,10 +552,13 @@
 
 
 <div class="viewcode-block" id="fix_string"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.fix_string">[docs]</a><span class="k">def</span> <span class="nf">fix_string</span><span class="p">(</span><span class="n">wrong_string</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    fix escape sequences in strings</span>
-<span class="sd">    :param wrong_string:</span>
-<span class="sd">    :return:</span>
+    <span class="sd">&quot;&quot;&quot; Fix escape sequences in a string.</span>
+
+<span class="sd">    :param wrong_string: string to be fixed</span>
+<span class="sd">    :type wrong_string: str, unicode</span>
+
+<span class="sd">    :return: fixed string</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">wrong_string</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">wrong_string</span>
@@ -494,21 +567,25 @@
 
 
 <div class="viewcode-block" id="fix_list_values"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.fix_list_values">[docs]</a><span class="k">def</span> <span class="nf">fix_list_values</span><span class="p">(</span><span class="n">list_vals</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Fixing list values with fix_string</span>
-<span class="sd">    :param list_vals:</span>
-<span class="sd">    :return:</span>
+    <span class="sd">&quot;&quot;&quot; Apply fix_string to each item in a list.</span>
+
+<span class="sd">    :param list_vals: list with strings to be fixed</span>
+<span class="sd">    :type list_vals: list</span>
+
+<span class="sd">    :return: list with fixed strings</span>
+<span class="sd">    :rtype: list</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">list_vals</span> <span class="o">=</span> <span class="p">[</span><span class="n">fix_string</span><span class="p">(</span><span class="n">item</span><span class="p">)</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">list_vals</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">list_vals</span></div>
 
 
 <div class="viewcode-block" id="process"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.process">[docs]</a><span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Processing messages from JSON to TTL</span>
-<span class="sd">    :param stage: instance of JSON2TTLProcessorStage</span>
-<span class="sd">    :param msg: input JSON message</span>
-<span class="sd">    :return:</span>
+    <span class="sd">&quot;&quot;&quot; Process a message. Convert the message&#39;s contents from JSON to TTL.</span>
+
+<span class="sd">    :param stage: stage instance</span>
+<span class="sd">    :type stage: pyDKB.dataflow.stage.ProcessorStage</span>
+<span class="sd">    :param msg: input message with JSON data</span>
+<span class="sd">    :type msg: pyDKB.dataflow.Message</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">content</span><span class="p">()</span>
     <span class="n">paper_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dkbID&#39;</span><span class="p">)</span>
@@ -542,12 +619,10 @@
 
 
 <div class="viewcode-block" id="main"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Parsing command line arguments and processing JSON string</span>
-<span class="sd">    from file or from stream</span>
+    <span class="sd">&quot;&quot;&quot; Parse command line arguments and run the stage.</span>
 
 <span class="sd">    :param argv: arguments</span>
-<span class="sd">    :return:</span>
+<span class="sd">    :type argv: list</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">exit_code</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">exc_info</span> <span class="o">=</span> <span class="kc">None</span>
