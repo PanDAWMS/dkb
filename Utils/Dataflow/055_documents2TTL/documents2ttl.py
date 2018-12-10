@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 """
-Module document2ttl.py
-- input from step 015 JSON:
+Stage for converting JSON files(output of stage 015) into TTL files(input for
+stage 060).
+
+JSON file should have the following structure::
+
             {
               "GLANCE": {},
               "CDS" : {},
@@ -17,7 +20,9 @@ Module document2ttl.py
                     }
               ]
             }
-- output to TTL format
+
+Resulting TTL file has the following structure::
+
             PAPER a atlas:Paper .
             PAPER atlas:hasGLANCE_ID __ .
             PAPER atlas:hasShortTitle __ .
