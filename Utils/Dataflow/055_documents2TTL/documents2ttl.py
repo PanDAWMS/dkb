@@ -173,8 +173,8 @@ def document_glance(data, doc_iri, glance_attrs):
     return ttl
 
 
-def documents_links(data):
-    """ Convert links from JSON to TTL.
+def document_links(data):
+    """ Convert links metadata from JSON to TTL.
 
     The result looks as following:
     PAPER atlas:isBasedOn SUPPORTING_DOCUMENT
@@ -577,7 +577,7 @@ def process(stage, msg):
                                        note_iri, NOTE_GLANCE_ATTRS)
             doc_ttl += document_cds(note.get('CDS'), note_iri, NOTE_CDS_ATTRS)
 
-    doc_ttl += documents_links(data)
+    doc_ttl += document_links(data)
     for item in doc_ttl.splitlines():
         stage.output(pyDKB.dataflow.Message(
             pyDKB.dataflow.messageType.TTL)(item))
