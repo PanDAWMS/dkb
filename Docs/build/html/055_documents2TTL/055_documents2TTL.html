@@ -1,0 +1,370 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>Stage 055 &#8212; Data Knowledge Base  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="prev" title="pyDKB.dataflow.types module" href="../pyDKB/pyDKB.dataflow.types.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-055_documents2TTL.documents2ttl">
+<span id="stage-055"></span><span id="documents2ttl"></span><h1>Stage 055<a class="headerlink" href="#module-055_documents2TTL.documents2ttl" title="Permalink to this headline">¶</a></h1>
+<p>Module document2ttl.py
+- input from step 015 JSON:</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>{</dt>
+<dd><p class="first">“GLANCE”: {},
+“CDS” : {},
+“dkbID” : …,
+“supporting_notes”: [</p>
+<blockquote>
+<div><dl class="docutils">
+<dt>{</dt>
+<dd>“GLANCE”: {},
+“CDS”: {},
+“dkbID”: …,</dd>
+</dl>
+<p>},
+{</p>
+<blockquote>
+<div>…</div></blockquote>
+<p>}</p>
+</div></blockquote>
+<p class="last">]</p>
+</dd>
+</dl>
+<p>}</p>
+</div></blockquote>
+<ul>
+<li><dl class="first docutils">
+<dt>output to TTL format</dt>
+<dd><p class="first last">PAPER a atlas:Paper .
+PAPER atlas:hasGLANCE_ID __ .
+PAPER atlas:hasShortTitle __ .
+PAPER atlas:hasFullTitle __ .
+PAPER atlas:hasRefCode __ .
+PAPER atlas:hasCreationDate __ .
+PAPER atlas:hasCDSReportNumber __ .
+PAPER atlas:hasCDSInternal __ .
+PAPER atlas:hasCDS_ID __ .
+PAPER atlas:hasAbstract __ .
+PAPER atlas:hasArXivCode __ .
+PAPER atlas:hasFullTitle __ .
+PAPER atlas:hasDOI __ .
+PAPER atlas:hasKeyword __ .
+JOURNAL_ISSUE a atlas:JournalIssue .
+JOURNAL_ISSUE atlas:hasTitle __ .
+JOURNAL_ISSUE atlas:hasVolume __ .
+JOURNAL_ISSUE atlas:hasYear __ .
+JOURNAL_ISSUE atlas:containsPublication&gt; PAPER .
+SUPPORTING_DOCUMENT a atlas:SupportingDocument .
+SUPPORTING_DOCUMENT atlas:hasGLANCE_ID __ .
+SUPPORTING_DOCUMENT atlas:hasLabel __ .
+SUPPORTING_DOCUMENT atlas:hasURL __ .
+SUPPORTING_DOCUMENT atlas:hasCreationDate __ .
+SUPPORTING_DOCUMENT atlas:hasCDSInternal __ .
+SUPPORTING_DOCUMENT atlas:hasCDS_ID __ .
+SUPPORTING_DOCUMENT atlas:hasAbstract __ .
+SUPPORTING_DOCUMENT atlas:hasKeyword __ .
+PAPER atlas:isBasedOn SUPPORTING_DOCUMENT .</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="docutils">
+<dt>TODO: This module doesn’t convert authors metadata.</dt>
+<dd>This task is still under consideration.</dd>
+</dl>
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.abstract_extraction">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">abstract_extraction</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#abstract_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.abstract_extraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracting abstract from json string
+:param data: json string
+:return: string with abstract</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.arxiv_extraction">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">arxiv_extraction</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#arxiv_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.arxiv_extraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracting of arXiv from json string
+:param data: json string
+:return: string with arXiv</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.cds_id_extraction">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">cds_id_extraction</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#cds_id_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.cds_id_extraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracting CDS_ID from json string
+:param data: json string
+:return: string with CDS_ID</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.cds_internal_extraction">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">cds_internal_extraction</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#cds_internal_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.cds_internal_extraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracting cds internal report number parameter from JSON string
+:param data: JSON string
+:return report number:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.cds_parameter_extraction">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">cds_parameter_extraction</code><span class="sig-paren">(</span><em>param_name</em>, <em>json_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#cds_parameter_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.cds_parameter_extraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracting parameters from json string with CDS parameters
+:param param_name: name of parameter, defined in <a href="#id1"><span class="problematic" id="id2">*</span></a>_CDS_ATTRS dict
+:param json_data: json string with CDS parameters
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.creation_date_extraction">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">creation_date_extraction</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#creation_date_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.creation_date_extraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracting creation date from json string
+:param data: json string
+:return: string with date</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.define_globals">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">define_globals</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#define_globals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.define_globals" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.document_cds">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">document_cds</code><span class="sig-paren">(</span><em>data</em>, <em>doc_iri</em>, <em>cds_attrs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#document_cds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.document_cds" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read JSON document with supporting document metadata and generating TTL
+:param data: metadata fro JSON file or stream
+:param doc_iri: document IRI for current graph
+:param cds_attrs: PAPER_CDS_ATTRS | NOTE_CDS_ATTRS
+:return ttl: string with metadata</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.document_glance">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">document_glance</code><span class="sig-paren">(</span><em>data</em>, <em>doc_iri</em>, <em>glance_attrs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#document_glance"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.document_glance" title="Permalink to this definition">¶</a></dt>
+<dd><p>converting document GLANCE metadata from JSON to TTL (Turtle)
+:param data: JSON data from file or stream
+:param doc_iri: document IRI
+:param glance_attrs: PAPER_GLANCE_ATTRS | NOTE_GLANCE_ATTRS
+:return ttl string with GLANCE metadata:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.documents_links">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">documents_links</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#documents_links"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.documents_links" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert documents links to TTL
+:param data: metadata fro JSON file or stream
+:return ttl: ttl string with links
+PAPER atlas:isBasedOn SUPPORTING_DOCUMENT .</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.doi2ttl">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">doi2ttl</code><span class="sig-paren">(</span><em>doi</em>, <em>doc_iri</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#doi2ttl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.doi2ttl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converting DOI parameter to TTL
+:param doi: doi from JSON string
+:param doc_iri: document IRI for current graph
+:return ttl: ttl string with DOIs</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.fix_list_values">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">fix_list_values</code><span class="sig-paren">(</span><em>list_vals</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#fix_list_values"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.fix_list_values" title="Permalink to this definition">¶</a></dt>
+<dd><p>Fixing list values with fix_string
+:param list_vals:
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.fix_string">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">fix_string</code><span class="sig-paren">(</span><em>wrong_string</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#fix_string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.fix_string" title="Permalink to this definition">¶</a></dt>
+<dd><p>fix escape sequences in strings
+:param wrong_string:
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.generate_journal_id">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">generate_journal_id</code><span class="sig-paren">(</span><em>journal_dict</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#generate_journal_id"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.generate_journal_id" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generating journal issue ID based on title, volume and year
+:param journal_dict: dictionary with journal parameters
+:return: journal ID</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.get_document_iri">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">get_document_iri</code><span class="sig-paren">(</span><em>doc_id</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#get_document_iri"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.get_document_iri" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>doc_id</strong> – </td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Return Document IRI for current graph:</th></tr>
+<tr class="field-even field"><td>&#160;</td><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.glance_parameter_extraction">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">glance_parameter_extraction</code><span class="sig-paren">(</span><em>param_name</em>, <em>json_data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#glance_parameter_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.glance_parameter_extraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracting single value parameters from GLANCE json
+:param param_name:
+:param json_data: JSON with GLANCE metadata
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.keywords2ttl">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">keywords2ttl</code><span class="sig-paren">(</span><em>keywords</em>, <em>doc_iri</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#keywords2ttl"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.keywords2ttl" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converting keywords from JSON string to TTL
+:param keywords: keywords parameters from JSON string
+:param doc_iri: document IRI for current graph
+:return ttl: ttl string with keywords</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.main">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">main</code><span class="sig-paren">(</span><em>argv</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.main" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parsing command line arguments and processing JSON string
+from file or from stream</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>argv</strong> – arguments</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.process">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">process</code><span class="sig-paren">(</span><em>stage</em>, <em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Processing messages from JSON to TTL
+:param stage: instance of JSON2TTLProcessorStage
+:param msg: input JSON message
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.process_journals">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">process_journals</code><span class="sig-paren">(</span><em>data</em>, <em>doc_iri</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#process_journals"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.process_journals" title="Permalink to this definition">¶</a></dt>
+<dd><p>Convert journal data from json string to TTL
+:param data: json string
+:param doc_iri: document IRI for current graph
+:return: ttl string with journal issue with connection to paper</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.report_number_extraction">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">report_number_extraction</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#report_number_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.report_number_extraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exracting report number from JSON string
+:param data:
+:return:</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="055_documents2TTL.documents2ttl.title_extraction">
+<code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">title_extraction</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/055_documents2TTL/documents2ttl.html#title_extraction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.title_extraction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Extracting title from json string
+:param data: json string
+:return: string with title</p>
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Data Knowledge Base</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pyDKB/pyDKB.html">pyDKB package</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Stage 055</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../pyDKB/pyDKB.dataflow.types.html" title="previous chapter">pyDKB.dataflow.types module</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, DKB team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="../_sources/055_documents2TTL/055_documents2TTL.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
