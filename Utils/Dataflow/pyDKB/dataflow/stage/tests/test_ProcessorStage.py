@@ -9,6 +9,7 @@ Usage: 'python -m unittest discover' from ..
 
 import os
 import sys
+import tempfile
 import unittest
 
 
@@ -203,8 +204,49 @@ for m in modes:
     add_override_hdfs_mode(m)
 
 
+class ProcessorStageConfigArgTestCase(unittest.TestCase):
+    def setUp(self):
+        self.stage = pyDKB.dataflow.stage.ProcessorStage()
+        self.fake_config = tempfile.NamedTemporaryFile(dir='.')
+
+    def tearDown(self):
+        self.stage = None
+        if not self.fake_config.closed:
+            self.fake_config.close()
+        self.fake_config = None
+
+    def test_correct_c(self):
+        self.stage.parse_args(['-c', self.fake_config.name])
+        self.assertIsNotNone(getattr(self.stage.ARGS, 'config'))
+
+    def test_correct_config(self):
+        self.stage.parse_args(['--config', self.fake_config.name])
+        self.assertIsNotNone(getattr(self.stage.ARGS, 'config'))
+
+    def test_missing_c(self):
+        self.fake_config.close()
+        with self.assertRaises(SystemExit) as e:
+            self.stage.parse_args(['-c', self.fake_config.name])
+
+    def test_missing_config(self):
+        self.fake_config.close()
+        with self.assertRaises(SystemExit) as e:
+            self.stage.parse_args(['--config', self.fake_config.name])
+
+    def test_unreadable_c(self):
+        os.chmod(self.fake_config.name, 0300)
+        with self.assertRaises(SystemExit) as e:
+            self.stage.parse_args(['-c', self.fake_config.name])
+
+    def test_unreadable_config(self):
+        os.chmod(self.fake_config.name, 0300)
+        with self.assertRaises(SystemExit) as e:
+            self.stage.parse_args(['--config', self.fake_config.name])
+
+
 test_cases = (
     ProcessorStageArgsTestCase,
+    ProcessorStageConfigArgTestCase,
 )
 
 
