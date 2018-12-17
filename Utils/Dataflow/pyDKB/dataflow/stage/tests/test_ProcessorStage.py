@@ -7,6 +7,7 @@ Usage: 'python -m unittest discover' from ..
 """
 
 
+import cStringIO
 import os
 import sys
 import tempfile
@@ -25,6 +26,35 @@ try:
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
+
+
+def isolate_function_error(f, *args):
+    """ Silence and retrieve the function's error message.
+
+    The function is expected to throw a SystemExit when run with
+    specific arguments. Error stream is redirected into a string during the
+    function's execution, and the resulting messages can be analyzed.
+
+    :param f: function to execute
+    :type f: function
+    :param args: arguments to execute function with
+    :type args: list
+
+    :return:
+    :rtype:
+    """
+    buf = cStringIO.StringIO()
+    temp_err = sys.stderr
+    sys.stderr = buf
+    try:
+        result = f(*args)
+    except SystemExit:
+        result = None
+    sys.stderr = temp_err
+    buf.seek(0)
+    msg = buf.read()
+    buf.close()
+    return [msg, result]
 
 
 args_to_add = {
@@ -225,23 +255,37 @@ class ProcessorStageConfigArgTestCase(unittest.TestCase):
 
     def test_missing_c(self):
         self.fake_config.close()
-        with self.assertRaises(SystemExit) as e:
-            self.stage.parse_args(['-c', self.fake_config.name])
+        [msg, result] = isolate_function_error(self.stage.parse_args,
+                                               ['-c', self.fake_config.name])
+        err = "[Errno 2] No such file or directory: '%s'" %\
+              self.fake_config.name
+        self.assertIn(err, msg)
 
     def test_missing_config(self):
         self.fake_config.close()
-        with self.assertRaises(SystemExit) as e:
-            self.stage.parse_args(['--config', self.fake_config.name])
+        [msg, result] = isolate_function_error(self.stage.parse_args,
+                                               ['--config',
+                                                self.fake_config.name])
+        err = "[Errno 2] No such file or directory: '%s'" %\
+              self.fake_config.name
+        self.assertIn(err, msg)
 
     def test_unreadable_c(self):
         os.chmod(self.fake_config.name, 0300)
-        with self.assertRaises(SystemExit) as e:
-            self.stage.parse_args(['-c', self.fake_config.name])
+        [msg, result] = isolate_function_error(self.stage.parse_args,
+                                               ['-c', self.fake_config.name])
+        err = "[Errno 13] Permission denied: '%s'" %\
+              self.fake_config.name
+        self.assertIn(err, msg)
 
     def test_unreadable_config(self):
         os.chmod(self.fake_config.name, 0300)
-        with self.assertRaises(SystemExit) as e:
-            self.stage.parse_args(['--config', self.fake_config.name])
+        [msg, result] = isolate_function_error(self.stage.parse_args,
+                                               ['--config',
+                                                self.fake_config.name])
+        err = "[Errno 13] Permission denied: '%s'" %\
+              self.fake_config.name
+        self.assertIn(err, msg)
 
 
 test_cases = (
