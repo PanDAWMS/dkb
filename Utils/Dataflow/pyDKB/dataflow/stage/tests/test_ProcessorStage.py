@@ -170,6 +170,24 @@ def add_arg(arg, val, short=False):
         setattr(ProcessorStageArgsTestCase, 'test_%s_%s' % (arg, val), f)
 
 
+def add_arg_incorrect(arg, short=False):
+    if short:
+        val = 'i'
+        args = ['-' + arg[0], val]
+        fname = 'test_%s_%s' % (arg[0], val)
+    else:
+        val = 'incorrect'
+        args = ['--' + arg, val]
+        fname = 'test_%s_%s' % (arg, val)
+
+    def f(self):
+        [msg, result] = isolate_function_error(self.stage.parse_args, args)
+        err = "error: argument -%s/--%s: invalid choice: '%s'" % (arg[0],
+                                                                  arg, val)
+        self.assertIn(err, msg)
+    setattr(ProcessorStageArgsTestCase, fname, f)
+
+
 def add_mode(val, short=False):
     def f(self):
         if short:
@@ -226,12 +244,18 @@ for a in args_to_add:
         add_override_hdfs(a, v)
         for m in modes:
             add_override_mode(a, v, m)
+    add_arg_incorrect(a, True)
+    add_arg_incorrect(a)
 
 
 for m in modes:
     add_mode(m, True)
     add_mode(m)
     add_override_hdfs_mode(m)
+
+
+add_arg_incorrect('mode', True)
+add_arg_incorrect('mode')
 
 
 class ProcessorStageConfigArgTestCase(unittest.TestCase):
