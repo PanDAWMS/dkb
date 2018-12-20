@@ -157,17 +157,18 @@ class ProcessorStageArgsTestCase(unittest.TestCase):
 
 
 def add_arg(arg, val, short=False):
+    if short:
+        args = ['-' + arg[0], val]
+        fname = 'test_%s_%s' % (arg[0], val)
+    else:
+        args = ['--' + arg, val]
+        fname = 'test_%s_%s' % (arg, val)
+
     def f(self):
-        if short:
-            self.stage.parse_args(['-' + arg[0], val])
-        else:
-            self.stage.parse_args(['--' + arg, val])
+        self.stage.parse_args(args)
         self.args[arg] = val
         self.check_args()
-    if short:
-        setattr(ProcessorStageArgsTestCase, 'test_%s_%s' % (arg[0], val), f)
-    else:
-        setattr(ProcessorStageArgsTestCase, 'test_%s_%s' % (arg, val), f)
+    setattr(ProcessorStageArgsTestCase, fname, f)
 
 
 def add_arg_incorrect(arg, short=False):
@@ -189,17 +190,18 @@ def add_arg_incorrect(arg, short=False):
 
 
 def add_mode(val, short=False):
+    if short:
+        args = ['-m', val]
+        fname = 'test_m_%s' % (val)
+    else:
+        args = ['--mode', val]
+        fname = 'test_mode_%s' % (val)
+
     def f(self):
-        if short:
-            self.stage.parse_args(['-m', val])
-        else:
-            self.stage.parse_args(['--mode', val])
+        self.stage.parse_args(args)
         self.args.update(modes[val])
         self.check_args()
-    if short:
-        setattr(ProcessorStageArgsTestCase, 'test_m_%s' % (val), f)
-    else:
-        setattr(ProcessorStageArgsTestCase, 'test_mode_%s' % (val), f)
+    setattr(ProcessorStageArgsTestCase, fname, f)
 
 
 # hdfs >> source-dest >> mode
