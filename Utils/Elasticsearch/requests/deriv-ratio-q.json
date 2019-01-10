@@ -1,0 +1,64 @@
+/*
+Get total size of task input and output datasets.
+
+Parameter values:
+  PROJECT_LOWERCASE -- project name ("mc16_13tev")
+  AMI_TAG_LOWERCASE -- current AMI tag for the task ("p3585")
+  FORMAT_UPPERCASE  -- output dataset data format ("DAOD_BPHY8")
+
+GET tasks_production/task/_search
+*/
+{
+  "size": 0,
+  "query": {
+    "bool": {
+      "must": [
+        {"term": {"primary_input": "aod"}},
+        {"term": {"project": %%PROJECT_LOWERCASE%%}},
+        {"term": {"ctag": %%AMI_TAG_LOWERCASE%%}},
+        {"term": {"status": "done"}},
+        {"range": {"input_bytes": {"gt": 0}}},  /* input dataset size > 0 */
+        {"has_child": {                         /* task has output dataset... */
+            "type": "output_dataset",
+            "query" : {
+              "bool": {
+                "must": [
+                  {"term": {"data_format": %%FORMAT_UPPERCASE%%}},  /*...with proper data format */
+                  {"range": {"bytes": {"gt": 0}}}                   /* and size > 0 */
+                ]
+              }
+            }
+        }}
+      ]
+    }
+  },
+  "aggs": {
+    "input_bytes": {
+       "sum": {"field": "input_bytes"}
+    },
+    "input_events": {
+       "sum": {"field": "requested_events"}
+    },
+    "output_datasets": {
+      "children": {"type": "output_dataset"},
+      "aggs": {
+        "not_removed": {
+          "filter": {"term": {"deleted": false}},
+          "aggs": {
+            "format": {
+              "filter": {"term": {"data_format": %%FORMAT_UPPERCASE%%}},
+              "aggs": {
+                "sum_bytes": {
+                  "sum": {"field": "bytes"}
+                },
+                "sum_events": {
+                  "sum": {"field": "events"}
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

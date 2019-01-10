@@ -1,0 +1,37 @@
+{
+  "took" : 13,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 4,
+    "successful" : 4,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 3,
+    "max_score" : 0.0,
+    "hits" : [ ]
+  },
+  "aggregations" : {
+    "output_datasets" : {
+      "doc_count" : 3,
+      "not_removed" : {
+        "doc_count" : 3,
+        "format" : {
+          "doc_count" : 3,
+          "sum_events" : {
+            "value" : 590447.0
+          },
+          "sum_bytes" : {
+            "value" : 4.995767597E9
+          }
+        }
+      }
+    },
+    "input_bytes" : {
+      "value" : 1.91329808543E11
+    },
+    "input_events" : {
+      "value" : 1000000.0
+    }
+  }
+}
