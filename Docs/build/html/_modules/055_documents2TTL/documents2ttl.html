@@ -153,7 +153,7 @@
 <span class="p">]</span>
 
 
-<div class="viewcode-block" id="define_globals"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.define_globals">[docs]</a><span class="k">def</span> <span class="nf">define_globals</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+<div class="viewcode-block" id="define_globals"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.define_globals">[docs]</a><span class="k">def</span> <span class="nf">define_globals</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Define global variables for further usage in other functions.</span>
 
 <span class="sd">    :param args: stage arguments</span>
@@ -166,7 +166,7 @@
     <span class="n">ONTOLOGY</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">ONTOLOGY</span></div>
 
 
-<div class="viewcode-block" id="get_document_iri"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.get_document_iri">[docs]</a><span class="k">def</span> <span class="nf">get_document_iri</span><span class="p">(</span><span class="n">doc_id</span><span class="p">):</span>
+<div class="viewcode-block" id="get_document_iri"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.get_document_iri">[docs]</a><span class="k">def</span> <span class="nf">get_document_iri</span><span class="p">(</span><span class="n">doc_id</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Construct an IRI for a document.</span>
 
 <span class="sd">    :param doc_id: document id</span>
@@ -179,7 +179,7 @@
     <span class="k">return</span> <span class="s2">&quot;&lt;</span><span class="si">%s</span><span class="s2">/</span><span class="si">%s</span><span class="s2">&gt;&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">GRAPH</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="document_glance"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.document_glance">[docs]</a><span class="k">def</span> <span class="nf">document_glance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">,</span> <span class="n">glance_attrs</span><span class="p">):</span>
+<div class="viewcode-block" id="document_glance"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.document_glance">[docs]</a><span class="k">def</span> <span class="nf">document_glance</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">,</span> <span class="n">glance_attrs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Convert GLANCE metadata from JSON to TTL.</span>
 
 <span class="sd">    :param data: &#39;GLANCE&#39; part of the initial JSON</span>
@@ -207,7 +207,7 @@
     <span class="k">return</span> <span class="n">ttl</span></div>
 
 
-<div class="viewcode-block" id="document_links"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.document_links">[docs]</a><span class="k">def</span> <span class="nf">document_links</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="document_links"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.document_links">[docs]</a><span class="k">def</span> <span class="nf">document_links</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Convert links metadata from JSON to TTL.</span>
 
 <span class="sd">    The result looks as following:</span>
@@ -228,7 +228,7 @@
     <span class="k">return</span> <span class="n">ttl</span></div>
 
 
-<div class="viewcode-block" id="document_cds"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.document_cds">[docs]</a><span class="k">def</span> <span class="nf">document_cds</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">,</span> <span class="n">cds_attrs</span><span class="p">):</span>
+<div class="viewcode-block" id="document_cds"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.document_cds">[docs]</a><span class="k">def</span> <span class="nf">document_cds</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">,</span> <span class="n">cds_attrs</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Convert CDS metadata from JSON to TTL.</span>
 
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
@@ -263,7 +263,7 @@
     <span class="k">return</span> <span class="n">ttl</span></div>
 
 
-<div class="viewcode-block" id="doi2ttl"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.doi2ttl">[docs]</a><span class="k">def</span> <span class="nf">doi2ttl</span><span class="p">(</span><span class="n">doi</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">):</span>
+<div class="viewcode-block" id="doi2ttl"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.doi2ttl">[docs]</a><span class="k">def</span> <span class="nf">doi2ttl</span><span class="p">(</span><span class="n">doi</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Convert DOI parameter from JSON to TTL.</span>
 
 <span class="sd">    :param doi: &#39;doi&#39; part of the initial JSON</span>
@@ -286,7 +286,7 @@
     <span class="k">return</span> <span class="n">ttl</span></div>
 
 
-<div class="viewcode-block" id="keywords2ttl"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.keywords2ttl">[docs]</a><span class="k">def</span> <span class="nf">keywords2ttl</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">):</span>
+<div class="viewcode-block" id="keywords2ttl"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.keywords2ttl">[docs]</a><span class="k">def</span> <span class="nf">keywords2ttl</span><span class="p">(</span><span class="n">keywords</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Convert keywords from JSON to TTL.</span>
 
 <span class="sd">    :param keywords: &#39;keywords&#39; part of the initial JSON</span>
@@ -315,7 +315,7 @@
     <span class="k">return</span> <span class="n">ttl</span></div>
 
 
-<div class="viewcode-block" id="cds_internal_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.cds_internal_extraction">[docs]</a><span class="k">def</span> <span class="nf">cds_internal_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="cds_internal_extraction"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.cds_internal_extraction">[docs]</a><span class="k">def</span> <span class="nf">cds_internal_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Extract CDS internal report number parameter from JSON.</span>
 
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
@@ -338,7 +338,7 @@
                     <span class="k">return</span> <span class="n">report_number</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;primary_report_number&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="report_number_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.report_number_extraction">[docs]</a><span class="k">def</span> <span class="nf">report_number_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="report_number_extraction"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.report_number_extraction">[docs]</a><span class="k">def</span> <span class="nf">report_number_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Extract report number from JSON.</span>
 
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
@@ -357,7 +357,7 @@
                 <span class="k">return</span> <span class="n">report_number</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report_number&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="glance_parameter_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.glance_parameter_extraction">[docs]</a><span class="k">def</span> <span class="nf">glance_parameter_extraction</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="n">json_data</span><span class="p">):</span>
+<div class="viewcode-block" id="glance_parameter_extraction"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.glance_parameter_extraction">[docs]</a><span class="k">def</span> <span class="nf">glance_parameter_extraction</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="n">json_data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Extract a parameter value from JSON.</span>
 
 <span class="sd">    :param param_name: name of the parameter</span>
@@ -382,7 +382,7 @@
         <span class="k">return</span> <span class="n">fix_string</span><span class="p">(</span><span class="n">json_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;url&#39;</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="cds_parameter_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.cds_parameter_extraction">[docs]</a><span class="k">def</span> <span class="nf">cds_parameter_extraction</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="n">json_data</span><span class="p">):</span>
+<div class="viewcode-block" id="cds_parameter_extraction"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.cds_parameter_extraction">[docs]</a><span class="k">def</span> <span class="nf">cds_parameter_extraction</span><span class="p">(</span><span class="n">param_name</span><span class="p">,</span> <span class="n">json_data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Extract CDS parameter value from JSON.</span>
 
 <span class="sd">    :param param_name: name of the parameter, defined in *_CDS_ATTRS dict</span>
@@ -408,7 +408,7 @@
         <span class="k">return</span> <span class="n">report_number_extraction</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="abstract_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.abstract_extraction">[docs]</a><span class="k">def</span> <span class="nf">abstract_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="abstract_extraction"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.abstract_extraction">[docs]</a><span class="k">def</span> <span class="nf">abstract_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Extract abstract from JSON.</span>
 
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
@@ -432,7 +432,7 @@
     <span class="k">return</span> <span class="n">fix_string</span><span class="p">(</span><span class="n">result</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="title_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.title_extraction">[docs]</a><span class="k">def</span> <span class="nf">title_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="title_extraction"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.title_extraction">[docs]</a><span class="k">def</span> <span class="nf">title_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Extracting title from JSON.</span>
 
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
@@ -445,7 +445,7 @@
         <span class="k">return</span> <span class="n">fix_string</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="cds_id_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.cds_id_extraction">[docs]</a><span class="k">def</span> <span class="nf">cds_id_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="cds_id_extraction"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.cds_id_extraction">[docs]</a><span class="k">def</span> <span class="nf">cds_id_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Extract CDS id from JSON.</span>
 
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
@@ -458,7 +458,7 @@
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;recid&#39;</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="creation_date_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.creation_date_extraction">[docs]</a><span class="k">def</span> <span class="nf">creation_date_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="creation_date_extraction"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.creation_date_extraction">[docs]</a><span class="k">def</span> <span class="nf">creation_date_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Extract creation date from JSON.</span>
 
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
@@ -471,7 +471,7 @@
         <span class="k">return</span> <span class="n">fix_string</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;creation_date&#39;</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="arxiv_extraction"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.arxiv_extraction">[docs]</a><span class="k">def</span> <span class="nf">arxiv_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
+<div class="viewcode-block" id="arxiv_extraction"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.arxiv_extraction">[docs]</a><span class="k">def</span> <span class="nf">arxiv_extraction</span><span class="p">(</span><span class="n">data</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Extract arXiv code from JSON.</span>
 
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
@@ -495,7 +495,7 @@
                     <span class="k">return</span> <span class="n">fix_string</span><span class="p">(</span><span class="n">item</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="generate_journal_id"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.generate_journal_id">[docs]</a><span class="k">def</span> <span class="nf">generate_journal_id</span><span class="p">(</span><span class="n">journal_dict</span><span class="p">):</span>
+<div class="viewcode-block" id="generate_journal_id"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.generate_journal_id">[docs]</a><span class="k">def</span> <span class="nf">generate_journal_id</span><span class="p">(</span><span class="n">journal_dict</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Generate a journal issue ID based on title, volume and year.</span>
 
 <span class="sd">    :param journal_dict: journal parameters</span>
@@ -514,7 +514,7 @@
     <span class="k">return</span> <span class="n">journal_id</span></div>
 
 
-<div class="viewcode-block" id="process_journals"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.process_journals">[docs]</a><span class="k">def</span> <span class="nf">process_journals</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">):</span>
+<div class="viewcode-block" id="process_journals"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.process_journals">[docs]</a><span class="k">def</span> <span class="nf">process_journals</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">doc_iri</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Convert journal data from JSON to TTL.</span>
 
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
@@ -551,7 +551,7 @@
     <span class="k">return</span> <span class="n">ttl</span></div>
 
 
-<div class="viewcode-block" id="fix_string"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.fix_string">[docs]</a><span class="k">def</span> <span class="nf">fix_string</span><span class="p">(</span><span class="n">wrong_string</span><span class="p">):</span>
+<div class="viewcode-block" id="fix_string"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.fix_string">[docs]</a><span class="k">def</span> <span class="nf">fix_string</span><span class="p">(</span><span class="n">wrong_string</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Fix escape sequences in a string.</span>
 
 <span class="sd">    :param wrong_string: string to be fixed</span>
@@ -566,7 +566,7 @@
         <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="se">\\</span><span class="s2">n&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;</span><span class="se">\\</span><span class="s2">&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\&quot;</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="fix_list_values"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.fix_list_values">[docs]</a><span class="k">def</span> <span class="nf">fix_list_values</span><span class="p">(</span><span class="n">list_vals</span><span class="p">):</span>
+<div class="viewcode-block" id="fix_list_values"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.fix_list_values">[docs]</a><span class="k">def</span> <span class="nf">fix_list_values</span><span class="p">(</span><span class="n">list_vals</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Apply fix_string to each item in a list.</span>
 
 <span class="sd">    :param list_vals: list with strings to be fixed</span>
@@ -579,7 +579,7 @@
     <span class="k">return</span> <span class="n">list_vals</span></div>
 
 
-<div class="viewcode-block" id="process"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.process">[docs]</a><span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+<div class="viewcode-block" id="process"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.process">[docs]</a><span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Process a message. Convert the message&#39;s contents from JSON to TTL.</span>
 
 <span class="sd">    :param stage: stage instance</span>
@@ -618,7 +618,7 @@
     <span class="k">return</span> <span class="kc">True</span></div>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="p">):</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">(</span><span class="n">argv</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Parse command line arguments and run the stage.</span>
 
 <span class="sd">    :param argv: arguments</span>
@@ -691,7 +691,7 @@
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../pyDKB/pyDKB.html">pyDKB package</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../055_documents2TTL/055_documents2TTL.html">Stage 055</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Stages/Stages.html">Stages</a></li>
 </ul>
 
 <div class="relations">
