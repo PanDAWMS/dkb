@@ -555,6 +555,9 @@ def process(stage, msg):
     :type stage: pyDKB.dataflow.stage.ProcessorStage
     :param msg: input message with JSON data
     :type msg: pyDKB.dataflow.Message
+
+    :return: True
+    :rtype: bool
     """
     data = msg.content()
     paper_id = data.get('dkbID')

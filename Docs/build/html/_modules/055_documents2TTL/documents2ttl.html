@@ -589,6 +589,9 @@
 <span class="sd">    :type stage: pyDKB.dataflow.stage.ProcessorStage</span>
 <span class="sd">    :param msg: input message with JSON data</span>
 <span class="sd">    :type msg: pyDKB.dataflow.Message</span>
+
+<span class="sd">    :return: True</span>
+<span class="sd">    :rtype: bool</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">data</span> <span class="o">=</span> <span class="n">msg</span><span class="o">.</span><span class="n">content</span><span class="p">()</span>
     <span class="n">paper_id</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;dkbID&#39;</span><span class="p">)</span>
