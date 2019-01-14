@@ -39,22 +39,22 @@ Number
 =========================
 * Dataflows description *
 =========================
-Dataflow                                                        Description
+Dataflow                                            Description
 ********************************************************************************************************
-010/output -> 015                                               using output of 010 as input for 015
-015/output -> (018|055)
-018/output -> 030/output -> 054                                 download PDF, analyze them and prepare results for Virtuoso
-015/output -> 055                                               generate TTL file for paper and its supporting documents
-                                                                  metadata
-(054|055)/output -> 060                                         upload links, papers, support docs and datasets TTL
-                                                                  files to Virtuoso
+010 -> 015                                          using output of 010 as input for 015
+015 -> (018|055)
+018 -> 030 -> 054                                   download PDF, analyze them and prepare results for Virtuoso
+015 -> 055                                          generate TTL file for paper and its supporting documents
+                                                    metadata
+(054|055)/output -> 060                             upload links, papers, support docs and datasets TTL
+                                                    files to Virtuoso
 
-009/output ---> 091(in)/output ---> *                           Task metadata from Oracle to Elasticsearch
-  \       * ---> 025/output ---> 016/output ---> **
-   \                           ** ----> 019/output -> 069
-    \                                         /
-     \--> 091(out)/output ---> ***           /                  Dataset metadata from Rucio and AMI to Elasticsearch
-         *** --> 093/output -> 095/output --/
+009 ---> 091(in) ---> *                             Task metadata from Oracle to Elasticsearch
+  \       * ---> 025 ---> 016 ---> **
+   \                           ** ----> 019 -> 069
+    \                                  /
+     \--> 091(out) ---> ***           /             Dataset metadata from Rucio and AMI to Elasticsearch
+                *** --> 093 -> 095 --/
 
 ==============
 * REFERENCES *
