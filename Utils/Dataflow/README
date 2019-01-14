@@ -7,8 +7,8 @@
 =====================
 * Brief description *
 =====================
-Stage            Stage Name                     Stage Description 
-Number   
+Stage            Stage Name                     Stage Description
+Number
 ********************************************************************************************
 0.0              000_kafka                      Dataflow managing Kafka applications
 0.9              009_oracleConnector            Get task metadata from ProdSys
