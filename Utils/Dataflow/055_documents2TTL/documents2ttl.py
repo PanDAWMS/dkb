@@ -122,6 +122,9 @@ NOTE_CDS_ATTRS = [
 def define_globals(args):
     """ Define global variables for further usage in other functions.
 
+    Global variables GRAPH and ONTOLOGY are defined, their values are
+    received from the command line arguments via argparse.
+
     :param args: stage arguments
     :type args: argparse.Namespace
     """
