@@ -7,26 +7,32 @@
 =====================
 * Brief description *
 =====================
-Stage            Stage Name                     Stage Description
+Stage   Stage Name                     Stage Description
 Number
-********************************************************************************************
-0.0              000_kafka                      Dataflow managing Kafka applications
-0.9              009_oracleConnector            Get task metadata from ProdSys
-1.0              010_glancePapers               Get papers with links to supporting documents from GLANCE
-1.5              015_CDSDocuments               Get metadata for paper (and its supporting documents) from CDS
-1.6              016_task2es                    Prepare task metadata for bulk upload to ES
-1.8              018_PDFDownloader              Download PFD documents and upload them to HDFS
-1.9              019_oracle2esFormat            Prepare data for bulk upload to ES
-2.5              025_chicagoES                  Get additional metadata from Chicago ES
-3.0              030_PDFAnalyzer                PDF Analyzer (search dataset in PDF Supporting Notes)
-5.4              054_docContent2TTL             Convert results of Stage 30 to triples
-5.5              055_docs2TTL                   Convert paper (and its supporting documents) metadata to triples
-6.0              060_upload2virtuoso            Upload data to Virtuoso
-6.9              069_upload2es                  Upload data to ES
-9.1              091_datasetsRucio              Get dataset metadata from Rucio
-9.3              093_datasetsFormat             Update dataset metadata:
-                                                  add "data_format" field
-9.5              095_datasetInfoAMI             Get dataset metadata from AMI
+*******************************************************************************
+0.0     000_kafka                      Dataflow managing Kafka applications
+0.9     009_oracleConnector            Get task metadata from ProdSys
+1.0     010_glancePapers               Get papers with links to supporting
+                                         documents from GLANCE
+1.5     015_CDSDocuments               Get metadata for paper (and its
+                                         supporting documents) from CDS
+1.6     016_task2es                    Prepare task metadata for bulk upload
+                                         to ES
+1.8     018_PDFDownloader              Download PFD documents and upload them
+                                         to HDFS
+1.9     019_oracle2esFormat            Prepare data for bulk upload to ES
+2.5     025_chicagoES                  Get additional metadata from Chicago ES
+3.0     030_PDFAnalyzer                PDF Analyzer (search dataset in PDF
+                                         Supporting Notes)
+5.4     054_docContent2TTL             Convert results of Stage 30 to triples
+5.5     055_docs2TTL                   Convert paper (and its supporting
+                                         documents) metadata to triples
+6.0     060_upload2virtuoso            Upload data to Virtuoso
+6.9     069_upload2es                  Upload data to ES
+9.1     091_datasetsRucio              Get dataset metadata from Rucio
+9.3     093_datasetsFormat             Update dataset metadata: add
+                                         "data_format" field
+9.5     095_datasetInfoAMI             Get dataset metadata from AMI
 
 
 
