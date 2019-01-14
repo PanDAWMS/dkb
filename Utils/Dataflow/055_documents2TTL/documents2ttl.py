@@ -327,7 +327,7 @@ def report_number_extraction(data):
 
 
 def glance_parameter_extraction(param_name, json_data):
-    """ Extract a parameter value from JSON.
+    """ Extract a GLANCE parameter value from JSON.
 
     :param param_name: name of the parameter
     :type param_name: str
