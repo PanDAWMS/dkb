@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Stage for converting JSON files(output of stage 015) into TTL files(input for
+Stage for converting JSON files (output of stage 015) into TTL files (input for
 stage 060).
 
 JSON file should have the following structure::
