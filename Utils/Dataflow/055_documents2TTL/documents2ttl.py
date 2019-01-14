@@ -177,7 +177,7 @@ def document_glance(data, doc_iri, glance_attrs):
 
 
 def document_links(data):
-    """ Convert links metadata from JSON to TTL.
+    """ Construct TTL sentences to link paper to its supporting documents.
 
     The result looks as following:
     PAPER atlas:isBasedOn SUPPORTING_DOCUMENT
