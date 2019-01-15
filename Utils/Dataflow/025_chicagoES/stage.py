@@ -59,7 +59,8 @@ def task_metadata(taskid, fields=[], retry=3):
 
     :param taskid: Task ID or None
     :type taskd: str, NoneType
-    :param fields: requested ES fields
+    :param fields: requested ES fields; if empty list or not passed, all
+                   fields available will be used
     :type fields: list
     :param retry: number of retries for ES query
     :type retry: int
