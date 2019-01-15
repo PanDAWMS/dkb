@@ -14,6 +14,8 @@ import sys
 import traceback
 
 import time
+import datetime
+import json
 
 try:
     base_dir = os.path.dirname(__file__)
@@ -47,6 +49,8 @@ META_FIELDS = {
     'cputime': 'hs06'
 }
 
+AGG_FIELDS = {'hs06sec_sum': 'toths06'}
+JOB_STATUSES = ['finished', 'failed']
 
 def init_es_client():
     """ Initialize connection to Chicago ES. """
@@ -100,6 +104,121 @@ def task_metadata(taskid, fields=[], retry=3):
     return result
 
 
+def get_indices_by_interval(start_time, end_time, prefix='jobs_archive_'):
+    """ Get list of Chicago ES indices for jobs between two dates.
+
+    :param start_time: beginning of the interval
+    :type start_time: str, NoneType
+    :param end_time: ending of the interval
+    :type end_time: str, NoneType
+    :param prefix: prefix for the index names
+    :type prefix: str
+
+    :returns: indices for dates between specified times; if start or end
+              time is not specified, default wildcard-appended index
+              is returned
+    :rtype: list
+    """
+    if not start_time or not end_time:
+        return [prefix + '*']
+    dt_format = '%d-%m-%Y %H:%M:%S'
+    d_format = '%Y-%m-%d'
+    beg = datetime.datetime.strptime(start_time, dt_format).date()
+    end = datetime.datetime.strptime(end_time, dt_format).date()
+    delta = datetime.timedelta(days=1)
+    cur = beg
+    result = []
+    while cur <= end:
+      result += [ prefix + cur.strftime(d_format) ]
+      cur += delta
+    return result
+
+
+def agg_metadata(taskid, start_time, end_time, agg_names, retry=3):
+    """ Get task metadata by task jobs metadata aggregation.
+
+    The aggregation is done within buckets of jobs with different status.
+
+    :param taskid: Task ID or None
+    :type taskid: str, NoneType
+    :param start_time: task start time or None
+    :type start_time: str, NoneType
+    :param end_time: task end time or None
+    :type end_time: str, NoneType
+    :param agg_names: code names of requested aggregations (available:
+                     "hs06sec")
+    :type agg_names: list
+    :param retry: number of retries for ES query
+    :type retry: int
+
+    :returns: requested task metadata from ES or None if called before
+              ES connection is established
+    :rtype: dict, NoneType
+    """
+    if not chicago_es:
+        sys.stderr.write("(ERROR) Connection to Chicago ES is not"
+                         " established.")
+        return None
+    if not taskid:
+        sys.stderr.write("(WARN) Invalid task id: %s" % taskid)
+        return {}
+    index = get_indices_by_interval(start_time, end_time)
+    query = {
+        "query": {
+            "bool": {
+                "must": [
+                    {"term": {"taskid": "%s"}},
+                    {"terms": {"jobstatus": JOB_STATUSES}}
+                ]
+            }
+        },
+        "aggs": {}
+    }
+    aggs = query["aggs"]
+
+    for agg in agg_names:
+        idx = agg.rfind('_')
+        field = agg[:idx]
+        agg_type = agg[idx+1:]
+        if agg == 'hs06sec_sum':
+           aggs["status"] = {"terms": {"field": "jobstatus"}}
+           aggs["status"]["aggs"] = {agg: {agg_type: {"field": field}}}
+        else:
+           sys.stderr.write("(ERROR) Unknown aggregation: '%s'.\n" % agg)
+
+    if not query['aggs']:
+        sys.stderr.write("(WARN) No aggregations done for Task ID: '%s'.\n"
+                         % taskid)
+        return {}
+
+    kwargs = {
+        'index': index,
+        'doc_type': 'jobs_data',
+        'body': json.dumps(query) % taskid,
+        'size': 0
+    }
+
+    try:
+        r = chicago_es.search(**kwargs)
+    except ElasticsearchException, err:
+        sys.stderr.write("(ERROR) ES search error: %s\n" % err)
+        if retry > 0:
+            sys.stderr.write("(INFO) Sleep 5 sec before retry...\n")
+            time.sleep(5)
+            return agg_metadata(taskid, start_time, end_time, agg_names,
+                                retry - 1)
+        else:
+            sys.stderr.write("(FATAL) Failed to get task aggregated"
+                             " metadata.\n")
+            raise
+
+    if r['hits']['total']:
+        result = r['aggregations']
+    else:
+        result = {}
+    return result
+
+
 def process(stage, message):
     """ Single message processing.
 
@@ -112,11 +231,31 @@ def process(stage, message):
     :rtype: bool
     """
     data = message.content()
+
+    # Get task metadata (direct values)
     mdata = task_metadata(data.get('taskid'), META_FIELDS.keys())
     if mdata is None:
         return False
     for key in mdata:
         data[META_FIELDS[key]] = mdata.get(key)
+
+    # Get metadata as aggregation by jobs
+    mdata = agg_metadata(data.get('taskid'), data.get('start_time'),
+                         data.get('end_time'), AGG_FIELDS.keys())
+    if mdata is None:
+        return False
+    if mdata:
+        buckets = mdata['status']['buckets']
+        for f in AGG_FIELDS.keys():
+            total = 0
+            for b in buckets:
+                status = b['key']
+                val = b[f]['value']
+                fname = '_'.join([AGG_FIELDS[f], status])
+                data[fname] = val
+                total += val
+            fname = AGG_FIELDS[f]
+            data[fname] = total
     out_message = JSONMessage(data)
     stage.output(out_message)
     return True

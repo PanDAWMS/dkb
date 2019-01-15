@@ -198,6 +198,20 @@
         "hs06": {
           "type": "long"
         },
+
+        "toths06": {           /* Origin: ChicagoES/jobs_archive_YYYY-MM-DD/jobs_data/doc['hs06sec'] */
+          "type": "long"       /*         (total value for the task jobs with status 'finished' or   */
+        },                     /*          'failed')                                                 */
+                               /* Meaning: CPU resources used by the task.                           */
+
+        "toths06_finished": {  /* Meaning: CPU resources the task would use in the perfect world.    */
+          "type": "long"
+        },
+
+        "toths06_failed": {    /* Meaning: 'wasted' CPU resources. */
+          "type": "long"
+        },
+
         "input_bytes": {
           "type": "long"
         },
