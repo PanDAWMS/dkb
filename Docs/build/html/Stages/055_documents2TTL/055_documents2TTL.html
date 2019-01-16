@@ -455,13 +455,16 @@ PAPER atlas:isBasedOn SUPPORTING_DOCUMENT</p>
 <dt id="055_documents2TTL.documents2ttl.process">
 <code class="descclassname">055_documents2TTL.documents2ttl.</code><code class="descname">process</code><span class="sig-paren">(</span><em>stage</em>, <em>msg</em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/055_documents2TTL/documents2ttl.html#process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#055_documents2TTL.documents2ttl.process" title="Permalink to this definition">¶</a></dt>
 <dd><p>Process a message. Convert the message’s contents from JSON to TTL.</p>
+<p>Implementation of <a class="reference internal" href="../../pyDKB/pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.process" title="pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage.process"><code class="xref py py-meth docutils literal notranslate"><span class="pre">AbstractProcessorStage.process()</span></code></a> for hooking
+the stage into DKB workflow. Output message containing the TTL result is
+generated in this function.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>stage</strong> (<em>pyDKB.dataflow.stage.ProcessorStage</em>) – stage instance</li>
-<li><strong>msg</strong> (<em>pyDKB.dataflow.Message</em>) – input message with JSON data</li>
+<li><strong>msg</strong> (<em>pyDKB.dataflow.Message</em>) – input message with initial JSON</li>
 </ul>
 </td>
 </tr>

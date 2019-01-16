@@ -551,9 +551,13 @@ def fix_list_values(list_vals):
 def process(stage, msg):
     """ Process a message. Convert the message's contents from JSON to TTL.
 
+    Implementation of :py:meth:`.AbstractProcessorStage.process` for hooking
+    the stage into DKB workflow. Output message containing the TTL result is
+    generated in this function.
+
     :param stage: stage instance
     :type stage: pyDKB.dataflow.stage.ProcessorStage
-    :param msg: input message with JSON data
+    :param msg: input message with initial JSON
     :type msg: pyDKB.dataflow.Message
 
     :return: True
