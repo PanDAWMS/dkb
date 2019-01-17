@@ -222,6 +222,16 @@ def agg_metadata(taskid, start_time, end_time, agg_names, retry=3, es_args=None)
     try:
         r = chicago_es.search(**es_args)
     except ElasticsearchException, err:
+        if isinstance(err, elasticsearch.exceptions.NotFoundError) and \
+          err.error == 'index_not_found_exception':
+            idx_name = err.info['error']['index']
+            es_args['index'].remove(idx_name)
+            sys.stderr.write("(INFO) No such index in Chicago ES: '%s'."
+                             " Retrying query without it.\n" % idx_name)
+            if not es_args['index']:
+                return {}
+            return agg_metadata(taskid, start_time, end_time, agg_names,
+                                retry, es_args)
         sys.stderr.write("(ERROR) ES search error: %s\n" % err)
         if retry > 0:
             sys.stderr.write("(INFO) Sleep 5 sec before retry...\n")
