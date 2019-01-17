@@ -181,7 +181,7 @@ def agg_query(taskid, agg_names):
     return query
 
 
-def agg_metadata(taskid, start_time, end_time, agg_names, retry=3):
+def agg_metadata(taskid, start_time, end_time, agg_names, retry=3, es_args=None):
     """ Get task metadata by task jobs metadata aggregation.
 
     The aggregation is done within buckets of jobs with different status.
@@ -197,6 +197,8 @@ def agg_metadata(taskid, start_time, end_time, agg_names, retry=3):
     :type agg_names: list
     :param retry: number of retries for ES query
     :type retry: int
+    :param es_args: ES search query parameters (used e.g. for retry)
+    :type es_args: dict, NoneType
 
     :returns: requested task metadata from ES or None if called before
               ES connection is established
@@ -207,25 +209,25 @@ def agg_metadata(taskid, start_time, end_time, agg_names, retry=3):
                          " established.")
         return None
 
-    if not kwargs:
-        kwargs = {
+    if not es_args:
+        es_args = {
             'index': get_indices_by_interval(start_time, end_time),
             'doc_type': 'jobs_data',
             'body': agg_query(taskid, agg_names),
             'size': 0
         }
-    if not kwargs['body']:
+    if not es_args['body']:
         return {}
 
     try:
-        r = chicago_es.search(**kwargs)
+        r = chicago_es.search(**es_args)
     except ElasticsearchException, err:
         sys.stderr.write("(ERROR) ES search error: %s\n" % err)
         if retry > 0:
             sys.stderr.write("(INFO) Sleep 5 sec before retry...\n")
             time.sleep(5)
             return agg_metadata(taskid, start_time, end_time, agg_names,
-                                retry - 1)
+                                retry - 1, es_args)
         else:
             sys.stderr.write("(FATAL) Failed to get task aggregated"
                              " metadata.\n")
