@@ -134,6 +134,53 @@ def get_indices_by_interval(start_time, end_time, prefix='jobs_archive_'):
     return result
 
 
+def agg_query(taskid, agg_names):
+    """ Create ES query for aggregation request.
+
+    :param taskid: Task ID or None
+    :type taskid: str, NoneType
+    :param agg_names: code names of requested aggregations (available:
+                     "hs06sec")
+    :type agg_names: list
+
+    :returns: ES query or None in case of failure
+    :rtype: str, NoneType
+    """
+    if not taskid:
+        sys.stderr.write("(WARN) Invalid task id: %s" % taskid)
+        return None
+
+    query = {
+        "query": {
+            "bool": {
+                "must": [
+                    {"term": {"taskid": taskid}},
+                    {"terms": {"jobstatus": JOB_STATUSES}}
+                ]
+            }
+        },
+        "aggs": {}
+    }
+    aggs = query["aggs"]
+
+    for agg in agg_names:
+        idx = agg.rfind('_')
+        field = agg[:idx]
+        agg_type = agg[idx+1:]
+        if agg == 'hs06sec_sum':
+           aggs["status"] = {"terms": {"field": "jobstatus"}}
+           aggs["status"]["aggs"] = {agg: {agg_type: {"field": field}}}
+        else:
+           sys.stderr.write("(ERROR) Unknown aggregation: '%s'.\n" % agg)
+
+    if not query['aggs']:
+        sys.stderr.write("(WARN) No aggregations done for Task ID: '%s'.\n"
+                         % taskid)
+        return {}
+
+    return query
+
+
 def agg_metadata(taskid, start_time, end_time, agg_names, retry=3):
     """ Get task metadata by task jobs metadata aggregation.
 
@@ -159,44 +206,16 @@ def agg_metadata(taskid, start_time, end_time, agg_names, retry=3):
         sys.stderr.write("(ERROR) Connection to Chicago ES is not"
                          " established.")
         return None
-    if not taskid:
-        sys.stderr.write("(WARN) Invalid task id: %s" % taskid)
+
+    if not kwargs:
+        kwargs = {
+            'index': get_indices_by_interval(start_time, end_time),
+            'doc_type': 'jobs_data',
+            'body': agg_query(taskid, agg_names),
+            'size': 0
+        }
+    if not kwargs['body']:
         return {}
-    index = get_indices_by_interval(start_time, end_time)
-    query = {
-        "query": {
-            "bool": {
-                "must": [
-                    {"term": {"taskid": "%s"}},
-                    {"terms": {"jobstatus": JOB_STATUSES}}
-                ]
-            }
-        },
-        "aggs": {}
-    }
-    aggs = query["aggs"]
-
-    for agg in agg_names:
-        idx = agg.rfind('_')
-        field = agg[:idx]
-        agg_type = agg[idx+1:]
-        if agg == 'hs06sec_sum':
-           aggs["status"] = {"terms": {"field": "jobstatus"}}
-           aggs["status"]["aggs"] = {agg: {agg_type: {"field": field}}}
-        else:
-           sys.stderr.write("(ERROR) Unknown aggregation: '%s'.\n" % agg)
-
-    if not query['aggs']:
-        sys.stderr.write("(WARN) No aggregations done for Task ID: '%s'.\n"
-                         % taskid)
-        return {}
-
-    kwargs = {
-        'index': index,
-        'doc_type': 'jobs_data',
-        'body': json.dumps(query) % taskid,
-        'size': 0
-    }
 
     try:
         r = chicago_es.search(**kwargs)
