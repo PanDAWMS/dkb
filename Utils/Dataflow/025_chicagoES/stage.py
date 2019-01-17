@@ -225,11 +225,15 @@ def agg_metadata(taskid, start_time, end_time, agg_names, retry=3, es_args=None)
         if isinstance(err, elasticsearch.exceptions.NotFoundError) and \
           err.error == 'index_not_found_exception':
             idx_name = err.info['error']['index']
-            es_args['index'].remove(idx_name)
+            pos = idx_name.rfind('-')
+            idx_prefix = idx_name[:pos+1]
+            idx_wild = idx_prefix + '*'
             sys.stderr.write("(INFO) No such index in Chicago ES: '%s'."
-                             " Retrying query without it.\n" % idx_name)
-            if not es_args['index']:
-                return {}
+                             " Using wildcard instead ('%s').\n"
+                             % (idx_name, idx_wild))
+            es_args['index'] = [idx for idx in es_args['index'] \
+                                if not idx.startswith(idx_prefix)] \
+                               + [idx_wild]
             return agg_metadata(taskid, start_time, end_time, agg_names,
                                 retry, es_args)
         sys.stderr.write("(ERROR) ES search error: %s\n" % err)
