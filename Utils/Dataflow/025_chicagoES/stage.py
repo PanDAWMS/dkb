@@ -113,9 +113,9 @@ def get_indices_by_interval(start_time, end_time, prefix='jobs_archive_',
     """ Get list of Chicago ES indices for jobs between two dates.
 
     :param start_time: beginning of the interval
-    :type start_time: str, NoneType
+    :type start_time: datetime.datetime, NoneType
     :param end_time: ending of the interval
-    :type end_time: str, NoneType
+    :type end_time: datetime.datetime, NoneType
     :param prefix: prefix for the index names
     :type prefix: str
     :param wildcard: indicates if the index names should be appended with '*'
@@ -128,10 +128,9 @@ def get_indices_by_interval(start_time, end_time, prefix='jobs_archive_',
     """
     if not start_time or not end_time:
         return [prefix + '*']
-    dt_format = '%d-%m-%Y %H:%M:%S'
     d_format = '%Y-%m-%d'
-    beg = datetime.datetime.strptime(start_time, dt_format).date()
-    end = datetime.datetime.strptime(end_time, dt_format).date()
+    beg = start_time.date()
+    end = end_time.date()
     delta = datetime.timedelta(days=1)
     cur = beg
     result = []
@@ -222,9 +221,13 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
         return {}
 
     if not es_args:
+        dt_format = '%d-%m-%Y %H:%M:%S'
+        if start_time:
+            beg = datetime.datetime.strptime(start_time, dt_format)
+        if end_time:
+            end = datetime.datetime.strptime(end_time, dt_format)
         es_args = {
-            'index': get_indices_by_interval(start_time, end_time,
-                                             wildcard=True),
+            'index': get_indices_by_interval(beg, end, wildcard=True),
             'doc_type': 'jobs_data',
             'body': agg_query(taskid, agg_names),
             'size': 0
