@@ -52,6 +52,9 @@ META_FIELDS = {
 AGG_FIELDS = {'hs06sec_sum': 'toths06'}
 JOB_STATUSES = ['finished', 'failed']
 
+TASK_FINAL_STATES = ['done', 'finished', 'obsolete', 'failed', 'broken',
+                     'aborted']
+
 
 def init_es_client():
     """ Initialize connection to Chicago ES. """
@@ -188,7 +191,7 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
     The aggregation is done within buckets of jobs with different status.
 
     :param task_data: Task metadata, including: 'taskid', 'start_time',
-                      'end_time'.
+                      'end_time', 'status'.
     :type task_data: dict
     :param agg_names: code names of requested aggregations (available:
                      "hs06sec")
@@ -205,11 +208,15 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
     taskid = task_data.get('taskid')
     start_time = task_data.get('start_time')
     end_time = task_data.get('end_time')
+    status = task_data.get('status')
 
     if not chicago_es:
         sys.stderr.write("(ERROR) Connection to Chicago ES is not"
                          " established.")
         return None
+
+    if status not in TASK_FINAL_STATES:
+        return {}
 
     if not es_args:
         es_args = {

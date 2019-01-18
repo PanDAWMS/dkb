@@ -21,6 +21,7 @@ output):
   "taskid": <TASK_ID>,
   "start_time": <DD-MM-YYYY hh:mm:ss>,
   "end_time": <DD-MM-YYYY hh:mm:ss>,
+  "status": <TASK_STATUS>,
   ...
 }
 }}}
