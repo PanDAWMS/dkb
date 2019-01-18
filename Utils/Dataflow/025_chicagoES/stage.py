@@ -182,18 +182,14 @@ def agg_query(taskid, agg_names):
     return query
 
 
-def agg_metadata(taskid, start_time, end_time, agg_names, retry=3,
-                 es_args=None):
+def agg_metadata(task_data, agg_names, retry=3, es_args=None):
     """ Get task metadata by task jobs metadata aggregation.
 
     The aggregation is done within buckets of jobs with different status.
 
-    :param taskid: Task ID or None
-    :type taskid: str, NoneType
-    :param start_time: task start time or None
-    :type start_time: str, NoneType
-    :param end_time: task end time or None
-    :type end_time: str, NoneType
+    :param task_data: Task metadata, including: 'taskid', 'start_time',
+                      'end_time'.
+    :type task_data: dict
     :param agg_names: code names of requested aggregations (available:
                      "hs06sec")
     :type agg_names: list
@@ -206,6 +202,10 @@ def agg_metadata(taskid, start_time, end_time, agg_names, retry=3,
               ES connection is established
     :rtype: dict, NoneType
     """
+    taskid = task_data.get('taskid')
+    start_time = task_data.get('start_time')
+    end_time = task_data.get('end_time')
+
     if not chicago_es:
         sys.stderr.write("(ERROR) Connection to Chicago ES is not"
                          " established.")
@@ -235,14 +235,12 @@ def agg_metadata(taskid, start_time, end_time, agg_names, retry=3,
                              % (idx_name, idx_wild))
             es_args['index'] = [idx for idx in es_args['index']
                                 if not idx.startswith(idx_prefix)] + [idx_wild]
-            return agg_metadata(taskid, start_time, end_time, agg_names,
-                                retry, es_args)
+            return agg_metadata(task_data, agg_names, retry, es_args)
         sys.stderr.write("(ERROR) ES search error: %s\n" % err)
         if retry > 0:
             sys.stderr.write("(INFO) Sleep 5 sec before retry...\n")
             time.sleep(5)
-            return agg_metadata(taskid, start_time, end_time, agg_names,
-                                retry - 1, es_args)
+            return agg_metadata(task_data, agg_names, retry - 1, es_args)
         else:
             sys.stderr.write("(FATAL) Failed to get task aggregated"
                              " metadata.\n")
@@ -276,8 +274,7 @@ def process(stage, message):
         data[META_FIELDS[key]] = mdata.get(key)
 
     # Get metadata as aggregation by jobs
-    mdata = agg_metadata(data.get('taskid'), data.get('start_time'),
-                         data.get('end_time'), AGG_FIELDS.keys())
+    mdata = agg_metadata(data, AGG_FIELDS.keys())
     if mdata is None:
         return False
     if mdata:
