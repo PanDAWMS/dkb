@@ -52,6 +52,7 @@ META_FIELDS = {
 AGG_FIELDS = {'hs06sec_sum': 'toths06'}
 JOB_STATUSES = ['finished', 'failed']
 
+
 def init_es_client():
     """ Initialize connection to Chicago ES. """
     global chicago_es
@@ -129,8 +130,8 @@ def get_indices_by_interval(start_time, end_time, prefix='jobs_archive_'):
     cur = beg
     result = []
     while cur <= end:
-      result += [ prefix + cur.strftime(d_format) ]
-      cur += delta
+        result += [prefix + cur.strftime(d_format)]
+        cur += delta
     return result
 
 
@@ -166,12 +167,12 @@ def agg_query(taskid, agg_names):
     for agg in agg_names:
         idx = agg.rfind('_')
         field = agg[:idx]
-        agg_type = agg[idx+1:]
+        agg_type = agg[(idx + 1):]
         if agg == 'hs06sec_sum':
-           aggs["status"] = {"terms": {"field": "jobstatus"}}
-           aggs["status"]["aggs"] = {agg: {agg_type: {"field": field}}}
+            aggs["status"] = {"terms": {"field": "jobstatus"}}
+            aggs["status"]["aggs"] = {agg: {agg_type: {"field": field}}}
         else:
-           sys.stderr.write("(ERROR) Unknown aggregation: '%s'.\n" % agg)
+            sys.stderr.write("(ERROR) Unknown aggregation: '%s'.\n" % agg)
 
     if not query['aggs']:
         sys.stderr.write("(WARN) No aggregations done for Task ID: '%s'.\n"
@@ -181,7 +182,8 @@ def agg_query(taskid, agg_names):
     return query
 
 
-def agg_metadata(taskid, start_time, end_time, agg_names, retry=3, es_args=None):
+def agg_metadata(taskid, start_time, end_time, agg_names, retry=3,
+                 es_args=None):
     """ Get task metadata by task jobs metadata aggregation.
 
     The aggregation is done within buckets of jobs with different status.
@@ -223,17 +225,16 @@ def agg_metadata(taskid, start_time, end_time, agg_names, retry=3, es_args=None)
         r = chicago_es.search(**es_args)
     except ElasticsearchException, err:
         if isinstance(err, elasticsearch.exceptions.NotFoundError) and \
-          err.error == 'index_not_found_exception':
+                err.error == 'index_not_found_exception':
             idx_name = err.info['error']['index']
             pos = idx_name.rfind('-')
-            idx_prefix = idx_name[:pos+1]
+            idx_prefix = idx_name[:(pos + 1)]
             idx_wild = idx_prefix + '*'
             sys.stderr.write("(INFO) No such index in Chicago ES: '%s'."
                              " Using wildcard instead ('%s').\n"
                              % (idx_name, idx_wild))
-            es_args['index'] = [idx for idx in es_args['index'] \
-                                if not idx.startswith(idx_prefix)] \
-                               + [idx_wild]
+            es_args['index'] = [idx for idx in es_args['index']
+                                if not idx.startswith(idx_prefix)] + [idx_wild]
             return agg_metadata(taskid, start_time, end_time, agg_names,
                                 retry, es_args)
         sys.stderr.write("(ERROR) ES search error: %s\n" % err)
