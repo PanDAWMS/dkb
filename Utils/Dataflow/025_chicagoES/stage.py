@@ -108,7 +108,8 @@ def task_metadata(taskid, fields=[], retry=3):
     return result
 
 
-def get_indices_by_interval(start_time, end_time, prefix='jobs_archive_'):
+def get_indices_by_interval(start_time, end_time, prefix='jobs_archive_',
+                            wildcard=False):
     """ Get list of Chicago ES indices for jobs between two dates.
 
     :param start_time: beginning of the interval
@@ -117,6 +118,8 @@ def get_indices_by_interval(start_time, end_time, prefix='jobs_archive_'):
     :type end_time: str, NoneType
     :param prefix: prefix for the index names
     :type prefix: str
+    :param wildcard: indicates if the index names should be appended with '*'
+    :type wildcard: bool
 
     :returns: indices for dates between specified times; if start or end
               time is not specified, default wildcard-appended index
@@ -133,7 +136,7 @@ def get_indices_by_interval(start_time, end_time, prefix='jobs_archive_'):
     cur = beg
     result = []
     while cur <= end:
-        result += [prefix + cur.strftime(d_format)]
+        result += [prefix + cur.strftime(d_format) + '*' * wildcard]
         cur += delta
     return result
 
@@ -220,7 +223,8 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
 
     if not es_args:
         es_args = {
-            'index': get_indices_by_interval(start_time, end_time),
+            'index': get_indices_by_interval(start_time, end_time,
+                                             wildcard=True),
             'doc_type': 'jobs_data',
             'body': agg_query(taskid, agg_names),
             'size': 0
@@ -231,18 +235,6 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
     try:
         r = chicago_es.search(**es_args)
     except ElasticsearchException, err:
-        if isinstance(err, elasticsearch.exceptions.NotFoundError) and \
-                err.error == 'index_not_found_exception':
-            idx_name = err.info['error']['index']
-            pos = idx_name.rfind('-')
-            idx_prefix = idx_name[:(pos + 1)]
-            idx_wild = idx_prefix + '*'
-            sys.stderr.write("(INFO) No such index in Chicago ES: '%s'."
-                             " Using wildcard instead ('%s').\n"
-                             % (idx_name, idx_wild))
-            es_args['index'] = [idx for idx in es_args['index']
-                                if not idx.startswith(idx_prefix)] + [idx_wild]
-            return agg_metadata(task_data, agg_names, retry, es_args)
         sys.stderr.write("(ERROR) ES search error: %s\n" % err)
         if retry > 0:
             sys.stderr.write("(INFO) Sleep 5 sec before retry...\n")
