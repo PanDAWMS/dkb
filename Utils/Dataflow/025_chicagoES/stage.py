@@ -222,6 +222,7 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
 
     if not es_args:
         dt_format = '%d-%m-%Y %H:%M:%S'
+        beg = end = None
         if start_time:
             beg = datetime.datetime.strptime(start_time, dt_format)
             beg -= datetime.timedelta(days=1)
