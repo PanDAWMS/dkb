@@ -1,5 +1,5 @@
 {
-  "took" : 36,
+  "took" : 79,
   "timed_out" : false,
   "_shards" : {
     "total" : 4,
@@ -22,9 +22,9 @@
           "output" : {
             "doc_count" : 890,
             "not_removed" : {
-              "doc_count" : 802,
+              "doc_count" : 801,
               "bytes" : {
-                "value" : 1.843975252907852E15
+                "value" : 1.838315348775601E15
               }
             }
           },
@@ -32,12 +32,12 @@
             "value" : 3.11532E9
           },
           "input_events" : {
-            "value" : 3.12086314E9
+            "value" : 3.12087114E9
           },
           "not_deleted" : {
-            "doc_count" : 731,
+            "doc_count" : 698,
             "input_bytes" : {
-              "value" : 9.2578323257809E13
+              "value" : 8.6551288761914E13
             }
           },
           "timestamp_defined" : {
@@ -72,7 +72,7 @@
             "not_removed" : {
               "doc_count" : 873,
               "bytes" : {
-                "value" : 1.611510871873012E15
+                "value" : 1.611504836125157E15
               }
             }
           },
@@ -80,12 +80,12 @@
             "value" : 3.08715E9
           },
           "input_events" : {
-            "value" : 3.08856748E9
+            "value" : 3.088623E9
           },
           "not_deleted" : {
-            "doc_count" : 69,
+            "doc_count" : 1,
             "input_bytes" : {
-              "value" : 1.25602037876142E14
+              "value" : 5.396989069335E12
             }
           },
           "timestamp_defined" : {
@@ -118,9 +118,9 @@
           "output" : {
             "doc_count" : 874,
             "not_removed" : {
-              "doc_count" : 69,
+              "doc_count" : 1,
               "bytes" : {
-                "value" : 1.25602037876142E14
+                "value" : 5.396989069335E12
               }
             }
           },
@@ -166,9 +166,9 @@
           "output" : {
             "doc_count" : 660,
             "not_removed" : {
-              "doc_count" : 346,
+              "doc_count" : 290,
               "bytes" : {
-                "value" : 5.3438348330422E13
+                "value" : 4.4392907304839E13
               }
             }
           },
@@ -214,9 +214,9 @@
           "output" : {
             "doc_count" : 603,
             "not_removed" : {
-              "doc_count" : 281,
+              "doc_count" : 0,
               "bytes" : {
-                "value" : 1.39618809E8
+                "value" : 0.0
               }
             }
           },
@@ -224,12 +224,12 @@
             "value" : 2.307705E9
           },
           "input_events" : {
-            "value" : 2.30159525E9
+            "value" : 2.30158525E9
           },
           "not_deleted" : {
             "doc_count" : 603,
             "input_bytes" : {
-              "value" : 1.184385227092671E15
+              "value" : 1.184379191344816E15
             }
           },
           "timestamp_defined" : {
@@ -262,9 +262,9 @@
           "output" : {
             "doc_count" : 603,
             "not_removed" : {
-              "doc_count" : 603,
+              "doc_count" : 592,
               "bytes" : {
-                "value" : 3.0760037E7
+                "value" : 3.0565762E7
               }
             }
           },
@@ -275,9 +275,9 @@
             "value" : 2.3465E9
           },
           "not_deleted" : {
-            "doc_count" : 281,
+            "doc_count" : 0,
             "input_bytes" : {
-              "value" : 1.39618809E8
+              "value" : 0.0
             }
           },
           "timestamp_defined" : {
@@ -310,9 +310,9 @@
           "output" : {
             "doc_count" : 456,
             "not_removed" : {
-              "doc_count" : 456,
+              "doc_count" : 455,
               "bytes" : {
-                "value" : 4.7421588396214E13
+                "value" : 4.7047128896953E13
               }
             }
           },
@@ -323,9 +323,9 @@
             "value" : 1.99189804E9
           },
           "not_deleted" : {
-            "doc_count" : 142,
+            "doc_count" : 103,
             "input_bytes" : {
-              "value" : 2.4121442024259E13
+              "value" : 2.0572632798778E13
             }
           },
           "timestamp_defined" : {
@@ -371,9 +371,9 @@
             "value" : 3.2461535E8
           },
           "not_deleted" : {
-            "doc_count" : 4,
+            "doc_count" : 3,
             "input_bytes" : {
-              "value" : 7.743374148466E12
+              "value" : 2.083470016215E12
             }
           },
           "timestamp_defined" : {
