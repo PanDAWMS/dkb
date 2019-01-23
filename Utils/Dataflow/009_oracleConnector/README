@@ -35,6 +35,13 @@ tasks: query/prodsys2ES.sql
 # relative path to datasets query
 datasets: query/datasets.sql
 
+[process]
+# Query response processing mode:
+#  PLAIN   -- pass records to output independently of each other
+#  SQUASH  -- link 'datasets' records to 'task', joining them into a single
+#             record
+mode = SQUASH
+
 [timestamps]
 # initial timestamp
 initial = 04-03-2014 00:00:00

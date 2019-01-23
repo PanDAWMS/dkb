@@ -26,7 +26,7 @@ def main():
     """ Main program cycle.
 
     USAGE:
-       ./Oracle2JSON.py --config <config file> --mode <PLAIN|SQUASH>
+       ./Oracle2JSON.py --config <config file>
 
     TODO:
        Obtain the min(timestamp) from t_production_task
@@ -37,7 +37,6 @@ def main():
 
     # read initial configuration
     config = read_config(args.config)
-    config['mode'] = args.mode
     log_config(config)
     if config is None:
         sys.exit(1)
@@ -140,6 +139,7 @@ def read_config(config_file):
     result['offset_file'] = config_path(config_get(config, 'logging',
                                                    'offset_file', '.offset'),
                                         result)
+    result['mode'] = config_get(config, 'process', 'mode', 'SQUASH')
 
     return result
 
@@ -537,8 +537,6 @@ def parsingArguments():
                                      " connector stage.")
     parser.add_argument('--config', help="Configuration file path",
                         type=str, required=True)
-    parser.add_argument('--mode', help="Mode of execution: PLAIN | SQUASH",
-                        choices=[PLAIN_POLICY, SQUASH_POLICY])
     args = parser.parse_args()
     if not os.access(args.config, os.F_OK):
         sys.stderr.write("argument --config: '%s' file not exists\n"

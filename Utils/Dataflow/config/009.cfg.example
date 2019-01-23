@@ -20,6 +20,13 @@ datasets: %__009_query_dir__%/datasets.sql
 # * = -- analysis
 production_or_analysis_cond = >
 
+[process]
+# Query response processing mode:
+#  PLAIN   -- pass records to output independently of each other
+#  SQUASH  -- link 'datasets' records to 'task', joining them into a single
+#             record
+mode = SQUASH
+
 [timestamps]
 # initial timestamp (e.g. 01-05-2016 00:00:00)
 initial = %__009_init_offset__%
