@@ -23,6 +23,12 @@ etc
 
 Test cases:
 
-(-) without parameters (expected: "no input file specified" error):
+(+) in file mode with no parameters
+    (expected: "no input file specified" error):
+
+  ./json2TTL.py -m f
+
+(+) without parameters
+    (expeted: same as in file mode without parameters)
 
   ./json2TTL.py
