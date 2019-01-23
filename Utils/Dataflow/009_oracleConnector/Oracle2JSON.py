@@ -41,6 +41,7 @@ def main():
 
     # read initial configuration
     config = read_config(args.config)
+    log_config(config)
     if config is None:
         sys.exit(1)
 
@@ -60,6 +61,29 @@ def main():
         sys.exit(1)
 
     process(conn, offset_storage, config)
+
+
+def log_config(config):
+    """ Log stage configuration.
+
+    :param config: stage configuration
+    :type config: dict, NoneType
+    """
+    if config is None:
+        sys.stderr.write("(ERROR) Stage is not configured.\n")
+    if not isinstance(config, dict):
+        sys.stderr.write("(ERROR) Stage is misconfigured.\n")
+
+    sys.stderr.write("(INFO) Stage 009 configuration:\n")
+
+    key_len = len(max(config.keys(), key=len))
+    pattern = "(INFO)  %%-%ds : '%%s'\n" % key_len
+    sys.stderr.write("(INFO) ---\n")
+    for p in config:
+        if p.startswith('__'):
+            continue
+        sys.stderr.write(pattern % (p, config[p]))
+    sys.stderr.write("(INFO) ---\n")
 
 
 def read_config(config_file):
