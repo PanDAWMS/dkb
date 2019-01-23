@@ -17,8 +17,6 @@ SQUASH_POLICY = 'SQUASH'
 
 # Global variables
 # ---
-# Operating mode
-mode = None
 # Output stream
 OUT = os.fdopen(sys.stdout.fileno(), 'w', 0)
 # ---
@@ -36,12 +34,10 @@ def main():
        Query: SELECT min(timestamp) from t_production_task;
     """
     args = parsingArguments()
-    global mode
-    mode = args.mode
 
     # read initial configuration
     config = read_config(args.config)
-    config['mode'] = mode
+    config['mode'] = args.mode
     log_config(config)
     if config is None:
         sys.exit(1)
@@ -438,6 +434,7 @@ def process(conn, offset_storage, config):
     :type offset_storage: OffsetStorage
     :type config: dict
     """
+    mode = config['mode']
     reverse = config['step_seconds'] < 0
     final_date = config['final_date']
     step_seconds = config['step_seconds']
