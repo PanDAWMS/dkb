@@ -11,6 +11,8 @@ from FileConsumer import FileConsumer
 from HDFSConsumer import HDFSConsumer
 from StreamConsumer import StreamConsumer
 
+from Consumer import ConsumerException
+
 __all__ = ['ConsumerBuilder']
 
 
