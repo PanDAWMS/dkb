@@ -273,11 +273,13 @@ class ProcessorStageConfigArgTestCase(unittest.TestCase):
 
     def test_correct_c(self):
         self.stage.parse_args(['-c', self.fake_config.name])
-        self.assertIsNotNone(getattr(self.stage.ARGS, 'config'))
+        isfile = isinstance(getattr(self.stage.ARGS, 'config'), file)
+        self.assertTrue(isfile)
 
     def test_correct_config(self):
         self.stage.parse_args(['--config', self.fake_config.name])
-        self.assertIsNotNone(getattr(self.stage.ARGS, 'config'))
+        isfile = isinstance(getattr(self.stage.ARGS, 'config'), file)
+        self.assertTrue(isfile)
 
     def test_missing_c(self):
         self.fake_config.close()
