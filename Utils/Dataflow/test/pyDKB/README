@@ -32,3 +32,10 @@ Test cases:
     (expeted: same as in file mode without parameters)
 
   ./json2TTL.py
+
+(+) read input from file(s)
+(+) output to (s)tream
+    (expected: output file(s) content)
+
+  ./json2TTL.py -d s input/NDjson.json
+  ./json2TTL.py -d s input/NDjson.json input/NDjson.json
