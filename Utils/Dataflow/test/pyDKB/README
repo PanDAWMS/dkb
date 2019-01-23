@@ -39,3 +39,9 @@ Test cases:
 
   ./json2TTL.py -d s input/NDjson.json
   ./json2TTL.py -d s input/NDjson.json input/NDjson.json
+
+(+) read with wrong EOM
+    (expected: can't decode message(s), works till the ens)
+
+  ./json2TTL.py -d s input/EOMDjson.json
+  ./json2TTL.py -d s -e EOM input/NDjson.json
