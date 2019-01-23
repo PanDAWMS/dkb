@@ -74,7 +74,8 @@ def log_config(config):
     if not isinstance(config, dict):
         sys.stderr.write("(ERROR) Stage is misconfigured.\n")
 
-    sys.stderr.write("(INFO) Stage 009 configuration:\n")
+    sys.stderr.write("(INFO) Stage 009 configuration (%s):\n"
+                     % config['__file__'])
 
     key_len = len(max(config.keys(), key=len))
     pattern = "(INFO)  %%-%ds : '%%s'\n" % key_len
@@ -97,6 +98,7 @@ def read_config(config_file):
     :rtype: dict|NoneType
     """
     result = {'__path__': os.path.dirname(os.path.abspath(config_file))}
+    result['__file__'] = os.path.join(result['__path__'], config_file)
     config = ConfigParser.SafeConfigParser()
     try:
         config.read(config_file)
