@@ -105,24 +105,21 @@ a streaming mode.  It means, that every (processing) stage is to meet the
 following requirements:
 - can be run in a quasi-infinite loop (waiting for input data and reading and
   so on unless the input stream is closed) [1]; - read input data from STDIN;
-- write output data to STDOUT;
+- write output data to STDOUT, separating records with EOM [2];
 - not to write anything but processing result to STDOUT (meaning that any log
   and error messages are going to STDERR or can be suppressed by some kind of
-  --silent option); - in case of multiple output messages as a result of
-  processing of one input message, use '\0' as a separator between sets of
-  output messages [2];
-- [not implemented] in case of multiline result use empty line or '\3'
-  as a message separator[3].
+  --silent option);
+- indicate that input message processing is finished by sending EOP [3] to
+  STDOUT (note that last output record must ends with EOM, as any other record);
+
 
 [1] In case of input data that cannot be easily transformed in a 'one-line
     message' (as PDF files), use names of the files in HDFS as input or learn
     how to distinguish where one input message ends and starts another one.
 
-[2] For now, ExternalProcessor supposes that even one-message results should be
-    separated with '\0'.
+[2] EOM, End-of-Message marker. Default value: '\n' (newline)
 
-[3] Not implemented yet in ExternalProcessor, so let M.Golosova know if it is a
-    crying need.
+[3] EOP, End-of-Process marker. Default value: '\0' (NULL)
 
 =====================================
 * 3. External sources (data mining) *
