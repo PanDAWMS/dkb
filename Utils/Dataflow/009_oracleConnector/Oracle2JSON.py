@@ -46,7 +46,7 @@ def main():
     if not offset_storage:
         sys.exit(2)
 
-    conn = OracleConnection(config['dsn'])
+    conn = OracleConnection(config['__dsn'])
     if not conn.establish():
         sys.stderr.write("(ERROR) Failed to connect to Oracle. Exiting.\n")
         sys.exit(3)
@@ -99,7 +99,7 @@ def read_config(config_file):
     try:
         config.read(config_file)
         # Required parameters (with no defaults)
-        result['dsn'] = config.get('oracle', 'dsn')
+        result['__dsn'] = config.get('oracle', 'dsn')
         step = config.get('timestamps', 'step')
         result['step_seconds'] = interval_seconds(step)
         if result['step_seconds'] == 0:
