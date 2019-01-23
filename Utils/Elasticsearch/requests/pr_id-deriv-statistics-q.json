@@ -57,8 +57,11 @@ GET <index>/task/_search
             "processed_events": {
               "sum": {"field": "processed_events"}
             },
-            "cpu": {
-              "sum": {"script": {"inline":"doc['hs06'].value * doc['total_events'].value"}}
+            "cpu_total": {
+              "sum": {"field": "toths06"}
+            },
+            "cpu_failed": {
+              "sum": {"field": "toths06_failed"}
             },
             "timestamp_defined": {
               "filter": {
