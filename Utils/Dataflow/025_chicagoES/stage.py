@@ -55,7 +55,20 @@ def init_es_client():
 
 
 def task_metadata(taskid, fields=[], retry=3):
-    """ Get additional metadata for given task. """
+    """ Get additional metadata for given task.
+
+    :param taskid: Task ID or None
+    :type taskid: str, NoneType
+    :param fields: requested ES fields; if empty list or nothing is
+                   passed, all the fields available will be used
+    :type fields: list
+    :param retry: number of retries for ES query
+    :type retry: int
+
+    :returns: requested task metadata from ES or None if called before
+              ES connection is established
+    :rtype: dict, NoneType
+    """
     if not chicago_es:
         sys.stderr.write("(ERROR) Connection to Chicago ES is not"
                          " established.")
@@ -88,7 +101,16 @@ def task_metadata(taskid, fields=[], retry=3):
 
 
 def process(stage, message):
-    """ Single message processing. """
+    """ Single message processing.
+
+    :param stage: ETL processing stage
+    :type stage: JSONProcessorStage
+    :param message: input message with data to be processed
+    :type message: JSONMessage
+
+    :returns: True or False in case of failure
+    :rtype: bool
+    """
     data = message.content()
     mdata = task_metadata(data.get('taskid'), META_FIELDS.keys())
     if mdata is None:
@@ -101,7 +123,11 @@ def process(stage, message):
 
 
 def main(args):
-    """ Program body. """
+    """ Program body.
+
+    :param args: command line arguments
+    :type args: list
+    """
     stage = JSONProcessorStage()
     stage.process = process
 
