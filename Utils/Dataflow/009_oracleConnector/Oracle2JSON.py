@@ -41,6 +41,7 @@ def main():
 
     # read initial configuration
     config = read_config(args.config)
+    config['mode'] = mode
     log_config(config)
     if config is None:
         sys.exit(1)
