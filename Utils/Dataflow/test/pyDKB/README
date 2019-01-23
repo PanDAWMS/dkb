@@ -46,6 +46,12 @@ Test cases:
   ./json2TTL.py -d s input/EOMDjson.json
   ./json2TTL.py -d s -e EOM input/NDjson.json
 
+(-) read with custom EOM from file
+    (expected: output file(s) content)
+
+  ./json2TTL.py -d s -e EOM input/EOMDjson.json && echo ''
+  ./json2TTL.py -d s -e EOM input/EOMDjson.json input/EOMDjson.json && echo ''
+
 (-) last message not ended with EOM
     (expected: last message is thrown away)
 
