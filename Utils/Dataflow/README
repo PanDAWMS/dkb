@@ -87,11 +87,14 @@ Conventions, in-between data location in HDFS storage etc.
 ===========================
 * 1. Data Samples in HDFS *
 ===========================
-Catalog                                 Description                                             Link to Dataflow Stage
-***********************************************************************************************************************
-/user/DKB/store/PDF                     PDF documents loaded from CDS                           [by 018_PDFDownloader]
-/user/DKB/store/DatasetsFromPDF         dataset names and ID's, found by PDFAnalyzer module     [030_PDFAnalyzer/output]
-/user/DKB/store/document-metadata       ATLAS documents metadata from CDS and GLANCE            [015_CDSDocuments/output]
+
+HOME folder: /user/DKB
+
+Stage  HDFS                           Description
+*******************************************************************
+018    $HOME/store/PDF                PDF documents loaded from CDS
+030    $HOME/store/DatasetsFromPDF    dataset names and ID's, found by stage 30
+015    $HOME/store/document-metadata  ATLAS documents metadata from CDS/GLANCE
 
 
 =======================================
