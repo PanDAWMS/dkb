@@ -45,3 +45,8 @@ Test cases:
 
   ./json2TTL.py -d s input/EOMDjson.json
   ./json2TTL.py -d s -e EOM input/NDjson.json
+
+(-) last message not ended with EOM
+    (expected: last message is thrown away)
+
+  ./json2TTL.py -d s -e EOM input/NDjson.json
