@@ -58,7 +58,7 @@ def task_metadata(taskid, fields=[], retry=3):
     """ Get additional metadata for given task.
 
     :param taskid: Task ID or None
-    :type taskd: str, NoneType
+    :type taskid: str, NoneType
     :param fields: requested ES fields; if empty list or nothing is
                    passed, all the fields available will be used
     :type fields: list
