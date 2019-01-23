@@ -195,6 +195,11 @@ class ProcessorStage(AbstractStage):
             .setSourceInfoMethod(self.get_source_info) \
             .build()
         self.__stoppable_append(self.__output, producer.Producer)
+        self.log_configuration()
+
+    def log_configuration(self):
+        """ Log stage configuration. """
+        super(ProcessorStage, self).log_configuration()
 
     def get_source_info(self):
         """ Get information about current source. """
