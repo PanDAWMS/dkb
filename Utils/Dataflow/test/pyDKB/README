@@ -17,3 +17,12 @@ Run as:
   ./json2TTL.py --hdfs -i /my/test/input
 
 etc
+
+2. What to check
+----------------
+
+Test cases:
+
+(-) without parameters (expected: "no input file specified" error):
+
+  ./json2TTL.py
