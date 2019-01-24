@@ -163,6 +163,9 @@ def config_get(config, section, param, default=None):
                              % (param, section, default))
         result = default
 
+    if result == '' and default is not None:
+        result = default
+
     return result
 
 
