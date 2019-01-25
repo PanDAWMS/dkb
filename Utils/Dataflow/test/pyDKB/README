@@ -41,7 +41,8 @@ Test cases:
   ./json2TTL.py -d s input/NDjson.json input/NDjson.json
 
 (+) read with wrong EOM
-    (expected: can't decode message(s), works till the ens)
+    (expected: can't decode message(s), works till the end and skip last
+     "message")
 
   ./json2TTL.py -d s input/EOMDjson.json
   ./json2TTL.py -d s -e EOM input/NDjson.json
@@ -53,7 +54,8 @@ Test cases:
   ./json2TTL.py -d s -e EOM input/EOMDjson.json && echo ''
   ./json2TTL.py -d s -e EOM input/EOMDjson.json input/EOMDjson.json && echo ''
 
-(-) last message not ended with EOM
+(+) last message not ended with EOM
     (expected: last message is thrown away)
 
-  ./json2TTL.py -d s -e EOM input/NDjson.json
+  ./json2TTL.py -d s input/NDjson_unfinished.json
+  ./json2TTL.py -d s -e EOM input/EOMDjson_unfinished.json && echo ''

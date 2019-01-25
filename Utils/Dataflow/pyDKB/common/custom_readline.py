@@ -1,6 +1,7 @@
 import select
 import os
 import fcntl
+import sys
 
 
 def custom_readline(f, newline):
@@ -43,10 +44,10 @@ def custom_readline(f, newline):
             # and (in theory) may provide another message sooner or later
             send_not_next = yield True
         while newline in buf:
-            pos = buf.index(newline)
+            pos = buf.index(newline) + len(newline)
             while send_not_next:
                 # If we are here, the source is not empty for sure:
                 # we have another message to yield
                 send_not_next = yield True
             send_not_next = yield buf[:pos]
-            buf = buf[pos + len(newline):]
+            buf = buf[pos:]

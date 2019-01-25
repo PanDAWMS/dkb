@@ -144,4 +144,13 @@ class InputStream(Stream):
         if not self.__iterator:
             self._reset_iterator()
         msg = self.__iterator.next()
-        return self.parse_message(msg)
+        if not msg.endswith(self.EOM):
+            log_msg = msg[:10] + '<...>' * (len(msg) > 20)
+            log_msg += msg[-min(len(msg) - 10, 10):]
+            log_msg = log_msg.replace('\n', r'\n')
+            self.log("Unexpected end of stream, skipping rest of input:\n"
+                     "'%s'" % log_msg, logLevel.WARN)
+            return False
+        else:
+            result = self.parse_message(msg[:-len(self.EOM)])
+        return result
