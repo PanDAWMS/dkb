@@ -118,7 +118,10 @@ def get_indices_by_interval(start_time, end_time, prefix='jobs_archive_',
     :type end_time: datetime.datetime, NoneType
     :param prefix: prefix for the index names
     :type prefix: str
-    :param wildcard: indicates if the index names should be appended with '*'
+    :param wildcard: indicates if the index names should be appended with '*';
+                     if interval between start and end date is longer than one
+                     month, it will be set to True automatically (to reduce
+                     number of indices in the result list)
     :type wildcard: bool
 
     :returns: indices for dates between specified times; if start or end
@@ -129,15 +132,19 @@ def get_indices_by_interval(start_time, end_time, prefix='jobs_archive_',
     if not start_time or not end_time:
         return [prefix + '*']
     d_format = '%Y-%m-%d'
+    delta = datetime.timedelta(days=1)
+    if (end_time - start_time).days > 30:
+        d_format = '%Y-%m'
+        delta = datetime.timedelta(days=28)
+        wildcard = True
     beg = start_time.date()
     end = end_time.date()
-    delta = datetime.timedelta(days=1)
     cur = beg
     result = []
-    while cur <= end:
+    while cur <= end + delta - datetime.timedelta(days=1):
         result += [prefix + cur.strftime(d_format) + '*' * wildcard]
         cur += delta
-    return result
+    return list(set(result))
 
 
 def agg_query(taskid, agg_names):
