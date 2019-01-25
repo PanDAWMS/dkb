@@ -30,11 +30,12 @@ def custom_readline(f, newline):
         if poller.poll(500):
             chunk = f.read()
             if not chunk:
-                while send_not_next:
-                    # If we are here, the source is not empty for sure:
-                    # we have another message to yield
-                    send_not_next = yield True
-                yield buf
+                if buf:
+                    while send_not_next:
+                        # If we are here, the source is not empty for sure:
+                        # we have another message to yield
+                        send_not_next = yield True
+                    yield buf
                 break
             buf += chunk
         if send_not_next:
