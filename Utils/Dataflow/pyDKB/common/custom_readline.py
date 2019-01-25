@@ -24,7 +24,8 @@ def custom_readline(f, newline):
         if poller.poll(500):
             chunk = f.read()
             if not chunk:
-                yield buf
+                if buf:
+                    yield buf
                 break
             buf += chunk
         while newline in buf:
