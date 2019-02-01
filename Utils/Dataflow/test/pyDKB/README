@@ -1,12 +1,31 @@
-=============
-* Stage XX  *
-=============
+===============
+* puDKB tests *
+===============
 
-1. Description
---------------
-pyDKB testing stage.
+1. Content
+----------
 
-Run as:
+json2TTL.py -- dummy stage, that reads JSON input messages and outputs them
+               as text (TTL);
+
+test.sh     -- utility to run test cases;
+
+case/       -- directory with test cases; each case contains:
+    */cmd        command to run
+    */out        expected stdout
+    */err        expected stderr
+
+input/      -- input samples;
+
+
+2. How to use
+-------------
+
+To run test cases, use:
+
+  ./test.sh
+
+Dummy stage can be run as follows:
 
   ./json2TTL.py -i input
   ./json2TTL.py input/196.json
@@ -17,45 +36,3 @@ Run as:
   ./json2TTL.py --hdfs -i /my/test/input
 
 etc
-
-2. What to check
-----------------
-
-Test cases:
-
-(+) in file mode with no parameters
-    (expected: "no input file specified" error):
-
-  ./json2TTL.py -m f
-
-(+) without parameters
-    (expeted: same as in file mode without parameters)
-
-  ./json2TTL.py
-
-(+) read input from file(s)
-(+) output to (s)tream
-    (expected: output file(s) content)
-
-  ./json2TTL.py -d s input/NDjson.json
-  ./json2TTL.py -d s input/NDjson.json input/NDjson.json
-
-(+) read with wrong EOM
-    (expected: can't decode message(s), works till the end and skip last
-     "message")
-
-  ./json2TTL.py -d s input/EOMDjson.json
-  ./json2TTL.py -d s -e EOM input/NDjson.json
-
-(+) read with custom EOM from file(s)
-    (expected: output file(s) content, re-formatted so that all JSONs
-     are one-line)
-
-  ./json2TTL.py -d s -e EOM input/EOMDjson.json && echo ''
-  ./json2TTL.py -d s -e EOM input/EOMDjson.json input/EOMDjson.json && echo ''
-
-(+) last message not ended with EOM
-    (expected: last message is thrown away)
-
-  ./json2TTL.py -d s input/NDjson_unfinished.json
-  ./json2TTL.py -d s -e EOM input/EOMDjson_unfinished.json && echo ''
