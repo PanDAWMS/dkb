@@ -14,6 +14,7 @@ case/       -- directory with test cases; each case contains:
     */cmd        command to run
     */out        expected stdout
     */err        expected stderr
+    */info       (one-line) case description
 
 input/      -- input samples;
 
