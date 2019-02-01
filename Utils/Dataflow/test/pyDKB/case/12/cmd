@@ -1,0 +1,1 @@
+./json2TTL.py -d s -i input empty.json NDjson.json empty.json empty.json NDjson.json empty.json
