@@ -1,5 +1,9 @@
 #!/bin/bash
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+NC='\033[0m' # No Color
+
 # Test stage run modes.
 
 base_dir=$(cd "$(dirname "$(readlink -f "$0")")"; pwd)
@@ -41,9 +45,9 @@ test_case() {
   diff $case/out  out.tmp > /dev/null && out_correct=1
   diff $case/err err.tmp > /dev/null && err_correct=1
 
-  [ $out_correct -ne 1 ] && echo "FAIL: $case_id (STDOUT) (cmd: '$cmd')"
-  [ $err_correct -ne 1 ] && echo "FAIL: $case_id (STDERR) (cmd: '$cmd')"
-  [ $out_correct -eq 1 ] && [ $err_correct -eq 1 ] && echo " OK : $case_id"
+  [ $out_correct -ne 1 ] && echo -e "${RED}FAIL${NC}: $case_id (STDOUT) (cmd: '$cmd')"
+  [ $err_correct -ne 1 ] && echo -e "${RED}FAIL${NC}: $case_id (STDERR) (cmd: '$cmd')"
+  [ $out_correct -eq 1 ] && [ $err_correct -eq 1 ] && echo -e " ${GREEN}OK${NC} : $case_id"
 }
 
 CASES=""
