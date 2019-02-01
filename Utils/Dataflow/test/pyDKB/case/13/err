@@ -1,0 +1,13 @@
+(INFO) (ProcessorStage) Configuration parameters:
+(INFO) (ProcessorStage)   hdfs        : 'False'
+(INFO) (ProcessorStage)   dest        : 's'
+(INFO) (ProcessorStage)   input_dir   : 'input'
+(INFO) (ProcessorStage)   eom         : 'EOM'
+(INFO) (ProcessorStage)   output_dir  : 'out'
+(INFO) (ProcessorStage)   source      : 'f'
+(INFO) (ProcessorStage)   eop         : ''
+(INFO) (ProcessorStage)   mode        : 'f'
+(INFO) (ProcessorStage)   config      : 'None'
+(INFO) (ProcessorStage)   input_files : '['empty.json', 'EOMDjson.json', 'empty.json', 'empty.json', 'EOMDjson.json', 'empty.json']'
+(INFO) (ProcessorStage) Starting stage execution.
+(INFO) (ProcessorStage) Stopping stage.
