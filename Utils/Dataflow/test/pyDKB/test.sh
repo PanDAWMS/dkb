@@ -8,13 +8,15 @@ orig_dir=`pwd`
 cd $base_dir
 
 usage() {
-  echo "$0 [-h] [-l]
+  echo "$0 [-h] [-l] [-c N[,N...]]
 
 Run pyDKB stage functionality test cases.
 
 OPTIONS
   -h, --help    show this message and exit
   -l, --list    show test cases description
+  -c, --case N[,N...]
+                run specified test case(s)
 " >&2
 }
 
@@ -44,6 +46,8 @@ test_case() {
   [ $out_correct -eq 1 ] && [ $err_correct -eq 1 ] && echo " OK : $case_id"
 }
 
+CASES=""
+
 while [ -n "$1" ]; do
   case "$1" in
     -l|--list)
@@ -51,6 +55,13 @@ while [ -n "$1" ]; do
       ;;
     -h|--help)
       usage && exit 0
+      ;;
+    -c|--case)
+      ( [ -z "$2" ] || [[ "$2" = -* ]] ) && \
+        echo "-c/--case: test case ID not specified" \
+             "(use --help for usage info)." >&2 && exit 1
+      CASES=`echo "case/$2" | sed -e's/,/ case\//g'`
+      shift
       ;;
     -*)
       echo "Unknown option: $1" && usage && exit 1
@@ -62,8 +73,14 @@ while [ -n "$1" ]; do
   shift
 done
 
-for case in case/*; do
-  test_case $case
+[ -z "$CASES" ] && CASES='case/*'
+
+for case in $CASES; do
+  if [ -d "$case" ]; then
+    test_case $case
+  else
+    echo "Invalid test: '$case' (directory not found)." >&2
+  fi
 done
 
 cd $orig_dir
