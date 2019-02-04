@@ -1,0 +1,2 @@
+mkdir -p input/out
+touch input/out/NDjson.ttl &>/dev/null
