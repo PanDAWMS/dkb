@@ -215,24 +215,6 @@ class ProcessorStage(AbstractStage):
             result = None
         return result
 
-    def get_out_stream(self):
-        """ Get current output stream. """
-        if isinstance(self.__output, file):
-            fd = self.__output
-        else:
-            try:
-                fd = self.__output.next()
-            except DataflowException, err:
-                self.log(str(err), logLevel.ERROR)
-                raise DataflowException("Failed to configure output stream.")
-        if not self._out_stream:
-            self._out_stream = stream.StreamBuilder(fd, vars(self.ARGS)) \
-                .message_type(self.__output_message_type) \
-                .build()
-        else:
-            self._out_stream.reset(fd)
-        return self._out_stream
-
     def run(self):
         """ Run process() for every input() message. """
         self.log("Starting stage execution.")
