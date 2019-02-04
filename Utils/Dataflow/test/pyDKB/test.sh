@@ -12,7 +12,7 @@ orig_dir=`pwd`
 cd $base_dir
 
 usage() {
-  echo "$0 [-h] [-l] [-c N[,N...]]
+  echo "$0 [-h] [-l] [-c N[,N...]] [--todo]
 
 Run pyDKB stage functionality test cases.
 
@@ -21,13 +21,22 @@ OPTIONS
   -l, --list    show test cases description
   -c, --case N[,N...]
                 run specified test case(s)
+  --todo        list known issues for improvements
 " >&2
 }
 
 list_case() {
+  [ -n "$1" ] && info="$1"
   for c in "case/"*; do
-    echo -n "`basename "$c"`: "
-    cat $c/info
+    if [ -f "$c/$info" ] || [ -z "$info" ]; then
+      echo -n "`basename "$c"`: "
+      cat "$c/info"
+      if [ -n "$info" ]; then
+        echo "--- ${info^^} ---"
+        cat "$c/$info"
+        echo -e "------------\n"
+      fi
+    fi
   done
 }
 
@@ -72,6 +81,10 @@ while [ -n "$1" ]; do
              "(use --help for usage info)." >&2 && exit 1
       CASES=`echo "case/$2" | sed -e's/,/ case\//g'`
       shift
+      ;;
+    --todo)
+      list_case todo
+      exit 0
       ;;
     -*)
       echo "Unknown option: $1" && usage && exit 1
