@@ -60,7 +60,8 @@ CASES=""
 while [ -n "$1" ]; do
   case "$1" in
     -l|--list)
-      list_case && exit 0
+      list_case
+      exit 0
       ;;
     -h|--help)
       usage && exit 0
