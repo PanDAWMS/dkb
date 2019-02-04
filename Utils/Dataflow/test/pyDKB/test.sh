@@ -35,9 +35,14 @@ test_case() {
   case=$1
   case_id=`basename $case`
 
+  before=`cat $case/before 2>/dev/null`
+  [ -n "$before" ] && before="$before;"
   cmd=`cat $case/cmd`
-  eval "$cmd"  2>&1 1> out.tmp | \
-    grep -v '(WARN) pyDKB.dataflow.cds failed (No module named invenio_client.contrib)' >  err.tmp
+  after=`cat $case/after 2>/dev/null`
+
+  eval "$before $cmd; $after"  2>&1 1> out.tmp | \
+    grep -v '(WARN) pyDKB.dataflow.cds failed (No module named invenio_client.contrib)' | \
+    sed -e"s#$base_dir#\$base_dir#" >  err.tmp
 
   err_correct=0
   out_correct=0
