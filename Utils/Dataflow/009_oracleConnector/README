@@ -15,14 +15,9 @@ The goal is to make it work with any number and combination of queries.
 
 2. HowTo
 --------
-To run `prodsys2ES` and `datasets` queries and join the results, use
-  SQUASH mode:
+To run stage, use:
 
-  ./oracle2JSON.py --config $CONFIG --mode SQUASH
-
-To run `prodsys2ES` query only, use PLAIN mode:
-
-  ./oracle2JSON.py --config $CONFIG --mode PLAIN
+  ./oracle2JSON.py --config CONFIG
 
 A template for the configuration file can be obtained in Dataflow's
 corresponding directory:
