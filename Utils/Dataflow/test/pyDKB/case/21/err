@@ -14,9 +14,9 @@
 (ERROR) (FileProducer) Failed to create output directory
 (==) Error message: [Errno 17] File exists: './input/out'
 (DEBUG) (ProcessorStage) Traceback (most recent call last):
-(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 226, in run
+(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 227, in run
 (==)     self.flush_buffer()
-(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 304, in flush_buffer
+(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 305, in flush_buffer
 (==)     self.__output.flush()
 (==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line 125, in flush
 (==)     self.get_stream().flush()

@@ -134,8 +134,9 @@ class ProcessorStage(AbstractStage):
                           'or initial directory for relative FILE names. '
                           'If no FILE is specified, all files with '
                           'extension matching input message type will '
-                          'be taken from %(metavar)s',
-                          default=os.curdir,
+                          'be taken from %%(metavar)s\n'
+                          'DEFAULT: %s' % os.curdir,
+                          default=None,
                           metavar='DIR',
                           dest='input_dir'
                           )
