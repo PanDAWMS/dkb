@@ -23,6 +23,7 @@ production_or_analysis_cond = >
 [process]
 # Query response processing mode:
 #  PLAIN   -- pass records to output independently of each other
+#             (currently: 'tasks' query only)
 #  SQUASH  -- link 'datasets' records to 'task', joining them into a single
 #             record
 mode = SQUASH
