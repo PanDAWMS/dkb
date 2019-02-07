@@ -30,10 +30,12 @@ class ConsumerBuilder(object):
 
         if config.get('hdfs'):
             self.setSource('h')
+        elif config.get('source'):
+            self.setSource(config.get('source'))
         elif config.get('mode') in ('s', 'm'):
             self.setSource('s')
         else:
-            self.setSource(config.get('source'))
+            self.setSource('f')
 
     def setSource(self, source):
         """ Set data source for the consumer. """
