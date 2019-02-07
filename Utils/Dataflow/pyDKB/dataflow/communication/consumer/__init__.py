@@ -48,6 +48,7 @@ class ConsumerBuilder(object):
                              % (sources.keys(), source))
 
         self.consumerClass = sources[source]
+        self.config['source'] = source
         return self
 
     def setType(self, Type):

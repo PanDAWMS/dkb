@@ -50,6 +50,7 @@ class ProducerBuilder(object):
                              % (dests.keys(), dest))
 
         self.producerClass = dests[dest]
+        self.config['dest'] = dest
         return self
 
     def setType(self, Type):
