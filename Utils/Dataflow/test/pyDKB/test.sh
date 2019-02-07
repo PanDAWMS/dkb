@@ -56,12 +56,23 @@ test_case() {
   err_correct=0
   out_correct=0
 
-  diff $case/out  out.tmp > /dev/null && out_correct=1
-  diff $case/err err.tmp > /dev/null && err_correct=1
+  diff -a -u $case/out out.tmp > "${case_id}_out.diff"
+  diff -a -u $case/err err.tmp > "${case_id}_err.diff"
 
-  [ $out_correct -ne 1 ] && echo -e "${RED}FAIL${NC}: $case_id (STDOUT) (cmd: '$cmd')"
-  [ $err_correct -ne 1 ] && echo -e "${RED}FAIL${NC}: $case_id (STDERR) (cmd: '$cmd')"
-  [ $out_correct -eq 1 ] && [ $err_correct -eq 1 ] && echo -e " ${GREEN}OK${NC} : $case_id"
+  if [ -s "${case_id}_out.diff" ]; then
+    echo -e "${RED}FAIL${NC}: $case_id (STDOUT) (cmd: '$cmd')"
+    cp out.tmp "${case_id}.out"
+  else
+    rm "${case_id}_out.diff"
+  fi
+  if [ -s "${case_id}_err.diff" ]; then
+    echo -e "${RED}FAIL${NC}: $case_id (STDERR) (cmd: '$cmd')"
+    cp err.tmp "${case_id}.err"
+  else
+    rm "${case_id}_err.diff"
+  fi
+  ! [ -f "${case_id}_err.diff" ] && ! [ -f "${case_id}_out.diff" ] && \
+    echo -e " ${GREEN}OK${NC} : $case_id"
 }
 
 CASES=""
@@ -97,6 +108,9 @@ while [ -n "$1" ]; do
 done
 
 [ -z "$CASES" ] && CASES='case/*'
+
+rm *_{err,out}.diff 2>/dev/null
+rm *.{err,out} 2>/dev/null
 
 for case in $CASES; do
   if [ -d "$case" ]; then
