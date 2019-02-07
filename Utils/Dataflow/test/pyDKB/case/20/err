@@ -13,9 +13,9 @@
 (INFO) (ProcessorStage) Starting stage execution.
 (ERROR) (ProcessorStage) File already exists: ./input/out/NDjson.ttl
 (DEBUG) (ProcessorStage) Traceback (most recent call last):
-(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 227, in run
+(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 229, in run
 (==)     self.flush_buffer()
-(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 305, in flush_buffer
+(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 307, in flush_buffer
 (==)     self.__output.flush()
 (==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line 125, in flush
 (==)     self.get_stream().flush()
