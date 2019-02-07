@@ -1,0 +1,4 @@
+ES_HOST=127.0.0.1			#elasticsearch host
+ES_PORT=9200				#elasticsearch port
+ES_USER=someUser			#elasticsearch username for basic auth
+ES_PASSWORD=sUPperDupperPassword 	#password for basic auth
