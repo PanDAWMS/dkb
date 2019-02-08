@@ -18,7 +18,9 @@ Run pyDKB stage functionality test cases.
 
 OPTIONS
   -h, --help    show this message and exit
-  -l, --list    show test cases description
+  -l, --list [TYPE]
+                show test case information: description by default,
+                TYPE if specified
   -c, --case N[,N...]
                 run specified test case(s)
   --todo        list known issues for improvements
@@ -31,10 +33,9 @@ list_case() {
     if [ -f "$c/$info" ] || [ -z "$info" ]; then
       echo -n "`basename "$c"`: "
       cat "$c/info"
-      if [ -n "$info" ]; then
-        echo "--- ${info^^} ---"
-        cat "$c/$info"
-        echo -e "------------\n"
+      if [ -n "$info" ] && [ "$info" != 'info' ] ; then
+        cat "$c/$info" | sed 's/^/    /'
+        echo ""
       fi
     fi
   done
@@ -80,7 +81,9 @@ CASES=""
 while [ -n "$1" ]; do
   case "$1" in
     -l|--list)
-      list_case
+      ( [ -z "$2" ] || [[ "$2" = -* ]] ) && INFO=info || \
+        { INFO="$2"; shift; }
+      list_case "$INFO"
       exit 0
       ;;
     -h|--help)
