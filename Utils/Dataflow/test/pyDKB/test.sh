@@ -56,8 +56,8 @@ test_case() {
   err_correct=0
   out_correct=0
 
-  diff -a -u $case/out out.tmp > "${case_id}_out.diff"
-  diff -a -u $case/err err.tmp > "${case_id}_err.diff"
+  diff -a -u $case/out out.tmp &> "${case_id}_out.diff"
+  diff -a -u $case/err err.tmp &> "${case_id}_err.diff"
 
   if [ -s "${case_id}_out.diff" ]; then
     echo -e "${RED}FAIL${NC}: $case_id (STDOUT) (cmd: '$cmd')"
