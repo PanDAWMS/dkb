@@ -27,7 +27,7 @@ input/      -- input samples.
 
 To run test cases, use:
 
-  ./test.sh [-h] [-l [TYPE]] [-c N[,N...]] [--todo]
+  ./test.sh [-h] [-l [TYPE]] [-c N[,N...]]
 
   Run pyDKB stage functionality test cases.
 
@@ -38,7 +38,6 @@ To run test cases, use:
                   TYPE if specified
     -c, --case N[,N...]
                   run specified test case(s)
-    --todo        list known issues for improvements
 
 
 Dummy stage can be run as follows:
