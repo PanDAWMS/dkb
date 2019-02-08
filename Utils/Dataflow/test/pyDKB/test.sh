@@ -23,7 +23,6 @@ OPTIONS
                 TYPE if specified
   -c, --case N[,N...]
                 run specified test case(s)
-  --todo        list known issues for improvements
 " >&2
 }
 
@@ -95,10 +94,6 @@ while [ -n "$1" ]; do
              "(use --help for usage info)." >&2 && exit 1
       CASES=`echo "case/$2" | sed -e's/,/ case\//g'`
       shift
-      ;;
-    --todo)
-      list_case todo
-      exit 0
       ;;
     -*)
       echo "Unknown option: $1" && usage && exit 1
