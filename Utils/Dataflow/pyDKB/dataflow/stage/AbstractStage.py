@@ -197,6 +197,12 @@ class AbstractStage(object):
                                  "(ERROR) Case: %s\n" % (err))
                 sys.exit(1)
 
+        if self.ARGS.mode == 'm':
+            if 'f' in (self.ARGS.source, self.ARGS.dest):
+                self.log("File source/destination is not allowed "
+                         "in map-reduce mode.", logLevel.ERROR)
+                sys.exit(1)
+
         if not self.read_config():
             self.config_error()
 
