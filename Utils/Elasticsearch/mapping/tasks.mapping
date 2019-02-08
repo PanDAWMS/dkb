@@ -79,6 +79,10 @@
           "type" : "keyword",
           "ignore_above" : 256
         },
+        "chain_id":{
+          "type" : "keyword",
+          "ignore_above" : 256
+        },
         "taskname" : {
           "type" : "text",
           "analyzer": "task_dataset_analyzer",

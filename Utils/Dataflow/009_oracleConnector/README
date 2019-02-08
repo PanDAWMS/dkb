@@ -23,3 +23,25 @@ A template for the configuration file can be obtained in Dataflow's
 corresponding directory:
 
   Utils/Dataflow/config/009.cfg.example
+
+3. Task Chain
+-------------
+The query prodsys2ES includes the subquery that obtains the task's chain_id:
+taskid of the task chain's root.
+
+The root of a given task is found by recursively looking for the current
+task's parent, starting with the given task, until the task is encountered
+that has no parent - this is the root. The parent of a task is found by
+comparing the datasets: task's input dataset is one of the parent's output
+datasets.
+
+Some tasks have their parent specified in the "parent_tid" field, and
+originally it was planned to find each parent in this way if possible, and
+by comparing input/output otherwise. However, using conditions in Oracle's
+recursive construction START WITH ... CONNECT BY leads to problems with
+infinite cycles. Therefore, only the input/output mechanism was implemented
+- it is slower, but more reliable.
+
+Note: the query "cuts corner" by obtaining the minimal task_id from the
+chain instead of sorting it and finding the last result. This relies upon the
+fact that the newer task always has the larger taskid.
