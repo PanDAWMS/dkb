@@ -21,6 +21,7 @@ OPTIONS
   -l, --list [TYPE]
                 show test case information: description by default,
                 TYPE if specified
+  --no-info     don't show case descriptions with --list command
   -c, --case N[,N...]
                 run specified test case(s)
 " >&2
@@ -31,10 +32,11 @@ list_case() {
   for c in "case/"*; do
     if [ -f "$c/$info" ] || [ -z "$info" ]; then
       echo -n "`basename "$c"`: "
-      cat "$c/info"
+      [ -z "$NO_INFO" ] && cat "$c/info"
       if [ -n "$info" ] && [ "$info" != 'info' ] ; then
-        cat "$c/$info" | sed 's/^/    /'
-        echo ""
+        [ -n "$NO_INFO" ] && sed_cmd='1!s/^/    /' || sed_cmd='s/^/    /'
+        cat "$c/$info" | sed "$sed_cmd"
+        [ -z "$NO_INFO" ] && echo ""
       fi
     fi
   done
@@ -82,8 +84,6 @@ while [ -n "$1" ]; do
     -l|--list)
       ( [ -z "$2" ] || [[ "$2" = -* ]] ) && INFO=info || \
         { INFO="$2"; shift; }
-      list_case "$INFO"
-      exit 0
       ;;
     -h|--help)
       usage && exit 0
@@ -95,6 +95,9 @@ while [ -n "$1" ]; do
       CASES=`echo "case/$2" | sed -e's/,/ case\//g'`
       shift
       ;;
+    --no-info)
+      NO_INFO=1
+      ;;
     -*)
       echo "Unknown option: $1" && usage && exit 1
       ;;
@@ -104,6 +107,11 @@ while [ -n "$1" ]; do
   esac
   shift
 done
+
+if [ -n "$INFO" ]; then
+  list_case "$INFO"
+  exit 0
+fi
 
 [ -z "$CASES" ] && CASES='case/*'
 
