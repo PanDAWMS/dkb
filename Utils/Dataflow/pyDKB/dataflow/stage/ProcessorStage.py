@@ -200,6 +200,7 @@ class ProcessorStage(AbstractStage):
             self.log(str(err), logLevel.ERROR)
             self.stop()
             sys.exit(1)
+        self.log_configuration()
 
     def get_source_info(self):
         """ Get information about current source. """
