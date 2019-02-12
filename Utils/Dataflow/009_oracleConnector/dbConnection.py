@@ -117,8 +117,8 @@ class OracleConnection(dbConnection):
     def save_query_file(self, qname, src_filename, params=None):
         """ Read query from file and save it in query hash. """
         try:
-            f = open(src_filename)
-            q = f.read().rstrip().rstrip(';')
+            with open(src_filename) as f:
+                q = f.read().rstrip().rstrip(';')
             if isinstance(params, dict):
                 q = q % params
             elif '%' in q.replace('%%', ''):
