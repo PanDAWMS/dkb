@@ -124,17 +124,15 @@ class OracleConnection(dbConnection):
             elif '%' in q.replace('%%', ''):
                 # Check for single '%' is done because a valid query without
                 # parameters (and their configuration) is possible.
-                sys.stderr.write("(WARN) No parameters were configured "
-                                 "for '%s' query. This can result in "
+                sys.stderr.write("(WARN) No query parameters were configured "
+                                 "for '%s'. This can result in "
                                  "'ORA-00911' error.\n" % qname)
             self.queries[qname]['query'] = q
         except IOError, err:
             sys.stderr.write("(ERROR) Failed to read query file: %s\n" % err)
             return False
         except KeyError, err:
-            sys.stderr.write("(ERROR) Failed to update query: expected "
-                             "parameter %s not found in the "
-                             "configuration.\n" % err)
+            sys.stderr.write("(ERROR) Query parameter missing: %s\n" % err)
             return False
 
         return True
