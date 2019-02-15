@@ -46,6 +46,8 @@ class HDFSConsumer(FileConsumer.FileConsumer):
         """
         try:
             files = hdfs.listdir(dirname, "f")
+            # Make files order predictable
+            files.sort()
         except HDFSException, err:
             raise Consumer.ConsumerException(err)
         return files

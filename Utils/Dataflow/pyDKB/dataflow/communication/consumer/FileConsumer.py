@@ -112,6 +112,8 @@ class FileConsumer(Consumer.Consumer):
         ext = Message(self.message_type).extension()
         try:
             dir_content = os.listdir(dirname)
+            # Make files order predictable
+            dir_content.sort()
             for f in dir_content:
                 if os.path.isfile(os.path.join(dirname, f)) \
                         and f.lower().endswith(ext):
