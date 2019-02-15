@@ -34,6 +34,9 @@ class FileConsumer(Consumer.Consumer):
         if not config:
             config = self.config
 
+        if not config.get('input_files', None):
+            raise Consumer.ConsumerException("No input files specified.")
+
         if not self.config.get('input_dir'):
             self.config['input_dir'] = os.path.curdir
         self.input_files = None

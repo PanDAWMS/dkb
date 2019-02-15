@@ -11,6 +11,8 @@ from FileProducer import FileProducer
 from HDFSProducer import HDFSProducer
 from StreamProducer import StreamProducer
 
+from Producer import ProducerException
+
 __all__ = ['ProducerBuilder']
 
 

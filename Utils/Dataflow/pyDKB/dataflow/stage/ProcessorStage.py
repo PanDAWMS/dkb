@@ -181,17 +181,22 @@ class ProcessorStage(AbstractStage):
         """
         if args:
             self.parse_args(args)
-        # Input
-        self.__input = consumer.ConsumerBuilder(vars(self.ARGS)) \
-            .setType(self.__input_message_type) \
-            .build()
-        self.__stoppable_append(self.__input, consumer.Consumer)
-        # Output
-        self.__output = producer.ProducerBuilder(vars(self.ARGS)) \
-            .setType(self.__output_message_type) \
-            .setSourceInfoMethod(self.get_source_info) \
-            .build()
-        self.__stoppable_append(self.__output, producer.Producer)
+        try:
+            # Input
+            self.__input = consumer.ConsumerBuilder(vars(self.ARGS)) \
+                .setType(self.__input_message_type) \
+                .build()
+            self.__stoppable_append(self.__input, consumer.Consumer)
+            # Output
+            self.__output = producer.ProducerBuilder(vars(self.ARGS)) \
+                .setType(self.__output_message_type) \
+                .setSourceInfoMethod(self.get_source_info) \
+                .build()
+            self.__stoppable_append(self.__output, producer.Producer)
+        except (consumer.ConsumerException, producer.ProducerException), err:
+            self.log(str(err), logLevel.ERROR)
+            self.stop()
+            sys.exit(1)
 
     def get_source_info(self):
         """ Get information about current source. """
