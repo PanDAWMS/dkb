@@ -124,8 +124,9 @@ class OracleConnection(dbConnection):
             elif '%(' in q:
                 # Check for '%(' is done because a valid query without
                 # parameters (and their configuration) is possible.
-                sys.stderr.write("(WARN) No query parameters were configured "
-                                 "for '%s'. This can result in "
+                sys.stderr.write("(WARN) '%s': query seems to be parametric, "
+                                 "but no query parameters were configured. "
+                                 "This can result in "
                                  "'ORA-00911' error.\n" % qname)
             self.queries[qname]['query'] = q
         except IOError, err:
