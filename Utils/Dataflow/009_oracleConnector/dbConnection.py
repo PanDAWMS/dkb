@@ -121,8 +121,8 @@ class OracleConnection(dbConnection):
                 q = f.read().rstrip().rstrip(';')
             if isinstance(params, dict):
                 q = q % params
-            elif '%' in q.replace('%%', ''):
-                # Check for single '%' is done because a valid query without
+            elif '%(' in q:
+                # Check for '%(' is done because a valid query without
                 # parameters (and their configuration) is possible.
                 sys.stderr.write("(WARN) No query parameters were configured "
                                  "for '%s'. This can result in "
