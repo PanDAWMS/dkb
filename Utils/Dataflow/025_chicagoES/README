@@ -31,3 +31,10 @@ output):
 ---------
 Goes to stage 016.
 Contain same fields as input data, with additional fields.
+
+4. Samples
+----------
+The 'output' directory contains 2 samples:
+
+sample.ndjson - 2016 data (from 009's 2016 sample, 091 was skipped)
+sample2018.ndjson - 2018 data (from 091's 2018 sample)
