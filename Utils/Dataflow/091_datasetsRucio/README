@@ -72,4 +72,14 @@ example:
 	"taskid": 8343552
 }
 
+5. Samples
+----------
+The 'output' directory contains two pairs of samples:
 
+2016 data:
+input_datasets.ndjson
+output_datasets.ndjson
+
+2018 data:
+input_datasets2018.ndjson
+output_datasets2018.ndjson
