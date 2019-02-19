@@ -69,6 +69,15 @@ class AbstractStage(object):
             out_message += "\n"
             sys.stderr.write(out_message)
 
+    def log_configuration(self):
+        """ Log stage configuration. """
+        self.log("Configuration parameters:")
+        args = vars(self.ARGS)
+        key_len = len(max(args.keys(), key=len))
+        pattern = "  %%-%ds : '%%s'" % key_len
+        for arg in args:
+            self.log((pattern % (arg, args[arg])).replace("\n", r"\n"))
+
     def defaultArguments(self):
         """ Config argument parser with parameters common for all stages. """
         self.add_argument('-m', '--mode', action='store', type=str,
