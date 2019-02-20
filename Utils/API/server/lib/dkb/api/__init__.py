@@ -4,8 +4,6 @@ DKB API server module.
 
 import logging
 
-ADDR = '%%ADDR%%'
-
 from exceptions import DkbApiException
 import methods
 

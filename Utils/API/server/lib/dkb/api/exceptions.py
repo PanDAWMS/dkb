@@ -2,7 +2,7 @@
 Exception definitions for DKB API server.
 """
 
-from . import ADDR
+ADDR = '%%ADDR%%'
 
 
 class DkbApiException(Exception):
