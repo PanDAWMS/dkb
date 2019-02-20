@@ -4,7 +4,7 @@ Exception definitions for DKB API server.
 
 import inspect
 
-from . import ADDR
+ADDR = '%%ADDR%%'
 
 
 class DkbApiException(Exception):
