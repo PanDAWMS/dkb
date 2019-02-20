@@ -53,6 +53,14 @@ do
     -t|--tmp)
       CLEAN="NO"
       ;;
+    -e|--eom)
+      EOM="$2"
+      shift
+      ;;
+    -E|--eop)
+      EOP="$2"
+      shift
+      ;;
     -*)
       echo "Unknown option: $key" >&2
       usage >&2
@@ -71,7 +79,17 @@ if [ -z "$USR" ] ; then
   usage >&2
   exit 1
 fi
- 
+
+if [ -z "$EOM" ] ; then
+  echo "EOM marker is not specified. Exiting." >&2
+  exit 1
+fi
+
+if [ -z "$EOP" ] ; then
+  echo "EOP marker is not specified. Exiting." >&2
+  exit 1
+fi
+
 if [ -n "$PIPE" ]; then
   if ! ( [ -p "$PIPE" ] || mkfifo "$PIPE" 2>&1 > /dev/null ) ; then
     echo "Can not create a FIFO named pipe: $PIPE. Exiting." >&2
