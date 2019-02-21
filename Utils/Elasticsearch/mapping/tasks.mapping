@@ -75,6 +75,9 @@
           "type" : "keyword",
           "ignore_above" : 256
         },
+        "chain_id":{
+          "type": "long"
+        },
         "chain_data":{
           "type" : "keyword",
           "ignore_above" : 512,

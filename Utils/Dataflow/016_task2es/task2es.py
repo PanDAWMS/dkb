@@ -183,6 +183,29 @@ def input_events(data):
     return result
 
 
+def add_chain_id(data):
+    """ Add chain_id into data - taskid of the task chain's root.
+
+    :param data: data to be updated, must contain taskid and proper chain_data
+    (string of numbers separated by commas).
+    :type data: dict
+
+    :return: True if update was successful, False otherwise (data is unchanged)
+    :rtype: bool
+    """
+    if type(data) is not dict:
+        return False
+    taskid = data.get('taskid')
+    chain_data = data.get('chain_data')
+    if not chain_data or not chain_data.replace(',', '').isdigit():
+        sys.stderr.write('(WARN) Task %s: cannot obtain chain_id, '
+                         'chain_data "%s" seems to be incorrect.\n'
+                         % (taskid, chain_data))
+        return False
+    data['chain_id'] = int(chain_data.split(',')[0])
+    return True
+
+
 def process(stage, message):
     """ Single message processing. """
     data = message.content()
@@ -205,6 +228,7 @@ def process(stage, message):
         sys.stderr.write("(WARN) Skip message (not enough info"
                          " for ES indexing.\n")
         return True
+    add_chain_id(data)
     out_message = JSONMessage(data)
     stage.output(out_message)
     return True
