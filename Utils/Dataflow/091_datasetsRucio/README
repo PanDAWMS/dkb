@@ -77,8 +77,8 @@ example:
 The 'output' directory contains two pairs of samples:
 
 2016 data:
-input_datasets.ndjson
-output_datasets.ndjson
+input_datasets2016.ndjson
+output_datasets2016.ndjson
 
 2018 data:
 input_datasets2018.ndjson

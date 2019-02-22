@@ -46,8 +46,8 @@ Samples
 The 'output' directory contains two pairs of samples:
 
 2016 data:
-tasks.ndjson (from 016's 2016 sample, 025 was skipped)
-datasets.ndjson (from 095's 2016 sample)
+tasks2016.ndjson (from 016's 2016 sample, 025 was skipped)
+datasets2016.ndjson (from 095's 2016 sample)
 
 2018 data:
 tasks2018.ndjson (from 016's 2018 sample)
