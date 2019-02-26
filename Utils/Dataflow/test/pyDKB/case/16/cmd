@@ -1,0 +1,1 @@
+cat input/EOMDjson.json  | ./json2TTL.py -m s -e EOM

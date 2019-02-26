@@ -1,0 +1,1 @@
+./json2TTL.py -d s -e EOM -i input empty.json EOMDjson.json empty.json empty.json EOMDjson.json empty.json
