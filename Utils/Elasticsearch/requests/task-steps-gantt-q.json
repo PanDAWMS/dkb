@@ -21,7 +21,7 @@ GET <index>/task/_search
       "aggs": {
         "gantt_data": {
           "date_histogram": {
-            "script": "List list = []; for (long i = doc['start_time'].value; i <= doc['end_time'].value; i += 86400) { list.add(i); } return list;",
+            "script": "List list = []; for (long i = doc['start_time'].value; i <= doc['end_time'].value; i += 86400000) { list.add(i); } return list;",
             "interval": "day",
             "min_doc_count": 1
           }
