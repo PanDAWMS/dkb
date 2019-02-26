@@ -69,6 +69,18 @@ class Consumer(object):
                 .setType(self.message_type) \
                 .build()
 
+    def stream_is_readable(self):
+        """ Check if input data stream is readable.
+
+        :returns: True  -- stream is initialized and not empty,
+                  False -- stream is empty,
+                  None  -- stream is not initialized
+        :rtype: bool, NoneType
+        """
+        if not self._stream:
+            return None
+        return self._stream.is_readable()
+
     def get_stream(self):
         """ Get input stream linked to the current source.
 

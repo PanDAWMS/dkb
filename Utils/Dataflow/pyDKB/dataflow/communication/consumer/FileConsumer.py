@@ -43,22 +43,23 @@ class FileConsumer(Consumer.Consumer):
 
         super(FileConsumer, self).reconfigure(config)
 
-    def source_is_empty(self):
-        """ Check if current source is empty.
+    def source_is_readable(self):
+        """ Check if current source is readable.
 
-        Return value:
-            True  (empty)
-            False (not empty)
-            None  (no source)
+        :returns: None  -- no source,
+                  False -- source is empty / fully read,
+                  True  -- source is defined and is not empty
+        :rtype: bool, NoneType
         """
-        f = self.current_file
-        if not f:
-            return None
-        fd = f['fd']
-        if not f.get('size'):
+        result = None
+        fd = self.current_file['fd'] if self.current_file else None
+        if self._stream and self._stream.get_fd() == fd:
+            result = self.stream_is_readable()
+        if fd and result is None:
+            # check file directly only when there's no stream bound to it
             stat = os.fstat(fd.fileno())
-            f['size'] = stat.st_size
-        return fd.tell() == f['size']
+            result = fd.tell() != stat.st_size
+        return result
 
     def get_source_info(self):
         """ Return current source info. """
@@ -66,9 +67,8 @@ class FileConsumer(Consumer.Consumer):
 
     def get_source(self):
         """ Get nearest non-empty source (current or next). """
-        if self.source_is_empty() is not False:
-            result = self.next_source()
-        else:
+        result = None
+        if self.source_is_readable() or self.next_source():
             result = self.current_file['fd']
         return result
 
