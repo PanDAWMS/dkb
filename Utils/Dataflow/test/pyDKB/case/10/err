@@ -8,8 +8,8 @@
 (INFO) (ProcessorStage)   eop         : ''
 (INFO) (ProcessorStage)   mode        : 'f'
 (INFO) (ProcessorStage)   config      : 'None'
-(INFO) (ProcessorStage)   input_files : '['input/NDjson.json']'
+(INFO) (ProcessorStage)   input_files : '['input/EOMDjson_unfinished.json']'
 (INFO) (ProcessorStage) Starting stage execution.
 (WARN) (InputStream) Unexpected end of stream, skipping rest of input:
-(==) '{"a": 11}\n<...>{"d": 44}\n'
+(==) '"Unfinishe<...>age......\n'
 (INFO) (ProcessorStage) Stopping stage.

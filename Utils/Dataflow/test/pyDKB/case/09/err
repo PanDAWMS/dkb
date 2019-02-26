@@ -2,14 +2,14 @@
 (INFO) (ProcessorStage)   hdfs        : 'False'
 (INFO) (ProcessorStage)   dest        : 's'
 (INFO) (ProcessorStage)   input_dir   : '.'
-(INFO) (ProcessorStage)   eom         : 'EOM'
+(INFO) (ProcessorStage)   eom         : '\n'
 (INFO) (ProcessorStage)   output_dir  : 'out'
 (INFO) (ProcessorStage)   source      : 'f'
 (INFO) (ProcessorStage)   eop         : ''
 (INFO) (ProcessorStage)   mode        : 'f'
 (INFO) (ProcessorStage)   config      : 'None'
-(INFO) (ProcessorStage)   input_files : '['input/NDjson.json']'
+(INFO) (ProcessorStage)   input_files : '['input/NDjson_unfinished.json']'
 (INFO) (ProcessorStage) Starting stage execution.
 (WARN) (InputStream) Unexpected end of stream, skipping rest of input:
-(==) '{"a": 11}\n<...>{"d": 44}\n'
+(==) 'Unfinished<...>ge is here'
 (INFO) (ProcessorStage) Stopping stage.

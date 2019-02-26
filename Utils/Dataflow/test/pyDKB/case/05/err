@@ -11,10 +11,8 @@
 (INFO) (ProcessorStage)   input_files : '['input/EOMDjson.json']'
 (INFO) (ProcessorStage) Starting stage execution.
 (WARN) (InputStream) Failed to read input message as JSON.
-(==) Cause: Extra data: line 1 column 10 - line 2 column 1 (char 9 - 22)
-(==) Original message: '{"A":"B"}EOM{"C":"D",
-(==) '
-(WARN) (InputStream) Failed to read input message as JSON.
-(==) Cause: Extra data: line 1 column 4 - line 1 column 12 (char 3 - 11)
-(==) Original message: '"E":"F"}EOM'
+(==) Cause: Extra data: line 1 column 10 - line 1 column 22 (char 9 - 21)
+(==) Original message: '{"A":"B"}EOM{"C":"D",'
+(WARN) (InputStream) Unexpected end of stream, skipping rest of input:
+(==) '"E":"F"}EOM'
 (INFO) (ProcessorStage) Stopping stage.
