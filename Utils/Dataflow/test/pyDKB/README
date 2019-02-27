@@ -11,7 +11,9 @@ json2TTL.py -- dummy stage, that reads JSON input messages and outputs them
 test.sh     -- utility to run test cases;
 
 case/       -- directory with test cases; each case contains:
-    */cmd        command to run
+    */before     commands to run before main one (set up)
+    */cmd        main command to run the test
+    */after      commands to run after main one (cleanup, etc)
     */out        expected stdout
     */err        expected stderr
     */info       (one-line) case description
