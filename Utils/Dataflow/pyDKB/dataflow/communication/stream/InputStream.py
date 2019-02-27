@@ -152,5 +152,7 @@ class InputStream(Stream):
                      "'%s'" % log_msg, logLevel.WARN)
             return False
         else:
-            result = self.parse_message(msg[:-len(self.EOM)])
+            if self.EOM != '':
+                msg = msg[:-len(self.EOM)]
+            result = self.parse_message(msg)
         return result

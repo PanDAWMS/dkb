@@ -128,7 +128,8 @@ class AbstractStage(object):
                           'can be set to empty string to read input '
                           'file as single JSON object, not as NDJSON. '
                           'In this case output will also be formatted '
-                          'as a single JSON object (array or hash)\n'
+                          'as a single message: array or hash for JSON, '
+                          'single line for TTL, ...\n'
                           'DEFAULT: \'\\n\'',
                           default=None,
                           dest='eom'

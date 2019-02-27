@@ -17,6 +17,7 @@ case/       -- directory with test cases; each case contains:
     */out        expected stdout
     */err        expected stderr
     */info       (one-line) case description
+    */todo       ToDo notes for given test case
 
 input/      -- input samples.
 
@@ -26,7 +27,7 @@ input/      -- input samples.
 
 To run test cases, use:
 
-  ./test.sh [-h] [-l] [-c N[,N...]]
+  ./test.sh [-h] [-l] [-c N[,N...]] [--todo]
 
   Run pyDKB stage functionality test cases.
 
@@ -35,6 +36,7 @@ To run test cases, use:
     -l, --list    show test cases description
     -c, --case N[,N...]
                   run specified test case(s)
+    --todo        list known issues for improvements
 
 
 Dummy stage can be run as follows:
