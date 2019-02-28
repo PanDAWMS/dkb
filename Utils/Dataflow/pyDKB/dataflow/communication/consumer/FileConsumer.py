@@ -34,7 +34,8 @@ class FileConsumer(Consumer.Consumer):
         if not config:
             config = self.config
 
-        if not config.get('input_files', None):
+        if not (config.get('input_files', None)
+                or config.get('input_dir', None)):
             raise Consumer.ConsumerException("No input files specified.")
 
         if not self.config.get('input_dir'):
@@ -111,6 +112,8 @@ class FileConsumer(Consumer.Consumer):
         ext = Message(self.message_type).extension()
         try:
             dir_content = os.listdir(dirname)
+            # Make files order predictable
+            dir_content.sort()
             for f in dir_content:
                 if os.path.isfile(os.path.join(dirname, f)) \
                         and f.lower().endswith(ext):

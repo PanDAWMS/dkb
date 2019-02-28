@@ -1,0 +1,38 @@
+(INFO) (ProcessorStage) Configuration parameters:
+(INFO) (ProcessorStage)   hdfs        : 'False'
+(INFO) (ProcessorStage)   dest        : 's'
+(INFO) (ProcessorStage)   input_dir   : './input'
+(INFO) (ProcessorStage)   eom         : '\n'
+(INFO) (ProcessorStage)   output_dir  : 'out'
+(INFO) (ProcessorStage)   source      : 'f'
+(INFO) (ProcessorStage)   eop         : ''
+(INFO) (ProcessorStage)   mode        : 'f'
+(INFO) (ProcessorStage)   config      : 'None'
+(INFO) (ProcessorStage)   input_files : '[]'
+(INFO) (ProcessorStage) Starting stage execution.
+(WARN) (InputStream) Failed to read input message as JSON.
+(==) Cause: Extra data: line 1 column 10 - line 1 column 22 (char 9 - 21)
+(==) Original message: '{"A":"B"}EOM{"C":"D",'
+(WARN) (InputStream) Unexpected end of stream, skipping rest of input:
+(==) '"E":"F"}EOM'
+(WARN) (InputStream) Failed to read input message as JSON.
+(==) Cause: Extra data: line 1 column 10 - line 1 column 22 (char 9 - 21)
+(==) Original message: '{"A":"B"}EOM{"C":"D",'
+(WARN) (InputStream) Failed to read input message as JSON.
+(==) Cause: Extra data: line 1 column 4 - line 1 column 37 (char 3 - 36)
+(==) Original message: '"E":"F"}EOM"Unfinished message......'
+(WARN) (InputStream) Unexpected end of stream, skipping rest of input:
+(==) 'Unfinished<...>ge is here'
+(WARN) (InputStream) Failed to read input message as JSON.
+(==) Cause: Expecting object: line 1 column 1 (char 0)
+(==) Original message: '['
+(WARN) (InputStream) Failed to read input message as JSON.
+(==) Cause: Extra data: line 1 column 10 - line 1 column 21 (char 9 - 20)
+(==) Original message: '{"a": 11}, {"b": 22,'
+(WARN) (InputStream) Failed to read input message as JSON.
+(==) Cause: Extra data: line 1 column 4 - line 1 column 10 (char 3 - 9)
+(==) Original message: '"c": 33},'
+(WARN) (InputStream) Failed to read input message as JSON.
+(==) Cause: No JSON object could be decoded
+(==) Original message: ']'
+(INFO) (ProcessorStage) Stopping stage.
