@@ -6,7 +6,10 @@
 --------------
 Get task metadata from Chicago ES.
 Fields:
-* cputime -> HS06
+* task_data.cputime -> HS06
+* sum(jobs_data['finished'].hs06sec) -> toths06_finished
+* sum(jobs_data['failed'].hs06sec) -> toths06_failed
+* sum(jobs_data['failed','finished'].hs06sec) -> toths06
 
 
 2. Input
@@ -16,6 +19,9 @@ output):
 {{{
 {
   "taskid": <TASK_ID>,
+  "start_time": <DD-MM-YYYY hh:mm:ss>,
+  "end_time": <DD-MM-YYYY hh:mm:ss>,
+  "status": <TASK_STATUS>,
   ...
 }
 }}}
