@@ -78,7 +78,7 @@ while [ $# -gt 0 ]; do
       exit 0
       ;;
     -d|--dest)
-      WWW_DIR=`readlink -f "$2"`
+      WWW_DIR=`readlink -m "$2"`
       shift
       ;;
     -s|--sock)
@@ -99,7 +99,7 @@ while [ $# -gt 0 ]; do
       MANAGE_NGINX=1
       ;;
     --nginx-dir)
-      NGINX_DIR=`readlink -f "$2"`
+      NGINX_DIR=`readlink -m "$2"`
       shift
       ;;
     -l|--listen)
