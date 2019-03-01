@@ -24,6 +24,7 @@ USAGE
 
 COMMANDS
   build     extend files with parameter values
+  clean     remove build directory
   install   build and copy files to system directories
   uninstall remove WWW files, remove service,
               undo changes in SELinux policy
@@ -421,12 +422,17 @@ start_www() {
 }
 
 _build() {
+  _clean
   build_dir="$base_dir/build"
-  rm -rf "$build_dir"
   mkdir -p "$build_dir"
   [ -n "$MANAGE_WWW" ] && build_www
   [ -n "$MANAGE_NGINX" ] && build_nginx_cfg
   [ -n "$MANAGE_SERVICE" ] && build_service_cfg
+}
+
+_clean() {
+  build_dir="$base_dir/build"
+  rm -rf "$build_dir"
 }
 
 _install() {
@@ -459,6 +465,9 @@ while [ $# -gt 0 ]; do
   case "$1" in
     build)
       _build
+      ;;
+    clean)
+      _clean
       ;;
     install)
       _install
