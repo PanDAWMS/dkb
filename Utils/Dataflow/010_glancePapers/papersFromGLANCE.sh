@@ -34,6 +34,9 @@ GENERAL
 
 EOMessage='\n'
 
+EOP_set="N"
+EOM_set="N"
+
 while [[ $# > 0 ]]
 do
   key="$1"
@@ -62,10 +65,12 @@ do
       ;;
     -e|--eom)
       EOM="$2"
+      EOM_set="Y"
       shift
       ;;
     -E|--eop)
       EOP="$2"
+      EOP_set="Y"
       shift
       ;;
     -*)
@@ -101,8 +106,10 @@ then
 else
   EOProcess="\0"
 fi
-[ -n "$EOM" ] && EOMessage="$EOM"
-[ -n "$EOP" ] && EOProcess="$EOP"
+
+[ "$EOM_set" == "Y" ] && EOMessage="$EOM"
+[ "$EOP_set" == "Y" ] && EOProcess="$EOP"
+
 if [ -z "$EOMessage" ] ; then
   echo "EOM marker is not specified. Exiting." >&2
   exit 1
