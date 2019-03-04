@@ -211,7 +211,7 @@ def process(stage, message):
     data = message.content()
     if not add_es_index_info(data):
         sys.stderr.write("(WARN) Skip message (not enough info"
-                         " for ES indexing.\n")
+                         " for ES indexing).\n")
         return True
     # 1. Hashtag_list unification
     hashtags = data.get('hashtag_list')
