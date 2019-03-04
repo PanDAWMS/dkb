@@ -183,14 +183,17 @@ def input_events(data):
     return result
 
 
-def add_chain_id(data):
-    """ Add chain_id into data - taskid of the task chain's root.
+def transform_chain_data(data):
+    """ Transform chain_data into array of integers and get chain_id from it.
+
+    chain_id is the taskid of the task chain's root.
 
     :param data: data to be updated, must contain taskid and proper chain_data
     (string of numbers separated by commas).
     :type data: dict
 
-    :return: True if update was successful, False otherwise (data is unchanged)
+    :return: True if update was successful, False otherwise (chain_data will be
+    discarded from data in such case)
     :rtype: bool
     """
     if type(data) is not dict:
@@ -198,11 +201,14 @@ def add_chain_id(data):
     taskid = data.get('taskid')
     chain_data = data.get('chain_data')
     if not chain_data or not chain_data.replace(',', '').isdigit():
-        sys.stderr.write('(WARN) Task %s: cannot obtain chain_id, '
-                         'chain_data "%s" seems to be incorrect.\n'
+        sys.stderr.write('(WARN) Task %s: cannot transform chain_data "%s", '
+                         'it seems to be incorrect and will be discarded.\n'
                          % (taskid, chain_data))
+        del data['chain_data']
         return False
-    data['chain_id'] = int(chain_data.split(',')[0])
+    chain_data = [int(i) for i in chain_data.split(',')]
+    data['chain_id'] = chain_data[0]
+    data['chain_data'] = chain_data
     return True
 
 
@@ -230,8 +236,8 @@ def process(stage, message):
     inp_events = input_events(data)
     if inp_events:
         data['input_events'] = inp_events
-    # 6. Obtain and add chain_id into data
-    add_chain_id(data)
+    # 6. Save chain_data as array of integers, extract chain_id from it
+    transform_chain_data(data)
 
     out_message = JSONMessage(data)
     stage.output(out_message)
