@@ -124,8 +124,9 @@ class ProcessorStage(AbstractStage):
                           help=u'where to get data from:\n'
                           '    f -- local files\n'
                           '    s -- stdin\n'
-                          '    h -- hdfs files',
-                          default='f',
+                          '    h -- hdfs files\n'
+                          'DEFAULT: \'f\'',
+                          default=None,
                           choices=['f', 's', 'h'],
                           dest='source'
                           )
@@ -144,8 +145,9 @@ class ProcessorStage(AbstractStage):
                           help=u'where to write results:\n'
                           '    f -- local files\n'
                           '    s -- stdout\n'
-                          '    h -- hdfs files',
-                          default='f',
+                          '    h -- hdfs files\n'
+                          'DEFAULT: \'f\'',
+                          default=None,
                           choices=['f', 's', 'h'],
                           dest='dest'
                           )

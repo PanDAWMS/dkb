@@ -32,10 +32,12 @@ class ProducerBuilder(object):
 
         if config.get('hdfs'):
             self.setDest('h')
+        elif config.get('dest'):
+            self.setDest(config.get('dest'))
         elif config.get('mode') in ('s', 'm'):
             self.setDest('s')
         else:
-            self.setDest(config.get('dest'))
+            self.setDest('f')
 
     def setDest(self, dest):
         """ Set data destination for the producer. """
@@ -50,6 +52,7 @@ class ProducerBuilder(object):
                              % (dests.keys(), dest))
 
         self.producerClass = dests[dest]
+        self.config['dest'] = dest
         return self
 
     def setType(self, Type):
