@@ -209,6 +209,10 @@ def add_chain_id(data):
 def process(stage, message):
     """ Single message processing. """
     data = message.content()
+    if not add_es_index_info(data):
+        sys.stderr.write("(WARN) Skip message (not enough info"
+                         " for ES indexing.\n")
+        return True
     # 1. Hashtag_list unification
     hashtags = data.get('hashtag_list')
     if hashtags:
@@ -224,10 +228,6 @@ def process(stage, message):
     inp_events = input_events(data)
     if inp_events:
         data['input_events'] = inp_events
-    if not add_es_index_info(data):
-        sys.stderr.write("(WARN) Skip message (not enough info"
-                         " for ES indexing.\n")
-        return True
     add_chain_id(data)
     out_message = JSONMessage(data)
     stage.output(out_message)
