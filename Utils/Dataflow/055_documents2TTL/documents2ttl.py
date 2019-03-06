@@ -311,6 +311,7 @@ def report_number_extraction(data):
     """ Extract report number from JSON.
 
     :param data: 'CDS' part of the initial JSON
+    :type data: dict
 
     :return: report number
     :rtype: unicode
