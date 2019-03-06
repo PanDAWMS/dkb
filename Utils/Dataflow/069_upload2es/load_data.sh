@@ -19,7 +19,7 @@ ES_CONFIG="${base_dir}/../../Elasticsearch/config/es"
 
 while [ -n "$1" ]; do
   case "$1" in
-    --config|-c)
+    -c|--config)
       [ -n "$2" ] && ES_CONFIG="$2" || { usage >&2 && exit 1; }
       shift;;
     --)
