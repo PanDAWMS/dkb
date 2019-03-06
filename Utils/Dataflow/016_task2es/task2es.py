@@ -192,8 +192,9 @@ def transform_chain_data(data):
                  (string of numbers separated by commas).
     :type data: dict
 
-    :return: True if update was successful, False otherwise (chain_data will be
-             discarded from data in such case)
+    :return: True if update was successful, False otherwise (chain_id and
+             chain_data will be updated so that the task is considered
+             independent)
     :rtype: bool
     """
     if type(data) is not dict:
@@ -202,9 +203,11 @@ def transform_chain_data(data):
     chain_data = data.get('chain_data')
     if not chain_data or not chain_data.replace(',', '').isdigit():
         sys.stderr.write('(WARN) Task %s: cannot transform chain_data "%s", '
-                         'it seems to be incorrect and will be discarded.\n'
-                         % (taskid, chain_data))
-        del data['chain_data']
+                         'it seems to be incorrect. Setting chain_id=%s, '
+                         'chain_data=[%s].\n'
+                         % (taskid, chain_data, taskid, taskid))
+        data['chain_id'] = taskid
+        data['chain_data'] = [taskid]
         return False
     chain_data = [int(i) for i in chain_data.split(',')]
     data['chain_id'] = chain_data[0]
