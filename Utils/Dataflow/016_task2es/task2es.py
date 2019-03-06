@@ -189,11 +189,11 @@ def transform_chain_data(data):
     chain_id is the taskid of the task chain's root.
 
     :param data: data to be updated, must contain taskid and proper chain_data
-    (string of numbers separated by commas).
+                 (string of numbers separated by commas).
     :type data: dict
 
     :return: True if update was successful, False otherwise (chain_data will be
-    discarded from data in such case)
+             discarded from data in such case)
     :rtype: bool
     """
     if type(data) is not dict:
