@@ -44,8 +44,8 @@ ES_PORT='9200'
 
 CURL_N_MAX=10
 SLEEP=5
-DELIMITER=`echo -e -n "\x00"`
-EOProcess=`echo -e -n "\x06"`
+DELIMITER='\x00'
+EOProcess='\x06'
 
 cmd="curl $ES_AUTH http://$ES_HOST:$ES_PORT/_bulk?pretty --data-binary @"
 
@@ -61,14 +61,14 @@ load_files () {
 
 load_stream () {
   log "Switched to the stream mode."
-  while read -r -d "$DELIMITER" line; do
+  while read -r -d $(echo -ne "$DELIMITER") line; do
     n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
     while [ $n -gt $CURL_N_MAX ]; do
       sleep $SLEEP
       n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
     done
     echo "$line" | ${cmd}- &
-    echo -n "$EOProcess"
+    echo -ne "$EOProcess"
   done
 }
 
