@@ -24,7 +24,21 @@ class NotFoundException(DkbApiException):
               " %s/<category>/info" % ADDR
 
 
-class CategoryNotFound(DkbApiException):
+class CategoryException(DkbApiException):
+    """ Base exception for category failures. """
+    code = 460
+
+    def __init__(self, category, reason=None):
+        message = "Category failure"
+        if category:
+            message += ": '%s'" % category
+        if reason:
+            message += ". Reason: %s" % reason
+        self.details = message
+        super(CategoryException, self).__init__(message)
+
+
+class CategoryNotFound(CategoryException):
     """ Exception indicating that category not found. """
     code = 461
 

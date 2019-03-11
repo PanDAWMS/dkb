@@ -13,6 +13,7 @@ STATUS_CODES = {
     250: 'Some Information Missed',
     251: 'Method Description Missed',
     400: 'Bad Request',
+    460: 'Category Failure',
     461: 'Category Not Found',
     462: 'Method Not Found',
     500: 'Internal Server Error',
