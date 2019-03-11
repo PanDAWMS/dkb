@@ -36,7 +36,7 @@ from exceptions import (CategoryNotFound,
 API_METHODS = {}
 
 
-def category(category, create=False):
+def get_category(category, create=False):
     """ Get category definition.
 
     If category is not defined and ``create`` is False, raise
