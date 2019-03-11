@@ -48,9 +48,23 @@ class CategoryNotFound(CategoryException):
         super(CategoryNotFound, self).__init__(message)
 
 
-class MethodNotFound(DkbApiException):
+class MethodException(DkbApiException):
+    """ Base exception for method failures. """
+    code = 470
+
+    def __init__(self, method, reason=None):
+        message = "Method failed"
+        if method:
+            message += ": '%s'" % method
+        if reason:
+            message += ". Reason: %s" % reason
+        self.details = message
+        super(MethodException, self).__init__(message)
+
+
+class MethodNotFound(MethodException):
     """ Exception indicating that called method is not found. """
-    code = 462
+    code = 471
 
     def __init__(self, method, category='', details=''):
         message = "Method not found: '%s'" % method
@@ -63,8 +77,9 @@ class MethodNotFound(DkbApiException):
         super(MethodNotFound, self).__init__(message)
 
 
-class MethodAlreadyExists(DkbApiException):
+class MethodAlreadyExists(MethodException):
     """ Exception indicating that method being created already exists. """
+    code = 472
 
     def __init__(self, method, category, handler):
         message = "Method '%s' in category '%s' already exists" \
