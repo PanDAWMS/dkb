@@ -24,6 +24,12 @@ sys.path.append(os.path.join("%%WWW_DIR%%", "lib", "dkb"))
 import api
 from api import methods
 from api import STATUS_CODES
+from api.exceptions import InvalidArgument
+
+
+RESPONSE_TYPE = {'json': 'application/json',
+                 'img': 'image/png'
+                 }
 
 
 def parse_params(qs):
@@ -64,17 +70,21 @@ def dkb_app(environ, start_response):
     response = None
     error = None
     try:
+        rtype = params.get('rtype', 'json')
+        if rtype not in RESPONSE_TYPE:
+            raise InvalidArgument(None, ('rtype', rtype, RESPONSE_TYPE.keys()))
         handler = methods.handler(path)
         response = handler(path, **params)
         status = response.pop('_status', 200)
     except Exception, err:
         error = methods.error_handler(sys.exc_info())
         status = error.pop('_status', 500)
+        rtype = 'json'
     status_line = "%(code)d %(reason)s" % {
         'code': status,
         'reason': STATUS_CODES.get(status, 'Unknown')
     }
-    start_response(status_line, [('Content-Type', 'application/json')])
+    start_response(status_line, [('Content-Type', RESPONSE_TYPE[rtype])])
     if status/100 == 2:
         str_status = 'OK'
     else:
