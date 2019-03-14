@@ -102,14 +102,23 @@ def list_category(path):
 
     If category is not defined, raise ``CategoryNotFound`` exception.
 
-    :param path: full path (starts with '/')  to method or category
+    :param path: full path (starts with '/')  to category
     :type path: str
 
-    :return: {'methods': {<name>: <callable>}, 'categories': [...],
+    :return: {'methods': [name, ...], 'categories': [...],
               'path': '/path/to/category/'}
     :rtype: dict
     """
-    raise DkbApiNotImplemented
+    c = get_category(path)
+    cat = {'path': c.get('__path'), 'methods': [], 'categories': []}
+    for k in c.keys():
+        if k in KEYWORDS:
+            continue
+        if callable(c[k]):
+            cat['methods'].append(k)
+        if isinstance(c[k], dict):
+            cat['categories'].append(k)
+    return cat
 
 
 def add(category, name, handler):
