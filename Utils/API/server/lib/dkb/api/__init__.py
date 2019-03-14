@@ -8,13 +8,20 @@ from exceptions import DkbApiException
 import methods
 
 
+__version__ = '0.1'
+
+
 STATUS_CODES = {
     200: 'OK',
     250: 'Some Information Missed',
     251: 'Method Description Missed',
     400: 'Bad Request',
+    460: 'Category Failure',
     461: 'Category Not Found',
-    462: 'Method Not Found',
+    462: 'Invalid Category Name',
+    470: 'Method Failure',
+    471: 'Method Not Found',
+    472: 'Method Already Exists',
     500: 'Internal Server Error',
     501: 'Not Implemented'
 }

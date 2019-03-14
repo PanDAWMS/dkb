@@ -26,31 +26,75 @@ methods.add('/path/to/category', 'method_name', my_method_handler)
 import traceback
 import logging
 
-from exceptions import (CategoryNotFound,
+from exceptions import (InvalidCategoryName,
+                        CategoryNotFound,
                         MethodNotFound,
+                        MethodAlreadyExists,
                         DkbApiException,
                         DkbApiNotImplemented,
                         NotFoundException)
 
 # Hash of categories and methods
-API_METHODS = {}
+API_METHODS = {'__path': '/'}
+KEYWORDS = ['__path']
+WILDCARD = '*'
 
 
-def category(category, create=False):
+def get_category(path, create=False, analyze_wildcard=False):
     """ Get category definition.
 
     If category is not defined and ``create`` is False, raise
     ``CategoryNotFound`` exception.
 
-    :param category: full path to a category
-    :type category: str
+    If category name contains some keywords (service words), raise
+    ``InvalidCategoryName`` exception.
+
+    :param path: full path to a category
+    :type path: str
     :param create: if ``True``, create category if missed.
     :type create: bool
+    :param analyze_wildcard: if ``True``, '*' in category path will
+                             be taken as 'any heir'
+    :type analyze_wildcard: bool
 
-    :return: hash with category methods and subcategories
-    :rtype: dict
+    :return: hash or (in case of wildcard) list of hashes with category
+             methods and subcategories
+    :rtype: dict, list(dict)
     """
-    raise DkbApiNotImplemented
+    keys = path.strip('/').split('/')
+    keys = [k for k in keys if k]
+    h = API_METHODS
+    category = h
+    key = ''
+    for idx, key in enumerate(keys):
+        if key in KEYWORDS:
+            raise InvalidCategoryName(key, '/'.join((category.get('__path',
+                                                                  ''),
+                                                     key)))
+        if WILDCARD in key:
+            if analyze_wildcard:
+                raise NotImplementedError("Wildcard categories lookup is not"
+                                          " implemented yet")
+        h = h.get(key, False)
+        if not h or callable(h):
+            if not create:
+                break
+            category[key] = {}
+            if callable(h):
+                category[key]['/'] = h
+            h = category[key]
+            h['__path'] = '/' + '/'.join(keys[:(idx + 1)])
+        category = h
+    if h is False or callable(h):
+        cat_name = category.get('__path', '')
+        if cat_name == '/':
+            cat_name = ''
+        raise CategoryNotFound('/'.join((cat_name, key)))
+    if analyze_wildcard:
+        result = [category]
+    else:
+        result = category
+    return result
 
 
 def list_category(path):
@@ -58,14 +102,23 @@ def list_category(path):
 
     If category is not defined, raise ``CategoryNotFound`` exception.
 
-    :param path: full path (starts with '/')  to method or category
+    :param path: full path (starts with '/')  to category
     :type path: str
 
-    :return: {'methods': {<name>: <callable>}, 'categories': [...],
+    :return: {'methods': [name, ...], 'categories': [...],
               'path': '/path/to/category/'}
     :rtype: dict
     """
-    raise DkbApiNotImplemented
+    c = get_category(path)
+    cat = {'path': c.get('__path'), 'methods': [], 'categories': []}
+    for k in c.keys():
+        if k in KEYWORDS:
+            continue
+        if callable(c[k]):
+            cat['methods'].append(k)
+        if isinstance(c[k], dict):
+            cat['categories'].append(k)
+    return cat
 
 
 def add(category, name, handler):
@@ -86,7 +139,29 @@ def add(category, name, handler):
     :return: True on success, False on failure
     :rtype: bool
     """
-    raise DkbApiNotImplemented
+    categories = get_category(category, create=True, analyze_wildcard=True)
+    exists_in = []
+    added_to = []
+    if not name:
+        name = '/'
+    for cat in categories:
+        m = cat.get(name, None)
+        if m and (callable(m) or '/' in m):
+            exists_in.append(cat['__path'])
+            break
+        else:
+            added_to.append(cat['__path'])
+            if not m:
+                cat[name] = handler
+            else:
+                m['/'] = handler
+    if exists_in:
+        raise MethodAlreadyExists(name, exists_in)
+    if added_to:
+        logging.info("Method '%s' defined in categories: %s"
+                     % (name, ', '.join(added_to)))
+        return True
+    return False
 
 
 def handler(path, method=None):
@@ -100,10 +175,36 @@ def handler(path, method=None):
     :param method: method name
     :type method: str
 
-    :return: method handler function
+    :return: handler function
     :rtype: callable
     """
-    raise DkbApiNotImplemented
+    try:
+        handlers
+    except NameError:
+        logging.error('Handlers not configured.')
+        raise MethodNotFound(path)
+    if not method:
+        if path.endswith('/'):
+            method = '/'
+            category = path[:-1]
+        else:
+            pos = path.rfind('/')
+            method = path[(pos + 1):]
+            category = path[:pos]
+    else:
+        category = path
+    try:
+        c = get_category(category)
+    except CategoryNotFound, err:
+        raise MethodNotFound(category, method, str(err))
+    h = c.get(method)
+    if not h:
+        raise MethodNotFound(category, method)
+    if not callable(h):
+        h = h.get('/')
+    if not h:
+        raise MethodNotFound(category, method)
+    return h
 
 
 def error_handler(exc_info):
