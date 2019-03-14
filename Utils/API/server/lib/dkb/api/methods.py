@@ -34,21 +34,29 @@ from exceptions import (CategoryNotFound,
 
 # Hash of categories and methods
 API_METHODS = {}
+WILDCARD = '*'
 
 
-def get_category(category, create=False):
+def get_category(category, create=False, analyze_wildcard=False):
     """ Get category definition.
 
     If category is not defined and ``create`` is False, raise
     ``CategoryNotFound`` exception.
 
+    If category name contains some keywords (service words), raise
+    ``InvalidCategoryName`` exception.
+
     :param category: full path to a category
     :type category: str
     :param create: if ``True``, create category if missed.
     :type create: bool
+    :param analyze_wildcard: if ``True``, '*' in category path will
+                             be taken as 'any heir'
+    :type analyze_wildcard: bool
 
-    :return: hash with category methods and subcategories
-    :rtype: dict
+    :return: hash or (in case of wildcard) list of hashes with category
+             methods and subcategories
+    :rtype: dict, list(dict)
     """
     raise DkbApiNotImplemented
 
