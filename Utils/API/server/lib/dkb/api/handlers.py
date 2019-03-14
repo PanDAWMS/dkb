@@ -30,7 +30,9 @@ from exceptions import DkbApiNotImplemented
 
 def info(path, **kwargs):
     """ Information about available methods and (sub)categories. """
-    raise DkbApiNotImplemented
+    cat = path.rstrip('/')[:-len('info')]
+    response = methods.list_category(cat)
+    return response
 
 
 try:
