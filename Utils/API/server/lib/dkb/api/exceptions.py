@@ -52,7 +52,7 @@ class InvalidCategoryName(CategoryException):
     """ Exception indicating that given name can't be a category name. """
     code = 462
 
-    def __init__(self, name, category = None):
+    def __init__(self, name, category=None):
         cat = " ('%s')" % category if category else ''
         message = "Invalid (sub)category name: '%s'" % name
         message += cat
@@ -95,9 +95,9 @@ class MethodAlreadyExists(MethodException):
 
     def __init__(self, method, category):
         if type(category) == list:
-             category = "categories (%s)" % category
+            category = "categories (%s)" % category
         else:
-             category = "category ('%s')" % category
+            category = "category ('%s')" % category
         message = "Method '%s' already exists in %s" \
                   % (method, category)
         self.details = message

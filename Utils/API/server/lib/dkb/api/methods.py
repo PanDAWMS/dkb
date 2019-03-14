@@ -73,8 +73,8 @@ def get_category(path, create=False, analyze_wildcard=False):
                                                      key)))
         if WILDCARD in key:
             if analyze_wildcard:
-                 raise NotImplementedError("Wildcard categories lookup is not"
-                                           " implemented yet")
+                raise NotImplementedError("Wildcard categories lookup is not"
+                                          " implemented yet")
         h = h.get(key, False)
         if not h or callable(h):
             if not create:
@@ -83,7 +83,7 @@ def get_category(path, create=False, analyze_wildcard=False):
             if callable(h):
                 category[key]['/'] = h
             h = category[key]
-            h['__path'] = '/' + '/'.join(keys[:idx+1])
+            h['__path'] = '/' + '/'.join(keys[:(idx + 1)])
         category = h
     if h is False or callable(h):
         cat_name = category.get('__path', '')
@@ -189,7 +189,7 @@ def handler(path, method=None):
             category = path[:-1]
         else:
             pos = path.rfind('/')
-            method = path[pos+1:]
+            method = path[(pos + 1):]
             category = path[:pos]
     else:
         category = path
