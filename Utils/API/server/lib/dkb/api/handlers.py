@@ -20,8 +20,13 @@ def my_method_handler(path, **kwargs):
 """
 
 import methods
-from exceptions import DkbApiNotImplemented
+from exceptions import DkbApiNotImplemented, MethodException
 from . import __version__
+
+try:
+    import matplotlib
+except Exception:
+    pass
 
 
 # =================
@@ -48,3 +53,24 @@ def server_info(path, **kwargs):
 
 methods.add('/', None, server_info)
 methods.add('/', 'server_info', server_info)
+
+
+# ===================
+# API method handlers
+# ===================
+
+
+def task_hist(path, **kwargs):
+    """ Generate histogram with task steps distribution over time.
+
+    :param path: full path to the method
+    :type path: str
+    """
+    try:
+        matplotlib
+    except NameError:
+        raise MethodException("Module 'matplotlib' is not installed")
+    raise DkbApiNotImplemented
+
+
+methods.add('/task', 'hist', task_hist)
