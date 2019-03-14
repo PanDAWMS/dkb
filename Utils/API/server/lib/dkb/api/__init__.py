@@ -15,6 +15,7 @@ STATUS_CODES = {
     400: 'Bad Request',
     460: 'Category Failure',
     461: 'Category Not Found',
+    462: 'Invalid Category Name',
     470: 'Method Failure',
     471: 'Method Not Found',
     472: 'Method Already Exists',

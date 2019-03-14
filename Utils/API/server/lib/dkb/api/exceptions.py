@@ -48,6 +48,18 @@ class CategoryNotFound(CategoryException):
         super(CategoryNotFound, self).__init__(message)
 
 
+class InvalidCategoryName(CategoryException):
+    """ Exception indicating that given name can't be a category name. """
+    code = 462
+
+    def __init__(self, name, category = None):
+        cat = " ('%s')" % category if category else ''
+        message = "Invalid (sub)category name: '%s'" % name
+        message += cat
+        self.details = message
+        super(InvalidCategoryName, self).__init__(message)
+
+
 class MethodException(DkbApiException):
     """ Base exception for method failures. """
     code = 470
@@ -81,8 +93,12 @@ class MethodAlreadyExists(MethodException):
     """ Exception indicating that method being created already exists. """
     code = 472
 
-    def __init__(self, method, category, handler):
-        message = "Method '%s' in category '%s' already exists" \
-                  " (handler function: %s)" % (method, category, handler)
+    def __init__(self, method, category):
+        if type(category) == list:
+             category = "categories (%s)" % category
+        else:
+             category = "category ('%s')" % category
+        message = "Method '%s' already exists in %s" \
+                  % (method, category)
         self.details = message
         super(MethodAlreadyExists, self).__init__(message)
