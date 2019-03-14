@@ -166,10 +166,36 @@ def handler(path, method=None):
     :param method: method name
     :type method: str
 
-    :return: method handler function
+    :return: handler function
     :rtype: callable
     """
-    raise DkbApiNotImplemented
+    try:
+        handlers
+    except NameError:
+        logging.error('Handlers not configured.')
+        raise MethodNotFound(path)
+    if not method:
+        if path.endswith('/'):
+            method = '/'
+            category = path[:-1]
+        else:
+            pos = path.rfind('/')
+            method = path[pos+1:]
+            category = path[:pos]
+    else:
+        category = path
+    try:
+        c = get_category(category)
+    except CategoryNotFound, err:
+        raise MethodNotFound(category, method, str(err))
+    h = c.get(method)
+    if not h:
+        raise MethodNotFound(category, method)
+    if not callable(h):
+        h = h.get('/')
+    if not h:
+        raise MethodNotFound(category, method)
+    return h
 
 
 def error_handler(exc_info):

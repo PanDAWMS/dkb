@@ -78,11 +78,11 @@ class MethodNotFound(MethodException):
     """ Exception indicating that called method is not found. """
     code = 471
 
-    def __init__(self, method, category='', details=''):
-        message = "Method not found: '%s'" % method
-        if category:
-            message += " (category: '%s')" % category
-        message += '.'
+    def __init__(self, path, method='', details=''):
+        message = "Method not found: '%s" % path
+        if method:
+            message += "/%s" % method.strip('/')
+        message += "'."
         if details:
             message += "\nDetails: %s" % details
         self.details = message
