@@ -21,6 +21,7 @@ def my_method_handler(path, **kwargs):
 
 import methods
 from exceptions import DkbApiNotImplemented
+from . import __version__
 
 
 # =================
@@ -40,7 +41,10 @@ methods.add('/', 'info', info)
 
 def server_info(path, **kwargs):
     """ Server info. """
-    raise DkbApiNotImplemented
+    response = {"name": "DKB API server",
+                "version": __version__}
+    return response
 
 
 methods.add('/', None, server_info)
+methods.add('/', 'server_info', server_info)

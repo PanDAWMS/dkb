@@ -8,6 +8,9 @@ from exceptions import DkbApiException
 import methods
 
 
+__version__ = '0.1'
+
+
 STATUS_CODES = {
     200: 'OK',
     250: 'Some Information Missed',
