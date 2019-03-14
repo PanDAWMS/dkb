@@ -35,10 +35,7 @@ def info(path, **kwargs):
     return response
 
 
-try:
-    methods.add('/*', 'info', info)
-except DkbApiNotImplemented:
-    pass
+methods.add('/', 'info', info)
 
 
 def server_info(path, **kwargs):
@@ -46,7 +43,4 @@ def server_info(path, **kwargs):
     raise DkbApiNotImplemented
 
 
-try:
-    methods.add('/', None, server_info)
-except DkbApiNotImplemented:
-    pass
+methods.add('/', None, server_info)
