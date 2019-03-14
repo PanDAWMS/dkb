@@ -37,7 +37,7 @@ API_METHODS = {}
 WILDCARD = '*'
 
 
-def get_category(category, create=False, analyze_wildcard=False):
+def get_category(path, create=False, analyze_wildcard=False):
     """ Get category definition.
 
     If category is not defined and ``create`` is False, raise
@@ -46,8 +46,8 @@ def get_category(category, create=False, analyze_wildcard=False):
     If category name contains some keywords (service words), raise
     ``InvalidCategoryName`` exception.
 
-    :param category: full path to a category
-    :type category: str
+    :param path: full path to a category
+    :type path: str
     :param create: if ``True``, create category if missed.
     :type create: bool
     :param analyze_wildcard: if ``True``, '*' in category path will
