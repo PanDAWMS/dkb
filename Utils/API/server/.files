@@ -4,3 +4,5 @@ lib/
 lib/dkb/
 lib/dkb/api/
 lib/dkb/api/*.py
+lib/dkb/api/storages/
+lib/dkb/api/storages/*.py

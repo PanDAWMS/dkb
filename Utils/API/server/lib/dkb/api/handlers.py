@@ -26,6 +26,7 @@ from exceptions import (DkbApiNotImplemented,
                         InvalidArgument
                         )
 from . import __version__
+import storages
 
 try:
     import matplotlib
@@ -79,6 +80,7 @@ def task_hist(path, **kwargs):
         raise MissedArgument('/task/hist', 'htags')
     if not isinstance(htags, (list, str)):
         raise InvalidArgument('/task/hist', ('htags', htags))
+    hist_data = storages.task_steps_hist(**kwargs)
     raise DkbApiNotImplemented
 
 

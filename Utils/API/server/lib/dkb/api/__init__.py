@@ -25,7 +25,9 @@ STATUS_CODES = {
     473: 'Missed Argument',
     474: 'Invalid Argument',
     500: 'Internal Server Error',
-    501: 'Not Implemented'
+    501: 'Not Implemented',
+    580: 'Storage Failure',
+    581: 'Storage Client Failure'
 }
 
 
