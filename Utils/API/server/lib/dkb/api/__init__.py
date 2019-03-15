@@ -22,6 +22,8 @@ STATUS_CODES = {
     470: 'Method Failure',
     471: 'Method Not Found',
     472: 'Method Already Exists',
+    473: 'Missed Argument',
+    474: 'Invalid Argument',
     500: 'Internal Server Error',
     501: 'Not Implemented'
 }

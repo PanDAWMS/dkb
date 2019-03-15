@@ -20,7 +20,11 @@ def my_method_handler(path, **kwargs):
 """
 
 import methods
-from exceptions import DkbApiNotImplemented, MethodException
+from exceptions import (DkbApiNotImplemented,
+                        MethodException,
+                        MissedArgument,
+                        InvalidArgument
+                        )
 from . import __version__
 
 try:
@@ -70,6 +74,11 @@ def task_hist(path, **kwargs):
         matplotlib
     except NameError:
         raise MethodException("Module 'matplotlib' is not installed")
+    htags = kwargs.get('htags')
+    if htags is None:
+        raise MissedArgument('/task/hist', 'htags')
+    if not isinstance(htags, (list, str)):
+        raise InvalidArgument('/task/hist', ('htags', htags))
     raise DkbApiNotImplemented
 
 
