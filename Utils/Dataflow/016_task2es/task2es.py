@@ -198,6 +198,8 @@ def transform_chain_data(data):
     :rtype: bool
     """
     if type(data) is not dict:
+        sys.stderr.write('(WARN) Function transform_chain_data() received '
+                         'non-dict data: %s. Skipping.\n' % str(data))
         return False
     taskid = data.get('taskid')
     chain_data = data.get('chain_data')
