@@ -73,11 +73,13 @@ def task_hist(path, **kwargs):
     :param path: full path to the method
     :type path: str
     """
-    try:
-        pyplot
-    except NameError:
-        raise MethodException("Module 'matplotlib' ('pyplot') is not "
-                              "installed")
+    rtype = kwargs.get('rtype', 'img')
+    if rtype == 'img':
+        try:
+            pyplot
+        except NameError:
+            raise MethodException("Module 'matplotlib' ('pyplot') is not "
+                                  "installed")
     htags = kwargs.get('htags')
     if htags is None:
         raise MissedArgument('/task/hist', 'htags')
