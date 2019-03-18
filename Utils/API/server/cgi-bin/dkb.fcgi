@@ -46,12 +46,13 @@ def parse_params(qs):
     """
     params = urlparse.parse_qs(qs, True)
     for key in params:
+        for idx,val in enumerate(params[key]):
+            if val == '':
+                params[key][idx] = True
+            elif val.lower() == 'false':
+                params[key][idx] = False
         if len(params[key]) == 1:
             params[key] = params[key][0]
-        if params[key] == '':
-            params[key] = True
-        elif params[key].lower() == 'false':
-            params[key] = False
     return params
 
 
