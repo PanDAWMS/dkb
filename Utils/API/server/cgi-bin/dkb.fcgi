@@ -59,6 +59,8 @@ def parse_params(qs):
                 params[key][idx] = False
         if len(params[key]) == 1:
             params[key] = params[key][0]
+    if not params.get('rtype'):
+        params['rtype'] = 'json'
     return params
 
 
