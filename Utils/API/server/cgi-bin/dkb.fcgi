@@ -70,7 +70,7 @@ def dkb_app(environ, start_response):
         error = methods.error_handler(sys.exc_info())
         status = error.pop('_status', 500)
     status_line = "%(code)d %(reason)s" % {'code': status,
-                                           'reason': STATUS_CODES[status]}
+                                           'reason': STATUS_CODES.get(status, 'Unknown')}
     start_response(status_line, [('Content-Type', 'application/json')])
     if status/100 == 2:
         str_status = 'OK'
