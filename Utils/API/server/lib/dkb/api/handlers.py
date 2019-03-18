@@ -28,6 +28,8 @@ from exceptions import (DkbApiNotImplemented,
 from . import __version__
 import storages
 
+from cStringIO import StringIO
+
 try:
     import matplotlib
     matplotlib.rcParams['backend'] = 'agg'
@@ -94,6 +96,15 @@ def task_hist(path, **kwargs):
             for j, d in enumerate(x_data[i]):
                 x_data[i][j] = str(d)
         result = data
+    if rtype == 'img':
+        pyplot.figure(figsize=(20, 15))
+        pyplot.hist(data['data']['x'], weights=data['data']['y'],
+                    stacked=True, bins=250)
+        pyplot.legend(data['legend'])
+        img = StringIO()
+        pyplot.savefig(img)
+        img.seek(0)
+        result['img'] = img.read()
     return result
 
 
