@@ -30,6 +30,9 @@ STATUS_CODES = {
     501: 'Not Implemented',
     550: 'Storage Failure',
     551: 'Storage Client Failure',
+    560: 'Storage Query Failure',
+    561: 'Storage Query Not Found',
+    562: 'Storage Query Parameter Missed',
     590: 'Configuration Error',
     591: 'Configuration Not Found'
 }

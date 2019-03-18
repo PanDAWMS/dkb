@@ -177,6 +177,7 @@ build_file() {
       -e "s#%%ES_ADDR%%#$ES_ADDR#g" \
       -e "s#%%ES_USER%%#$ES_USER#g" \
       -e "s#%%ES_PASSWD%%#$ES_PASSWD#g" \
+      -e "s#%%ES_INDEX%%#$ES_INDEX#g" \
       "$1"
 }
 

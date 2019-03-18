@@ -85,8 +85,16 @@ def task_hist(path, **kwargs):
         raise MissedArgument('/task/hist', 'htags')
     if not isinstance(htags, (list, str)):
         raise InvalidArgument('/task/hist', ('htags', htags))
-    hist_data = storages.task_steps_hist(**kwargs)
-    raise DkbApiNotImplemented
+    data = storages.task_steps_hist(**kwargs)
+    result = {}
+    if rtype == 'json':
+        # json module doesn't know how to serialize `datetime` objects
+        x_data = data['data']['x']
+        for i, _ in enumerate(x_data):
+            for j, d in enumerate(x_data[i]):
+                x_data[i][j] = str(d)
+        result = data
+    return result
 
 
 methods.add('/task', 'hist', task_hist)

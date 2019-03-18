@@ -24,5 +24,5 @@ def read_config(cfg_type, cfg_name):
     if (cfg_type, cfg_name) == ('storage', STORAGES['ES']):
         hosts = '%%ES_ADDR%%'.split(',')
         return {'hosts': hosts, 'user': '%%ES_USER%%',
-                'passwd': '%%ES_PASSWD%%'}
+                'passwd': '%%ES_PASSWD%%', 'index': '%%ES_INDEX%%'}
     raise ConfigurationNotFound('unknown')
