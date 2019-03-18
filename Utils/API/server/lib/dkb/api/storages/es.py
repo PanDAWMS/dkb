@@ -6,7 +6,8 @@ import logging
 import sys
 import traceback
 
-from ..exceptions import DkbApiNotImplemented, StorageClientException
+from ..exceptions import DkbApiNotImplemented
+from exceptions import StorageClientException
 from .. import config
 
 # To ensure storages are named same way in all messages
