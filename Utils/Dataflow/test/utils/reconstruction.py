@@ -14,12 +14,26 @@ def es_connect():
     ''' Establish a connection to elasticsearch.
 
     TODO: take parameters from es config.
+
+    :return: client with established elasticsearch connection
+    :rtype: elasticsearch.client.Elasticsearch
     '''
     return elasticsearch.Elasticsearch(['localhost:9200'])
 
 
 def get_chain_id(es, index, taskid):
-    ''' Get chain_id by given taskid. '''
+    ''' Get chain_id by given taskid.
+
+    :param es: elasticsearch client
+    :type es: elasticsearch.client.Elasticsearch
+    :param index: index containing tasks
+    :type index: str
+    :param taskid: taskid of the task to look for
+    :type taskid: int or str
+
+    :return: chain_id, or False if the task was not found
+    :rtype: int or bool
+    '''
     try:
         results = es.get(index=index, doc_type='_all', id=taskid,
                          _source=['chain_id'])
@@ -29,7 +43,23 @@ def get_chain_id(es, index, taskid):
 
 
 def get_chain_data(es, index, chain_id):
-    ''' Get chain_data of all tasks that have given chain_id. '''
+    ''' Get chain_data of all tasks that have given chain_id.
+
+    :param es: elasticsearch client
+    :type es: elasticsearch.client.Elasticsearch
+    :param index: index containing tasks
+    :type index: str
+    :param chain_id: chain_id - taskid of the chain's root
+    :type chain_id: int or str
+
+    :return: chain_data of all tasks in the chain, format is
+             [
+                 ...
+                 [chain_id, other_taskid_1, other_taskid_2, ..., taskid],
+                 ...
+             ]
+    :rtype: list
+    '''
     srch = {'query': {'term': {'chain_id': chain_id}}}
     rtrn = []
     fr = 0
@@ -48,7 +78,23 @@ def get_chain_data(es, index, chain_id):
 
 
 def construct_chain(data):
-    ''' Build a chain from the list of its tasks' chain_data. '''
+    ''' Build a chain from the list of its tasks' chain_data.
+
+    Chain is a group of tasks where the first task is the root, and each next
+    task has one of the previous ones as its parent (parent's output includes
+    child's input).
+
+    :param data: chain_data of all tasks in the chain
+    :type data: list
+
+    :return: constructed chain, format is
+             {
+                 ...
+                 taskidN: [childN1_id, childN2_id, ...]
+                 ...
+             }
+    :rtype: dict
+    '''
     chain = {}
     # Order data from longest to shortest lists. Processing [1, 2, 3] is faster
     # than processing [1], then [1, 2] and then [1, 2, 3].
@@ -77,6 +123,16 @@ def check(chain, chain_data, task_id, indent=0):
     Recursively display the constructed chain starting from given task_id (so,
     the chain's root should be used for getting a full chain). Also, find
     matching chain_data for each task and display it as well.
+
+    :param chain: constructed chain
+    :type chain: dict
+    :param chain_data: chain_data of all tasks in the chain
+    :type chain_data: list
+    :param task_id: task from which to start
+    :type task_id: int
+    :param indent: recursion parameter, used for visualization and measuring
+                   a (complete or partial) chain's length
+    :type indent: int
     '''
     task_cd = False
     for cd in chain_data:
