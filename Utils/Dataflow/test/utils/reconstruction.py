@@ -33,7 +33,7 @@ def get_chain_data(es, index, chain_id):
     srch = {'query': {'term': {'chain_id': chain_id}}}
     rtrn = []
     fr = 0
-    sz = 100
+    sz = 2000
     while True:
         results = es.search(index=index, body=srch, from_=fr, size=sz,
                             _source=['chain_data'])
