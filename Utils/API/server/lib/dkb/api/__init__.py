@@ -28,8 +28,8 @@ STATUS_CODES = {
     474: 'Invalid Argument',
     500: 'Internal Server Error',
     501: 'Not Implemented',
-    580: 'Storage Failure',
-    581: 'Storage Client Failure',
+    550: 'Storage Failure',
+    551: 'Storage Client Failure',
     590: 'Configuration Error',
     591: 'Configuration Not Found'
 }
