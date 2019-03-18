@@ -23,6 +23,19 @@ def get_common_x_axis(data):
     return x_axis
 
 
+def cumulative_sum(datasets, rows=None):
+    """
+    Calculates cumulative sum of several lists of the same length.
+    :param datasets: List of lists of numbers of the same length
+    :param rows: How many lists to add together, starting from the first. If not set, adds all lists.
+    :return: A single list of length equal to the length of lists in data, containing their sum.
+    """
+    if not rows:
+        rows = len(datasets)
+
+    return [sum(x) for x in zip(*datasets[0:rows])]
+
+
 def get_plot_data_from_json(json_data):
     """
     Extracts data to plot from a JSON output of Elasticsearch query.
@@ -75,6 +88,58 @@ def get_plot_data_from_json(json_data):
     return prepared_set_names, x_axis, normalized_datasets
 
 
+def group_merges(data):
+    """
+    Adds together all the *Deriv steps into a single deriv step
+    :param data: Tuple of data to plot. Tuple contains 3 elements,
+    first element is a list of names for plot legend, second element is  a list of X-axis values in datetime format,
+    third element is a tuple of tuples of data points. Length of X-axis equals to length of each datapoint
+    in 3rd element. Number of lists in 3rd element is equal to number of legend records in 1st element.
+    :return: Tuple with all *Merge datasets turned into a sum of them. Original *Merge datasets are removed
+    from results, new Merge dataset is appended to the end.
+    """
+    dataset_names = data[0]
+    x_axis = data[1]
+    datasets = data[2]
+
+    result_datasets = []
+    result_names = []
+
+    merge_datasets = []
+
+    for i in range(0, len(dataset_names)):
+        if dataset_names[i][-5:] == "Merge":
+            merge_datasets.append(datasets[i])
+        else:
+            result_names.append(dataset_names[i])
+            result_datasets.append(datasets[i])
+
+    result_names.append("Merge")
+    result_datasets.append(cumulative_sum(merge_datasets))
+    return result_names, x_axis, result_datasets
+
+
+def sort_steps(data):
+    """
+    Sorts the steps in data for plotting into Evgen -> Simul -> Reco -> Deriv
+    :param data: Tuple of data to plot. Tuple contains 3 elements,
+    first element is a list of names for plot legend, second element is  a list of X-axis values in datetime format,
+    third element is a tuple of tuples of data points. Length of X-axis equals to length of each datapoint
+    in 3rd element. Number of lists in 3rd element is equal to number of legend records in 1st element.
+    :return: Data sorted by Evgen -> Simul -> Reco -> Deriv
+    """
+    sort_order = ["Evgen", "Simul", "Reco", "Deriv", "Merge"]
+    sorted_data = []
+    sorted_names = []
+    x_axis = data[1]
+
+    for name in sort_order:
+        sorted_data.append(data[2][data[0].index(name)])
+        sorted_names.append(name)
+
+    return sorted_names, x_axis, sorted_data
+
+
 def draw_dataset_plot(data):
     """
     Draws a plot based on datasets.
@@ -94,7 +159,7 @@ def draw_dataset_plot(data):
 
     for i in range(0, len(prepared_set_names)):
         if i > 0:
-            bottom_datasets = [sum(x) for x in zip(*normalized_datasets[0:i])]
+            bottom_datasets = cumulative_sum(normalized_datasets, i)
             plot = plt.bar(x_axis, normalized_datasets[i], width, bottom=bottom_datasets)
         else:
             plot = plt.bar(x_axis, normalized_datasets[i], width)
@@ -117,7 +182,9 @@ if __name__ == '__main__':
     with open("g:/task-steps-gantt-r.json") as infile:
         rawdata = json.load(infile)
         data = get_plot_data_from_json(rawdata)
-        image = draw_dataset_plot(data)
+        merged_data = group_merges(data)
+        sorted_data = sort_steps(merged_data)
+        image = draw_dataset_plot(sorted_data)
         print(image)
         with open("g:/test_fig.png", 'wb') as outfile:
             outfile.write(image.getvalue())
