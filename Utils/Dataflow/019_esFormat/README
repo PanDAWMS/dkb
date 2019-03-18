@@ -52,3 +52,6 @@ datasets2016.ndjson (from 095's 2016 sample)
 2018 data:
 tasks2018.ndjson (from 016's 2018 sample)
 datasets2018.ndjson (from 095's 2018 sample)
+
+tasks* is the tasks' and input datasets' metadata.
+datasets* is the output datasets' metadata.
