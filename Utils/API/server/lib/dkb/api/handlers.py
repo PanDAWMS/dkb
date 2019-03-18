@@ -30,6 +30,8 @@ import storages
 
 try:
     import matplotlib
+    matplotlib.rcParams['backend'] = 'agg'
+    from matplotlib import pyplot
 except Exception:
     pass
 
@@ -72,9 +74,10 @@ def task_hist(path, **kwargs):
     :type path: str
     """
     try:
-        matplotlib
+        pyplot
     except NameError:
-        raise MethodException("Module 'matplotlib' is not installed")
+        raise MethodException("Module 'matplotlib' ('pyplot') is not "
+                              "installed")
     htags = kwargs.get('htags')
     if htags is None:
         raise MissedArgument('/task/hist', 'htags')
