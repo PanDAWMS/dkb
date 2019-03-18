@@ -20,23 +20,23 @@ def es_connect():
 
 def get_chain_id(es, index, taskid):
     ''' Get chain_id by given taskid. '''
-    srch = {'query': {'match': {'_id': taskid}}}
-    results = es.search(index=index, body=srch)
-    results = results['hits']['hits']
-    if not results:
+    try:
+        results = es.get(index=index, doc_type='_all', id=taskid,
+                         _source=['chain_id'])
+    except elasticsearch.exceptions.NotFoundError:
         return False
-    else:
-        return results[0]['_source'].get('chain_id')
+    return results['_source'].get('chain_id')
 
 
 def get_chain_data(es, index, chain_id):
     ''' Get chain_data of all tasks that have given chain_id. '''
-    srch = {'query': {'match': {'chain_id': chain_id}}}
+    srch = {'query': {'term': {'chain_id': chain_id}}}
     rtrn = []
     fr = 0
     sz = 100
     while True:
-        results = es.search(index=index, body=srch, from_=fr, size=sz)
+        results = es.search(index=index, body=srch, from_=fr, size=sz,
+                            _source=['chain_data'])
         if not results['hits']['hits']:
             break
         for hit in results['hits']['hits']:
