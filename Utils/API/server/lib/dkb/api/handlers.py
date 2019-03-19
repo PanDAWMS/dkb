@@ -87,6 +87,8 @@ def task_hist(path, **kwargs):
         raise MissedArgument('/task/hist', 'htags')
     if not isinstance(htags, (list, str)):
         raise InvalidArgument('/task/hist', ('htags', htags))
+    if not isinstance(htags, list):
+        kwargs['htags'] = [htags]
     data = storages.task_steps_hist(**kwargs)
     result = {}
     if rtype == 'json':
