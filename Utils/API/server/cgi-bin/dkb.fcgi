@@ -46,12 +46,13 @@ def parse_params(qs):
     """
     params = urlparse.parse_qs(qs, True)
     for key in params:
+        for idx,val in enumerate(params[key]):
+            if val == '':
+                params[key][idx] = True
+            elif val.lower() == 'false':
+                params[key][idx] = False
         if len(params[key]) == 1:
             params[key] = params[key][0]
-        if params[key] == '':
-            params[key] = True
-        elif params[key].lower() == 'false':
-            params[key] = False
     return params
 
 
@@ -69,8 +70,10 @@ def dkb_app(environ, start_response):
     except Exception, err:
         error = methods.error_handler(sys.exc_info())
         status = error.pop('_status', 500)
-    status_line = "%(code)d %(reason)s" % {'code': status,
-                                           'reason': STATUS_CODES[status]}
+    status_line = "%(code)d %(reason)s" % {
+        'code': status,
+        'reason': STATUS_CODES.get(status, 'Unknown')
+    }
     start_response(status_line, [('Content-Type', 'application/json')])
     if status/100 == 2:
         str_status = 'OK'
