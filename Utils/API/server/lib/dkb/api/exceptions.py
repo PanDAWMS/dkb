@@ -102,3 +102,67 @@ class MethodAlreadyExists(MethodException):
                   % (method, category)
         self.details = message
         super(MethodAlreadyExists, self).__init__(message)
+
+
+class MissedArgument(MethodException):
+    """ Exception indicating that method required argument(s) are missed. """
+    code = 473
+
+    def __init__(self, method, *args):
+        if not args:
+            super(MissedArgument, self).__init__(method)
+        else:
+            args_str = "'" + "', '".join(args) + "'"
+            reason = "required arguments are missed (%s)." % args_str
+            super(MissedArgument, self).__init__(method, reason)
+
+
+class InvalidArgument(MethodException):
+    """ Exception indicating that passed argument has wrong value. """
+    code = 474
+
+    def __init__(self, method, *args):
+        if not args:
+            super(InvalidArgument, self).__init__(method)
+        else:
+            args_keyval = []
+            for arg in args:
+                if not isinstance(arg, (list, tuple)):
+                    raise ValueError("InvalidArgument exception expects 'arg'"
+                                     " to be list or tuple: (name, [value,"
+                                     " [expected_value/type/class]]).")
+                keyval = "%s" % arg[0]
+                if len(arg) > 1:
+                    keyval += "='%s'" % arg[1]
+                if len(arg) > 2:
+                    exp = arg[2]
+                    if isinstance(exp, (list, tuple)):
+                        keyval += " (expected one of: '%s')" \
+                            % ("', '".join(exp))
+                    else:
+                        keyval += " (expected: '%s')" % exp
+                args_keyval += [keyval]
+            reason = "invalid argument value. Get: %s" \
+                     % ('; '.join(args_keyval))
+            super(InvalidArgument, self).__init__(method, reason)
+
+
+class ConfigurationError(DkbApiException):
+    """ Base exception for server configuration errors. """
+    code = 590
+
+    def __init__(self, reason=None):
+        message = "Configuration failure"
+        if reason:
+            message += ": %s" % reason
+        self.details = message
+        super(ConfigurationError, self).__init__(message)
+
+
+class ConfigurationNotFound(ConfigurationError, NotFoundException):
+    """ Exception indicating that configuration file is not found. """
+    code = 591
+
+    def __init__(self, path):
+        reason = "file not found (%s)" % path
+        super(ConfigurationNotFound, self).__init__(reason)

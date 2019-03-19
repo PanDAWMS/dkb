@@ -20,8 +20,22 @@ def my_method_handler(path, **kwargs):
 """
 
 import methods
-from exceptions import DkbApiNotImplemented
+from exceptions import (DkbApiNotImplemented,
+                        MethodException,
+                        MissedArgument,
+                        InvalidArgument
+                        )
 from . import __version__
+import storages
+
+from cStringIO import StringIO
+
+try:
+    import matplotlib
+    matplotlib.rcParams['backend'] = 'agg'
+    from matplotlib import pyplot
+except Exception:
+    pass
 
 
 # =================
@@ -48,3 +62,52 @@ def server_info(path, **kwargs):
 
 methods.add('/', None, server_info)
 methods.add('/', 'server_info', server_info)
+
+
+# ===================
+# API method handlers
+# ===================
+
+
+def task_hist(path, **kwargs):
+    """ Generate histogram with task steps distribution over time.
+
+    :param path: full path to the method
+    :type path: str
+    """
+    rtype = kwargs.get('rtype', 'img')
+    if rtype == 'img':
+        try:
+            pyplot
+        except NameError:
+            raise MethodException("Module 'matplotlib' ('pyplot') is not "
+                                  "installed")
+    htags = kwargs.get('htags')
+    if htags is None:
+        raise MissedArgument('/task/hist', 'htags')
+    if not isinstance(htags, (list, str)):
+        raise InvalidArgument('/task/hist', ('htags', htags))
+    if not isinstance(htags, list):
+        kwargs['htags'] = htags.split(',')
+    data = storages.task_steps_hist(**kwargs)
+    result = {}
+    if rtype == 'json':
+        # json module doesn't know how to serialize `datetime` objects
+        x_data = data['data']['x']
+        for i, _ in enumerate(x_data):
+            for j, d in enumerate(x_data[i]):
+                x_data[i][j] = str(d)
+        result = data
+    if rtype == 'img':
+        pyplot.figure(figsize=(20, 15))
+        pyplot.hist(data['data']['x'], weights=data['data']['y'],
+                    stacked=True, bins=250)
+        pyplot.legend(data['legend'])
+        img = StringIO()
+        pyplot.savefig(img)
+        img.seek(0)
+        result['img'] = img.read()
+    return result
+
+
+methods.add('/task', 'hist', task_hist)

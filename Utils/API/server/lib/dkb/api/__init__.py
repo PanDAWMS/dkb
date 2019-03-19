@@ -7,8 +7,10 @@ import logging
 from exceptions import DkbApiException
 import methods
 
+CONFIG_DIR = '%%CFG_DIR%%'
 
-__version__ = '0.1'
+
+__version__ = '0.2'
 
 
 STATUS_CODES = {
@@ -22,8 +24,17 @@ STATUS_CODES = {
     470: 'Method Failure',
     471: 'Method Not Found',
     472: 'Method Already Exists',
+    473: 'Missed Argument',
+    474: 'Invalid Argument',
     500: 'Internal Server Error',
-    501: 'Not Implemented'
+    501: 'Not Implemented',
+    550: 'Storage Failure',
+    551: 'Storage Client Failure',
+    560: 'Storage Query Failure',
+    561: 'Storage Query Not Found',
+    562: 'Storage Query Parameter Missed',
+    590: 'Configuration Error',
+    591: 'Configuration Not Found'
 }
 
 
