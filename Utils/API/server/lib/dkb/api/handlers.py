@@ -74,6 +74,9 @@ def task_hist(path, **kwargs):
 
     :param path: full path to the method
     :type path: str
+    :param detailed: keep all "* Merge" steps instead of joining them
+                     into single "Merge"
+    :type detailed: bool
     """
     rtype = kwargs.get('rtype', 'img')
     if rtype == 'img':
@@ -90,6 +93,23 @@ def task_hist(path, **kwargs):
     if not isinstance(htags, list):
         kwargs['htags'] = htags.split(',')
     data = storages.task_steps_hist(**kwargs)
+    if 'detailed' not in kwargs:
+        # Join all '* Merge' steps under common label 'Merge'
+        if 'Merge' not in data['legend']:
+            data['legend'].append('Merge')
+            data['data']['x'].append([])
+            data['data']['y'].append([])
+        merge_idx = data['legend'].index('Merge')
+        to_remove = []
+        for idx, step in enumerate(data['legend']):
+            if 'Merge' in step and step != 'Merge':
+                to_remove.append(idx)
+                data['data']['x'][merge_idx] += data['data']['x'][idx]
+                data['data']['y'][merge_idx] += data['data']['y'][idx]
+        for idx in to_remove[::-1]:
+            del data['legend'][idx]
+            del data['data']['x'][idx]
+            del data['data']['y'][idx]
     result = {}
     if rtype == 'json':
         # json module doesn't know how to serialize `datetime` objects
