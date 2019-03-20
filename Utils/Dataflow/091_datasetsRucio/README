@@ -49,3 +49,15 @@ Being able to do so requires:
 More information about accessing ATLAS resources and Rucio in particular:
 
 https://twiki.ific.uv.es/twiki/bin/view/Atlas/AtlasDataProcessingAtIFIC
+
+3. Running the stage
+--------------------
+Stage can be run as following:
+
+  ./datasets_processing.py filename.ndjson
+
+which will process the file in output mode and produce the result
+filename.json in the directory of the file. For more information about
+running the stage and its arguments, use:
+
+ ./datasets_processing.py -h
