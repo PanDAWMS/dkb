@@ -3,8 +3,13 @@ Stage 091_datasetsRucio
 
 1. Description
 --------------
-This stage is implemented to obtain output datasets metadata from Rucio.
+Obtain datasets' metadata from Rucio and process the supplied tasks' metadata
+in one of the two ways:
 
+1) input mode - update the tasks' metadata with the input datasets' metadata
+   from Rucio.
+2) output mode - extract the information about output datasets and update it
+   with corresponding metadata from Rucio.
 
 2. Requirements
 ---------------
