@@ -77,6 +77,10 @@ def task_hist(path, **kwargs):
     :param detailed: keep all "* Merge" steps instead of joining them
                      into single "Merge"
     :type detailed: bool
+    :param start: left border of the time interval
+    :type start: datetime.datetime
+    :param stop: right border of the time interval
+    :type stop: datetime.datetime
     """
     rtype = kwargs.get('rtype', 'img')
     if rtype == 'img':

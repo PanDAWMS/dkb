@@ -7,7 +7,7 @@ import sys
 import os
 import traceback
 import json
-from datetime import date
+from datetime import datetime
 
 from ..exceptions import DkbApiNotImplemented
 from exceptions import (StorageClientException,
@@ -159,6 +159,8 @@ def task_steps_hist(**kwargs):
     """
     init()
     raw_data = _raw_task_steps_hist(**kwargs)
+    start = kwargs.get('start')
+    end = kwargs.get('end')
     result = {'legend': [], 'data': {'x': [], 'y': []}}
     if raw_data is None:
         return result
@@ -167,8 +169,11 @@ def task_steps_hist(**kwargs):
         x = []
         y = []
         for data in step['chart_data']['buckets']:
-            x.append(date.fromtimestamp(data['key'] / 1000))
-            y.append(data['doc_count'])
+            dt = datetime.fromtimestamp(data['key'] / 1000)
+            if (not kwargs.get('start') or kwargs['start'] <= dt) \
+                    and (not kwargs.get('end') or kwargs['end'] >= dt):
+                x.append(dt.date())
+                y.append(data['doc_count'])
         result['legend'].append(step_name)
         result['data']['x'].append(x)
         result['data']['y'].append(y)
