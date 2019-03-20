@@ -198,7 +198,7 @@ def task_chain(**kwargs):
     init()
     tid = kwargs.get('tid')
     task_data = _task_info(tid, fields=['chain_id'])
-    if not task_data:
+    if task_data is None:
         raise NoDataFound(STORAGE_NAME, 'Task (taskid = %s)' % tid)
     chain_id = task_data.get('chain_id', tid)
     data = _chain_data(chain_id)
