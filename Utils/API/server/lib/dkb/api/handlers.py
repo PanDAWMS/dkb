@@ -81,6 +81,8 @@ def task_hist(path, **kwargs):
     :type start: datetime.datetime
     :param stop: right border of the time interval
     :type stop: datetime.datetime
+    :param bins: number of bins in the histogram
+    :type bins: int
     """
     rtype = kwargs.get('rtype', 'img')
     if rtype == 'img':
@@ -140,8 +142,15 @@ def task_hist(path, **kwargs):
             new_data['data']['y'].append(data['data']['y'][i])
         data = new_data
         pyplot.figure(figsize=(20, 15))
+        bins = kwargs.get('bins')
+        if not bins:
+            default_max_bins = 400
+            total_x = []
+            for x in data['data']['x']:
+                total_x += x
+            bins = min(len(set(total_x)), default_max_bins)
         pyplot.hist(data['data']['x'], weights=data['data']['y'],
-                    stacked=True, bins=250)
+                    stacked=True, bins=int(bins))
         pyplot.legend(data['legend'])
         img = StringIO()
         pyplot.savefig(img)
