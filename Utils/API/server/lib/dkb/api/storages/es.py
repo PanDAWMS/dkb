@@ -24,6 +24,9 @@ STORAGE_NAME = config.STORAGES['ES']
 QUERY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                          'es', 'query')
 
+# Default datetime format
+DATE_FORMAT = '%d-%m-%Y %H:%M:%S'
+
 
 try:
     import elasticsearch
@@ -105,7 +108,15 @@ def get_query(qname, **kwargs):
     """
     fname = os.path.join(QUERY_DIR, qname)
     query = None
-    params = {key: json.dumps(kwargs[key]) for key in kwargs}
+    params = {}
+    for key in kwargs:
+        try:
+            params[key] = json.dumps(kwargs[key])
+        except TypeError, err:
+            if 'datetime' in str(err):
+                params[key] = json.dumps(kwargs[key].strftime(DATE_FORMAT))
+            else:
+                raise
     try:
         with open(fname, 'r') as f:
             query = f.read() % params
