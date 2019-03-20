@@ -14,8 +14,38 @@ in one of the two ways:
 2. Requirements
 ---------------
 * pyRucio
-* grid user certificate stored in VIRTUAL_ENV/auth/{cert,key}.pem
-  (or somewhere else, just don`t forget to fix paths),
-  where VIRTUAL_ENV = ~/.rucio (if exists) or ./.rucio.
-* rucio.cfg in VIRTUAL_ENV/etc/
-  (don`t forget to fix USERNAME and, again, path to cert files)
+* proper configuration file (see below)
+* proper memberships and grid certificate (see below)
+
+Rucio requires authentication, which is performed by supplying a number of
+things, such as certificate or user name. In case of this stage, the
+authentication is performed as following:
+
+1) The stage sets up the environment variable VIRTUAL_ENV, its value will be
+   "~/.rucio" (if it exists), or "./.rucio" otherwise.
+2) Rucio client looks for configuration file "rucio.cfg" in
+   "VIRTUAL_ENV/etc/" (and some other places).
+3) Rucio client retrieves the necessary information from the config and
+   authenticates the user.
+
+Therefore, a correct configuration file should be put into designated place.
+Repository contains an example with correct values for most of the parameters:
+
+  Utils/Dataflow/091_datasetsRucio/.rucio/etc/rucio.cfg.example
+
+The following parameters should be updated:
+
+* account - username in CERN systems.
+* client_cert - full path to the user's grid certificate.
+* client_key - full path to the key corresponding to the user's grid
+  certificate.
+
+Being able to do so requires:
+
+1) Registering in CERN systems (discuss this with your supervisor).
+2) Obtaining a grid certificate (https://ca.cern.ch/ca/).
+3) Registering in ATLAS Virtual Organization (VO ATLAS, see link below).
+
+More information about accessing ATLAS resources and Rucio in particular:
+
+https://twiki.ific.uv.es/twiki/bin/view/Atlas/AtlasDataProcessingAtIFIC
