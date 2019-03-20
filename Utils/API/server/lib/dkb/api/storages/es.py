@@ -7,7 +7,7 @@ import sys
 import os
 import traceback
 import json
-from datetime import date
+from datetime import datetime
 
 from ..exceptions import DkbApiNotImplemented
 from exceptions import (StorageClientException,
@@ -23,6 +23,9 @@ STORAGE_NAME = config.STORAGES['ES']
 # Path to queries
 QUERY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                          'es', 'query')
+
+# Default datetime format
+DATE_FORMAT = '%d-%m-%Y %H:%M:%S'
 
 
 try:
@@ -105,7 +108,15 @@ def get_query(qname, **kwargs):
     """
     fname = os.path.join(QUERY_DIR, qname)
     query = None
-    params = {key: json.dumps(kwargs[key]) for key in kwargs}
+    params = {}
+    for key in kwargs:
+        try:
+            params[key] = json.dumps(kwargs[key])
+        except TypeError, err:
+            if 'datetime' in str(err):
+                params[key] = json.dumps(kwargs[key].strftime(DATE_FORMAT))
+            else:
+                raise
     try:
         with open(fname, 'r') as f:
             query = f.read() % params
@@ -148,6 +159,8 @@ def task_steps_hist(**kwargs):
     """
     init()
     raw_data = _raw_task_steps_hist(**kwargs)
+    start = kwargs.get('start')
+    end = kwargs.get('end')
     result = {'legend': [], 'data': {'x': [], 'y': []}}
     if raw_data is None:
         return result
@@ -156,8 +169,11 @@ def task_steps_hist(**kwargs):
         x = []
         y = []
         for data in step['chart_data']['buckets']:
-            x.append(date.fromtimestamp(data['key'] / 1000))
-            y.append(data['doc_count'])
+            dt = datetime.fromtimestamp(data['key'] / 1000)
+            if (not kwargs.get('start') or kwargs['start'] <= dt) \
+                    and (not kwargs.get('end') or kwargs['end'] >= dt):
+                x.append(dt.date())
+                y.append(data['doc_count'])
         result['legend'].append(step_name)
         result['data']['x'].append(x)
         result['data']['y'].append(y)
@@ -173,6 +189,14 @@ def _raw_task_steps_hist(**kwargs):
     logging.debug("_raw_task_steps_hist(%s)" % kwargs)
     q = dict(TASK_KWARGS)
     q['body'] = get_query('task-steps-hist', **kwargs)
+    if kwargs.get('start'):
+        r = {"range": {"end_time": {"gte":
+                                    kwargs['start'].strftime(DATE_FORMAT)}}}
+        q['body']['query']['bool']['must'].append(r)
+    if kwargs.get('end'):
+        r = {"range": {"start_time": {"lte":
+                                      kwargs['end'].strftime(DATE_FORMAT)}}}
+        q['body']['query']['bool']['must'].append(r)
     r = client().search(**q)
     return r
 

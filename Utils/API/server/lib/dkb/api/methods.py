@@ -222,6 +222,9 @@ def error_handler(exc_info):
         response['details'] = err.details
     elif isinstance(err, DkbApiNotImplemented):
         response['_status'] = 501
+    else:
+        response['_status'] = 500
+        response['details'] = str(err)
     if isinstance(err, NotFoundException):
         response['text_info'] = NotFoundException.description
     trace = traceback.format_exception(*exc_info)

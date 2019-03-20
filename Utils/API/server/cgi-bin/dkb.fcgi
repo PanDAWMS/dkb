@@ -6,6 +6,7 @@ import urlparse
 import sys
 import os
 import signal
+from datetime import datetime
 
 logging.basicConfig(format="%(asctime)s (%(levelname)s) %(message)s",
                     level=logging.DEBUG)
@@ -57,6 +58,14 @@ def parse_params(qs):
                 params[key][idx] = True
             elif val.lower() == 'false':
                 params[key][idx] = False
+            else:
+                # Try to detect and parse date/datetime parameter values
+                formats = ['%Y-%m%dT%H:%M:%S', '%Y-%m-%d']
+                for f in formats:
+                    try:
+                        params[key][idx] = datetime.strptime(val, f)
+                    except ValueError:
+                        pass
         if len(params[key]) == 1:
             params[key] = params[key][0]
     if not params.get('rtype'):

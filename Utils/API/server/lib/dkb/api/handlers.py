@@ -74,6 +74,15 @@ def task_hist(path, **kwargs):
 
     :param path: full path to the method
     :type path: str
+    :param detailed: keep all "* Merge" steps instead of joining them
+                     into single "Merge"
+    :type detailed: bool
+    :param start: left border of the time interval
+    :type start: datetime.datetime
+    :param stop: right border of the time interval
+    :type stop: datetime.datetime
+    :param bins: number of bins in the histogram
+    :type bins: int
     """
     rtype = kwargs.get('rtype', 'img')
     if rtype == 'img':
@@ -90,6 +99,23 @@ def task_hist(path, **kwargs):
     if not isinstance(htags, list):
         kwargs['htags'] = htags.split(',')
     data = storages.task_steps_hist(**kwargs)
+    if 'detailed' not in kwargs:
+        # Join all '* Merge' steps under common label 'Merge'
+        if 'Merge' not in data['legend']:
+            data['legend'].append('Merge')
+            data['data']['x'].append([])
+            data['data']['y'].append([])
+        merge_idx = data['legend'].index('Merge')
+        to_remove = []
+        for idx, step in enumerate(data['legend']):
+            if 'Merge' in step and step != 'Merge':
+                to_remove.append(idx)
+                data['data']['x'][merge_idx] += data['data']['x'][idx]
+                data['data']['y'][merge_idx] += data['data']['y'][idx]
+        for idx in to_remove[::-1]:
+            del data['legend'][idx]
+            del data['data']['x'][idx]
+            del data['data']['y'][idx]
     result = {}
     if rtype == 'json':
         # json module doesn't know how to serialize `datetime` objects
@@ -99,9 +125,32 @@ def task_hist(path, **kwargs):
                 x_data[i][j] = str(d)
         result = data
     if rtype == 'img':
+        # Reorder data series according to the steps order
+        reordered_idx = range(len(data['legend']))
+        extra = 1
+        steps_order = ['Evgen', 'Simul', 'Reco', 'Deriv', 'Merge']
+        for idx, step in enumerate(data['legend']):
+            try:
+                reordered_idx[steps_order.index(step)] = idx
+            except ValueError:
+                reordered_idx[-extra] = idx
+                extra += 1
+        new_data = {'legend': [], 'data': {'x': [], 'y': []}}
+        for i in reordered_idx:
+            new_data['legend'].append(data['legend'][i])
+            new_data['data']['x'].append(data['data']['x'][i])
+            new_data['data']['y'].append(data['data']['y'][i])
+        data = new_data
         pyplot.figure(figsize=(20, 15))
+        bins = kwargs.get('bins')
+        if not bins:
+            default_max_bins = 400
+            total_x = []
+            for x in data['data']['x']:
+                total_x += x
+            bins = min(len(set(total_x)), default_max_bins)
         pyplot.hist(data['data']['x'], weights=data['data']['y'],
-                    stacked=True, bins=250)
+                    stacked=True, bins=int(bins))
         pyplot.legend(data['legend'])
         img = StringIO()
         pyplot.savefig(img)
