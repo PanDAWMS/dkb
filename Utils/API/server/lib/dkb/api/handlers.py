@@ -119,6 +119,22 @@ def task_hist(path, **kwargs):
                 x_data[i][j] = str(d)
         result = data
     if rtype == 'img':
+        # Reorder data series according to the steps order
+        reordered_idx = range(len(data['legend']))
+        extra = 1
+        steps_order = ['Evgen', 'Simul', 'Reco', 'Deriv', 'Merge']
+        for idx, step in enumerate(data['legend']):
+            try:
+                reordered_idx[steps_order.index(step)] = idx
+            except ValueError:
+                reordered_idx[-extra] = idx
+                extra += 1
+        new_data = {'legend': [], 'data': {'x': [], 'y': []}}
+        for i in reordered_idx:
+            new_data['legend'].append(data['legend'][i])
+            new_data['data']['x'].append(data['data']['x'][i])
+            new_data['data']['y'].append(data['data']['y'][i])
+        data = new_data
         pyplot.figure(figsize=(20, 15))
         pyplot.hist(data['data']['x'], weights=data['data']['y'],
                     stacked=True, bins=250)
