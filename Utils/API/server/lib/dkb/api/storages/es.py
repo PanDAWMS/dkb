@@ -189,6 +189,14 @@ def _raw_task_steps_hist(**kwargs):
     logging.debug("_raw_task_steps_hist(%s)" % kwargs)
     q = dict(TASK_KWARGS)
     q['body'] = get_query('task-steps-hist', **kwargs)
+    if kwargs.get('start'):
+        r = {"range": {"end_time": {"gte":
+                                    kwargs['start'].strftime(DATE_FORMAT)}}}
+        q['body']['query']['bool']['must'].append(r)
+    if kwargs.get('end'):
+        r = {"range": {"start_time": {"lte":
+                                      kwargs['end'].strftime(DATE_FORMAT)}}}
+        q['body']['query']['bool']['must'].append(r)
     r = client().search(**q)
     return r
 
