@@ -111,3 +111,28 @@ def task_hist(path, **kwargs):
 
 
 methods.add('/task', 'hist', task_hist)
+
+
+def task_chain(path, **kwargs):
+    """ Get list of tasks belonging to same chain as ``tid``.
+
+    :param path: full path to the method
+    :type path: str
+    :param tid: task id
+    :type tid: str, int
+
+    :return: list of Task IDs, ordered from first to last task in chain
+    :rtype: dict
+    """
+    method_name = '/task/chain'
+    tid = kwargs.get('tid', None)
+    if tid is None:
+        raise MissedArgument(method_name, 'tid')
+    try:
+        int(tid)
+    except ValueError:
+        raise InvalidArgument(method_name, ('tid', tid, int))
+    return storages.task_chain(**kwargs)
+
+
+methods.add('/task', 'chain', task_chain)
