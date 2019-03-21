@@ -155,6 +155,11 @@ def task_hist(path, **kwargs):
         pyplot.hist(data['data']['x'], weights=data['data']['y'],
                     stacked=True, bins=int(bins))
         pyplot.legend(data['legend'])
+        title = ', '.join(kwargs['htags'])
+        font = {}
+        font['fontsize'] = 36
+        font['fontweight'] = 'bold'
+        pyplot.suptitle(title, **font)
         img = StringIO()
         pyplot.savefig(img)
         img.seek(0)
