@@ -126,15 +126,18 @@ def task_hist(path, **kwargs):
         result = data
     if rtype == 'img':
         # Reorder data series according to the steps order
-        reordered_idx = range(len(data['legend']))
-        extra = 1
         steps_order = ['Evgen', 'Simul', 'Reco', 'Deriv', 'Merge']
+        reordered_idx = [-1] * max(len(data['legend']), len(steps_order))
+        extra = 1
         for idx, step in enumerate(data['legend']):
             try:
                 reordered_idx[steps_order.index(step)] = idx
             except ValueError:
                 reordered_idx[-extra] = idx
                 extra += 1
+        if -1 in reordered_idx:
+            reordered_idx = set(reordered_idx)
+            reordered_idx.remove(-1)
         new_data = {'legend': [], 'data': {'x': [], 'y': []}}
         for i in reordered_idx:
             new_data['legend'].append(data['legend'][i])
