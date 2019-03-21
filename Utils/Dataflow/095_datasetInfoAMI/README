@@ -34,3 +34,15 @@ https://twiki.ific.uv.es/twiki/bin/view/Atlas/AtlasDataProcessingAtIFIC
 https://ami.in2p3.fr/pages/getting-started
 
 for more information.
+
+3. Running the stage
+--------------------
+Stage can be run as following:
+
+   ./amiDatasets.py --userkey /path/to/key --usercert /path/to/certificate filename.ndjson
+
+which will process the file and produce the result filename.json in the
+directory of the file. For more information about running the stage and its
+arguments, use:
+
+  ./amiDatasets.py -h
