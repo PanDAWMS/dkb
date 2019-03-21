@@ -161,7 +161,7 @@ def task_hist(path, **kwargs):
         font['fontweight'] = 'bold'
         pyplot.suptitle(title, **font)
         pyplot.xlabel('Days', labelpad=20, fontsize=30)
-        pyplot.ylabel('Runnung tasks', labelpad=20, fontsize=30)
+        pyplot.ylabel('Running tasks', labelpad=20, fontsize=30)
         pyplot.tick_params(labelsize=18)
         img = StringIO()
         pyplot.savefig(img)
