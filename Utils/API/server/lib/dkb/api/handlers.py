@@ -154,12 +154,13 @@ def task_hist(path, **kwargs):
             bins = min(len(set(total_x)), default_max_bins)
         pyplot.hist(data['data']['x'], weights=data['data']['y'],
                     stacked=True, bins=int(bins))
-        pyplot.legend(data['legend'])
+        pyplot.legend(data['legend'], fontsize=20)
         title = ', '.join(kwargs['htags'])
         font = {}
         font['fontsize'] = 36
         font['fontweight'] = 'bold'
         pyplot.suptitle(title, **font)
+        pyplot.tick_params(labelsize=18)
         img = StringIO()
         pyplot.savefig(img)
         img.seek(0)
