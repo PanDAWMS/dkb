@@ -17,3 +17,20 @@ Since requesting information from AMI is a very time-consuming process,
 the supplied datasets are filtered by data format - the ones with formats
 mentioned above are included into request to AMI and their metadata are
 updated, while all the others are left unchanged.
+
+2. Requirements
+---------------
+Proper memberships and grid certificate are required to run the stage.
+This includes:
+
+1) Registering in CERN systems (discuss this with your supervisor).
+2) Obtaining a grid certificate (https://ca.cern.ch/ca/).
+3) Registering in ATLAS Virtual Organization (VO ATLAS, see first link below).
+4) Registering on AMI site with the grid certificate(https://ami.in2p3.fr/).
+
+See
+
+https://twiki.ific.uv.es/twiki/bin/view/Atlas/AtlasDataProcessingAtIFIC
+https://ami.in2p3.fr/pages/getting-started
+
+for more information.
