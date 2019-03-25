@@ -1,5 +1,11 @@
 """
-Task chain reconstruction from elasticsearch.
+Proof of concept script for DKB.
+
+Reconstruct a task chain (task ids and connections between them) including a
+given task by quering data from elasticsearch.
+
+Authors:
+  Vasilii Aulov (vasilii.aulov@cern.ch)
 """
 import copy
 import sys
