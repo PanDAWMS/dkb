@@ -48,7 +48,7 @@ Details:
 """.format(updated, deleted, inserted)
 
     for v in report:
-        rep_str = "  " + report_str + v + ": " + str(report[v]) + " records\n"
+        rep_str = "  " + rep_str + v + ": " + str(report[v]) + " records\n"
 
     return rep_str
 
