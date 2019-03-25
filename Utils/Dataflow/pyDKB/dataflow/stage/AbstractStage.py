@@ -124,18 +124,20 @@ class AbstractStage(object):
                           )
         self.add_argument('-e', '--end-of-message', action='store', type=str,
                           help=u'custom end of message marker\n'
-                          'NOTE: in (f)ile mode for JSON messages EOM '
-                          'can be set to empty string to read input '
-                          'file as single JSON object, not as NDJSON. '
+                          'NOTE: for (f)ile sources EOM can be set to empty '
+                          'string to read input file as single message, '
+                          'not a number of NL-delimited messages. '
                           'In this case output will also be formatted '
-                          'as a single message: array or hash for JSON, '
-                          'single line for TTL, ...\n'
+                          'as a single message (array or hash for JSON, '
+                          'single line for TTL, ...), and EOP will be set to '
+                          '\'\\n\'\n'
                           'DEFAULT: \'\\n\'',
                           default=None,
                           dest='eom'
                           )
         self.add_argument('-E', '--end-of-process', action='store', type=str,
                           help=u'custom end of process marker\n'
+                          'NOTE: in case of empty EOM will be set to \'\\n\'\n'
                           'DEFAULT: \'\'',
                           default=None,
                           dest='eop'
