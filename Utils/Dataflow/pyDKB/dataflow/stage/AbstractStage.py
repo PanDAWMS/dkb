@@ -125,7 +125,7 @@ class AbstractStage(object):
         self.add_argument('-e', '--end-of-message', action='store', type=str,
                           help=u'custom end of message marker\n'
                           'NOTE: for (f)ile sources EOM can be set to empty '
-                          'string to read input file as single message, '
+                          'string to read input file as a single message, '
                           'not a number of NL-delimited messages. '
                           'In this case output will also be formatted '
                           'as a single message (array or hash for JSON, '
