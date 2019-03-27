@@ -10,6 +10,8 @@ them as NDJSON.
 Currently works with specific set of queries only:
  * prodsys2ES + datasets
  * prodsys2ES
+ * consistency : simplified query that only obtains taskid and task_timestamp
+   for each task
 
 The goal is to make it work with any number and combination of queries.
 
