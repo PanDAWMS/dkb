@@ -1,0 +1,77 @@
+/* Get statistics for tasks with given hashtag by steps.
+
+Parameter values:
+  HASHTAGS_LOWERCASE -- list of hashtags (["gammajets", "mc16c_cp"])
+
+GET <index>/task/_search
+*/
+{
+  "size": 0,
+  "query": {
+    "bool": {
+      "must": [
+        {"terms": {"hashtag_list": %%HASHTAGS_LOWERCASE%%}},
+        {"bool": {"must_not": [{"terms": {"status": ["aborted", "failed", "broken", "obsolete"]}}]}}
+      ]
+    }
+  },
+  "aggs": {
+    "steps": {
+      "terms": {"field": "step_name.keyword"},
+      "aggs": {
+        "input_events": {
+          "sum": {"field": "input_events"}
+        },
+        "not_deleted": {
+          "filter": {"term": {"primary_input_deleted": false}},
+          "aggs": {
+            "input_bytes": {
+              "sum": {"field": "input_bytes"}
+            }
+          }
+        },
+        "processed_events": {
+          "sum": {"field": "processed_events"}
+        },
+        "cpu_total": {
+          "sum": {"field": "toths06"}
+        },
+        "cpu_failed": {
+          "sum": {"field": "toths06_failed"}
+        },
+        "timestamp_defined": {
+          "filter": {
+            "bool": {
+              "must": [
+                {"exists": {"field": "start_time"}},
+                {"exists": {"field": "end_time"}},
+                {"script": {"script": "doc['end_time'].value > doc['start_time'].value"}}
+              ]
+            }
+          },
+          "aggs": {
+            "walltime": {
+              "avg": {"script": {"inline": "doc['end_time'].value - doc['start_time'].value"}}
+            }
+          }
+        },
+        "output": {
+          "children": {"type": "output_dataset"},
+          "aggs": {
+            "not_removed": {
+              "filter": {"term": {"deleted": false}},
+              "aggs": {
+                "bytes": {
+                  "sum": {"field": "bytes"}
+                }
+              }
+            }
+          }
+        },
+        "status": {
+          "terms": {"field": "status"}
+        }
+      }
+    }
+  }
+}

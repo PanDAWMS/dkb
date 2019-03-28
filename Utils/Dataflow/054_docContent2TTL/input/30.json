@@ -1,0 +1,89 @@
+{
+    "content": {
+        "table_12": [
+            "Table 12: Monte Carlo samples used for fake rate studies described in Appendix D.\n\n", 
+            [
+                [
+                    "Process", 
+                    "Dataset", 
+                    "Generator", 
+                    "Cross section (pb)", 
+                    "Luminosity(pb\u22121)"
+                ], 
+                [
+                    "W \u2192 \u00b5\u03bd +0p", 
+                    "107690", 
+                    "A\uf76c\uf770\uf767\uf765\uf76e", 
+                    "8303.5", 
+                    "417.5"
+                ], 
+                [
+                    "W \u2192 \u00b5\u03bd +1p", 
+                    "107691", 
+                    "A\uf76c\uf770\uf767\uf765\uf76e", 
+                    "1564.8", 
+                    "380.8"
+                ], 
+                [
+                    "W \u2192 \u00b5\u03bd +2p", 
+                    "107692", 
+                    "A\uf76c\uf770\uf767\uf765\uf76e", 
+                    "453.3", 
+                    "8213.3"
+                ], 
+                [
+                    "W \u2192 \u00b5\u03bd +3p", 
+                    "107693", 
+                    "A\uf76c\uf770\uf767\uf765\uf76e", 
+                    "122.3", 
+                    "7928.1"
+                ], 
+                [
+                    "W \u2192 \u00b5\u03bd +4p", 
+                    "107694", 
+                    "A\uf76c\uf770\uf767\uf765\uf76e", 
+                    "30.9", 
+                    "8248.7"
+                ], 
+                [
+                    "W \u2192 \u00b5\u03bd +5p", 
+                    "107695", 
+                    "A\uf76c\uf770\uf767\uf765\uf76e", 
+                    "8.3", 
+                    "8428.7"
+                ], 
+                [
+                    "W \u2192 \u00b5\u03bd +jets", 
+                    "119129", 
+                    "S\uf768\uf765\uf772\uf770\uf761", 
+                    "10503", 
+                    "161.8"
+                ], 
+                [
+                    "Single-top (t-channel)", 
+                    "108341", 
+                    "\uf76d\uf763@\uf76e\uf76c\uf76f", 
+                    "7.12", 
+                    "24928"
+                ]
+            ]
+        ], 
+        "plain_text": {
+            "atlas_name": false, 
+            "links": {}, 
+            "data taking years": [
+                "2011"
+            ], 
+            "luminosity": false, 
+            "energy": "7 TeV", 
+            "campaigns": [], 
+            "collisions": "proton-proton", 
+            "possible_project_realdata": [
+                "data11_7TeV"
+            ], 
+            "possible_project_montecarlo": false
+        }
+    }, 
+    "fname": "30",
+    "dkbID": "FAKE-ID-30"
+}

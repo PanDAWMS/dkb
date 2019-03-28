@@ -1,0 +1,19 @@
+.. _pyDKB.dataflow.stage:
+
+pyDKB.dataflow.stage package
+============================
+
+.. automodule:: pyDKB.dataflow.stage
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+
+   pyDKB.dataflow.stage.AbstractProcessorStage
+   pyDKB.dataflow.stage.AbstractStage
+   pyDKB.dataflow.stage.processors
+

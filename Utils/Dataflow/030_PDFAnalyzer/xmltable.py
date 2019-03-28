@@ -9,6 +9,7 @@ PAGE_SIZE = 1000
 
 re_textline = re.compile("<textline bbox=\"[0-9.,]+\">.+?</textline>",
                          re.DOTALL)
+re_table_caption_short = re.compile(r"Table (\d+):")
 
 
 class TextLine:
@@ -84,7 +85,6 @@ class TextLine:
         elif isinstance(params, list):
             [self.left, self.top, self.right, self.bottom,
              self.text, self.spaces_coords] = params
-#        print self.text
 
             self.center = [(self.left + self.right) / 2,
                            (self.top + self.bottom) / 2]
@@ -137,34 +137,16 @@ class TextLine:
 
 def row_centery(row):
     """ Calculate average y-center in a row. """
-    c = 0
-    for line in row:
-        c += line.center[1]
-    c /= len(row)
-    return c
+    return sum([line.center[1] for line in row]) / len(row)
 
 
 class Table:
     re_month = re.compile("(january|february|march|april|may|june|july|august"
                           "|september|october|november|december)")
 
-    def __init__(self, header, lines):
-        # table description
-        self.header = header
-        # table text lines
-        self.lines = lines
-
-#        print "\nTABLE WITH HEADER", header
-
-        rows = []
-        t = []
-        # Construct rows out of lines
-        for line in self.lines:
-            if line not in t:
-                row = self.construct_row(line, t)
-                rows.append(row)
-                t += row
-        rows.sort(key=lambda row: row_centery(row))
+    def __init__(self, caption, rows, caption_position):
+        # Table description
+        self.caption = caption
 
         # Remove rows which contain date - this is used because
         # sometimes date stamped on a page gets caught while we are
@@ -180,29 +162,40 @@ class Table:
                 row.sort(key=lambda line: line.center[0])
                 self.rows.append(row)
 
-        r = len(self.rows) - 1
         # Separate table lines from text above table. This is done by
         # looking for a space between rows which is too large.
         max_diff = False
-        n = 1
-        while r > 0:
-            if not max_diff:
-                max_diff = row_centery(self.rows[r])\
-                    - row_centery(self.rows[r - 1])
-            else:
-                diff = row_centery(self.rows[r]) - \
-                    row_centery(self.rows[r - 1])
-#                print "DIFF BETWEEN", self.row_text(num = r), "AND",\
-#                      self.row_text(num = r - 1), ":", diff
-                if diff > 1.4 * max_diff:
-                    del self.rows[0:r]
-                    break
-                elif diff > max_diff:
-                    max_diff = diff
-            n += 1
-            r -= 1
+        if caption_position < 0:
+            r = 0
+            while r < len(self.rows) - 1:
+                if not max_diff:
+                    max_diff = row_centery(self.rows[r + 1])\
+                        - row_centery(self.rows[r])
+                else:
+                    diff = row_centery(self.rows[r + 1]) - \
+                        row_centery(self.rows[r])
+                    if diff > 1.4 * max_diff:
+                        del self.rows[r + 1:]
+                        break
+                    elif diff > max_diff:
+                        max_diff = diff
+                r += 1
+        else:
+            r = len(self.rows) - 1
+            while r > 0:
+                if not max_diff:
+                    max_diff = row_centery(self.rows[r])\
+                        - row_centery(self.rows[r - 1])
+                else:
+                    diff = row_centery(self.rows[r]) - \
+                        row_centery(self.rows[r - 1])
+                    if diff > 1.4 * max_diff:
+                        del self.rows[:r]
+                        break
+                    elif diff > max_diff:
+                        max_diff = diff
+                r -= 1
 
-#        print "ROWS"
         # Find overlapping (by X coordinate) lines and merge them. So
         # far this was required to deal with rows where several lines
         # are above each other. No additional spaces are added.
@@ -215,8 +208,6 @@ class Table:
                     new_row.append(line)
                     line = row[i]
                 else:
-                    # print "LINES WITH TEXT", line.text, "AND",\
-                    #     row[i].text, "OVERLAP - MERGING"
                     line = line.merge(row[i])
             new_row.append(line)
             rows.append(new_row)
@@ -231,11 +222,10 @@ class Table:
                 if len_min == len_max:
                     break
                 else:
-                    # print "ATTEMPTING TO BREAK SHORT ROWS"
                     self.break_short_rows(len_max)
                     i += 1
                 if i == 2:
-                    # print "MAXIMUM BREAKING ATTEMPTS REACHED"
+                    # Too much breaking attempts.
                     break
 
     def construct_row(self, first_line, used_lines):
@@ -257,17 +247,13 @@ class Table:
         """
         if num is not None or num == 0:
             row = self.rows[num]
-        text = ""
-        for line in row:
-            text += line.text + "!"
-        return text
+        return "!".join([line.text for line in row])
 
     def break_short_rows(self, max_elements):
         """ Attempt to break lines in rows which are too short. """
         normal_rows = []
         short_rows = []
-#        print "ROWS"
-        # Divide rows on short and normal.
+        # Divide rows into short and normal.
         for row in self.rows:
             if len(row) == max_elements:
                 normal_rows.append(row)
@@ -276,9 +262,7 @@ class Table:
         main_row = normal_rows[0]
         # Calculate x coord for centers of each column in first normal
         # row.
-        main_centers = []
-        for line in main_row:
-            main_centers.append((line.left + line.right) / 2)
+        main_centers = [(line.left + line.right) / 2 for line in main_row]
         # Calculate x boundaries of each column.
         boundaries = []
         for i in range(0, max_elements):
@@ -288,20 +272,16 @@ class Table:
             # Most right point in a column.
             boundaries.append(max(normal_rows,
                                   key=lambda row: row[i].right)[i].right)
-#        print "BOUNDARIES", boundaries
         del boundaries[0]
         del boundaries[-1]
         # Transform boundaries into spaces between columns.
         column_spaces = []
         for i in range(0, len(boundaries) / 2):
             column_spaces.append([boundaries[2 * i], boundaries[2 * i + 1]])
-#        for cs in column_spaces:
-#            print "COLUMN SPACE", column_spaces.index(cs), cs
         self.rows = normal_rows
         # Attempt to break some of the lines in short rows.
         for row in short_rows:
             new_row = []
-#            print "SHORT ROW", self.row_text(row = row)
             for line in row:
                 for cs in column_spaces:
                     # If line crosses the space entirely, attempt to
@@ -310,7 +290,6 @@ class Table:
                         # We cannot break a line if there are no spaces.
                         # This means that line is, most likely, not needed.
                         if not line.spaces_coords:
-                            # print "LINE HAS NO SPACES TO BREAK ON, REMOVING"
                             line = None
                             break
                         else:
@@ -320,13 +299,11 @@ class Table:
                                       key=lambda space:
                                       abs((space[1] + space[0]) / 2 - cs2))
                             if abs((cls[1] + cls[0]) / 2 - cs2) > 5000:
+                                # Line's spaces are too far from the
+                                # column boundaries, so it is removed.
                                 # TO DO: fix this.
-                                # print "LINE ONLY HAS SPACES TOO FAR\
-                                # FROM COLUMN BOUNDARIES, REMOVING"
                                 line = None
                                 break
-#                            print "BREAKING ON SPACE", \
-#                                  closest_space  # min_x[0]
                             [nl1, nl2] = line.split(cls)
                             new_row.append(nl1)
                             line = nl2
@@ -334,7 +311,6 @@ class Table:
                     new_row.append(line)
             # Make sure that new row has enough members.
             if new_row:
-                #                print "NEW_ROW", self.row_text(row = new_row)
                 num_lines = len(new_row)
                 # Try to find a line corresponding each main center.
                 for c in main_centers:
@@ -350,8 +326,6 @@ class Table:
                     # If there is no line corresponding a center, add
                     # an "EMPTY" line to row.
                     if not existing_column:
-                        # print "ADDING EMPTY LINE", c - 1,
-                        # new_row[0].top, c + 1, new_row[0].bottom
                         nl = TextLine([c - 1, new_row[0].top, c + 1,
                                        new_row[0].bottom, "EMPTY", []])
                         new_row.append(nl)
@@ -361,53 +335,8 @@ class Table:
         self.rows.sort(key=lambda row: row_centery(row))
 
 
-def get_tables_from_text(text):
-    """ Get tables from a xml page text. """
-    re_textbox = re.compile(r"<textbox id=\"\d+\" bbox=\"([0-9.,]+)\">",
-                            re.DOTALL)
-    re_table_header = re.compile(r"Table \d+:")
-    tlines = re_textline.findall(text)
-    lines = []
-    table_headers = []
-    for line in tlines:
-        tl = TextLine(line)
-        if re_table_header.match(tl.text):
-            table_headers.append(tl)
-        else:
-            lines.append(tl)
-
-    # Find the highest top coordinate possible and use it as a zero
-    # point for new Y axis.
-    top = max(table_headers + lines, key=lambda line: line.top).top
-    for line in table_headers + lines:
-        line.swap_y(top)
-
-    table_headers.sort(key=lambda x: x.center[1])
-
-    table_lines = []
-    tables = []
-    for header in table_headers:
-        table_lines = []
-        remaining_lines = []
-        for line in lines:
-            if line.center[1] < header.center[1]:
-                table_lines.append(line)
-            else:
-                remaining_lines.append(line)
-
-        table = Table(header.text, table_lines)
-        if table.rows:
-            tables.append(table)
-        lines = remaining_lines
-    return tables
-
-
 def analyze_page(text):
-    tlines = re_textline.findall(text)
-    lines = []
-    for line in tlines:
-        tl = TextLine(line)
-        lines.append(tl)
+    lines = [TextLine(line) for line in re_textline.findall(text)]
 
     # Find the highest top coordinate possible and use it as a zero
     # point for new Y axis.
@@ -428,5 +357,109 @@ def analyze_page(text):
             rows.append(row)
             t += row
     rows.sort(key=lambda row: row_centery(row))
+    # Discard the top row if it contains "DRAFT" line. Such line is sometimes
+    # placed on top of each page of the document and may interfere with
+    # reconstruction when the caption is below the tables.
+    for line in rows[0]:
+        if line.text == "DRAFT":
+            rows = rows[1:]
+            break
 
     return rows
+
+
+def get_tables_from_text(text):
+    """ Get tables from a xml page text. """
+    rows = analyze_page(text)
+    caption_start = False
+    caption_rows = []
+    text_rows = []
+    # Determine the type of each row, if possible.
+    # Caption rows are related to the table - notably, they contain the table
+    # number.
+    # Text rows contain parts of the document's main text body.
+    # The tables cannot include rows from any of these two types - therefore,
+    # such rows (and document borders) can be used to determine whether the
+    # table captions are positioned above or below their tables.
+    for (i, row) in enumerate(rows):
+        if re_table_caption_short.match(row[0].text):
+            caption_start = row
+            caption_rows.append(i)
+        elif caption_start and len(row) == 1 and\
+                abs(row[0].left - caption_start[0].left) < 1.0:
+            caption_rows.append(i)
+        else:
+            caption_start = False
+            if len(row) > 1 and row[0].right - row[0].left < 10.0:
+                f = row[1]
+            else:
+                f = row[0]
+            # Magic number - text rows in most of the documents are positioned
+            # in such way that PDFMiner determines their left coordinate to
+            # be ~76. Non-rotated pages only.
+            if f.left - 76.0 < 1.0 and len(row) < 3:
+                text_rows.append(i)
+    # Tables' captions position on the page
+    # -1 - above tables
+    # 0 - unknown
+    # 1 - below tables
+    caption_position = 0
+    if 0 in caption_rows:
+        caption_position = -1
+    elif len(rows) - 1 in caption_rows:
+        caption_position = 1
+    else:
+        for i in caption_rows:
+            if i - 1 in text_rows:
+                caption_position = -1
+                break
+            elif i + 1 in text_rows:
+                caption_position = 1
+                break
+    tables = []
+    if caption_position < 0:
+        i = len(rows) - 1
+        last_unused = i
+        while i >= 0:
+            if i in caption_rows:
+                table_rows = rows[i + 1:last_unused + 1]
+                while i - 1 in caption_rows:
+                    i -= 1
+                caption = "".join([line.text for line in rows[i]])
+                while i + 1 in caption_rows:
+                    i += 1
+                    caption += "".join([line.text for line in rows[i]])
+                while i - 1 in caption_rows:
+                    i -= 1
+                # Row after table cannot be another caption and is first unused
+                # row for the next table.
+                i -= 1
+                last_unused = i
+                i -= 1
+                table = Table(caption, table_rows, caption_position)
+                if table.rows:
+                    tables.append(table)
+            else:
+                i -= 1
+        tables = list(reversed(tables))
+    else:
+        i = 0
+        last_unused = i
+        while i < len(rows):
+            if i in caption_rows:
+                table_rows = rows[last_unused:i]
+                caption = "".join([line.text for line in rows[i]])
+                while i + 1 in caption_rows:
+                    i += 1
+                    caption += "".join([line.text for line in rows[i]])
+                # Row after table cannot be another caption and is first unused
+                # row for the next table.
+                i += 1
+                last_unused = i
+                i += 1
+                table = Table(caption, table_rows, caption_position)
+                if table.rows:
+                    tables.append(table)
+            else:
+                i += 1
+    return tables

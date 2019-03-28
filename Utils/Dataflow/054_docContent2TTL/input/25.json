@@ -1,6 +1,17 @@
 {
     "content": {
-        "montecarlo_datasets": [
+        "plain_text": {
+            "atlas_name": "ATL-COM-PHYS-2011-081", 
+            "links": {}, 
+            "data taking years": false, 
+            "luminosity": "42 pb-1", 
+            "energy": "7 TeV", 
+            "campaigns": [], 
+            "collisions": false, 
+            "possible_project_realdata": false, 
+            "possible_project_montecarlo": false
+        }, 
+        "mc_datasets": [
             "mc10_7TeV.105863.pythiaContactInt_Lambda3_minus.merge.AOD.e574_s933_s946_r1831_r1700", 
             "mc10_7TeV.105864.pythiaContactInt_Lambda4_minus.merge.AOD.e574_s933_s946_r1831_r1700", 
             "mc10_7TeV.105865.pythiaContactInt_Lambda5_minus.merge.AOD.e574_s933_s946_r1831_r1700", 
@@ -9,28 +20,8 @@
             "mc10_7TeV.105867.pythiaContactInt_Lambda3_plus.merge.AOD.e574_s933_s946_r1831_r1700", 
             "mc10_7TeV.105868.pythiaContactInt_Lambda4_plus.merge.AOD.e574_s933_s946_r1831_r1700", 
             "mc10_7TeV.105869.pythiaContactInt_Lambda5_plus.merge.AOD.e574_s933_s946_r1831_r1700"
-        ], 
-        "plain_text": {
-            "data taking year": false, 
-            "luminosity": "42 pb-1", 
-            "energy": "7 TeV", 
-            "campaigns": [], 
-            "collisions": false, 
-            "possible years": [
-                "at ATLAS\u201d, DPF\u201909 talk proceedings (http://arxiv.org/abs/0910.3384), October 2009.", 
-                "Our dataset consists of the full 2010 run. This corresponds to \u223c42 pb\u22121 of muon-triggered data, collected", 
-                "March 15, 2011", 
-                "Data 2010", 
-                "With the full 2010 data set, we are able to set limits on the 4-fermion contact interaction q \u00afq \u2192 m +m \u2212 in", 
-                "200 400 600 800 1000 1200 1400 1600 1800 2000", 
-                "800 1000 1200 1400 1600 1800 2000", 
-                "[6] ATLAS Exotics Dilepton statistics note, ATL-COM-PHYS-2011-085, 2011.", 
-                "Commun. 125 238 (LU TP 00-30, hep-ph/0010017, 2001.", 
-                "Trigger and Physics\u201d, CERN-OPEN-2008-020, 2008.", 
-                "lider\u201d, Journal of Instrumentation 3 08 S08003, http://stacks.iop.org/1748-0221/3/S08003, 2008.", 
-                "[5] ATLAS Exotics Dimuon support note, ATL-COM-PHYS-2011-084, 2011."
-            ]
-        }
+        ]
     }, 
-    "fname": "25"
+    "fname": "25",
+    "dkbID": "ATL-PHYS-2015"
 }

@@ -2,7 +2,7 @@
 """
 DKB Dataflow Stage 091 (datasetsRucio)
 
-Get metadata abourt datasets from Rucio.
+Get dataset metadata from Rucio.
 Input: from Stage 009.
 Output: to Stage 019.
 
@@ -41,7 +41,22 @@ except Exception, err:
     sys.exit(1)
 
 rucio_client = None
-DS_TYPE = 'output'
+
+OUTPUT = 'o'
+INPUT = 'i'
+
+META_FIELDS = {
+    OUTPUT: {'bytes': 'bytes', 'events': 'events', 'deleted': 'deleted'},
+    INPUT: {'bytes': 'input_bytes',
+            'events': 'primary_input_events',
+            'deleted': 'primary_input_deleted'
+            }
+}
+
+SRC_FIELD = {
+    OUTPUT: 'output',
+    INPUT: 'primary_input'
+}
 
 
 def main(argv):
@@ -49,9 +64,20 @@ def main(argv):
     stage = pyDKB.dataflow.stage.ProcessorStage()
     stage.set_input_message_type(messageType.JSON)
     stage.set_output_message_type(messageType.JSON)
+    stage.add_argument('-t', '--dataset-type', action='store', type=str,
+                       help=u'Type of datasets to work with: (i)nput'
+                             ' or (o)utput',
+                       nargs='?',
+                       default=OUTPUT,
+                       choices=[INPUT, OUTPUT],
+                       dest='ds_type'
+                       )
 
     stage.configure(argv)
-    stage.process = process
+    if stage.ARGS.ds_type == OUTPUT:
+        stage.process = process_output_ds
+    elif stage.ARGS.ds_type == INPUT:
+        stage.process = process_input_ds
     init_rucio_client()
     exit_code = stage.run()
 
@@ -73,26 +99,31 @@ def init_rucio_client():
         sys.exit(1)
 
 
-def process(stage, message):
-    """ Process input message.
+def process_output_ds(stage, message):
+    """ Process output datasets from input message.
 
     Generate output JSON document of the following structure:
-        { "taskid": <TASKID>,
-          "output": []
+        { "datasetname": <DSNAME>
+          "deleted": <bool>,
+          "bytes": <...>,
+          ...
+          "_type": "output_dataset",
+          "_parent": <TASKID>,
+          "_id": <DSNAME>
         }
     """
     json_str = message.content()
 
-    if not json_str.get(DS_TYPE):
+    if not json_str.get(SRC_FIELD[OUTPUT]):
         # Nothing to process; over.
         return True
 
-    datasets = json_str[DS_TYPE]
+    datasets = json_str[SRC_FIELD[OUTPUT]]
     if type(datasets) != list:
         datasets = [datasets]
 
     for dataset in datasets:
-        ds = get_dataset_info(dataset)
+        ds = get_output_ds_info(dataset)
         ds['taskid'] = json_str.get('taskid')
         if not add_es_index_info(ds):
             sys.stderr.write("(WARN) Skip message (not enough info"
@@ -104,7 +135,31 @@ def process(stage, message):
     return True
 
 
-def get_dataset_info(dataset):
+def process_input_ds(stage, message):
+    """ Process input dataset from input message.
+
+    Add to original JSON fields:
+     * bytes
+     * deleted
+    """
+    data = message.content()
+    mfields = META_FIELDS[INPUT]
+    ds_name = data.get(SRC_FIELD[INPUT])
+    if ds_name:
+        try:
+            mdata = get_metadata(ds_name, mfields.keys())
+            adjust_metadata(mdata)
+            for mkey in mdata:
+                data[mfields[mkey]] = mdata[mkey]
+        except RucioException:
+            data[mfields['bytes']] = -1
+            data[mfields['deleted']] = True
+    stage.output(pyDKB.dataflow.messages.JSONMessage(data))
+
+    return True
+
+
+def get_output_ds_info(dataset):
     """ Construct dictionary with dataset info.
 
     Dict format:
@@ -117,18 +172,17 @@ def get_dataset_info(dataset):
     ds_dict = {}
     ds_dict['datasetname'] = dataset
     try:
-        bytes = get_metadata_attribute(dataset, 'bytes')
-        if bytes == 'null' or bytes is None:
-            ds_dict['bytes'] = -1
-        else:
-            ds_dict['bytes'] = bytes
-            ds_dict['deleted'] = False
+        mfields = META_FIELDS[OUTPUT]
+        mdata = get_metadata(dataset, mfields.keys())
+        adjust_metadata(mdata)
+        for mkey in mfields:
+            ds_dict[mfields[mkey]] = mdata[mkey]
     except RucioException:
-        # if dataset wasn't find in Rucio, it means that it was deleted from
-        # the Rucio catalog. In this case 'deleted' is set to TRUE and
+        # if dataset wasn't found in Rucio, it means that it has been deleted
+        # from the Rucio catalog. In this case 'deleted' is set to TRUE and
         # the length of file is set to -1
-        ds_dict['bytes'] = -1
-        ds_dict['deleted'] = True
+        ds_dict[mfields['bytes']] = -1
+        ds_dict[mfields['deleted']] = True
     return ds_dict
 
 
@@ -153,19 +207,50 @@ def extract_scope(dsn):
     return result
 
 
-def get_metadata_attribute(dsn, attribute_name):
+def get_metadata(dsn, attributes=None):
     """ Get attribute value from Rucio
 
     :param dsn: full dataset name
-    :param attribute_name: name of searchable attribute
-    :return:
+    :param attributes: attribute name OR
+                       list of names of searchable attributes
+                       (None = all attributes)
+    :return: dataset metadata
+    :rtype:  dict
     """
     scope, dataset = extract_scope(dsn)
-    metadata = rucio_client.get_metadata(scope=scope, name=dataset)
-    if attribute_name in metadata.keys():
-        return metadata[attribute_name]
+    try:
+        metadata = rucio_client.get_metadata(scope=scope, name=dataset)
+    except ValueError, err:
+        raise RucioException(err)
+    if attributes is None:
+        result = metadata
     else:
-        return None
+        result = {}
+        if not isinstance(attributes, list):
+            attributes = [attributes]
+        for attribute_name in attributes:
+            result[attribute_name] = metadata.get(attribute_name, None)
+    return result
+
+
+def adjust_metadata(mdata):
+    """ Update metadata taken from Rucio with values required to proceed. """
+    if not mdata:
+        return mdata
+    if not isinstance(mdata, dict):
+        sys.stderr.write("(ERROR) adjust_metadata() expects parameter of type "
+                         " 'dict' (get '%s')" % mdata.__class__.__name__)
+    for key in mdata:
+        if mdata[key] == 'null':
+            mdata[key] = None
+    if 'bytes' in mdata.keys():
+        val = mdata['bytes']
+        if val is None:
+            mdata['bytes'] = -1
+            mdata['deleted'] = True
+        else:
+            mdata['deleted'] = False
+    return mdata
 
 
 def add_es_index_info(data):

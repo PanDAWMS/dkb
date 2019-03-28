@@ -17,8 +17,6 @@ SQUASH_POLICY = 'SQUASH'
 
 # Global variables
 # ---
-# Operating mode
-mode = None
 # Output stream
 OUT = os.fdopen(sys.stdout.fileno(), 'w', 0)
 # ---
@@ -28,7 +26,7 @@ def main():
     """ Main program cycle.
 
     USAGE:
-       ./Oracle2JSON.py --config <config file> --mode <PLAIN|SQUASH>
+       ./Oracle2JSON.py --config <config file>
 
     TODO:
        Obtain the min(timestamp) from t_production_task
@@ -36,11 +34,10 @@ def main():
        Query: SELECT min(timestamp) from t_production_task;
     """
     args = parsingArguments()
-    global mode
-    mode = args.mode
 
     # read initial configuration
     config = read_config(args.config)
+    log_config(config)
     if config is None:
         sys.exit(1)
 
@@ -49,7 +46,7 @@ def main():
     if not offset_storage:
         sys.exit(2)
 
-    conn = OracleConnection(config['dsn'])
+    conn = OracleConnection(config['__dsn'])
     if not conn.establish():
         sys.stderr.write("(ERROR) Failed to connect to Oracle. Exiting.\n")
         sys.exit(3)
@@ -60,6 +57,30 @@ def main():
         sys.exit(1)
 
     process(conn, offset_storage, config)
+
+
+def log_config(config):
+    """ Log stage configuration.
+
+    :param config: stage configuration
+    :type config: dict, NoneType
+    """
+    if config is None:
+        sys.stderr.write("(ERROR) Stage is not configured.\n")
+    if not isinstance(config, dict):
+        sys.stderr.write("(ERROR) Stage is misconfigured.\n")
+
+    sys.stderr.write("(INFO) Stage 009 configuration (%s):\n"
+                     % config['__file__'])
+
+    key_len = len(max(config.keys(), key=len))
+    pattern = "(INFO)  %%-%ds : '%%s'\n" % key_len
+    sys.stderr.write("(INFO) ---\n")
+    for p in config:
+        if p.startswith('__'):
+            continue
+        sys.stderr.write(pattern % (p, config[p]))
+    sys.stderr.write("(INFO) ---\n")
 
 
 def read_config(config_file):
@@ -73,11 +94,12 @@ def read_config(config_file):
     :rtype: dict|NoneType
     """
     result = {'__path__': os.path.dirname(os.path.abspath(config_file))}
+    result['__file__'] = os.path.join(result['__path__'], config_file)
     config = ConfigParser.SafeConfigParser()
     try:
         config.read(config_file)
         # Required parameters (with no defaults)
-        result['dsn'] = config.get('oracle', 'dsn')
+        result['__dsn'] = config.get('oracle', 'dsn')
         step = config.get('timestamps', 'step')
         result['step_seconds'] = interval_seconds(step)
         if result['step_seconds'] == 0:
@@ -86,6 +108,16 @@ def read_config(config_file):
         queries = {}
         for (qname, f) in queries_cfg:
             queries[qname] = {'file': config_path(f, result)}
+        if 'queries.params' in config.sections():
+            qparams = {}
+            for (param, val) in config.items('queries.params'):
+                qparams[param] = val
+            for q in queries:
+                # As for now we have a common set of parameters for all
+                # queries, we reuse same `dict` instead of copying it.
+                # But if we need different parameters for different queries,
+                # it must be changed to `dict(qparams)` or smth like this.
+                queries[q]['params'] = qparams
         result['queries'] = queries
     except (IOError, ConfigParser.Error), e:
         sys.stderr.write('Failed to read config file (%s): %s\n'
@@ -107,6 +139,7 @@ def read_config(config_file):
     result['offset_file'] = config_path(config_get(config, 'logging',
                                                    'offset_file', '.offset'),
                                         result)
+    result['mode'] = config_get(config, 'process', 'mode', 'SQUASH')
 
     return result
 
@@ -151,6 +184,9 @@ def config_get(config, section, param, default=None):
             sys.stderr.write("(INFO) Config: parameter '%s' (section '%s')"
                              " is not configured. Using default value: %s\n"
                              % (param, section, default))
+        result = default
+
+    if result == '' and default is not None:
         result = default
 
     return result
@@ -401,6 +437,7 @@ def process(conn, offset_storage, config):
     :type offset_storage: OffsetStorage
     :type config: dict
     """
+    mode = config['mode']
     reverse = config['step_seconds'] < 0
     final_date = config['final_date']
     step_seconds = config['step_seconds']
@@ -503,8 +540,6 @@ def parsingArguments():
                                      " connector stage.")
     parser.add_argument('--config', help="Configuration file path",
                         type=str, required=True)
-    parser.add_argument('--mode', help="Mode of execution: PLAIN | SQUASH",
-                        choices=[PLAIN_POLICY, SQUASH_POLICY])
     args = parser.parse_args()
     if not os.access(args.config, os.F_OK):
         sys.stderr.write("argument --config: '%s' file not exists\n"
