@@ -13,7 +13,6 @@ Submodules
 
 .. toctree::
 
-   pyDKB.dataflow.stage.AbstractProcessorStage
    pyDKB.dataflow.stage.AbstractStage
-   pyDKB.dataflow.stage.processors
+   pyDKB.dataflow.stage.ProcessorStage
 
