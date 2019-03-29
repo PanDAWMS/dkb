@@ -98,15 +98,27 @@ load_files () {
 
 load_stream () {
   log "Switched to the stream mode."
-  while read -r -d $(echo -ne "$EOBatch") line; do
-    n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
-    while [ $n -gt $CURL_N_MAX ]; do
-      sleep $SLEEP
+  if [ -z "$(echo -ne $EOBatch)" ] ; then
+    while eval "read -d \$'$EOBatch' line"; do
       n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
+      while [ $n -gt $CURL_N_MAX ]; do
+        sleep $SLEEP
+        n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
+      done
+      echo "$line" | ${cmd}- &
+      echo -ne "$EOProcess"
     done
-    echo "$line" | ${cmd}- &
-    echo -ne "$EOProcess"
-  done
+  else
+    while read -r -d $(echo -ne "$EOBatch") line; do
+      n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
+      while [ $n -gt $CURL_N_MAX ]; do
+        sleep $SLEEP
+        n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
+      done
+      echo "$line" | ${cmd}- &
+      echo -ne "$EOProcess"
+    done
+  fi
 }
 
 if [ -z "$1" ] ; then
