@@ -21,6 +21,8 @@ fi
 SLEEP=1
 CURL_N_MAX=10
 
+EOP_set="N"
+
 usage () {
   echo "
 Upload TTL or SPARQL query files to Virtuoso.
@@ -64,6 +66,11 @@ OPTIONS:
 }
 
 upload_files () {
+  if [ "$EOP_set" == "N" ] ; then
+    EOProcess=""
+  else
+    EOProcess="$EOP"
+  fi
 
   if [ -z "$1" ] ; then
     echo "(ERROR) Input file is not specified." >&2
@@ -115,7 +122,7 @@ upload_files () {
     esac
 
     eval "$cmd" || { echo "(ERROR) An error occured while uploading file: $INPUTFILE" >&2; continue; }
-
+    echo -ne "$EOProcess"
   done
 
   return 0;
@@ -124,6 +131,12 @@ upload_files () {
 
 upload_stream () {
   local delimiter=$'\n'
+
+  if [ "$EOP_set" == "N" ] ; then
+    EOProcess="\0"
+  else
+    EOProcess="$EOP"
+  fi
 
   [ -z "$TYPE" ] && { echo "(ERROR) input data format is not specified. Exiting." >&2; return 2;}
   while [[ $# > 0 ]]
@@ -165,7 +178,7 @@ upload_stream () {
         n=`ps axf | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
       done
       echo "$line" | $cmd &>/dev/null || { echo "(ERROR) An error occured while uploading stream data." >&2; continue; } &
-      echo -n $'\6'
+      echo -ne "$EOProcess"
     done
   done
 }
@@ -202,6 +215,11 @@ do
       ;;
     -d|--delimiter)
       DELIMITER=`echo -e $2`
+      shift
+      ;;
+    -E|--eop)
+      EOP="$2"
+      EOP_set="Y"
       shift
       ;;
     -u|--user)
