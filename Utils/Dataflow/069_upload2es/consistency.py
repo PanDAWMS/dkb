@@ -1,6 +1,9 @@
 #!/bin/env python
 '''
-Script for consistency checking.
+Script for checking the supplied task's presence in elasticsearch.
+
+Currently it performs the check by comparing the supplied timestamp
+with the one in elasticsearch.
 
 Authors:
   Vasilii Aulov (vasilii.aulov@cern.ch)
@@ -15,7 +18,7 @@ import elasticsearch
 
 
 def log(msg, prefix='DEBUG'):
-    ''' ??? '''
+    ''' Add prefix and current time to message and write it to stderr. '''
     prefix = '(%s)' % (prefix)
     prefix = prefix.ljust(8)
     sys.stderr.write('%s%s %s\n' % (prefix, datetime.now().isoformat(), msg))
@@ -41,7 +44,13 @@ INDEX = None
 
 
 def load_config(fname):
-    ''' ??? '''
+    ''' Open elasticsearch config and obtain parameters from it.
+
+    Setup INDEX as global variable.
+
+    :param fname: config file's name
+    :type fname: str
+    '''
     cfg = {
         'ES_HOST': 'localhost',
         'ES_PORT': '9200',
@@ -67,9 +76,10 @@ def load_config(fname):
 
 
 def es_connect(cfg):
-    ''' Establish a connection to elasticsearch.
+    ''' Establish a connection to elasticsearch, as a global variable.
 
-    TODO: take parameters from es config.
+    :param cfg: connection parameters
+    :type cfg: dict
     '''
     global es
     if cfg['ES_USER'] and cfg['ES_PASSWORD']:
@@ -110,6 +120,11 @@ def process(stage, message):
 
     Implementation of :py:meth:`.AbstractProcessorStage.process` for hooking
     the stage into DKB workflow.
+
+    :param stage: stage instance
+    :type stage: pyDKB.dataflow.stage.ProcessorStage
+    :param msg: input message with task info
+    :type msg: pyDKB.dataflow.Message
     '''
     data = message.content()
     if type(data) is not dict:
@@ -141,7 +156,11 @@ def process(stage, message):
 
 
 def main(args):
-    ''' ??? '''
+    ''' Parse command line arguments and run the stage.
+
+    :param argv: arguments
+    :type argv: list
+    '''
 
     stage = JSONProcessorStage()
     stage.add_argument('--conf', help='elasticsearch config', required=True)
