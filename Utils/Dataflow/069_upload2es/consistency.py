@@ -153,7 +153,11 @@ def main(args):
         cfg = load_config(stage.ARGS.conf)
         stage.process = process
         es_connect(cfg)
-        stage.run()
+        if not es.indices.exists(INDEX):
+            log('No such index: %s' % INDEX, 'ERROR')
+            exit_code = 4
+        else:
+            stage.run()
     except (DataflowException, RuntimeError), err:
         if str(err):
             log(err, 'ERROR')
