@@ -37,7 +37,7 @@ except Exception, err:
 es = None
 
 
-INDEX = 'tasks_chain_data'
+INDEX = None
 
 
 def load_config(fname):
@@ -61,6 +61,8 @@ def load_config(fname):
                 pass
             if key in cfg:
                 cfg[key] = value
+    global INDEX
+    INDEX = cfg['ES_INDEX']
     return cfg
 
 
