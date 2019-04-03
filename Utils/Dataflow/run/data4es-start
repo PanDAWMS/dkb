@@ -104,7 +104,7 @@ get_buffer() {
 
 # Flush Sink Connector buffer to STDOUT and reset it
 flush_buffer() {
-  bufer=`get_buffer "$1"`
+  buffer=`get_buffer "$1"`
   if [ -r "$buffer" ]; then
     cat $buffer
     echo -e '\x00'
