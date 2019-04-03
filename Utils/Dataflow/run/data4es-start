@@ -41,7 +41,7 @@ pidfile="$HOME_DIR/pid"
 
 # Find configuration file in $CONFIG_PATH
 get_config() {
-  [ -z "$1" ] && echo "get_config(): no argumets passed." && return 1
+  [ -z "$1" ] && echo "get_config(): no arguments passed." && return 1
   dirs=$CONFIG_PATH
   while [ -n "$dirs" ]; do
     dir=${dirs%%:*}
