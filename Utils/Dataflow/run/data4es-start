@@ -41,7 +41,7 @@ pidfile="$HOME_DIR/pid"
 
 # Find configuration file in $CONFIG_PATH
 get_config() {
-  [ -z "$1" ] && echo "get_config(): no arguments passed." && return 1
+  [ -z "$1" ] && echo "get_config(): no arguments passed." >&2 && return 1
   dirs=$CONFIG_PATH
   while [ -n "$dirs" ]; do
     dir=${dirs%%:*}
@@ -164,7 +164,7 @@ while [ -n "$1" ]; do
       shift
       break;;
     -*)
-      echo "Unknown option: $1" >&1;;
+      echo "Unknown option: $1" >&2;;
     *)
       break;;
   esac
