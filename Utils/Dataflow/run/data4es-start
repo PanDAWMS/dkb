@@ -1,6 +1,5 @@
 #!/bin/bash -l
 
-START_OFFSET="09-05-2016 00:00:00"
 BATCH_SIZE=100
 DEBUG=
 
@@ -89,11 +88,6 @@ source $auth_cfg
        exit 1; }
 cmd_95="${base_dir}/../095_datasetInfoAMI/amiDatasets.py -m s --userkey $AUTH_KEY --usercert $AUTH_CRT"
 # ---
-
-# Reset offset value for Oracle Connector.
-[ -n "$START_OFFSET" ] \
-    && sed -i.bak -e"s/^offset = .*$/offset = $START_OFFSET/" \
-           $cfg_09
 
 # Service (glue) functions
 # ---
