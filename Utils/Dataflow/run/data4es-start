@@ -213,6 +213,9 @@ sink_chain() {
   $cmd_19 | eop_filter | mediator "$1" | $cmd > /dev/null
 }
 
+log "Starting process."
+t1=`date +%s`
+
 out=/dev/null
 [ -n "$DEBUG" ] \
   && out='src.out'
@@ -233,3 +236,7 @@ for cmd in "$cmd_25" "$cmd_16" "$cmd_91_in" "$cmd_91_out" "$cmd_93" \
 done
 
 wait
+
+t2=`date +%s`
+let "took=$t2-$t1"
+log "Finished process (took: $took sec)." >&2
