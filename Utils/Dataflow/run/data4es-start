@@ -5,6 +5,13 @@ DEBUG=
 
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
 
+log() {
+  level=INFO
+  [ $# -eq 2 ] && level="$1" && shift
+  msg="$1"
+  echo "($level) `date +'%d-%m-%Y %T'` (data4es) $msg" >&2
+}
+
 # Directories with configuration files
 [ -n "$DATA4ES_CONFIG_PATH" ] && \
     CONFIG_PATH="$DATA4ES_CONFIG_PATH" || \
@@ -17,7 +24,7 @@ base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
 
 # Check if process is running
 DATA4ES_HOME=$HOME_DIR ${base_dir}/data4es-status &>/dev/null
-[ $? -eq 0 ] && echo "Process already running." >&2 && exit 1
+[ $? -eq 0 ] && log WARN "Process already running." && exit 1
 
 # Create / clean home directory
 AUX_FILES="pid"
@@ -41,7 +48,7 @@ pidfile="$HOME_DIR/pid"
 
 # Find configuration file in $CONFIG_PATH
 get_config() {
-  [ -z "$1" ] && echo "get_config(): no arguments passed." >&2 && return 1
+  [ -z "$1" ] && log ERROR "get_config(): no arguments passed." && return 1
   dirs=$CONFIG_PATH
   while [ -n "$dirs" ]; do
     dir=${dirs%%:*}
@@ -84,7 +91,7 @@ cmd_93="${base_dir}/../093_datasetsFormat/datasets_format.py -m s"
 auth_cfg=`get_config "095.cfg"`
 source $auth_cfg
 [ -r "$AUTH_KEY" -a -r "$AUTH_CRT" ] \
-  || { echo "Stage 095: wrong authentication parameters (failed to read certificate files: $AUTH_KEY and $AUTH_CRT)" >&2;
+  || { log ERROR "Stage 095: wrong authentication parameters (failed to read certificate files: $AUTH_KEY and $AUTH_CRT)";
        exit 1; }
 cmd_95="${base_dir}/../095_datasetInfoAMI/amiDatasets.py -m s --userkey $AUTH_KEY --usercert $AUTH_CRT"
 # ---
@@ -131,7 +138,7 @@ mediator() {
 # ---
 branch() {
   [ -z "$1" ] \
-    && echo "Branch name not specified." >&2\
+    && log ERROR "branch(): Branch name not specified."\
     && return 1
 
   name="$pipe_dir/$1"
@@ -142,7 +149,7 @@ branch() {
   fi
 
   mkfifo $name \
-    || { echo "Failed to create named pipe for branch $1" >&2;
+    || { log ERROR "branch(): Failed to create named pipe for branch $1";
          return 1; }
 
   echo $name
@@ -164,7 +171,7 @@ while [ -n "$1" ]; do
       shift
       break;;
     -*)
-      echo "Unknown option: $1" >&2;;
+      log ERROR "Unknown option: $1";;
     *)
       break;;
   esac
