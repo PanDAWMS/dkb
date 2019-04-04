@@ -21,7 +21,13 @@ fi
 SLEEP=1
 CURL_N_MAX=10
 
+BATCHMODE="d"
+EOB_DEFAULT="NOT_SPECIFIED"
+EOB="$EOB_DEFAULT"
+EOBatch='\x17'
+
 EOP_set="N"
+EOB_set="N"
 
 usage () {
   echo "
@@ -130,7 +136,6 @@ upload_files () {
 }
 
 upload_stream () {
-  local delimiter=$'\n'
 
   if [ "$EOP_set" == "N" ] ; then
     EOProcess="\0"
@@ -171,15 +176,27 @@ upload_stream () {
   esac
 
   while true; do
-    while read -r -d "$delimiter" line; do
-      n=`ps ax | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
-      while [ $n -gt $CURL_N_MAX ]; do
-        sleep $SLEEP
-        n=`ps axf | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
+    if [ -z "$(echo -ne $delimiter)" ] ; then
+      while eval "read -d \$'$delimiter' line"; do
+        n=`ps ax | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
+        while [ $n -gt $CURL_N_MAX ]; do
+          sleep $SLEEP
+          n=`ps axf | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
+        done
+        echo "$line" | $cmd &>/dev/null || { echo "(ERROR) An error occured while uploading stream data." >&2; continue; } &
+        echo -ne "$EOProcess"
       done
-      echo "$line" | $cmd &>/dev/null || { echo "(ERROR) An error occured while uploading stream data." >&2; continue; } &
-      echo -ne "$EOProcess"
-    done
+    else
+      while read -r -d "$delimiter" line; do
+        n=`ps ax | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
+        while [ $n -gt $CURL_N_MAX ]; do
+          sleep $SLEEP
+          n=`ps axf | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
+        done
+        echo "$line" | $cmd &>/dev/null || { echo "(ERROR) An error occured while uploading stream data." >&2; continue; } &
+        echo -ne "$EOProcess"
+      done
+    fi
   done
 }
 
@@ -213,8 +230,18 @@ do
       MODE="${2,,}"
       shift
       ;;
-    -d|--delimiter)
-      DELIMITER=`echo -e $2`
+    -b|--batch)
+      if [ -z "$2" ] || [[ "$2" == -* ]];
+      then
+        BATCHMODE="e"
+      else
+        BATCHMODE="$2"
+      shift
+      fi
+      ;;
+    -B|--eob)
+      EOB="$2"
+      EOB_set="Y"
       shift
       ;;
     -E|--eop)
@@ -249,8 +276,21 @@ done
 [ -z "$HOST" ] && echo "(ERROR) empty host value." >&2 && exit 2
 [ -z "$PORT" ] && echo "(ERROR) empty port value." >&2 && exit 2
 [ -z "$GRAPH" ] && GRAPH=http://$HOST:$PORT/$GRAPH_PATH
-[ -z "$DELIMITER" ]  && DELIMITER=$'\0'
-[ "x$DELIMITER" = "xNOT SPECIFIED" ] && DELIMITER=$'\n'
+
+[ "$EOB_set" == "Y" ] && EOBatch="$EOB"
+[ -z "$EOB" ] && EOBatch='\n'
+
+case $BATCHMODE in
+  "e"|"enabled")
+    [ "$EOB" == "$EOB_DEFAULT" ] && EOBatch='\x17'
+    ;;
+  "d"|"disabled")
+    [ "$EOB" == "$EOB_DEFAULT" ] && EOBatch='\n'
+    ;;
+  *)
+    log "Unexpected batch-mode parameter."
+    ;;
+esac
 
 cmdTTL="curl --retry 3 -s -f -X POST --digest -u $USER:$PASSWD -H Content-Type:text/turtle -G http://$HOST:$PORT/sparql-graph-crud-auth --data-urlencode graph=$GRAPH"
 cmdSPARQL="curl --retry 3 -s -f -H 'Accept: text/csv' -G http://$HOST:$PORT/sparql --data-urlencode query"
@@ -260,7 +300,7 @@ case $MODE in
     upload_files $*;
     ;;
   s)
-    upload_stream -d "$DELIMITER";
+    upload_stream -d "$EOBatch";
     ;;
   *)
     echo "(ERROR) $MODE: unsupported mode."  >&2
