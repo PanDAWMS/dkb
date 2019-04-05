@@ -25,9 +25,11 @@ BATCHMODE="d"
 EOB_DEFAULT="NOT_SPECIFIED"
 EOB="$EOB_DEFAULT"
 EOBatch='\x17'
+EOMessage='\n'
 
 EOP_set="N"
 EOB_set="N"
+EOM_set="N"
 
 usage () {
   echo "
@@ -178,6 +180,9 @@ upload_stream () {
   while true; do
     if [ -z "$(echo -ne $delimiter)" ] ; then
       while eval "read -d \$'$delimiter' line"; do
+        if [ "$EOMessage" != "\n" ]; then
+          $line=${line/$EOMessage/"\n"}
+        fi
         n=`ps ax | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
         while [ $n -gt $CURL_N_MAX ]; do
           sleep $SLEEP
@@ -188,6 +193,9 @@ upload_stream () {
       done
     else
       while read -r -d "$delimiter" line; do
+        if [ "$EOMessage" != "\n" ]; then
+          $line=${line/$EOMessage/"\n"}
+        fi
         n=`ps ax | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
         while [ $n -gt $CURL_N_MAX ]; do
           sleep $SLEEP
@@ -249,6 +257,11 @@ do
       EOP_set="Y"
       shift
       ;;
+    -e|--eom)
+      EOM="$2"
+      EOM_set="Y"
+      shift
+      ;;
     -u|--user)
       USER="$2"
       shift
@@ -276,6 +289,9 @@ done
 [ -z "$HOST" ] && echo "(ERROR) empty host value." >&2 && exit 2
 [ -z "$PORT" ] && echo "(ERROR) empty port value." >&2 && exit 2
 [ -z "$GRAPH" ] && GRAPH=http://$HOST:$PORT/$GRAPH_PATH
+
+[ "$EOM_set" == "Y" ] && EOMessage="$EOM"
+[ -z "$EOMessage" ] && EOMessage='\n'
 
 [ "$EOB_set" == "Y" ] && EOBatch="$EOB"
 [ -z "$EOB" ] && EOBatch='\n'
