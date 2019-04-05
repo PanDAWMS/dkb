@@ -41,6 +41,7 @@ es = None
 
 
 INDEX = None
+FOUND_DIFF = []
 
 
 def load_config(fname):
@@ -153,6 +154,8 @@ def process(stage, message):
     if data != es_data:
         log('Document (%s, %d) differs between Oracle and ES: Oracle:%s ES:%s'
             % (_type, _id, data, es_data), 'DIFF')
+        global FOUND_DIFF
+        FOUND_DIFF.append((_type, _id))
     else:
         log('Document (%s, %d) is up to date in ES' % (_type, _id), 'INFO')
 
@@ -195,6 +198,11 @@ def main(args):
         trace = traceback.format_exception(*exc_info)
         for line in trace:
             log(line, 'ERROR')
+
+    if exit_code == 0 and FOUND_DIFF:
+        exit_code = 1
+
+    print FOUND_DIFF
 
     exit(exit_code)
 
