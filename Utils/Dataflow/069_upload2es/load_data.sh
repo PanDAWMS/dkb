@@ -20,6 +20,7 @@ ES_CONFIG="${base_dir}/../../Elasticsearch/config/es"
 BATCHMODE="d"
 EOB_DEFAULT="NOT_SPECIFIED"
 EOB="$EOB_DEFAULT"
+EOMessage='\n'
 EOBatch='\x17'
 EOP_set="N"
 EOB_set="N"
@@ -28,6 +29,10 @@ while [ -n "$1" ]; do
   case "$1" in
     -c|--config)
       [ -n "$2" ] && ES_CONFIG="$2" || { usage >&2 && exit 1; }
+      shift;;
+    -e|--eom)
+      EOM="$2"
+      EOM_set="Y"
       shift;;
     -E|--eop)
       EOP="$2"
@@ -57,6 +62,9 @@ while [ -n "$1" ]; do
   esac
   shift
 done
+
+[ "$EOM_set" == "Y" ] && EOMessage="$EOM"
+[ -z "$EOMessage" ] && EOMessage='\n'
 
 [ "$EOB_set" == "Y" ] && EOBatch="$EOB"
 [ -z "$EOB" ] && EOBatch='\n'
@@ -100,6 +108,9 @@ load_stream () {
   log "Switched to the stream mode."
   if [ -z "$(echo -ne $EOBatch)" ] ; then
     while eval "read -d \$'$EOBatch' line"; do
+      if [ "$EOMessage" != "\n" ]; then
+        $line=${line/$EOMessage/"\n"}
+      fi
       n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
       while [ $n -gt $CURL_N_MAX ]; do
         sleep $SLEEP
@@ -110,6 +121,9 @@ load_stream () {
     done
   else
     while read -r -d $(echo -ne "$EOBatch") line; do
+      if [ "$EOMessage" != "\n" ]; then
+        $line=${line/$EOMessage/"\n"}
+      fi
       n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
       while [ $n -gt $CURL_N_MAX ]; do
         sleep $SLEEP
