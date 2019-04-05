@@ -65,10 +65,22 @@ OPTIONS:
                                 * in a (s)tream mode waits for input from STDIN,
                                   sending data to Virtuoso;
                                   messages are to be delimited by <delimiter>.
-  -d, --delimiter <delimiter>   Specifies the delimiter between sets of input
-                                data in the stream mode.
-                                Default: \n
-                                Kafka-style: \0
+  -e, --eom                     Specifies EOM (End-of-message) marker.
+                                Default: '\n'
+  -E, --eop                     Specifies EOP (End-of-process) marker.
+                                Default:
+                                File mode: ''
+                                Stream mode: '\0'
+  -b, --batch {e[abled]|d[isabled]} Specifies batch-mode: (e)nabled|(d)isabled.
+  -B, --eob <EOB>               Specifies the delimiter between sets of input
+                                Default ('\x11' is a random one):
+                                
+   -b   ||  X   |  X   |   X    |   X    ||  'e'   | 'e'  |  'e'   |  'e'   |
+------- || ---- | ---- | ------ | ------ || ------ | ---- | ------ | ------ |
+   -B   ||  X   |  ''  | '\x17' | '\x11' ||   X    |  ''  | '\x17' | '\x11' |
+======= || ==== | ==== | ====== | ====== || ====== | ==== | ====== | ====== |
+EOBatch || '\n' | '\n' | '\x17' | '\x11' || '\x17' | '\n' | '\x17' | '\x11' |
+
   -h, --help                    Print this message and exit.
 "
 }
