@@ -6,6 +6,7 @@ import ConfigParser
 import sys
 from datetime import datetime, timedelta
 import time
+import pytz
 from collections import defaultdict
 
 from OffsetStorage import FileOffsetStorage
@@ -19,6 +20,10 @@ SQUASH_POLICY = 'SQUASH'
 # ---
 # Output stream
 OUT = os.fdopen(sys.stdout.fileno(), 'w', 0)
+
+# Timezone of the data timestamps in the source DB
+# (used to adjust 'now' to the proper value)
+OFFSET_TZ = None
 # ---
 
 
@@ -45,6 +50,9 @@ def main():
     offset_storage = init_offset_storage(config)
     if not offset_storage:
         sys.exit(2)
+
+    # Offset timezone initialization
+    init_offset_tz(config)
 
     conn = OracleConnection(config['__dsn'])
     if not conn.establish():
@@ -129,7 +137,7 @@ def read_config(config_file):
         default_initial = datetime.utcfromtimestamp(0)
         default_final = None
     else:
-        default_initial = datetime.now()
+        default_initial = offset_now()
         default_final = datetime.utcfromtimestamp(0)
 
     result['final_date'] = str2date(config_get(config, 'timestamps', 'final',
@@ -140,6 +148,8 @@ def read_config(config_file):
                                                    'offset_file', '.offset'),
                                         result)
     result['mode'] = config_get(config, 'process', 'mode', 'SQUASH')
+    result['timestamp_tz'] = config_get(config, 'timestamps', 'tz',
+                                        time.tzname[0])
 
     return result
 
@@ -208,6 +218,12 @@ def config_path(rel_path, config):
         config_dir = config['__path__']
         abs_path = os.path.join(config_dir, rel_path)
     return abs_path
+
+
+def init_offset_tz(config):
+    """ Initialize OFFSET_TZ. """
+    global OFFSET_TZ
+    OFFSET_TZ = pytz.timezone(config['timestamp_tz'])
 
 
 def init_offset_storage(config):
@@ -281,6 +297,15 @@ def get_offset(offset_storage):
         timestamp = float(result)
         result = datetime.fromtimestamp(timestamp)
     return result
+
+
+def offset_now():
+    """ Get offset value corresonding to the current moment of time.
+
+    :return: offset value (naive datetime, adjusted to OFFSET_TZ)
+    :rtype: datetime.datetime
+    """
+    return OFFSET_TZ.fromutc(datetime.utcnow()).replace(tzinfo=None)
 
 
 def plain(conn, queries, start_date, end_date):
@@ -446,7 +471,7 @@ def process(conn, offset_storage, config):
         # In case of normal data load 'final_date' may be None:
         # it means we need to adjust it to current timestamp
         # before every check
-        final_date = datetime.now()
+        final_date = offset_now()
     full_interval = {'l': min(final_date, offset_date),
                      'r': max(final_date, offset_date)}
     break_loop = False
@@ -462,9 +487,10 @@ def process(conn, offset_storage, config):
             break
         start_date = min(offset_date, new_offset)
         end_date = max(offset_date, new_offset)
-        sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
-                         % (date2str(datetime.now()), date2str(start_date),
-                            date2str(end_date)))
+        sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s"
+                         " (%s)\n" % (date2str(datetime.now()),
+                                      date2str(start_date), date2str(end_date),
+                                      OFFSET_TZ.zone))
         if mode == SQUASH_POLICY:
             records = squash(conn, ['tasks', 'datasets'], start_date,
                              end_date)
@@ -475,7 +501,7 @@ def process(conn, offset_storage, config):
         offset_date = new_offset
         commit_offset(offset_storage, offset_date)
         if not config['final_date']:
-            full_interval['r'] = datetime.now()
+            full_interval['r'] = offset_now()
         if break_loop:
             break
 
