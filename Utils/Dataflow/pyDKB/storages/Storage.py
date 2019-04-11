@@ -2,8 +2,6 @@
 pyDKB.storages.Storage
 """
 
-from . import storageType
-
 
 class Storage(object):
     """ Interface class for external and internal DKB storages. """
@@ -20,13 +18,10 @@ class Storage(object):
     def __init__(self, name):
         """ Initialize Storage object.
 
-        Raise ``StorageAlreadyExists`` if storage with given name
-        was already created.
-
         :param name: storage identifier
         :type name: str
         """
-        raise NotImplementedError
+        self.name = name
 
     def configure(self, cfg):
         """ Apply storage configuration (initialize client).
