@@ -1,7 +1,5 @@
 #!/bin/bash -l
 
-DEBUG=
-
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
 lib="$base_dir/../shell_lib"
 
@@ -16,18 +14,12 @@ source $lib/eop_filter
 # Oracle
 cfg009=`get_config "consistency009.cfg"`
 cmd_009="$base_dir/../009_oracleConnector/Oracle2JSON.py --config $cfg009"
-[ -n "$DEBUG" ] &&
-  err009="009.err" ||
-    err009=/dev/null
 
 # Formatting
 cmd_016="$base_dir/../016_task2es/task2es.py -m s"
-[ -n "$DEBUG" ] &&
-  err016="016.err" ||
-    err016=/dev/null
 
 # ES
 cfg_es=`get_config "es"`
 cmd_069="$base_dir/../069_upload2es/consistency.py -m s --conf $cfg_es"
 
-$cmd_009 2>"$err009" | $cmd_016 2>"$err016" | eop_filter | $cmd_069 >/dev/null
+$cmd_009 | $cmd_016 | eop_filter | $cmd_069 >/dev/null
