@@ -20,6 +20,6 @@ cmd_016="$base_dir/../016_task2es/task2es.py -m s"
 
 # ES
 cfg_es=`get_config "es"`
-cmd_069="$base_dir/../069_upload2es/consistency.py -m s --conf $cfg_es"
+cmd_071="$base_dir/../071_esConsistency/consistency.py -m s --conf $cfg_es"
 
-$cmd_009 | $cmd_016 | eop_filter | $cmd_069 >/dev/null
+$cmd_009 | $cmd_016 | eop_filter | $cmd_071 >/dev/null

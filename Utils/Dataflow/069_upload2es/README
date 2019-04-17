@@ -4,7 +4,7 @@
 
 Description
 -----------
-load_data.sh uploads prepared data to ElasticSearch.
+Uploads prepared data to ElasticSearch.
 
 Input
 -----
@@ -17,24 +17,6 @@ JSON documents, one per line:
 <data>
 ...
 }}}
-
-Consistency
------------
-consistency.py checks that the data is present in ElasticSearch instead of
-uploading it. Input comes from Stage 009(in consistency mode) and only needs 2
-fields for now:
-{{{
-{taskid, task_timestamp}
-...
-}}}
-
-Consistency check can be run as following:
-
-  ./consistency.py --conf elasticsearch_config
-
-For more information about running the check and its arguments, use:
-
-  ./consistency.py -h
 
 TODO
 ----
