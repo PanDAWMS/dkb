@@ -20,7 +20,8 @@ import elasticsearch
 def log(msg, prefix='DEBUG'):
     ''' Add prefix and current time to message and write it to stderr. '''
     prefix = '(%s)' % (prefix)
-    prefix = prefix.ljust(8)
+    # 11 = len("(CRITICAL) "), where CRITICAL is the longest log level name.
+    prefix = prefix.ljust(11)
     sys.stderr.write('%s%s %s\n' % (prefix, datetime.now().isoformat(), msg))
 
 
