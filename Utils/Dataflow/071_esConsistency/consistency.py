@@ -134,12 +134,12 @@ def process(stage, message):
     '''
     data = message.content()
     if type(data) is not dict:
-        log('Incorrect data:' + str(data), 'INPUT')
+        log('Incorrect data:' + str(data), 'WARN')
         return False
     _id = data.pop('_id')
     _type = data.pop('_type')
     if _id is None or _type is None:
-        log('Insufficient ES info in data:' + str(data), 'INPUT')
+        log('Insufficient ES info in data:' + str(data), 'WARN')
         return False
 
     # Crutch. Remove unwanted (for now) field added by Stage 016.
@@ -150,13 +150,13 @@ def process(stage, message):
     # It's unlikely that such documents will be produced in DKB. In general,
     # such documents should be checked by es.exists(), and not es.get().
     if not data:
-        log('Nothing to check for document (%s, %d)' % (_type, _id), 'INPUT')
+        log('Nothing to check for document (%s, %d)' % (_type, _id), 'WARN')
         return False
 
     es_data = get_fields(INDEX, _id, _type, data.keys())
     if data != es_data:
         log('Document (%s, %d) differs between Oracle and ES: Oracle:%s ES:%s'
-            % (_type, _id, data, es_data), 'DIFF')
+            % (_type, _id, data, es_data), 'WARN')
         global FOUND_DIFF
         FOUND_DIFF.append((_type, _id))
     else:
