@@ -54,8 +54,8 @@ def load_config(fname):
     :type fname: str
     '''
     cfg = {
-        'ES_HOST': 'localhost',
-        'ES_PORT': '9200',
+        'ES_HOST': '',
+        'ES_PORT': '',
         'ES_USER': '',
         'ES_PASSWORD': '',
         'ES_INDEX': ''
@@ -85,6 +85,13 @@ def es_connect(cfg):
     :param cfg: connection parameters
     :type cfg: dict
     '''
+    if not cfg['ES_HOST']:
+        log('No ES host specified', 'ERROR')
+        return False
+    if not cfg['ES_PORT']:
+        log('No ES port specified', 'ERROR')
+        return False
+
     global es
     if cfg['ES_USER'] and cfg['ES_PASSWORD']:
         s = 'http://%s:%s@%s:%s/' % (cfg['ES_USER'],
@@ -94,6 +101,7 @@ def es_connect(cfg):
     else:
         s = '%s:%s' % (cfg['ES_HOST'], cfg['ES_PORT'])
     es = elasticsearch.Elasticsearch([s])
+    return True
 
 
 def get_fields(index, _id, _type, fields):
@@ -182,10 +190,14 @@ def main(args):
         stage.parse_args(args)
         cfg = load_config(stage.ARGS.conf)
         stage.process = process
-        es_connect(cfg)
-        if not es.indices.exists(INDEX):
-            log('No such index: %s' % INDEX, 'ERROR')
+        if not es_connect(cfg):
             exit_code = 4
+        elif not INDEX:
+            log('No ES index specified', 'ERROR')
+            exit_code = 5
+        elif not es.indices.exists(INDEX):
+            log('No such index: %s' % INDEX, 'ERROR')
+            exit_code = 6
         else:
             stage.run()
     except (DataflowException, RuntimeError), err:
