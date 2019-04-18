@@ -42,7 +42,7 @@ es = None
 
 
 INDEX = None
-FOUND_DIFF = []
+FOUND_DIFF = False
 
 
 def load_config(fname):
@@ -166,8 +166,10 @@ def process(stage, message):
     if data != es_data:
         log('Document (%s, %d) differs between Oracle and ES: Oracle:%s ES:%s'
             % (_type, _id, data, es_data), 'WARN')
+        out_message = JSONMessage({'_type': _type, '_id': _id})
+        stage.output(out_message)
         global FOUND_DIFF
-        FOUND_DIFF.append((_type, _id))
+        FOUND_DIFF = True
     else:
         log('Document (%s, %d) is up to date in ES' % (_type, _id), 'INFO')
 
@@ -217,8 +219,6 @@ def main(args):
 
     if exit_code == 0 and FOUND_DIFF:
         exit_code = 1
-
-    print FOUND_DIFF
 
     exit(exit_code)
 
