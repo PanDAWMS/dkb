@@ -78,7 +78,9 @@ def load_config(fname):
 
 
 def es_connect(cfg):
-    ''' Establish a connection to elasticsearch, as a global variable.
+    ''' Establish a connection to elasticsearch.
+
+    Initialize the global variable es with the resulting client object.
 
     :param cfg: connection parameters
     :type cfg: dict
