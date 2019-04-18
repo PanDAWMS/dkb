@@ -136,9 +136,10 @@ def process(stage, message):
     if type(data) is not dict:
         log('Incorrect data:' + str(data), 'WARN')
         return False
-    _id = data.pop('_id')
-    _type = data.pop('_type')
-    if _id is None or _type is None:
+    try:
+        _id = data.pop('_id')
+        _type = data.pop('_type')
+    except KeyError:
         log('Insufficient ES info in data:' + str(data), 'WARN')
         return False
 
