@@ -23,3 +23,10 @@ execute requests for AMI only for the filtered datasets. The rest of the
 records, which haven't pass the filter, we write to the output "AS-IS".
 It allows us to optimize time of data extraction from AMI, which is very
 time-consuming.
+
+3. Samples
+----------
+The 'output' directory contains 2 samples:
+
+datasets2016.ndjson - 2016 data (from 093's 2016 sample)
+datasets2018.ndjson - 2018 data (from 093's 2018 sample)
