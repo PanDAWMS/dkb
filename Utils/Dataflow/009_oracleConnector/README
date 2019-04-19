@@ -23,3 +23,10 @@ A template for the configuration file can be obtained in Dataflow's
 corresponding directory:
 
   Utils/Dataflow/config/009.cfg.example
+
+3. Samples
+----------
+The 'output' directory contains two samples of production data:
+
+  sample2016.ndjson - collected with timestamps [09-05-2016 12:12:00, 09-05-2016 13:32:30]
+  sample2018.ndjson - collected with timestamps [15-06-2018 12:00:00, 15-06-2018 13:00:00]
