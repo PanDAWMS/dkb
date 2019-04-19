@@ -32,3 +32,7 @@ The 'output' directory contains two samples of production data:
 
   sample2016.ndjson - collected with timestamps [09-05-2016 12:12:00, 09-05-2016 13:32:30]
   sample2018.ndjson - collected with timestamps [15-06-2018 12:00:00, 15-06-2018 13:00:00]
+
+Also, it contains a consistency checking sample:
+
+  consistency.ndjson - collected with timestamps [21-07-2018 00:00:00, 22-07-2018 00:00:00]
