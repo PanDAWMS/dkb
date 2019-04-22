@@ -72,4 +72,17 @@ example:
 	"taskid": 8343552
 }
 
+5. Samples
+----------
+The 'output' directory contains two pairs of samples:
 
+2016 data:
+input_datasets2016.ndjson
+output_datasets2016.ndjson
+
+2018 data:
+input_datasets2018.ndjson
+output_datasets2018.ndjson
+
+input_datasets* is the tasks' metadata extended with primary_input datasets' metadata.
+output_datasets* is the output datasets' metadata.
