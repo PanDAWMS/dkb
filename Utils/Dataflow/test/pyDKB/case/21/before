@@ -1,0 +1,2 @@
+rm -rf input/out 2>/dev/null
+touch input/out

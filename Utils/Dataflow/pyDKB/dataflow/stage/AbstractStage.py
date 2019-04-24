@@ -69,6 +69,15 @@ class AbstractStage(object):
             out_message += "\n"
             sys.stderr.write(out_message)
 
+    def log_configuration(self):
+        """ Log stage configuration. """
+        self.log("Configuration parameters:")
+        args = vars(self.ARGS)
+        key_len = len(max(args.keys(), key=len))
+        pattern = "  %%-%ds : '%%s'" % key_len
+        for arg in args:
+            self.log((pattern % (arg, args[arg])).replace("\n", r"\n"))
+
     def defaultArguments(self):
         """ Config argument parser with parameters common for all stages. """
         self.add_argument('-m', '--mode', action='store', type=str,
@@ -115,17 +124,20 @@ class AbstractStage(object):
                           )
         self.add_argument('-e', '--end-of-message', action='store', type=str,
                           help=u'custom end of message marker\n'
-                          'NOTE: in (f)ile mode for JSON messages EOM '
-                          'can be set to empty string to read input '
-                          'file as single JSON object, not as NDJSON. '
+                          'NOTE: for (f)ile sources EOM can be set to empty '
+                          'string to read input file as a single message, '
+                          'not a number of NL-delimited messages. '
                           'In this case output will also be formatted '
-                          'as a single JSON object (array or hash)\n'
+                          'as a single message (array or hash for JSON, '
+                          'single line for TTL, ...), and EOP will be set to '
+                          '\'\\n\'\n'
                           'DEFAULT: \'\\n\'',
                           default=None,
                           dest='eom'
                           )
         self.add_argument('-E', '--end-of-process', action='store', type=str,
                           help=u'custom end of process marker\n'
+                          'NOTE: in case of empty EOM will be set to \'\\n\'\n'
                           'DEFAULT: \'\'',
                           default=None,
                           dest='eop'
@@ -183,6 +195,12 @@ class AbstractStage(object):
             except (ValueError), err:
                 sys.stderr.write("(ERROR) Failed to read arguments.\n"
                                  "(ERROR) Case: %s\n" % (err))
+                sys.exit(1)
+
+        if self.ARGS.mode == 'm':
+            if 'f' in (self.ARGS.source, self.ARGS.dest):
+                self.log("File source/destination is not allowed "
+                         "in map-reduce mode.", logLevel.ERROR)
                 sys.exit(1)
 
         if not self.read_config():

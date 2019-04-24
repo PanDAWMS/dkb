@@ -25,6 +25,9 @@ class StreamConsumer(Consumer.Consumer):
         """ (Re)configure Stream consumer. """
         self.fd = sys.stdin
         super(StreamConsumer, self).reconfigure(config)
+        if self.config['eom'] == '':
+            raise Consumer.ConsumerException("Empty EOM is not allowed "
+                                             "for stream input.")
 
     def get_source_info(self):
         """ Return current source info. """

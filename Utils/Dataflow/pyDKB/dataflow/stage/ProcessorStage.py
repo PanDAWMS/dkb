@@ -57,7 +57,7 @@ from pyDKB.dataflow.communication import producer
 class ProcessorStage(AbstractStage):
     """ Abstract class to implement Processor stages
 
-    Processor stage -- is a stage for data processing/transfornation.
+    Processor stage -- is a stage for data processing/transformation.
 
     Class/instance variable description:
 
@@ -124,8 +124,9 @@ class ProcessorStage(AbstractStage):
                           help=u'where to get data from:\n'
                           '    f -- local files\n'
                           '    s -- stdin\n'
-                          '    h -- hdfs files',
-                          default='f',
+                          '    h -- hdfs files\n'
+                          'DEFAULT: \'f\'',
+                          default=None,
                           choices=['f', 's', 'h'],
                           dest='source'
                           )
@@ -134,8 +135,9 @@ class ProcessorStage(AbstractStage):
                           'or initial directory for relative FILE names. '
                           'If no FILE is specified, all files with '
                           'extension matching input message type will '
-                          'be taken from %(metavar)s',
-                          default=os.curdir,
+                          'be taken from %%(metavar)s\n'
+                          'DEFAULT: %s' % os.curdir,
+                          default=None,
                           metavar='DIR',
                           dest='input_dir'
                           )
@@ -143,8 +145,9 @@ class ProcessorStage(AbstractStage):
                           help=u'where to write results:\n'
                           '    f -- local files\n'
                           '    s -- stdout\n'
-                          '    h -- hdfs files',
-                          default='f',
+                          '    h -- hdfs files\n'
+                          'DEFAULT: \'f\'',
+                          default=None,
                           choices=['f', 's', 'h'],
                           dest='dest'
                           )
@@ -181,17 +184,26 @@ class ProcessorStage(AbstractStage):
         """
         if args:
             self.parse_args(args)
-        # Input
-        self.__input = consumer.ConsumerBuilder(vars(self.ARGS)) \
-            .setType(self.__input_message_type) \
-            .build()
-        self.__stoppable_append(self.__input, consumer.Consumer)
-        # Output
-        self.__output = producer.ProducerBuilder(vars(self.ARGS)) \
-            .setType(self.__output_message_type) \
-            .setSourceInfoMethod(self.get_source_info) \
-            .build()
-        self.__stoppable_append(self.__output, producer.Producer)
+        elif self.ARGS is None:
+            # Need to initialize ARGS to proceed
+            self.parse_args([])
+        try:
+            # Input
+            self.__input = consumer.ConsumerBuilder(vars(self.ARGS)) \
+                .setType(self.__input_message_type) \
+                .build()
+            self.__stoppable_append(self.__input, consumer.Consumer)
+            # Output
+            self.__output = producer.ProducerBuilder(vars(self.ARGS)) \
+                .setType(self.__output_message_type) \
+                .setSourceInfoMethod(self.get_source_info) \
+                .build()
+            self.__stoppable_append(self.__output, producer.Producer)
+        except (consumer.ConsumerException, producer.ProducerException), err:
+            self.log(str(err), logLevel.ERROR)
+            self.stop()
+            sys.exit(1)
+        self.log_configuration()
 
     def get_source_info(self):
         """ Get information about current source. """
@@ -200,24 +212,6 @@ class ProcessorStage(AbstractStage):
         else:
             result = None
         return result
-
-    def get_out_stream(self):
-        """ Get current output stream. """
-        if isinstance(self.__output, file):
-            fd = self.__output
-        else:
-            try:
-                fd = self.__output.next()
-            except DataflowException, err:
-                self.log(str(err), logLevel.ERROR)
-                raise DataflowException("Failed to configure output stream.")
-        if not self._out_stream:
-            self._out_stream = stream.StreamBuilder(fd, vars(self.ARGS)) \
-                .message_type(self.__output_message_type) \
-                .build()
-        else:
-            self._out_stream.reset(fd)
-        return self._out_stream
 
     def run(self):
         """ Run process() for every input() message. """

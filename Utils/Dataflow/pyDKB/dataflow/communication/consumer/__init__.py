@@ -11,6 +11,8 @@ from FileConsumer import FileConsumer
 from HDFSConsumer import HDFSConsumer
 from StreamConsumer import StreamConsumer
 
+from Consumer import ConsumerException
+
 __all__ = ['ConsumerBuilder']
 
 
@@ -28,10 +30,12 @@ class ConsumerBuilder(object):
 
         if config.get('hdfs'):
             self.setSource('h')
+        elif config.get('source'):
+            self.setSource(config.get('source'))
         elif config.get('mode') in ('s', 'm'):
             self.setSource('s')
         else:
-            self.setSource(config.get('source'))
+            self.setSource('f')
 
     def setSource(self, source):
         """ Set data source for the consumer. """
@@ -46,6 +50,7 @@ class ConsumerBuilder(object):
                              % (sources.keys(), source))
 
         self.consumerClass = sources[source]
+        self.config['source'] = source
         return self
 
     def setType(self, Type):

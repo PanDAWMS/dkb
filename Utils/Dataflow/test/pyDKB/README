@@ -1,12 +1,47 @@
-=============
-* Stage XX  *
-=============
+===============
+* pyDKB tests *
+===============
 
-1. Description
---------------
-pyDKB testing stage.
+1. Content
+----------
 
-Run as:
+json2TTL.py -- dummy stage, that reads JSON input messages and outputs them
+               as text (TTL);
+
+test.sh     -- utility to run test cases;
+
+case/       -- directory with test cases; each case contains:
+    */before     commands to run before main one (set up)
+    */cmd        main command to run the test
+    */after      commands to run after main one (cleanup, etc)
+    */out        expected stdout
+    */err        expected stderr
+    */info       (one-line) case description
+    */todo       ToDo notes for given test case
+
+input/      -- input samples.
+
+
+2. How to use
+-------------
+
+To run test cases, use:
+
+  ./test.sh [-h] [-l [TYPE] [--no-info]] [-c N[,N...]]
+
+  Run pyDKB stage functionality test cases.
+
+  OPTIONS
+    -h, --help    show this message and exit
+    -l, --list [TYPE]
+                  show test case information: description by default,
+                  TYPE if specified
+    --no-info     don't show case descriptions with --list command
+    -c, --case N[,N...]
+                  run specified test case(s)
+
+
+Dummy stage can be run as follows:
 
   ./json2TTL.py -i input
   ./json2TTL.py input/196.json

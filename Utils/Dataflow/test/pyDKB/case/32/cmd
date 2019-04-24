@@ -1,0 +1,1 @@
+cat input/NDjson.json | ./json2TTL.py -m s -E EOP
