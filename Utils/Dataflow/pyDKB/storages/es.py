@@ -59,6 +59,7 @@ class ES(Storage):
         :param cfg: configuration parameters
         :type cfg: dict
         """
+        self.log_cfg(cfg)
         hosts = [{'host': cfg.get('host', DEFAULT_CFG['host']),
                  'port': cfg.get('port', DEFAULT_CFG['port'])}]
         kwargs = {}
