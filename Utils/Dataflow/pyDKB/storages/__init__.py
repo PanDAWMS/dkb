@@ -13,7 +13,7 @@ storageClass = {storageType.ES: ES}
 storages = {}
 
 
-def create(name, stype):
+def create(name, stype, cfg=None):
     """ Create storage of given type.
 
     Raise ``StorageAlreadyExists`` if storage with given name was created
@@ -23,6 +23,8 @@ def create(name, stype):
     :type name: str
     :param stype: storage type
     :type stype: storageType member
+    :param cfg: storage configuration (if None, won't be applied)
+    :type cfg: dict, NoneType
 
     :return: Storage object
     :rtype: Storage
@@ -38,6 +40,8 @@ def create(name, stype):
         raise NotImplementedError("Storage class is not implemented for: '%s'"
                                   % storageType.memberName(stype))
     storages[name] = cls(name)
+    if cfg is not None:
+        storages[name].configure(cfg)
     return storages[name]
 
 
