@@ -61,3 +61,46 @@ class ES(Storage):
         if cfg.get('index'):
             self.index = cfg['index']
         self.c = elasticsearch.Elasticsearch(hosts, **kwargs)
+
+    def get(self, id, fields=None, index=None, doc_type='_all', parent=None):
+        """ Get record from ES.
+
+        Raise:
+         * ``NotFound`` exception if record is not found
+         * ``InvalidRequest`` if request can not be executed
+         * ``StorageNotConfigured`` if called before `configure()`
+
+        Supported document types for ATLAS: 'task', 'output_dataset'.
+
+        :param fields: specific set of fields to get (if not specified, all
+                       fields will be returned)
+        :type fields: list, NoneType
+        :param doc_type: document type
+        :type doc_type: str
+        :param parent: parent document ID (required for child documents)
+        :type parent: str
+
+        :return: ES record with specified or full set of fields
+        :rtype: dict
+        """
+        c = self.client()
+        if not index:
+            index = self.index
+        kwargs = {'index': index, 'doc_type': doc_type, 'id': id}
+        if not kwargs['index']:
+            raise InvalidRequest("Index not specified.")
+        if fields is not None:
+            kwargs['_source'] = fields
+        if parent:
+            kwargs['parent'] = parent
+        try:
+            r = c.get(**kwargs)
+        except NotFoundError, err:
+            raise NotFound(self.name, id=id, index=index)
+        except RequestError, err:
+            if doc_type == 'output_dataset' \
+                    and err.args[1] == 'routing_missing_exception':
+                self.log('WARN', 'Parent info missed.')
+                raise NotFound(self.name, id=id, index=index)
+            raise InvalidRequest(err)
+        return r.get('_source', {})

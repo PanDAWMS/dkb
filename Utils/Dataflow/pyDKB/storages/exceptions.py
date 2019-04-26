@@ -51,3 +51,28 @@ class NotFound(StorageException):
             params = ', '.join(params)
             message = message + ' (%s)' % params
         super(NotFound, self).__init__(message)
+
+
+class InvalidRequest(StorageException):
+    """ Exception indicating wrong user request. """
+
+    def __init__(self, message, *args, **kwargs):
+        """ Initialize exception.
+
+        Message formatting: old-style ('%' operator) only.
+
+        :param message: error message
+        :type message: str
+        :param args: message format positional parameters
+        :type args: list
+        :param kwargs: message format named parameters
+        :type kwargs: dict
+        """
+        if args and kwargs:
+            raise ValueError("Message formatting supports only one type "
+                             "of parameters: positional OR named.")
+        if args:
+            message = message % params
+        elif kwargs:
+            message = message % kwargs
+        super(InvalidRequest, self).__init__(message)
