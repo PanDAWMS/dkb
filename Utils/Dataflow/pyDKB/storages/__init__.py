@@ -2,15 +2,14 @@
 pyDKB.storages
 """
 
-from ..common import Type
-
+from types import storageType
 from Storage import Storage
+from es import ES
 from exceptions import (StorageAlreadyExists,
                         StorageNotConfigured)
 
 
-storageType = Type()
-storageClass = {}
+storageClass = {storageType.ES: ES}
 storages = {}
 
 

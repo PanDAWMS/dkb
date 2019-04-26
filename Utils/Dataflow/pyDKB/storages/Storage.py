@@ -23,6 +23,8 @@ class Storage(object):
     def __init__(self, name):
         """ Initialize Storage object.
 
+        Raise ``StorageException`` in case of error.
+
         :param name: storage identifier
         :type name: str
         """
