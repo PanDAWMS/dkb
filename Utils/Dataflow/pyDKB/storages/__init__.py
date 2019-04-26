@@ -10,6 +10,7 @@ from exceptions import (StorageAlreadyExists,
 
 
 storageType = Type()
+storageClass = {}
 storages = {}
 
 
@@ -30,7 +31,14 @@ def create(name, stype):
     global storages
     if name in storages:
         raise StorageAlreadyExists(name)
-    storages[name] = Storage(name)
+    cls = storageClass.get(stype)
+    if not cls:
+        sname = storageType.memberName(stype)
+        if not sname:
+            raise ValueError("Unknown storage type: '%s'" % stype)
+        raise NotImplementedError("Storage class is not implemented for: '%s'"
+                                  % storageType.memberName(stype))
+    storages[name] = cls(name)
     return storages[name]
 
 
