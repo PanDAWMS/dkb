@@ -44,23 +44,26 @@ class Storage(object):
                                                 self.__class__.__name__,
                                                 message))
 
-    def log_cfg(self, cfg):
+    def log_cfg(self, cfg, defaults={}):
         """ Log storage configuration.
 
         :param cfg: configuration to be logged
         :type cfg: dict
+        :param defaults: default parameter values, if any (will be logged only
+                         if the parameter is missed in ``cfg``)
+        :type defaults: dict
         """
         fname = ''
         if cfg.get('__file'):
             fname = ' (%s)' % cfg['__file']
         self.log("INFO", "'%s' storage configuration%s:" % (self.name, fname))
-        key_len = len(max(cfg.keys(), key=len))
+        key_len = len(max(cfg.keys() + defaults.keys(), key=len))
         pattern = "%%-%ds : '%%s'" % key_len
         self.log("INFO", "---")
-        for key in cfg:
+        for key in set(cfg.keys() + defaults.keys()):
             if key.startswith('__'):
                 continue
-            self.log("INFO", pattern % (key, cfg[key]))
+            self.log("INFO", pattern % (key, cfg.get(key, defaults.get(key))))
         self.log("INFO", "---")
 
     def configure(self, cfg):
