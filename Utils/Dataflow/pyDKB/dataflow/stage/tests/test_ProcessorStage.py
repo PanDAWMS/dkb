@@ -100,73 +100,85 @@ class ProcessorStageArgsTestCase(unittest.TestCase):
                              {a: self.args[a]})
 
     def test_default(self):
-        self.stage.parse_args('')
-        self.check_args()
+        [msg, result] = isolate_function_error(self.stage.configure, [])
+        self.assertIn('No input files specified.', msg)
 
     def test_hdfs(self):
-        self.stage.parse_args(['--hdfs'])
+        self.stage.configure(['--hdfs'])
         self.args['hdfs'] = True
         self.args['source'] = 'h'
         self.args['dest'] = 'h'
+        self.args['input_dir'] = '/user/DKB/'
         self.check_args()
 
     def test_e(self):
-        self.stage.parse_args(['-e', '\t'])
+        self.stage.configure(['-e', '\t', 'something'])
         self.args['eom'] = '\t'
+        self.args['input_files'] = ['something']
         self.check_args()
 
     def test_end_of_message(self):
-        self.stage.parse_args(['--end-of-message', '\t'])
+        self.stage.configure(['--end-of-message', '\t', 'something'])
         self.args['eom'] = '\t'
+        self.args['input_files'] = ['something']
         self.check_args()
 
     def test_E(self):
-        self.stage.parse_args(['-E', '\t'])
+        self.stage.configure(['-E', '\t', 'something'])
         self.args['eop'] = '\t'
+        self.args['input_files'] = ['something']
         self.check_args()
 
     def test_end_of_process(self):
-        self.stage.parse_args(['--end-of-process', '\t'])
+        self.stage.configure(['--end-of-process', '\t', 'something'])
         self.args['eop'] = '\t'
+        self.args['input_files'] = ['something']
         self.check_args()
 
     def test_i(self):
-        self.stage.parse_args(['-i', 'something'])
+        self.stage.configure(['-i', 'something'])
         self.args['input_dir'] = 'something'
         self.check_args()
 
     def test_input_dir(self):
-        self.stage.parse_args(['--input-dir', 'something'])
+        self.stage.configure(['--input-dir', 'something'])
         self.args['input_dir'] = 'something'
         self.check_args()
 
     def test_o(self):
-        self.stage.parse_args(['-o', 'something'])
+        self.stage.configure(['-o', 'something', 'something'])
         self.args['output_dir'] = 'something'
+        self.args['input_files'] = ['something']
         self.check_args()
 
     def test_output_dir(self):
-        self.stage.parse_args(['--output-dir', 'something'])
+        self.stage.configure(['--output-dir', 'something', 'something'])
         self.args['output_dir'] = 'something'
+        self.args['input_files'] = ['something']
         self.check_args()
 
     def test_input_files(self):
-        self.stage.parse_args(['something', 'something_else'])
+        self.stage.configure(['something', 'something_else'])
         self.args['input_files'] = ['something', 'something_else']
         self.check_args()
 
 
 def add_arg(arg, val, short=False):
     if short:
-        args = ['-' + arg[0], val]
+        args = ['-' + arg[0], val, 'something']
         fname = 'test_%s_%s' % (arg[0], val)
     else:
-        args = ['--' + arg, val]
+        args = ['--' + arg, val, 'something']
         fname = 'test_%s_%s' % (arg, val)
 
     def f(self):
-        self.stage.parse_args(args)
+        self.stage.configure(args)
         self.args[arg] = val
+        self.args['input_files'] = ['something']
+        if self.args['source'] == 's':
+            self.args['input_dir'] = None
+        elif self.args['source'] == 'h':
+            self.args['input_dir'] = '/user/DKB/'
         self.check_args()
     setattr(ProcessorStageArgsTestCase, fname, f)
 
@@ -191,15 +203,18 @@ def add_arg_incorrect(arg, short=False):
 
 def add_mode(val, short=False):
     if short:
-        args = ['-m', val]
+        args = ['-m', val, 'something']
         fname = 'test_m_%s' % (val)
     else:
-        args = ['--mode', val]
+        args = ['--mode', val, 'something']
         fname = 'test_mode_%s' % (val)
 
     def f(self):
-        self.stage.parse_args(args)
+        self.stage.configure(args)
         self.args.update(modes[val])
+        self.args['input_files'] = ['something']
+        if val != 'f':
+            self.args['input_dir'] = None
         self.check_args()
     setattr(ProcessorStageArgsTestCase, fname, f)
 
@@ -207,33 +222,48 @@ def add_mode(val, short=False):
 # hdfs >> source-dest >> mode
 def add_override_hdfs(arg, val):
     def f(self):
-        self.stage.parse_args(['--hdfs', '--' + arg, val])
+        self.stage.configure(['--hdfs', '--' + arg, val])
         self.args[arg] = val
         self.args['hdfs'] = True
         self.args['source'] = 'h'
         self.args['dest'] = 'h'
+        self.args['input_dir'] = '/user/DKB/'
         self.check_args()
     setattr(ProcessorStageArgsTestCase,
             'test_override_hdfs_%s_%s' % (arg, val), f)
 
 
 def add_override_mode(arg, val, mode_val):
-    def f(self):
-        self.stage.parse_args(['--' + arg, val, '--mode', mode_val])
-        self.args.update(modes[mode_val])
-        self.args[arg] = val
-        self.check_args()
+    if mode_val == 'm' and val == 'f':
+        def f(self):
+            args = ['--' + arg, val, '--mode', mode_val, 'something']
+            [msg, result] = isolate_function_error(self.stage.configure, args)
+            err = "File source/destination is not allowed in map-reduce mode."
+            self.assertIn(err, msg)
+    else:
+        def f(self):
+            self.stage.configure(['--' + arg, val, '--mode', mode_val,
+                                  'something'])
+            self.args.update(modes[mode_val])
+            self.args[arg] = val
+            if self.args['source'] == 's':
+                self.args['input_dir'] = None
+            elif self.args['source'] == 'h':
+                self.args['input_dir'] = '/user/DKB/'
+            self.args['input_files'] = ['something']
+            self.check_args()
     setattr(ProcessorStageArgsTestCase,
             'test_override_%s_%s_mode_%s' % (arg, val, mode_val), f)
 
 
 def add_override_hdfs_mode(val):
     def f(self):
-        self.stage.parse_args(['--hdfs', '--mode', val])
+        self.stage.configure(['--hdfs', '--mode', val])
         self.args.update(modes[val])
         self.args['hdfs'] = True
         self.args['source'] = 'h'
         self.args['dest'] = 'h'
+        self.args['input_dir'] = '/user/DKB/'
         self.check_args()
     setattr(ProcessorStageArgsTestCase,
             'test_override_hdfs_mode_%s' % (val), f)
@@ -272,45 +302,43 @@ class ProcessorStageConfigArgTestCase(unittest.TestCase):
         self.fake_config = None
 
     def test_correct_c(self):
-        self.stage.parse_args(['-c', self.fake_config.name])
+        self.stage.configure(['-c', self.fake_config.name, 'something'])
         isfile = isinstance(getattr(self.stage.ARGS, 'config'), file)
         self.assertTrue(isfile)
 
     def test_correct_config(self):
-        self.stage.parse_args(['--config', self.fake_config.name])
+        self.stage.configure(['--config', self.fake_config.name, 'something'])
         isfile = isinstance(getattr(self.stage.ARGS, 'config'), file)
         self.assertTrue(isfile)
 
     def test_missing_c(self):
         self.fake_config.close()
-        [msg, result] = isolate_function_error(self.stage.parse_args,
-                                               ['-c', self.fake_config.name])
+        args = ['-c', self.fake_config.name, 'something']
+        [msg, result] = isolate_function_error(self.stage.configure, args)
         err = "[Errno 2] No such file or directory: '%s'" %\
               self.fake_config.name
         self.assertIn(err, msg)
 
     def test_missing_config(self):
         self.fake_config.close()
-        [msg, result] = isolate_function_error(self.stage.parse_args,
-                                               ['--config',
-                                                self.fake_config.name])
+        args = ['--config', self.fake_config.name, 'something']
+        [msg, result] = isolate_function_error(self.stage.configure, args)
         err = "[Errno 2] No such file or directory: '%s'" %\
               self.fake_config.name
         self.assertIn(err, msg)
 
     def test_unreadable_c(self):
         os.chmod(self.fake_config.name, 0300)
-        [msg, result] = isolate_function_error(self.stage.parse_args,
-                                               ['-c', self.fake_config.name])
+        args = ['-c', self.fake_config.name, 'something']
+        [msg, result] = isolate_function_error(self.stage.configure, args)
         err = "[Errno 13] Permission denied: '%s'" %\
               self.fake_config.name
         self.assertIn(err, msg)
 
     def test_unreadable_config(self):
         os.chmod(self.fake_config.name, 0300)
-        [msg, result] = isolate_function_error(self.stage.parse_args,
-                                               ['--config',
-                                                self.fake_config.name])
+        args = ['--config', self.fake_config.name, 'something']
+        [msg, result] = isolate_function_error(self.stage.configure, args)
         err = "[Errno 13] Permission denied: '%s'" %\
               self.fake_config.name
         self.assertIn(err, msg)
