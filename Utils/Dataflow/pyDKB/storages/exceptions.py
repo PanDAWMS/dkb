@@ -81,3 +81,26 @@ class InvalidRequest(StorageException):
 class QueryError(StorageException):
     """ Exception indicating issues with stored queries. """
     pass
+
+
+class MissedParameter(QueryError):
+    """ Exception indicating that some query parameters are missed. """
+
+    def __init__(self, qname=None, param=None):
+        """ Initialize exception.
+
+        :param qname: query name
+        :type qname: str, NoneType
+        :param param: parameter name(s)
+        :type param: str, list(str)
+        """
+        message = 'Missed query parameters'
+        if param:
+            if isinstance(param, list):
+                p = ', '.join(param)
+            else:
+                p = param
+            message += ": %s" % p
+        if qname:
+            message += " ('%s')" % qname
+        super(MissedParameter, self).__init__(message)

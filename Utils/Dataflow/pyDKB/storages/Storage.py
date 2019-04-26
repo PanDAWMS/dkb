@@ -87,21 +87,42 @@ class Storage(object):
         """
         raise NotImplementedError
 
-    def save_query(self, query, qname=None):
+    def query_is_raw(self, query):
+        """ Check if given query is not compiled ("raw").
+
+        :param query: query body
+        :type query: obj
+
+        :return: True/False
+        :rtype: bool
+        """
+        raise NotImplementedError
+
+    def save_query(self, query, qname=None, raw=False):
         """ Save query for further usage.
 
         :param query: query content
         :type query: object
         :param qname: query name (must not start with '__')
         :type qname: str
+        :param raw: store "raw" (not compiled) version of query
+        :type raw: bool
         """
         if qname and qname.startswith('__'):
             raise ValueError("Query name must not start with '__'"
                              " (reserved for service needs).")
+        if not raw:
+            try:
+                raw = self.query_is_raw(query)
+            except NotImplementedError:
+                pass
+        prefix = ''
         if not qname:
             qname = '__last'
-        self.stored_queries[qname] = query
-        self.stored_queries[__last'] = query
+        if raw:
+            prefix = '__raw'
+        self.stored_queries[prefix + qname] = query
+        self.stored_queries[prefix + '__last'] = query
 
     def get_query(self, qname):
         """ Get query by name.
@@ -120,8 +141,12 @@ class Storage(object):
             q = self.stored_queries[qname]
             self.stored_queries['__last'] = q
         except KeyError:
-            raise QueryError("Query used before saving: '%s'"
-                             % qname)
+            # There still may be raw version of the query
+            try:
+                q = self.stored_queries['__raw' + qname]
+            except KeyError:
+                raise QueryError("Query used before saving: '%s'"
+                                 % qname)
         self.stored_queries['__last'] = q
         return q
 
