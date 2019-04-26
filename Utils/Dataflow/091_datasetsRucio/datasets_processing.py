@@ -74,8 +74,8 @@ def main(argv):
     stage.add_argument('--es-config', action='store',
                        type=argparse.FileType('r'),
                        help=u'Use ES as a backup source for dataset info'
-                             ' in order to save information even if it was'
-                             ' removed from the original source',
+                            ' in order to save information even if it was'
+                            ' removed from the original source',
                        nargs='?',
                        dest='es'
                        )
