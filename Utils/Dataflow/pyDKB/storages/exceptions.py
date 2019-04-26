@@ -37,13 +37,17 @@ class StorageNotConfigured(StorageException):
 class NotFound(StorageException):
     """ Exeption indicating that record with given ID  not found. """
 
-    def __init__(self, name, id):
+    def __init__(self, name, **kwargs):
         """ Initialize exception.
 
         :param name: storage name
         :type name: str
-        :param id: record ID
-        :type id: str, int
+        :param kwargs: record parameters
+        :type kwargs: dict
         """
-        message = "Record not found in '%s' (id: '%s')" % (name, id)
+        message = "Record not found in '%s'" % (name)
+        if kwargs:
+            params = [': '.join((key, '%r' % kwargs[key])) for key in kwargs]
+            params = ', '.join(params)
+            message = message + ' (%s)' % params
         super(NotFound, self).__init__(message)
