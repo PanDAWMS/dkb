@@ -21,6 +21,19 @@ class StorageAlreadyExists(StorageException):
         super(StorageAlreadyExists, self).__init__(message)
 
 
+class StorageNotConfigured(StorageException):
+    """ Exception indicating that requested storage is not configured. """
+
+    def __init__(self, name):
+        """ Initialize exception.
+
+        :param name: storage name
+        :type name: str
+        """
+        message = "Storage '%s' used before configuration." % name
+        super(StorageNotConfigured, self).__init__(message)
+
+
 class NotFound(StorageException):
     """ Exeption indicating that record with given ID  not found. """
 
