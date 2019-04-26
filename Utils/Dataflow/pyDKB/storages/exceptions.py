@@ -76,3 +76,8 @@ class InvalidRequest(StorageException):
         elif kwargs:
             message = message % kwargs
         super(InvalidRequest, self).__init__(message)
+
+
+class QueryError(StorageException):
+    """ Exception indicating issues with stored queries. """
+    pass

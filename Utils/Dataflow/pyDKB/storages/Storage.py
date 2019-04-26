@@ -5,7 +5,8 @@ pyDKB.storages.Storage
 import sys
 from datetime import datetime
 
-from exceptions import StorageNotConfigured
+from exceptions import (StorageNotConfigured,
+                        QueryError)
 
 
 class Storage(object):
@@ -19,6 +20,9 @@ class Storage(object):
 
     # Storage client
     c = None
+
+    # Stored queries
+    stored_queries = {}
 
     def __init__(self, name):
         """ Initialize Storage object.
@@ -91,10 +95,18 @@ class Storage(object):
         :param qname: query name (must not start with '__')
         :type qname: str
         """
-        raise NotImplementedError
+        if qname and qname.startswith('__'):
+            raise ValueError("Query name must not start with '__'"
+                             " (reserved for service needs).")
+        if not qname:
+            qname = '__last'
+        self.stored_queries[qname] = query
+        self.stored_queries[__last'] = query
 
     def get_query(self, qname):
         """ Get query by name.
+
+        Raise ``QueryError`` if query not found.
 
         :param qname: query name (if None, last stored/used query will be used)
         :type qnmae: str
@@ -102,7 +114,16 @@ class Storage(object):
         :return: stored query
         :rtype: object
         """
-        raise NotImplementedError
+        if not qname:
+            qname = '__last'
+        try:
+            q = self.stored_queries[qname]
+            self.stored_queries['__last'] = q
+        except KeyError:
+            raise QueryError("Query used before saving: '%s'"
+                             % qname)
+        self.stored_queries['__last'] = q
+        return q
 
     def exec_query(self, qname=None, **kwargs):
         """ Execute stored query with given parameters.
