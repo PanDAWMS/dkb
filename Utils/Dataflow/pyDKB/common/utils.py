@@ -1,5 +1,7 @@
 """
-Implementation of "readline"-like functionality for custom separator.
+pyDKB.common.utils
+
+Miscellaneous useful functions.
 
 .. todo:: make import of ``fcntl`` (or of this module) optional
   to avoid errors when library is used under Windows.
