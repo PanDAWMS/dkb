@@ -4,6 +4,7 @@ SCRIPT_NAME=data4es
 
 BATCH_SIZE=100
 DEBUG=
+UPDATE=
 
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
 
@@ -170,6 +171,8 @@ while [ -n "$1" ]; do
   case $1 in
     --debug)
       DEBUG=1;;
+    --update)
+      UPDATE=1;;
     --)
       shift
       break;;
@@ -181,6 +184,12 @@ while [ -n "$1" ]; do
   shift
 done
 
+if [ -n "$UPDATE" ]; then
+  es_cfg=`get_config "es"`
+  cmd_91_in="$cmd_91_in --es-config $es_cfg"
+  cmd_91_out="$cmd_91_out --es-config $es_cfg"
+  cmd_95="$cmd_95 --es-config $es_cfg"
+fi
 
 # Define subchains
 # Source subchain: Oracle Connector
