@@ -315,11 +315,11 @@ def get_metadata(dsn, attributes=None):
 
 def get_es_metadata(oid, fields=[], parent=None):
     es = storages.get("ES")
+    r = {}
     try:
         r = es.get(oid, fields, parent=parent)
     except storages.exceptions.NotFound, err:
         sys.stderr.write("(WARN) %s\n" % err)
-        return None
     return r
 
 
