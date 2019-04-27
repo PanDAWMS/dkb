@@ -133,11 +133,13 @@ def read_config(config_file):
         return None
 
     # Optional parameters
+    result['timestamp_tz'] = config_get(config, 'timestamps', 'tz',
+                                        time.tzname[0])
     if result['step_seconds'] > 0:
         default_initial = datetime.utcfromtimestamp(0)
         default_final = None
     else:
-        default_initial = offset_now()
+        default_initial = offset_now(result['timestamp_tz'])
         default_final = datetime.utcfromtimestamp(0)
 
     result['final_date'] = str2date(config_get(config, 'timestamps', 'final',
@@ -148,8 +150,6 @@ def read_config(config_file):
                                                    'offset_file', '.offset'),
                                         result)
     result['mode'] = config_get(config, 'process', 'mode', 'SQUASH')
-    result['timestamp_tz'] = config_get(config, 'timestamps', 'tz',
-                                        time.tzname[0])
 
     return result
 
@@ -299,13 +299,20 @@ def get_offset(offset_storage):
     return result
 
 
-def offset_now():
+def offset_now(tz=None):
     """ Get offset value corresonding to the current moment of time.
+
+    :param tz: time zone name. If not specified, default (globally set)
+               time zone is used.
+    :type tz: str, NoneType
 
     :return: offset value (naive datetime, adjusted to OFFSET_TZ)
     :rtype: datetime.datetime
     """
-    return OFFSET_TZ.fromutc(datetime.utcnow()).replace(tzinfo=None)
+    TZ = OFFSET_TZ
+    if tz:
+        TZ = pytz.timezone(tz)
+    return TZ.fromutc(datetime.utcnow()).replace(tzinfo=None)
 
 
 def plain(conn, queries, start_date, end_date):
