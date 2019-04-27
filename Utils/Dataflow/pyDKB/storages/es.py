@@ -22,7 +22,8 @@ except ImportError:
 
 DEFAULT_CFG = {
     'host': '127.0.0.1',
-    'port': '9200'
+    'port': '9200',
+    'timeout_retry': 3
 }
 
 
@@ -50,11 +51,12 @@ class ES(Storage):
         """ Configure ES client.
 
         Configuration parameters:
-          host     (str: '127.0.0.1')
-          port     (str: '9200')
-          index    (str)
-          user     (str)
-          __passwd (str)
+          host          (str: '127.0.0.1')
+          port          (str: '9200')
+          index         (str)
+          user          (str)
+          __passwd      (str)
+          timeout_retry (int: 3)
 
         :param cfg: configuration parameters
         :type cfg: dict
@@ -67,6 +69,9 @@ class ES(Storage):
             kwargs['http_auth'] = '%(user)s:%(__passwd)s' % cfg
         if cfg.get('index'):
             self.index = cfg['index']
+        kwargs['retry_on_timeout'] = True
+        kwargs['max_retries'] = cfg.get('timeout_retry',
+                                        DEFAULT_CFG['timeout_retry'])
         self.c = elasticsearch.Elasticsearch(hosts, **kwargs)
 
     def get(self, id, fields=None, index=None, doc_type='_all', parent=None):
