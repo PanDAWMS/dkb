@@ -3,6 +3,8 @@ import json
 import re
 import sys
 import os
+import argparse
+
 try:
     import pyAMI.client
     import pyAMI.atlas.api as AtlasAPI
@@ -17,6 +19,8 @@ try:
     dkb_dir = os.path.join(base_dir, os.pardir)
     sys.path.append(dkb_dir)
     import pyDKB
+    from pyDKB import storages
+    from pyDKB.common.utils import read_es_config
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -39,10 +43,22 @@ def main(argv):
     stage.add_argument('--userkey', help='PEM key file', required=True)
     stage.add_argument('--usercert', help='PEM certificate file',
                        required=True)
+    stage.add_argument('--es-config', action='store',
+                       type=argparse.FileType('r'),
+                       help=u'Use ES as a backup source for dataset info'
+                            ' in order to save information even if it was'
+                            ' removed from the original source',
+                       nargs='?',
+                       dest='es'
+                       )
 
     exit_code = 0
     try:
         stage.parse_args(argv)
+        if stage.ARGS.es:
+            cfg = read_es_config(stage.ARGS.es)
+            stage.ARGS.es.close()
+            storages.create("ES", storages.storageType.ES, cfg)
         stage.process = process
         init_ami_client(stage.ARGS.userkey, stage.ARGS.usercert)
         stage.run()
@@ -91,6 +107,7 @@ def process(stage, message):
     # or not set at all.
     if update or not formats:
         amiPhysValues(data)
+        fix_ds_info(data)
     stage.output(pyDKB.dataflow.messages.JSONMessage(data))
 
     return True
@@ -151,6 +168,44 @@ def remove_tid(dataset):
     :return: dataset name without _tid => container name
     """
     return re.sub('_tid(.)+', '', dataset)
+
+
+def fix_ds_info(data):
+    """ Fix dataset metadata with data from ES, if needed and possible.
+
+    :param data: data
+    :type data: dict
+
+    :return: None if update is not requested (ES client not configured) or
+             not possible (ES does not contain information of given dataset);
+             else -- True
+    :rtype: bool, NoneType
+    """
+    try:
+        es = storages.get("ES")
+    except storages.StorageNotConfigured:
+        return None
+    mfields = [item['es'] for item in PHYS_VALUES]
+    update_required = False
+    for f in mfields:
+        if not data.get(f):
+            update_required = True
+            break
+    if update_required:
+        try:
+            r = es.get(data.get('datasetname'), mfields,
+                       doc_type='output_dataset',
+                       parent=data.get('_parent'))
+        except storages.exceptions.NotFound, err:
+            sys.stderr.write("(DEBUG) %s.\n" % err)
+            return None
+        for f in mfields:
+            if not data.get(f) and r.get(f) != data.get(f):
+                sys.stderr.write("(DEBUG) Update AMI info with data from ES:"
+                                 " %s = '%s' (was: '%s')\n" % (f, r.get(f),
+                                                               data.get(f)))
+                data[f] = r[f]
+    return True
 
 
 if __name__ == '__main__':

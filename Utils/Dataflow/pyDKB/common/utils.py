@@ -1,5 +1,7 @@
 """
-Implementation of "readline"-like functionality for custom separator.
+pyDKB.common.utils
+
+Miscellaneous useful functions.
 
 .. todo:: make import of ``fcntl`` (or of this module) optional
   to avoid errors when library is used under Windows.
@@ -52,3 +54,34 @@ def custom_readline(f, newline):
             pos = buf.index(newline)
             yield buf[:pos]
             buf = buf[pos + len(newline):]
+
+
+def read_es_config(cfg_file):
+    """ Read ES configuration file.
+
+    We have ES config in form of file with shell variables declaration,
+    but sometimes need to parse it in Python as well.
+
+    :param cfg_file: open file descriptor with ES access configuration
+    :type cfg_file: file descriptor
+    """
+    keys = {'ES_HOST': 'host',
+            'ES_PORT': 'port',
+            'ES_USER': 'user',
+            'ES_PASSWORD': '__passwd',
+            'ES_INDEX': 'index'
+            }
+    cfg = {}
+    for line in cfg_file.readlines():
+        if line.strip().startswith('#'):
+            continue
+        line = line.split('#')[0].strip()
+        if '=' not in line:
+            continue
+        key, val = line.split('=')[:2]
+        try:
+            cfg[keys[key]] = val
+        except KeyError:
+            sys.stderr.write("(WARN) Unknown configuration parameter: "
+                             "'%s'.\n" % key)
+    return cfg
