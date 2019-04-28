@@ -50,20 +50,21 @@ class ES(Storage):
         """ Configure ES client.
 
         Configuration parameters:
-          host   (str: '127.0.0.1')
-          port   (str: '9200')
-          index  (str)
-          user   (str)
-          passwd (str)
+          host     (str: '127.0.0.1')
+          port     (str: '9200')
+          index    (str)
+          user     (str)
+          __passwd (str)
 
         :param cfg: configuration parameters
         :type cfg: dict
         """
+        self.log_cfg(cfg, DEFAULT_CFG)
         hosts = [{'host': cfg.get('host', DEFAULT_CFG['host']),
                  'port': cfg.get('port', DEFAULT_CFG['port'])}]
         kwargs = {}
         if cfg.get('user'):
-            kwargs['http_auth'] = '%(user)s:%(passwd)s' % cfg
+            kwargs['http_auth'] = '%(user)s:%(__passwd)s' % cfg
         if cfg.get('index'):
             self.index = cfg['index']
         self.c = elasticsearch.Elasticsearch(hosts, **kwargs)
