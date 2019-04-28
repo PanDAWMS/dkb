@@ -194,6 +194,7 @@ def fix_ds_info(data):
     if update_required:
         try:
             r = es.get(data.get('datasetname'), mfields,
+                       doc_type='output_dataset',
                        parent=data.get('_parent'))
         except storages.exceptions.NotFound, err:
             sys.stderr.write("(DEBUG) %s.\n" % err)
