@@ -40,8 +40,9 @@ def isolate_function_error(f, *args):
     :param args: arguments to execute function with
     :type args: list
 
-    :return:
-    :rtype:
+    :return: list with two members, first one is the error message,
+             second one is the function's return
+    :rtype: list
     """
     buf = cStringIO.StringIO()
     temp_err = sys.stderr
