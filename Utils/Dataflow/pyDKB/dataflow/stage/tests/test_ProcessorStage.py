@@ -63,6 +63,13 @@ args_to_add = {
 }
 
 
+hdfs_args = {
+    'hdfs': True,
+    'source': 'h',
+    'dest': 'h',
+}
+
+
 modes = {
     's': {'mode': 's', 'source': 's', 'dest': 's', 'eom': '\n', 'eop': '\0'},
     'f': {'mode': 'f', 'source': 'f', 'dest': 'f', 'eom': '\n', 'eop': ''},
@@ -105,9 +112,7 @@ class ProcessorStageArgsTestCase(unittest.TestCase):
 
     def test_hdfs(self):
         self.stage.configure(['--hdfs'])
-        self.args['hdfs'] = True
-        self.args['source'] = 'h'
-        self.args['dest'] = 'h'
+        self.args.update(hdfs_args)
         self.args['input_dir'] = '/user/DKB/'
         self.check_args()
 
@@ -245,9 +250,7 @@ def add_override_hdfs(arg, val):
     def f(self):
         self.stage.configure(['--hdfs', '--' + arg, val])
         self.args[arg] = val
-        self.args['hdfs'] = True
-        self.args['source'] = 'h'
-        self.args['dest'] = 'h'
+        self.args.update(hdfs_args)
         self.args['input_dir'] = '/user/DKB/'
         self.check_args()
     setattr(ProcessorStageArgsTestCase,
@@ -281,9 +284,7 @@ def add_override_hdfs_mode(val):
     def f(self):
         self.stage.configure(['--hdfs', '--mode', val])
         self.args.update(modes[val])
-        self.args['hdfs'] = True
-        self.args['source'] = 'h'
-        self.args['dest'] = 'h'
+        self.args.update(hdfs_args)
         self.args['input_dir'] = '/user/DKB/'
         self.check_args()
     setattr(ProcessorStageArgsTestCase,
