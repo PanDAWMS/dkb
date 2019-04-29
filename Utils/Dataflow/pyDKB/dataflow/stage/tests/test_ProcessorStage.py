@@ -149,6 +149,13 @@ class ProcessorStageArgsTestCase(unittest.TestCase):
         self.args['input_files'] = ['something']
         self.check_args()
 
+    def test_raw_strings(self):
+        self.stage.configure(['-e', r'\t', '-E', r'\n', 'something'])
+        self.args['eom'] = '\t'
+        self.args['eop'] = '\n'
+        self.args['input_files'] = ['something']
+        self.check_args()
+
     def test_i(self):
         self.stage.configure(['-i', 'something'])
         self.args['input_dir'] = 'something'
