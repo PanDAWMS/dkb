@@ -4,7 +4,8 @@
     "bool": {
       "must": [
         {"terms": {"hashtag_list": %(htags)s}},
-        {"bool": {"must_not": [{"terms": {"status": ["aborted", "failed", "broken", "obsolete"]}}]}}
+        {"bool": {"must_not": [{"terms": {"status": ["aborted", "failed", "broken", "obsolete"]}}]}},
+        {"exists": {"field": "start_time"}}
       ]
     }
   },
@@ -14,7 +15,7 @@
       "aggs": {
         "chart_data": {
           "date_histogram": {
-            "script": "long interval = 86400000; List list = []; for (long i = doc['start_time'].value / interval * interval; i <= doc['end_time'].value; i += interval) { list.add(i); } return list;",
+            "script": "long interval = 86400000; List list = []; long end = doc['end_time'].value; if (end == 0) {end = %(current_ts_ms)sL;} for (long i = doc['start_time'].value / interval * interval; i <= end; i += interval) { list.add(i); } return list;",
             "interval": "day",
             "min_doc_count": 1
           }

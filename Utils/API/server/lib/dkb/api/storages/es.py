@@ -8,6 +8,7 @@ import os
 import traceback
 import json
 from datetime import datetime
+import time
 
 from ..exceptions import DkbApiNotImplemented
 from exceptions import (StorageClientException,
@@ -188,6 +189,11 @@ def _raw_task_steps_hist(**kwargs):
     """
     logging.debug("_raw_task_steps_hist(%s)" % kwargs)
     q = dict(TASK_KWARGS)
+    if kwargs.get('end'):
+        current_ts = kwargs['end']
+    else:
+        current_ts = datetime.utcnow()
+    kwargs['current_ts_ms'] = int(time.mktime(current_ts.timetuple())) * 1000
     q['body'] = get_query('task-steps-hist', **kwargs)
     if kwargs.get('start'):
         r = {"range": {"end_time": {"gte":
