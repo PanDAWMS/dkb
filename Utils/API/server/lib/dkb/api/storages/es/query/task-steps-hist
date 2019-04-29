@@ -4,7 +4,8 @@
     "bool": {
       "must": [
         {"terms": {"hashtag_list": %(htags)s}},
-        {"bool": {"must_not": [{"terms": {"status": ["aborted", "failed", "broken", "obsolete"]}}]}}
+        {"bool": {"must_not": [{"terms": {"status": ["aborted", "failed", "broken", "obsolete"]}}]}},
+        {"exists": {"field": "start_time"}}
       ]
     }
   },
