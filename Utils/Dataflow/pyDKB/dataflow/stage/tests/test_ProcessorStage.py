@@ -199,7 +199,7 @@ def add_arg(arg, val, short=False):
 
 def add_arg_incorrect(arg, short=False):
     if short:
-        val = 'i'
+        val = 'incorrect'
         args = ['-' + arg[0], val]
         fname = 'test_%s_%s' % (arg[0], val)
     else:
