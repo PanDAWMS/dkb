@@ -71,7 +71,7 @@ modes = {
 
 
 class ProcessorStageArgsTestCase(unittest.TestCase):
-    default_args = {
+    expected_args = {
         'mode': 'f',
         'config': None,
         'eom': '\n',
@@ -86,7 +86,7 @@ class ProcessorStageArgsTestCase(unittest.TestCase):
 
     def setUp(self):
         self.stage = pyDKB.dataflow.stage.ProcessorStage()
-        self.args = dict(self.default_args)
+        self.args = dict(self.expected_args)
 
     def tearDown(self):
         self.stage = None
