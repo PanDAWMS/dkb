@@ -135,6 +135,20 @@ class ProcessorStageArgsTestCase(unittest.TestCase):
         self.args['input_files'] = ['something']
         self.check_args()
 
+    def test_e_empty(self):
+        self.stage.configure(['-e', '', 'something'])
+        self.args['eom'] = ''
+        self.args['eop'] = '\n'
+        self.args['input_files'] = ['something']
+        self.check_args()
+
+    def test_e_empty_E_override(self):
+        self.stage.configure(['-e', '', '-E', '', 'something'])
+        self.args['eom'] = ''
+        self.args['eop'] = ''
+        self.args['input_files'] = ['something']
+        self.check_args()
+
     def test_i(self):
         self.stage.configure(['-i', 'something'])
         self.args['input_dir'] = 'something'
