@@ -49,8 +49,6 @@ class Paper:
             self.pdf = path_join(self.dir, self.fname + '.pdf')
 
             self.mine_text()
-
-            self.save_metadata()
         else:
             # Create a paper object from existing directory.
             self.load_metadata()
