@@ -5,33 +5,56 @@
 
 import json
 import os
+import re
+import shutil
+
 
 import pdfwork
-from utils import path_join
+from utils import log, path_join
 
 
 class Paper:
     ''' Class represents a document which needs to be analyzed. '''
-    attributes_metadata = ['num_pages', 'rotated_pages']
+    attributes_metadata = ['fname', 'num_pages', 'rotated_pages']
     txt_dir_name = 'txt'
     xml_dir_name = 'xml'
+    re_pdfname = re.compile(r"([^./]+)\.pdf$")
 
-    def __init__(self, fname, dirname):
-        self.fname = fname
+    def __init__(self, dirname, fname=False, hdfs=False):
         self.dir = dirname
-        self.pdf = path_join(self.dir, '%s.pdf' % self.fname)
         self.txt_dir = path_join(self.dir, self.txt_dir_name)
         self.xml_dir = path_join(self.dir, self.xml_dir_name)
         self.metadata_file = path_join(self.dir, 'metadata.json')
-
-        # Number of pages in a paper.
-        self.num_pages = None
-        # Numbers of pages which are rotated.
-        self.rotated_pages = None
-
         # This flag is set to True when part of metadata is changed, but
         # not yet saved to the metadata file.
         self.changed = False
+
+        if fname:
+            # Create a new paper from given file.
+            # Create a directory.
+            if os.access(self.dir, os.F_OK):
+                log('Cannot create directory %s: filename already exists.'
+                    % (self.dir), 'ERROR')
+                return None
+            os.mkdir(self.dir)
+
+            # Copy the PDF file into the directory.
+            if hdfs:
+                raise NotImplementedError('Processing HDFS documents not '
+                                          'implemented yet.')
+            else:
+                shutil.copy(fname, self.dir)
+
+            self.fname = self.re_pdfname.search(fname).group(1)
+            self.pdf = path_join(self.dir, self.fname + '.pdf')
+
+            self.mine_text()
+
+            self.save_metadata()
+        else:
+            # Create a paper object from existing directory.
+            self.load_metadata()
+            self.pdf = path_join(self.dir, self.fname + '.pdf')
 
     def get_txt_page(self, number, text=False):
         ''' Fetch txt page of the paper by number.
