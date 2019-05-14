@@ -94,9 +94,8 @@ class Paper:
         ''' Extract text from the PDF file. '''
         if not os.access(self.txt_dir, os.F_OK):
             os.mkdir(self.txt_dir)
-        [num_pages,
+        [self.num_pages,
          self.rotated_pages] = pdfwork.mine_text(self.pdf, folder=self.txt_dir)
-        self.num_pages = num_pages
         if not os.access(self.xml_dir, os.F_OK):
             os.mkdir(self.xml_dir)
         self.get_xml_page(1)
