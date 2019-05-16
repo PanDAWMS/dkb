@@ -55,7 +55,7 @@ def get_chain_data(es, index, chain_id):
     :type es: elasticsearch.client.Elasticsearch
     :param index: index containing tasks
     :type index: str
-    :param chain_id: chain_id - taskid of the chain's root
+    :param chain_id: taskid of the chain's root
     :type chain_id: int or str
 
     :return: chain_data of all tasks in the chain, format is
