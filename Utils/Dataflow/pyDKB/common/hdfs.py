@@ -207,10 +207,12 @@ def dirname(p):
     return path.dirname(p).strip()
 
 
-def join(p, filename):
-    """ Join path and filename. """
-    if p is None:
-        p = ''
-    if filename is None:
-        filename = ''
-    return path.join(p, filename).strip()
+def join(p, *args):
+    """ Join given paths. """
+    paths = []
+    for a in [p] + list(args):
+        if a is None:
+            paths.append('')
+        else:
+            paths.append(a)
+    return path.join(*paths).strip()
