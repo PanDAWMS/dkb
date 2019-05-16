@@ -201,9 +201,9 @@ def transform_chain_data(data):
         sys.stderr.write('(WARN) Function transform_chain_data() received '
                          'non-dict data: %s. Skipping.\n' % str(data))
         return False
-    taskid = data.get('taskid')
     chain_data = data.get('chain_data')
     if not chain_data or not chain_data.replace(',', '').isdigit():
+        taskid = data.get('taskid')
         sys.stderr.write('(WARN) Task %s: cannot transform chain_data "%s", '
                          'it seems to be incorrect. Setting chain_id=%s, '
                          'chain_data=[%s].\n'
