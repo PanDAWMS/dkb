@@ -21,8 +21,9 @@ Rucio requires authentication, which is performed by supplying a number of
 things, such as certificate or user name. In case of this stage, the
 authentication is performed as following:
 
-1) The stage sets up the environment variable VIRTUAL_ENV, its value will be
-   "~/.rucio" (if it exists), or "./.rucio" otherwise.
+1) The stage sets up the environment variable VIRTUAL_ENV (unless it was
+   already initialized), its value will be "~/.rucio" (if it exists), or
+   "./.rucio" otherwise.
 2) Rucio client looks for configuration file "rucio.cfg" in
    "VIRTUAL_ENV/etc/" (and some other places).
 3) Rucio client retrieves the necessary information from the config and
