@@ -16,7 +16,8 @@ data types/formats:
 Since requesting information from AMI is a very time-consuming process,
 the supplied datasets are filtered by data format - the ones with formats
 mentioned above are included into request to AMI and their metadata are
-updated, while all the others are left unchanged.
+updated, while all the others are left unchanged. Request will also include
+datasets with undefined data format (missing 'data_format' field).
 
 2. Requirements
 ---------------
