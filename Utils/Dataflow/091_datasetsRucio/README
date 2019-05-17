@@ -75,5 +75,6 @@ output_datasets2016.ndjson
 input_datasets2018.ndjson
 output_datasets2018.ndjson
 
-input_datasets* is the tasks' metadata extended with primary_input datasets' metadata.
+input_datasets* is the tasks' metadata extended with primary_input datasets'
+metadata.
 output_datasets* is the output datasets' metadata.
