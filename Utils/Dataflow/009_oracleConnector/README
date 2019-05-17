@@ -24,7 +24,27 @@ corresponding directory:
 
   Utils/Dataflow/config/009.cfg.example
 
-3. Samples
+3. Task Chain
+-------------
+The query prodsys2ES includes the subquery that obtains the task's chain_data:
+taskids of tasks in the task chain, starting with the root and ending with the
+given task.
+
+The root of a given task is found by recursively looking for the current
+task's parent, starting with the given task, until the task is encountered
+that has no parent - this is the root. The parent of a task is found by
+comparing the datasets: task's input dataset is one of the parent's output
+datasets. After finding the root, ids of the encountered tasks are aggregated
+into a string.
+
+Some tasks have their parent specified in the "parent_tid" field, and
+originally it was planned to find each parent in this way if possible, and
+by comparing input/output otherwise. However, using conditions in Oracle's
+recursive construction START WITH ... CONNECT BY leads to problems with
+infinite cycles. Therefore, only the input/output mechanism was implemented
+- it is slower, but more reliable.
+
+4. Samples
 ----------
 The 'output' directory contains two samples of production data:
 

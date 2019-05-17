@@ -9,6 +9,8 @@ Transform task metadata to fit ES scheme:
 * split comma-separated 'hashtag_list' to the actual list structure
 * turn hashtags to lower case
 * split dot-separated 'output_formats' to the actual list structure
+* extract 'chain_id' from 'chain_data' and turn the latter into array
+  of integers
 
 2. Input
 --------

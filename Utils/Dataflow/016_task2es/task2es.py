@@ -183,28 +183,67 @@ def input_events(data):
     return result
 
 
+def transform_chain_data(data):
+    """ Transform chain_data into array of integers and get chain_id from it.
+
+    chain_id is the taskid of the task chain's root.
+
+    :param data: data to be updated, must contain taskid and proper chain_data
+                 (string of numbers separated by commas).
+    :type data: dict
+
+    :return: True if update was successful, False otherwise (chain_id and
+             chain_data will be updated so that the task is considered
+             independent)
+    :rtype: bool
+    """
+    if type(data) is not dict:
+        sys.stderr.write('(WARN) Function transform_chain_data() received '
+                         'non-dict data: %s. Skipping.\n' % str(data))
+        return False
+    chain_data = data.get('chain_data')
+    if not chain_data or not chain_data.replace(',', '').isdigit():
+        taskid = data.get('taskid')
+        sys.stderr.write('(WARN) Task %s: cannot transform chain_data "%s", '
+                         'it seems to be incorrect. Setting chain_id=%s, '
+                         'chain_data=[%s].\n'
+                         % (taskid, chain_data, taskid, taskid))
+        data['chain_id'] = taskid
+        data['chain_data'] = [taskid]
+        return False
+    chain_data = [int(i) for i in chain_data.split(',')]
+    data['chain_id'] = chain_data[0]
+    data['chain_data'] = chain_data
+    return True
+
+
 def process(stage, message):
     """ Single message processing. """
     data = message.content()
-    # 1. Hashtag_list unification
+
+    # 1. Add the fields for ES indexing
+    if not add_es_index_info(data):
+        sys.stderr.write("(WARN) Skip message (not enough info"
+                         " for ES indexing).\n")
+        return True
+    # 2. Unify hashtag_list
     hashtags = data.get('hashtag_list')
     if hashtags:
         hashtags = hashtags.lower().split(',')
         data['hashtag_list'] = [x.strip() for x in hashtags]
-    # 2. Physics category detection
+    # 3. Detect physics category
     data['phys_category'] = get_category(data)
-    # 3. Output_formats unification
+    # 4. Unify output_formats
     output_formats = data.get('output_formats')
     if output_formats:
         data['output_formats'] = output_formats.split('.')
-    # 4. Produce derived value 'input_events'
+    # 5. Produce derived value 'input_events'
     inp_events = input_events(data)
     if inp_events:
         data['input_events'] = inp_events
-    if not add_es_index_info(data):
-        sys.stderr.write("(WARN) Skip message (not enough info"
-                         " for ES indexing.\n")
-        return True
+    # 6. Save chain_data as array of integers, extract chain_id from it
+    transform_chain_data(data)
+
     out_message = JSONMessage(data)
     stage.output(out_message)
     return True
