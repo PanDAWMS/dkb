@@ -9,7 +9,7 @@ import unittest
 import documents2ttl
 
 
-class SimpleTestCase(unittest.TestCase):
+class Case(unittest.TestCase):
     def test_get_document_iri(self):
         doc_id = "abcd"
         iri = "<%s/document/%s>" % (documents2ttl.GRAPH, doc_id)
@@ -53,114 +53,7 @@ class SimpleTestCase(unittest.TestCase):
         self.assertEqual(documents2ttl.documents_links(data), result)
 
 
-class arxiv_extractionTestCase(unittest.TestCase):
-    def test_empty(self):
-        result_function = documents2ttl.arxiv_extraction({})
-        result_known = None
-        self.assertEqual(result_function, result_known)
-
-    def test_wrong_number_type(self):
-        data = {'primary_report_number': 1}
-        result_function = documents2ttl.arxiv_extraction(data)
-        result_known = None
-        self.assertEqual(result_function, result_known)
-
-    def test_string(self):
-        data = {'primary_report_number': 'arXiv123'}
-        result_function = documents2ttl.arxiv_extraction(data)
-        result_known = 'arXiv123'
-        self.assertEqual(result_function, result_known)
-
-    def test_list(self):
-        data = {'primary_report_number': [None, 'arXiv123', 'something']}
-        result_function = documents2ttl.arxiv_extraction(data)
-        result_known = 'arXiv123'
-        self.assertEqual(result_function, result_known)
-
-    def test_small_x(self):
-        data = {'primary_report_number': 'arxiv123'}
-        result_function = documents2ttl.arxiv_extraction(data)
-        result_known = None
-        self.assertEqual(result_function, result_known)
-
-    def test_prefix(self):
-        data = {'primary_report_number': '321arXiv123'}
-        result_function = documents2ttl.arxiv_extraction(data)
-        result_known = None
-        self.assertEqual(result_function, result_known)
-
-
-class generate_journal_idTestCase(unittest.TestCase):
-    def test_empty(self):
-        self.assertEqual(documents2ttl.generate_journal_id({}), '')
-
-    def test_title(self):
-        journal_dict = {'title': 'T I T L E\n'}
-        result_function = documents2ttl.generate_journal_id(journal_dict)
-        result_known = 'TITLE\n'
-        self.assertEqual(result_function, result_known)
-
-    def test_volume(self):
-        journal_dict = {'volume': 'o ne \n'}
-        result_function = documents2ttl.generate_journal_id(journal_dict)
-        result_known = '_one\n'
-        self.assertEqual(result_function, result_known)
-
-    def test_year(self):
-        journal_dict = {'year': ' 2 0 1 8 \n'}
-        result_function = documents2ttl.generate_journal_id(journal_dict)
-        result_known = '_2018\n'
-        self.assertEqual(result_function, result_known)
-
-    def test_full(self):
-        journal_dict = {'year': '2018 ', 'title': ' TITLE', 'volume': '1'}
-        result_function = documents2ttl.generate_journal_id(journal_dict)
-        result_known = 'TITLE_1_2018'
-        self.assertEqual(result_function, result_known)
-
-
-class fix_stringTestCase(unittest.TestCase):
-    def test_wrong_type(self):
-        s = 1
-        self.assertEqual(documents2ttl.fix_string(s), s)
-
-    def test_backslash_n(self):
-        s = "\n"
-        fixed_s = "\\\\n"
-        self.assertEqual(documents2ttl.fix_string(s), fixed_s)
-
-    def test_single_quote(self):
-        s = "'"
-        fixed_s = "\\\\'"
-        self.assertEqual(documents2ttl.fix_string(s), fixed_s)
-
-    def test_single_backslash_single_quote(self):
-        s = "\'"
-        fixed_s = "\\\\'"
-        self.assertEqual(documents2ttl.fix_string(s), fixed_s)
-
-    def test_backslash_double_quote(self):
-        # Is it normal that this and previous tests are so different?
-        s = "\""
-        fixed_s = ""
-        self.assertEqual(documents2ttl.fix_string(s), fixed_s)
-
-    def test_string_without_characters_to_escape(self):
-        s = "Am I supposed to write something _important_/*smart* here?"\
-            "Preposterous!"
-        self.assertEqual(documents2ttl.fix_string(s), s)
-
-
-test_cases = (
-    SimpleTestCase,
-    arxiv_extractionTestCase,
-    generate_journal_idTestCase,
-    fix_stringTestCase
-)
-
-
 def load_tests(loader, tests, pattern):
     suite = unittest.TestSuite()
-    for case in test_cases:
-        suite.addTest(loader.loadTestsFromTestCase(case))
+    suite.addTest(loader.loadTestsFromTestCase(Case))
     return suite
