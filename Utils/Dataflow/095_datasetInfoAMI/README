@@ -25,16 +25,15 @@ Proper memberships and grid certificate are required to run the stage.
 This includes:
 
 1) Registering in CERN systems (discuss this with your supervisor).
-2) Obtaining a grid certificate (https://ca.cern.ch/ca/).
-3) Registering in ATLAS Virtual Organization (VO ATLAS, see first link below).
-4) Registering on AMI site with the grid certificate(https://ami.in2p3.fr/).
+2) Obtaining a grid certificate (see [1]).
+3) Registering in ATLAS Virtual Organization (see [2]).
+4) Registering on AMI site with the grid certificate (see [3]).
 
-See
+Useful links:
 
-https://twiki.ific.uv.es/twiki/bin/view/Atlas/AtlasDataProcessingAtIFIC
-https://ami.in2p3.fr/pages/getting-started
-
-for more information.
+[1] https://ca.cern.ch/ca/
+[2] https://twiki.ific.uv.es/twiki/bin/view/Atlas/AtlasDataProcessingAtIFIC
+[3] https://ami.in2p3.fr/pages/getting-started
 
 3. Running the stage
 --------------------
