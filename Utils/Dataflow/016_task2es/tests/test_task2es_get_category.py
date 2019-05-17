@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Sample tests for Stage 016 to be used as example for writing tests.
+Tests for Stage 016's function get_category().
 Usage: 'python -m unittest discover' from ..(directory with Stage 016 code).
 """
 
@@ -9,23 +9,7 @@ import unittest
 import task2es
 
 
-class add_es_index_infoTestCase(unittest.TestCase):
-    def test_wrong_type(self):
-        data = 1
-        self.assertEqual(task2es.add_es_index_info(data), False)
-
-    def test_no_taskid(self):
-        data = {}
-        self.assertEqual(task2es.add_es_index_info(data), False)
-
-    def test_normal(self):
-        data = {'taskid': '123'}
-        self.assertEqual(task2es.add_es_index_info(data), True)
-        self.assertEqual(data['_id'], data['taskid'])
-        self.assertEqual(data['_type'], 'task')
-
-
-class get_categoryTestCase(unittest.TestCase):
+class Case(unittest.TestCase):
     def setUp(self):
         self.task = {'hashtag_list': [], 'taskname': ''}
 
@@ -115,16 +99,15 @@ def add_tag_test(category, tag):
     def f(self):
         self.task['hashtag_list'] = [tag]
         self.assertEqual(task2es.get_category(self.task), [category])
-    setattr(get_categoryTestCase,
-            'test_category_%s_tag_%s' % (category, tag), f)
+    setattr(Case, 'test_category_%s_tag_%s' % (category, tag), f)
 
 
 def add_phys_short_test(category, phys_short):
     def f(self):
         self.task['taskname'] = 'nothing.nothing.' + phys_short
         self.assertEqual(task2es.get_category(self.task), [category])
-    setattr(get_categoryTestCase,
-            'test_category_%s_phys_short_%s' % (category, phys_short), f)
+    setattr(Case, 'test_category_%s_phys_short_%s'
+                  % (category, phys_short), f)
 
 
 # Add tests by cycling over values in dictionary.
@@ -138,11 +121,7 @@ for category in PHYS_CATEGORIES_PHYS_SHORTS_MAP:
         add_phys_short_test(category, phys_short)
 
 
-test_cases = (add_es_index_infoTestCase, get_categoryTestCase)
-
-
 def load_tests(loader, tests, pattern):
     suite = unittest.TestSuite()
-    for case in test_cases:
-        suite.addTest(loader.loadTestsFromTestCase(case))
+    suite.addTest(loader.loadTestsFromTestCase(Case))
     return suite
