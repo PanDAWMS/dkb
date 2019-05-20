@@ -193,24 +193,24 @@ def listdir(dirname, mode='a'):
     return result
 
 
-def basename(path):
+def basename(p):
     """ Return file name without path. """
-    if path is None:
-        path = ''
-    return path.basename(path).strip()
+    if p is None:
+        p = ''
+    return path.basename(p).strip()
 
 
-def dirname(path):
+def dirname(p):
     """ Return dirname without filename. """
-    if path is None:
-        path = ''
-    return path.dirname(path).strip()
+    if p is None:
+        p = ''
+    return path.dirname(p).strip()
 
 
-def join(path, filename):
+def join(p, filename):
     """ Join path and filename. """
-    if path is None:
-        path = ''
+    if p is None:
+        p = ''
     if filename is None:
         filename = ''
-    return path.join(path, filename).strip()
+    return path.join(p, filename).strip()
