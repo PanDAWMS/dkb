@@ -151,9 +151,10 @@ def process(stage, message):
         log('Insufficient ES info in data:' + str(data), 'WARN')
         return False
 
-    # Crutch. Remove unwanted (for now) field added by Stage 016.
-    if 'phys_category' in data:
-        del data['phys_category']
+    # Crutch. Remove unwanted (for now) fields added by Stage 016.
+    for field in ['phys_category', 'chain_data', 'chain_id']:
+        if field in data:
+            del data[field]
 
     # Do not check empty documents with valid _id and _type.
     # It's unlikely that such documents will be produced in DKB. In general,
