@@ -1,5 +1,3 @@
-#!/usr/bin/env bash
-
 get_config_lib=$(cd "$(dirname "$BASH_SOURCE")"; pwd)
 source $get_config_lib/log
 
