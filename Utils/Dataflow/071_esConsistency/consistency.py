@@ -104,7 +104,7 @@ def es_connect(cfg):
     return True
 
 
-def get_fields(index, _id, _type, fields):
+def get_fields(index, _id, _type, fields, _parent):
     ''' Get fields value by given _id and _type.
 
     :param es: elasticsearch client
@@ -123,7 +123,7 @@ def get_fields(index, _id, _type, fields):
     '''
     try:
         results = es.get(index=index, doc_type=_type, id=_id,
-                         _source=fields)
+                         _source=fields, parent=_parent)
     except elasticsearch.exceptions.NotFoundError:
         return False
     return results['_source']
@@ -151,6 +151,10 @@ def process(stage, message):
         log('Insufficient ES info in data:' + str(data), 'WARN')
         return False
 
+    _parent = None
+    if '_parent' in data:
+        _parent = data.pop('_parent')
+
     # Crutch. Remove unwanted (for now) fields added by Stage 016.
     for field in ['phys_category', 'chain_data', 'chain_id']:
         if field in data:
@@ -163,7 +167,7 @@ def process(stage, message):
         log('Nothing to check for document (%s, %r)' % (_type, _id), 'WARN')
         return False
 
-    es_data = get_fields(INDEX, _id, _type, data.keys())
+    es_data = get_fields(INDEX, _id, _type, data.keys(), _parent)
     if data != es_data:
         log('Document (%s, %r) differs between Oracle and ES: Oracle:%s ES:%s'
             % (_type, _id, data, es_data), 'WARN')
