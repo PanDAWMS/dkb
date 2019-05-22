@@ -160,19 +160,19 @@ def process(stage, message):
     # It's unlikely that such documents will be produced in DKB. In general,
     # such documents should be checked by es.exists(), and not es.get().
     if not data:
-        log('Nothing to check for document (%s, %d)' % (_type, _id), 'WARN')
+        log('Nothing to check for document (%s, %r)' % (_type, _id), 'WARN')
         return False
 
     es_data = get_fields(INDEX, _id, _type, data.keys())
     if data != es_data:
-        log('Document (%s, %d) differs between Oracle and ES: Oracle:%s ES:%s'
+        log('Document (%s, %r) differs between Oracle and ES: Oracle:%s ES:%s'
             % (_type, _id, data, es_data), 'WARN')
         out_message = JSONMessage({'_type': _type, '_id': _id})
         stage.output(out_message)
         global FOUND_DIFF
         FOUND_DIFF = True
     else:
-        log('Document (%s, %d) is up to date in ES' % (_type, _id), 'INFO')
+        log('Document (%s, %r) is up to date in ES' % (_type, _id), 'INFO')
 
     return True
 
