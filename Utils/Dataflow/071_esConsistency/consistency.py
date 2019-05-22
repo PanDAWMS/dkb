@@ -160,6 +160,11 @@ def process(stage, message):
         if field in data:
             del data[field]
 
+    # Fields starting with an underscore are service fields. Some of them are
+    # treated in special way (see _id above). Service fields should not be
+    # checked, so they are removed.
+    data = {field: data[field] for field in data if field[0] != '_'}
+
     # Do not check empty documents with valid _id and _type.
     # It's unlikely that such documents will be produced in DKB. In general,
     # such documents should be checked by es.exists(), and not es.get().
