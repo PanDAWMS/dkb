@@ -55,10 +55,10 @@ https://twiki.ific.uv.es/twiki/bin/view/Atlas/AtlasDataProcessingAtIFIC
 --------------------
 Stage can be run as following:
 
-  ./datasets_processing.py filename.ndjson
+  ./datasets_processing.py /path/to/file.ndjson
 
-which will process the file in output mode and produce the result
-filename.json in the directory of the file. For more information about
+which will process the input file "/path/to/file.ndjson" in output mode and
+save the result in a new file "/path/to/file.json". For more information about
 running the stage and its arguments, use:
 
  ./datasets_processing.py -h
