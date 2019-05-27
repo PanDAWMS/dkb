@@ -3,76 +3,67 @@ Stage 091_datasetsRucio
 
 1. Description
 --------------
-This stage is implemented to obtain output datasets metadata from Rucio.
+Obtain datasets' metadata from Rucio and process the supplied tasks' metadata
+in one of the two ways:
 
+1) input mode - update the tasks' metadata with the input datasets' metadata
+   from Rucio.
+2) output mode - extract the information about output datasets and update it
+   with corresponding metadata from Rucio.
 
 2. Requirements
 ---------------
 * pyRucio
-* grid user certificate stored in VIRTUAL_ENV/auth/{cert,key}.pem
-  (or somewhere else, just don`t forget to fix paths),
-  where VIRTUAL_ENV = ~/.rucio (if exists) or ./.rucio.
-* rucio.cfg in VIRTUAL_ENV/etc/
-  (don`t forget to fix USERNAME and, again, path to cert files)
+* proper configuration file (see below)
+* proper memberships and grid certificate (see below)
 
+Rucio requires authentication, which is performed by supplying a number of
+things, such as certificate or user name. In case of this stage, the
+authentication is performed as following:
 
-3. Input
---------
-The INPUT data for this stage comes from stage 009_oracleConnector.
+1) The stage sets up the environment variable VIRTUAL_ENV (unless it was
+   already initialized), its value will be "~/.rucio" (if it exists), or
+   "./.rucio" otherwise.
+2) Rucio client looks for configuration file "rucio.cfg" in
+   "VIRTUAL_ENV/etc/" (and some other places).
+3) Rucio client retrieves the necessary information from the config and
+   authenticates the user.
 
-example:
-{
-	"campaign": "MC15",
-	"processed_events": 395000,
-	"energy_gev": 13000,
-	"site": null,
-	"trans_uses": "Atlas-20.7.5",
-	"geometry_version": "ATLAS-R2-2015-03-01-00",
-	"taskname": "mc15_13TeV.343507.aMcAtNloPythia8EvtGen_A14NNPDF23LO_bbA360_yb2_Zhllbb.recon.e4741_a766_a821",
-	"subcampaign": "MC15c",
-	"job_config": null,
-	"cloud": "WORL",
-	"core_count": "8",
-	"conditions_tags": "OFLCOND-MC15c-SDR-09",
-	"trans_path": "Reco_tf.py",
-	"trans_home": "AtlasProd1-20.7.5.1.1",
-	"evgen_job_opts": null,
-	"ticket_id": "ATLPSTASKS-72836",
-	"taskid": 8343552,
-	"input": ["mc15_13TeV:mc15_13TeV.361034.Pythia8EvtGen_A2MSTW2008LO_minbias_inelastic_low.merge.HITS.e3581_s2578_s2195/", "mc15_13TeV:mc15_13TeV.361035.Pythia8EvtGen_A2MSTW2008LO_minbias_inelastic_high.merge.HITS.e3581_s2578_s2195/", "mc15_13TeV:mc15_13TeV.343507.aMcAtNloPythia8EvtGen_A14NNPDF23LO_bbA360_yb2_Zhllbb.simul.HITS.e4741_a766_tid07402029_00"],
-	"user_name": "gingrich",
-	"architecture": "x86_64-slc6-gcc49-op",
-	"status": "done",
-	"description": "MC15c Higgs BSM other 1",
-	"trigger_config": "RDOtoRDOTrigger=MCRECO:DBF:TRIGGERDBMC:2046,20,5",
-	"start_time": "05-05-2016 12:26:24",
-	"phys_category": [],
-	"vo": "atlas",
-	"task_timestamp": "09-05-2016 13:32:26",
-	"run_number": "343507",
-	"pr_id": 7345,
-	"requested_events": 395000,
-	"project": "mc15_13TeV",
-	"step_name": "Atlfast",
-	"phys_group": "MCGN",
-	"output": ["mc15_13TeV.343507.aMcAtNloPythia8EvtGen_A14NNPDF23LO_bbA360_yb2_Zhllbb.recon.AOD.e4741_a766_a821_tid08343552_00"],
-	"hashtag_list": "aMcAtNloPythia8EvtGen",
-	"end_time": "09-05-2016 11:18:32"
-}
+Therefore, a correct configuration file should be put into designated place.
+Repository contains an example with correct values for most of the parameters:
 
-4. Output
----------
-Stage 091_datasetsRucio constructs the following JSON documents, with 'bytes' from Rucio:
+  Utils/Dataflow/091_datasetsRucio/.rucio/etc/rucio.cfg.example
 
-example:
-{
-	"deleted": true,
-	"datasetname": "mc15_13TeV.343507.aMcAtNloPythia8EvtGen_A14NNPDF23LO_bbA360_yb2_Zhllbb.recon.AOD.e4741_a766_a821_tid08343552_00",
-	"bytes": -1,
-	"taskid": 8343552
-}
+The following parameters should be updated:
 
-5. Samples
+* account - username in CERN systems.
+* client_cert - full path to the user's grid certificate.
+* client_key - full path to the key corresponding to the user's grid
+  certificate.
+
+Being able to do so requires:
+
+1) Registering in CERN systems (discuss this with your supervisor).
+2) Obtaining a grid certificate (https://ca.cern.ch/ca/).
+3) Registering in ATLAS Virtual Organization (VO ATLAS, see link below).
+
+More information about accessing ATLAS resources and Rucio in particular:
+
+https://twiki.ific.uv.es/twiki/bin/view/Atlas/AtlasDataProcessingAtIFIC
+
+3. Running the stage
+--------------------
+Stage can be run as following:
+
+  ./datasets_processing.py /path/to/file.ndjson
+
+which will process the input file "/path/to/file.ndjson" in output mode and
+save the result in a new file "/path/to/file.json". For more information about
+running the stage and its arguments, use:
+
+ ./datasets_processing.py -h
+
+4. Samples
 ----------
 The 'output' directory contains two pairs of samples:
 
@@ -84,5 +75,6 @@ output_datasets2016.ndjson
 input_datasets2018.ndjson
 output_datasets2018.ndjson
 
-input_datasets* is the tasks' metadata extended with primary_input datasets' metadata.
+input_datasets* is the tasks' metadata extended with primary_input datasets'
+metadata.
 output_datasets* is the output datasets' metadata.
