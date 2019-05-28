@@ -151,9 +151,7 @@ def process(stage, message):
         log('Insufficient ES info in data:' + str(data), 'WARN')
         return False
 
-    _parent = None
-    if '_parent' in data:
-        _parent = data.pop('_parent')
+    _parent = data.pop('_parent', None)
 
     # Crutch. Remove unwanted (for now) fields added by Stage 016.
     for field in ['phys_category', 'chain_data', 'chain_id']:
