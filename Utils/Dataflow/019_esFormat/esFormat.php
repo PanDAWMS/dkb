@@ -38,9 +38,9 @@ function convertIndexToLowerCase(&$a) {
   $a = $result;
 }
 
-function constructIndexJson(&$row) {
+function constructActionJson(&$row) {
   global $ES_INDEX;
-  $index = Array(
+  $action = Array(
     'index' => Array(
       '_index' => $ES_INDEX,
       '_type'  => $row['_type'],
@@ -49,14 +49,14 @@ function constructIndexJson(&$row) {
   );
 
   if (isset($row['_parent'])) {
-    $index['index']['_parent'] = $row['_parent'];
+    $action['index']['_parent'] = $row['_parent'];
   }
 
-  foreach ($index['index'] as $key => $val) {
+  foreach ($action['index'] as $key => $val) {
     unset($row[$key]);
   }
 
-  return $index;
+  return $action;
 }
 
 function decode_escaped($string) {
@@ -130,9 +130,9 @@ if ($h) {
 
     convertIndexToLowerCase($row);
 
-    $index = constructIndexJson($row);
+    $action = constructActionJson($row);
 
-    echo json_encode($index)."\n";
+    echo json_encode($action)."\n";
     echo json_encode($row);
     echo $EOM_MARKER;
     echo $EOP_MARKER;
