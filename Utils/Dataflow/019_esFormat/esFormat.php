@@ -133,7 +133,7 @@ if ($h) {
     $index = constructIndexJson($row);
 
     echo json_encode($index)."\n";
-    echo json_encode($row);
+    echo json_encode($row)."\n";
     echo $EOM_MARKER;
     echo $EOP_MARKER;
   }
