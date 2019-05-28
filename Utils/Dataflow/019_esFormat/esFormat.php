@@ -120,7 +120,7 @@ if (!$ES_INDEX) {
 }
 
 if ($h) {
-  while (($line = fgets($h)) !== false) {
+  while (($line = stream_get_line($h, 0, $EOM_MARKER)) !== false) {
     $row = json_decode($line,true);
 
     if (!check_input($row)) {
