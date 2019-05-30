@@ -109,6 +109,12 @@ if ($EOM_MARKER == '') {
   fwrite(STDERR, "(ERROR) EOM marker can not be empty string.\n");
   exit(1);
 }
+if ($EOM_MARKER == "\n") {
+  fwrite(STDERR, "(ERROR) NEWLINE symbol is not allowed as EOM, "
+                 ."as it is contained in output messages.\n");
+  exit(1);
+}
+
 
 fwrite(STDERR, "(DEBUG) End-of-message marker: '" . $EOM_MARKER . "' (hex: " . $EOM_HEX . ").\n");
 fwrite(STDERR, "(DEBUG) End-of-process marker: '" . $EOP_MARKER . "' (hex: " . $EOP_HEX . ").\n");
