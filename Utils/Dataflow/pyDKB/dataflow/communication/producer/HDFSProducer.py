@@ -10,6 +10,7 @@ TODO: think about:
 """
 
 import os
+import time
 
 from Producer import ProducerException
 from FileProducer import FileProducer
