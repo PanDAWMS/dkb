@@ -8,7 +8,7 @@ set_error_handler("exception_error_handler");
 $DEFAULT_INDEX = 'tasks_production';
 $ES_INDEX = NULL;
 $EOP_DEFAULTS = Array("stream" => chr(0), "file" => "");
-$EOM_DEFAULTS = Array("stream" => "\n", "file" => "\n");
+$EOM_DEFAULTS = Array("stream" => chr(30), "file" => chr(30));
 
 function check_input($row) {
   $required_fields = array('_id', '_type');
