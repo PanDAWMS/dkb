@@ -52,8 +52,9 @@ function constructActionJson(&$row) {
     $action['index']['_parent'] = $row['_parent'];
   }
 
-  foreach ($action['index'] as $key => $val) {
-    unset($row[$key]);
+  foreach ($row as $key => $val) {
+    if (strncmp($key, '_', 1) === 0)
+      unset($row[$key]);
   }
 
   return $action;
