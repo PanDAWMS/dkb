@@ -6,6 +6,8 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 set_error_handler("exception_error_handler");
 
 $DEFAULT_INDEX = 'tasks_production';
+$DEFAULT_ACTION = 'index';
+$UPDATE_RETRIES = 3;
 $ES_INDEX = NULL;
 $EOP_DEFAULTS = Array("stream" => chr(0), "file" => "");
 $EOM_DEFAULTS = Array("stream" => "\n", "file" => "\n");
@@ -38,15 +40,35 @@ function convertIndexToLowerCase(&$a) {
   $a = $result;
 }
 
+function getAction($row) {
+  global $DEFAULT_ACTION;
+
+  if (isset($row['_update']) and $row['_update'] === true) {
+    $action = 'update';
+  } else {
+    $action = $DEFAULT_ACTION;
+  }
+
+  return $action;
+}
+
 function constructActionJson($row) {
   global $ES_INDEX;
+  global $UPDATE_RETRIES;
+
+  $act = getAction($row);
+
   $action = Array(
-    'index' => Array(
+    $act => Array(
       '_index' => $ES_INDEX,
       '_type'  => $row['_type'],
       '_id'    => $row['_id'],
     )
   );
+
+  if ($act == 'update') {
+    $action[$act]['_retry_on_conflict'] = $UPDATE_RETRIES;
+  }
 
   if (isset($row['_parent'])) {
     $action['index']['_parent'] = $row['_parent'];
@@ -61,6 +83,15 @@ function constructDataJson($row) {
   foreach ($data as $key => $val) {
     if (strncmp($key, '_', 1) === 0)
       unset($data[$key]);
+  }
+
+  $act = getAction($row);
+
+  if ($act == 'update') {
+    $data = Array(
+      'doc' => $data,
+      'doc_as_upsert' => true
+    );
   }
 
   return $data;
