@@ -102,14 +102,17 @@ function decode_escaped($string) {
                       'stripcslashes("$0")', $string);
 }
 
-$opts = getopt("e:E:", Array("end-of-message:", "end-of-process:"));
+$opts = getopt("e:E:", Array("end-of-message:", "end-of-process:",
+                             "update"));
 $args = $argv;
 
 foreach ($opts as $key => $val) {
   $match = preg_grep("/^-(-)?".$key."$/", $args);
   foreach ($match as $mkey => $mval) {
     unset($args[$mkey]);
-    unset($args[$mkey+1]);
+    if ($val !== false) {
+      unset($args[$mkey+1]);
+    }
   }
   $match = preg_grep("/^-(-)?".$key."=/", $args);
   foreach ($match as $mkey => $mval) {
@@ -123,6 +126,9 @@ foreach ($opts as $key => $val) {
     case "E":
     case "end-of-process":
       $EOP_MARKER = decode_escaped($val);
+      break;
+    case "update":
+      $DEFAULT_ACTION = "update";
       break;
   }
 }
