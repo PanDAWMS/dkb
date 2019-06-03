@@ -6,10 +6,13 @@ Description
 -----------
 Prepare data before uploading to ElasticSearch:
  * turn JSON keys to lower case
- * generate JSON with index information
+ * generate JSON with ES bulk API action information
 
 Use ./run.sh to run stage with common configuration from
   /Utils/Elasticsearch/config/es
+
+Use `--update` option to produce records intended to *update* data in ES,
+  not replace.
 
 Input
 -----
@@ -20,14 +23,16 @@ Required:
 
 Optional:
 * '_parent' (ES identifier for parent type record).
+* '_update' (corresponding ES record should be "updated", not
+             "inserted"/"indexed").
 
 Output
 ------
 JSON documents, one document per line:
 {{{
- <index info>
+ <action info>
  <data>
- <index info>
+ <action info>
  <data>
  ...
 }}}
