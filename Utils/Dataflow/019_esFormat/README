@@ -31,7 +31,21 @@ JSON documents, one document per line:
 
 Samples
 -------
-The 'output' directory contains two pairs of samples:
+To produce regular (seamless NDJSON) samples, run:
+
+  cat input/sample_name.ndjson | tr $'\n' $'\x1e' | \
+    ./run.sh -E '' | tr -d $'\x1e' > output/sample_name.ndjson
+
+Comment:
+ * input samples can not be used (and output one -- saved) as-is
+   due to the specific EOM marker (most of the stages use NEWLINE, which
+   is not allowed here because of the output message format);
+ * `tr` is a Unix utility to translate or delete characters (for details please
+   refer to man pages);
+ * output message body contains trailing NEWLINE, so RS is simply removed from
+   the output stream (not replaced with another NEWLINE).
+
+The 'output' directory contains two pairs of regular samples:
 
 2016 data:
 tasks2016.ndjson (from 016's 2016 sample)
