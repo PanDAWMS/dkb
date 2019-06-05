@@ -1,0 +1,28 @@
+=============
+* Stage 071 *
+=============
+
+1. Description
+--------------
+Checks that the given data is present in ElasticSearch.
+
+Input must contain at least 2 fields:
+{{{
+{"_type": ..., "_id": ..., ...}
+...
+}}}
+
+_type and _id are required to retrieve the document from ES. All the other
+fields are compared with the document's corresponding ones. Results of the
+comparison are written to stderr.
+
+2. Running the stage
+--------------------
+The stage can be run as following:
+
+  ./consistency.py --conf elasticsearch_config
+
+For more information about running the stage and its arguments, use:
+
+  ./consistency.py -h
+

@@ -45,6 +45,7 @@
 1.9     019_oracle2esFormat            Prepare data for bulk upload to ES
 2.5     025_chicagoES                  Get additional metadata from Chicago ES
 6.9     069_upload2es                  Upload data to ES
+7.1     071_esConsistency              Check data in ES
 9.1     091_datasetsRucio              Get dataset metadata from Rucio
 9.3     093_datasetsFormat             Update dataset metadata: add
                                          "data_format" field
@@ -80,6 +81,16 @@
        \-> 091(out) -> 093 -> 095 --> ** | Get DS metadata from Rucio and AMI
                                          |
     ** ----> 019 -> 069                  | Prepare and upload metadata to ES
+
+3. Tasks metadata consistency check
+---
+
+009 ---> 016 ---> 071
+
+This is a simplified and slightly changed version of the previous dataflow,
+intended for making sure that information is consistent between ProdSys2 and
+ES. It gets a very basic set of metadata from ProdSys2, adds ES-related
+fields, and checks that it is present in ES rather than uploading it.
 
 ==============
 * REFERENCES *

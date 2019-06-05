@@ -312,7 +312,7 @@ def offset_now(tz=None):
     TZ = OFFSET_TZ
     if tz:
         TZ = pytz.timezone(tz)
-    return TZ.fromutc(datetime.utcnow()).replace(tzinfo=None)
+    return datetime.now(TZ).replace(tzinfo=None)
 
 
 def plain(conn, queries, start_date, end_date):
