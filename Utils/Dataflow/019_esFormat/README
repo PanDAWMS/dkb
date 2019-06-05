@@ -27,9 +27,6 @@ JSON documents, one document per line:
 {{{
  <index info>
  <data>
- <index info>
- <data>
- ...
 }}}
 
 Samples
