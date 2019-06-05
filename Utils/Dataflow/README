@@ -38,8 +38,10 @@
 #       Name                           Description
 ---------------------------------------------------
 0.9     009_oracleConnector            Get task metadata from ProdSys
-1.6     016_task2es                    Prepare task metadata for bulk upload
-                                         to ES
+1.6     016_adjustMetadata             Adjust task metadata to prepare it for
+                                         storage
+1.7     017_task2es                    Update task metadata with fields
+                                         required for ES indexing
 1.9     019_oracle2esFormat            Prepare data for bulk upload to ES
 2.5     025_chicagoES                  Get additional metadata from Chicago ES
 6.9     069_upload2es                  Upload data to ES
@@ -70,14 +72,14 @@
 2. Tasks and data samples (DS) metadata integration (ProdSys2)
 ---
 
-009 ---> *                                | Get task metadata from ProdSys2 DB
-                                          |
-    * --> 091(in) --> 025 --> 016         | Append task metadata with that from
-     \                           \        |   Rucio (input DS) and Chicago ES
-      \                           \       |
-       \-> 091(out) -> 093 -> 095 --> **  | Get DS metadata from Rucio and AMI
-                                          |
-    ** ----> 019 -> 069                   | Prepare and upload metadata to ES
+009 ---> *                               | Get task metadata from ProdSys2 DB
+                                         |
+    * -> 091(in) -> 025 > 016 > 017      | Append task metadata with that from
+     \                           \       |   Rucio (input DS) and Chicago ES
+      \                           \      |
+       \-> 091(out) -> 093 -> 095 --> ** | Get DS metadata from Rucio and AMI
+                                         |
+    ** ----> 019 -> 069                  | Prepare and upload metadata to ES
 
 ==============
 * REFERENCES *
