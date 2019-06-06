@@ -225,7 +225,7 @@ def main(args):
     if error_code == 0:
         stage.stop()
 
-    exit(exit_code)
+    exit(error_code)
 
 
 if __name__ == '__main__':
