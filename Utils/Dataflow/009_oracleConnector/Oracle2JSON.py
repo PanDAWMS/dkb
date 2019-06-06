@@ -559,7 +559,7 @@ def interval_seconds(step):
         raise ValueError("Failed to decode numeric part of the interval: %s"
                          % step)
     except KeyError:
-        raise ValueError("Failes to decode index of the interval: %s" % step)
+        raise ValueError("Failed to decode index of the interval: %s" % step)
 
 
 def str2date(str_date):
