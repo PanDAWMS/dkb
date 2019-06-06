@@ -154,7 +154,7 @@ def process_input_ds(stage, message):
         except RucioException:
             data[mfields['bytes']] = -1
             data[mfields['deleted']] = True
-    stage.output(pyDKB.dataflow.messages.JSONMessage(data))
+    stage.output(pyDKB.dataflow.communication.messages.JSONMessage(data))
 
     return True
 
