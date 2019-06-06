@@ -35,6 +35,13 @@ initial = %__009_init_offset__%
 final = %__009_final_offset__%
 # offset from current timestamp (e.g. 86400 <=> 86400s <=> 1d; 8h; 15m)
 step = %__009_step__%
+# delay (e.g. 86400 <=> 86400s <=> 1d; 8h; 15m)
+# This parameter can be used to adjust 'now'.
+# For example, running the script at 10-05-2016 12:00:00 with
+# delay = 2h will set 'final' to 10-05-2016 10:00:00.
+# Has no effect if 'final' is set explicitly.
+# Cannot be negative.
+delay = %__009_delay__%
 
 # Time zone of timestamps (default: local timezone)
 tz = UTC

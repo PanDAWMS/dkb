@@ -24,6 +24,9 @@ OUT = os.fdopen(sys.stdout.fileno(), 'w', 0)
 # Timezone of the data timestamps in the source DB
 # (used to adjust 'now' to the proper value)
 OFFSET_TZ = None
+# Delay
+# (used to adjust 'now' when performing consistency check)
+OFFSET_DELAY = None
 # ---
 
 
@@ -53,6 +56,8 @@ def main():
 
     # Offset timezone initialization
     init_offset_tz(config)
+    # Offset delay initialization
+    init_offset_delay(config)
 
     conn = OracleConnection(config['__dsn'])
     if not conn.establish():
@@ -135,11 +140,18 @@ def read_config(config_file):
     # Optional parameters
     result['timestamp_tz'] = config_get(config, 'timestamps', 'tz',
                                         time.tzname[0])
+    delay = config_get(config, 'timestamps', 'delay', '0')
+    result['delay'] = interval_seconds(delay)
+    if result['delay'] < 0:
+        # Delay is only used when 'final_date' is 'now'. It does not make much
+        # sense to ask for data from the future.
+        sys.stderr.write('(WARN) Delay is less than 0, setting it to 0.\n')
+        result['delay'] = 0
     if result['step_seconds'] > 0:
         default_initial = datetime.utcfromtimestamp(0)
         default_final = None
     else:
-        default_initial = offset_now(result['timestamp_tz'])
+        default_initial = offset_now(result['timestamp_tz'], result['delay'])
         default_final = datetime.utcfromtimestamp(0)
 
     result['final_date'] = str2date(config_get(config, 'timestamps', 'final',
@@ -226,6 +238,12 @@ def init_offset_tz(config):
     OFFSET_TZ = pytz.timezone(config['timestamp_tz'])
 
 
+def init_offset_delay(config):
+    """ Initialize OFFSET_DELAY. """
+    global OFFSET_DELAY
+    OFFSET_DELAY = config['delay']
+
+
 def init_offset_storage(config):
     """ Get configured (or default) offset file.
 
@@ -299,12 +317,15 @@ def get_offset(offset_storage):
     return result
 
 
-def offset_now(tz=None):
+def offset_now(tz=None, delay=None):
     """ Get offset value corresonding to the current moment of time.
 
     :param tz: time zone name. If not specified, default (globally set)
                time zone is used.
     :type tz: str, NoneType
+    :param delay: delay in seconds. If not specified, default (globally set)
+               value is used.
+    :type delay: int, NoneType
 
     :return: offset value (naive datetime, adjusted to OFFSET_TZ)
     :rtype: datetime.datetime
@@ -312,7 +333,10 @@ def offset_now(tz=None):
     TZ = OFFSET_TZ
     if tz:
         TZ = pytz.timezone(tz)
-    return datetime.now(TZ).replace(tzinfo=None)
+    dl = OFFSET_DELAY
+    if delay:
+        dl = delay
+    return datetime.now(TZ).replace(tzinfo=None) - timedelta(seconds=dl)
 
 
 def plain(conn, queries, start_date, end_date):
