@@ -16,5 +16,5 @@ WHERE
   jd.type IN ('output') AND
       t.timestamp > :start_date AND
       t.timestamp <= :end_date AND
-      t.pr_id > 300
+      t.pr_id %(production_or_analysis_cond)s 300
 ORDER BY t.taskid;

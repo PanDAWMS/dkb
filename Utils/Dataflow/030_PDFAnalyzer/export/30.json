@@ -69,11 +69,19 @@
             ]
         ], 
         "plain_text": {
-            "campaigns": [], 
+            "atlas_name": false, 
+            "links": {}, 
+            "data taking years": [
+                "2011"
+            ], 
             "luminosity": false, 
             "energy": "7 TeV", 
+            "campaigns": [], 
             "collisions": "proton-proton", 
-            "data taking year": "2011"
+            "possible_project_realdata": [
+                "data11_7TeV"
+            ], 
+            "possible_project_montecarlo": false
         }
     }, 
     "fname": "30"

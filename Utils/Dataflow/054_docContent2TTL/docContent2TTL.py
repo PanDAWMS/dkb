@@ -79,9 +79,9 @@ def doc_content_triples(data):
                            )
         if item == 'plain_text':
             try:
-                data_taking_year = data['content'][item]['data taking year']
+                data_taking_years = data['content'][item]['data taking years']
             except KeyError:
-                data_taking_year = None
+                data_taking_years = None
             try:
                 luminosity = data['content'][item]['luminosity'] \
                     .replace(' ', '_')
@@ -93,7 +93,6 @@ def doc_content_triples(data):
             except (KeyError, AttributeError):
                 energy = None
             PLAINTEXT = {
-                'data_taking_year': data_taking_year,
                 'luminosity': luminosity,
                 'energy': energy
             }
@@ -107,12 +106,13 @@ def doc_content_triples(data):
                        " <{graph}/document/{doc_ID}/{c_name}> ."
                        .format(**PLAINTEXT)
                        )
-            if data_taking_year:
-                ttl.append("<{graph}/document/{doc_ID}/{c_name}>"
-                           " <{ontology}#mentionsDataTakingYear>"
-                           " \"{data_taking_year}\" ."
-                           .format(**PLAINTEXT)
-                           )
+            if data_taking_years:
+                for year in data_taking_years:
+                    ttl.append("<{graph}/document/{doc_ID}/{c_name}>"
+                               " <{ontology}#mentionsDataTakingYear>"
+                               " \""
+                               .format(**PLAINTEXT) + year + "\" ."
+                               )
             if luminosity:
                 ttl.append("<{graph}/luminosity/{luminosity}>"
                            " a <{ontology}#Luminosity> ."
