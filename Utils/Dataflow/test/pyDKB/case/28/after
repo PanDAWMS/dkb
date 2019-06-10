@@ -1,0 +1,7 @@
+numeric_fnames=OK
+for f in out/*.ttl; do
+  [[ "$f" =~ ^out/[0-9]{10,}.ttl$ ]] || numeric_fnames=FAIL
+done
+echo "Filenames check: ${numeric_fnames}"
+cat out/*.ttl
+rm -rf out &>/dev/null

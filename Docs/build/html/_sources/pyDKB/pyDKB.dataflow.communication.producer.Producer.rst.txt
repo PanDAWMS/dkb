@@ -1,0 +1,9 @@
+.. _pyDKB.dataflow.communication.producer.Producer:
+
+pyDKB.dataflow.communication.producer.Producer module
+=====================================================
+
+.. automodule:: pyDKB.dataflow.communication.producer.Producer
+    :members:
+    :undoc-members:
+    :show-inheritance:

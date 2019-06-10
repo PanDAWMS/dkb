@@ -22,8 +22,9 @@ try:
     dkb_dir = os.path.join(base_dir, os.pardir)
     sys.path.append(dkb_dir)
     import pyDKB
-    from pyDKB.dataflow.stage import JSONProcessorStage
-    from pyDKB.dataflow.messages import JSONMessage
+    from pyDKB.dataflow.stage import ProcessorStage
+    from pyDKB.dataflow import messageType
+    from pyDKB.dataflow.communication.messages import Message
     from pyDKB.dataflow.exceptions import DataflowException
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
@@ -268,9 +269,9 @@ def process(stage, message):
     """ Single message processing.
 
     :param stage: ETL processing stage
-    :type stage: JSONProcessorStage
+    :type stage: pyDKB.dataflow.stage.ProcessorStage
     :param message: input message with data to be processed
-    :type message: JSONMessage
+    :type message: pyDKB.dataflow.communication.messages.JSONMessage
 
     :returns: True or False in case of failure
     :rtype: bool
@@ -300,7 +301,7 @@ def process(stage, message):
                 total += val
             fname = AGG_FIELDS[f]
             data[fname] = total
-    out_message = JSONMessage(data)
+    out_message = Message(messageType.JSON)(data)
     stage.output(out_message)
     return True
 
@@ -311,7 +312,10 @@ def main(args):
     :param args: command line arguments
     :type args: list
     """
-    stage = JSONProcessorStage()
+    stage = ProcessorStage()
+    stage.set_input_message_type(messageType.JSON)
+    stage.set_output_message_type(messageType.JSON)
+
     stage.process = process
 
     init_es_client()
@@ -319,7 +323,7 @@ def main(args):
     exit_code = 0
     exc_info = None
     try:
-        stage.parse_args(args)
+        stage.configure(args)
         stage.run()
     except (DataflowException, RuntimeError), err:
         if str(err):

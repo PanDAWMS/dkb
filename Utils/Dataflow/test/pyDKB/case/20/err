@@ -1,0 +1,31 @@
+(INFO) (FileProducer) Output directory is set to subdirectory 'out' of the one containing input files or of the current one ($base_dir).
+(INFO) (ProcessorStage) Configuration parameters:
+(INFO) (ProcessorStage)   hdfs        : 'False'
+(INFO) (ProcessorStage)   dest        : 'f'
+(INFO) (ProcessorStage)   input_dir   : '.'
+(INFO) (ProcessorStage)   eom         : '\n'
+(INFO) (ProcessorStage)   output_dir  : 'out'
+(INFO) (ProcessorStage)   source      : 'f'
+(INFO) (ProcessorStage)   eop         : ''
+(INFO) (ProcessorStage)   mode        : 'f'
+(INFO) (ProcessorStage)   config      : 'None'
+(INFO) (ProcessorStage)   input_files : '['input/NDjson.json']'
+(INFO) (ProcessorStage) Starting stage execution.
+(ERROR) (ProcessorStage) File already exists: ./input/out/NDjson.ttl
+(DEBUG) (ProcessorStage) Traceback (most recent call last):
+(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 224, in run
+(==)     self.flush_buffer()
+(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 302, in flush_buffer
+(==)     self.__output.flush()
+(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line 125, in flush
+(==)     self.get_stream().flush()
+(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line 72, in get_stream
+(==)     self.reset_stream()
+(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line 82, in reset_stream
+(==)     dest = self.get_dest()
+(==)   File "./../../pyDKB/dataflow/communication/producer/FileProducer.py", line 60, in get_dest
+(==)     self.reset_file()
+(==)   File "./../../pyDKB/dataflow/communication/producer/FileProducer.py", line 171, in reset_file
+(==)     % cur['local_path'])
+(==) ProducerException: File already exists: ./input/out/NDjson.ttl
+(INFO) (ProcessorStage) Stopping stage.
