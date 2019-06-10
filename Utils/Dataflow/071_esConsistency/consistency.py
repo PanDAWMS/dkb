@@ -30,8 +30,8 @@ try:
     dkb_dir = os.path.join(base_dir, os.pardir)
     sys.path.append(dkb_dir)
     import pyDKB
-    from pyDKB.dataflow.stage import JSONProcessorStage
-    from pyDKB.dataflow.messages import JSONMessage
+    from pyDKB.dataflow.stage import ProcessorStage
+    from pyDKB.dataflow.communication.messages import JSONMessage
     from pyDKB.dataflow.exceptions import DataflowException
 except Exception, err:
     log('Failed to import pyDKB library: %s' % err, 'ERROR')
@@ -132,13 +132,13 @@ def get_fields(index, _id, _type, fields, _parent):
 def process(stage, message):
     ''' Process a message.
 
-    Implementation of :py:meth:`.AbstractProcessorStage.process` for hooking
+    Implementation of :py:meth:`.ProcessorStage.process` for hooking
     the stage into DKB workflow.
 
     :param stage: stage instance
     :type stage: pyDKB.dataflow.stage.ProcessorStage
     :param msg: input message with document info
-    :type msg: pyDKB.dataflow.Message
+    :type msg: pyDKB.dataflow.communication.messages.JSONMessage
     '''
     data = message.content()
     if type(data) is not dict:
@@ -191,39 +191,24 @@ def main(args):
     :type argv: list
     '''
 
-    stage = JSONProcessorStage()
+    stage = ProcessorStage()
+    stage.set_input_message_type(JSONMessage.msg_type)
+    stage.set_output_message_type(JSONMessage.msg_type)
     stage.add_argument('--conf', help='elasticsearch config', required=True)
 
-    exit_code = 0
-    exc_info = None
-    try:
-        stage.parse_args(args)
-        cfg = load_config(stage.ARGS.conf)
-        stage.process = process
-        if not es_connect(cfg):
-            exit_code = 4
-        elif not INDEX:
-            log('No ES index specified', 'ERROR')
-            exit_code = 5
-        elif not es.indices.exists(INDEX):
-            log('No such index: %s' % INDEX, 'ERROR')
-            exit_code = 6
-        else:
-            stage.run()
-    except (DataflowException, RuntimeError), err:
-        if str(err):
-            log(err, 'ERROR')
-        exit_code = 2
-    except Exception:
-        exc_info = sys.exc_info()
-        exit_code = 3
-    finally:
-        stage.stop()
-
-    if exc_info:
-        trace = traceback.format_exception(*exc_info)
-        for line in trace:
-            log(line, 'ERROR')
+    stage.configure(args)
+    cfg = load_config(stage.ARGS.conf)
+    stage.process = process
+    if not es_connect(cfg):
+        exit_code = 4
+    elif not INDEX:
+        log('No ES index specified', 'ERROR')
+        exit_code = 5
+    elif not es.indices.exists(INDEX):
+        log('No such index: %s' % INDEX, 'ERROR')
+        exit_code = 6
+    else:
+        exit_code = stage.run()
 
     if exit_code == 0 and FOUND_DIFF:
         exit_code = 1
