@@ -32,7 +32,8 @@ except Exception, err:
 
 try:
     import elasticsearch
-    from elasticsearch.exceptions import ElasticsearchException
+    from elasticsearch.exceptions import (ElasticsearchException,
+                                          ConnectionTimeout)
 except ImportError, err:
     sys.stderr.write("(ERROR) Failed to import elasticsearch module: %s\n"
                      % err)
@@ -280,6 +281,8 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
         if retry > 0:
             sys.stderr.write("(INFO) Sleep 5 sec before retry...\n")
             time.sleep(5)
+            if isinstance(err, ConnectionTimeout):
+                es_args['request_timeout'] *= 2
             return agg_metadata(task_data, agg_names, retry - 1, es_args)
         else:
             sys.stderr.write("(FATAL) Failed to get task aggregated"
