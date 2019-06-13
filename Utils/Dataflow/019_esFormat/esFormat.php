@@ -6,6 +6,8 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 set_error_handler("exception_error_handler");
 
 $DEFAULT_INDEX = 'tasks_production';
+$DEFAULT_ACTION = 'index';
+$UPDATE_RETRIES = 3;
 $ES_INDEX = NULL;
 $EOP_DEFAULTS = Array("stream" => chr(0), "file" => "");
 $EOM_DEFAULTS = Array("stream" => "\n", "file" => "\n");
@@ -38,25 +40,61 @@ function convertIndexToLowerCase(&$a) {
   $a = $result;
 }
 
-function constructIndexJson(&$row) {
+function getAction($row) {
+  global $DEFAULT_ACTION;
+
+  if (isset($row['_update']) and $row['_update'] === true) {
+    $action = 'update';
+  } else {
+    $action = $DEFAULT_ACTION;
+  }
+
+  return $action;
+}
+
+function constructActionJson($row) {
   global $ES_INDEX;
-  $index = Array(
-    'index' => Array(
+  global $UPDATE_RETRIES;
+
+  $act = getAction($row);
+
+  $action = Array(
+    $act => Array(
       '_index' => $ES_INDEX,
       '_type'  => $row['_type'],
       '_id'    => $row['_id'],
     )
   );
 
+  if ($act == 'update') {
+    $action[$act]['_retry_on_conflict'] = $UPDATE_RETRIES;
+  }
+
   if (isset($row['_parent'])) {
-    $index['index']['_parent'] = $row['_parent'];
+    $action['index']['_parent'] = $row['_parent'];
   }
 
-  foreach ($index['index'] as $key => $val) {
-    unset($row[$key]);
+  return $action;
+}
+
+function constructDataJson($row) {
+  $data = $row;
+
+  foreach ($data as $key => $val) {
+    if (strncmp($key, '_', 1) === 0)
+      unset($data[$key]);
   }
 
-  return $index;
+  $act = getAction($row);
+
+  if ($act == 'update') {
+    $data = Array(
+      'doc' => $data,
+      'doc_as_upsert' => true
+    );
+  }
+
+  return $data;
 }
 
 function decode_escaped($string) {
@@ -64,14 +102,17 @@ function decode_escaped($string) {
                       'stripcslashes("$0")', $string);
 }
 
-$opts = getopt("e:E:", Array("end-of-message:", "end-of-process:"));
+$opts = getopt("e:E:", Array("end-of-message:", "end-of-process:",
+                             "update"));
 $args = $argv;
 
 foreach ($opts as $key => $val) {
   $match = preg_grep("/^-(-)?".$key."$/", $args);
   foreach ($match as $mkey => $mval) {
     unset($args[$mkey]);
-    unset($args[$mkey+1]);
+    if ($val !== false) {
+      unset($args[$mkey+1]);
+    }
   }
   $match = preg_grep("/^-(-)?".$key."=/", $args);
   foreach ($match as $mkey => $mval) {
@@ -85,6 +126,9 @@ foreach ($opts as $key => $val) {
     case "E":
     case "end-of-process":
       $EOP_MARKER = decode_escaped($val);
+      break;
+    case "update":
+      $DEFAULT_ACTION = "update";
       break;
   }
 }
@@ -130,10 +174,11 @@ if ($h) {
 
     convertIndexToLowerCase($row);
 
-    $index = constructIndexJson($row);
+    $action = constructActionJson($row);
+    $data = constructDataJson($row);
 
-    echo json_encode($index)."\n";
-    echo json_encode($row);
+    echo json_encode($action)."\n";
+    echo json_encode($data);
     echo $EOM_MARKER;
     echo $EOP_MARKER;
   }
