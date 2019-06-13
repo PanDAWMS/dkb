@@ -1,0 +1,9 @@
+.. _pyDKB.dataflow.communication.consumer.Consumer:
+
+pyDKB.dataflow.communication.consumer.Consumer module
+=====================================================
+
+.. automodule:: pyDKB.dataflow.communication.consumer.Consumer
+    :members:
+    :undoc-members:
+    :show-inheritance:

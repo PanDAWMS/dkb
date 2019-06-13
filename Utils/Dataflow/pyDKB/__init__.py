@@ -29,13 +29,13 @@ Quickstart guide
 To create simple processor stage application first decide input and
 output data format. In following examples we will work with data in JSON
 format (for the full list of supported formats check
-:ref:`pyDKB.dataflow.messages` section of this documentation).
+:ref:`pyDKB.dataflow.communication.messages` section of this documentation).
 
 Now let`s start writing example processor ``welcome.py`` and implement
 message handler -- functional part of the stage (operations to be
 performed on data flow units)::
 
-  from pyDKB.dataflow.messages import JSONMessage
+  from pyDKB.dataflow.communication.messages import JSONMessage
 
   def my_process(stage, message):
       \""" Single message processing. \"""
@@ -73,27 +73,32 @@ Now as we have processing logic implemented, we need to turn it into
 fully functional application. Add following lines to ``welcome.py``:
 
 .. code-block:: python
-  :emphasize-lines: 1-2,8-
+  :emphasize-lines: 1-3,9-
 
   import sys
-  from pyDKB.dataflow.stage import JSONProcessorStage
-  from pyDKB.dataflow.messages import JSONMessage
+  from pyDKB.dataflow.stage import ProcessorStage
+  from pyDKB.dataflow import messageType
+  from pyDKB.dataflow.communication.messages import JSONMessage
 
   def my_process(stage, message):
       <...function code...>
 
   if __name__ == '__main__':
-      stage = JSONProcessorStage()
+      stage = ProcessorStage()
+      stage.set_input_message_type(messageType.JSON)
+      stage.set_output_message_type(messageType.JSON)
       stage.process = my_process
-      stage.parse_args(sys.argv[1:])
+      stage.configure(sys.argv[1:])
       stage.run()
 
-First we create stage object and indicate that input and output message
-format is JSON: ``stage = JSONProcessorStage()`` (for full list of
-processors check :ref:`pyDKB.dataflow.stage` section of this documentation);
-then set stage processing function to our function ``my_process()``,
-parse command line arguments (``stage.parse_args(sys.argv[1:])``) and
-start the stage execution.
+First we create stage object: ``stage = JSONProcessorStage()``; then indicate
+that input and output message format is JSON:
+``stage.set_{input,output}_message_type(messageType.JSON)`` (for full list of
+message types check :ref:`pyDKB.dataflow.communication.messages` section
+of this documentation); then set stage processing function to our function
+``my_process()``, parse command line arguments and configure stage instance
+according to it (``stage.configure(sys.argv[1:])``). Now we ready to start the
+stage execution.
 
 Easy, right?
 
@@ -128,6 +133,11 @@ documentation.
 import dataflow
 import common
 
-__version__ = "0.2"
+import os
+
+
+basedir = os.path.dirname(__file__)
+with open(os.path.join(basedir, 'VERSION')) as version_file:
+    __version__ = version_file.read().strip()
 
 __all__ = ["dataflow"]

@@ -13,6 +13,7 @@ Subpackages
 
 .. toctree::
 
+    pyDKB.dataflow.communication
     pyDKB.dataflow.stage
 
 Submodules
@@ -23,6 +24,5 @@ Submodules
    pyDKB.dataflow.cds
    pyDKB.dataflow.dkbID
    pyDKB.dataflow.exceptions
-   pyDKB.dataflow.messages
    pyDKB.dataflow.types
 

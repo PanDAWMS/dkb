@@ -1,0 +1,5 @@
+fname=input/out/NDjson.ttl
+echo "=== $fname ==="
+cat $fname 2>/dev/null
+echo "=== end ==="
+rm -rf input/out &>/dev/null

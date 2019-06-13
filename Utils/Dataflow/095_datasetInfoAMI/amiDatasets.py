@@ -17,6 +17,7 @@ try:
     dkb_dir = os.path.join(base_dir, os.pardir)
     sys.path.append(dkb_dir)
     import pyDKB
+    from pyDKB.dataflow import messageType
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -34,24 +35,20 @@ FILTER = ['AOD', 'EVNT', 'HITS']
 
 def main(argv):
     """ Main program body. """
-    stage = pyDKB.dataflow.stage.JSONProcessorStage()
+    stage = pyDKB.dataflow.stage.ProcessorStage()
+    stage.set_input_message_type(messageType.JSON)
+    stage.set_output_message_type(messageType.JSON)
 
     stage.add_argument('--userkey', help='PEM key file', required=True)
     stage.add_argument('--usercert', help='PEM certificate file',
                        required=True)
 
-    exit_code = 0
-    try:
-        stage.parse_args(argv)
-        stage.process = process
-        init_ami_client(stage.ARGS.userkey, stage.ARGS.usercert)
-        stage.run()
-    except (pyDKB.dataflow.exceptions.DataflowException, RuntimeError), err:
-        if str(err):
-            str_err = str(err).replace("\n", "\n(==) ")
-            sys.stderr.write("(ERROR) %s\n" % str_err)
-        exit_code = 2
-    finally:
+    stage.configure(argv)
+    stage.process = process
+    init_ami_client(stage.ARGS.userkey, stage.ARGS.usercert)
+    exit_code = stage.run()
+
+    if exit_code == 0:
         stage.stop()
 
     sys.exit(exit_code)
@@ -91,7 +88,7 @@ def process(stage, message):
     # or not set at all.
     if update or not formats:
         amiPhysValues(data)
-    stage.output(pyDKB.dataflow.messages.JSONMessage(data))
+    stage.output(pyDKB.dataflow.communication.messages.JSONMessage(data))
 
     return True
 

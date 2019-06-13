@@ -1,0 +1,3 @@
+(WARN) (ProcessorStage) Empty EOM marker specified!
+(ERROR) (ProcessorStage) Empty EOM is not allowed for stream input.
+(INFO) (ProcessorStage) Stopping stage.
