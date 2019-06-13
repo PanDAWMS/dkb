@@ -16,8 +16,8 @@ Transform task metadata to prepare it for storage:
 ----------
 The 'output' directory contains 2 samples of production data:
 
-sample2016.ndjson - 2016 data (from 025's 2016 sample)
-sample2018.ndjson - 2018 data (from 025's 2018 sample)
+sample2016.ndjson - 2016 data (from 016's 2016 sample)
+sample2018.ndjson - 2018 data (from 016's 2018 sample)
 
 Also, it contains a consistency checking sample:
 

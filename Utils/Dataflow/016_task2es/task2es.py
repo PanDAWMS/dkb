@@ -1,6 +1,6 @@
 #!/bin/env python
 """
-DKB Dataflow stage 017 (task2es)
+DKB Dataflow stage 016 (task2es)
 
 Update task metadata with utility fields necessary for ES indexing.
 

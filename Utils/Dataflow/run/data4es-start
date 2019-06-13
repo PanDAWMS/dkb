@@ -55,10 +55,10 @@ cmd_OC="$cmd_09 --config $cfg_09"
 cmd_25="${base_dir}/../025_chicagoES/stage.py -m s"
 
 # Stage 16
-cmd_16="${base_dir}/../016_adjustMetadata/adjustMetadata.py -m s"
+cmd_16="${base_dir}/../016_task2es/task2es.py -m s"
 
 # Stage 17
-cmd_17="${base_dir}/../017_task2es/task2es.py -m s"
+cmd_17="${base_dir}/../017_adjustMetadata/adjustMetadata.py -m s"
 
 # Stage 19
 cfg_19=`get_config "es"`

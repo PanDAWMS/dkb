@@ -1,5 +1,5 @@
 =============
-* Stage 017 *
+* Stage 016 *
 =============
 
 1. Description
@@ -12,8 +12,8 @@ Add ES-specific utility fields to task metadata:
 ----------
 The 'output' directory contains 2 samples:
 
-sample2016.ndjson - 2016 data (from 016's 2016 sample)
-sample2018.ndjson - 2018 data (from 016's 2018 sample)
+sample2016.ndjson - 2016 data (from 025's 2016 sample)
+sample2018.ndjson - 2018 data (from 025's 2018 sample)
 
 Also, it contains a consistency checking sample:
 
