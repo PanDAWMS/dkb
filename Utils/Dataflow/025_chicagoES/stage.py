@@ -263,7 +263,8 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
             'index': get_indices_by_interval(beg, end, wildcard=True),
             'doc_type': 'jobs_data',
             'body': agg_query(taskid, agg_names),
-            'size': 0
+            'size': 0,
+            'request_timeout': 30
         }
     if not es_args['body']:
         return {}
