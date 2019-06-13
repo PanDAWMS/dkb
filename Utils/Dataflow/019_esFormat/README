@@ -38,8 +38,8 @@ To produce regular (seamless NDJSON) samples, run:
 
 Comment:
  * input samples can not be used (and output one -- saved) as-is
-   due to the specific EOM marker (most of the stages use NEWLINE, which
-   is not allowed here because of the output message format);
+   due to the specific EOM marker (most of the stages use NEWLINE, which,
+   being part of the output messages body, is not allowed here);
  * `tr` is a Unix utility to translate or delete characters (for details please
    refer to man pages);
  * output message body contains trailing NEWLINE, so RS is simply removed from
