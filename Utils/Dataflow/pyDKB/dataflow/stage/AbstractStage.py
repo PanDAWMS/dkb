@@ -218,7 +218,7 @@ class AbstractStage(object):
         sys.exit(3)
 
     def read_config(self):
-        """ Reads stage custom config file.
+        """ Read stage custom config file.
 
         :return: (True|False)
         """
