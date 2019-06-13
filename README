@@ -8,6 +8,11 @@ Directory layout
   Impala
     dkb_schema.sql
 
+./DKBFrontEnd/     # Web interface
+  src/             # Application
+  deployment/      # Scripts and helpers for Web server deployment
+  vendor/          # Vendor code (currently for Ontodia)
+
 ./Utils/           # Data and database management scripts
   Virtuoso/
     load_ontology.sh
