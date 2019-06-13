@@ -6,6 +6,7 @@ Update task metadata with utility fields necessary for ES indexing.
 
 Authors:
   Marina Golosova (marina.golosova@cern.ch)
+  Vasilii Aulov (vasilii.aulov@cern.ch)
 """
 
 import os

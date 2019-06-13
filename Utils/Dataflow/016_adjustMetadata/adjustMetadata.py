@@ -5,7 +5,8 @@ DKB Dataflow stage 016 (adjustMetadata)
 Transform task metadata to prepare it for storage.
 
 Authors:
-  Marina Golosova (marina.golosova@cern.ch)
+   Marina Golosova (marina.golosova@cern.ch)
+   Vasilii Aulov (vasilii.aulov@cern.ch)
 """
 
 import os
