@@ -112,7 +112,11 @@ def task_metadata(taskid, fields=[], retry=3):
     try:
         r = chicago_es.search(**kwargs)
     except ElasticsearchException, err:
-        sys.stderr.write("(ERROR) ES search error: %s\n" % err)
+        sys.stderr.write("(ERROR) ES search error (id=%r): %s\n"
+                         % (taskid, err))
+        kwargs_str = json.dumps(kwargs, indent=2)
+        sys.stderr.write(("(DEBUG) ES query details:\n%s" % kwargs_str)
+                         .replace('\n', '\n(DEBUG) ') + '\n')
         if retry > 0:
             sys.stderr.write("(INFO) Sleep 5 sec before retry...\n")
             time.sleep(5)
@@ -267,7 +271,11 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
     try:
         r = chicago_es.search(**es_args)
     except ElasticsearchException, err:
-        sys.stderr.write("(ERROR) ES search error: %s\n" % err)
+        sys.stderr.write("(ERROR) ES search error (id=%r): %s\n"
+                         % (taskid, err))
+        args_str = json.dumps(es_args, indent=2)
+        sys.stderr.write(("(DEBUG) ES query details:\n%s" % args_str)
+                         .replace('\n', '\n(DEBUG) ') + '\n')
         if retry > 0:
             sys.stderr.write("(INFO) Sleep 5 sec before retry...\n")
             time.sleep(5)
