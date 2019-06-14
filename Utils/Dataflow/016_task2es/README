@@ -4,7 +4,7 @@
 
 1. Description
 --------------
-Add ES-specific utility fields to task metadata:
+Add ES-specific service fields to task metadata:
 * _id = taskid
 * _type = 'task'
 

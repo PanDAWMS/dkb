@@ -2,7 +2,7 @@
 """
 DKB Dataflow stage 016 (task2es)
 
-Update task metadata with utility fields necessary for ES indexing.
+Update task metadata with service fields necessary for ES indexing.
 
 Authors:
   Marina Golosova (marina.golosova@cern.ch)
