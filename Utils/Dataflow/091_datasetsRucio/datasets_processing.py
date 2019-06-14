@@ -27,13 +27,22 @@ try:
     from rucio.common.exception import RucioException
 except ImportError, err:
     sys.stderr.write("(ERROR) Failed to import Rucio module: %s\n" % err)
-    sys.exit(1)
+except Exception, err:
+    # rucio.client tries to read Rucio config file, and if it is not found,
+    # throws plain Exception
+    sys.stderr.write("(ERROR) %s.\n" % err.message)
+finally:
+    try:
+        RucioException
+    except NameError:
+        RucioException = None
 
 try:
     dkb_dir = os.path.join(base_dir, os.pardir)
     sys.path.append(dkb_dir)
     import pyDKB
     from pyDKB.dataflow import messageType
+    from pyDKB.dataflow.exceptions import DataflowException
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -89,6 +98,10 @@ def init_rucio_client():
     global rucio_client
     try:
         rucio_client = rucio.client.Client()
+    except NameError:
+        sys.stderr.write("(FATAL) Failed to initialize Rucio client: "
+                         "module not loaded.\n")
+        raise DataflowException("Module not found or misconfigured: 'rucio'")
     except RucioException as err:
         sys.stderr.write("(ERROR) Failed to initialize Rucio client.\n")
         err_str = str(err).replace("\n", "\n(==) ")
