@@ -73,14 +73,14 @@
 2. Tasks and data samples (DS) metadata integration (ProdSys2)
 ---
 
-009 ---> *                               | Get task metadata from ProdSys2 DB
-                                         |
-    * -> 091(in) -> 025 > 016 > 017      | Append task metadata with that from
-     \                           \       |   Rucio (input DS) and Chicago ES
-      \                           \      |
-       \-> 091(out) -> 093 -> 095 --> ** | Get DS metadata from Rucio and AMI
-                                         |
-    ** ----> 019 -> 069                  | Prepare and upload metadata to ES
+009 ---> *                                | Get task metadata from ProdSys2 DB
+                                          |
+  * -> 091(in) -> 025 -> 016 -> 017       | Append task metadata with that from
+   \                             \        |   Rucio (input DS) and Chicago ES
+    \                             \       |
+     \-> 091(out) -> 093 -> 095 -----> ** | Get DS metadata from Rucio and AMI
+                                          |
+  ** ----> 019 -> 069                     | Prepare and upload metadata to ES
 
 3. Tasks metadata consistency check
 ---
