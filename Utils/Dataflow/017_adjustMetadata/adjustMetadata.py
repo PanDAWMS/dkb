@@ -2,7 +2,7 @@
 """
 DKB Dataflow stage 017 (adjustMetadata)
 
-Transform task metadata to prepare it for storage.
+Transform task metadata to fit ES scheme.
 
 Authors:
    Marina Golosova (marina.golosova@cern.ch)

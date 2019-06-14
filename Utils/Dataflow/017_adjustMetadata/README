@@ -4,7 +4,7 @@
 
 1. Description
 --------------
-Transform task metadata to prepare it for storage:
+Transform task metadata to fit ES scheme:
 * detect 'phys_category'
 * split comma-separated 'hashtag_list' to the actual list structure
 * turn hashtags to lower case
