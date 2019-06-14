@@ -76,7 +76,6 @@ def main(argv):
         stage.process = process_output_ds
     elif stage.ARGS.ds_type == INPUT:
         stage.process = process_input_ds
-    init_rucio_client()
     exit_code = stage.run()
 
     if exit_code == 0:
@@ -95,6 +94,13 @@ def init_rucio_client():
         err_str = str(err).replace("\n", "\n(==) ")
         sys.stderr.write("(ERROR) %s.\n" % err_str)
         sys.exit(1)
+
+
+def get_rucio_client():
+    """ Get initialized Rucio client. """
+    if not rucio_client:
+        init_rucio_client()
+    return rucio_client
 
 
 def process_output_ds(stage, message):
@@ -215,6 +221,7 @@ def get_metadata(dsn, attributes=None):
     :return: dataset metadata
     :rtype:  dict
     """
+    rucio_client = get_rucio_client()
     scope, dataset = extract_scope(dsn)
     try:
         metadata = rucio_client.get_metadata(scope=scope, name=dataset)
