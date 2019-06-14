@@ -36,6 +36,12 @@ try:
 except ImportError, err:
     sys.stderr.write("(ERROR) Failed to import elasticsearch module: %s\n"
                      % err)
+finally:
+    try:
+        ElasticsearchException
+    except NameError:
+        ElasticsearchException = None
+
 
 chicago_es = None
 
