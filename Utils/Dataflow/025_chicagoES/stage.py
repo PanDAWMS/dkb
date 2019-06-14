@@ -63,6 +63,13 @@ def init_es_client():
     chicago_es = elasticsearch.Elasticsearch(chicago_hosts)
 
 
+def get_es_client():
+    """ Get configured client connected to the Chicago ES. """
+    if not chicago_es:
+        init_es_client()
+    return chicago_es
+
+
 def task_metadata(taskid, fields=[], retry=3):
     """ Get additional metadata for given task.
 
@@ -78,6 +85,7 @@ def task_metadata(taskid, fields=[], retry=3):
               ES connection is established
     :rtype: dict, NoneType
     """
+    chicago_es = get_es_client()
     if not chicago_es:
         sys.stderr.write("(ERROR) Connection to Chicago ES is not"
                          " established.")
@@ -220,6 +228,7 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
     end_time = task_data.get('end_time')
     status = task_data.get('status')
 
+    chicago_es = get_es_client()
     if not chicago_es:
         sys.stderr.write("(ERROR) Connection to Chicago ES is not"
                          " established.")
@@ -317,8 +326,6 @@ def main(args):
     stage.set_output_message_type(messageType.JSON)
 
     stage.process = process
-
-    init_es_client()
 
     exit_code = 0
     exc_info = None
