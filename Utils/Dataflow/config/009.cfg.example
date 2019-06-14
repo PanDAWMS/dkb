@@ -36,6 +36,9 @@ final = %__009_final_offset__%
 # offset from current timestamp (e.g. 86400 <=> 86400s <=> 1d; 8h; 15m)
 step = %__009_step__%
 
+# Time zone of timestamps (default: local timezone)
+tz = UTC
+
 [logging]
 # Current offset file
 # (relative to the dir with the config file or absolute path)

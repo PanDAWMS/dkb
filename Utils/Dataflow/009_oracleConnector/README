@@ -10,6 +10,8 @@ them as NDJSON.
 Currently works with specific set of queries only:
  * prodsys2ES + datasets
  * prodsys2ES
+ * consistency : simplified query that only obtains taskid and task_timestamp
+   for each task
 
 The goal is to make it work with any number and combination of queries.
 
@@ -23,3 +25,34 @@ A template for the configuration file can be obtained in Dataflow's
 corresponding directory:
 
   Utils/Dataflow/config/009.cfg.example
+
+3. Task Chain
+-------------
+The query prodsys2ES includes the subquery that obtains the task's chain_data:
+taskids of tasks in the task chain, starting with the root and ending with the
+given task.
+
+The root of a given task is found by recursively looking for the current
+task's parent, starting with the given task, until the task is encountered
+that has no parent - this is the root. The parent of a task is found by
+comparing the datasets: task's input dataset is one of the parent's output
+datasets. After finding the root, ids of the encountered tasks are aggregated
+into a string.
+
+Some tasks have their parent specified in the "parent_tid" field, and
+originally it was planned to find each parent in this way if possible, and
+by comparing input/output otherwise. However, using conditions in Oracle's
+recursive construction START WITH ... CONNECT BY leads to problems with
+infinite cycles. Therefore, only the input/output mechanism was implemented
+- it is slower, but more reliable.
+
+4. Samples
+----------
+The 'output' directory contains two samples of production data:
+
+  sample2016.ndjson - collected with timestamps [09-05-2016 12:12:00, 09-05-2016 13:32:30]
+  sample2018.ndjson - collected with timestamps [15-06-2018 12:00:00, 15-06-2018 13:00:00]
+
+Also, it contains a consistency checking sample:
+
+  consistency.ndjson - collected with timestamps [21-07-2018 00:00:00, 22-07-2018 00:00:00]

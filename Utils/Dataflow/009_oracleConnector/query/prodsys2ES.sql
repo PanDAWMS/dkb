@@ -7,6 +7,7 @@
 -- ATLAS_DEFT.t_ht_to_task
 -- ATLAS_DEFT.t_hashtag
 -- ATLAS_PANDA.jedi_datasets
+-- ATLAS_DEFT.t_production_dataset
 --
 -- All fields:
 -- architecture, campaign, cloud, conditions_tags, core_count, description, end_time,
@@ -23,7 +24,6 @@ with tasks as (
     SELECT DISTINCT
       t.campaign,
       t.taskid,
-      t.parent_tid,
       t.step_id,
       t.taskname,
       TO_CHAR(t.timestamp, 'dd-mm-yyyy hh24:mi:ss')           AS task_timestamp,
@@ -127,7 +127,12 @@ with tasks as (
       OVER (PARTITION BY t.taskid) AS requested_events,
     NVL(
       sum(jd.neventsused) OVER (PARTITION BY t.taskid),
-      t.total_events) AS processed_events
+      t.total_events) AS processed_events,
+    (
+      SELECT LISTAGG(tpt.taskid, ',') WITHIN GROUP(ORDER BY LEVEL DESC)
+      FROM ATLAS_DEFT.t_production_task tpt JOIN ATLAS_DEFT.t_production_dataset tpd ON tpt.taskid = tpd.taskid
+      START WITH tpt.taskid = t.taskid AND ROWNUM = 1 CONNECT BY NOCYCLE PRIOR tpt.primary_input = tpd.name
+    ) AS chain_data
   FROM tasks_t_task t
     LEFT JOIN ATLAS_PANDA.jedi_datasets jd
       ON t.taskid = jd.jeditaskid

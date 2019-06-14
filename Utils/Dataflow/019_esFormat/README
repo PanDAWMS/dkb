@@ -40,3 +40,18 @@ For input it is OK, but for output it would be better to take <index info> and
   be critical for now, but something tells me that it will.
 This task requires accurate EOMessage and EOProcess markers handling (see the
   `kafka-dataflow-markers` branch).
+
+Samples
+-------
+The 'output' directory contains two pairs of samples:
+
+2016 data:
+tasks2016.ndjson (from 016's 2016 sample)
+datasets2016.ndjson (from 095's 2016 sample)
+
+2018 data:
+tasks2018.ndjson (from 016's 2018 sample)
+datasets2018.ndjson (from 095's 2018 sample)
+
+tasks* is the tasks' and input datasets' metadata.
+datasets* is the output datasets' metadata.
