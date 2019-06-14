@@ -34,9 +34,8 @@ try:
     import elasticsearch
     from elasticsearch.exceptions import ElasticsearchException
 except ImportError, err:
-    sys.stderr.write("(FATAL) Failed to import elasticsearch module: %s\n"
+    sys.stderr.write("(ERROR) Failed to import elasticsearch module: %s\n"
                      % err)
-    sys.exit(2)
 
 chicago_es = None
 
@@ -60,7 +59,12 @@ TASK_FINAL_STATES = ['done', 'finished', 'obsolete', 'failed', 'broken',
 def init_es_client():
     """ Initialize connection to Chicago ES. """
     global chicago_es
-    chicago_es = elasticsearch.Elasticsearch(chicago_hosts)
+    try:
+        chicago_es = elasticsearch.Elasticsearch(chicago_hosts)
+    except NameError:
+        sys.stderr.write("(FATAL) Failed to initialize Elasticsearch client: "
+                         "module not loaded.\n")
+        raise DataflowException("Module not found: 'elasticsearch'")
 
 
 def get_es_client():
