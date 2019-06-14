@@ -83,6 +83,7 @@ def main(argv):
     stage.configure(argv)
     if stage.ARGS.ds_type == OUTPUT:
         stage.process = process_output_ds
+        stage.skip_process = skip_process_output_ds
     elif stage.ARGS.ds_type == INPUT:
         stage.process = process_input_ds
     exit_code = stage.run()
@@ -148,6 +149,41 @@ def process_output_ds(stage, message):
             return True
         del(ds['taskid'])
         stage.output(pyDKB.dataflow.communication.messages.JSONMessage(ds))
+
+    return True
+
+
+def skip_process_output_ds(stage, message):
+    """ Process output datasets from input message.
+
+    Generate output JSON document of the following structure:
+        { "datasetname": <DSNAME>,
+          "_type": "output_dataset",
+          "_parent": <TASKID>,
+          "_id": <DSNAME>
+        }
+    """
+    json_str = message.content()
+
+    if not json_str.get(SRC_FIELD[OUTPUT]):
+        # Nothing to process; over.
+        return True
+
+    datasets = json_str[SRC_FIELD[OUTPUT]]
+    if type(datasets) != list:
+        datasets = [datasets]
+
+    for dataset in datasets:
+        ds = {'datasetname': dataset}
+        ds['taskid'] = json_str.get('taskid')
+        if not add_es_index_info(ds):
+            sys.stderr.write("(WARN) Skip message (not enough info"
+                             " for ES indexing).\n")
+            return True
+        del(ds['taskid'])
+        out_msg = pyDKB.dataflow.communication.messages.JSONMessage(ds)
+        out_msg.incomplete(True)
+        stage.output(out_msg)
 
     return True
 
