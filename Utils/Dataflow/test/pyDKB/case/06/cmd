@@ -1,0 +1,1 @@
+./json2TTL.py -d s -e EOM input/NDjson.json

@@ -31,8 +31,9 @@ try:
     from pyDKB.dataflow import CDSInvenioConnector
     from pyDKB.dataflow import KerberizedCDSInvenioConnector
     from pyDKB.dataflow import dkbID, dataType
-    from pyDKB.dataflow.stage import JSONProcessorStage
+    from pyDKB.dataflow.stage import ProcessorStage
     from pyDKB.dataflow import DataflowException
+    from pyDKB.dataflow import messageType
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -298,7 +299,9 @@ def process(stage, message):
 
 def main(argv):
     """ Program body. """
-    stage = JSONProcessorStage()
+    stage = ProcessorStage()
+    stage.set_input_message_type(messageType.JSON)
+    stage.set_output_message_type(messageType.JSON)
     stage.add_argument("-l", "--login", action="store", type=str, nargs='?',
                        help="CERN account login",
                        default='',
@@ -332,34 +335,27 @@ def main(argv):
 #                       dest='indent'
 #                      )
 
-    exit_code = 0
-    try:
-        stage.parse_args(argv)
-        stage.process = process
-        # This part remains here, as not every JSON-to-JSON processor need
-        # any authentication method
-        # Maybe we need a ProcessorWithAuthorization?
-        if not stage.ARGS.login and not stage.ARGS.kerberos:
-            sys.stderr.write(
-                "WARNING: no authentication method will be used.\n")
+    stage.configure(argv)
+    stage.process = process
+    # This part remains here, as not every JSON-to-JSON processor need
+    # any authentication method
+    # Maybe we need a ProcessorWithAuthorization?
+    if not stage.ARGS.login and not stage.ARGS.kerberos:
+        sys.stderr.write("WARNING: no authentication method will be used.\n")
 
-        warnings.simplefilter("once", InsecurePlatformWarning)
-        ARGS = stage.ARGS
+    warnings.simplefilter("once", InsecurePlatformWarning)
+    ARGS = stage.ARGS
 
-        if ARGS.kerberos:
-            Connector = KerberizedCDSInvenioConnector
-        else:
-            Connector = CDSInvenioConnector
+    if ARGS.kerberos:
+        Connector = KerberizedCDSInvenioConnector
+    else:
+        Connector = CDSInvenioConnector
 
-        with Connector(ARGS.login, ARGS.password) as cds:
-            ARGS.cds = cds
-            stage.run()
+    with Connector(ARGS.login, ARGS.password) as cds:
+        ARGS.cds = cds
+        exit_code = stage.run()
 
-    except (DataflowException, RuntimeError), err:
-        if str(err):
-            sys.stderr.write("(ERROR) %s\n" % err)
-        exit_code = 1
-    finally:
+    if exit_code == 0:
         stage.stop()
 
     exit(exit_code)

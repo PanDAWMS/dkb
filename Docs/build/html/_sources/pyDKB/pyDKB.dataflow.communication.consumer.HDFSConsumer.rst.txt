@@ -1,0 +1,9 @@
+.. _pyDKB.dataflow.communication.consumer.HDFSConsumer:
+
+pyDKB.dataflow.communication.consumer.HDFSConsumer module
+=========================================================
+
+.. automodule:: pyDKB.dataflow.communication.consumer.HDFSConsumer
+    :members:
+    :undoc-members:
+    :show-inheritance:
