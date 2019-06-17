@@ -11,7 +11,6 @@ Authors:
 
 import os
 import sys
-import traceback
 
 try:
     base_dir = os.path.dirname(__file__)

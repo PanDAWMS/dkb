@@ -11,7 +11,6 @@ Authors:
 
 import os
 import sys
-import traceback
 
 import re
 
