@@ -9,7 +9,6 @@ try:
     import pyAMI.config
 except ImportError:
     sys.stderr.write("(ERROR) Unable to find pyAMI client.\n")
-    sys.exit(1)
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -18,6 +17,7 @@ try:
     sys.path.append(dkb_dir)
     import pyDKB
     from pyDKB.dataflow import messageType
+    from pyDKB.dataflow.exceptions import DataflowException
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -66,6 +66,10 @@ def init_ami_client(userkey, usercert):
         ami_client = pyAMI.client.Client('atlas', key_file=userkey,
                                          cert_file=usercert)
         AtlasAPI.init()
+    except NameError:
+        sys.stderr.write("(FATAL) Failed to initialise AMI client: "
+                         "pyAMI module is not loaded.\n")
+        raise DataflowException("Module not found: 'pyAMI'")
     except Exception:
         sys.stderr.write(
             "(ERROR) Could not establish pyAMI session."
