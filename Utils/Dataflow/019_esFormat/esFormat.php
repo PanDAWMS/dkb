@@ -80,18 +80,46 @@ function constructActionJson($row) {
 function constructDataJson($row) {
   $data = $row;
 
+  if (isset($data['_incomplete'])) {
+    $incompl = $data['_incomplete'];
+  }
+
   foreach ($data as $key => $val) {
     if (strncmp($key, '_', 1) === 0)
       unset($data[$key]);
   }
 
   $act = getAction($row);
+  $insert_data = $data;
+  $update_data = $data;
+  if (isset($incompl)) {
+    # We *may* not specify "update_required" value on insert, if it is False,
+    # (for it is a default value), but to allow usage of 'doc_as_upsert'
+    # ES option, it can be specified explicitly. So in case of 'update' action
+    # it should always be so.
+    if ($incompl or $act == 'update') {
+      $insert_data['update_required'] = $incompl;
+    }
+    if (!$incompl) {
+      # We must specify explicitly that update is not required after this operation
+      # (just in case it was set to "true" previously).
+      $update_data['update_required'] = false;
+    }
+  }
 
   if ($act == 'update') {
+    # We can do "clean upsert" (when insert and update documents are the same)
+    # only when $incompl is NOT set to True:
+    $clean_upsert = !(isset($incompl) and $incompl);
     $data = Array(
-      'doc' => $data,
-      'doc_as_upsert' => true
+      'doc' => $update_data,
+      'doc_as_upsert' => $clean_upsert
     );
+    if (!$clean_upsert) {
+      $data['upsert'] = $insert_data;
+    }
+  } else {
+    $data = $insert_data;
   }
 
   return $data;
