@@ -172,29 +172,25 @@ def transform_chain_data(data):
                  (string of numbers separated by commas).
     :type data: dict
 
-    :return: True if update was successful, False otherwise (chain_id and
-             chain_data will be updated so that the task is considered
-             independent)
-    :rtype: bool
+    :return: empty string if everything is fine, error message otherwise
+    :rtype: str
     """
     chain_data = data.get('chain_data')
     if not chain_data or not chain_data.replace(',', '').isdigit():
         taskid = data.get('taskid')
         if not taskid:
-            sys.stderr.write('(WARN) Message contains no chain_data and no '
-                             'taskid. Skipping chain_data processing.\n')
-            return False
-        sys.stderr.write('(WARN) Task %s: cannot transform chain_data "%s", '
-                         'it seems to be incorrect. Setting chain_id=%s, '
-                         'chain_data=[%s].\n'
-                         % (taskid, chain_data, taskid, taskid))
+            return '(WARN) Message contains no chain_data and no '\
+                   'taskid. Skipping chain_data processing.\n'
         data['chain_id'] = taskid
         data['chain_data'] = [taskid]
-        return False
+        return '(WARN) Task %s: cannot transform chain_data "%s", '\
+               'it seems to be incorrect. Setting chain_id=%s, '\
+               'chain_data=[%s].\n'\
+               % (taskid, chain_data, taskid, taskid)
     chain_data = [int(i) for i in chain_data.split(',')]
     data['chain_id'] = chain_data[0]
     data['chain_data'] = chain_data
-    return True
+    return ''
 
 
 def process(stage, message):
@@ -224,7 +220,9 @@ def process(stage, message):
     if inp_events:
         data['input_events'] = inp_events
     # 5. Save chain_data as array of integers, extract chain_id from it
-    transform_chain_data(data)
+    e = transform_chain_data(data)
+    if e:
+        sys.stderr.write(e)
 
     out_message = JSONMessage(data)
     stage.output(out_message)
