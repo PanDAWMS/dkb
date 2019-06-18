@@ -70,11 +70,11 @@ def init_ami_client(userkey, usercert):
         sys.stderr.write("(FATAL) Failed to initialise AMI client: "
                          "pyAMI module is not loaded.\n")
         raise DataflowException("Module not found: 'pyAMI'")
-    except Exception:
+    except Exception, err:
         sys.stderr.write(
             "(ERROR) Could not establish pyAMI session."
             " Are you sure you have a valid certificate?\n")
-        sys.exit(1)
+        raise DataflowException(str(err))
 
 
 def process(stage, message):
