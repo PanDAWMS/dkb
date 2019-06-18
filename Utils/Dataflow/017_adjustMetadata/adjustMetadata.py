@@ -163,7 +163,7 @@ def input_events(data):
     return result
 
 
-def transform_chain_data(data, original):
+def transform_chain_data(data):
     """ Transform chain_data into array of integers and get chain_id from it.
 
     chain_id is the taskid of the task chain's root.
@@ -171,24 +171,18 @@ def transform_chain_data(data, original):
     :param data: data to be updated, must contain taskid and proper chain_data
                  (string of numbers separated by commas).
     :type data: dict
-    :param original: string representing data at the beginning of the stage
-    :type original: str
 
     :return: True if update was successful, False otherwise (chain_id and
              chain_data will be updated so that the task is considered
              independent)
     :rtype: bool
     """
-    if type(data) is not dict:
-        sys.stderr.write('(WARN) Function transform_chain_data() received '
-                         'non-dict data: %s. Skipping.\n' % original)
-        return False
     chain_data = data.get('chain_data')
     if not chain_data or not chain_data.replace(',', '').isdigit():
         taskid = data.get('taskid')
         if not taskid:
-            sys.stderr.write('(WARN) No taskid: %s. Skipping chain_data '
-                             'processing.\n' % original)
+            sys.stderr.write('(WARN) Message contains no chain_data and no '
+                             'taskid. Skipping chain_data processing.\n')
             return False
         sys.stderr.write('(WARN) Task %s: cannot transform chain_data "%s", '
                          'it seems to be incorrect. Setting chain_id=%s, '
@@ -206,7 +200,13 @@ def transform_chain_data(data, original):
 def process(stage, message):
     """ Single message processing. """
     data = message.content()
-    original = str(data)
+
+    if type(data) is not dict:
+        sys.stderr.write('(WARN) Message contains non-dict data: %r. '
+                         'Skipping.\n' % data)
+        return False
+    if 'taskid' not in data:
+        sys.stderr.write('(WARN) Message contains no taskid: %r.\n' % data)
 
     # 1. Unify hashtag_list
     hashtags = data.get('hashtag_list')
@@ -224,7 +224,7 @@ def process(stage, message):
     if inp_events:
         data['input_events'] = inp_events
     # 5. Save chain_data as array of integers, extract chain_id from it
-    transform_chain_data(data, original)
+    transform_chain_data(data)
 
     out_message = JSONMessage(data)
     stage.output(out_message)
