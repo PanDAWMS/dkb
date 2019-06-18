@@ -11,13 +11,15 @@ lib="$base_dir/../shell_lib"
 
 usage() {
   echo "USAGE
-  $(basename $0) [-h] [--debug] [-i STAGE...]
+  $(basename $0) [-hl] [--debug] [-i STAGE...]
 
   Run 'data4es' process of metadata integration from ATLAS systems (ProdSys,
   AMI, Rucio, ...) to the DKB Elasticsearch.
 
 OPTIONS
   -h, --help  show this message and exit
+
+  -l, --list  list known stage IDs and exit
 
   --debug     do not actualy load integrated metadata to the DKB Elasticsearch
               (will creates files with data flow snapshots, taken between
@@ -29,6 +31,10 @@ OPTIONS
               in the integration process (stages will be run with '--skip'
               option)
 " >&2
+}
+
+list_stages() {
+  compgen -A variable | grep 'cmd_' | sed 's/cmd_//' >&1
 }
 
 source $lib/log
@@ -180,6 +186,9 @@ while [ -n "$1" ]; do
     -i|--ignore)
       IGNORE=$(echo "$2" | tr ',' ' ')
       shift;;
+    -l|--list)
+      list_stages
+      exit 0;;
     --)
       shift
       break;;
@@ -196,7 +205,7 @@ done
 # Adjust stage commands according to IGNORE parameter
 for s in $IGNORE; do
   cmd="cmd_${s}"
-  [ -z "${!cmd}" ] && log ERROR "Can not skip stage: $s (unknown stage ID)" && exit 1
+  [ -z "${!cmd}" ] && log ERROR "Unknown stage ID: $s (known IDs: --list)." && exit 1
   eval "cmd_$s='${!cmd} --skip'"
 done
 
