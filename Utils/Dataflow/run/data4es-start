@@ -211,6 +211,11 @@ for s in $IGNORE; do
   eval "cmd_$s='${!cmd} --skip'"
 done
 
+if [ -n "$IGNORE" ]; then
+  cmd_19="$cmd_19 --update"
+  log INFO "Stage 19 set to update mode."
+fi
+
 # Define subchains
 # Source subchain: Oracle Connector
 source_chain() {
