@@ -8,6 +8,22 @@ DEBUG=
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
 lib="$base_dir/../shell_lib"
 
+usage() {
+  echo "USAGE
+  $(basename $0) [-h] [--debug]
+
+  Run 'data4es' process of metadata integration from ATLAS systems (ProdSys,
+  AMI, Rucio, ...) to the DKB Elasticsearch.
+
+OPTIONS
+  -h, --help  show this message and exit
+
+  --debug     do not actualy load integrated metadata to the DKB Elasticsearch
+              (will creates files with data flow snapshots, taken between
+              the stages)
+" >&2
+}
+
 source $lib/log
 
 # Directories with configuration files
@@ -149,6 +165,9 @@ b_91=`branch b_91` && b_16=`branch b_16` \
 # Parse command line parameters
 while [ -n "$1" ]; do
   case $1 in
+    -h|--help)
+      usage
+      exit 0;;
     --debug)
       DEBUG=1;;
     --)
