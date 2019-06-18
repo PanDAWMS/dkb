@@ -174,7 +174,9 @@ while [ -n "$1" ]; do
       shift
       break;;
     -*)
-      log ERROR "Unknown option: $1";;
+      log ERROR "Unknown option: $1"
+      usage
+      exit 1;;
     *)
       break;;
   esac
