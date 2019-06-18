@@ -4,13 +4,14 @@ SCRIPT_NAME=data4es
 
 BATCH_SIZE=100
 DEBUG=
+IGNORE=
 
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
 lib="$base_dir/../shell_lib"
 
 usage() {
   echo "USAGE
-  $(basename $0) [-h] [--debug]
+  $(basename $0) [-h] [--debug] [-i STAGE...]
 
   Run 'data4es' process of metadata integration from ATLAS systems (ProdSys,
   AMI, Rucio, ...) to the DKB Elasticsearch.
@@ -21,6 +22,12 @@ OPTIONS
   --debug     do not actualy load integrated metadata to the DKB Elasticsearch
               (will creates files with data flow snapshots, taken between
               the stages)
+
+  -i, --ignore STAGE...
+
+              ignore stages specified as a comma-separated list
+              in the integration process (stages will be run with '--skip'
+              option)
 " >&2
 }
 
@@ -170,6 +177,9 @@ while [ -n "$1" ]; do
       exit 0;;
     --debug)
       DEBUG=1;;
+    -i|--ignore)
+      IGNORE=$(echo "$2" | tr ',' ' ')
+      shift;;
     --)
       shift
       break;;
@@ -183,6 +193,12 @@ while [ -n "$1" ]; do
   shift
 done
 
+# Adjust stage commands according to IGNORE parameter
+for s in $IGNORE; do
+  cmd="cmd_${s}"
+  [ -z "${!cmd}" ] && log ERROR "Can not skip stage: $s (unknown stage ID)" && exit 1
+  eval "cmd_$s='${!cmd} --skip'"
+done
 
 # Define subchains
 # Source subchain: Oracle Connector
