@@ -46,7 +46,7 @@ jobs:
 
             if [ $? -eq 0 ];then
               echo "Very long line(s) in $f:" 
-              echo "$r" | sed -e 's/^+//' | while IFS= read -r l; do
+              echo "$r" | sed -e 's/^+//' | sort -u | while IFS= read -r l; do
                 grep -n "^$l\$" -- "$f"
               done
               e=1
@@ -67,7 +67,7 @@ jobs:
 
             if [ $? -eq 0 ];then
               echo "Tabs found in $f:"
-              echo "$r" | sed -e 's/^+//' | while IFS= read -r l; do
+              echo "$r" | sed -e 's/^+//' | sort -u | while IFS= read -r l; do
                 grep -n "^$l\$" -- "$f"
               done
               e=1
@@ -88,7 +88,7 @@ jobs:
 
             if [ $? -eq 0 ];then
               echo "Trailing spaces found $f:"
-              echo "$r" | sed -e 's/^+//' | while IFS= read -r l; do
+              echo "$r" | sed -e 's/^+//' | sort -u | while IFS= read -r l; do
                 grep -n "^$l\$" -- "$f"
               done
               e=1
