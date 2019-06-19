@@ -35,6 +35,7 @@ jobs:
 
     - stage: README_line_length
       language: minimal
+      name: "Line length"
 
       script:
         - |
