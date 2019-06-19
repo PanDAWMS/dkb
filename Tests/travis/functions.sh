@@ -15,7 +15,7 @@ getLinesFromFile() {
 
   echo "$lines" | sort -u | while IFS= read -r l; do
       grep -n "^$l\$" -- "$file"
-  done
+  done | sort -n
 }
 
 getURL() {
