@@ -10,8 +10,13 @@ fi
 e=0
 while read f; do
   [ -z "$f" ] && continue
-  r=`getAddedLines "$f" | grep -e '^.\{81,\}'`;
-  if [ $? -eq 0 ];then
+  r=`getAddedLines "$f" | grep -e '^.\{81,\}' | while IFS= read -r line; do
+    url=$(echo "$line" | getURL)
+    trimmed_line=$(echo "$line" | sed -e 's/^\s*//')
+    [ "$url" = "$trimmed_line" ] && continue
+    echo "$line"
+  done`
+  if [ $(echo "$r" | wc -l) -gt 0 ];then
     echo "Very long line(s) in $f:"
     getLinesFromFile "$f" "$r"
     e=1
