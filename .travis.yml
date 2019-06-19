@@ -33,7 +33,7 @@ jobs:
               false
             fi
 
-    - stage: README_line_length
+    - stage: README_checks
       language: minimal
       name: "Line length"
 
@@ -45,6 +45,26 @@ jobs:
 
             if [ $? -eq 0 ];then
               echo "Very long line(s) in $f:" 
+              echo "$r" | while read l; do
+                grep -n "^$l\$" -- "$f"
+              done
+              e=1
+            fi
+          done <<< $(git diff --name-only HEAD^ | grep 'README$')
+          exit $e
+
+    - stage: README_checks
+      language: minimal
+      name: "Tabs"
+
+      script:
+        - |
+          e=0
+          while read f; do
+            r=`git diff HEAD^ -- "$f" | grep -v "^+++ b/$f" | grep -e '^+.*\t\+.*' | sed -e 's/^+//'`;
+
+            if [ $? -eq 0 ];then
+              echo "Tabs found in $f:"
               echo "$r" | while read l; do
                 grep -n "^$l\$" -- "$f"
               done
