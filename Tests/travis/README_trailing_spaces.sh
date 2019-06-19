@@ -10,7 +10,7 @@ fi
 e=0
 while read f; do
   [ -z "$f" ] && continue
-  r=`getAddedLines "$f" | grep -e '^.*\s\+$'`;
+  r=`getAddedLines "$f" | grep -e '\s$'`;
   if [ $? -eq 0 ];then
     echo "Trailing spaces found in $f:"
     getLinesFromFile "$f" "$r"
