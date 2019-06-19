@@ -10,7 +10,7 @@ fi
 e=0
 while read f; do
   [ -z "$f" ] && continue
-  r=`getAddedLines "$f" | grep -e '^.\{80,\}'`;
+  r=`getAddedLines "$f" | grep -e '^.\{81,\}'`;
   if [ $? -eq 0 ];then
     echo "Very long line(s) in $f:"
     getLinesFromFile "$f" "$r"
