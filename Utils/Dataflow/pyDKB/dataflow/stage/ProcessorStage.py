@@ -296,7 +296,7 @@ class ProcessorStage(AbstractStage):
         """ Mark input message as incomplete and output.
 
         May be re-implemented just like `process()`,
-        yet has default implememtation.
+        yet has default implementation.
 
         :param input_message: message to process
         :type input_message: pyDKB.messages.AbstractMessage
