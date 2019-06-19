@@ -39,12 +39,12 @@ jobs:
       script:
         - |
           e=0
-          git diff --name-only HEAD^ | grep 'README$' | while read f; do
+          while read f; do
             r=`git diff HEAD^ -- "$f" | grep -v "^+++ b/$f" | grep -ne '^+.\{81,\}' | sed -e 's/^\([0-9]*:\)+/\1/'`;
             if [ $? -eq 0 ];then
               echo "Very long line(s) in $f:"
               echo "$r"
               e=1
             fi
-          done
+          done <<< $(git diff --name-only HEAD^ | grep 'README$')
           exit $e
