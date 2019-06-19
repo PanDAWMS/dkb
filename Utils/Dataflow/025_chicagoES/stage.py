@@ -34,9 +34,14 @@ try:
     import elasticsearch
     from elasticsearch.exceptions import ElasticsearchException
 except ImportError, err:
-    sys.stderr.write("(FATAL) Failed to import elasticsearch module: %s\n"
+    sys.stderr.write("(ERROR) Failed to import elasticsearch module: %s\n"
                      % err)
-    sys.exit(2)
+finally:
+    try:
+        ElasticsearchException
+    except NameError:
+        ElasticsearchException = None
+
 
 chicago_es = None
 
@@ -60,7 +65,19 @@ TASK_FINAL_STATES = ['done', 'finished', 'obsolete', 'failed', 'broken',
 def init_es_client():
     """ Initialize connection to Chicago ES. """
     global chicago_es
-    chicago_es = elasticsearch.Elasticsearch(chicago_hosts)
+    try:
+        chicago_es = elasticsearch.Elasticsearch(chicago_hosts)
+    except NameError:
+        sys.stderr.write("(FATAL) Failed to initialize Elasticsearch client: "
+                         "module not loaded.\n")
+        raise DataflowException("Module not found: 'elasticsearch'")
+
+
+def get_es_client():
+    """ Get configured client connected to the Chicago ES. """
+    if not chicago_es:
+        init_es_client()
+    return chicago_es
 
 
 def task_metadata(taskid, fields=[], retry=3):
@@ -78,6 +95,7 @@ def task_metadata(taskid, fields=[], retry=3):
               ES connection is established
     :rtype: dict, NoneType
     """
+    chicago_es = get_es_client()
     if not chicago_es:
         sys.stderr.write("(ERROR) Connection to Chicago ES is not"
                          " established.")
@@ -220,6 +238,7 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
     end_time = task_data.get('end_time')
     status = task_data.get('status')
 
+    chicago_es = get_es_client()
     if not chicago_es:
         sys.stderr.write("(ERROR) Connection to Chicago ES is not"
                          " established.")
@@ -317,8 +336,6 @@ def main(args):
     stage.set_output_message_type(messageType.JSON)
 
     stage.process = process
-
-    init_es_client()
 
     exit_code = 0
     exc_info = None
