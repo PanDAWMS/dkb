@@ -41,11 +41,11 @@ jobs:
         - |
           e=0
           while read f; do
-            r=`git diff HEAD^ -- "$f" | grep -v "^+++ b/$f" | grep -e '^+.\{81,\}' | sed -e 's/^+//'`;
+            r=`git diff HEAD^ -- "$f" | grep -v "^+++ b/$f" | grep -e '^+.\{81,\}'`;
 
             if [ $? -eq 0 ];then
               echo "Very long line(s) in $f:" 
-              echo "$r" | while read l; do
+              echo "$r" | sed -e 's/^+//' | while read l; do
                 grep -n "^$l\$" -- "$f"
               done
               e=1
@@ -61,11 +61,11 @@ jobs:
         - |
           e=0
           while read f; do
-            r=`git diff HEAD^ -- "$f" | grep -v "^+++ b/$f" | grep -e '^+.*\t\+.*' | sed -e 's/^+//'`;
+            r=`git diff HEAD^ -- "$f" | grep -v "^+++ b/$f" | grep -e '^+.*\t\+.*'`;
 
             if [ $? -eq 0 ];then
               echo "Tabs found in $f:"
-              echo "$r" | while read l; do
+              echo "$r" | sed -e 's/^+//' | while read l; do
                 grep -n "^$l\$" -- "$f"
               done
               e=1
@@ -81,11 +81,11 @@ jobs:
         - |
           e=0
           while read f; do
-            r=`git diff HEAD^ -- "$f" | grep -v "^+++ b/$f" | grep -e '^+.*\s\+$' | sed -e 's/^+//'`;
+            r=`git diff HEAD^ -- "$f" | grep -v "^+++ b/$f" | grep -e '^+.*\s\+$'`;
 
             if [ $? -eq 0 ];then
               echo "Trailing spaces found $f:"
-              echo "$r" | while read l; do
+              echo "$r" | sed -e 's/^+//' | while read l; do
                 grep -n "^$l\$" -- "$f"
               done
               e=1
