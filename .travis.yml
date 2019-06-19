@@ -61,7 +61,7 @@ jobs:
         - |
           e=0
           while read f; do
-            r=`git diff HEAD^ -- "$f" | grep -v "^+++ b/$f" | grep -e '^+.*\t\+.*'`;
+            r=`git diff HEAD^ -- "$f" | grep -v "^+++ b/$f" | grep -P '^\+.*?\t+.*'`;
 
             if [ $? -eq 0 ];then
               echo "Tabs found in $f:"
