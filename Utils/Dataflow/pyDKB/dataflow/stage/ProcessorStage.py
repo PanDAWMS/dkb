@@ -176,6 +176,12 @@ class ProcessorStage(AbstractStage):
                           default=False,
                           dest='hdfs'
                           )
+        self.add_argument('--skip', action='store_true',
+                          help=u'Skip process and push input message '
+                          'forward as-is (marking it as "incomplete").',
+                          default=False,
+                          dest='skip_process'
+                          )
 
     def configure(self, args=None):
         """ Configure stage according to the config parameters.
@@ -215,12 +221,17 @@ class ProcessorStage(AbstractStage):
 
     def run(self):
         """ Run process() for every input() message. """
-        self.log("Starting stage execution.")
+        if self.ARGS.skip_process:
+            process = self.skip_process
+            self.log("Starting stage execution (skip mode).")
+        else:
+            process = self.process
+            self.log("Starting stage execution.")
         exit_code = 0
         err = None
         try:
             for msg in self.input():
-                if msg and self.process(self, msg):
+                if msg and process(self, msg):
                     self.flush_buffer()
                 else:
                     self.clear_buffer()
@@ -279,6 +290,24 @@ class ProcessorStage(AbstractStage):
             False -- processing failed (skip the input message)
         """
         raise NotImplementedError("Stage method process() is not implemented")
+
+    @staticmethod
+    def skip_process(stage, input_message):
+        """ Mark input message as incomplete and output.
+
+        May be re-implemented just like `process()`,
+        yet has default implememtation.
+
+        :param input_message: message to process
+        :type input_message: pyDKB.messages.AbstractMessage
+
+        :return: True/False (success/failure)
+        :rtype: bool
+        """
+        out_msg = stage.output_message_class()(input_message.content())
+        out_msg.incomplete(True)
+        stage.output(out_msg)
+        return True
 
     def input(self):
         """ Generator for input messages.

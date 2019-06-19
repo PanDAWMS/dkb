@@ -54,11 +54,14 @@ class AbstractMessage(object):
     decoded = None
     encoded = None
 
+    incompl = None
+
     def __init__(self, message=None):
         """ Save initial message. """
         self.__orig = message
         if type(message) in self.native_types:
             self.decoded = message
+        self.incompl = False
 
     def getOriginal(self):
         """ Return original message. """
@@ -92,6 +95,20 @@ class AbstractMessage(object):
         """ Return file extension corresponding to this message type. """
         return cls._ext
 
+    def incomplete(self, status=None):
+        """ Set message incomplete marker and/or get previous/current value.
+
+        :param status: new status (if not passed, current status is returned)
+        :type status: bool, NoneType
+
+        :return: incomplete marker status (previous value, if reset)
+        :rtype: bool
+        """
+        old = self.incompl
+        if status is not None:
+            self.incompl = bool(status)
+        return old
+
 
 class JSONMessage(AbstractMessage):
     """ Message in JSON format. """
@@ -99,6 +116,8 @@ class JSONMessage(AbstractMessage):
     native_types = [dict]
 
     _ext = ".json"
+
+    incompl_key = "_incomplete"
 
     def decode(self, code=codeType.STRING):
         """ Decode original data as JSON. """
@@ -121,6 +140,24 @@ class JSONMessage(AbstractMessage):
                 raise EncodeUnknownType(code, self.__class__)
             self.decoded = orig
         return self.encoded
+
+    def incomplete(self, status=None):
+        """ Set message incomplete marker and/or get previous/current value.
+
+        For JSON messages the marker is implemented as additional field:
+        "_incomplete".
+
+        :param status: new status (if not passed, current status is returned)
+        :type status: bool, NoneType
+
+        :return: incomplete marker status (previous value, if reset)
+        :rtype: bool
+        """
+        if status is not None:
+            decoded = self.decode()
+            decoded[self.incompl_key] = status
+            self.encoded = None
+        return super(JSONMessage, self).incomplete(status)
 
 
 __message_class[messageType.JSON] = JSONMessage
