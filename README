@@ -1,3 +1,17 @@
+1234567 10 234567 20 234567 30 234567 40 234567 50 234567 60 234567 70 234567 80
+1234567 10 234567 20 234567 30 234567 40 234567 50 234567 60 234567 70 234567 80 2
+		tabs here!
+and trailing spaces too  
+
+good line with short URL http://ya.ru
+
+good line with long URL at new line
+http://f1fooooooooooo.baaaaaaaaar.bz/queeeeeeeeeeerrrrrrrrryyyyyyyyyy?looooooooonnnnnnnngggggggg=123
+
+good line too: we need formating...
+     http://f2fooooooooooo.baaaaaaaaar.bz/queeeeeeeeeeerrrrrrrrryyyyyyyyyy?looooooooonnnnnnnngggggggg=123
+
+bad line with url http://f3fooooooooooo.baaaaaaaaar.bz/queeeeeeeeeeerrrrrrrrryyyyyyyyyy?looooooooonnnnnnnngggggggg=123
 ================
 Directory layout
 ================
