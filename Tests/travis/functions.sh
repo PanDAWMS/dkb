@@ -18,3 +18,6 @@ getLinesFromFile() {
   done
 }
 
+getURL() {
+  grep -oP '[a-zA-Z]+://[^/?& ]+(/[^&? ]*(\?[^& ]+(&[^& ]+)*)?)?'
+}
