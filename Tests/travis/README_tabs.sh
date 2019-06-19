@@ -10,7 +10,7 @@ fi
 e=0
 while read f; do
   [ -z "$f" ] && continue
-  r=`getAddedLines "$f" | grep -P '^.*?\t+.*'`;
+  r=`getAddedLines "$f" | grep -P '\t'`;
   if [ $? -eq 0 ];then
     echo "Tabs found in $f:"
     getLinesFromFile "$f" "$r"
