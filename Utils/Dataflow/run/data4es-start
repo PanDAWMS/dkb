@@ -57,6 +57,9 @@ cmd_25="${base_dir}/../025_chicagoES/stage.py -m s"
 # Stage 16
 cmd_16="${base_dir}/../016_task2es/task2es.py -m s"
 
+# Stage 17
+cmd_17="${base_dir}/../017_adjustMetadata/adjustMetadata.py -m s"
+
 # Stage 19
 cfg_19=`get_config "es"`
 cmd_19="${base_dir}/../019_esFormat/run.sh --config $cfg_19"
@@ -139,7 +142,7 @@ branch() {
   echo $name
 }
 
-b_91=`branch b_91` && b_16=`branch b_16` \
+b_91=`branch b_91` && b_17=`branch b_17` \
   || exit $?
 # ---
 
@@ -166,17 +169,19 @@ done
 # Define subchains
 # Source subchain: Oracle Connector
 source_chain() {
-  $cmd_OC | tee $b_16 $b_91
+  $cmd_OC | tee $b_17 $b_91
 }
 
-# Parallel subchains: 16 and 91
-chain_16() {
+# Parallel subchains: 17 and 91
+chain_17() {
   [ -n DEBUG ] \
     && out_91='91_in.out' \
-    && out_25='25.out'
-  cat $b_16 | $cmd_91_in | eop_filter | tee $out_91 \
+    && out_25='25.out' \
+    && out_16='16.out'
+  cat $b_17 | $cmd_91_in | eop_filter | tee $out_91 \
             | $cmd_25 | eop_filter | tee $out_25 \
-            | $cmd_16 | eop_filter
+            | $cmd_16 | eop_filter | tee $out_16 \
+            | $cmd_17 | eop_filter
 }
 
 chain_91() {
@@ -206,16 +211,16 @@ out=/dev/null
 source_chain > $out &
 
 [ -n "$DEBUG" ] \
-  && out='16.out'
-chain_16 | tee $out | sink_chain b16 &
+  && out='17.out'
+chain_17 | tee $out | sink_chain b17 &
 
 [ -n "$DEBUG" ] \
   && out='95.out'
 chain_91 | tee $out | sink_chain b91 &
 
 ps ax | grep "$cmd_OC" | grep -v grep | awk '{print $1 " source"}' >> $pidfile
-for cmd in "$cmd_25" "$cmd_16" "$cmd_91_in" "$cmd_91_out" "$cmd_93" \
-           "$cmd_95" "$cmd_19" "$cmd_69"; do
+for cmd in "$cmd_25" "$cmd_16" "$cmd_17" "$cmd_91_in" "$cmd_91_out" \
+           "$cmd_93" "$cmd_95" "$cmd_19" "$cmd_69"; do
   ps ax | grep "$cmd" | awk '{print $1}' >> $pidfile
 done
 

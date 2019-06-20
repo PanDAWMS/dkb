@@ -4,13 +4,9 @@
 
 1. Description
 --------------
-Transform task metadata to fit ES scheme:
-* detect 'phys_category'
-* split comma-separated 'hashtag_list' to the actual list structure
-* turn hashtags to lower case
-* split dot-separated 'output_formats' to the actual list structure
-* extract 'chain_id' from 'chain_data' and turn the latter into array
-  of integers
+Add ES-specific service fields to task metadata:
+* _id = taskid
+* _type = 'task'
 
 2. Samples
 ----------
