@@ -12,16 +12,7 @@ Transform task metadata to fit ES scheme:
 * extract 'chain_id' from 'chain_data' and turn the latter into array
   of integers
 
-2. Input
---------
-Comes from 009 Oracle Connector.
-
-
-3. Output
----------
-Goes to 019 esFormat.
-
-4. Samples
+2. Samples
 ----------
 The 'output' directory contains 2 samples of production data:
 
