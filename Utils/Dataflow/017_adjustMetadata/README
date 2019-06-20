@@ -1,5 +1,5 @@
 =============
-* Stage 016 *
+* Stage 017 *
 =============
 
 1. Description
@@ -11,14 +11,3 @@ Transform task metadata to fit ES scheme:
 * split dot-separated 'output_formats' to the actual list structure
 * extract 'chain_id' from 'chain_data' and turn the latter into array
   of integers
-
-2. Samples
-----------
-The 'output' directory contains 2 samples of production data:
-
-sample2016.ndjson - 2016 data (from 025's 2016 sample)
-sample2018.ndjson - 2018 data (from 025's 2018 sample)
-
-Also, it contains a consistency checking sample:
-
-consistency.ndjson (from 009's consistency sample)

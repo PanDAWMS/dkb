@@ -1,11 +1,12 @@
 #!/bin/env python
 """
-DKB Dataflow stage 016 (task2es)
+DKB Dataflow stage 017 (adjustMetadata)
 
 Transform task metadata (from ProdSys) to fit ES scheme.
 
 Authors:
   Marina Golosova (marina.golosova@cern.ch)
+  Vasilii Aulov (vasilii.aulov@cern.ch)
 """
 
 import os
@@ -25,26 +26,6 @@ try:
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
-
-
-def add_es_index_info(data):
-    """ Update data with required for ES indexing info.
-
-    Add fields:
-      _id => taskid
-      _type => 'task'
-
-    Return value:
-      False -- update failed, skip the record
-      True  -- update successful
-    """
-    if type(data) is not dict:
-        return False
-    if not data.get('taskid'):
-        return False
-    data['_id'] = data['taskid']
-    data['_type'] = 'task'
-    return True
 
 
 def get_category(row):
@@ -221,27 +202,22 @@ def process(stage, message):
     """ Single message processing. """
     data = message.content()
 
-    # 1. Add the fields for ES indexing
-    if not add_es_index_info(data):
-        sys.stderr.write("(WARN) Skip message (not enough info"
-                         " for ES indexing).\n")
-        return True
-    # 2. Unify hashtag_list
+    # 1. Unify hashtag_list
     hashtags = data.get('hashtag_list')
     if hashtags:
         hashtags = hashtags.lower().split(',')
         data['hashtag_list'] = [x.strip() for x in hashtags]
-    # 3. Detect physics category
+    # 2. Detect physics category
     data['phys_category'] = get_category(data)
-    # 4. Unify output_formats
+    # 3. Unify output_formats
     output_formats = data.get('output_formats')
     if output_formats:
         data['output_formats'] = output_formats.split('.')
-    # 5. Produce derived value 'input_events'
+    # 4. Produce derived value 'input_events'
     inp_events = input_events(data)
     if inp_events:
         data['input_events'] = inp_events
-    # 6. Save chain_data as array of integers, extract chain_id from it
+    # 5. Save chain_data as array of integers, extract chain_id from it
     transform_chain_data(data)
 
     out_message = JSONMessage(data)
