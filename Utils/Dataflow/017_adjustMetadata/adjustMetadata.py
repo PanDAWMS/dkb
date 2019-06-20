@@ -202,6 +202,16 @@ def process(stage, message):
     """ Single message processing. """
     data = message.content()
 
+    if type(data) is not dict:
+        sys.stderr.write('(WARN) Message contains non-dict data: %r. '
+                         'Skipping.\n' % data)
+        return False
+    # Missing taskid indicates that the message is, most likely, incorrect.
+    if 'taskid' not in data:
+        sys.stderr.write('(WARN) Message contains no taskid: %r. '
+                         'Skipping.\n' % data)
+        return False
+
     # 1. Unify hashtag_list
     hashtags = data.get('hashtag_list')
     if hashtags:
