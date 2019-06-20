@@ -53,7 +53,7 @@ def process(stage, message):
     if not add_es_index_info(data):
         sys.stderr.write("(WARN) Skip message (not enough info"
                          " for ES indexing).\n")
-        return True
+        return False
 
     out_message = JSONMessage(data)
     stage.output(out_message)
