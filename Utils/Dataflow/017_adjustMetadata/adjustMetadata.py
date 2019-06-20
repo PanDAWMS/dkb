@@ -169,8 +169,8 @@ def transform_chain_data(data):
 
     chain_id is the taskid of the task chain's root.
 
-    :param data: data to be updated, must contain taskid and proper chain_data
-                 (string of numbers separated by commas).
+    :param data: data to be updated, must contain proper chain_data
+                 (string of numbers separated by commas) or taskid
     :type data: dict
 
     :return: True if update was successful, False otherwise (chain_id and
