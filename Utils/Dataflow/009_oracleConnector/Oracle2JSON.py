@@ -328,7 +328,8 @@ def offset_now(tz=None, delay=None):
                   value is used.
     :type delay: int, NoneType
 
-    :return: offset value (naive datetime, adjusted to OFFSET_TZ)
+    :return: offset value (naive datetime, adjusted to OFFSET_TZ with
+             OFFSET_DELAY)
     :rtype: datetime.datetime
     """
     TZ = OFFSET_TZ
