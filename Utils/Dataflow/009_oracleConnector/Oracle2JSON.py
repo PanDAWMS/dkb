@@ -143,8 +143,9 @@ def read_config(config_file):
     delay = config_get(config, 'timestamps', 'delay', '0')
     result['delay'] = interval_seconds(delay)
     if result['delay'] < 0:
-        # Delay is only used when 'final_date' is 'now'. It does not make much
-        # sense to ask for data from the future.
+        # Delay is used when right border of the data taking interval is
+        # 'now'.
+        # It does not make much sense to ask for data from the future.
         sys.stderr.write('(WARN) Delay is less than 0, setting it to 0.\n')
         result['delay'] = 0
     if result['step_seconds'] > 0:

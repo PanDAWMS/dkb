@@ -39,7 +39,8 @@ step = %__009_step__%
 # This parameter can be used to adjust 'now'.
 # For example, running the script at 10-05-2016 12:00:00 with
 # delay = 2h will set 'final' to 10-05-2016 10:00:00.
-# Has no effect if 'final' is set explicitly.
+# Has no effect if the right border of the data taking interval is
+# set explicitly.
 # Cannot be negative.
 delay = %__009_delay__%
 
