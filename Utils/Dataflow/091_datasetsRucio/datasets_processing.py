@@ -154,9 +154,11 @@ def process_output_ds(stage, message):
 
 
 def skip_process_output_ds(stage, message):
-    """ Process output datasets from input message.
+    """ Implementation of `ProcessorStage.skip_process()` method.
 
-    Generate output JSON document of the following structure:
+    Convert input message (representing task) into a set of messages
+    representing the task output datasets.
+    Each output message contains dataset UID (name) and service fields:
         { "datasetname": <DSNAME>,
           "_type": "output_dataset",
           "_parent": <TASKID>,
