@@ -293,10 +293,23 @@ class ProcessorStage(AbstractStage):
 
     @staticmethod
     def skip_process(stage, input_message):
-        """ Mark input message as incomplete and output.
+        """ Process input_message in "skip" processing mode.
 
-        May be re-implemented just like `process()`,
-        yet has default implementation.
+        Skip mode is turned on with command line parameter `--skip`; in this
+        mode stage is expected to skip its "semantic" part of the message
+        transformation (like changes in data fields format, definition of
+        additional data fields, etc) but perform actions required to keep
+        the dataflow seamless.
+
+        The simpliest way to achieve this is to send the input message to the
+        output without changes (marking it as "incomplete"), and this is
+        the default implementation of the method.
+
+        In some cases it may be necessary to re-implement it (just like
+        `process()`) to keep the dataflow unbroken.
+
+        NOTE: the output messages in "skip" mode MUST be marked as
+              "incomplete".
 
         :param input_message: message to process
         :type input_message: pyDKB.messages.AbstractMessage

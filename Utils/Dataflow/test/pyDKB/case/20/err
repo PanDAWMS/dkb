@@ -16,7 +16,7 @@
 (DEBUG) (ProcessorStage) Traceback (most recent call last):
 (==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 235, in run
 (==)     self.flush_buffer()
-(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 331, in flush_buffer
+(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 344, in flush_buffer
 (==)     self.__output.flush()
 (==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line 125, in flush
 (==)     self.get_stream().flush()
