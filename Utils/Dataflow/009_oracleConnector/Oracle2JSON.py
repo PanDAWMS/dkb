@@ -325,7 +325,7 @@ def offset_now(tz=None, delay=None):
                time zone is used.
     :type tz: str, NoneType
     :param delay: delay in seconds. If not specified, default (globally set)
-               value is used.
+                  value is used.
     :type delay: int, NoneType
 
     :return: offset value (naive datetime, adjusted to OFFSET_TZ)
