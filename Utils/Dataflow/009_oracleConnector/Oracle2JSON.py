@@ -25,7 +25,7 @@ OUT = os.fdopen(sys.stdout.fileno(), 'w', 0)
 # (used to adjust 'now' to the proper value)
 OFFSET_TZ = None
 # Delay
-# (used to adjust 'now' when performing consistency check)
+# (used to adjust 'now' to avoid pulling of "unstable" data)
 OFFSET_DELAY = None
 # ---
 
