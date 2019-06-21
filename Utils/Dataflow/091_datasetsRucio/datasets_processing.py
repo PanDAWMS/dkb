@@ -27,13 +27,22 @@ try:
     from rucio.common.exception import RucioException
 except ImportError, err:
     sys.stderr.write("(ERROR) Failed to import Rucio module: %s\n" % err)
-    sys.exit(1)
+except Exception, err:
+    # rucio.client tries to read Rucio config file, and if it is not found,
+    # throws plain Exception
+    sys.stderr.write("(ERROR) %s.\n" % err.message)
+finally:
+    try:
+        RucioException
+    except NameError:
+        RucioException = None
 
 try:
     dkb_dir = os.path.join(base_dir, os.pardir)
     sys.path.append(dkb_dir)
     import pyDKB
     from pyDKB.dataflow import messageType
+    from pyDKB.dataflow.exceptions import DataflowException
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -74,9 +83,9 @@ def main(argv):
     stage.configure(argv)
     if stage.ARGS.ds_type == OUTPUT:
         stage.process = process_output_ds
+        stage.skip_process = skip_process_output_ds
     elif stage.ARGS.ds_type == INPUT:
         stage.process = process_input_ds
-    init_rucio_client()
     exit_code = stage.run()
 
     if exit_code == 0:
@@ -90,11 +99,22 @@ def init_rucio_client():
     global rucio_client
     try:
         rucio_client = rucio.client.Client()
+    except NameError:
+        sys.stderr.write("(FATAL) Failed to initialize Rucio client: "
+                         "module not loaded.\n")
+        raise DataflowException("Module not found or misconfigured: 'rucio'")
     except RucioException as err:
         sys.stderr.write("(ERROR) Failed to initialize Rucio client.\n")
         err_str = str(err).replace("\n", "\n(==) ")
         sys.stderr.write("(ERROR) %s.\n" % err_str)
         sys.exit(1)
+
+
+def get_rucio_client():
+    """ Get initialized Rucio client. """
+    if not rucio_client:
+        init_rucio_client()
+    return rucio_client
 
 
 def process_output_ds(stage, message):
@@ -129,6 +149,43 @@ def process_output_ds(stage, message):
             return True
         del(ds['taskid'])
         stage.output(pyDKB.dataflow.communication.messages.JSONMessage(ds))
+
+    return True
+
+
+def skip_process_output_ds(stage, message):
+    """ Implementation of `ProcessorStage.skip_process()` method.
+
+    Convert input message (representing task) into a set of messages
+    representing the task output datasets.
+    Each output message contains dataset UID (name) and service fields:
+        { "datasetname": <DSNAME>,
+          "_type": "output_dataset",
+          "_parent": <TASKID>,
+          "_id": <DSNAME>
+        }
+    """
+    json_str = message.content()
+
+    if not json_str.get(SRC_FIELD[OUTPUT]):
+        # Nothing to process; over.
+        return True
+
+    datasets = json_str[SRC_FIELD[OUTPUT]]
+    if type(datasets) != list:
+        datasets = [datasets]
+
+    for dataset in datasets:
+        ds = {'datasetname': dataset}
+        ds['taskid'] = json_str.get('taskid')
+        if not add_es_index_info(ds):
+            sys.stderr.write("(WARN) Skip message (not enough info"
+                             " for ES indexing).\n")
+            return True
+        del(ds['taskid'])
+        out_msg = pyDKB.dataflow.communication.messages.JSONMessage(ds)
+        out_msg.incomplete(True)
+        stage.output(out_msg)
 
     return True
 
@@ -215,6 +272,7 @@ def get_metadata(dsn, attributes=None):
     :return: dataset metadata
     :rtype:  dict
     """
+    rucio_client = get_rucio_client()
     scope, dataset = extract_scope(dsn)
     try:
         metadata = rucio_client.get_metadata(scope=scope, name=dataset)
