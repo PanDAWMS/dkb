@@ -21,7 +21,6 @@ BATCHMODE="d"
 EOB_DEFAULT="NOT_SPECIFIED"
 EOB="$EOB_DEFAULT"
 EOMessage='\n'
-EOBatch='\x17'
 EOP_set="N"
 EOB_set="N"
 
