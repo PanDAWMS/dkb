@@ -20,7 +20,13 @@ OUTPUT
 
 MARKERS
   -e, --eom      EOM            End-of-message marker.
+        Note that EOM goes after a message to $tmp.
+                                Default: '\n'
   -E, --eop      EOP            End-of-process marker.
+        Note that EOP always goes to standard output.
+                                Default:
+                                Stream mode - '\0'
+                                File mode - ''
 
 KERBEROS
   -u, --username USER           Cern account login.
