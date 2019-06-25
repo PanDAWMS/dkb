@@ -256,7 +256,7 @@ do
         BATCHMODE="e"
       else
         BATCHMODE="$2"
-      shift
+        shift
       fi
       ;;
     -B|--eob)
