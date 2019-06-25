@@ -44,7 +44,7 @@ while [ -n "$1" ]; do
         BATCHMODE="e"
       else
         BATCHMODE="$2"
-      shift
+        shift
       fi;;
     -B|--eob)
       EOB="$2"
