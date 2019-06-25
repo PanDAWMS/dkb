@@ -336,7 +336,7 @@ def offset_now(tz=None, delay=None):
     if tz:
         TZ = pytz.timezone(tz)
     dl = OFFSET_DELAY
-    if delay:
+    if delay is not None:
         dl = delay
     return datetime.now(TZ).replace(tzinfo=None) - timedelta(seconds=dl)
 
