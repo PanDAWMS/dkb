@@ -74,7 +74,7 @@ OPTIONS:
   -b, --batch {e[abled]|d[isabled]} Specifies batch-mode: (e)nabled|(d)isabled.
   -B, --eob <EOB>               Specifies the delimiter between sets of input
                                 Default ('\x11' is a random one):
-                                
+
    -b   ||  X   |  X   |   X    |   X    ||  'e'   | 'e'  |  'e'   |  'e'   |
 ------- || ---- | ---- | ------ | ------ || ------ | ---- | ------ | ------ |
    -B   ||  X   |  ''  | '\x17' | '\x11' ||   X    |  ''  | '\x17' | '\x11' |
