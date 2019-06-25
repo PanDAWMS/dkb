@@ -8,7 +8,7 @@ set_error_handler("exception_error_handler");
 $DEFAULT_INDEX = 'tasks_production';
 $ES_INDEX = NULL;
 $EOP_DEFAULTS = Array("stream" => chr(0), "file" => "");
-$EOM_DEFAULTS = Array("stream" => "\n", "file" => "\n");
+$EOM_DEFAULTS = Array("stream" => chr(30), "file" => chr(30));
 
 function check_input($row) {
   $required_fields = array('_id', '_type');
@@ -109,6 +109,12 @@ if ($EOM_MARKER == '') {
   fwrite(STDERR, "(ERROR) EOM marker can not be empty string.\n");
   exit(1);
 }
+if ($EOM_MARKER == "\n") {
+  fwrite(STDERR, "(ERROR) NEWLINE symbol is not allowed as EOM, "
+                 ."as it is contained in output messages.\n");
+  exit(1);
+}
+
 
 fwrite(STDERR, "(DEBUG) End-of-message marker: '" . $EOM_MARKER . "' (hex: " . $EOM_HEX . ").\n");
 fwrite(STDERR, "(DEBUG) End-of-process marker: '" . $EOP_MARKER . "' (hex: " . $EOP_HEX . ").\n");
@@ -120,7 +126,7 @@ if (!$ES_INDEX) {
 }
 
 if ($h) {
-  while (($line = fgets($h)) !== false) {
+  while (($line = stream_get_line($h, 0, $EOM_MARKER)) !== false) {
     $row = json_decode($line,true);
 
     if (!check_input($row)) {
@@ -133,7 +139,7 @@ if ($h) {
     $index = constructIndexJson($row);
 
     echo json_encode($index)."\n";
-    echo json_encode($row);
+    echo json_encode($row)."\n";
     echo $EOM_MARKER;
     echo $EOP_MARKER;
   }

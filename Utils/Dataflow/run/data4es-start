@@ -199,7 +199,7 @@ sink_chain() {
   [ -n "$DEBUG" ] \
     && cmd="tee 69.$1.inp" \
     || cmd=$cmd_69
-  $cmd_19 | eop_filter | mediator "$1" | $cmd > /dev/null
+  tr $'\n' $'\x1e' | $cmd_19 | tr -d $'\x1e' | eop_filter | mediator "$1" | $cmd > /dev/null
 }
 
 log "Starting process."
