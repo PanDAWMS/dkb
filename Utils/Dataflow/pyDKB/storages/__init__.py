@@ -9,6 +9,19 @@ import exceptions
 import client
 
 
+_scope = None
+
+
+def setScope(scope):
+    """ Set default scope to look for storages.
+
+    :param scope: scope name
+    :type scope: str
+    """
+    global _scope
+    _scope = getScope(scope)
+
+
 def getScope(scope):
     """ Initialize storages scope for further usage.
 
@@ -40,6 +53,8 @@ def getClient(name, scope=None):
     if scope:
         scope = getScope(scope)
     else:
+        scope = _scope
+    if scope is None:
         raise exceptions.StorageException("Storages scope not specified")
     cur_scope = scope
     for n in name.split('.'):
