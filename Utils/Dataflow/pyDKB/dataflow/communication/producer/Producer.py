@@ -4,7 +4,7 @@ pyDKB.dataflow.communication.producer.Producer
 
 import sys
 
-from pyDKB.common.types import logLevel
+from pyDKB.common import LoggableObject
 from . import DataflowException
 
 from .. import Message
@@ -16,7 +16,7 @@ class ProducerException(DataflowException):
     pass
 
 
-class Producer(object):
+class Producer(LoggableObject):
     """ Data producer implementation. """
 
     config = None
@@ -29,23 +29,6 @@ class Producer(object):
         """ Initialize Producer instance. """
         self.config = config
         self.reconfigure()
-
-    def log(self, message, level=logLevel.INFO):
-        """ Output log message with given log level. """
-        if not logLevel.hasMember(level):
-            self.log("Unknown log level: %s" % level, logLevel.WARN)
-            level = logLevel.INFO
-        if type(message) == list:
-            lines = message
-        else:
-            lines = message.splitlines()
-        if lines:
-            out_message = "(%s) (%s) %s" % (logLevel.memberName(level),
-                                            self.__class__.__name__, lines[0])
-            for l in lines[1:]:
-                out_message += "\n(==) %s" % l
-            out_message += "\n"
-            sys.stderr.write(out_message)
 
     def reconfigure(self, config={}):
         """ (Re)initialize producer with stage config arguments. """

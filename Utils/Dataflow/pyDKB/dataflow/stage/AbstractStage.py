@@ -8,6 +8,7 @@ import ConfigParser
 from collections import defaultdict
 import textwrap
 
+from pyDKB.common import LoggableObject
 from pyDKB.common.types import logLevel
 
 try:
@@ -17,7 +18,7 @@ except ImportError, e:
     raise e
 
 
-class AbstractStage(object):
+class AbstractStage(LoggableObject):
     """
     Class/instance variable description:
     * Argument parser (argparse.ArgumentParser)
@@ -50,24 +51,6 @@ class AbstractStage(object):
         self.defaultArguments()
 
         self._error = None
-
-    def log(self, message, level=logLevel.INFO):
-        """ Output log message with given log level. """
-        if not logLevel.hasMember(level):
-            self.log("Unknown log level: %s" % level, logLevel.WARN)
-            level = logLevel.INFO
-        if type(message) == list:
-            lines = message
-        else:
-            lines = message.splitlines()
-        if lines:
-            out_message = "(%s) (%s) %s" % (logLevel.memberName(level),
-                                            self.__class__.__name__,
-                                            lines[0])
-            for l in lines[1:]:
-                out_message += "\n(==) %s" % l
-            out_message += "\n"
-            sys.stderr.write(out_message)
 
     def log_configuration(self):
         """ Log stage configuration. """
