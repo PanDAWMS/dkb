@@ -4,7 +4,6 @@ pyDKB.dataflow.communication.stream
 
 from .. import messageType
 from .. import codeType
-from .. import logLevel
 from .. import DataflowException
 from .. import Message
 from InputStream import InputStream

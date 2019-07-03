@@ -4,7 +4,7 @@ pyDKB.dataflow.communication.consumer.Consumer
 
 import sys
 
-from . import logLevel
+from pyDKB.common.types import logLevel
 from . import DataflowException
 
 from .. import Message

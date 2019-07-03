@@ -13,7 +13,7 @@ import os
 import time
 
 from Producer import Producer, ProducerException
-from . import logLevel
+from pyDKB.common.types import logLevel
 
 
 class FileProducer(Producer):

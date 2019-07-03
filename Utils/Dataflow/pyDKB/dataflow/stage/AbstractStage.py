@@ -8,7 +8,7 @@ import ConfigParser
 from collections import defaultdict
 import textwrap
 
-from . import logLevel
+from pyDKB.common.types import logLevel
 
 try:
     import argparse
