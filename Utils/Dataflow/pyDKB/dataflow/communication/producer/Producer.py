@@ -4,7 +4,6 @@ pyDKB.dataflow.communication.producer.Producer
 
 import sys
 
-from . import messageType
 from . import logLevel
 from . import DataflowException
 

@@ -3,10 +3,7 @@ pyDKB.dataflow.communication.stream.OutputStream
 """
 
 from Stream import Stream
-from . import messageType
-from . import logLevel
 from . import Message
-from pyDKB.common import custom_readline
 
 
 class OutputStream(Stream):
