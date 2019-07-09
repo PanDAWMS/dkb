@@ -20,7 +20,7 @@ try:
     from invenio_client.contrib import cds
     import splinter
 except ImportError, e:
-    log("%s failed (%s)\n" % (__name__, e), logLevel.WARN)
+    log("Submodule failed (%s)" % e, logLevel.WARN)
     __all__ = []
 else:
 

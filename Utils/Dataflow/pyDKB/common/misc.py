@@ -5,6 +5,7 @@ Miscellanious utility functions.
 """
 
 import sys
+import inspect
 
 from types import logLevel
 
@@ -30,7 +31,9 @@ def log(message, level=logLevel.INFO, *args):
     if args:
         prefix = ' ' + ' '.join(['(%s)' % p for p in args])
     else:
-        prefix = ''
+        frm = inspect.stack()[1]
+        mod = inspect.getmodule(frm[0])
+        prefix = ' (%s)' % mod.__name__
     if lines:
         out_message = "(%s)%s %s" % (logLevel.memberName(level),
                                      prefix, lines[0])

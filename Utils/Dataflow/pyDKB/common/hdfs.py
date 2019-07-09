@@ -34,7 +34,7 @@ def check_stderr(proc, timeout=None, max_lines=1):
             if err:
                 n_lines += 1
                 if max_lines is None or n_lines <= max_lines:
-                    log("%s" % err, logLevel.INFO, 'proc')
+                    log("%s" % err, logLevel.INFO, __name__, 'proc')
     if proc.poll():
         raise subprocess.CalledProcessError(proc.returncode, None)
     return proc.poll()
