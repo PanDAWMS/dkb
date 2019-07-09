@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 
 """
-Tests for Stage 016's function get_category().
-Usage: 'python -m unittest discover' from ..(directory with Stage 016 code).
+Tests for Stage 017's function get_category().
+Usage: 'python -m unittest discover' from ..(directory with Stage 017 code).
 """
 
 import unittest
-import task2es
+import adjustMetadata
 
 
 class Case(unittest.TestCase):
@@ -17,33 +17,35 @@ class Case(unittest.TestCase):
         self.task = None
 
     def test_empty(self):
-        self.assertEqual(task2es.get_category(self.task), ['Uncategorized'])
+        self.assertEqual(adjustMetadata.get_category(self.task),
+                         ['Uncategorized'])
 
     def test_multiple_tags(self):
         self.task['hashtag_list'] = ['btagging', 'diphoton', 'qcd']
-        result_function = set(task2es.get_category(self.task))
+        result_function = set(adjustMetadata.get_category(self.task))
         result_known = set(['BTag', 'GammaJets', 'Multijet'])
         self.assertEqual(result_function, result_known)
 
     def test_multiple_tags_same_category(self):
         self.task['hashtag_list'] = ['diboson', 'zz', 'ww']
-        self.assertEqual(task2es.get_category(self.task), ['Diboson'])
+        self.assertEqual(adjustMetadata.get_category(self.task), ['Diboson'])
 
     def test_multiple_phys_shorts(self):
         self.task['taskname'] = 'nothing.nothing.3topjetstanb_wenu_'
-        result_function = set(task2es.get_category(self.task))
+        result_function = set(adjustMetadata.get_category(self.task))
         result_known = set(['TTbarX', 'Multijet', 'SUSY', 'Wjets'])
         self.assertEqual(result_function, result_known)
 
     def test_phys_short_wrong_field(self):
         self.task['taskname'] = '3top.jets.nothing.tanb._wenu_'
-        self.assertEqual(task2es.get_category(self.task), ['Uncategorized'])
+        self.assertEqual(adjustMetadata.get_category(self.task),
+                         ['Uncategorized'])
 
 
 '''
 This dictionary is declared each time inside of get_category(). Moving it
-outside will allow it to be called here as task2es.PHYS_CATEGORIES_MAP instead
-of declaring it again and changing it each time in both places.
+outside will allow it to be called here as adjustMetadata.PHYS_CATEGORIES_MAP
+instead of declaring it again and changing it each time in both places.
 '''
 PHYS_CATEGORIES_MAP = {
     'BPhysics': ['charmonium', 'jpsi', 'bs', 'bd', 'bminus', 'bplus',
@@ -98,14 +100,14 @@ stuck on the last value in the loop.
 def add_tag_test(category, tag):
     def f(self):
         self.task['hashtag_list'] = [tag]
-        self.assertEqual(task2es.get_category(self.task), [category])
+        self.assertEqual(adjustMetadata.get_category(self.task), [category])
     setattr(Case, 'test_category_%s_tag_%s' % (category, tag), f)
 
 
 def add_phys_short_test(category, phys_short):
     def f(self):
         self.task['taskname'] = 'nothing.nothing.' + phys_short
-        self.assertEqual(task2es.get_category(self.task), [category])
+        self.assertEqual(adjustMetadata.get_category(self.task), [category])
     setattr(Case, 'test_category_%s_phys_short_%s'
                   % (category, phys_short), f)
 
