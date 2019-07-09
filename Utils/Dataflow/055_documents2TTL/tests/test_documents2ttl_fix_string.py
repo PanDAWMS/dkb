@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Tests for Stage 055's function fix_string.
+Tests for Stage 055's function fix_string().
 Usage: 'python -m unittest discover' from ..(directory with Stage 055 code).
 """
 
