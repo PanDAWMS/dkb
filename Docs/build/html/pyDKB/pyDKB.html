@@ -1,0 +1,313 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pyDKB package &#8212; Data Knowledge Base  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyDKB.common package" href="pyDKB.common.html" />
+    <link rel="prev" title="Welcome to Data Knowledge Base documentation pages" href="../index.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-pyDKB">
+<span id="pydkb-package"></span><span id="pydkb"></span><h1>pyDKB package<a class="headerlink" href="#module-pyDKB" title="Permalink to this headline">¶</a></h1>
+<p>Common library for Data Knowledge Base Dataflow stages development.</p>
+<dl class="docutils">
+<dt>Dataflow</dt>
+<dd>ETL process (extract-transform-load) for populating internal DKB
+storages and keeping them up to date</dd>
+<dt>Dataflow stage</dt>
+<dd>Logical step of ETL process, implemented as standalone executable
+program (worker)</dd>
+</dl>
+<p>Dataflow stages are standalone programs, but can be combined into a
+pipeline by means of Kafka-based supervising program. For details about
+program compatibility with the supervisor please check documentation
+for the Metadata Integration Topology Management System (MInT MS)
+workers <a class="footnote-reference" href="#id3" id="id1">[1]</a>. Worker program can be written in any language; <code class="docutils literal notranslate"><span class="pre">pyDKB</span></code>
+is intended to simplify this process for Python.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">There are three types of stages corresponding three types of ETL
+operations:  <em>source connector</em> (data extraction), <em>processor</em>
+(transformation) and <em>sink connector</em> (load to internal DKB storage).
+Currently <code class="docutils literal notranslate"><span class="pre">pyDKB</span></code> library can be used only for <em>processor</em> stages, but
+in future versions <em>connector</em> stages will also be supported.</p>
+</div>
+<div class="section" id="quickstart-guide">
+<h2>Quickstart guide<a class="headerlink" href="#quickstart-guide" title="Permalink to this headline">¶</a></h2>
+<p>To create simple processor stage application first decide input and
+output data format. In following examples we will work with data in JSON
+format (for the full list of supported formats check
+<a class="reference internal" href="pyDKB.dataflow.communication.messages.html#pydkb-dataflow-communication-messages"><span class="std std-ref">pyDKB.dataflow.communication.messages module</span></a> section of this documentation).</p>
+<p>Now let`s start writing example processor <code class="docutils literal notranslate"><span class="pre">welcome.py</span></code> and implement
+message handler – functional part of the stage (operations to be
+performed on data flow units):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyDKB.dataflow.communication.messages</span> <span class="k">import</span> <span class="n">JSONMessage</span>
+
+<span class="k">def</span> <span class="nf">my_process</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Single message processing. &quot;&quot;&quot;</span>
+    <span class="n">input_data</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">content</span><span class="p">()</span>
+    <span class="n">name</span> <span class="o">=</span> <span class="n">input_data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;name&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">name</span><span class="p">:</span>
+        <span class="n">out_data</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;message&#39;</span><span class="p">:</span> <span class="s2">&quot;Welcome, </span><span class="si">%s</span><span class="s2">!&quot;</span> <span class="o">%</span> <span class="n">name</span><span class="p">}</span>
+        <span class="n">out_message</span> <span class="o">=</span> <span class="n">JSONMessage</span><span class="p">(</span><span class="n">out_data</span><span class="p">)</span>
+        <span class="n">stage</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">out_message</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">True</span>
+</pre></div>
+</div>
+<p>Function must take two arguments: <code class="docutils literal notranslate"><span class="pre">stage</span></code> (stage context object) and
+<code class="docutils literal notranslate"><span class="pre">message</span></code> (input message, which should be transformed by our stage).
+Message is a smallest data unit in the data flow running through the
+processor, and every message is to be processed independently of
+previous or following ones. <code class="docutils literal notranslate"><span class="pre">message.content()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">JSONMessage(out_data)</span></code> statements are used to decode/encode message
+to/from Python <code class="docutils literal notranslate"><span class="pre">dict</span></code> object.
+Message, passed to the function, is taken from the input data flow; to
+write new message(s) to the output data flow,
+<code class="docutils literal notranslate"><span class="pre">stage.output(out_message)</span></code> is used. It can be used as many times as
+many output messages were generated (or once with the list of messages).
+In our example, messages without key <code class="docutils literal notranslate"><span class="pre">'name'</span></code> will produce no output
+messages, so <code class="docutils literal notranslate"><span class="pre">stage.output()</span></code> will not be called at all.
+In terms of data flow it means that the input message is filtered out
+and will not reach the <em>sink connector</em>.</p>
+<p>Boolean return value of <code class="docutils literal notranslate"><span class="pre">my_process()</span></code> indicates if the processing was
+successful or not.
+If processing failed (<code class="docutils literal notranslate"><span class="pre">False</span></code> is returned), produced output messages
+will be dropped to avoid loading sketchy information into the DKB
+storages.</p>
+<p>Now as we have processing logic implemented, we need to turn it into
+fully functional application. Add following lines to <code class="docutils literal notranslate"><span class="pre">welcome.py</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="kn">import</span> <span class="nn">sys</span>
+</span><span class="hll"><span class="kn">from</span> <span class="nn">pyDKB.dataflow.stage</span> <span class="kn">import</span> <span class="n">ProcessorStage</span>
+</span><span class="hll"><span class="kn">from</span> <span class="nn">pyDKB.dataflow</span> <span class="kn">import</span> <span class="n">messageType</span>
+</span><span class="kn">from</span> <span class="nn">pyDKB.dataflow.communication.messages</span> <span class="kn">import</span> <span class="n">JSONMessage</span>
+
+<span class="k">def</span> <span class="nf">my_process</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
+    <span class="o">&lt;...</span><span class="n">function</span> <span class="n">code</span><span class="o">...&gt;</span>
+
+<span class="hll"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+</span><span class="hll">    <span class="n">stage</span> <span class="o">=</span> <span class="n">ProcessorStage</span><span class="p">()</span>
+</span><span class="hll">    <span class="n">stage</span><span class="o">.</span><span class="n">set_input_message_type</span><span class="p">(</span><span class="n">messageType</span><span class="o">.</span><span class="n">JSON</span><span class="p">)</span>
+</span><span class="hll">    <span class="n">stage</span><span class="o">.</span><span class="n">set_output_message_type</span><span class="p">(</span><span class="n">messageType</span><span class="o">.</span><span class="n">JSON</span><span class="p">)</span>
+</span><span class="hll">    <span class="n">stage</span><span class="o">.</span><span class="n">process</span> <span class="o">=</span> <span class="n">my_process</span>
+</span><span class="hll">    <span class="n">stage</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</span><span class="hll">    <span class="n">stage</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
+</span></pre></div>
+</div>
+<p>First we create stage object: <code class="docutils literal notranslate"><span class="pre">stage</span> <span class="pre">=</span> <span class="pre">JSONProcessorStage()</span></code>; then indicate
+that input and output message format is JSON:
+<code class="docutils literal notranslate"><span class="pre">stage.set_{input,output}_message_type(messageType.JSON)</span></code> (for full list of
+message types check <a class="reference internal" href="pyDKB.dataflow.communication.messages.html#pydkb-dataflow-communication-messages"><span class="std std-ref">pyDKB.dataflow.communication.messages module</span></a> section
+of this documentation); then set stage processing function to our function
+<code class="docutils literal notranslate"><span class="pre">my_process()</span></code>, parse command line arguments and configure stage instance
+according to it (<code class="docutils literal notranslate"><span class="pre">stage.configure(sys.argv[1:])</span></code>). Now we ready to start the
+stage execution.</p>
+<p>Easy, right?</p>
+<p>It`s time to run our application. Create input data sample
+<code class="docutils literal notranslate"><span class="pre">input.ndjson</span></code> with following lines:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;James&quot;</span><span class="p">,</span> <span class="s2">&quot;city&quot;</span><span class="p">:</span> <span class="s2">&quot;New York&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&quot;user&quot;</span><span class="p">:</span> <span class="s2">&quot;Jonathan&quot;</span><span class="p">,</span> <span class="s2">&quot;role&quot;</span><span class="p">:</span> <span class="s2">&quot;support&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;John Smith&quot;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>and type:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>$ python welcome.py --dest s input.ndjson
+{&quot;message&quot;: &quot;Welcome, James!&quot;}
+{&quot;message&quot;: &quot;Welcome, John Smith!&quot;}
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--dest</span> <span class="pre">s</span></code> indicates that output destination is (s)tdout (default
+destination is file).
+For full information about modes in which the stage application can be
+used, run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">welcome.py</span> <span class="pre">-h</span></code>.</p>
+<p>That`s it, your first application is ready to be integrated into an ETL
+process as data processing node.
+For details about ETL process creation check <cite>MInT Supervisor</cite> <a class="footnote-reference" href="#id4" id="id2">[2]</a>
+documentation.</p>
+<table class="docutils footnote" frame="void" id="id3" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id1">[1]</a></td><td>WIP</td></tr>
+</tbody>
+</table>
+<table class="docutils footnote" frame="void" id="id4" rules="none">
+<colgroup><col class="label" /><col /></colgroup>
+<tbody valign="top">
+<tr><td class="label"><a class="fn-backref" href="#id2">[2]</a></td><td>WIP</td></tr>
+</tbody>
+</table>
+</div>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pyDKB.common.html">pyDKB.common package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyDKB.common.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyDKB.common.Type.html">pyDKB.common.Type module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyDKB.common.custom_readline.html">pyDKB.common.custom_readline module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyDKB.common.exceptions.html">pyDKB.common.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyDKB.common.hdfs.html">pyDKB.common.hdfs module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyDKB.common.json_utils.html">pyDKB.common.json_utils module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyDKB.dataflow.html">pyDKB.dataflow package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pyDKB.dataflow.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyDKB.dataflow.communication.html">pyDKB.dataflow.communication package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyDKB.dataflow.communication.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pyDKB.dataflow.communication.consumer.html">pyDKB.dataflow.communication.consumer package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pyDKB.dataflow.communication.consumer.html#submodules">Submodules</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.consumer.Consumer.html">pyDKB.dataflow.communication.consumer.Consumer module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.consumer.FileConsumer.html">pyDKB.dataflow.communication.consumer.FileConsumer module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.consumer.HDFSConsumer.html">pyDKB.dataflow.communication.consumer.HDFSConsumer module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.consumer.StreamConsumer.html">pyDKB.dataflow.communication.consumer.StreamConsumer module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="pyDKB.dataflow.communication.producer.html">pyDKB.dataflow.communication.producer package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pyDKB.dataflow.communication.producer.html#submodules">Submodules</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.producer.FileProducer.html">pyDKB.dataflow.communication.producer.FileProducer module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.producer.HDFSProducer.html">pyDKB.dataflow.communication.producer.HDFSProducer module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.producer.Producer.html">pyDKB.dataflow.communication.producer.Producer module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.producer.StreamProducer.html">pyDKB.dataflow.communication.producer.StreamProducer module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="pyDKB.dataflow.communication.stream.html">pyDKB.dataflow.communication.stream package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pyDKB.dataflow.communication.stream.html#submodules">Submodules</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.stream.InputStream.html">pyDKB.dataflow.communication.stream.InputStream module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.stream.OutputStream.html">pyDKB.dataflow.communication.stream.OutputStream module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.stream.Stream.html">pyDKB.dataflow.communication.stream.Stream module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.stream.exceptions.html">pyDKB.dataflow.communication.stream.exceptions module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pyDKB.dataflow.communication.html#submodules">Submodules</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pyDKB.dataflow.communication.messages.html">pyDKB.dataflow.communication.messages module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="pyDKB.dataflow.stage.html">pyDKB.dataflow.stage package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyDKB.dataflow.stage.html#submodules">Submodules</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pyDKB.dataflow.stage.AbstractStage.html">pyDKB.dataflow.stage.AbstractStage module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="pyDKB.dataflow.stage.ProcessorStage.html">pyDKB.dataflow.stage.ProcessorStage module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="pyDKB.dataflow.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyDKB.dataflow.cds.html">pyDKB.dataflow.cds module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyDKB.dataflow.dkbID.html">pyDKB.dataflow.dkbID module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyDKB.dataflow.exceptions.html">pyDKB.dataflow.exceptions module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pyDKB.dataflow.types.html">pyDKB.dataflow.types module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Data Knowledge Base</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyDKB package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#quickstart-guide">Quickstart guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#subpackages">Subpackages</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="../index.html" title="previous chapter">Welcome to Data Knowledge Base  documentation pages</a></li>
+      <li>Next: <a href="pyDKB.common.html" title="next chapter">pyDKB.common package</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, DKB team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="../_sources/pyDKB/pyDKB.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

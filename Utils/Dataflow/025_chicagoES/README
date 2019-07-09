@@ -6,7 +6,10 @@
 --------------
 Get task metadata from Chicago ES.
 Fields:
-* cputime -> HS06
+* task_data.cputime -> HS06
+* sum(jobs_data['finished'].hs06sec) -> toths06_finished
+* sum(jobs_data['failed'].hs06sec) -> toths06_failed
+* sum(jobs_data['failed','finished'].hs06sec) -> toths06
 
 
 2. Input
@@ -16,6 +19,9 @@ output):
 {{{
 {
   "taskid": <TASK_ID>,
+  "start_time": <DD-MM-YYYY hh:mm:ss>,
+  "end_time": <DD-MM-YYYY hh:mm:ss>,
+  "status": <TASK_STATUS>,
   ...
 }
 }}}
@@ -25,3 +31,10 @@ output):
 ---------
 Goes to stage 016.
 Contain same fields as input data, with additional fields.
+
+4. Samples
+----------
+The 'output' directory contains 2 samples:
+
+sample2016.ndjson - 2016 data (from 091's input_datasets2016 sample)
+sample2018.ndjson - 2018 data (from 091's input_datasets2018 sample)

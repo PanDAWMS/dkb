@@ -1,0 +1,31 @@
+PDF Analyzer
+
+Introduction
+PDF Analyzer is intended for extracting certain data from PDF files and exporting it into JSON files. Currently it works with ATLAS papers and supporting notes and extracts information about datasets and paper attributes.
+PDF Analyzer uses PDFMiner (https://pypi.python.org/pypi/pdfminer/) as a basic tool for converting PDF to TXT and XML. PDFMiner python package must be installed before using PDF Analyzer.
+
+Files and directories
+PDF Analyzer consists of the following files:
+manager.py - contains main classes and functions.
+pdfwork.py - contains functions for invoking PDFMiner and performing some other tasks concerning the whole text of the document.
+xmltable.py - contains classes and functions for table reconstruction.
+flow.py - script for launching dataflow mode.
+config.json - configuration file. Will be created automatically if none is present.
+README - this file.
+
+PDF Analyzer uses two directories (will be created if none are found):
+papers - contains directories for papers. Each directory contains paper PDF file, metadata file and two directories with extracted pages in different formats.
+export - exported papers and export statistics are placed into this directory.
+
+On github, these two directories contain examples.
+
+Interactive mode
+This mode will be activated if manager.py is executed.
+The main window displays a column of buttons corresponding to papers (With paper title to the right of the button if title was determined).
+Pressing a button opens a new window displaying information about corresponding paper. Main actions which should be performed to analyze the paper are "Attributes", "Datasets" and "Dataset tables". Other actions are used for further development and debugging.
+Warning: some operations, such as adding new papers and exporting, take a considerable amount of time to perform and PDF Analyzer may "hang" during them.
+
+Dataflow mode
+This mode will be activated if flow.py is executed. Its purpose is using PDF Analyzer as a part of DKB's dataflow.
+Use "flow.py -h" to get help.
+Note: flow.py can use files located on HDFS. Before using HDFS, make sure that kerberos ticket was acquired and configuration file contains correct values for HDFS_PDF_DIR and HDFS_DOWNLOAD_COMMAND.

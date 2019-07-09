@@ -17,7 +17,8 @@ try:
     sys.path.append(dkb_dir)
     import pyDKB
     from pyDKB.dataflow import DataflowException
-    from pyDKB.dataflow.stage import JSONProcessorStage
+    from pyDKB.dataflow.stage import ProcessorStage
+    from pyDKB.dataflow import messageType
     from pyDKB.common import hdfs, HDFSException
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
@@ -99,30 +100,17 @@ def process(stage, msg):
 
 def main(args):
     """ Main function. """
-    stage = JSONProcessorStage()
+    stage = ProcessorStage()
+    stage.set_input_message_type(messageType.JSON)
+    stage.set_output_message_type(messageType.JSON)
+
     stage.process = process
 
-    exit_code = 0
-    exc_info = None
-    try:
-        stage.parse_args(args)
-        stage.run()
-    except (DataflowException, RuntimeError), err:
-        if str(err):
-            sys.stderr.write("(ERROR) %s\n" % err)
-        else:
-            exc_info = sys.exc_info()
-        exit_code = 2
-    except Exception:
-        exc_info = sys.exc_info()
-        exit_code = 1
-    finally:
-        stage.stop()
+    stage.configure(args)
+    exit_code = stage.run()
 
-    if exc_info:
-        trace = traceback.format_exception(*exc_info)
-        for line in trace:
-            sys.stderr.write("(ERROR) %s" % line)
+    if exit_code == 0:
+        stage.stop()
 
     exit(exit_code)
 

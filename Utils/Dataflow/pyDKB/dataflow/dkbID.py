@@ -29,13 +29,13 @@ except KeyError, err:
 
 
 def firstValue(nestedList):
-    """ Return first not None value from nested lists. """
+    """ Return first value from nested lists which isn't None/empty string. """
     if type(nestedList) != list:
         return nestedList
     val = None
     for val in nestedList:
         val = firstValue(val)
-        if val:
+        if val is not None and str(val) != '':
             break
     return val
 

@@ -1,0 +1,16 @@
+(INFO) (ProcessorStage) Configuration parameters:
+(INFO) (ProcessorStage)   hdfs         : 'False'
+(INFO) (ProcessorStage)   dest         : 's'
+(INFO) (ProcessorStage)   input_dir    : 'None'
+(INFO) (ProcessorStage)   skip_process : 'False'
+(INFO) (ProcessorStage)   eom          : '\n'
+(INFO) (ProcessorStage)   output_dir   : 'out'
+(INFO) (ProcessorStage)   source       : 's'
+(INFO) (ProcessorStage)   eop          : ''
+(INFO) (ProcessorStage)   mode         : 'm'
+(INFO) (ProcessorStage)   config       : 'None'
+(INFO) (ProcessorStage)   input_files  : '[]'
+
+Type '{"stop": ""}' to interrupt.
+(INFO) (ProcessorStage) Starting stage execution.
+(INFO) (ProcessorStage) Stopping stage.

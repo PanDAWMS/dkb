@@ -3,6 +3,7 @@ Classes representing connection to a database.
 """
 
 import sys
+import time
 from collections import defaultdict
 
 try:
@@ -116,13 +117,23 @@ class OracleConnection(dbConnection):
     def save_query_file(self, qname, src_filename, params=None):
         """ Read query from file and save it in query hash. """
         try:
-            f = open(src_filename)
-            q = f.read().rstrip().rstrip(';')
+            with open(src_filename) as f:
+                q = f.read().rstrip().rstrip(';')
             if isinstance(params, dict):
                 q = q % params
+            elif '%(' in q:
+                # Check for '%(' is done because a valid query without
+                # parameters (and their configuration) is possible.
+                sys.stderr.write("(WARN) '%s': query seems to be parametric, "
+                                 "but no query parameters were configured. "
+                                 "This can result in "
+                                 "'ORA-00911' error.\n" % qname)
             self.queries[qname]['query'] = q
         except IOError, err:
             sys.stderr.write("(ERROR) Failed to read query file: %s\n" % err)
+            return False
+        except KeyError, err:
+            sys.stderr.write("(ERROR) Query parameter missing: %s\n" % err)
             return False
 
         return True
@@ -151,7 +162,10 @@ class OracleConnection(dbConnection):
             return False
 
         try:
+            t1 = time.time()
             c.execute(None, params)
+            t2 = time.time()
+            sys.stderr.write("(TIMING) (%s) (sec): %s\n" % (qname, t2 - t1))
         except cx_Oracle.DatabaseError, err:
             sys.stderr.write("(WARN) Failed to execute query '%s': %s\n"
                              % (qname, err))
@@ -191,6 +205,7 @@ class OracleConnection(dbConnection):
         if not c:
             raise StopIteration
 
+        rc1 = c.rowcount
         if rows_as_dict and not self.queries[qname].get('columns') \
                 and c.description:
             self.queries[qname]['columns'] = \
@@ -210,3 +225,6 @@ class OracleConnection(dbConnection):
                 else:
                     yield row
             results = c.fetchmany(arraysize)
+
+        rc2 = c.rowcount
+        sys.stderr.write("(TIMING) (%s) (n_rows): %s\n" % (qname, rc2 - rc1))

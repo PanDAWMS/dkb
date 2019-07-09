@@ -1,0 +1,4 @@
+# EOP filter (required due to the unconfigurable EOP marker in pyDKB)
+eop_filter() {
+  sed -e"s/\\x00//g"
+}

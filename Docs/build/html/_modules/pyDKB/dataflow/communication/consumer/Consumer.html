@@ -1,0 +1,246 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pyDKB.dataflow.communication.consumer.Consumer &#8212; Data Knowledge Base  documentation</title>
+    <link rel="stylesheet" href="../../../../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../../../../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../../../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../../../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" />
+   
+  <link rel="stylesheet" href="../../../../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <h1>Source code for pyDKB.dataflow.communication.consumer.Consumer</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">pyDKB.dataflow.communication.consumer.Consumer</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">defaultdict</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">messageType</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">logLevel</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">DataflowException</span>
+
+<span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">Message</span>
+<span class="kn">from</span> <span class="nn">..stream</span> <span class="k">import</span> <span class="n">StreamBuilder</span>
+
+
+<div class="viewcode-block" id="ConsumerException"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.ConsumerException">[docs]</a><span class="k">class</span> <span class="nc">ConsumerException</span><span class="p">(</span><span class="n">DataflowException</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Dataflow Consumer exception. &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Consumer"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer">[docs]</a><span class="k">class</span> <span class="nc">Consumer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Data consumer implementation. &quot;&quot;&quot;</span>
+
+    <span class="n">config</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">message_type</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">_stream</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="sd">&quot;&quot;&quot; Initialize Consumer instance. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reconfigure</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Consumer.log"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.log">[docs]</a>    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logLevel</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Output log message with given log level. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">logLevel</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="n">level</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Unknown log level: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">level</span><span class="p">,</span> <span class="n">logLevel</span><span class="o">.</span><span class="n">WARN</span><span class="p">)</span>
+            <span class="n">level</span> <span class="o">=</span> <span class="n">logLevel</span><span class="o">.</span><span class="n">INFO</span>
+        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">message</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">lines</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
+            <span class="n">out_message</span> <span class="o">=</span> <span class="s2">&quot;(</span><span class="si">%s</span><span class="s2">) (</span><span class="si">%s</span><span class="s2">) </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">logLevel</span><span class="o">.</span><span class="n">memberName</span><span class="p">(</span><span class="n">level</span><span class="p">),</span>
+                                            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                                            <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
+                <span class="n">out_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">(==) </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">l</span>
+            <span class="n">out_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">out_message</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__iter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initialize iteration. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="Consumer.reconfigure"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.reconfigure">[docs]</a>    <span class="k">def</span> <span class="nf">reconfigure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{}):</span>
+        <span class="sd">&quot;&quot;&quot; (Re)initialize consumer with stage config arguments. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span></div>
+
+<div class="viewcode-block" id="Consumer.init_stream"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.init_stream">[docs]</a>    <span class="k">def</span> <span class="nf">init_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Init input stream. &quot;&quot;&quot;</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">src</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_stream</span> <span class="o">=</span> \
+                <span class="n">StreamBuilder</span><span class="p">(</span><span class="n">src</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">)</span> \
+                <span class="o">.</span><span class="n">setStream</span><span class="p">(</span><span class="s1">&#39;input&#39;</span><span class="p">)</span> \
+                <span class="o">.</span><span class="n">setType</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message_type</span><span class="p">)</span> \
+                <span class="o">.</span><span class="n">build</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Consumer.stream_is_readable"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.stream_is_readable">[docs]</a>    <span class="k">def</span> <span class="nf">stream_is_readable</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Check if input data stream is readable.</span>
+
+<span class="sd">        :returns: True  -- stream is initialized and not empty,</span>
+<span class="sd">                  False -- stream is empty,</span>
+<span class="sd">                  None  -- stream is not initialized</span>
+<span class="sd">        :rtype: bool, NoneType</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stream</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stream</span><span class="o">.</span><span class="n">is_readable</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="Consumer.get_stream"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.get_stream">[docs]</a>    <span class="k">def</span> <span class="nf">get_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get input stream linked to the current source.</span>
+
+<span class="sd">        Return value:</span>
+<span class="sd">            InputStream</span>
+<span class="sd">            None (no sources left to read from)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reset_stream</span><span class="p">():</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stream</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="Consumer.reset_stream"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.reset_stream">[docs]</a>    <span class="k">def</span> <span class="nf">reset_stream</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Reset input stream to the current source. &quot;&quot;&quot;</span>
+        <span class="n">src</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">src</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_stream</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">init_stream</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_stream</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">src</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">src</span></div>
+
+<div class="viewcode-block" id="Consumer.set_message_type"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.set_message_type">[docs]</a>    <span class="k">def</span> <span class="nf">set_message_type</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">Type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set input message type. &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">message_type</span> <span class="o">=</span> <span class="n">Type</span>
+        <span class="n">stream</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_stream</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">stream</span><span class="p">:</span>
+            <span class="n">stream</span><span class="o">.</span><span class="n">set_message_type</span><span class="p">(</span><span class="n">Type</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Consumer.message_class"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.message_class">[docs]</a>    <span class="k">def</span> <span class="nf">message_class</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return message class. &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Message</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message_type</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Consumer.get_source_info"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.get_source_info">[docs]</a>    <span class="k">def</span> <span class="nf">get_source_info</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return current source info. &quot;&quot;&quot;</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span></div>
+
+<div class="viewcode-block" id="Consumer.get_message"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.get_message">[docs]</a>    <span class="k">def</span> <span class="nf">get_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Get new message from current source.</span>
+
+<span class="sd">        Return values:</span>
+<span class="sd">            Message object</span>
+<span class="sd">            False (failed to parse message)</span>
+<span class="sd">            None  (all input sources are empty)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_stream</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">get_message</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">msg</span></div>
+
+<div class="viewcode-block" id="Consumer.next"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.next">[docs]</a>    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Return new Message, read from input stream. &quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_message</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">msg</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">StopIteration</span>
+        <span class="k">return</span> <span class="n">msg</span></div>
+
+<div class="viewcode-block" id="Consumer.close"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer.close">[docs]</a>    <span class="k">def</span> <span class="nf">close</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Close opened data stream and data source. &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_stream</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">s</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="s1">&#39;closed&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">):</span>
+                <span class="n">s</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div></div>
+</pre></div>
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../../../../../index.html">Data Knowledge Base</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../pyDKB/pyDKB.html">pyDKB package</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../../../../index.html">Documentation overview</a><ul>
+  <li><a href="../../../../index.html">Module code</a><ul>
+  <li><a href="../consumer.html">pyDKB.dataflow.communication.consumer</a><ul>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, DKB team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

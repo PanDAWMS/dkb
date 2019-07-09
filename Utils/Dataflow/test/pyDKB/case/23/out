@@ -1,0 +1,10 @@
+=== input/output/NDjson.ttl ===
+{u'a': 11}
+{u'c': 33, u'b': 22}
+{u'd': 44}
+=== end ===
+=== input/output/NDjson-2.ttl ===
+{u'a': u'value_1'}
+{u'c': u'val_3', u'b': u'val_2'}
+{u'd': None}
+=== end ===

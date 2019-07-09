@@ -1,0 +1,28 @@
+.. _pyDKB.dataflow:
+
+pyDKB.dataflow package
+======================
+
+.. automodule:: pyDKB.dataflow
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Subpackages
+-----------
+
+.. toctree::
+
+    pyDKB.dataflow.communication
+    pyDKB.dataflow.stage
+
+Submodules
+----------
+
+.. toctree::
+
+   pyDKB.dataflow.cds
+   pyDKB.dataflow.dkbID
+   pyDKB.dataflow.exceptions
+   pyDKB.dataflow.types
+
