@@ -42,11 +42,6 @@ class Case(unittest.TestCase):
                          ['Uncategorized'])
 
 
-'''
-This dictionary is declared each time inside of get_category(). Moving it
-outside will allow it to be called here as adjustMetadata.PHYS_CATEGORIES_MAP
-instead of declaring it again and changing it each time in both places.
-'''
 PHYS_CATEGORIES_MAP = {
     'BPhysics': ['charmonium', 'jpsi', 'bs', 'bd', 'bminus', 'bplus',
                  'charm', 'bottom', 'bottomonium', 'b0'],
@@ -74,10 +69,7 @@ PHYS_CATEGORIES_MAP = {
     'Zjets': ['z']
 }
 
-'''
-This dictionary is used for testing a bunch of 'if' calls. Isn't it better to
-rewrite that part of code as this dictionary and 'if' in a cycle?
-'''
+
 PHYS_CATEGORIES_PHYS_SHORTS_MAP = {
     'SingleTop': ['singletop', '_wt', '_wwbb'],
     'TTbar': ['ttbar', '_tt_'],
