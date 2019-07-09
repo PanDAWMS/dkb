@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Sample tests for Stage 055 to be used as example for writing tests.
+Various tests for Stage 055.
 Usage: 'python -m unittest discover' from ..(directory with Stage 055 code).
 """
 
