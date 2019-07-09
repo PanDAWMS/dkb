@@ -161,8 +161,8 @@ class AbstractStage(LoggableObject):
             try:
                 self.ARGS.eom = self.ARGS.eom.decode('string_escape')
             except (ValueError), err:
-                sys.stderr.write("(ERROR) Failed to read arguments.\n"
-                                 "(ERROR) Case: %s\n" % (err))
+                self.log("Failed to read arguments.\n"
+                         "Case: %s" % (err), logLevel.ERROR)
                 sys.exit(1)
 
         if self.ARGS.eop is None:
@@ -176,8 +176,8 @@ class AbstractStage(LoggableObject):
             try:
                 self.ARGS.eop = self.ARGS.eop.decode('string_escape')
             except (ValueError), err:
-                sys.stderr.write("(ERROR) Failed to read arguments.\n"
-                                 "(ERROR) Case: %s\n" % (err))
+                self.log("Failed to read arguments.\n"
+                         "Case: %s" % (err), logLevel.ERROR)
                 sys.exit(1)
 
         if self.ARGS.mode == 'm':
