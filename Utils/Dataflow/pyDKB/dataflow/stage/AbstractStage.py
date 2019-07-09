@@ -10,11 +10,12 @@ import textwrap
 
 from pyDKB.common import LoggableObject
 from pyDKB.common.types import logLevel
+from pyDKB.common.misc import log
 
 try:
     import argparse
 except ImportError, e:
-    sys.stderr.write("(ERROR) argparse package is not installed.\n")
+    log("argparse package is not installed.", logLevel.ERROR)
     raise e
 
 

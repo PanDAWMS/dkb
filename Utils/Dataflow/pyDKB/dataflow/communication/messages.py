@@ -6,6 +6,7 @@ Definition of abstract message class and specific message classes
 
 from . import messageType
 from . import codeType
+from pyDKB.common.misc import (log, logLevel)
 
 import json
 import sys
@@ -35,9 +36,8 @@ def Message(msg_type):
         raise ValueError("Message type must be a member of messageType")
     cls = __message_class.get(msg_type)
     if not cls:
-        sys.stderr.write(
-            "(WARN) Message class for type %s is not implemented. "
-            "Using AbstractMessage instead.")
+        log("Message class for type %s is not implemented. "
+            "Using AbstractMessage instead.", logLevel.WARN)
         cls = AbstractMessage
 
     return cls
