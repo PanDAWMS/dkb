@@ -2,8 +2,8 @@
 '''
 Script for checking the supplied task's presence in elasticsearch.
 
-Currently it performs the check by comparing the supplied timestamp
-with the one in elasticsearch.
+It performs the check by comparing the supplied fields with the corresponding
+ones in elasticsearch.
 
 Authors:
   Vasilii Aulov (vasilii.aulov@cern.ch)
