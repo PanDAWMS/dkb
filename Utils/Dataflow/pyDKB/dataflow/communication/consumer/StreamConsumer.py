@@ -8,11 +8,8 @@ TODO: think about multiple streams (like a number of named
 """
 
 import sys
-import os
 
 import Consumer
-from . import DataflowException
-from . import logLevel
 
 
 class StreamConsumer(Consumer.Consumer):

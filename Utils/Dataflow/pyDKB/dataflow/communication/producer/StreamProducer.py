@@ -10,8 +10,6 @@ TODO: think about multiple streams (like a number of named
 import sys
 
 from Producer import Producer
-from . import DataflowException
-from . import logLevel
 
 
 class StreamProducer(Producer):

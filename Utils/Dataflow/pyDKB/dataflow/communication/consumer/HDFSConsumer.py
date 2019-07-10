@@ -2,14 +2,10 @@
 pyDKB.dataflow.communication.consumer.HDFSConsumer
 """
 
-import sys
-
 import FileConsumer
 import Consumer
-from . import DataflowException
 from pyDKB.common import hdfs
 from pyDKB.common import HDFSException
-from . import logLevel
 
 
 class HDFSConsumer(FileConsumer.FileConsumer):

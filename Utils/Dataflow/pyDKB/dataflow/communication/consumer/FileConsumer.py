@@ -14,7 +14,6 @@ import sys
 import os
 
 import Consumer
-from . import DataflowException
 from . import logLevel
 from .. import Message
 
