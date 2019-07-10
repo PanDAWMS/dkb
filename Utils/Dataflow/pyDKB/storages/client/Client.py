@@ -20,13 +20,13 @@ class Client(LoggableObject):
         """
         raise NotImplementedError
 
-    def get(self, id, **kwargs):
+    def get(self, oid, **kwargs):
         """ Get object / record from storage by ID.
 
         Raise ``NotFound`` exception if object / record not found.
 
-        :param id: object / record identfier
-        :type id: str, int
+        :param oid: object / record identfier
+        :type oid: str, int
 
         :return: record with given ID
         :rtype: dict
