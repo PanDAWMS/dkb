@@ -31,4 +31,3 @@ The stage can be run as following:
 For more information about running the stage and its arguments, use:
 
   ./consistency.py -h
-
