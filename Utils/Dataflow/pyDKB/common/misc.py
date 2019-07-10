@@ -6,8 +6,12 @@ Miscellanious utility functions.
 
 import sys
 import inspect
+from datetime import datetime
 
 from types import logLevel
+
+# Datetime format for log messages
+DTFORMAT = '%Y-%m-%d %H:%M:%S'
 
 
 def log(message, level=logLevel.INFO, *args):
@@ -35,8 +39,9 @@ def log(message, level=logLevel.INFO, *args):
         mod = inspect.getmodule(frm[0])
         prefix = ' (%s)' % mod.__name__
     if lines:
-        out_message = "(%s)%s %s" % (logLevel.memberName(level),
-                                     prefix, lines[0])
+        dtime = datetime.now().strftime(DTFORMAT)
+        out_message = "%s (%s)%s %s" % (dtime, logLevel.memberName(level),
+                                        prefix, lines[0])
         for l in lines[1:]:
             out_message += "\n(==) %s" % l
         out_message += "\n"
