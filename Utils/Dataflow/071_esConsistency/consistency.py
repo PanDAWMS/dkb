@@ -153,11 +153,6 @@ def process(stage, message):
 
     _parent = data.pop('_parent', None)
 
-    # Crutch. Remove unwanted (for now) fields added by Stage 016.
-    for field in ['phys_category', 'chain_data', 'chain_id']:
-        if field in data:
-            del data[field]
-
     # Fields starting with an underscore are service fields. Some of them are
     # treated in special way (see _id above). Service fields should not be
     # checked, so they are removed.
