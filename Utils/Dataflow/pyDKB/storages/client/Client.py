@@ -8,9 +8,6 @@ from pyDKB.common import LoggableObject
 class Client(LoggableObject):
     """ Interface class for external and internal DKB storage clients. """
 
-    # Storage client
-    c = None
-
     def __init__(self):
         """ Initialize Storage object. """
         raise NotImplementedError
