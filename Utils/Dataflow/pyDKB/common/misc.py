@@ -7,6 +7,7 @@ Miscellanious utility functions.
 import sys
 import inspect
 from datetime import datetime
+import importlib
 
 from types import logLevel
 
@@ -56,3 +57,25 @@ def log(message, level=logLevel.INFO, *args):
             out_message += "\n(==) %s" % l
         out_message += "\n"
         sys.stderr.write(out_message)
+
+
+def try_to_import(modname, attrname=None):
+    """ Try to import specified module or attribute from a module.
+
+    If module/attribute can not be imported, catch the exception and output log
+    message.
+    """
+    result = False
+    try:
+        result = importlib.import_module(modname)
+        if attrname:
+            result = getattr(result, attrname)
+    except ImportError, err:
+        log("Failed to import '%s'.\nDetails: %s" % (modname, err),
+            logLevel.ERROR)
+    except AttributeError:
+        if attrname:
+            log("Failed to import '%s' from '%s'" % (attrname, modname))
+    except Exception, err:
+        log(str(err), logLevel.ERROR)
+    return result
