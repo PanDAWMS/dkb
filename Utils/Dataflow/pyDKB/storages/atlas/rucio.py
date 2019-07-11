@@ -48,7 +48,7 @@ class RucioClient(Client, ParentClientClass):
     """ Implement common interface for Rucio client. """
 
     def __init__(self, *args, **kwargs):
-        """ Initialize parent client class. """
+        """ Initialize instance as parent client class object. """
         ParentClientClass.__init__(self, *args, **kwargs)
 
     def get(self, oid, **kwargs):
