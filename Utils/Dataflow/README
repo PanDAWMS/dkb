@@ -91,6 +91,30 @@ intended for making sure that information is consistent between ProdSys2 and
 ES. It gets a very basic set of metadata from ProdSys2, adds ES-related
 fields, and checks that it is present in ES rather than uploading it.
 
+================
+* Stages types *
+================
+There are three types of stages:
+
+1. Source stage - an initial stage in a dataflow pipeline that gets data
+from an external source (CDS, Rucio, AMI, etc.)
+
+2. Transform stage - a stage that makes a set of different operations
+with metadata forming messages according to a particular pattern (e.g. select
+relevant metadata from a raw dataset, append metadata to a message, prepare
+messages to upload).
+
+2.1 Pre-sink stage - the last transform stage in a dataflow pipeline that
+prepares metadata to upload via sink stage; it awares about messages
+formatting. All the messages preparations should be done by a pre-sink stage.
+
+3. Sink stage - a stage that uploads data into the DKB storage (Virtuoso
+or ES). We consider that every single sink stage requires a particular
+pre-sink stage that transform data and form ready-to-send messages with a
+particular structure. Sink stage only gets prepared messages and upload it
+without any re-formatting. It does not care about messages content.
+If message does not follow the template, it will not be uploaded.
+
 ==============
 * REFERENCES *
 ==============
