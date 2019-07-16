@@ -38,7 +38,6 @@ Definition of an abstract class for Dataflow Data Processing Stages.
 
 """
 
-import subprocess
 import os
 import sys
 
@@ -47,9 +46,7 @@ from . import messageType
 from . import logLevel
 from pyDKB.dataflow import DataflowException
 from pyDKB.common import hdfs
-from pyDKB.common import custom_readline
 from pyDKB.dataflow import communication
-from pyDKB.dataflow.communication import stream
 from pyDKB.dataflow.communication import consumer
 from pyDKB.dataflow.communication import producer
 

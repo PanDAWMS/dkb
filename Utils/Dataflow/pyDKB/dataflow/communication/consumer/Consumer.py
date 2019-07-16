@@ -3,9 +3,7 @@ pyDKB.dataflow.communication.consumer.Consumer
 """
 
 import sys
-from collections import defaultdict
 
-from . import messageType
 from . import logLevel
 from . import DataflowException
 
