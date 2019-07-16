@@ -172,7 +172,7 @@ def agg_query(taskid, agg_names):
     :param taskid: Task ID or None
     :type taskid: str, NoneType
     :param agg_names: code names of requested aggregations (available:
-                     "hs06sec")
+                     "hs06sec_sum")
     :type agg_names: list
 
     :returns: ES query or None in case of failure
@@ -222,7 +222,7 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
                       'end_time', 'status'.
     :type task_data: dict
     :param agg_names: code names of requested aggregations (available:
-                     "hs06sec")
+                     "hs06sec_sum")
     :type agg_names: list
     :param retry: number of retries for ES query
     :type retry: int
