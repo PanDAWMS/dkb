@@ -16,7 +16,7 @@ while read f; do
     [ "$url" = "$trimmed_line" ] && continue
     echo "$line"
   done`
-  if [ $(echo "$r" | wc -l) -gt 0 ];then
+  if [ -n "$r" ];then
     echo "Very long line(s) in $f:"
     getLinesFromFile "$f" "$r"
     e=1
