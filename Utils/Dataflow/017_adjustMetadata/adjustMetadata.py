@@ -28,6 +28,33 @@ except Exception, err:
     sys.exit(1)
 
 
+PHYS_CATEGORIES_MAP = {
+    'BPhysics': ['charmonium', 'jpsi', 'bs', 'bd', 'bminus', 'bplus',
+                 'charm', 'bottom', 'bottomonium', 'b0'],
+    'BTag': ['btagging'],
+    'Diboson': ['diboson', 'zz', 'ww', 'wz', 'wwbb', 'wwll'],
+    'DrellYan': ['drellyan', 'dy'],
+    'Exotic': ['exotic', 'monojet', 'blackhole', 'technicolor',
+               'randallsundrum', 'wprime', 'zprime', 'magneticmonopole',
+               'extradimensions', 'warpeded', 'randallsundrum',
+               'contactinteraction', 'seesaw'],
+    'GammaJets': ['photon', 'diphoton'],
+    'Higgs': ['whiggs', 'zhiggs', 'mh125', 'higgs', 'vbf', 'smhiggs',
+              'bsmhiggs', 'chargedhiggs'],
+    'Minbias': ['minbias'],
+    'Multijet': ['dijet', 'multijet', 'qcd'],
+    'Performance': ['performance'],
+    'SingleParticle': ['singleparticle'],
+    'SingleTop': ['singletop'],
+    'SUSY': ['bino', 'susy', 'pmssm', 'leptosusy', 'rpv', 'mssm'],
+    'Triboson': ['triplegaugecoupling', 'triboson', 'zzw', 'www'],
+    'TTbar': ['ttbar'],
+    'TTbarX': ['ttw', 'ttz', 'ttv', 'ttvv', '4top', 'ttww'],
+    'Upgrade': ['upgrad'],
+    'Wjets': ['w'],
+    'Zjets': ['z']}
+
+
 def get_category(row):
     """
     Each task can be associated with a number of Physics Categories.
@@ -39,31 +66,6 @@ def get_category(row):
     """
     hashtags = row.get('hashtag_list')
     taskname = row.get('taskname')
-    PHYS_CATEGORIES_MAP = {
-        'BPhysics': ['charmonium', 'jpsi', 'bs', 'bd', 'bminus', 'bplus',
-                     'charm', 'bottom', 'bottomonium', 'b0'],
-        'BTag': ['btagging'],
-        'Diboson': ['diboson', 'zz', 'ww', 'wz', 'wwbb', 'wwll'],
-        'DrellYan': ['drellyan', 'dy'],
-        'Exotic': ['exotic', 'monojet', 'blackhole', 'technicolor',
-                   'randallsundrum', 'wprime', 'zprime', 'magneticmonopole',
-                   'extradimensions', 'warpeded', 'randallsundrum',
-                   'contactinteraction', 'seesaw'],
-        'GammaJets': ['photon', 'diphoton'],
-        'Higgs': ['whiggs', 'zhiggs', 'mh125', 'higgs', 'vbf', 'smhiggs',
-                  'bsmhiggs', 'chargedhiggs'],
-        'Minbias': ['minbias'],
-        'Multijet': ['dijet', 'multijet', 'qcd'],
-        'Performance': ['performance'],
-        'SingleParticle': ['singleparticle'],
-        'SingleTop': ['singletop'],
-        'SUSY': ['bino', 'susy', 'pmssm', 'leptosusy', 'rpv', 'mssm'],
-        'Triboson': ['triplegaugecoupling', 'triboson', 'zzw', 'www'],
-        'TTbar': ['ttbar'],
-        'TTbarX': ['ttw', 'ttz', 'ttv', 'ttvv', '4top', 'ttww'],
-        'Upgrade': ['upgrad'],
-        'Wjets': ['w'],
-        'Zjets': ['z']}
     match = {}
     categories = []
     for phys_category in PHYS_CATEGORIES_MAP:
