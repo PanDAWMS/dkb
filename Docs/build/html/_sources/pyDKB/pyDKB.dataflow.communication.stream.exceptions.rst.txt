@@ -1,0 +1,9 @@
+.. _pyDKB.dataflow.communication.stream.exceptions:
+
+pyDKB.dataflow.communication.stream.exceptions module
+=====================================================
+
+.. automodule:: pyDKB.dataflow.communication.stream.exceptions
+    :members:
+    :undoc-members:
+    :show-inheritance:

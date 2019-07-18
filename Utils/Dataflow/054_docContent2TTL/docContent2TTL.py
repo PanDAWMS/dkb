@@ -12,7 +12,7 @@ try:
     dkb_dir = os.path.join(base_dir, os.pardir)
     sys.path.append(dkb_dir)
     import pyDKB
-    from pyDKB.dataflow import messages
+    from pyDKB.dataflow.communication import messages
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -33,7 +33,7 @@ def process(stage, msg):
         return False
 
     for i in result:
-        stage.output(pyDKB.dataflow.messages.TTLMessage(i))
+        stage.output(messages.TTLMessage(i))
     return True
 
 
@@ -154,18 +154,15 @@ def main(args):
     """Parsing command line arguments and processing JSON
     string from file or from stream
     """
-    stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
+    stage = pyDKB.dataflow.stage.ProcessorStage()
+    stage.set_input_message_type(messages.messageType.JSON)
+    stage.set_output_message_type(messages.messageType.TTL)
     stage.process = process
 
-    exit_code = 0
-    try:
-        stage.parse_args(args)
-        stage.run()
-    except (pyDKB.dataflow.DataflowException, RuntimeError), err:
-        if str(err):
-            sys.stderr.write("(ERROR) %s\n" % err)
-        exit_code = 1
-    finally:
+    stage.configure(args)
+    exit_code = stage.run()
+
+    if exit_code == 0:
         stage.stop()
 
     exit(exit_code)

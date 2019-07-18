@@ -467,7 +467,7 @@ def fix_list_values(list_vals):
 def process(stage, msg):
     """
     Processing messages from JSON to TTL
-    :param stage: instance of JSON2TTLProcessorStage
+    :param stage: instance of ProcessorStage
     :param msg: input JSON message
     :return:
     """
@@ -512,44 +512,32 @@ def main(argv):
     """
     exit_code = 0
     exc_info = None
-    stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
+    stage = pyDKB.dataflow.stage.ProcessorStage()
+    stage.set_input_message_type(pyDKB.dataflow.messageType.JSON)
+    stage.set_output_message_type(pyDKB.dataflow.messageType.TTL)
     stage.process = process
-    try:
-        stage.add_argument('-g', '--graph', action='store', type=str,
-                           nargs='?',
-                           help='Virtuoso DB graph name (default:'
-                                ' %(default)s)',
-                           default=GRAPH,
-                           const=GRAPH,
-                           metavar='GRAPH',
-                           dest='GRAPH')
-        stage.add_argument('-O', '--ontology', action='store', type=str,
-                           nargs='?',
-                           help='Virtuoso ontology prefix (default:'
-                                ' %(default)s)',
-                           default=ONTOLOGY,
-                           const=ONTOLOGY,
-                           metavar='ONT',
-                           dest='ONTOLOGY')
-        stage.parse_args(argv)
-        define_globals(stage.ARGS)
-        stage.run()
-    except (pyDKB.dataflow.DataflowException, RuntimeError), err:
-        if str(err):
-            sys.stderr.write("(ERROR) %s\n" % err)
-        else:
-            exc_info = sys.exc_info()
-        exit_code = 2
-    except Exception, err:
-        exc_info = sys.exc_info()
-        exit_code = 1
-    finally:
-        stage.stop()
+    stage.add_argument('-g', '--graph', action='store', type=str,
+                       nargs='?',
+                       help='Virtuoso DB graph name (default:'
+                            ' %(default)s)',
+                       default=GRAPH,
+                       const=GRAPH,
+                       metavar='GRAPH',
+                       dest='GRAPH')
+    stage.add_argument('-O', '--ontology', action='store', type=str,
+                       nargs='?',
+                       help='Virtuoso ontology prefix (default:'
+                            ' %(default)s)',
+                       default=ONTOLOGY,
+                       const=ONTOLOGY,
+                       metavar='ONT',
+                       dest='ONTOLOGY')
+    stage.configure(argv)
+    define_globals(stage.ARGS)
+    exit_code = stage.run()
 
-    if exc_info:
-        trace = traceback.format_exception(*exc_info)
-        for line in trace:
-            sys.stderr.write("(ERROR) %s" % line)
+    if exit_code == 0:
+        stage.stop()
 
     exit(exit_code)
 

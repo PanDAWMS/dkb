@@ -37,24 +37,36 @@ def nestedKeys(key):
     """
     if type(key) == list:
         return key
-    nested_keys = []
 
-    splitted_key = key.split('.')
-    skip = []
-    for i in range(len(splitted_key)):
-        if i in skip:
-            continue
-        k = splitted_key[i]
-        if k[0] in ("'", '"'):
-            i1 = i
-            while k[-1] not in ("'", '"'):
-                i += 1
-                if i1 >= len(splitted_key):
-                    raise ValueError("Failed to decode dot-splitted "
-                                     "configuration key: %s" % key)
-                k1 = splitted_key[i1]
-                k += k1
-                skip += [i1]
-        nested_keys.append(k)
+    # Resulting list of keys
+    nested_keys = []
+    # Temporary string for constructing keys.
+    new_key = ''
+    # Current state of the cycle regarding quotes.
+    # Empty string - normal mode, keys are separated by dots.
+    # ' - a key limited by single quotes is being constructed.
+    # " - same, but with double quotes.
+    mode = ''
+
+    for i in range(len(key)):
+        if mode:
+            if key[i] == mode and (i == len(key) - 1 or key[i + 1] == '.'):
+                mode = ''
+            elif i == len(key) - 1:
+                raise ValueError("Failed to decode dot-splitted "
+                                 "configuration key: %s" % key)
+            else:
+                new_key += key[i]
+        else:
+            if key[i] == '.':
+                nested_keys.append(new_key)
+                new_key = ''
+            elif key[i] in ("'", '"') and new_key == '':
+                # The second condition checks that the quote is preceded
+                # either by dot or string start.
+                mode = key[i]
+            else:
+                new_key += key[i]
+    nested_keys.append(new_key)
 
     return nested_keys

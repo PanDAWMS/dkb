@@ -53,6 +53,9 @@ untill the <code class="docutils literal notranslate"><span class="pre">newline<
 <p class="last">the last line can be incomplete, if the input data flow
 is interrupted in the middle of data writing.</p>
 </div>
+<p>To check if iteration is not over without reading next value, one may
+<cite>send(True)</cite> to the generator: it will return <cite>True</cite> if there is another
+message to yield or raise <cite>StopIteration</cite> if nothing left.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />

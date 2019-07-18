@@ -37,25 +37,30 @@ JSON documents, one document per line:
  ...
 }}}
 
-TODO
-----
-Currently, it operates as if one line was one message (piece of information).
-For input it is OK, but for output it would be better to take <index info> and
-  <data> JSON documents together, as one message. I don`t know where it will
-  be critical for now, but something tells me that it will.
-This task requires accurate EOMessage and EOProcess markers handling (see the
-  `kafka-dataflow-markers` branch).
-
 Samples
 -------
-The 'output' directory contains two pairs of samples:
+To produce regular (seamless NDJSON) samples, run:
+
+  cat input/sample_name.ndjson | tr $'\n' $'\x1e' | \
+    ./run.sh -E '' | tr -d $'\x1e' > output/sample_name.ndjson
+
+Comment:
+ * input samples can not be used (and output one -- saved) as-is
+   due to the specific EOM marker (most of the stages use NEWLINE, which,
+   being part of the output messages body, is not allowed here);
+ * `tr` is a Unix utility to translate or delete characters (for details please
+   refer to man pages);
+ * output message body contains trailing NEWLINE, so RS is simply removed from
+   the output stream (not replaced with another NEWLINE).
+
+The 'output' directory contains two pairs of regular samples:
 
 2016 data:
-tasks2016.ndjson (from 016's 2016 sample)
+tasks2016.ndjson (from 017's 2016 sample)
 datasets2016.ndjson (from 095's 2016 sample)
 
 2018 data:
-tasks2018.ndjson (from 016's 2018 sample)
+tasks2018.ndjson (from 017's 2018 sample)
 datasets2018.ndjson (from 095's 2018 sample)
 
 tasks* is the tasks' and input datasets' metadata.

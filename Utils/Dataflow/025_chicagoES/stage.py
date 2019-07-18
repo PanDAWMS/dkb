@@ -22,8 +22,9 @@ try:
     dkb_dir = os.path.join(base_dir, os.pardir)
     sys.path.append(dkb_dir)
     import pyDKB
-    from pyDKB.dataflow.stage import JSONProcessorStage
-    from pyDKB.dataflow.messages import JSONMessage
+    from pyDKB.dataflow.stage import ProcessorStage
+    from pyDKB.dataflow import messageType
+    from pyDKB.dataflow.communication.messages import Message
     from pyDKB.dataflow.exceptions import DataflowException
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
@@ -33,9 +34,14 @@ try:
     import elasticsearch
     from elasticsearch.exceptions import ElasticsearchException
 except ImportError, err:
-    sys.stderr.write("(FATAL) Failed to import elasticsearch module: %s\n"
+    sys.stderr.write("(ERROR) Failed to import elasticsearch module: %s\n"
                      % err)
-    sys.exit(2)
+finally:
+    try:
+        ElasticsearchException
+    except NameError:
+        ElasticsearchException = None
+
 
 chicago_es = None
 
@@ -59,7 +65,19 @@ TASK_FINAL_STATES = ['done', 'finished', 'obsolete', 'failed', 'broken',
 def init_es_client():
     """ Initialize connection to Chicago ES. """
     global chicago_es
-    chicago_es = elasticsearch.Elasticsearch(chicago_hosts)
+    try:
+        chicago_es = elasticsearch.Elasticsearch(chicago_hosts)
+    except NameError:
+        sys.stderr.write("(FATAL) Failed to initialize Elasticsearch client: "
+                         "module not loaded.\n")
+        raise DataflowException("Module not found: 'elasticsearch'")
+
+
+def get_es_client():
+    """ Get configured client connected to the Chicago ES. """
+    if not chicago_es:
+        init_es_client()
+    return chicago_es
 
 
 def task_metadata(taskid, fields=[], retry=3):
@@ -77,6 +95,7 @@ def task_metadata(taskid, fields=[], retry=3):
               ES connection is established
     :rtype: dict, NoneType
     """
+    chicago_es = get_es_client()
     if not chicago_es:
         sys.stderr.write("(ERROR) Connection to Chicago ES is not"
                          " established.")
@@ -219,6 +238,7 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
     end_time = task_data.get('end_time')
     status = task_data.get('status')
 
+    chicago_es = get_es_client()
     if not chicago_es:
         sys.stderr.write("(ERROR) Connection to Chicago ES is not"
                          " established.")
@@ -268,9 +288,9 @@ def process(stage, message):
     """ Single message processing.
 
     :param stage: ETL processing stage
-    :type stage: JSONProcessorStage
+    :type stage: pyDKB.dataflow.stage.ProcessorStage
     :param message: input message with data to be processed
-    :type message: JSONMessage
+    :type message: pyDKB.dataflow.communication.messages.JSONMessage
 
     :returns: True or False in case of failure
     :rtype: bool
@@ -300,7 +320,7 @@ def process(stage, message):
                 total += val
             fname = AGG_FIELDS[f]
             data[fname] = total
-    out_message = JSONMessage(data)
+    out_message = Message(messageType.JSON)(data)
     stage.output(out_message)
     return True
 
@@ -311,15 +331,16 @@ def main(args):
     :param args: command line arguments
     :type args: list
     """
-    stage = JSONProcessorStage()
-    stage.process = process
+    stage = ProcessorStage()
+    stage.set_input_message_type(messageType.JSON)
+    stage.set_output_message_type(messageType.JSON)
 
-    init_es_client()
+    stage.process = process
 
     exit_code = 0
     exc_info = None
     try:
-        stage.parse_args(args)
+        stage.configure(args)
         stage.run()
     except (DataflowException, RuntimeError), err:
         if str(err):

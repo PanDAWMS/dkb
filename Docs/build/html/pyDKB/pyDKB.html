@@ -63,11 +63,11 @@ in future versions <em>connector</em> stages will also be supported.</p>
 <p>To create simple processor stage application first decide input and
 output data format. In following examples we will work with data in JSON
 format (for the full list of supported formats check
-<a class="reference internal" href="pyDKB.dataflow.messages.html#pydkb-dataflow-messages"><span class="std std-ref">pyDKB.dataflow.messages module</span></a> section of this documentation).</p>
+<a class="reference internal" href="pyDKB.dataflow.communication.messages.html#pydkb-dataflow-communication-messages"><span class="std std-ref">pyDKB.dataflow.communication.messages module</span></a> section of this documentation).</p>
 <p>Now let`s start writing example processor <code class="docutils literal notranslate"><span class="pre">welcome.py</span></code> and implement
 message handler – functional part of the stage (operations to be
 performed on data flow units):</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyDKB.dataflow.messages</span> <span class="k">import</span> <span class="n">JSONMessage</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyDKB.dataflow.communication.messages</span> <span class="k">import</span> <span class="n">JSONMessage</span>
 
 <span class="k">def</span> <span class="nf">my_process</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Single message processing. &quot;&quot;&quot;</span>
@@ -103,25 +103,30 @@ storages.</p>
 <p>Now as we have processing logic implemented, we need to turn it into
 fully functional application. Add following lines to <code class="docutils literal notranslate"><span class="pre">welcome.py</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="hll"><span class="kn">import</span> <span class="nn">sys</span>
-</span><span class="hll"><span class="kn">from</span> <span class="nn">pyDKB.dataflow.stage</span> <span class="kn">import</span> <span class="n">JSONProcessorStage</span>
-</span><span class="kn">from</span> <span class="nn">pyDKB.dataflow.messages</span> <span class="kn">import</span> <span class="n">JSONMessage</span>
+</span><span class="hll"><span class="kn">from</span> <span class="nn">pyDKB.dataflow.stage</span> <span class="kn">import</span> <span class="n">ProcessorStage</span>
+</span><span class="hll"><span class="kn">from</span> <span class="nn">pyDKB.dataflow</span> <span class="kn">import</span> <span class="n">messageType</span>
+</span><span class="kn">from</span> <span class="nn">pyDKB.dataflow.communication.messages</span> <span class="kn">import</span> <span class="n">JSONMessage</span>
 
 <span class="k">def</span> <span class="nf">my_process</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
     <span class="o">&lt;...</span><span class="n">function</span> <span class="n">code</span><span class="o">...&gt;</span>
 
 <span class="hll"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-</span><span class="hll">    <span class="n">stage</span> <span class="o">=</span> <span class="n">JSONProcessorStage</span><span class="p">()</span>
+</span><span class="hll">    <span class="n">stage</span> <span class="o">=</span> <span class="n">ProcessorStage</span><span class="p">()</span>
+</span><span class="hll">    <span class="n">stage</span><span class="o">.</span><span class="n">set_input_message_type</span><span class="p">(</span><span class="n">messageType</span><span class="o">.</span><span class="n">JSON</span><span class="p">)</span>
+</span><span class="hll">    <span class="n">stage</span><span class="o">.</span><span class="n">set_output_message_type</span><span class="p">(</span><span class="n">messageType</span><span class="o">.</span><span class="n">JSON</span><span class="p">)</span>
 </span><span class="hll">    <span class="n">stage</span><span class="o">.</span><span class="n">process</span> <span class="o">=</span> <span class="n">my_process</span>
-</span><span class="hll">    <span class="n">stage</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+</span><span class="hll">    <span class="n">stage</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
 </span><span class="hll">    <span class="n">stage</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 </span></pre></div>
 </div>
-<p>First we create stage object and indicate that input and output message
-format is JSON: <code class="docutils literal notranslate"><span class="pre">stage</span> <span class="pre">=</span> <span class="pre">JSONProcessorStage()</span></code> (for full list of
-processors check <a class="reference internal" href="pyDKB.dataflow.stage.html#pydkb-dataflow-stage"><span class="std std-ref">pyDKB.dataflow.stage package</span></a> section of this documentation);
-then set stage processing function to our function <code class="docutils literal notranslate"><span class="pre">my_process()</span></code>,
-parse command line arguments (<code class="docutils literal notranslate"><span class="pre">stage.parse_args(sys.argv[1:])</span></code>) and
-start the stage execution.</p>
+<p>First we create stage object: <code class="docutils literal notranslate"><span class="pre">stage</span> <span class="pre">=</span> <span class="pre">JSONProcessorStage()</span></code>; then indicate
+that input and output message format is JSON:
+<code class="docutils literal notranslate"><span class="pre">stage.set_{input,output}_message_type(messageType.JSON)</span></code> (for full list of
+message types check <a class="reference internal" href="pyDKB.dataflow.communication.messages.html#pydkb-dataflow-communication-messages"><span class="std std-ref">pyDKB.dataflow.communication.messages module</span></a> section
+of this documentation); then set stage processing function to our function
+<code class="docutils literal notranslate"><span class="pre">my_process()</span></code>, parse command line arguments and configure stage instance
+according to it (<code class="docutils literal notranslate"><span class="pre">stage.configure(sys.argv[1:])</span></code>). Now we ready to start the
+stage execution.</p>
 <p>Easy, right?</p>
 <p>It`s time to run our application. Create input data sample
 <code class="docutils literal notranslate"><span class="pre">input.ndjson</span></code> with following lines:</p>
@@ -174,11 +179,50 @@ documentation.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pyDKB.dataflow.html">pyDKB.dataflow package</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pyDKB.dataflow.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="pyDKB.dataflow.communication.html">pyDKB.dataflow.communication package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="pyDKB.dataflow.communication.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pyDKB.dataflow.communication.consumer.html">pyDKB.dataflow.communication.consumer package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pyDKB.dataflow.communication.consumer.html#submodules">Submodules</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.consumer.Consumer.html">pyDKB.dataflow.communication.consumer.Consumer module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.consumer.FileConsumer.html">pyDKB.dataflow.communication.consumer.FileConsumer module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.consumer.HDFSConsumer.html">pyDKB.dataflow.communication.consumer.HDFSConsumer module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.consumer.StreamConsumer.html">pyDKB.dataflow.communication.consumer.StreamConsumer module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="pyDKB.dataflow.communication.producer.html">pyDKB.dataflow.communication.producer package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pyDKB.dataflow.communication.producer.html#submodules">Submodules</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.producer.FileProducer.html">pyDKB.dataflow.communication.producer.FileProducer module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.producer.HDFSProducer.html">pyDKB.dataflow.communication.producer.HDFSProducer module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.producer.Producer.html">pyDKB.dataflow.communication.producer.Producer module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.producer.StreamProducer.html">pyDKB.dataflow.communication.producer.StreamProducer module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="pyDKB.dataflow.communication.stream.html">pyDKB.dataflow.communication.stream package</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="pyDKB.dataflow.communication.stream.html#submodules">Submodules</a><ul>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.stream.InputStream.html">pyDKB.dataflow.communication.stream.InputStream module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.stream.OutputStream.html">pyDKB.dataflow.communication.stream.OutputStream module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.stream.Stream.html">pyDKB.dataflow.communication.stream.Stream module</a></li>
+<li class="toctree-l7"><a class="reference internal" href="pyDKB.dataflow.communication.stream.exceptions.html">pyDKB.dataflow.communication.stream.exceptions module</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="pyDKB.dataflow.communication.html#submodules">Submodules</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="pyDKB.dataflow.communication.messages.html">pyDKB.dataflow.communication.messages module</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="pyDKB.dataflow.stage.html">pyDKB.dataflow.stage package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="pyDKB.dataflow.stage.html#submodules">Submodules</a><ul>
-<li class="toctree-l5"><a class="reference internal" href="pyDKB.dataflow.stage.AbstractProcessorStage.html">pyDKB.dataflow.stage.AbstractProcessorStage module</a></li>
 <li class="toctree-l5"><a class="reference internal" href="pyDKB.dataflow.stage.AbstractStage.html">pyDKB.dataflow.stage.AbstractStage module</a></li>
-<li class="toctree-l5"><a class="reference internal" href="pyDKB.dataflow.stage.processors.html">pyDKB.dataflow.stage.processors module</a></li>
+<li class="toctree-l5"><a class="reference internal" href="pyDKB.dataflow.stage.ProcessorStage.html">pyDKB.dataflow.stage.ProcessorStage module</a></li>
 </ul>
 </li>
 </ul>
@@ -189,7 +233,6 @@ documentation.</p>
 <li class="toctree-l3"><a class="reference internal" href="pyDKB.dataflow.cds.html">pyDKB.dataflow.cds module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyDKB.dataflow.dkbID.html">pyDKB.dataflow.dkbID module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyDKB.dataflow.exceptions.html">pyDKB.dataflow.exceptions module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="pyDKB.dataflow.messages.html">pyDKB.dataflow.messages module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="pyDKB.dataflow.types.html">pyDKB.dataflow.types module</a></li>
 </ul>
 </li>

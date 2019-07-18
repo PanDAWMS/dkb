@@ -1,0 +1,20 @@
+.. _pyDKB.dataflow.communication.producer:
+
+pyDKB.dataflow.communication.producer package
+=============================================
+
+.. automodule:: pyDKB.dataflow.communication.producer
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+Submodules
+----------
+
+.. toctree::
+
+   pyDKB.dataflow.communication.producer.FileProducer
+   pyDKB.dataflow.communication.producer.HDFSProducer
+   pyDKB.dataflow.communication.producer.Producer
+   pyDKB.dataflow.communication.producer.StreamProducer
+
