@@ -32,7 +32,8 @@ except Exception, err:
 
 try:
     import elasticsearch
-    from elasticsearch.exceptions import ElasticsearchException
+    from elasticsearch.exceptions import (ElasticsearchException,
+                                          ConnectionTimeout)
 except ImportError, err:
     sys.stderr.write("(ERROR) Failed to import elasticsearch module: %s\n"
                      % err)
@@ -112,7 +113,11 @@ def task_metadata(taskid, fields=[], retry=3):
     try:
         r = chicago_es.search(**kwargs)
     except ElasticsearchException, err:
-        sys.stderr.write("(ERROR) ES search error: %s\n" % err)
+        sys.stderr.write("(ERROR) ES search error (id=%r): %s\n"
+                         % (taskid, err))
+        kwargs_str = json.dumps(kwargs, indent=2)
+        sys.stderr.write(("(DEBUG) ES query details:\n%s" % kwargs_str)
+                         .replace('\n', '\n(DEBUG) ') + '\n')
         if retry > 0:
             sys.stderr.write("(INFO) Sleep 5 sec before retry...\n")
             time.sleep(5)
@@ -259,7 +264,8 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
             'index': get_indices_by_interval(beg, end, wildcard=True),
             'doc_type': 'jobs_data',
             'body': agg_query(taskid, agg_names),
-            'size': 0
+            'size': 0,
+            'request_timeout': 30
         }
     if not es_args['body']:
         return {}
@@ -267,10 +273,16 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
     try:
         r = chicago_es.search(**es_args)
     except ElasticsearchException, err:
-        sys.stderr.write("(ERROR) ES search error: %s\n" % err)
+        sys.stderr.write("(ERROR) ES search error (id=%r): %s\n"
+                         % (taskid, err))
+        args_str = json.dumps(es_args, indent=2)
+        sys.stderr.write(("(DEBUG) ES query details:\n%s" % args_str)
+                         .replace('\n', '\n(DEBUG) ') + '\n')
         if retry > 0:
             sys.stderr.write("(INFO) Sleep 5 sec before retry...\n")
             time.sleep(5)
+            if isinstance(err, ConnectionTimeout):
+                es_args['request_timeout'] *= 2
             return agg_metadata(task_data, agg_names, retry - 1, es_args)
         else:
             sys.stderr.write("(FATAL) Failed to get task aggregated"
