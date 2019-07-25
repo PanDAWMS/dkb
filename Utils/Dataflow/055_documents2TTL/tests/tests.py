@@ -52,38 +52,40 @@ class SimpleTestCase(unittest.TestCase):
                                                     iri)
         self.assertEqual(documents2ttl.documents_links(data), result)
 
-    def test_fix_string_wrong_type(self):
+
+class fix_stringTestCase(unittest.TestCase):
+    def test_wrong_type(self):
         s = 1
         self.assertEqual(documents2ttl.fix_string(s), s)
 
-    def test_fix_string_backslash_n(self):
+    def test_backslash_n(self):
         s = "\n"
         fixed_s = "\\\\n"
         self.assertEqual(documents2ttl.fix_string(s), fixed_s)
 
-    def test_fix_string_single_quote(self):
+    def test_single_quote(self):
         s = "'"
         fixed_s = "\\\\'"
         self.assertEqual(documents2ttl.fix_string(s), fixed_s)
 
-    def test_fix_string_backslash_single_quote(self):
+    def test_single_backslash_single_quote(self):
         s = "\'"
         fixed_s = "\\\\'"
         self.assertEqual(documents2ttl.fix_string(s), fixed_s)
 
-    def test_fix_string_backslash_double_quote(self):
+    def test_backslash_double_quote(self):
         # Is it normal that this and previous tests are so different?
         s = "\""
         fixed_s = ""
         self.assertEqual(documents2ttl.fix_string(s), fixed_s)
 
-    def test_fix_string_string_without_characters_to_escape(self):
+    def test_string_without_characters_to_escape(self):
         s = "Am I supposed to write something _important_/*smart* here?"\
             "Preposterous!"
         self.assertEqual(documents2ttl.fix_string(s), s)
 
 
-test_cases = (SimpleTestCase, )
+test_cases = (SimpleTestCase, fix_stringTestCase)
 
 
 def load_tests(loader, tests, pattern):
