@@ -53,6 +53,72 @@ class SimpleTestCase(unittest.TestCase):
         self.assertEqual(documents2ttl.documents_links(data), result)
 
 
+class arxiv_extractionTestCase(unittest.TestCase):
+    def test_empty(self):
+        result_function = documents2ttl.arxiv_extraction({})
+        result_known = None
+        self.assertEqual(result_function, result_known)
+
+    def test_wrong_number_type(self):
+        data = {'primary_report_number': 1}
+        result_function = documents2ttl.arxiv_extraction(data)
+        result_known = None
+        self.assertEqual(result_function, result_known)
+
+    def test_string(self):
+        data = {'primary_report_number': 'arXiv123'}
+        result_function = documents2ttl.arxiv_extraction(data)
+        result_known = 'arXiv123'
+        self.assertEqual(result_function, result_known)
+
+    def test_list(self):
+        data = {'primary_report_number': [None, 'arXiv123', 'something']}
+        result_function = documents2ttl.arxiv_extraction(data)
+        result_known = 'arXiv123'
+        self.assertEqual(result_function, result_known)
+
+    def test_small_x(self):
+        data = {'primary_report_number': 'arxiv123'}
+        result_function = documents2ttl.arxiv_extraction(data)
+        result_known = None
+        self.assertEqual(result_function, result_known)
+
+    def test_prefix(self):
+        data = {'primary_report_number': '321arXiv123'}
+        result_function = documents2ttl.arxiv_extraction(data)
+        result_known = None
+        self.assertEqual(result_function, result_known)
+
+
+class generate_journal_idTestCase(unittest.TestCase):
+    def test_empty(self):
+        self.assertEqual(documents2ttl.generate_journal_id({}), '')
+
+    def test_title(self):
+        journal_dict = {'title': 'T I T L E\n'}
+        result_function = documents2ttl.generate_journal_id(journal_dict)
+        result_known = 'TITLE\n'
+        self.assertEqual(result_function, result_known)
+
+    def test_volume(self):
+        journal_dict = {'volume': 'o ne \n'}
+        result_function = documents2ttl.generate_journal_id(journal_dict)
+        result_known = '_one\n'
+        self.assertEqual(result_function, result_known)
+
+    def test_year(self):
+        journal_dict = {'year': ' 2 0 1 8 \n'}
+        result_function = documents2ttl.generate_journal_id(journal_dict)
+        result_known = '_2018\n'
+        self.assertEqual(result_function, result_known)
+
+    def test_full(self):
+        journal_dict = {'year': '2018 ', 'title': ' TITLE', 'volume': '1'}
+        result_function = documents2ttl.generate_journal_id(journal_dict)
+        result_known = 'TITLE_1_2018'
+        self.assertEqual(result_function, result_known)
+
+
 class fix_stringTestCase(unittest.TestCase):
     def test_wrong_type(self):
         s = 1
@@ -85,7 +151,12 @@ class fix_stringTestCase(unittest.TestCase):
         self.assertEqual(documents2ttl.fix_string(s), s)
 
 
-test_cases = (SimpleTestCase, fix_stringTestCase)
+test_cases = (
+    SimpleTestCase,
+    arxiv_extractionTestCase,
+    generate_journal_idTestCase,
+    fix_stringTestCase
+    )
 
 
 def load_tests(loader, tests, pattern):
