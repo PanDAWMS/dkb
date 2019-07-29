@@ -24,13 +24,7 @@ class Case(unittest.TestCase):
         fixed_s = "\\\\'"
         self.assertEqual(documents2ttl.fix_string(s), fixed_s)
 
-    def test_backslash_single_quote(self):
-        s = "\'"
-        fixed_s = "\\\\'"
-        self.assertEqual(documents2ttl.fix_string(s), fixed_s)
-
     def test_backslash_double_quote(self):
-        # Is it normal that this and previous tests are so different?
         s = "\""
         fixed_s = ""
         self.assertEqual(documents2ttl.fix_string(s), fixed_s)
