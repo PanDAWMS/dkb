@@ -123,7 +123,7 @@ def amiPhysValues(data):
     ami_client = get_ami_client()
     try:
         res = ami_client.execute(['GetPhysicsParamsForDataset',
-                                  "--logicalDatasetName=%s" % container],
+                                  '--logicalDatasetName=%s' % container],
                                  format='json')
         json_str = json.loads(res)
         for row in json_str['AMIMessage'][0]['Result'][0]['rowset'][0]['row']:
