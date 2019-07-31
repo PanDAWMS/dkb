@@ -93,6 +93,9 @@ def get_ami_client():
 def process(stage, message):
     """ Single message processing. """
     data = message.content()
+    if not isinstance(data, dict):
+        sys.stderr.write("(WARN) Cannot update non-dict data: %r\n" % data)
+        return False
     # 'data_format' field contains a list of strings,
     # e.g. ['DAOD_SUSY5', 'DAOD']
     formats = data.get('data_format', [])
