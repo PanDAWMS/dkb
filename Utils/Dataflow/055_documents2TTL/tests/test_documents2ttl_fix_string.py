@@ -16,12 +16,12 @@ class Case(unittest.TestCase):
 
     def test_backslash_n(self):
         s = "\n"
-        fixed_s = "\\\\n"
+        fixed_s = r"\\n"
         self.assertEqual(documents2ttl.fix_string(s), fixed_s)
 
     def test_single_quote(self):
         s = "'"
-        fixed_s = "\\\\'"
+        fixed_s = r"\\'"
         self.assertEqual(documents2ttl.fix_string(s), fixed_s)
 
     def test_backslash_double_quote(self):
