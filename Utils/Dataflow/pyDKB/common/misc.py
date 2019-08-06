@@ -26,7 +26,7 @@ def log(message, level=logLevel.INFO, *args):
     :type *args: str
     """
     if not logLevel.hasMember(level):
-        self.log("Unknown log level: %s" % level, logLevel.WARN)
+        log("Unknown log level: %s" % level, logLevel.WARN)
         level = logLevel.INFO
     if type(message) == list:
         lines = message
