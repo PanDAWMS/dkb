@@ -1,6 +1,7 @@
 #!/bin/env python
 import json
 import re
+from ssl import SSLError
 import sys
 import os
 try:
@@ -142,6 +143,10 @@ def amiPhysValues(data):
                     continue
         change_key_names(data)
         return True
+    except SSLError as e:
+        sys.stderr.write("(ERROR) Failed to process dataset '%s': "
+                         "%r\n" % (data['datasetname'], e))
+        return False
     except Exception:
         sys.stderr.write("(WARN) No values found in AMI for dataset '%s'\n"
                          % data['datasetname'])
