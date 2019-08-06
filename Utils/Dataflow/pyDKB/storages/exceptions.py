@@ -9,7 +9,7 @@ class StorageException(Exception):
 
 
 class NotFound(StorageException):
-    """ Exeption indicating that record with given ID  not found. """
+    """ Exception indicating that record with given ID not found. """
 
     def __init__(self, **kwargs):
         """ Initialize exception.
