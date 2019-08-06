@@ -53,15 +53,19 @@ Comment:
  * output message body contains trailing NEWLINE, so RS is simply removed from
    the output stream (not replaced with another NEWLINE).
 
-The 'output' directory contains two pairs of regular samples:
+The 'output' directory contains following samples (in regular NDJSON format):
 
-2016 data:
-tasks2016.ndjson (from 017's 2016 sample)
-datasets2016.ndjson (from 095's 2016 sample)
+* with 2016 data:
+  * tasks2016.ndjson (from 017's 2016 sample)
+  * datasets2016.ndjson (from 095's 2016 sample)
 
-2018 data:
-tasks2018.ndjson (from 017's 2018 sample)
-datasets2018.ndjson (from 095's 2018 sample)
+* with 2018 data:
+  * tasks2018.ndjson (from 017's 2018 sample)
+  * datasets2018.ndjson (from 095's 2018 sample)
+
+* extra samples:
+  * <SAMPLE>.update.ndjson -- same as <SAMPLE>.ndjson, but generated with
+                              '--update' option.
 
 tasks* is the tasks' and input datasets' metadata.
 datasets* is the output datasets' metadata.
