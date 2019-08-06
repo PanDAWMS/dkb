@@ -37,7 +37,8 @@ def log(message, level=logLevel.INFO, *args):
     else:
         frm = inspect.stack()[1]
         mod = inspect.getmodule(frm[0])
-        prefix = ' (%s)' % mod.__name__
+        modname = getattr(mod, '__name__', 'main')
+        prefix = ' (%s)' % modname
     if lines:
         dtime = datetime.now().strftime(DTFORMAT)
         out_message = "%s (%s)%s %s" % (dtime, logLevel.memberName(level),
