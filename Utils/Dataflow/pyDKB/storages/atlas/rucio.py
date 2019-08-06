@@ -11,6 +11,7 @@ from pyDKB.common.misc import try_to_import
 
 
 if not os.environ.get("VIRTUAL_ENV", None):
+    base_dir = os.path.abspath(os.path.dirname(__file__))
     user_rucio_dir = os.path.expanduser("~/.rucio")
     if os.path.exists(user_rucio_dir):
         os.environ["VIRTUAL_ENV"] = os.path.join(user_rucio_dir)
