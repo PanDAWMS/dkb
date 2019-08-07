@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Various tests for Stage 055.
+Tests for Stage 055's functions document_iri() and document_links().
 Usage: 'python -m unittest discover' from ..(directory with Stage 055 code).
 """
 
