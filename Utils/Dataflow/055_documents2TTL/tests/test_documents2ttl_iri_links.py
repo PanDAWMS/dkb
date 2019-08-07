@@ -15,31 +15,7 @@ class Case(unittest.TestCase):
         iri = "<%s/document/%s>" % (documents2ttl.GRAPH, doc_id)
         self.assertEqual(documents2ttl.get_document_iri(doc_id), iri)
 
-    def test_documents_links_manual(self):
-        '''
-        This test contains no calls of other functions or variables,
-        everything is defined explicitly. If underlying functions or variables
-        are changed, this test has to be changed as well. This approach makes
-        sense when calling underlying functions should be avoided - for
-        example, they are too time-consuming. Mocking can be used here.
-        '''
-        data = {"dkbID": "0", "supporting_notes": [{"dkbID": "1"},
-                                                   {"dkbID": "2"}]}
-        result = "<http://nosql.tpu.ru:8890/DAV/ATLAS/document/0> "\
-                 "<http://nosql.tpu.ru/ontology/ATLAS#isBasedOn> "\
-                 "<http://nosql.tpu.ru:8890/DAV/ATLAS/document/1> .\n"\
-                 "<http://nosql.tpu.ru:8890/DAV/ATLAS/document/0> "\
-                 "<http://nosql.tpu.ru/ontology/ATLAS#isBasedOn> "\
-                 "<http://nosql.tpu.ru:8890/DAV/ATLAS/document/2> .\n"
-        self.assertEqual(documents2ttl.documents_links(data), result)
-
-    def test_documents_links_constructed(self):
-        '''
-        This test uses functions and variables and simulates the function
-        in normal situation. This approach should be used in most cases as it
-        may discover some errors which cannot be detected by testing parts of
-        the function separately.
-        '''
+    def test_documents_links(self):
         id0 = "2"
         ids = ["8", "3", "6"]
         data = {"dkbID": id0, "supporting_notes": [{"dkbID": i} for i in ids]}
