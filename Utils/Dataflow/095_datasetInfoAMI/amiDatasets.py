@@ -137,10 +137,12 @@ def amiPhysValues(data):
                     data[p_name] = p_val
                     p_name, p_val = None, None
                     continue
-        return change_key_names(data)
+        change_key_names(data)
+        return True
     except Exception:
         sys.stderr.write("(WARN) No values found in AMI for dataset '%s'\n"
                          % data['datasetname'])
+        return False
 
 
 def change_key_names(data):
