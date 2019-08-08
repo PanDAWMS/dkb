@@ -91,32 +91,6 @@ intended for making sure that information is consistent between ProdSys2 and
 ES. It gets a very basic set of metadata from ProdSys2, adds ES-related
 fields, and checks that it is present in ES rather than uploading it.
 
-================
-* Stage types *
-================
-There are three types of stages:
-
-1. Source stage - an initial stage in a dataflow pipeline that gets data
-from an external source (CDS, Rucio, AMI, etc.).
-
-2. Transform stage - these stages perform a set of operations for different
-cases on metadata and form output messages according to a particular pattern
-(e.g. select relevant metadata from a raw dataset, append metadata
-to a message, prepare messages for upload).
-
-2.1 Pre-sink stage - the last transform stage in a dataflow pipeline that
-prepares metadata for upload via sink stage; it awares about messages
-formatting rules. All the preparations should be done by the pre-sink
-stage.
-
-3. Sink stage - a stage that uploads data into the DKB storage
-(Virtuoso, ES, ...). Every single sink stage should be preceded by
-a corresponding pre-sink stage that transforms data and forms ready-to-send
-messages with a specific structure. Sink stage only gets prepared messages
-and uploads it without any re-formatting. It does not care about messages
-content. If message does not follow the template, most likely it
-will be rejected by the storage load API.
-
 ==============
 * REFERENCES *
 ==============
@@ -159,8 +133,34 @@ following requirements:
 
 [3] EOP, End-of-Process marker. Default value: '\0' (NULL)
 
+==================
+* 3. Stage types *
+==================
+There are three types of stages:
+
+1. Source stage - an initial stage in a dataflow pipeline that gets data
+from an external source (CDS, Rucio, AMI, etc.).
+
+2. Transform stage - these stages perform a set of operations for different
+cases on metadata and form output messages according to a particular pattern
+(e.g. select relevant metadata from a raw dataset, append metadata
+to a message, prepare messages for upload).
+
+2.1 Pre-sink stage - the last transform stage in a dataflow pipeline that
+prepares metadata for upload via sink stage; it awares about messages
+formatting rules. All the preparations should be done by the pre-sink
+stage.
+
+3. Sink stage - a stage that uploads data into the DKB storage
+(Virtuoso, ES, ...). Every single sink stage should be preceded by
+a corresponding pre-sink stage that transforms data and forms ready-to-send
+messages with a specific structure. Sink stage only gets prepared messages
+and uploads it without any re-formatting. It does not care about messages
+content. If message does not follow the template, most likely it
+will be rejected by the storage load API.
+
 =====================================
-* 3. External sources (data mining) *
+* 4. External sources (data mining) *
 =====================================
 There are two general cases of external data sources.
 1. Standard sources (like RDBMS) - here we can use standard connectors.
