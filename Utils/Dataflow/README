@@ -99,7 +99,7 @@ There are three types of stages:
 1. Source stage - an initial stage in a dataflow pipeline that gets data
 from an external source (CDS, Rucio, AMI, etc.).
 
-2. Transform stage - a stage that makes a set of different operations
+2. Transform stage - these stages make a set of operations for different cases
 with metadata forming messages according to a particular pattern (e.g. select
 relevant metadata from a raw dataset, append metadata to a message, prepare
 messages to upload).
