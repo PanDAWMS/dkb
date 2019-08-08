@@ -106,14 +106,16 @@ messages to upload).
 
 2.1 Pre-sink stage - the last transform stage in a dataflow pipeline that
 prepares metadata to upload via sink stage; it awares about messages
-formatting. All the messages preparations should be done by a pre-sink stage.
+formatting rules. All the messages preparations should be done by a pre-sink
+stage.
 
-3. Sink stage - a stage that uploads data into the DKB storage (Virtuoso
-or ES). We consider that every single sink stage requires a particular
-pre-sink stage that transform data and form ready-to-send messages with a
-particular structure. Sink stage only gets prepared messages and upload it
-without any re-formatting. It does not care about messages content.
-If message does not follow the template, it will not be uploaded.
+3. Sink stage - a stage that uploads data into the DKB storage
+(Virtuoso, ES, ...). Every single sink stage should be preceded by
+a corresponding pre-sink stage that transforms data and forms ready-to-send
+messages with a specific structure. Sink stage only gets prepared messages
+and uploads it without any re-formatting. It does not care about messages
+content. If message does not follow the template, most likely it
+will be rejected by the storage load API.
 
 ==============
 * REFERENCES *
