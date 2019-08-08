@@ -97,7 +97,7 @@ fields, and checks that it is present in ES rather than uploading it.
 There are three types of stages:
 
 1. Source stage - an initial stage in a dataflow pipeline that gets data
-from an external source (CDS, Rucio, AMI, etc.)
+from an external source (CDS, Rucio, AMI, etc.).
 
 2. Transform stage - a stage that makes a set of different operations
 with metadata forming messages according to a particular pattern (e.g. select
