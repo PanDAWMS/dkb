@@ -130,7 +130,12 @@ def amiPhysValues(data):
                                   '--logicalDatasetName=%s' % container],
                                  format='json')
         json_str = json.loads(res)
-        for row in json_str['AMIMessage'][0]['Result'][0]['rowset'][0]['row']:
+        rowset = json_str['AMIMessage'][0]['Result'][0]['rowset']
+        if not rowset:
+            sys.stderr.write("(WARN) No values found in AMI for dataset '%s'\n"
+                             % data['datasetname'])
+            return False
+        for row in rowset[0]['row']:
             p_name, p_val = None, None
             for field in row['field']:
                 if field['@name'] == 'paramName':
@@ -147,9 +152,9 @@ def amiPhysValues(data):
         sys.stderr.write("(ERROR) Failed to process dataset '%s': "
                          "%r\n" % (data['datasetname'], e))
         return False
-    except Exception:
-        sys.stderr.write("(WARN) No values found in AMI for dataset '%s'\n"
-                         % data['datasetname'])
+    except Exception as e:
+        sys.stderr.write("(ERROR) Failed to process dataset '%s': "
+                         "%r\n" % (data['datasetname'], e))
         return False
 
 
