@@ -92,7 +92,7 @@ ES. It gets a very basic set of metadata from ProdSys2, adds ES-related
 fields, and checks that it is present in ES rather than uploading it.
 
 ================
-* Stages types *
+* Stage types *
 ================
 There are three types of stages:
 
