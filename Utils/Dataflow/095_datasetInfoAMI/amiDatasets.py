@@ -56,7 +56,10 @@ def main(argv):
 
 
 def init_ami_client(userkey='', usercert=''):
-    """ Initialisation of AMI client into the global variable
+    """ Establish a connection to AMI.
+
+    Initialize the global variable ami_client with the resulting
+    client object.
 
     :param userkey: user key pem file
     :param usercert: user certificate pem file
@@ -115,7 +118,7 @@ def process(stage, message):
 
 
 def amiPhysValues(data):
-    """ Add elements in JSON string, according to theirs names in ES mapping
+    """ Add elements to JSON string according to their names in ES mapping.
 
     - gen_filt_eff
     - cross_section
@@ -160,7 +163,7 @@ def amiPhysValues(data):
 
 
 def change_key_names(data):
-    """ Changing parameter names according to PHYS_VALUES dictionary.
+    """ Change parameter names according to PHYS_VALUES dictionary.
 
     :param data: JSON string
     :return: JSON string
