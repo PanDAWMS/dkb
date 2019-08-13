@@ -25,7 +25,7 @@ class Client(LoggableObject):
 
         Raise ``NotFound`` exception if object / record not found.
 
-        :param oid: object / record identfier
+        :param oid: object / record identifier
         :type oid: str, int
 
         :return: record with given ID
