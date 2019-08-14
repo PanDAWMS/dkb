@@ -94,7 +94,16 @@ def get_ami_client():
 
 
 def process(stage, message):
-    """ Single message processing. """
+    """ Process a message.
+
+    Implementation of :py:meth:`.ProcessorStage.process` for hooking
+    the stage into DKB workflow.
+
+    :param stage: stage instance
+    :type stage: pyDKB.dataflow.stage.ProcessorStage
+    :param message: input message with data
+    :type message: pyDKB.dataflow.communication.messages.JSONMessage
+    """
     data = message.content()
     # 'data_format' field contains a list of strings,
     # e.g. ['DAOD_SUSY5', 'DAOD']
