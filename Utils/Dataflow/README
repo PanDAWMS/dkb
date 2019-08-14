@@ -146,7 +146,7 @@ cases on metadata and form output messages according to a particular pattern
 (e.g. select relevant metadata from a raw dataset, append metadata
 to a message, prepare messages for upload).
 
-2.1 Pre-sink stage - the last transform stage in a dataflow pipeline that
+2.1. Pre-sink stage - the last transform stage in a dataflow pipeline that
 prepares metadata for upload via sink stage; it awares about messages
 formatting rules. All the preparations should be done by the pre-sink
 stage.
