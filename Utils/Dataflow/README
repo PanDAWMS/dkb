@@ -141,15 +141,16 @@ There are three types of stages:
 1. Source stage - an initial stage in a dataflow pipeline that gets data
 from an external source (CDS, Rucio, AMI, etc.).
 
-2. Transform stage - these stages perform a set of operations for different
-cases on metadata and form output messages according to a particular pattern
-(e.g. select relevant metadata from a raw dataset, append metadata
-to a message, prepare messages for upload).
+2. Transform stage - a transitional stage that performs single logical
+operation on the metadata. Set (chain) of transform stages forms the whole
+transformation process for messages emitted by Source. Transformation
+operations may include: format change, derived values calculation,
+message extension with metadata from an additional source, etc.
 
 2.1. Pre-sink stage - the last transform stage in a dataflow pipeline that
 prepares metadata for upload via sink stage; it awares about messages
-formatting rules. All the preparations should be done by the pre-sink
-stage.
+formatting rules. All the preparations for upload should be done by
+the pre-sink stage.
 
 3. Sink stage - a stage that uploads data into the DKB storage
 (Virtuoso, ES, ...). Every single sink stage should be preceded by
