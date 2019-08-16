@@ -26,7 +26,7 @@ OUT = os.fdopen(sys.stdout.fileno(), 'w', 0)
 OFFSET_TZ = None
 # Delay
 # (used to adjust 'now' to avoid pulling of "unstable" data)
-OFFSET_DELAY = None
+OFFSET_DELAY = 0
 # ---
 
 
@@ -336,7 +336,7 @@ def offset_now(tz=None, delay=None):
     if tz:
         TZ = pytz.timezone(tz)
     dl = OFFSET_DELAY
-    if delay:
+    if delay is not None:
         dl = delay
     return datetime.now(TZ).replace(tzinfo=None) - timedelta(seconds=dl)
 
