@@ -35,7 +35,11 @@ FILTER = ['AOD', 'EVNT', 'HITS']
 
 
 def main(argv):
-    """ Main program body. """
+    """ Main program body.
+
+    :param argv: arguments
+    :type argv: list
+    """
     stage = pyDKB.dataflow.stage.ProcessorStage()
     stage.set_input_message_type(messageType.JSON)
     stage.set_output_message_type(messageType.JSON)
@@ -62,8 +66,9 @@ def init_ami_client(userkey='', usercert=''):
     client object.
 
     :param userkey: user key pem file
+    :type userkey: str
     :param usercert: user certificate pem file
-    :return:
+    :type usercert: str
     """
     global ami_client
     try:
@@ -88,7 +93,11 @@ def init_ami_client(userkey='', usercert=''):
 
 
 def get_ami_client():
-    """ Get configured AMI client. """
+    """ Get configured AMI client.
+
+    :return: AMI client instance (global variable)
+    :rtype: pyAMI.client.Client
+    """
     if not ami_client:
         init_ami_client()
     return ami_client
@@ -104,6 +113,9 @@ def process(stage, message):
     :type stage: pyDKB.dataflow.stage.ProcessorStage
     :param message: input message with data
     :type message: pyDKB.dataflow.communication.messages.JSONMessage
+
+    :return: False (failed to process message) or True (otherwise)
+    :rtype: bool
     """
     data = message.content()
     # 'data_format' field contains a list of strings,
@@ -153,8 +165,11 @@ def amiPhysValues(data):
 def change_key_names(data):
     """ Change parameter names from ones used by AMI to corresponding ES ones.
 
-    :param data: JSON string
-    :return: JSON string
+    :param data: data to update
+    :type data: dict
+
+    :return: updated data
+    :rtype: dict
     """
     for item in PHYS_VALUES:
         if item["ami"] in data:
