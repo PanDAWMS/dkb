@@ -141,7 +141,14 @@ def process(stage, message):
 
 
 def amiPhysValues(data):
-    """ Update data with information from AMI. """
+    """ Update data with information from AMI.
+
+    :param data: data to update
+    :type data: dict
+
+    :return: True (update was successful) or False (otherwise)
+    :rtype: bool
+    """
     dataset = data['datasetname']
     container = remove_tid(dataset)
     ami_client = get_ami_client()
