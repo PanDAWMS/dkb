@@ -172,8 +172,7 @@ def amiPhysValues(data):
                     p_val = field['$']
                 if p_name and p_val:
                     data[p_name] = p_val
-                    p_name, p_val = None, None
-                    continue
+                    break
         return True
     except SSLError as e:
         sys.stderr.write("(ERROR) Failed to process dataset '%s': "
