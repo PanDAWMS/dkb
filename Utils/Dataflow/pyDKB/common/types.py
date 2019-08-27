@@ -1,7 +1,7 @@
 """
 pyDKB.common.types
 
-Definitions of types used across all the library moduless.
+Definitions of types used across all the library modules.
 """
 
 from Type import Type
