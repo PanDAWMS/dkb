@@ -17,8 +17,9 @@ DTFORMAT = '%Y-%m-%d %H:%M:%S'
 def log(message, level=logLevel.INFO, *args):
     """ Output log message with given log level.
 
-    :param message: message to output
-    :type message: str
+    :param message: message to output (string, list of strings or
+                    any other object)
+    :type message: object
     :param level: log level of the message
     :type level: ``pyDKB.common.types.logLevel`` member
     :param *args: additional prefixes (will be output between log
@@ -31,7 +32,7 @@ def log(message, level=logLevel.INFO, *args):
     if type(message) == list:
         lines = message
     else:
-        lines = message.splitlines()
+        lines = str(message).splitlines()
     if args:
         prefix = ' ' + ' '.join(['(%s)' % p for p in args])
     else:
