@@ -148,7 +148,7 @@ operations may include: format change, derived values calculation,
 message extension with metadata from an additional source, etc.
 
 2.1. Pre-sink stage - the last transform stage in a dataflow pipeline that
-prepares metadata for upload via sink stage; it awares about messages
+prepares metadata for upload via sink stage; it is aware of messages'
 formatting rules. All the preparations for upload should be done by
 the pre-sink stage.
 
