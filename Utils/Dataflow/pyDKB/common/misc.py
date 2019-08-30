@@ -17,6 +17,13 @@ DTFORMAT = '%Y-%m-%d %H:%M:%S'
 def log(message, level=logLevel.INFO, *args):
     """ Output log message with given log level.
 
+    In case of multiline messages or list of messages only first line (message)
+    is prepended with provided prefixes and timestamp; in all the next lines
+    (messages) they are replaced with special prefix '(==)', representing that
+    these lines belong to the same log record.
+
+    Empty lines and lines containing only whitespace symbols are ignored.
+
     :param message: message to output (string, list of strings or
                     any other object)
     :type message: object
