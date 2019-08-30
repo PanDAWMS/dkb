@@ -33,7 +33,7 @@ def log(message, level=logLevel.INFO, *args):
         message = [message]
     lines = []
     for m in message:
-        lines += str(m).splitlines()
+        lines += [line for line in str(m).splitlines() if line.strip()]
     if args:
         prefix = ' ' + ' '.join(['(%s)' % p for p in args])
     else:
