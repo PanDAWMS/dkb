@@ -122,8 +122,7 @@ def amiPhysValues(data):
     - k_factor
     - cross_section_ref
     """
-    dataset = data['datasetname']
-    container = remove_tid(dataset)
+    container = container_name(data)
     ami_client = get_ami_client()
     try:
         res = ami_client.execute(['GetPhysicsParamsForDataset',
@@ -170,17 +169,17 @@ def change_key_names(data):
     return data
 
 
-def remove_tid(dataset):
-    """ Remove TaskID (_tidXX) part from dataset name.
+def container_name(data):
+    """ Retrieve container name from information about dataset.
 
     As AMI GetPhysicsParamsForDataset works with containers,
     we construct the container name from each dataset name,
     removing the _tid{...} part
 
-    :param dataset: dataset name
+    :param data: dataset information
     :return: dataset name without _tid => container name
     """
-    return re.sub('_tid(.)+', '', dataset)
+    return re.sub('_tid(.)+', '', data['datasetname'])
 
 
 if __name__ == '__main__':
