@@ -29,10 +29,11 @@ def log(message, level=logLevel.INFO, *args):
     if not logLevel.hasMember(level):
         log("Unknown log level: %s" % level, logLevel.WARN)
         level = logLevel.INFO
-    if type(message) == list:
-        lines = message
-    else:
-        lines = str(message).splitlines()
+    if type(message) != list:
+        message = [message]
+    lines = []
+    for m in message:
+        lines += str(m).splitlines()
     if args:
         prefix = ' ' + ' '.join(['(%s)' % p for p in args])
     else:
