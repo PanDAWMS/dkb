@@ -23,7 +23,7 @@ class Client(LoggableObject):
     def get(self, oid, **kwargs):
         """ Get object / record from storage by ID.
 
-        Raise ``NotFound`` exception if object / record not found.
+        :raise NotFound: object / record is not found
 
         :param oid: object / record identifier
         :type oid: str, int

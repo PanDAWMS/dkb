@@ -39,7 +39,7 @@ def getScope(scope):
 def getClient(name, scope=None):
     """ Get client for a given storage.
 
-    Raise ``StorageException`` if failed to get client by given name and scope.
+    :raise StorageException: failed to get client by given name and scope
 
     :param name: storage name
     :type name: str
