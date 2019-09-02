@@ -156,7 +156,7 @@ the pre-sink stage.
 (Virtuoso, ES, ...). Every single sink stage should be preceded by
 a corresponding pre-sink stage that transforms data and forms ready-to-send
 messages with a specific structure. Sink stage only gets prepared messages
-and uploads it without any re-formatting. It does not care about messages
+and uploads them without any re-formatting. It does not care about messages
 content. If message does not follow the template, most likely it
 will be rejected by the storage load API.
 
