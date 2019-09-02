@@ -143,7 +143,7 @@ from an external source (CDS, Rucio, AMI, etc.).
 
 2. Transform stage - a transitional stage that performs single logical
 operation on the metadata. Set (chain) of transform stages forms the whole
-transformation process for messages produced by Source. Transformation
+transformation process for messages produced by a source stage. Transformation
 operations may include: format change, derived values calculation,
 message extension with metadata from an additional source, etc.
 
