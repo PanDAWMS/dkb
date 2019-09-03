@@ -123,6 +123,8 @@ def amiPhysValues(data):
     - cross_section_ref
     """
     container = container_name(data)
+    if not container:
+        return False
     ami_client = get_ami_client()
     try:
         res = ami_client.execute(['GetPhysicsParamsForDataset',
@@ -181,7 +183,19 @@ def container_name(data):
     :return: container name if it was determined successfully, False otherwise
     :rtype: str or bool
     """
-    return re.sub('_tid(.)+', '', data['datasetname'])
+    if 'datasetname' in data:
+        dataset = data['datasetname']
+    else:
+        sys.stderr.write("(WARN) Required field 'datasetname' not found "
+                         "in data: %r\n" % data)
+        return False
+    if not isinstance(dataset, (str, unicode)):
+        sys.stderr.write("(WARN) Invalid type of 'datasetname' field: "
+                         "expected string, got %s.\n"
+                         "(==) Data: "
+                         "%r\n" % (dataset.__class__.__name__, data))
+        return False
+    return re.sub('_tid(.)+', '', dataset)
 
 
 if __name__ == '__main__':
