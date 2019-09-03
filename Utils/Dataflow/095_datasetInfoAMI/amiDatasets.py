@@ -206,12 +206,14 @@ def change_key_names(data):
 def container_name(data):
     """ Retrieve container name from information about dataset.
 
-    As AMI GetPhysicsParamsForDataset works with containers,
-    we construct the container name from each dataset name,
-    removing the _tid{...} part
+    The container name is extracted from dataset name by removing
+    the '_tid...' part.
 
     :param data: dataset information, must contain 'datasetname' field
-    :return: dataset name without _tid => container name
+    :type data: dict
+
+    :return: container name if it was determined successfully, False otherwise
+    :rtype: str or bool
     """
     return re.sub('_tid(.)+', '', data['datasetname'])
 
