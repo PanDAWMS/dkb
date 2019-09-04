@@ -91,6 +91,11 @@ def init_ami_client(userkey='', usercert=''):
                          "proxy.\n")
         raise DataflowException("Failed to initialise AMI client: certificate "
                                 "not provided or not found.")
+    try:
+        ami_client.execute('ListCommands')
+    except Exception as e:
+        sys.stderr.write("(WARN) Failed to perform test command "
+                         "ListCommands. Exception: %s\n" % str(e))
 
 
 def get_ami_client():
