@@ -121,7 +121,7 @@
           "type": "text"
         },
         "energy_gev": {
-          "type": "long"
+          "type": "integer"
         },
         "architecture": {
           "type": "keyword",
