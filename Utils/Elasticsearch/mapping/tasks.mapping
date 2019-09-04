@@ -86,7 +86,6 @@
         "taskname": {
           "type": "text",
           "analyzer": "task_dataset_analyzer",
-          "search_analyzer": "task_dataset_analyzer",
           "fields": {
             "keyword": {
               "type": "keyword",
@@ -189,7 +188,6 @@
         "primary_input": {
           "type": "text",
           "analyzer": "task_dataset_analyzer",
-          "search_analyzer": "task_dataset_analyzer",
           "fields": {
             "keyword": {
               "type": "keyword",
@@ -240,7 +238,6 @@
         "datasetname": {
           "type": "text",
           "analyzer": "task_dataset_analyzer",
-          "search_analyzer": "task_dataset_analyzer",
           "fields": {
             "keyword": {
               "type": "keyword",
