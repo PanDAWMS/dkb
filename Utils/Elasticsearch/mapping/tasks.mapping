@@ -110,8 +110,7 @@
           "ignore_above": 256
         },
         "description": {
-          "type": "text",
-          "index": true
+          "type": "text"
         },
         "energy_gev": {
           "type": "long"
