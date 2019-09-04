@@ -163,8 +163,12 @@
           "ignore_above": 256
         },
         "run_number": {
-          "type": "keyword",
-          "ignore_above": 256
+          "type": "integer",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
         },
         "trigger_config": {
           "type": "keyword",
