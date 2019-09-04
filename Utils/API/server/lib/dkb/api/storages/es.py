@@ -74,15 +74,14 @@ def init():
     passwd = CONFIG.get('passwd', '')
     TASK_KWARGS['index'] = CONFIG.get('index', None)
     try:
-        es = elasticsearch.Elasticsearch(hosts, http_auth=(user, passwd),
-                                         sniff_on_start=True)
+        es = elasticsearch.Elasticsearch(hosts, http_auth=(user, passwd))
     except Exception, err:
         trace = traceback.format_exception(*sys.exc_info())
         for lines in trace:
             for line in lines.split('\n'):
                 if line:
                     logging.debug(line)
-        raise StorageClientException(str(err))
+        raise StorageClientException(STORAGE_NAME, str(err))
     return es
 
 
