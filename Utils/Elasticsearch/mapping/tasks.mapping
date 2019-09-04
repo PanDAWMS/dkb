@@ -76,8 +76,12 @@
           "ignore_above": 256
         },
         "taskid": {
-          "type": "keyword",
-          "ignore_above": 256
+          "type": "integer",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
         },
         "chain_id": {
           "type": "long"
