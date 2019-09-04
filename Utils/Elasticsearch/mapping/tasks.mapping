@@ -236,7 +236,7 @@
           "type": "long"
         },
         "n_files_to_be_used": {
-          "type": "long"
+          "type": "integer"
         }
       }
     },
