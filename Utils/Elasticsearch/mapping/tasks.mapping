@@ -230,7 +230,7 @@
           "type": "long"
         },
         "n_files_per_job": {
-          "type": "long"
+          "type": "short"
         },
         "n_events_per_job": {
           "type": "long"
