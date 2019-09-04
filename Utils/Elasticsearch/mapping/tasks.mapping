@@ -84,10 +84,10 @@
           }
         },
         "chain_id": {
-          "type": "long"
+          "type": "integer"
         },
         "chain_data": {
-          "type": "long",
+          "type": "integer",
           "index": false,
           "doc_values": false
         },
