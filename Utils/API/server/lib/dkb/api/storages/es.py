@@ -81,7 +81,7 @@ def init():
             for line in lines.split('\n'):
                 if line:
                     logging.debug(line)
-        raise StorageClientException(str(err))
+        raise StorageClientException(STORAGE_NAME, str(err))
     return es
 
 
