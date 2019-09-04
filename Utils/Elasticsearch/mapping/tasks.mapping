@@ -52,8 +52,12 @@
           }
         },
         "pr_id": {
-          "type": "keyword",
-          "ignore_above": 256
+          "type": "integer",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
         },
         "step_name": {
           "type": "text",
