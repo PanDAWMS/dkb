@@ -79,6 +79,7 @@ def init_ami_client(userkey='', usercert=''):
                                - failed to establish pyAMI session
                                  (can be incorrect key/certificate)
                                - key and/or certificate not found
+                               - test command failed
     """
     global ami_client
     try:
@@ -100,6 +101,17 @@ def init_ami_client(userkey='', usercert=''):
                          " create proxy.\n")
         raise DataflowException("Failed to initialise AMI client: certificate"
                                 " not provided or not found.")
+    sys.stderr.write("(INFO) Sending test command ListCommands to check"
+                     " that AMI client works and the credentials are"
+                     " correct...\n")
+    try:
+        ami_client.execute('ListCommands')
+    except Exception as e:
+        sys.stderr.write("(ERROR) Test command ListCommands failed. Are you"
+                         " sure you have a valid certificate?\n"
+                         "(==) Exception: %s\n" % str(e))
+        raise DataflowException("Test command ListCommands failed.")
+    sys.stderr.write("(INFO) Success.\n")
 
 
 def get_ami_client():
