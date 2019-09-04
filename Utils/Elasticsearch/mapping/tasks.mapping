@@ -203,16 +203,15 @@
           "type": "long"
         },
 
-        "toths06": {           /* Origin: ChicagoES/jobs_archive_YYYY-MM-DD/jobs_data/doc['hs06sec'] */
-          "type": "long"       /*         (total value for the task jobs with status 'finished' or   */
-        },                     /*          'failed')                                                 */
-                               /* Meaning: CPU resources used by the task.                           */
-
-        "toths06_finished": {  /* Meaning: CPU resources the task would use in the perfect world.    */
+        "toths06": {
           "type": "long"
         },
 
-        "toths06_failed": {    /* Meaning: 'wasted' CPU resources. */
+        "toths06_finished": {
+          "type": "long"
+        },
+
+        "toths06_failed": {
           "type": "long"
         },
 
@@ -225,8 +224,8 @@
         "primary_input_deleted": {
           "type": "boolean"
         },
-        "input_events": {  /* derived value based on primary_input_events, requested_events, */
-          "type": "long"   /* n_files_per_job, n_events_per_job, n_files_to_be_used */
+        "input_events": {
+          "type": "long"
         },
         "n_files_per_job": {
           "type": "long"
