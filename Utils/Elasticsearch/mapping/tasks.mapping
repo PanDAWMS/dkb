@@ -128,8 +128,7 @@
           "ignore_above": 256
         },
         "core_count": {
-          "type": "keyword",
-          "ignore_above": 256
+          "type": "short"
         },
         "conditions_tag": {
           "type": "keyword",
