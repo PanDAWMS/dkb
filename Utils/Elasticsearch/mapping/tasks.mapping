@@ -279,8 +279,7 @@
           "type": "double"
         },
         "gen_filt_eff": {
-          "type": "keyword",
-          "ignore_above": 256
+          "type": "double"
         },
         "process_group": {
           "type": "keyword",
