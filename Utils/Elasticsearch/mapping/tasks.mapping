@@ -276,8 +276,7 @@
           "ignore_above": 256
         },
         "cross_section": {
-          "type": "keyword",
-          "ignore_above": 256
+          "type": "double"
         },
         "gen_filt_eff": {
           "type": "keyword",
