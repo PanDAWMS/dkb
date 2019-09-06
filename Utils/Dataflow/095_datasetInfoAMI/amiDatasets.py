@@ -25,12 +25,12 @@ except Exception, err:
 
 ami_client = None
 # Field names in terms of AMI and ES schemes.
-PHYS_VALUES = [{"ami": "genFiltEff", "es": "gen_filt_eff"},
-               {"ami": "crossSection", "es": "cross_section"},
-               {"ami": "crossSectionRef", "es": "cross_section_ref"},
-               {"ami": "kFactor", "es": "k_factor"},
-               {"ami": "processGroup", "es": "process_group"},
-               {"ami": "mePDF", "es": "me_pdf"},
+PHYS_VALUES = [{'ami': 'genFiltEff', 'es': 'gen_filt_eff'},
+               {'ami': 'crossSection', 'es': 'cross_section'},
+               {'ami': 'crossSectionRef', 'es': 'cross_section_ref'},
+               {'ami': 'kFactor', 'es': 'k_factor'},
+               {'ami': 'processGroup', 'es': 'process_group'},
+               {'ami': 'mePDF', 'es': 'me_pdf'},
                ]
 FILTER = ['AOD', 'EVNT', 'HITS']
 
@@ -199,8 +199,8 @@ def change_key_names(data):
     :rtype: dict
     """
     for item in PHYS_VALUES:
-        if item["ami"] in data:
-            data[item["es"]] = data.pop(item["ami"])
+        if item['ami'] in data:
+            data[item['es']] = data.pop(item['ami'])
     return data
 
 
