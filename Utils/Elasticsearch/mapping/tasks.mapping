@@ -269,8 +269,7 @@
           "ignore_above": 256
         },
         "k_factor": {
-          "type": "keyword",
-          "ignore_above": 256
+          "type": "double"
         },
         "cross_section_ref": {
           "type": "keyword",
