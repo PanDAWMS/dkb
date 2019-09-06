@@ -237,57 +237,55 @@
         },
         "n_files_to_be_used": {
           "type": "integer"
-        }
-      }
-    },
-    "output_dataset": {
-      "_parent": {
-        "type": "task"
-      },
-      "properties": {
-        "datasetname": {
-          "type": "text",
-          "analyzer": "task_dataset_analyzer",
-          "fields": {
-            "keyword": {
+        },
+        "output_dataset": {
+          "type": "nested",
+          "properties": {
+            "name": {
+              "type": "text",
+              "analyzer": "task_dataset_analyzer",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
+            },
+            "events": {
+              "type": "long"
+            },
+            "bytes": {
+              "type": "long"
+            },
+            "deleted": {
+              "type": "boolean"
+            },
+            "data_format": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "k_factor": {
+              "type": "double"
+            },
+            "cross_section_ref": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "cross_section": {
+              "type": "double"
+            },
+            "gen_filt_eff": {
+              "type": "double"
+            },
+            "process_group": {
+              "type": "keyword",
+              "ignore_above": 256
+            },
+            "me_pdf": {
               "type": "keyword",
               "ignore_above": 256
             }
           }
-        },
-        "events": {
-          "type": "long"
-        },
-        "bytes": {
-          "type": "long"
-        },
-        "deleted": {
-          "type": "boolean"
-        },
-        "data_format": {
-          "type": "keyword",
-          "ignore_above": 256
-        },
-        "k_factor": {
-          "type": "double"
-        },
-        "cross_section_ref": {
-          "type": "keyword",
-          "ignore_above": 256
-        },
-        "cross_section": {
-          "type": "double"
-        },
-        "gen_filt_eff": {
-          "type": "double"
-        },
-        "process_group": {
-          "type": "keyword",
-          "ignore_above": 256
-        },
-        "me_pdf": {
-          "type": "keyword",
-          "ignore_above": 256
         }
       }
     }
