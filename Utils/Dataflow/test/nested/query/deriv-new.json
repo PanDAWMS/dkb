@@ -1,0 +1,55 @@
+{
+  "size": 0,
+  "query": {
+    "bool": {
+      "must": [
+        {"terms": {"primary_input": ["aod","rpvll"]}},
+        {"term": {"project": %%PROJECT%%}},
+        {"terms": {"ctag": [%%CTAG%%]}},
+        {"term": {"status": "done"}},
+        {"range": {"input_bytes": {"gt": 0}}}
+      ]
+    }
+  },
+  "aggs": {
+    "output_datasets": {
+      "nested": {"path": "output_dataset"},
+      "aggs": {
+        "output_not_empty": {
+          "filter": {
+            "range": {"output_dataset.bytes": {"gt": 0}}
+          },
+          "aggs": {
+            "data_format": {
+              "terms": { "field": "output_dataset.data_format", "size":1000 },
+              "aggs": {
+                "output": {
+                  "filter": {"term": {"output_dataset.deleted": false}},
+                  "aggs": {
+                    "bytes": {
+                      "sum": {"field": "output_dataset.bytes"}
+                    },
+                    "events": {
+                      "sum": {"field": "output_dataset.events"}
+                    }
+                  }
+                },
+                "input": {
+                  "reverse_nested": {},
+                  "aggs": {
+                    "bytes": {
+                      "sum": {"field": "input_bytes"}
+                    },
+                    "events": {
+                      "sum": {"field": "requested_events"}
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
