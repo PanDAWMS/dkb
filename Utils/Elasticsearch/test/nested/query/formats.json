@@ -1,0 +1,12 @@
+{
+  "size": 0,
+  "query": {"term": {"pr_id": %%PR_ID%%}},
+  "aggs": {
+    "format": {
+      "terms": {
+        "field": "output_formats",
+        "size": 1000
+      }
+    }
+  }
+}

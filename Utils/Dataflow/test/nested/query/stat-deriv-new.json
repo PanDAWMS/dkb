@@ -1,0 +1,93 @@
+{
+  "size": 0,
+  "query": {
+    "bool": {
+      "must": [
+        {"term": {"pr_id": %%PR_ID%%}},
+        {"bool": {"must_not": [{"terms": {"status": ["aborted", "failed", "broken", "obsolete"]}}]}}
+      ]
+    }
+  },
+  "aggs": {
+    "datasets": {
+      "nested": {
+        "path": "output_dataset"
+      },
+      "aggs": {
+        "formats": {
+          "terms": {
+            "field": "output_dataset.data_format"
+          },
+          "aggs": {
+            "tasks": {
+              "reverse_nested": {},
+              "aggs": {
+                "amitag": {
+                  "terms": {"field": "ctag"},
+                  "aggs": {
+                    "input_events": {
+                      "sum": {"field": "input_events"}
+                    },
+                    "not_deleted": {
+                      "filter": {
+                        "term": {"primary_input_deleted": false}
+                      },
+                      "aggs": {
+                        "input_bytes": {
+                          "sum": {"field": "input_bytes"}
+                        }
+                      }
+                    },
+                    "processed_events": {
+                      "sum": {"field": "processed_events"}
+                    },
+                    "cpu_total": {
+                      "sum": {"field": "toths06"}
+                    },
+                    "cpu_failed": {
+                      "sum": {"field": "toths06_failed"}
+                    },
+                    "timestamp_defined": {
+                      "filter": {
+                        "bool": {
+                          "must": [
+                            {"exists": {"field": "start_time"}},
+                            {"exists": {"field": "end_time"}},
+                            {"script": {"script": "doc['end_time'].value > doc['start_time'].value"}}
+                          ]
+                        }
+                      },
+                      "aggs": {
+                        "walltime": {
+                          "avg": {"script": {"inline": "doc['end_time'].value - doc['start_time'].value"}}
+                        }
+                      }
+                    },
+                    "output": {
+                      "nested": {"path": "output_dataset"},
+                      "aggs": {
+                        "not_removed": {
+                          "filter": {
+                            "term": {"output_dataset.deleted": false}
+                          },
+                          "aggs": {
+                            "bytes": {
+                              "sum": {"field": "output_dataset.bytes"}
+                            },
+                            "events":{
+                              "sum": {"field": "output_dataset.events"}
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
