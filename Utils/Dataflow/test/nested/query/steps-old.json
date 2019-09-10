@@ -1,0 +1,67 @@
+{
+  "size": 0,
+  "query": {
+    "bool": {
+      "must": [
+        {"terms": {"hashtag_list": [%%HASHTAG%%]}},
+        {"bool": {"must_not": [{"terms": {"status": ["aborted", "failed", "broken", "obsolete"]}}]}}
+      ]
+    }
+  },
+  "aggs": {
+    "steps": {
+      "terms": {"field": "step_name.keyword"},
+      "aggs": {
+        "input_events": {
+          "sum": {"field": "input_events"}
+        },
+        "not_deleted": {
+          "filter": {"term": {"primary_input_deleted": false}},
+          "aggs": {
+            "input_bytes": {
+              "sum": {"field": "input_bytes"}
+            }
+          }
+        },
+        "processed_events": {
+          "sum": {"field": "processed_events"}
+        },
+        "total_events": {
+          "sum": {"field": "total_events"}
+        },
+        "hs06":{
+          "sum": {"field": "toths06"}
+        },
+        "cpu_failed":{
+          "sum": {"field": "toths06_failed"}
+        },
+        "ended":{
+          "filter" : {"exists" : { "field" : "end_time" }},
+          "aggs":{
+            "duration":{
+              "avg":{
+                "script":{
+                  "inline":"doc['end_time'].value - doc['start_time'].value"
+                }
+          }}}
+        },
+        "output": {
+          "children": {"type": "output_dataset"},
+          "aggs": {
+            "not_removed": {
+              "filter": {"term": {"deleted": false}},
+              "aggs": {
+                "bytes": {
+                  "sum": {"field": "bytes"}
+                }
+              }
+            }
+          }
+        },
+        "status": {
+          "terms": {"field": "status"}
+        }
+      }
+    }
+  }
+}
