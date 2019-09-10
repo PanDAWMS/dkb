@@ -1,0 +1,20 @@
+{
+  "query": {
+    "bool": {
+      "must": [
+        {"query_string": {
+            "query": %%QUERY%%
+        }}
+      ],
+      "should": [
+        {"has_child": {
+          "type": "output_dataset",
+          "score_mode": "sum",
+          "query": {"match_all": {}},
+          "inner_hits": {"size":20}
+        }}
+      ]
+    }
+  },
+  "size": 2000
+}

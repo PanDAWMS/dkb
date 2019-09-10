@@ -1,0 +1,8 @@
+{
+  "query": {
+    "query_string": {
+      "query": %%QUERY%%
+    }
+  },
+  "size": 2000
+}
