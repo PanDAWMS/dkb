@@ -154,7 +154,13 @@ def process(stage, message):
     # 'data_format' list contains one of the allowed formats
     # or not set at all.
     if update or not formats:
-        amiPhysValues(data)
+        try:
+            amiPhysValues(data)
+        except DataflowException:
+            raise
+        except Exception:
+            stage.output_error("Failed to process dataset '%s'"
+                               % data['datasetname'], sys.exc_info())
         change_key_names(data)
     stage.output(pyDKB.dataflow.communication.messages.JSONMessage(data))
 
@@ -174,31 +180,26 @@ def amiPhysValues(data):
     if not container:
         return False
     ami_client = get_ami_client()
-    try:
-        res = ami_client.execute(['GetPhysicsParamsForDataset',
-                                  '--logicalDatasetName=%s' % container],
-                                 format='json')
-        json_str = json.loads(res)
-        rowset = json_str['AMIMessage'][0]['Result'][0]['rowset']
-        if not rowset:
-            sys.stderr.write("(WARN) No values found in AMI for dataset '%s'\n"
-                             % data['datasetname'])
-            return False
-        for row in rowset[0]['row']:
-            p_name, p_val = None, None
-            for field in row['field']:
-                if field['@name'] == 'paramName':
-                    p_name = field['$']
-                elif field['@name'] == 'paramValue':
-                    p_val = field['$']
-                if p_name and p_val:
-                    data[p_name] = p_val
-                    break
-        return True
-    except Exception as e:
-        sys.stderr.write("(ERROR) Failed to process dataset '%s': "
-                         "%r\n" % (data['datasetname'], e))
+    res = ami_client.execute(['GetPhysicsParamsForDataset',
+                              '--logicalDatasetName=%s' % container],
+                             format='json')
+    json_str = json.loads(res)
+    rowset = json_str['AMIMessage'][0]['Result'][0]['rowset']
+    if not rowset:
+        sys.stderr.write("(WARN) No values found in AMI for dataset '%s'\n"
+                         % data['datasetname'])
         return False
+    for row in rowset[0]['row']:
+        p_name, p_val = None, None
+        for field in row['field']:
+            if field['@name'] == 'paramName':
+                p_name = field['$']
+            elif field['@name'] == 'paramValue':
+                p_val = field['$']
+            if p_name and p_val:
+                data[p_name] = p_val
+                break
+    return True
 
 
 def change_key_names(data):
