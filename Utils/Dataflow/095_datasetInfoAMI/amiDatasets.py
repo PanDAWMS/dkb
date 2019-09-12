@@ -138,7 +138,15 @@ def process(stage, message):
     # 'data_format' list contains one of the allowed formats
     # or not set at all.
     if update or not formats:
-        amiPhysValues(data)
+        try:
+            amiPhysValues(data)
+        except SSLError:
+            stage.output_error("Failed to process dataset '%s'"
+                               % data['datasetname'], sys.exc_info())
+        except Exception:
+            e_type, e_value, e_trace = sys.exc_info()
+            sys.stderr.write("(ERROR) Failed to process dataset '%s': %s\n"
+                             % (data['datasetname'], e_value))
         change_key_names(data)
     stage.output(pyDKB.dataflow.communication.messages.JSONMessage(data))
 
@@ -179,14 +187,8 @@ def amiPhysValues(data):
                     data[p_name] = p_val
                     break
         return True
-    except SSLError as e:
-        sys.stderr.write("(ERROR) Failed to process dataset '%s': "
-                         "%r\n" % (data['datasetname'], e))
-        return False
-    except Exception as e:
-        sys.stderr.write("(ERROR) Failed to process dataset '%s': "
-                         "%r\n" % (data['datasetname'], e))
-        return False
+    except Exception:
+        raise
 
 
 def change_key_names(data):
