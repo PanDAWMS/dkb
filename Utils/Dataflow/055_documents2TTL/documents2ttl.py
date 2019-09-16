@@ -524,11 +524,11 @@ def process_journals(data, doc_iri):
 def fix_string(wrong_string):
     """ Fix escape sequences in a string.
 
-    :param wrong_string: string to be fixed
-    :type wrong_string: str, unicode
+    :param wrong_string: string to be fixed, or any non-string object.
+    :type wrong_string: object
 
-    :return: fixed string
-    :rtype: str
+    :return: fixed string, or unchanged non-string object
+    :rtype: object
     """
     if type(wrong_string) not in (str, unicode):
         return wrong_string

@@ -558,11 +558,11 @@
 <div class="viewcode-block" id="fix_string"><a class="viewcode-back" href="../../Stages/055_documents2TTL/055_documents2TTL.html#055_documents2TTL.documents2ttl.fix_string">[docs]</a><span class="k">def</span> <span class="nf">fix_string</span><span class="p">(</span><span class="n">wrong_string</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Fix escape sequences in a string.</span>
 
-<span class="sd">    :param wrong_string: string to be fixed</span>
-<span class="sd">    :type wrong_string: str, unicode</span>
+<span class="sd">    :param wrong_string: string to be fixed, or any non-string object.</span>
+<span class="sd">    :type wrong_string: object</span>
 
-<span class="sd">    :return: fixed string</span>
-<span class="sd">    :rtype: str</span>
+<span class="sd">    :return: fixed string, or unchanged non-string object</span>
+<span class="sd">    :rtype: object</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">wrong_string</span><span class="p">)</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">unicode</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">wrong_string</span>
