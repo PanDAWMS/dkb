@@ -3,7 +3,7 @@ pyDKB.dataflow.communication.stream.InputStream
 """
 
 from Stream import Stream
-from . import logLevel
+from pyDKB.common.types import logLevel
 from . import Message
 from pyDKB.common import custom_readline
 

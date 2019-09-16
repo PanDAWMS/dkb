@@ -3,7 +3,6 @@ Producer submodule init file.
 """
 
 from .. import messageType
-from .. import logLevel
 from .. import DataflowException
 
 from Producer import Producer
