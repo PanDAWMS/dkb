@@ -6,7 +6,6 @@ import sys
 
 from . import messageType
 from . import logLevel
-from . import Message
 from exceptions import StreamException
 
 

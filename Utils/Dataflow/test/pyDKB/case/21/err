@@ -15,15 +15,15 @@
 (ERROR) (FileProducer) Failed to create output directory
 (==) Error message: [Errno 17] File exists: './input/out'
 (DEBUG) (ProcessorStage) Traceback (most recent call last):
-(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 235, in run
+(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 232, in run
 (==)     self.flush_buffer()
-(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 331, in flush_buffer
+(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 341, in flush_buffer
 (==)     self.__output.flush()
-(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line 125, in flush
+(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line 124, in flush
 (==)     self.get_stream().flush()
-(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line 72, in get_stream
+(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line 71, in get_stream
 (==)     self.reset_stream()
-(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line 82, in reset_stream
+(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line 81, in reset_stream
 (==)     dest = self.get_dest()
 (==)   File "./../../pyDKB/dataflow/communication/producer/FileProducer.py", line 60, in get_dest
 (==)     self.reset_file()

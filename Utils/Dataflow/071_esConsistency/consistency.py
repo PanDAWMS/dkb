@@ -2,8 +2,8 @@
 '''
 Script for checking the supplied task's presence in elasticsearch.
 
-Currently it performs the check by comparing the supplied timestamp
-with the one in elasticsearch.
+It performs the check by comparing the supplied fields with the corresponding
+ones in elasticsearch.
 
 Authors:
   Vasilii Aulov (vasilii.aulov@cern.ch)
@@ -152,11 +152,6 @@ def process(stage, message):
         return False
 
     _parent = data.pop('_parent', None)
-
-    # Crutch. Remove unwanted (for now) fields added by Stage 016.
-    for field in ['phys_category', 'chain_data', 'chain_id']:
-        if field in data:
-            del data[field]
 
     # Fields starting with an underscore are service fields. Some of them are
     # treated in special way (see _id above). Service fields should not be

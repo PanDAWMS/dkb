@@ -38,8 +38,9 @@
 #       Name                           Description
 ---------------------------------------------------
 0.9     009_oracleConnector            Get task metadata from ProdSys
-1.6     016_task2es                    Prepare task metadata for bulk upload
-                                         to ES
+1.6     016_task2es                    Update task metadata with fields
+                                         required for ES indexing
+1.7     017_adjustMetadata             Transform task metadata to fit ES scheme
 1.9     019_oracle2esFormat            Prepare data for bulk upload to ES
 2.5     025_chicagoES                  Get additional metadata from Chicago ES
 6.9     069_upload2es                  Upload data to ES
@@ -73,12 +74,12 @@
 
 009 ---> *                                | Get task metadata from ProdSys2 DB
                                           |
-    * --> 091(in) --> 025 --> 016         | Append task metadata with that from
-     \                           \        |   Rucio (input DS) and Chicago ES
-      \                           \       |
-       \-> 091(out) -> 093 -> 095 --> **  | Get DS metadata from Rucio and AMI
+  * -> 091(in) -> 025 -> 016 -> 017       | Append task metadata with that from
+   \                             \        |   Rucio (input DS) and Chicago ES
+    \                             \       |
+     \-> 091(out) -> 093 -> 095 -----> ** | Get DS metadata from Rucio and AMI
                                           |
-    ** ----> 019 -> 069                   | Prepare and upload metadata to ES
+  ** ----> 019 -> 069                     | Prepare and upload metadata to ES
 
 3. Tasks metadata consistency check
 ---
@@ -132,8 +133,35 @@ following requirements:
 
 [3] EOP, End-of-Process marker. Default value: '\0' (NULL)
 
+==================
+* 3. Stage types *
+==================
+There are three types of stages:
+
+1. Source stage - an initial stage in a dataflow pipeline that gets data
+from an external source (CDS, Rucio, AMI, etc.).
+
+2. Transform stage - a transitional stage that performs single logical
+operation on the metadata. Set (chain) of transform stages forms the whole
+transformation process for messages produced by a source stage. Transformation
+operations may include: format change, derived values calculation,
+message extension with metadata from an additional source, etc.
+
+2.1. Pre-sink stage - the last transform stage in a dataflow pipeline that
+prepares metadata for upload via sink stage; it is aware of messages'
+formatting rules. All the preparations for upload should be done by
+the pre-sink stage.
+
+3. Sink stage - a stage that uploads data into the DKB storage
+(Virtuoso, ES, ...). Every single sink stage should be preceded by
+a corresponding pre-sink stage that transforms data and forms ready-to-send
+messages with a specific structure. Sink stage only gets prepared messages
+and uploads them without any re-formatting. It does not care about messages
+content. If message does not follow the template, most likely it
+will be rejected by the storage load API.
+
 =====================================
-* 3. External sources (data mining) *
+* 4. External sources (data mining) *
 =====================================
 There are two general cases of external data sources.
 1. Standard sources (like RDBMS) - here we can use standard connectors.
