@@ -55,7 +55,7 @@ class RucioClient(Client, ParentClientClass):
     def get(self, oid, **kwargs):
         """ Get dataset metadata.
 
-        Implementation of interface method `Clent.get()`.
+        Implementation of interface method `Client.get()`.
 
         :param oid: dataset name
         :type oid: str
