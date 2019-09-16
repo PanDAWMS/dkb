@@ -93,17 +93,17 @@ function constructDataJson($row) {
   $insert_data = $data;
   $update_data = $data;
   if (isset($incompl)) {
-    # We *may* not specify "update_required" value on insert, if it is False,
+    # We *may* not specify "_update_required" value on insert, if it is False,
     # (for it is a default value), but to allow usage of 'doc_as_upsert'
     # ES option, it can be specified explicitly. So in case of 'update' action
     # it should always be so.
     if ($incompl or $act == 'update') {
-      $insert_data['update_required'] = $incompl;
+      $insert_data['_update_required'] = $incompl;
     }
     if (!$incompl) {
       # We must specify explicitly that update is not required after this operation
       # (just in case it was set to "true" previously).
-      $update_data['update_required'] = false;
+      $update_data['_update_required'] = false;
     }
   }
 

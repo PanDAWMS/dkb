@@ -238,7 +238,7 @@
         "n_files_to_be_used": {
           "type": "integer"
         },
-        "update_required": {
+        "_update_required": {
           "type": "boolean"
         }
       }
@@ -292,7 +292,7 @@
           "type": "keyword",
           "ignore_above": 256
         },
-        "update_required": {
+        "_update_required": {
           "type": "boolean"
         }
       }
