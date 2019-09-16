@@ -1,14 +1,15 @@
 (INFO) (ProcessorStage) Configuration parameters:
-(INFO) (ProcessorStage)   hdfs        : 'False'
-(INFO) (ProcessorStage)   dest        : 's'
-(INFO) (ProcessorStage)   input_dir   : '.'
-(INFO) (ProcessorStage)   eom         : '\n'
-(INFO) (ProcessorStage)   output_dir  : 'out'
-(INFO) (ProcessorStage)   source      : 'f'
-(INFO) (ProcessorStage)   eop         : ''
-(INFO) (ProcessorStage)   mode        : 'f'
-(INFO) (ProcessorStage)   config      : 'None'
-(INFO) (ProcessorStage)   input_files : '['input/EOMDjson.json']'
+(INFO) (ProcessorStage)   hdfs         : 'False'
+(INFO) (ProcessorStage)   dest         : 's'
+(INFO) (ProcessorStage)   input_dir    : '.'
+(INFO) (ProcessorStage)   skip_process : 'False'
+(INFO) (ProcessorStage)   eom          : '\n'
+(INFO) (ProcessorStage)   output_dir   : 'out'
+(INFO) (ProcessorStage)   source       : 'f'
+(INFO) (ProcessorStage)   eop          : ''
+(INFO) (ProcessorStage)   mode         : 'f'
+(INFO) (ProcessorStage)   config       : 'None'
+(INFO) (ProcessorStage)   input_files  : '['input/EOMDjson.json']'
 (INFO) (ProcessorStage) Starting stage execution.
 (WARN) (InputStream) Failed to read input message as JSON.
 (==) Cause: Extra data: line 1 column 10 - line 1 column 22 (char 9 - 21)
