@@ -1,5 +1,5 @@
 =======================================
-* Detailed description of the datafow *
+* Detailed description of the dataflow *
 =======================================
 
 *** NOTE: stages are to be named with three leading digits (XXX_StageName). ***
@@ -23,7 +23,7 @@
                                          documents from GLANCE
 1.5     015_CDSDocuments               Get metadata for paper (and its
                                          supporting documents) from CDS
-1.8     018_PDFDownloader              Download PFD documents and upload them
+1.8     018_PDFDownloader              Download PDF documents and upload them
                                          to HDFS
 3.0     030_PDFAnalyzer                PDF Analyzer (search dataset in PDF
                                          Supporting Notes)
@@ -113,7 +113,7 @@ Stage  HDFS                           Description
 * 2. Streaming mode (data processing) *
 =======================================
 To automate all the processes in the DataFlow, we need to run all the stages in
-a streaming mode.  It means, that every (processing) stage is to meet the
+a streaming mode. It means, that every (processing) stage is to meet the
 following requirements:
 - can be run in a quasi-infinite loop (waiting for input data and reading and
   so on unless the input stream is closed) [1]; - read input data from STDIN;
