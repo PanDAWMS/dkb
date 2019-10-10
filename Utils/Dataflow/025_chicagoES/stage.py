@@ -191,7 +191,7 @@ def agg_query(taskid, agg_names):
         "query": {
             "bool": {
                 "must": [
-                    {"term": {"taskid": taskid}},
+                    {"term": {"jeditaskid": taskid}},
                     {"terms": {"jobstatus": JOB_STATUSES}}
                 ]
             }
