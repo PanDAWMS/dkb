@@ -19,7 +19,7 @@ from exceptions import (StorageClientException,
 from .. import config
 
 # To ensure storages are named same way in all messages
-STORAGE_NAME = config.STORAGES['ES']
+STORAGE_NAME = 'Elasticsearch'
 
 # Path to queries
 QUERY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
@@ -68,7 +68,7 @@ def init():
         raise StorageClientException(STORAGE_NAME,
                                      "driver module is not loaded")
     if not CONFIG:
-        CONFIG = config.read_config('storage', STORAGE_NAME)
+        CONFIG = config.get_config('storages', STORAGE_NAME)
     hosts = CONFIG.get('hosts', None)
     user = CONFIG.get('user', '')
     passwd = CONFIG.get('passwd', '')

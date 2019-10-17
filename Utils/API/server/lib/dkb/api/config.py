@@ -2,18 +2,19 @@
 Module for handling configuration files.
 """
 
-from exceptions import DkbApiNotImplemented, ConfigurationNotFound
+from exceptions import (DkbApiNotImplemented,
+                        ConfigurationNotFound,
+                        ConfigurationError)
 from . import CONFIG_DIR
 
-STORAGES = {'ES': 'Elasticsearch'}
+import os
+import yaml
 
 
-def read_config(cfg_type, cfg_name):
-    """ Read configuration file for given type and name.
+def get_config(cfg_type, cfg_name):
+    """ Get configuration section corresponding type and name.
 
-    Raise ``ConfigurationNotFound`` if config file does not exist.
-
-    :param cfg_type: type of config file ('storage', ...)
+    :param cfg_type: type of config object ('storages', ...)
     :type cfg_type: str
     :param cfg_name: name of object to be configured
     :type cfg_name: str
@@ -21,8 +22,33 @@ def read_config(cfg_type, cfg_name):
     :return: confoguration parameters
     :rtype: hash
     """
-    if (cfg_type, cfg_name) == ('storage', STORAGES['ES']):
-        hosts = '%%ES_ADDR%%'.split(',')
-        return {'hosts': hosts, 'user': '%%ES_USER%%',
-                'passwd': '%%ES_PASSWD%%', 'index': '%%ES_INDEX%%'}
-    raise ConfigurationNotFound('unknown')
+    cfg = read_config('dkb.yaml')
+    try:
+        return cfg[cfg_type][cfg_name]
+    except KeyError:
+        raise ConfigurationError('failed to find section in configuration '
+                                 'file: %r -> %r' % (cfg_type, cfg_name))
+
+
+def read_config(fname):
+    """ Read configuration file into dict.
+
+    :raises: ConfigurationNotFound: config file does not exist.
+    :raises: ConfigurationException: failed to read config file.
+
+    :param fname: config file name
+    :type fname: str
+
+    :return: read configuration
+    :rtype: dict
+    """
+    # If `fname` is an absolute path, `CONFIG_DIR` will be ignored
+    full_path = os.path.join(CONFIG_DIR, fname)
+    if not os.path.isfile(full_path):
+        raise ConfigurationNotFound(full_path)
+    with open(full_path) as f:
+        try:
+            parsed = yaml.load(f)
+        except yaml.YAMLError, e:
+            raise ConfigurationError('Format error: %s' % e)
+    return parsed

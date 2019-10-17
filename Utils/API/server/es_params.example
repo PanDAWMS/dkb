@@ -1,4 +1,0 @@
-ES_ADDR=127.0.0.1:9200
-ES_USER=
-ES_PASSWD=
-ES_INDEX=index_name
