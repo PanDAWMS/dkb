@@ -3,6 +3,7 @@
 WWW_DIR=/data/www/dkb
 RUN_DIR=/var/run/wsgi
 LOG_DIR=/var/log/dkb
+CFG_DIR="$WWW_DIR/conf"
 SOCK="$RUN_DIR"/api-fcgi.socket
 APP_USER=www
 APP_GROUP=
@@ -15,7 +16,6 @@ NGINX_GROUP=
 MANAGE_SERVICE=
 MANAGE_SEL=
 
-CFG_DIR="$WWW_DIR/conf"
 
 base_dir=$(readlink -f $(cd $(dirname "$0"); pwd))
 build_dir="${base_dir}/build"
@@ -57,6 +57,10 @@ OPTIONS
     -d, --dest DIR   destination directory for installation
                      Default: $WWW_DIR
 
+    -c, --cfg-dir DIR
+                     directory with configuration files used by the application
+                     Default: $WWW_DIR/conf
+
     -s, --sock       socket name for communication between web-server
                      and API application
                      Default: $SOCK
@@ -81,6 +85,10 @@ while [ $# -gt 0 ]; do
       ;;
     -d|--dest)
       WWW_DIR=`readlink -m "$2"`
+      shift
+      ;;
+    -c|--cfg-dir)
+      CFG_DIR=`readlink -m "$2"`
       shift
       ;;
     -s|--sock)
