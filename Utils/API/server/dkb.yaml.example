@@ -1,0 +1,7 @@
+storages:
+  Elasticsearch:
+    hosts:
+      - 127.0.0.1:9200
+    user: username
+    passwd: supersecretpassword
+    index: index_name
