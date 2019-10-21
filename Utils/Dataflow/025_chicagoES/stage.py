@@ -295,7 +295,7 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
                              " metadata.\n")
             raise
 
-    if r['hits']['total']:
+    if r['hits']['total']['value']:
         result = r['aggregations']
     else:
         result = {}
