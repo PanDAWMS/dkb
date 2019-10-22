@@ -43,7 +43,7 @@ def parse_params(qs):
        has value ``False``;
      * parameter with single value (``?key=val&...``) has value passed
        as ``val``;
-     * parameters with number of values (``?key[]=val1&key[]=val2&...``)
+     * parameters with number of values (``?key=val1&key=val2&...``)
        has value of type ``list``: ``['val1', 'val2', ..]``.
 
     :param qs: query string
