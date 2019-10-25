@@ -4,10 +4,42 @@
     "number_of_shards": 4,
     "analysis": {
       "analyzer": {
-        "task_dataset_analyzer": {
+        "dsname": {
+          "char_filter": ["dsname_wildcarded", "remove_wildcard"],
+          "tokenizer": "dsname_tokenizer",
+          "filter": ["lowercase"]
+        },
+        "dsname_fields": {
+          "char_filter": ["dsname_wildcarded", "remove_wildcard"],
+          "tokenizer": "dsname_field_tokenizer",
+          "filter": "lowercase"
+        },
+        "dsname_fields_wildcarded": {
+          "char_filter": ["dsname_wildcarded"],
+          "tokenizer": "dsname_field_tokenizer",
+          "filter": "lowercase"
+        }
+      },
+      "tokenizer": {
+        "dsname_tokenizer": {
           "type": "pattern",
-          "pattern": "\\W|_",
-          "lowercase": true
+          "pattern": "\\.+|_+"
+        },
+        "dsname_field_tokenizer": {
+          "type": "pattern",
+          "pattern": "\\.+"
+        }
+      },
+      "char_filter": {
+        "dsname_wildcarded": {
+          "type": "pattern_replace",
+          "pattern": "[^a-zA-Z0-9_/.*?-]",
+          "replacement": ""
+        },
+        "remove_wildcard": {
+          "type": "pattern_replace",
+          "pattern": "[?*]",
+          "replacement": ""
         }
       }
     }
@@ -93,24 +125,32 @@
         },
         "parent_taskname": {
           "type": "text",
-          "analyzer": "task_dataset_analyzer",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
+          "analyzer": "dsname",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "fields": {
+              "type": "text",
+              "analyzer": "dsname_fields"
             }
           }
         },
         "parent_total_events": {
           "type": "long"
         },
-        "taskname": {
-          "type": "text",
-          "analyzer": "task_dataset_analyzer",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
+        "taskname" : {
+          "type" : "text",
+          "analyzer": "dsname",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "fields": {
+              "type": "text",
+              "analyzer": "dsname_fields"
             }
           }
         },
@@ -211,13 +251,17 @@
           "type": "keyword",
           "ignore_above": 256
         },
-        "primary_input": {
-          "type": "text",
-          "analyzer": "task_dataset_analyzer",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
+        "primary_input" : {
+          "type" : "text",
+          "analyzer": "dsname",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "fields": {
+              "type": "text",
+              "analyzer": "dsname_fields"
             }
           }
         },
@@ -267,13 +311,17 @@
         "type": "task"
       },
       "properties": {
-        "datasetname": {
-          "type": "text",
-          "analyzer": "task_dataset_analyzer",
-          "fields": {
-            "keyword": {
-              "type": "keyword",
-              "ignore_above": 256
+        "datasetname" : {
+          "type" : "text",
+          "analyzer": "dsname",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "fields": {
+              "type": "text",
+              "analyzer": "dsname_fields"
             }
           }
         },
