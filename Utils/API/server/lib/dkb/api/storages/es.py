@@ -72,7 +72,12 @@ def init():
     hosts = CONFIG.get('hosts', None)
     user = CONFIG.get('user', '')
     passwd = CONFIG.get('passwd', '')
-    TASK_KWARGS['index'] = CONFIG.get('index', None)
+    index = CONFIG.get('index', None)
+    # Setting default index name
+    if isinstance(index, dict):
+        TASK_KWARGS['index'] = index['production_tasks']
+    else:
+        TASK_KWARGS['index'] = index
     try:
         es = elasticsearch.Elasticsearch(hosts, http_auth=(user, passwd))
     except Exception, err:
