@@ -4,8 +4,10 @@ base_dir=$(cd "$(dirname "$(readlink -f "$0")")"; pwd)
 
 usage() {
   echo "USAGE:
-$(basename "$0") [-c CONFIG] [--] [ARGS]
-  
+$(basename "$0") [-h] [-c CONFIG] [--] [ARGS]
+
+Use -h or --help to get this help message.
+
 PARAMETERS:
   CONFIG -- Elasticsearch configuration file
   ARGS   -- arguments to be passed to the PHP script
@@ -16,6 +18,8 @@ ES_CONFIG=$base_dir/../../Elasticsearch/config/es
 
 while [ -n "$1" ]; do
   case "$1" in
+    --help|-h)
+      usage >&2 && exit 1;;
     --config|-c)
       [ -n "$2" ] && ES_CONFIG="$2" || { usage >&2 && exit 1; }
       shift;;
