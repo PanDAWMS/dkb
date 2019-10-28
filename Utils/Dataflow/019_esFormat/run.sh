@@ -7,7 +7,7 @@ usage() {
 $(basename "$0") [-c CONFIG] [--] [ARGS]
   
 PARAMETERS:
-  CONFIG -- configuration file
+  CONFIG -- Elasticsearch configuration file
   ARGS   -- arguments to be passed to the PHP script
 "
 }
