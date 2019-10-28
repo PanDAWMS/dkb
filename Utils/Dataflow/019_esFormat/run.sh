@@ -1,4 +1,4 @@
-#/usr//bin/env bash
+#/usr/bin/env bash
 
 base_dir=$(cd "$(dirname "$(readlink -f "$0")")"; pwd)
 
