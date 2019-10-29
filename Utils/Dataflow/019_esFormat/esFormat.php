@@ -42,6 +42,11 @@ function check_input($row) {
 }
 
 function convertIndexToLowerCase(&$a) {
+  /* Convert array's keys to lowercase, in place.
+
+  :param a: array to process
+  :type a: array
+  */
   $result = array();
 
   foreach (array_keys($a) as $i) {
