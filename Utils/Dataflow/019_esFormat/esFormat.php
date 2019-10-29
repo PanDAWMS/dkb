@@ -13,6 +13,17 @@ $EOP_DEFAULTS = Array("stream" => chr(0), "file" => "");
 $EOM_DEFAULTS = Array("stream" => chr(30), "file" => chr(30));
 
 function check_input($row) {
+  /* Check the provided input's correctness.
+
+  The input must:
+  - be an array;
+  - contain non-empty fields '_id' and '_type'.
+
+  :param row: input to check
+
+  :return: TRUE if input is correct, FALSE if it is not
+  :rtype: bool
+  */
   $required_fields = array('_id', '_type');
 
   if (!is_array($row)) {
