@@ -18,6 +18,7 @@ echo "$QUERY" | while read q; do
   | curl -s -X GET "http://127.0.0.1:9200/${old_idx}/task/_search" -H 'Content-Type: application/json' -d @- \
   | tee old.json \
   | jq -c -r '[ "keyword", "old", .hits.total, .took ] | @csv'
+
   cat $new_qfile \
   | sed -e's/%%QUERY%%/'"${q}"'/' \
   | tee new-q.json \
