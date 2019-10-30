@@ -49,16 +49,18 @@ source $lib/log
     HOME_DIR="$DATA4ES_HOME" || \
     HOME_DIR="${base_dir}/.data4es"
 
-# Check if process is running
-DATA4ES_HOME=$HOME_DIR ${base_dir}/data4es-status &>/dev/null
-[ $? -eq 0 ] && log WARN "Process already running." && exit 1
+init_process() {
+  # Check if process is running
+  DATA4ES_HOME=$HOME_DIR ${base_dir}/data4es-status &>/dev/null
+  [ $? -eq 0 ] && log WARN "Process already running." && return 1
 
-# Create / clean home directory
-AUX_FILES="pid"
-mkdir -p "$HOME_DIR"
-for f in $AUX_FILES; do
-  rm -rf "$HOME_DIR/$f"
-done
+  # Create / clean home directory
+  AUX_FILES="pid"
+  mkdir -p "$HOME_DIR"
+  for f in $AUX_FILES; do
+    rm -rf "$HOME_DIR/$f"
+  done
+}
 
 # Create aux directories and files
 # ---
@@ -210,6 +212,9 @@ while [ -n "$1" ]; do
   esac
   shift
 done
+
+# Try to init process and exit if it is already running
+init_process || exit $?
 
 # Define stages and exit if something went wrong
 define_stages
