@@ -441,9 +441,12 @@ def task_kwsearch(**kwargs):
     :param timeout: request execution timeout (sec)
     :type timeout: int
 
-    :return: tasks and related datasets metadata:
-             [ ..., {..., output_dataset: [ {...}, ...], ... }, ... ]
-    :rtype: list
+    :return: tasks and related datasets metadata with additional info:
+             { _took_storage: <storage query execution time in ms>,
+               _total: <total number of matching tasks>,
+               _data: [ ..., {..., output_dataset: [ {...}, ...], ... }, ... ]
+             }
+    :rtype: dict
     """
     init()
     q = _task_kwsearch_query(kwargs['kw'], kwargs['ds_size'])
@@ -455,9 +458,10 @@ def task_kwsearch(**kwargs):
         idx.append(CONFIG['index']['analysis_tasks'])
     r = client().search(index=idx, body={"query": q}, size=kwargs['size'],
                         request_timeout=kwargs['timeout'])
-    result = []
+    result = {'_took_storage': r['took'], '_data': []}
     if not r['hits']['hits']:
         return result
+    result['_total'] = r['hits']['total']
     for hit in r['hits']['hits']:
         task = hit['_source']
         try:
@@ -465,5 +469,5 @@ def task_kwsearch(**kwargs):
         except KeyError:
             datasets = []
         task['output_dataset'] = [ ds['_source'] for ds in datasets ]
-        result.append(task)
+        result['_data'].append(task)
     return result
