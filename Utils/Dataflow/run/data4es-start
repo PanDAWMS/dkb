@@ -205,7 +205,9 @@ done
 # Adjust stage commands according to IGNORE parameter
 for s in $IGNORE; do
   cmd="cmd_${s}"
-  [ -z "${!cmd}" ] && log ERROR "Unknown stage ID: $s (known IDs: --list)." && exit 1
+  [ -z "${!cmd}" ] \
+    && log ERROR "Unknown stage ID: $s (known IDs: --list)." \
+    && exit 1
   eval "cmd_$s='${!cmd} --skip'"
 done
 
