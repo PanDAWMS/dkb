@@ -2,6 +2,14 @@ clear_cache() {
   local IFS=","
   idx=`echo "$*"`
   curl -s -X POST "http://127.0.0.1:9200/$idx/_cache/clear/" >/dev/null
+  curl -s -X POST "http://127.0.0.1:9200/_cache/clear/" >/dev/null
+
+  curl -s -X POST "http://127.0.0.1:9200/$idx/_close" >/dev/null
+  # index close/open operations take some time, so we better wait a little
+  sleep 10
+  curl -s -X POST "http://127.0.0.1:9200/$idx/_open" >/dev/null
+  sleep 10
+
   sync
   echo 3 > /proc/sys/vm/drop_caches
 }
