@@ -75,45 +75,50 @@ pidfile="$HOME_DIR/pid"
 
 source $lib/get_config
 
-# Oracle Connector
-cmd_09="${base_dir}/../009_oracleConnector/Oracle2JSON.py"
-cfg_09=`get_config "009.cfg"`
-cmd_09="$cmd_09 --config $cfg_09"
+define_stages() {
+  return_code=0
 
-# Stage 25
-cmd_25="${base_dir}/../025_chicagoES/stage.py -m s"
+  # Oracle Connector
+  cmd_09="${base_dir}/../009_oracleConnector/Oracle2JSON.py"
+  cfg_09=`get_config "009.cfg"`
+  cmd_09="$cmd_09 --config $cfg_09"
 
-# Stage 16
-cmd_16="${base_dir}/../016_task2es/task2es.py -m s"
+  # Stage 25
+  cmd_25="${base_dir}/../025_chicagoES/stage.py -m s"
 
-# Stage 17
-cmd_17="${base_dir}/../017_adjustMetadata/adjustMetadata.py -m s"
+  # Stage 16
+  cmd_16="${base_dir}/../016_task2es/task2es.py -m s"
 
-# Stage 19
-cfg_19=`get_config "es"`
-cmd_19="${base_dir}/../019_esFormat/run.sh --config $cfg_19"
+  # Stage 17
+  cmd_17="${base_dir}/../017_adjustMetadata/adjustMetadata.py -m s"
 
-# Stage 69
-cfg_69=`get_config "es"`
-cmd_69="${base_dir}/../069_upload2es/load_data.sh --config $cfg_69"
+  # Stage 19
+  cfg_19=`get_config "es"`
+  cmd_19="${base_dir}/../019_esFormat/run.sh --config $cfg_19"
 
-# Stage 91 (input)
-cmd_91_in="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s -t i"
+  # Stage 69
+  cfg_69=`get_config "es"`
+  cmd_69="${base_dir}/../069_upload2es/load_data.sh --config $cfg_69"
 
-# Stage 91 (output)
-cmd_91_out="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
+  # Stage 91 (input)
+  cmd_91_in="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s -t i"
 
-# Stage 93
-cmd_93="${base_dir}/../093_datasetsFormat/datasets_format.py -m s"
+  # Stage 91 (output)
+  cmd_91_out="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
 
-# Stage 95
-auth_cfg=`get_config "095.cfg"`
-source $auth_cfg
-[ -r "$AUTH_KEY" -a -r "$AUTH_CRT" ] \
-  || { log ERROR "Stage 095: wrong authentication parameters (failed to read certificate files: $AUTH_KEY and $AUTH_CRT)";
-       exit 1; }
-cmd_95="${base_dir}/../095_datasetInfoAMI/amiDatasets.py -m s --userkey $AUTH_KEY --usercert $AUTH_CRT"
-# ---
+  # Stage 93
+  cmd_93="${base_dir}/../093_datasetsFormat/datasets_format.py -m s"
+
+  # Stage 95
+  auth_cfg=`get_config "095.cfg"`
+  source $auth_cfg
+  [ -r "$AUTH_KEY" -a -r "$AUTH_CRT" ] \
+    || { log ERROR "Stage 095: wrong authentication parameters (failed to read certificate files: $AUTH_KEY and $AUTH_CRT)";
+         return_code=1; }
+  cmd_95="${base_dir}/../095_datasetInfoAMI/amiDatasets.py -m s --userkey $AUTH_KEY --usercert $AUTH_CRT"
+
+  return $return_code
+}
 
 # Service (glue) functions
 # ---
@@ -190,6 +195,7 @@ while [ -n "$1" ]; do
       IGNORE=$(echo "$2" | tr ',' ' ')
       shift;;
     -l|--list)
+      define_stages
       list_stages
       exit 0;;
     --)
@@ -204,6 +210,11 @@ while [ -n "$1" ]; do
   esac
   shift
 done
+
+# Define stages and exit if something went wrong
+define_stages
+ret_code=$?
+[ $ret_code -ne 0 ] && exit $ret_code
 
 # Adjust stage commands according to IGNORE parameter
 for s in $IGNORE; do
