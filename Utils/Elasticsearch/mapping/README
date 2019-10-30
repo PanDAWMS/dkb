@@ -19,4 +19,4 @@ input_events: derived value based on primary_input_events, requested_events,
 
 _update_required: service field to mark documents that contain incomplete
                   information about object and thus must be updated sooner
-                  or later
+                  or later.
