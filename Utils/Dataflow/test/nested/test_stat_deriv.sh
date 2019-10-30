@@ -17,20 +17,21 @@ for pr_id in $PR_ID; do
   | sed -e's/%%PR_ID%%/'"${pr_id}"'/' \
   | tee old-formats-q.json \
   | curl -s -X GET "http://127.0.0.1:9200/${old_idx}/task/_search" -H 'Content-Type: application/json' -d @- \
+  | tee formats-${pr_id}.json \
   | jq -c '.aggregations.format.buckets | map({ (.key) : {"has_child": {"type": "output_dataset", "query": {"term": {"data_format": .key }}}}}) | add'`
 
   took=`jq ".took" "formats-${pr_id}.json"`
   cat $old_qfile \
   | sed -e's/%%PR_ID%%/'"${pr_id}"'/' -e's/%%FORMAT_FILTERS%%/'${FORMATS}'/' \
-  | tee old-q.json \
+  | tee old-${pr_id}-q.json \
   | curl -s -X GET "http://127.0.0.1:9200/${old_idx}/task/_search" -H 'Content-Type: application/json' -d @- \
-  | tee old.json \
+  | tee old-${pr_id}.json \
   | jq -c -r '[ "stat-deriv", "old", .hits.total, .took+'"$took"' ] | @csv'
 
   cat $new_qfile \
   | sed -e's/%%PR_ID%%/'"${pr_id}"'/' \
-  | tee new-q.json \
+  | tee new-${pr_id}-q.json \
   | curl -s -X GET "http://127.0.0.1:9200/${new_idx}/task/_search" -H 'Content-Type: application/json' -d @- \
-  | tee new.json \
+  | tee new-${pr_id}.json \
   | jq -c -r '[ "stat-deriv", "new", .hits.total, .took ] | @csv'
 done
