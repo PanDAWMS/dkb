@@ -119,6 +119,20 @@ define_stages() {
          return_code=1; }
   cmd_95="${base_dir}/../095_datasetInfoAMI/amiDatasets.py -m s --userkey $AUTH_KEY --usercert $AUTH_CRT"
 
+  # Adjust stage commands according to IGNORE parameter
+  for s in $IGNORE; do
+    cmd="cmd_${s}"
+    [ -z "${!cmd}" ] \
+      && log ERROR "Unknown stage ID: $s (known IDs: --list)." \
+      && return_code=1 \
+      || eval "cmd_$s='${!cmd} --skip'"
+  done
+
+  if [ -n "$IGNORE" ]; then
+    cmd_19="$cmd_19 --update"
+    log INFO "Stage 19 set to update mode."
+  fi
+
   return $return_code
 }
 
@@ -220,20 +234,6 @@ init_process || exit $?
 define_stages
 ret_code=$?
 [ $ret_code -ne 0 ] && exit $ret_code
-
-# Adjust stage commands according to IGNORE parameter
-for s in $IGNORE; do
-  cmd="cmd_${s}"
-  [ -z "${!cmd}" ] \
-    && log ERROR "Unknown stage ID: $s (known IDs: --list)." \
-    && exit 1
-  eval "cmd_$s='${!cmd} --skip'"
-done
-
-if [ -n "$IGNORE" ]; then
-  cmd_19="$cmd_19 --update"
-  log INFO "Stage 19 set to update mode."
-fi
 
 # Define subchains
 # Source subchain: Oracle Connector
