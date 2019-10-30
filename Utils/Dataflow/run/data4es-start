@@ -78,7 +78,7 @@ source $lib/get_config
 # Oracle Connector
 cmd_09="${base_dir}/../009_oracleConnector/Oracle2JSON.py"
 cfg_09=`get_config "009.cfg"`
-cmd_OC="$cmd_09 --config $cfg_09"
+cmd_09="$cmd_09 --config $cfg_09"
 
 # Stage 25
 cmd_25="${base_dir}/../025_chicagoES/stage.py -m s"
@@ -212,7 +212,7 @@ done
 # Define subchains
 # Source subchain: Oracle Connector
 source_chain() {
-  $cmd_OC | tee $b_16 $b_91
+  $cmd_09 | tee $b_16 $b_91
 }
 
 # Parallel subchains: 16 and 91
@@ -259,7 +259,7 @@ chain_16 | tee $out | sink_chain b16 &
   && out='95.out'
 chain_91 | tee $out | sink_chain b91 &
 
-ps ax | grep "$cmd_OC" | grep -v grep | awk '{print $1 " source"}' >> $pidfile
+ps ax | grep "$cmd_09" | grep -v grep | awk '{print $1 " source"}' >> $pidfile
 for cmd in "$cmd_25" "$cmd_16" "$cmd_91_in" "$cmd_91_out" "$cmd_93" \
            "$cmd_95" "$cmd_19" "$cmd_69"; do
   ps ax | grep "$cmd" | awk '{print $1}' >> $pidfile
