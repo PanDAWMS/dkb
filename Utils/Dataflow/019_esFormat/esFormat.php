@@ -93,13 +93,17 @@ function constructDataJson($row) {
   $insert_data = $data;
   $update_data = $data;
   if (isset($incompl)) {
-    # We *may* not specify "_update_required" value on insert, if it is False,
-    # (for it is a default value), but to allow usage of 'doc_as_upsert'
-    # ES option, it can be specified explicitly. So in case of 'update' action
-    # it should always be so.
+
+    # "_update_required" field must be specified explicitly in two cases:
+    #  * message is incomplete (so that record in ES get properly marked);
+    #  * we perfom "update" operation (since we want to use 'doc_as_upsert' ES
+    #    option, if possible, using "insert_data" for both cases --
+    #    insert-if-missed and existing document update -- and still get
+    #    resulting document properly marked)
     if ($incompl or $act == 'update') {
       $insert_data['_update_required'] = $incompl;
     }
+
     if (!$incompl) {
       # We must specify explicitly that update is not required after this operation
       # (just in case it was set to "true" previously).
