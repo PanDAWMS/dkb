@@ -22,7 +22,7 @@ OPTIONS
   -l, --list  list known stage IDs and exit
 
   --debug     do not actualy load integrated metadata to the DKB Elasticsearch
-              (will creates files with data flow snapshots, taken between
+              (will create files with data flow snapshots, taken between
               the stages)
 
   -i, --ignore STAGE...
