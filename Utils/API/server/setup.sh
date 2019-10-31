@@ -71,6 +71,10 @@ OPTIONS
                      directory for (application) log files
                      Default: $LOG_DIR
 
+    -r, --run-dir DIR
+                     directory for .pid file
+                     Default: $RUN_DIR
+
     -s, --sock       socket name for communication between web-server
                      and API application
                      Default: $SOCK
@@ -131,6 +135,10 @@ while [ $# -gt 0 ]; do
       ;;
     -l|--log-dir)
       LOG_DIR=`readlink -m "$2"`
+      shift
+      ;;
+    -r|--run-dir)
+      RUN_DIR=`readlink -m "$2"`
       shift
       ;;
     -s|--sock)
