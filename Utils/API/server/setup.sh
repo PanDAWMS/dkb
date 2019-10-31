@@ -7,7 +7,7 @@ WWW_DIR=/data/www/dkb
 RUN_DIR=/var/run/wsgi
 LOG_DIR=/var/log/dkb
 CFG_DIR="conf"
-SOCK="$RUN_DIR"/api-fcgi.socket
+SOCK=api-fcgi.socket
 APP_USER=www
 APP_GROUP=
 ADDR=127.0.0.1:5080
@@ -18,6 +18,11 @@ NGINX_USER=
 NGINX_GROUP=
 MANAGE_SERVICE=
 MANAGE_SEL=
+
+# Change with caution, for this directory must have
+# specific permissions that allow nginx user
+# access to the socket files
+SOCK_DIR="$RUN_DIR"
 
 
 base_dir=$(readlink -f $(cd $(dirname "$0"); pwd))
@@ -76,7 +81,7 @@ OPTIONS
                      Default: $RUN_DIR
 
     -s, --sock       socket name for communication between web-server
-                     and API application
+                     and API application (without path)
                      Default: $SOCK
 
     -u, --user       owner of application process
@@ -212,6 +217,8 @@ done
 
 save_cfg
 
+SOCK="$SOCK_DIR/$SOCK"
+
 get_nginx_user() {
   conf=$NGINX_DIR/nginx.conf
   [ ! -f "$conf" ] \
@@ -232,13 +239,14 @@ ensure_user() {
 }
 
 ensure_dirs() {
-  dirs="$WWW_DIR $LOG_DIR $RUN_DIR"
+  dirs="$WWW_DIR $LOG_DIR $RUN_DIR $SOCK_DIR"
   for dir in $dirs; do
     echo "Creating dir: $dir" >&2
     [ -d "$dir" ] && continue
     mkdir -p "$dir" &>/dev/null
     chown "$APP_USER:$NGINX_GROUP" "$dir"
     chmod 2750 "$dir"
+    [ "$dir" == "$SOCK_DIR" ] && chmod a+rwx "$dir"
   done
 }
 
