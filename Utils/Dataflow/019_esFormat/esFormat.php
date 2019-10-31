@@ -115,6 +115,23 @@ function constructActionJson($row) {
 }
 
 function constructDataJson($row) {
+  /* Prepare the document for bulk operation.
+
+  - Remove fields starting with an underscore. These are service fields
+    that are processed separately and should not be included into the
+    resulting data.
+  - If action is 'update' then 'doc_as_upsert' is set to 'true' if the data
+    is complete. This means that the same document should be used as a new
+    document to be indexed if there is no existing document to update.
+    For incomplete data it is set to 'false', and different copies of data
+    are provided for indexing and updating.
+
+  :param row: document to be prepared
+  :type row: array
+
+  :return: prepared document
+  :rtype: array
+  */
   $data = $row;
 
   if (isset($data['_incomplete'])) {
