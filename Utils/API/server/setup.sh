@@ -382,9 +382,11 @@ install_www() {
     fi
     chown "$APP_USER" "$WWW_DIR/$f"
   done
-  sudo -u "$APP_USER" python -m compileall "$WWW_DIR/lib"
+  cmd_pref=""
+  [ "`whoami`" == "$APP_USER" ] || cmd_pref="sudo -u $APP_USER"
+  $cmd_pref python -m compileall "$WWW_DIR/lib"
   echo "Compiling $WWW_DIR/cgi-bin/dkb.fcgi ..." >&2
-  sudo -u "$APP_USER" python -m py_compile "$WWW_DIR/cgi-bin/dkb.fcgi"
+  $cmd_pref python -m py_compile "$WWW_DIR/cgi-bin/dkb.fcgi"
   echo "...done." >&2
   cd "$old_dir"
 }
