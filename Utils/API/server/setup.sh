@@ -67,6 +67,10 @@ OPTIONS
                      by the application (absolute or relative to WWW_DIR)
                      Default: WWW_DIR/$CFG_DIR
 
+    -l, --log-dir DIR
+                     directory for (application) log files
+                     Default: $LOG_DIR
+
     -s, --sock       socket name for communication between web-server
                      and API application
                      Default: $SOCK
@@ -123,6 +127,10 @@ while [ $# -gt 0 ]; do
       [[ "$2" == /* || "$2" == .* ]] \
         && CFG_DIR=`readlink -m "$2"` \
         || CFG_DIR="$2"
+      shift
+      ;;
+    -l|--log-dir)
+      LOG_DIR=`readlink -m "$2"`
       shift
       ;;
     -s|--sock)
