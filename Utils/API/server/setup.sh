@@ -501,9 +501,12 @@ start_www() {
   [ ! -f "$app_file" ] \
     && echo "Failed to restart application: file not found ($app_file)." >&2 \
     && exit 1
-  su "$APP_USER" -c \
-    "nohup '$app_file' >> '$logfile' &
-     echo \$! > '$pidfile'"
+  [ "`whoami`" == "$APP_USER" ] && \
+    { nohup "$app_file" >> "$logfile" &
+      echo $! > "$pidfile"; } || \
+    su "$APP_USER" -c \
+      "nohup '$app_file' >> '$logfile' &
+       echo \$! > '$pidfile'"
 }
 
 _clean() {
