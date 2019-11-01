@@ -3,7 +3,7 @@
 WWW_DIR=/data/www/dkb
 RUN_DIR=/var/run/wsgi
 LOG_DIR=/var/log/dkb
-CFG_DIR="$WWW_DIR/conf"
+CFG_DIR="conf"
 SOCK="$RUN_DIR"/api-fcgi.socket
 APP_USER=www
 APP_GROUP=
@@ -54,12 +54,14 @@ OPTIONS
                      equivalent to '-w -n -S --sel'
 
   APPLICATION
-    -d, --dest DIR   destination directory for installation
+    -d, --dest WWW_DIR
+                     destination directory for installation
                      Default: $WWW_DIR
 
     -c, --cfg-dir DIR
-                     directory with configuration files used by the application
-                     Default: $WWW_DIR/conf
+                     path to directory with configuration files used
+                     by the application (absolute or relative to WWW_DIR)
+                     Default: WWW_DIR/$CFG_DIR
 
     -s, --sock       socket name for communication between web-server
                      and API application
@@ -88,7 +90,9 @@ while [ $# -gt 0 ]; do
       shift
       ;;
     -c|--cfg-dir)
-      CFG_DIR=`readlink -m "$2"`
+      [[ "$2" == /* || "$2" == .* ]] \
+        && CFG_DIR=`readlink -m "$2"` \
+        || CFG_DIR="$2"
       shift
       ;;
     -s|--sock)
@@ -175,7 +179,8 @@ ensure_dirs() {
 build_file() {
   [ -z "$1" ] && echo "build_file(): filename not passed." >&2 && exit 1
   echo "Building file: $1" >&2
-  sed -e "s#%%SOCK%%#$SOCK#g" \
+  [[ "$CFG_DIR" == /* ]] || CFG_DIR="${WWW_DIR}/${CFG_DIR}"
+  sed -e "s#%%SOCK%%#${SOCK_DIR}/${SOCK}#g" \
       -e "s#%%ADDR%%#$ADDR#g" \
       -e "s#%%WWW_DIR%%#$WWW_DIR#g" \
       -e "s#%%CFG_DIR%%#$CFG_DIR#g" \
