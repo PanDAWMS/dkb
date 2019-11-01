@@ -78,6 +78,12 @@ OPTIONS
 
     -l, --listen HOST:PORT  address for Nginx to listen
                             Default: $ADDR
+
+  INSTALLATION PARAMETERS
+
+    --restore-defaults
+                     restore default configuration parameters
+                     (remove stored configuration) and exit
 "
 }
 
@@ -144,6 +150,10 @@ while [ $# -gt 0 ]; do
       MANAGE_NGINX=1
       MANAGE_SEL=1
       MANAGE_SERVICE=1
+      ;;
+    --restore-defaults)
+      [ -f "$cfg_file" ] && mv "$cfg_file"{,.old}
+      exit
       ;;
     --)
       break
