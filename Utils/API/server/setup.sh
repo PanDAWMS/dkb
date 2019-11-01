@@ -67,7 +67,7 @@ OPTIONS
                      by the application (absolute or relative to WWW_DIR)
                      Default: WWW_DIR/$CFG_DIR
 
-    -l, --log-dir DIR
+    -L, --log-dir DIR
                      directory for (application) log files
                      Default: $LOG_DIR
 
@@ -133,7 +133,7 @@ while [ $# -gt 0 ]; do
         || CFG_DIR="$2"
       shift
       ;;
-    -l|--log-dir)
+    -L|--log-dir)
       LOG_DIR=`readlink -m "$2"`
       shift
       ;;
