@@ -1,5 +1,8 @@
 #!/bin/bash
 
+env_vars=.env
+( set -o posix; set; ) > $env_vars
+
 WWW_DIR=/data/www/dkb
 RUN_DIR=/var/run/wsgi
 LOG_DIR=/var/log/dkb
@@ -19,6 +22,7 @@ MANAGE_SEL=
 
 base_dir=$(readlink -f $(cd $(dirname "$0"); pwd))
 build_dir="${base_dir}/build"
+cfg_file=~/.dkb-api
 
 usage() {
   echo "
@@ -76,6 +80,19 @@ OPTIONS
                             Default: $ADDR
 "
 }
+
+load_cfg() {
+  [ -f "$cfg_file" ] || return 1
+  . "$cfg_file"
+}
+
+save_cfg() {
+  vars=`set -o posix; set | grep ^[A-Z] | grep -v -e ^BASH -e ^FUNCNAME -e ^PIPESTATUS`
+  new_cfg=`echo "$vars" | grep -v -f "$env_vars"`
+  echo "$new_cfg" > "$cfg_file"
+}
+
+[[ "$*" =~ "--help" ]] || load_cfg
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -141,6 +158,8 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+
+save_cfg
 
 get_nginx_user() {
   conf=$NGINX_DIR/nginx.conf
