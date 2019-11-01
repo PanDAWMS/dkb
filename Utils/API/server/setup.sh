@@ -99,7 +99,10 @@ load_cfg() {
 save_cfg() {
   vars=`set -o posix; set | grep ^[A-Z] | grep -v -e ^BASH -e ^FUNCNAME -e ^PIPESTATUS`
   new_cfg=`echo "$vars" | grep -v -f "$env_vars"`
-  echo "$new_cfg" > "$cfg_file"
+  echo "$new_cfg" > "$cfg_file.tmp"
+  # If config has changed -- save previous in .old file
+  [ -f "$cfg_file" ] && diff "$cfg_file"{,.tmp} &> /dev/null && mv "$cfg_file"{,.old}
+  mv "$cfg_file"{.tmp,}
 }
 
 [[ "$*" =~ "--help" ]] || load_cfg
