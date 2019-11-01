@@ -1,5 +1,8 @@
 #!/bin/bash
 
+env_vars=.env
+( set -o posix; set; ) > $env_vars
+
 WWW_DIR=/data/www/dkb
 RUN_DIR=/var/run/wsgi
 LOG_DIR=/var/log/dkb
@@ -19,6 +22,7 @@ MANAGE_SEL=
 
 base_dir=$(readlink -f $(cd $(dirname "$0"); pwd))
 build_dir="${base_dir}/build"
+cfg_file=~/.dkb-api
 
 usage() {
   echo "
@@ -76,8 +80,34 @@ OPTIONS
 
     -l, --listen HOST:PORT  address for Nginx to listen
                             Default: $ADDR
+
+  INSTALLATION PARAMETERS
+
+    --restore-defaults
+                     restore default configuration parameters
+                     (remove stored configuration) and exit
+
+    --restore-cfg    restore previous configuration and exit
+
+    --show-cfg       show stored configuration and exit
 "
 }
+
+load_cfg() {
+  [ -f "$cfg_file" ] || return 1
+  . "$cfg_file"
+}
+
+save_cfg() {
+  vars=`set -o posix; set | grep ^[A-Z] | grep -v -e ^BASH -e ^FUNCNAME -e ^PIPESTATUS`
+  new_cfg=`echo "$vars" | grep -v -f "$env_vars"`
+  echo "$new_cfg" > "$cfg_file.tmp"
+  # If config has changed -- save previous in .old file
+  [ -f "$cfg_file" ] && diff "$cfg_file"{,.tmp} &> /dev/null && mv "$cfg_file"{,.old}
+  mv "$cfg_file"{.tmp,}
+}
+
+[[ "$*" =~ "--help" ]] || load_cfg
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -132,6 +162,24 @@ while [ $# -gt 0 ]; do
       MANAGE_SEL=1
       MANAGE_SERVICE=1
       ;;
+    --restore-defaults)
+      [ -f "$cfg_file" ] && mv "$cfg_file"{,.old}
+      exit
+      ;;
+    --restore-cfg)
+      [ -f "${cfg_file}.old" ] \
+        || { echo "No configuration file found to restore." >&2 && exit 1; }
+      [ -f "$cfg_file" ] && mv "$cfg_file"{,.tmp}
+      mv "$cfg_file"{.old,}
+      [ -f "${cfg_file}.tmp" ] && mv "$cfg_file"{.tmp,.old}
+      exit
+      ;;
+    --show-cfg)
+      [ -f "$cfg_file" ] \
+        && cat "$cfg_file" \
+        || echo "No stored configuration found ($cfg_file)." >&2
+      exit
+      ;;
     --)
       break
       ;;
@@ -145,6 +193,8 @@ while [ $# -gt 0 ]; do
   esac
   shift
 done
+
+save_cfg
 
 get_nginx_user() {
   conf=$NGINX_DIR/nginx.conf
