@@ -85,6 +85,8 @@ OPTIONS
                      restore default configuration parameters
                      (remove stored configuration) and exit
 
+    --restore-cfg    restore previous configuration and exit
+
     --show-cfg       show stored configuration and exit
 "
 }
@@ -155,6 +157,14 @@ while [ $# -gt 0 ]; do
       ;;
     --restore-defaults)
       [ -f "$cfg_file" ] && mv "$cfg_file"{,.old}
+      exit
+      ;;
+    --restore-cfg)
+      [ -f "${cfg_file}.old" ] \
+        || { echo "No configuration file found to restore." >&2 && exit 1; }
+      [ -f "$cfg_file" ] && mv "$cfg_file"{,.tmp}
+      mv "$cfg_file"{.old,}
+      [ -f "${cfg_file}.tmp" ] && mv "$cfg_file"{.tmp,.old}
       exit
       ;;
     --show-cfg)
