@@ -1,0 +1,16 @@
+get_config_lib=$(cd "$(dirname "$BASH_SOURCE")"; pwd)
+source $get_config_lib/log
+
+# Find configuration file in $CONFIG_PATH
+get_config() {
+  [ -z "$1" ] && log ERROR "get_config(): no arguments passed." && return 1
+  [ -z "$CONFIG_PATH" ] && CONFIG_PATH=`pwd`
+  dirs=$CONFIG_PATH
+  while [ -n "$dirs" ]; do
+    dir=${dirs%%:*}
+    [ "$dirs" = "$dir" ] && \
+        dirs='' || \
+        dirs="${dirs#*:}"
+    [ -f "${dir}/${1}" ] && readlink -f "${dir}/${1}" && return 0
+  done
+}

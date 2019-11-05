@@ -1,0 +1,19 @@
+==============
+* ES mapping *
+==============
+
+1. Field descriptions
+---------------------
+
+toths06: CPU resources used by the task. Origins from ChicagoES:
+         jobs_archive_YYYY-MM-DD -> jobs_data -> doc['hs06sec'], total
+         value for the task jobs with status 'finished' or 'failed'.
+
+toths06_finished: CPU resources the task would use in the perfect world
+                  (see description for `toths06`).
+
+toths06_failed: 'wasted' CPU resources (see description for `toths06`).
+
+input_events: derived value based on primary_input_events, requested_events,
+              n_files_per_job, n_events_per_job, n_files_to_be_used.
+

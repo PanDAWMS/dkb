@@ -5,194 +5,238 @@
     "analysis": {
       "analyzer": {
         "task_dataset_analyzer": {
-          "type":      "pattern",
-          "pattern":   "\\W|_",
+          "type": "pattern",
+          "pattern": "\\W|_",
           "lowercase": true
         }
       }
     }
   },
-  "mappings" : {
-    "task" : {
-      "properties" : {
-        "campaign" : {
-          "type" : "text",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword",
-              "ignore_above" : 256
+  "mappings": {
+    "task": {
+      "properties": {
+        "campaign": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
             }
           }
         },
-        "subcampaign" : {
-          "type" : "text",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword",
-              "ignore_above" : 256
+        "subcampaign": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
             }
           }
         },
-        "phys_group" : {
-          "type" : "text",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword",
-              "ignore_above" : 256
+        "phys_group": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
             }
           }
         },
-        "project" : {
-          "type" : "text",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword",
-              "ignore_above" : 256
+        "project": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
             }
           }
         },
-        "pr_id" : {
-          "type" : "keyword",
-          "ignore_above" : 256
-        },
-        "step_name" : {
-          "type" : "text",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword",
-              "ignore_above" : 256
+        "pr_id": {
+          "type": "integer",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
             }
           }
         },
-        "status" : {
-          "type" : "keyword",
-          "ignore_above" : 256
+        "step_name": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
         },
-        "taskid":{
-          "type" : "keyword",
-          "ignore_above" : 256
+        "step_id": {
+          "type": "integer"
         },
-        "taskname" : {
-          "type" : "text",
+        "status": {
+          "type": "keyword",
+          "ignore_above": 256
+        },
+        "taskid": {
+          "type": "integer",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
+        },
+        "chain_id": {
+          "type": "integer"
+        },
+        "chain_data": {
+          "type": "integer",
+          "index": false,
+          "doc_values": false
+        },
+        "taskname": {
+          "type": "text",
           "analyzer": "task_dataset_analyzer",
-          "search_analyzer": "task_dataset_analyzer",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword",
-              "ignore_above" : 256
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
             }
           }
         },
-        "task_timestamp" : {
-          "type" : "date",
-          "format" : "dd-MM-yy HH:mm:ss"
+        "task_timestamp": {
+          "type": "date",
+          "format": "dd-MM-yy HH:mm:ss"
         },
-        "start_time" : {
-          "type" : "date",
-          "format" : "dd-MM-yy HH:mm:ss"
+        "start_time": {
+          "type": "date",
+          "format": "dd-MM-yy HH:mm:ss"
         },
-        "end_time" : {
-          "type" : "date",
-          "format" : "dd-MM-yy HH:mm:ss"
+        "end_time": {
+          "type": "date",
+          "format": "dd-MM-yy HH:mm:ss"
         },
-
-        "hashtag_list" : {
-          "type" : "keyword",
-          "ignore_above" : 256
+        "hashtag_list": {
+          "type": "keyword",
+          "ignore_above": 256
         },
-        "description" : {
-          "type" : "text",
-          "index": true
+        "description": {
+          "type": "text"
         },
-        "energy_gev" : {
-          "type" : "long"
+        "energy_gev": {
+          "type": "integer"
         },
-        "architecture" : {
-          "type" : "keyword",
-          "ignore_above" : 256
+        "architecture": {
+          "type": "keyword",
+          "ignore_above": 256
         },
-        "core_count" : {
-          "type" : "keyword",
-          "ignore_above" : 256
+        "core_count": {
+          "type": "short"
         },
-        "conditions_tag" : {
-          "type" : "keyword",
-          "ignore_above" : 2048
+        "conditions_tag": {
+          "type": "keyword",
+          "ignore_above": 2048
         },
-        "geometry_version" : {
-          "type" : "keyword",
-          "ignore_above" : 256
+        "geometry_version": {
+          "type": "keyword",
+          "ignore_above": 256
         },
-        "ticket_id" : {
-          "type" : "keyword",
-          "ignore_above" : 256
+        "ticket_id": {
+          "type": "keyword",
+          "ignore_above": 256
         },
-        "trans_home" : {
-          "type" : "keyword",
-          "ignore_above" : 256
+        "trans_home": {
+          "type": "keyword",
+          "ignore_above": 256
         },
-        "trans_path" : {
-          "type" : "keyword",
-          "ignore_above" : 256
+        "trans_path": {
+          "type": "keyword",
+          "ignore_above": 256
         },
-        "trans_uses" : {
-          "type" : "keyword",
-          "ignore_above" : 256
+        "trans_uses": {
+          "type": "keyword",
+          "ignore_above": 256
         },
-        "user_name" : {
-          "type" : "keyword",
-          "ignore_above" : 256
+        "user_name": {
+          "type": "keyword",
+          "ignore_above": 256
         },
-        "vo" : {
-          "type" : "keyword",
-          "ignore_above" : 256
+        "vo": {
+          "type": "keyword",
+          "ignore_above": 256
         },
-        "run_number" : {
-          "type" : "keyword",
-          "ignore_above" : 256
+        "run_number": {
+          "type": "integer",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
         },
-
-        "trigger_config" : {
-          "type" : "keyword",
-          "ignore_above" : 256
+        "trigger_config": {
+          "type": "keyword",
+          "ignore_above": 256
         },
-        "requested_events" : {
-          "type" : "long"
+        "total_events": {
+          "type": "long"
         },
-        "processed_events" : {
-          "type" : "long"
+        "requested_events": {
+          "type": "long"
         },
-        "phys_category" : {
-          "type" : "keyword",
-          "ignore_above" : 256
+        "processed_events": {
+          "type": "long"
+        },
+        "phys_category": {
+          "type": "keyword",
+          "ignore_above": 256
         },
         "ctag": {
           "type": "keyword",
-          "ignore_above" : 256
+          "ignore_above": 256
         },
         "output_formats": {
           "type": "keyword",
-          "ignore_above" : 256
+          "ignore_above": 256
         },
-        "primary_input" : {
-          "type" : "text",
+        "primary_input": {
+          "type": "text",
           "analyzer": "task_dataset_analyzer",
-          "search_analyzer": "task_dataset_analyzer",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword",
-              "ignore_above" : 256
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
             }
           }
         },
         "hs06": {
           "type": "long"
         },
+        "toths06": {
+          "type": "long"
+        },
+        "toths06_finished": {
+          "type": "long"
+        },
+        "toths06_failed": {
+          "type": "long"
+        },
         "input_bytes": {
+          "type": "long"
+        },
+        "primary_input_events": {
           "type": "long"
         },
         "primary_input_deleted": {
           "type": "boolean"
+        },
+        "input_events": {
+          "type": "long"
+        },
+        "n_files_per_job": {
+          "type": "short"
+        },
+        "n_events_per_job": {
+          "type": "long"
+        },
+        "n_files_to_be_used": {
+          "type": "integer"
         }
       }
     },
@@ -201,53 +245,49 @@
         "type": "task"
       },
       "properties": {
-        "datasetname" : {
-          "type" : "text",
+        "datasetname": {
+          "type": "text",
           "analyzer": "task_dataset_analyzer",
-          "search_analyzer": "task_dataset_analyzer",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword",
-              "ignore_above" : 256
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
             }
           }
         },
         "events": {
           "type": "long"
         },
-        "bytes" : {
-          "type" : "long"
+        "bytes": {
+          "type": "long"
         },
         "deleted": {
           "type": "boolean"
         },
         "data_format": {
           "type": "keyword",
-          "ignore_above" : 256
+          "ignore_above": 256
         },
         "k_factor": {
-          "type": "keyword",
-          "ignore_above" : 256
+          "type": "double"
         },
         "cross_section_ref": {
           "type": "keyword",
-          "ignore_above" : 256
+          "ignore_above": 256
         },
         "cross_section": {
-          "type": "keyword",
-          "ignore_above" : 256
+          "type": "double"
         },
         "gen_filt_eff": {
-          "type": "keyword",
-          "ignore_above" : 256
+          "type": "double"
         },
         "process_group": {
           "type": "keyword",
-          "ignore_above" : 256
+          "ignore_above": 256
         },
         "me_pdf": {
           "type": "keyword",
-          "ignore_above" : 256
+          "ignore_above": 256
         }
       }
     }

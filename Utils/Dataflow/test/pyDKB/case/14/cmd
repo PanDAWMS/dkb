@@ -1,0 +1,1 @@
+echo -n "" | ./json2TTL.py -m s

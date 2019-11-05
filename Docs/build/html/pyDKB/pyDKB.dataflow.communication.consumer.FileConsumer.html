@@ -1,0 +1,191 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>pyDKB.dataflow.communication.consumer.FileConsumer module &#8212; Data Knowledge Base  documentation</title>
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyDKB.dataflow.communication.consumer.HDFSConsumer module" href="pyDKB.dataflow.communication.consumer.HDFSConsumer.html" />
+    <link rel="prev" title="pyDKB.dataflow.communication.consumer.Consumer module" href="pyDKB.dataflow.communication.consumer.Consumer.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="module-pyDKB.dataflow.communication.consumer.FileConsumer">
+<span id="pydkb-dataflow-communication-consumer-fileconsumer-module"></span><span id="pydkb-dataflow-communication-consumer-fileconsumer"></span><h1>pyDKB.dataflow.communication.consumer.FileConsumer module<a class="headerlink" href="#module-pyDKB.dataflow.communication.consumer.FileConsumer" title="Permalink to this headline">¶</a></h1>
+<p>pyDKB.dataflow.communication.consumer.FileConsumer</p>
+<p>Data consumer implementation for common (static) files.</p>
+<dl class="docutils">
+<dt>TODO: think about:</dt>
+<dd><ul class="first last simple">
+<li>updatable files</li>
+<li>pipes (better, from the point of StreamConsumer)</li>
+<li>round-robin (for updatable sources)</li>
+<li>…</li>
+</ul>
+</dd>
+</dl>
+<dl class="class">
+<dt id="pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer">
+<em class="property">class </em><code class="descclassname">pyDKB.dataflow.communication.consumer.FileConsumer.</code><code class="descname">FileConsumer</code><span class="sig-paren">(</span><em>config={}</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/communication/consumer/FileConsumer.html#FileConsumer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyDKB.dataflow.communication.consumer.Consumer.html#pyDKB.dataflow.communication.consumer.Consumer.Consumer" title="pyDKB.dataflow.communication.consumer.Consumer.Consumer"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyDKB.dataflow.communication.consumer.Consumer.Consumer</span></code></a></p>
+<p>Data consumer implementation for HDFS data source.</p>
+<dl class="attribute">
+<dt id="pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.current_file">
+<code class="descname">current_file</code><em class="property"> = None</em><a class="headerlink" href="#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.current_file" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.get_source">
+<code class="descname">get_source</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/communication/consumer/FileConsumer.html#FileConsumer.get_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.get_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get nearest non-empty source (current or next).</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.get_source_info">
+<code class="descname">get_source_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/communication/consumer/FileConsumer.html#FileConsumer.get_source_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.get_source_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return current source info.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.input_filenames">
+<code class="descname">input_filenames</code><em class="property"> = None</em><a class="headerlink" href="#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.input_filenames" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.next_source">
+<code class="descname">next_source</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/communication/consumer/FileConsumer.html#FileConsumer.next_source"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.next_source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset $current_file to the next non-empty file.</p>
+<dl class="docutils">
+<dt>Return value:</dt>
+<dd>File descriptor of the new $current_file
+None (no files left)</dd>
+</dl>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.reconfigure">
+<code class="descname">reconfigure</code><span class="sig-paren">(</span><em>config={}</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/communication/consumer/FileConsumer.html#FileConsumer.reconfigure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.reconfigure" title="Permalink to this definition">¶</a></dt>
+<dd><p>(Re)initialize consumer with Stage configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.source_is_readable">
+<code class="descname">source_is_readable</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/communication/consumer/FileConsumer.html#FileConsumer.source_is_readable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.source_is_readable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Check if current source is readable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None  – no source,
+False – source is empty / fully read,
+True  – source is defined and is not empty</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">bool, NoneType</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">Data Knowledge Base</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="pyDKB.html">pyDKB package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="pyDKB.html#quickstart-guide">Quickstart guide</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="pyDKB.html#subpackages">Subpackages</a></li>
+</ul>
+</li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="pyDKB.html">pyDKB package</a><ul>
+  <li><a href="pyDKB.dataflow.html">pyDKB.dataflow package</a><ul>
+  <li><a href="pyDKB.dataflow.communication.html">pyDKB.dataflow.communication package</a><ul>
+  <li><a href="pyDKB.dataflow.communication.consumer.html">pyDKB.dataflow.communication.consumer package</a><ul>
+      <li>Previous: <a href="pyDKB.dataflow.communication.consumer.Consumer.html" title="previous chapter">pyDKB.dataflow.communication.consumer.Consumer module</a></li>
+      <li>Next: <a href="pyDKB.dataflow.communication.consumer.HDFSConsumer.html" title="next chapter">pyDKB.dataflow.communication.consumer.HDFSConsumer module</a></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, DKB team.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.11</a>
+      
+      |
+      <a href="../_sources/pyDKB/pyDKB.dataflow.communication.consumer.FileConsumer.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

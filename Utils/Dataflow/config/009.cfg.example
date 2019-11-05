@@ -8,7 +8,7 @@ tasks: %__009_query_dir__%/prodsys2ES.sql
 datasets: %__009_query_dir__%/datasets.sql
 
 [queries.params]
-# Parametric values for all queries:
+# Query parameters for all queries:
 # string '%(<param_name>)s' in sql file will be replaced
 # with the value of <param_name> (if value is quoted, quotes
 # will appear in the query as well).
@@ -20,6 +20,14 @@ datasets: %__009_query_dir__%/datasets.sql
 # * = -- analysis
 production_or_analysis_cond = >
 
+[process]
+# Query response processing mode:
+#  PLAIN   -- pass records to output independently of each other
+#             (currently: 'tasks' query only)
+#  SQUASH  -- link 'datasets' records to 'task', joining them into a single
+#             record
+mode = SQUASH
+
 [timestamps]
 # initial timestamp (e.g. 01-05-2016 00:00:00)
 initial = %__009_init_offset__%
@@ -27,6 +35,17 @@ initial = %__009_init_offset__%
 final = %__009_final_offset__%
 # offset from current timestamp (e.g. 86400 <=> 86400s <=> 1d; 8h; 15m)
 step = %__009_step__%
+# delay (e.g. 86400 <=> 86400s <=> 1d; 8h; 15m)
+# This parameter can be used to adjust 'now'.
+# For example, running the script at 10-05-2016 12:00:00 with
+# delay = 2h will set 'final' to 10-05-2016 10:00:00.
+# Has no effect if the right border of the data taking interval is
+# set explicitly.
+# Cannot be negative.
+delay = %__009_delay__%
+
+# Time zone of timestamps (default: local timezone)
+tz = UTC
 
 [logging]
 # Current offset file

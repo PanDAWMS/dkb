@@ -1,53 +1,95 @@
 =======================================
-* Detailed description of the datafow *
+* Detailed description of the dataflow *
 =======================================
 
 *** NOTE: stages are to be named with three leading digits (XXX_StageName). ***
 
-=====================
-* Brief description *
-=====================
-Stage		Stage Name			Stage Description 
-Number   
-********************************************************************************************
-0.0              000_kafka                      Dataflow managing Kafka applications
-0.9              009_oracleConnector            Get task metadata from ProdSys
-1.0		 010_glancePapers 		Get papers with links to supporting documents from GLANCE
-1.5              015_CDSDocuments               Get metadata for paper (and its supporting documents) from CDS
-1.6              016_task2es                    Prepare task metadata for bulk upload to ES
-1.8              018_PDFDownloader              Download PFD documents and upload them to HDFS
-1.9              019_oracle2esFormat            Prepare data for bulk upload to ES
-2.5              025_chicagoES                  Get additional metadata from Chicago ES
-3.0		 030_PDFAnalyzer		PDF Analyzer (search dataset in PDF Supporting Notes)
-5.4		 054_docContent2TTL		Convert results of Stage 30 to triples
-5.5              055_docs2TTL                   Convert paper (and its supporting documents) metadata to triples
-6.0		 060_upload2virtuoso		Upload data to Virtuoso
-6.9              069_upload2es                  Upload data to ES
-9.1              091_datasetsRucio              Get dataset metadata from Rucio
-9.3              093_datasetsFormat             Update dataset metadata:
-                                                  add "data_format" field
-9.5              095_datasetInfoAMI             Get dataset metadata from AMI
+======================
+* Stages description *
+======================
 
+               Supervisor Stages
+---------------------------------------------------
+#       Name                           Description
+---------------------------------------------------
+0.0     000_kafka                      Dataflow managing Kafka applications
+
+
+           Document analysis Stages
+---------------------------------------------------
+#       Name                           Description
+---------------------------------------------------
+1.0     010_glancePapers               Get papers with links to supporting
+                                         documents from GLANCE
+1.5     015_CDSDocuments               Get metadata for paper (and its
+                                         supporting documents) from CDS
+1.8     018_PDFDownloader              Download PDF documents and upload them
+                                         to HDFS
+3.0     030_PDFAnalyzer                PDF Analyzer (search dataset in PDF
+                                         Supporting Notes)
+5.4     054_docContent2TTL             Convert results of Stage 30 to triples
+5.5     055_docs2TTL                   Convert paper (and its supporting
+                                         documents) metadata to triples
+6.0     060_upload2virtuoso            Upload data to Virtuoso
+
+
+     Task and DS metadata integration Stages
+---------------------------------------------------
+#       Name                           Description
+---------------------------------------------------
+0.9     009_oracleConnector            Get task metadata from ProdSys
+1.6     016_task2es                    Update task metadata with fields
+                                         required for ES indexing
+1.7     017_adjustMetadata             Transform task metadata to fit ES scheme
+1.9     019_oracle2esFormat            Prepare data for bulk upload to ES
+2.5     025_chicagoES                  Get additional metadata from Chicago ES
+6.9     069_upload2es                  Upload data to ES
+7.1     071_esConsistency              Check data in ES
+9.1     091_datasetsRucio              Get dataset metadata from Rucio
+9.3     093_datasetsFormat             Update dataset metadata: add
+                                         "data_format" field
+9.5     095_datasetInfoAMI             Get dataset metadata from AMI
 
 
 =========================
 * Dataflows description *
 =========================
-Dataflow 							Description
-********************************************************************************************************
-010/output -> 015 	   					using output of 010 as input for 015
-015/output -> (018|055)
-018/output -> 030/output -> 054    				download PDF, analyze them and prepare results for Virtuoso
-015/output -> 055						generate TTL file for paper and its supporting documents
-                                                                  metadata
-(054|055)/output -> 060						upload links, papers, support docs and datasets TTL
-								  files to Virtuoso
 
-009/output ---> 091(in)/output ---> *                           Task metadata from Oracle to Elasticsearch
-   \                * ---> 016/output ----> 019/output -> 069   
-    \                                            /
-     \--> 091(out)/output ---> **               /               Dataset metadata from Rucio and AMI to Elasticsearch
-            ** ---> 093/output -> 095/output --/
+1. Document analysis
+---
+
+010 --> 015 --> *                    | Get papers and supporting docs metadata
+                                     |
+    * -> 018 -> 030 -> 054           | Get supp. doc PDFs, analyze and
+     \                  \            |   prepare extracted metadata
+      \                  \           |   for upload to Virtuoso
+       \                  \          |
+        \----> 055 ----------> **    | Prepare papers and supp. docs
+                                     |  metadata for upload to Virtuoso
+                                     |
+    ** ---> 060                      | Upload prepared metadata to Virtuoso
+
+2. Tasks and data samples (DS) metadata integration (ProdSys2)
+---
+
+009 ---> *                                | Get task metadata from ProdSys2 DB
+                                          |
+  * -> 091(in) -> 025 -> 016 -> 017       | Append task metadata with that from
+   \                             \        |   Rucio (input DS) and Chicago ES
+    \                             \       |
+     \-> 091(out) -> 093 -> 095 -----> ** | Get DS metadata from Rucio and AMI
+                                          |
+  ** ----> 019 -> 069                     | Prepare and upload metadata to ES
+
+3. Tasks metadata consistency check
+---
+
+009 ---> 016 ---> 071
+
+This is a simplified and slightly changed version of the previous dataflow,
+intended for making sure that information is consistent between ProdSys2 and
+ES. It gets a very basic set of metadata from ProdSys2, adds ES-related
+fields, and checks that it is present in ES rather than uploading it.
 
 ==============
 * REFERENCES *
@@ -57,42 +99,69 @@ Conventions, in-between data location in HDFS storage etc.
 ===========================
 * 1. Data Samples in HDFS *
 ===========================
-Catalog					Description						Link to Dataflow Stage   	
-***********************************************************************************************************************
-/user/DKB/store/PDF			PDF documents loaded from CDS				[by 018_PDFDownloader]
-/user/DKB/store/DatasetsFromPDF		dataset names and ID's, found by PDFAnalyzer module   	[030_PDFAnalyzer/output]
-/user/DKB/store/document-metadata       ATLAS documents metadata from CDS and GLANCE            [015_CDSDocuments/output]
+
+HOME folder: /user/DKB
+
+Stage  HDFS                           Description
+*******************************************************************
+018    $HOME/store/PDF                PDF documents loaded from CDS
+030    $HOME/store/DatasetsFromPDF    dataset names and ID's, found by stage 30
+015    $HOME/store/document-metadata  ATLAS documents metadata from CDS/GLANCE
 
 
 =======================================
 * 2. Streaming mode (data processing) *
 =======================================
 To automate all the processes in the DataFlow, we need to run all the stages in
-a streaming mode.  It means, that every (processing) stage is to meet the
+a streaming mode. It means, that every (processing) stage is to meet the
 following requirements:
 - can be run in a quasi-infinite loop (waiting for input data and reading and
   so on unless the input stream is closed) [1]; - read input data from STDIN;
-- write output data to STDOUT;
+- write output data to STDOUT, separating records with EOM [2];
 - not to write anything but processing result to STDOUT (meaning that any log
   and error messages are going to STDERR or can be suppressed by some kind of
-  --silent option); - in case of multiple output messages as a result of
-  processing of one input message, use '\0' as a separator between sets of
-  output messages [2];
-- [not implemented] in case of multiline result use empty line or '\3'
-  as a message separator[3].
+  --silent option);
+- indicate that input message processing is finished by sending EOP [3] to
+  STDOUT (note that last output record must ends with EOM, as any other record);
+
 
 [1] In case of input data that cannot be easily transformed in a 'one-line
     message' (as PDF files), use names of the files in HDFS as input or learn
     how to distinguish where one input message ends and starts another one.
 
-[2] For now, ExternalProcessor supposes that even one-message results should be
-    separated with '\0'.
+[2] EOM, End-of-Message marker. Default value: '\n' (newline)
 
-[3] Not implemented yet in ExternalProcessor, so let M.Golosova know if it is a
-    crying need.
+[3] EOP, End-of-Process marker. Default value: '\0' (NULL)
+
+==================
+* 3. Stage types *
+==================
+There are three types of stages:
+
+1. Source stage - an initial stage in a dataflow pipeline that gets data
+from an external source (CDS, Rucio, AMI, etc.).
+
+2. Transform stage - a transitional stage that performs single logical
+operation on the metadata. Set (chain) of transform stages forms the whole
+transformation process for messages produced by a source stage. Transformation
+operations may include: format change, derived values calculation,
+message extension with metadata from an additional source, etc.
+
+2.1. Pre-sink stage - the last transform stage in a dataflow pipeline that
+prepares metadata for upload via sink stage; it is aware of messages'
+formatting rules. All the preparations for upload should be done by
+the pre-sink stage.
+
+3. Sink stage - a stage that uploads data into the DKB storage
+(Virtuoso, ES, ...). Every single sink stage should be preceded by
+a corresponding pre-sink stage that transforms data and forms ready-to-send
+messages with a specific structure. Sink stage only gets prepared messages
+and uploads them without any re-formatting. It does not care about messages
+content. If message does not follow the template, most likely it
+will be rejected by the storage load API.
 
 =====================================
-* 3. External sources (data mining) *
+* 4. External sources (data mining) *
 =====================================
 There are two general cases of external data sources.
 1. Standard sources (like RDBMS) - here we can use standard connectors.

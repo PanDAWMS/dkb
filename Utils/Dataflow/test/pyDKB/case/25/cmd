@@ -1,0 +1,1 @@
+./json2TTL.py -o $base_dir/output input/NDjson.json input/NDjson-2.json

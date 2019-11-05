@@ -1,0 +1,4 @@
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/FAKE-ID-30/plain_text> a <http://nosql.tpu.ru/ontology/ATLAS#DocumentContent> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/FAKE-ID-30> <http://nosql.tpu.ru/ontology/ATLAS#hasContent> <http://nosql.tpu.ru:8890/DAV/ATLAS/document/FAKE-ID-30/plain_text> .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/FAKE-ID-30/plain_text> <http://nosql.tpu.ru/ontology/ATLAS#mentionsDataTakingYear> "2011" .
+<http://nosql.tpu.ru:8890/DAV/ATLAS/document/FAKE-ID-30/plain_text> <http://nosql.tpu.ru/ontology/ATLAS#mentionsEnergy> <http://nosql.tpu.ru/ontology/ATLAS#7tev> .

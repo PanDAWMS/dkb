@@ -1,0 +1,9 @@
+.. _pyDKB.dataflow.communication.stream.Stream:
+
+pyDKB.dataflow.communication.stream.Stream module
+=================================================
+
+.. automodule:: pyDKB.dataflow.communication.stream.Stream
+    :members:
+    :undoc-members:
+    :show-inheritance:

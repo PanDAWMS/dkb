@@ -2,10 +2,8 @@
 Stage submodule init file.
 """
 
-from .. import Message
 from .. import messageType
 from AbstractStage import AbstractStage
-from AbstractProcessorStage import AbstractProcessorStage
-from processors import *
+from ProcessorStage import ProcessorStage
 
-__all__ = ['JSONProcessorStage', 'TTLProcessorStage', 'JSON2TTLProcessorStage']
+__all__ = ['ProcessorStage']

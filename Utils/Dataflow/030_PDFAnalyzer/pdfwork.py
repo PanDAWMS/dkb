@@ -63,11 +63,6 @@ def mine_text(infname, page_numbers=False, outtype="text", rotated_pages=[],
 
         tmp = TemporaryFile(mode="w+")
         laparams = LAParams()
-    #    laparams.detect_vertical = True
-    #    laparams.line_margin = 0.8
-    #    laparams.word_margin = 0.1
-    #    print laparams
-    #    laparams.boxes_flow = -1.0
 
         extension = False
         if outtype == "text":
@@ -85,9 +80,7 @@ def mine_text(infname, page_numbers=False, outtype="text", rotated_pages=[],
         interpreter = PDFPageInterpreter(rsrcmngr, device)
 
         n = 1
-#        pages = {}
         for page in PDFPage.get_pages(inf):
-            #        print n
             if not page_numbers or n in page_numbers:
                 if outtype == "xml" and n in rotated_pages:
                     rotation = 90
@@ -105,19 +98,13 @@ def mine_text(infname, page_numbers=False, outtype="text", rotated_pages=[],
                                 single += 1
                             normal += 1
                     coef = float(single) / normal
-    #                print "Page %d: %d/%d = %f lines contain a single \
-    #                character" % (n, single, normal, coef)
                     if coef > 0.6:
                         rotated_pages.append(n)
-    #                    print "Page seems to be rotated"
                         text = get_page_text(interpreter, page, tmp, 90)
-#                pages[n] = text
                 if folder and extension:
                     with open(folder + "/%d.%s" % (n, extension), "w") as outf:
                         outf.write(text)
-    #            outf.writelines(lines)
             n += 1
-#    inf.close()
     device.close()
     tmp.close()
     return [n - 1, rotated_pages]

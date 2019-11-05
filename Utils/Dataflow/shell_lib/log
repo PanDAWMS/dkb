@@ -1,0 +1,7 @@
+log() {
+  level=INFO
+  [ $# -eq 2 ] && level="$1" && shift
+  [ -z "$SCRIPT_NAME" ] && SCRIPT_NAME="$(basename "$0")"
+  msg="$1"
+  echo "($level) `date +'%d-%m-%Y %T'` ($SCRIPT_NAME) $msg" >&2
+}
