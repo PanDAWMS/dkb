@@ -7,6 +7,7 @@ import sys
 import os
 import signal
 from datetime import datetime
+import time
 
 logging.basicConfig(format="%(asctime)s (%(levelname)s) %(message)s",
                     level=logging.DEBUG)
@@ -88,6 +89,7 @@ def construct_response(data, **kwargs):
     """
     rtype = kwargs.get('rtype', 'json')
     status = data.pop('_status', 200)
+    t0 = kwargs.pop('__start_time', None)
     if status/100 != 2:
         # Some error occured, so we need to return error info,
         # not the request results
@@ -101,6 +103,8 @@ def construct_response(data, **kwargs):
             body = 'error'
         result = {'status': str_status}
         result[body] = data
+        if t0 and result.get('took_total') is None:
+            result['took_total'] = int((time.time() - t0)*1000)
         indent = None
         newline = ''
         if kwargs.get('pretty'):
@@ -124,9 +128,11 @@ def construct_response(data, **kwargs):
 
 
 def dkb_app(environ, start_response):
+    t0 = time.time()
     path = environ.get('SCRIPT_NAME')
     logging.debug('REQUEST: %s' % path)
     params = parse_params(environ.get('QUERY_STRING', ''))
+    params['__start_time'] = t0
     logging.debug('PARAMS: %s' % params)
     try:
         rtype = params.get('rtype', 'json')
