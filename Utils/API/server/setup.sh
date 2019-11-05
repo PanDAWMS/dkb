@@ -332,6 +332,7 @@ build_www() {
   cd "$base_dir"
   files=`cat .files`
   for f in $files; do
+    [ -e "$f" ] || continue
     if [ -d "$f" ]; then
       mkdir -p "$build_dir/$f"
     else
@@ -351,6 +352,7 @@ install_www() {
   files=`cat .files`
   echo "Installing www files..." >&2
   for f in $files; do
+    [ -e "$build_dir/$f" ] || continue
     echo "> $WWW_DIR/$f" >&2
     if [ -d "$build_dir/$f" ]; then
       mkdir -p "$WWW_DIR/$f"
