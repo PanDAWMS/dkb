@@ -453,10 +453,9 @@ def task_kwsearch(**kwargs):
     q = _task_kwsearch_query(kwargs['kw'], kwargs['ds_size'])
     logging.debug("Keyword search query: %r" % q)
     idx = []
-    if kwargs['production']:
-        idx.append(CONFIG['index']['production_tasks'])
-    if kwargs['analysis']:
-        idx.append(CONFIG['index']['analysis_tasks'])
+    for name in ('production', 'analysis'):
+        if kwargs[name]:
+            idx.append(CONFIG['index'][name + '_tasks'])
     r = client().search(index=idx, body={"query": q}, size=kwargs['size'],
                         request_timeout=kwargs['timeout'])
     result = {'_took_storage': r['took'], '_data': []}
