@@ -208,7 +208,7 @@ def task_kwsearch(path, **kwargs):
     :param kw: list of keywords (or a single keyword)
     :type kw: list, str
     :param analysis: if analysis tasks should be searched
-                     (default: False)
+                     (default: True)
     :type analysis: str, bool
     :param production: if production tasks should be searched
                        (default: True)
@@ -223,13 +223,21 @@ def task_kwsearch(path, **kwargs):
     """
     method_name = '/task/kwsearch'
     params = {
-        'analysis': False,
+        'analysis': True,
         'production': True,
         'size': 2000,
         'ds_size': 20,
         'timeout': 120
     }
     params.update(kwargs)
+    if (kwargs.get('analysis') is True):
+        params['production'] &= bool(kwargs.get('production'))
+    if (kwargs.get('production') is True):
+        params['analysis'] &= bool(kwargs.get('analysis'))
+    if not (params.get('analysis') or params.get('production')):
+        raise MethodException(method_name, "Parameters 'production' and "
+                              "'analysis' should not be set to False at the "
+                              "same time.")
     kw = kwargs.get('kw')
     if kw is None:
         raise MissedArgument(method_name, 'kw')
