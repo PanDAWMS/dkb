@@ -452,13 +452,21 @@ def task_kwsearch(**kwargs):
     init()
     q = _task_kwsearch_query(kwargs['kw'], kwargs['ds_size'])
     logging.debug("Keyword search query: %r" % q)
+    warn = []
     idx = []
-    for name in ('production', 'analysis'):
-        if kwargs[name]:
-            idx.append(CONFIG['index'][name + '_tasks'])
+    try:
+        for name in ('production', 'analysis'):
+            if kwargs[name]:
+                idx.append(CONFIG['index'][name + '_tasks'])
+    except KeyError, err:
+        msg = "Missed parameter in server configuration: %s" % str(err)
+        warn.append(msg)
+        logging.warn(msg)
     r = client().search(index=idx, body={"query": q}, size=kwargs['size'],
                         request_timeout=kwargs['timeout'])
     result = {'_took_storage': r['took'], '_data': []}
+    if warn:
+        result['_errors'] = warn
     if not r['hits']['hits']:
         return result
     result['_total'] = r['hits']['total']
