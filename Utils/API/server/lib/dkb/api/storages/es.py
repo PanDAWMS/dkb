@@ -456,8 +456,14 @@ def task_kwsearch(**kwargs):
     idx = []
     try:
         for name in ('production', 'analysis'):
+            idx_name = CONFIG['index'][name + '_tasks']
             if kwargs[name]:
-                idx.append(CONFIG['index'][name + '_tasks'])
+                if idx_name:
+                    idx.append(idx_name)
+                else:
+                    msg = "Index name not configured (%s_tasks)." % name
+                    warn.append(msg)
+                    logging.warn(msg)
     except KeyError, err:
         msg = "Missed parameter in server configuration: %s" % str(err)
         warn.append(msg)
