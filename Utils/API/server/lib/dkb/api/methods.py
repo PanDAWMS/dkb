@@ -226,7 +226,7 @@ def error_handler(exc_info):
         response['_status'] = 500
         response['details'] = str(err)
     if isinstance(err, NotFoundException):
-        response['text_info'] = NotFoundException.description
+        response['text_info'] = NotFoundException.details
     trace = traceback.format_exception(*exc_info)
     for lines in trace:
         for line in lines.split('\n'):
