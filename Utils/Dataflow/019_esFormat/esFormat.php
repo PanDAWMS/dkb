@@ -5,12 +5,24 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 }
 set_error_handler("exception_error_handler");
 
+# Default values.
+# ES index where the documents should be indexed/updated.
 $DEFAULT_INDEX = 'tasks_production';
-$DEFAULT_ACTION = 'index';
-$UPDATE_RETRIES = 3;
-$ES_INDEX = NULL;
+# End-of-process marker, depending on mode.
 $EOP_DEFAULTS = Array("stream" => chr(0), "file" => "");
+# End-of-message marker, depending on mode.
 $EOM_DEFAULTS = Array("stream" => chr(30), "file" => chr(30));
+
+# Variable initialization.
+# Action. Possible values are 'index' and 'update'. Note: this variable is not
+# a constant and can be changed with command line argument. The "DEFAULT" in
+# its name refers to action not being specified in the data being processed,
+# not in the script's configuration (like the default values above).
+$DEFAULT_ACTION = 'index';
+# How many times the update should be retried in case of conflict.
+$UPDATE_RETRIES = 3;
+# ES index where the documents should be indexed/updated.
+$ES_INDEX = NULL;
 
 function check_input($row) {
   /* Check the provided input's correctness.
