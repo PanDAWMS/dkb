@@ -200,6 +200,7 @@ function decode_escaped($string) {
                       'stripcslashes("$0")', $string);
 }
 
+# Process command line arguments.
 $opts = getopt("e:E:", Array("end-of-message:", "end-of-process:",
                              "update"));
 $args = $argv;
@@ -233,6 +234,7 @@ foreach ($opts as $key => $val) {
 
 $args = array_values($args);
 
+# Determine mode depending on whether the input file was supplied or not.
 if (isset($args[1])) {
   $h = fopen($args[1], "r");
   $mode = "file";
@@ -241,12 +243,14 @@ if (isset($args[1])) {
   $mode = "stream";
 }
 
+# Set markers.
 if (!(isset($EOM_MARKER))) $EOM_MARKER = $EOM_DEFAULTS[$mode];
 if (!(isset($EOP_MARKER))) $EOP_MARKER = $EOP_DEFAULTS[$mode];
 
 $EOM_HEX = implode(unpack("H*", $EOM_MARKER));
 $EOP_HEX = implode(unpack("H*", $EOP_MARKER));
 
+# Check that markers are valid.
 if ($EOM_MARKER == '') {
   fwrite(STDERR, "(ERROR) EOM marker can not be empty string.\n");
   exit(1);
@@ -267,6 +271,7 @@ if (!$ES_INDEX) {
   $ES_INDEX = $DEFAULT_INDEX;
 }
 
+# Process data.
 if ($h) {
   while (($line = stream_get_line($h, 0, $EOM_MARKER)) !== false) {
     $row = json_decode($line,true);
