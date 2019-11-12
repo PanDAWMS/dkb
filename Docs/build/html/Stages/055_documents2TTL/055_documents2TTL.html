@@ -103,9 +103,9 @@ JSON - for example, if ‘data’ variable contains the initial JSON then
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – ‘CDS’ part of the initial JSON</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">abstract</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">abstract or None if it was not found</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str or NoneType</td>
 </tr>
 </tbody>
 </table>
@@ -121,9 +121,9 @@ JSON - for example, if ‘data’ variable contains the initial JSON then
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – ‘CDS’ part of the initial JSON</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">arXiv code</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">arXiv code or None if it was not found</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str or NoneType</td>
 </tr>
 </tbody>
 </table>
@@ -139,9 +139,9 @@ JSON - for example, if ‘data’ variable contains the initial JSON then
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – ‘CDS’ part of the initial JSON</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">CDS id</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">CDS id or None if it was not found</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">int or NoneType</td>
 </tr>
 </tbody>
 </table>
@@ -157,9 +157,9 @@ JSON - for example, if ‘data’ variable contains the initial JSON then
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – ‘CDS’ part of the initial JSON</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">CDS internal report number</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">CDS internal report number or None if it was not found</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">unicode</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">unicode or NoneType</td>
 </tr>
 </tbody>
 </table>
@@ -179,10 +179,10 @@ JSON - for example, if ‘data’ variable contains the initial JSON then
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">parameter value</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">parameter value or None if it was not found</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int, str</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">int, str, NoneType</p>
 </td>
 </tr>
 </tbody>
@@ -199,9 +199,9 @@ JSON - for example, if ‘data’ variable contains the initial JSON then
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – ‘CDS’ part of the initial JSON</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">creation date</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">creation date or None if it was not found</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str or NoneType</td>
 </tr>
 </tbody>
 </table>
@@ -403,10 +403,10 @@ PAPER atlas:isBasedOn SUPPORTING_DOCUMENT</p>
 </ul>
 </td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">parameter value</p>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">parameter value or None if it was not found</p>
 </td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str, unicode</p>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">str, unicode, NoneType</p>
 </td>
 </tr>
 </tbody>
@@ -512,9 +512,9 @@ generated in this function.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – ‘CDS’ part of the initial JSON</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">report number</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">report number or None if it was not found</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">unicode</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">unicode or NoneType</td>
 </tr>
 </tbody>
 </table>
@@ -530,9 +530,9 @@ generated in this function.</p>
 <tbody valign="top">
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>dict</em>) – ‘CDS’ part of the initial JSON</td>
 </tr>
-<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">title</td>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">title or None if it was not found</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str</td>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">str or NoneType</td>
 </tr>
 </tbody>
 </table>

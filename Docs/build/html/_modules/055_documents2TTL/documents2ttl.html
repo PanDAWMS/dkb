@@ -324,8 +324,8 @@
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 <span class="sd">    :type data: dict</span>
 
-<span class="sd">    :return: CDS internal report number</span>
-<span class="sd">    :rtype: unicode</span>
+<span class="sd">    :return: CDS internal report number or None if it was not found</span>
+<span class="sd">    :rtype: unicode or NoneType</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;report_number&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="n">report_number</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report_number&#39;</span><span class="p">)</span>
@@ -347,8 +347,8 @@
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 <span class="sd">    :type data: dict</span>
 
-<span class="sd">    :return: report number</span>
-<span class="sd">    :rtype: unicode</span>
+<span class="sd">    :return: report number or None if it was not found</span>
+<span class="sd">    :rtype: unicode or NoneType</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;report_number&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="n">report_number</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;report_number&#39;</span><span class="p">)</span>
@@ -369,8 +369,8 @@
 <span class="sd">    :param json_data: &#39;GLANCE&#39; part of the initial JSON</span>
 <span class="sd">    :type json_data: dict</span>
 
-<span class="sd">    :return: parameter value</span>
-<span class="sd">    :rtype: str, unicode</span>
+<span class="sd">    :return: parameter value or None if it was not found</span>
+<span class="sd">    :rtype: str, unicode, NoneType</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">param_name</span> <span class="o">==</span> <span class="s1">&#39;id&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">json_data</span><span class="p">[</span><span class="s1">&#39;id&#39;</span><span class="p">]</span>
@@ -393,8 +393,8 @@
 <span class="sd">    :type param_name: str</span>
 <span class="sd">    :param json_data: &#39;CDS&#39; part of the initial JSON</span>
 
-<span class="sd">    :return: parameter value</span>
-<span class="sd">    :rtype: int, str</span>
+<span class="sd">    :return: parameter value or None if it was not found</span>
+<span class="sd">    :rtype: int, str, NoneType</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">param_name</span> <span class="o">==</span> <span class="s1">&#39;abstract&#39;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">abstract_extraction</span><span class="p">(</span><span class="n">json_data</span><span class="p">)</span>
@@ -418,8 +418,8 @@
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 <span class="sd">    :type data: dict</span>
 
-<span class="sd">    :return: abstract</span>
-<span class="sd">    :rtype: str</span>
+<span class="sd">    :return: abstract or None if it was not found</span>
+<span class="sd">    :rtype: str or NoneType</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="s1">&#39;abstract&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
@@ -442,8 +442,8 @@
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 <span class="sd">    :type data: dict</span>
 
-<span class="sd">    :return: title</span>
-<span class="sd">    :rtype: str</span>
+<span class="sd">    :return: title or None if it was not found</span>
+<span class="sd">    :rtype: str or NoneType</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;title&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">fix_string</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;title&#39;</span><span class="p">))</span></div>
@@ -455,8 +455,8 @@
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 <span class="sd">    :type data: dict</span>
 
-<span class="sd">    :return: CDS id</span>
-<span class="sd">    :rtype: int</span>
+<span class="sd">    :return: CDS id or None if it was not found</span>
+<span class="sd">    :rtype: int or NoneType</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;recid&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">int</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;recid&#39;</span><span class="p">))</span></div>
@@ -468,8 +468,8 @@
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 <span class="sd">    :type data: dict</span>
 
-<span class="sd">    :return: creation date</span>
-<span class="sd">    :rtype: str</span>
+<span class="sd">    :return: creation date or None if it was not found</span>
+<span class="sd">    :rtype: str or NoneType</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;creation_date&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">fix_string</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;creation_date&#39;</span><span class="p">))</span></div>
@@ -481,8 +481,8 @@
 <span class="sd">    :param data: &#39;CDS&#39; part of the initial JSON</span>
 <span class="sd">    :type data: dict</span>
 
-<span class="sd">    :return: arXiv code</span>
-<span class="sd">    :rtype: str</span>
+<span class="sd">    :return: arXiv code or None if it was not found</span>
+<span class="sd">    :rtype: str or NoneType</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="s1">&#39;primary_report_number&#39;</span> <span class="ow">in</span> <span class="n">data</span><span class="p">:</span>
         <span class="n">report_number</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;primary_report_number&#39;</span><span class="p">)</span>

@@ -290,8 +290,8 @@ def cds_internal_extraction(data):
     :param data: 'CDS' part of the initial JSON
     :type data: dict
 
-    :return: CDS internal report number
-    :rtype: unicode
+    :return: CDS internal report number or None if it was not found
+    :rtype: unicode or NoneType
     """
     if 'report_number' in data:
         report_number = data.get('report_number')
@@ -313,8 +313,8 @@ def report_number_extraction(data):
     :param data: 'CDS' part of the initial JSON
     :type data: dict
 
-    :return: report number
-    :rtype: unicode
+    :return: report number or None if it was not found
+    :rtype: unicode or NoneType
     """
     if 'report_number' in data:
         report_number = data.get('report_number')
@@ -335,8 +335,8 @@ def glance_parameter_extraction(param_name, json_data):
     :param json_data: 'GLANCE' part of the initial JSON
     :type json_data: dict
 
-    :return: parameter value
-    :rtype: str, unicode
+    :return: parameter value or None if it was not found
+    :rtype: str, unicode, NoneType
     """
     if param_name == 'id':
         return json_data['id']
@@ -359,8 +359,8 @@ def cds_parameter_extraction(param_name, json_data):
     :type param_name: str
     :param json_data: 'CDS' part of the initial JSON
 
-    :return: parameter value
-    :rtype: int, str
+    :return: parameter value or None if it was not found
+    :rtype: int, str, NoneType
     """
     if param_name == 'abstract':
         return abstract_extraction(json_data)
@@ -384,8 +384,8 @@ def abstract_extraction(data):
     :param data: 'CDS' part of the initial JSON
     :type data: dict
 
-    :return: abstract
-    :rtype: str
+    :return: abstract or None if it was not found
+    :rtype: str or NoneType
     """
     result = None
     if 'abstract' in data:
@@ -408,8 +408,8 @@ def title_extraction(data):
     :param data: 'CDS' part of the initial JSON
     :type data: dict
 
-    :return: title
-    :rtype: str
+    :return: title or None if it was not found
+    :rtype: str or NoneType
     """
     if 'title' in data:
         return fix_string(data.get('title').get('title'))
@@ -421,8 +421,8 @@ def cds_id_extraction(data):
     :param data: 'CDS' part of the initial JSON
     :type data: dict
 
-    :return: CDS id
-    :rtype: int
+    :return: CDS id or None if it was not found
+    :rtype: int or NoneType
     """
     if 'recid' in data:
         return int(data.get('recid'))
@@ -434,8 +434,8 @@ def creation_date_extraction(data):
     :param data: 'CDS' part of the initial JSON
     :type data: dict
 
-    :return: creation date
-    :rtype: str
+    :return: creation date or None if it was not found
+    :rtype: str or NoneType
     """
     if 'creation_date' in data:
         return fix_string(data.get('creation_date'))
@@ -447,8 +447,8 @@ def arxiv_extraction(data):
     :param data: 'CDS' part of the initial JSON
     :type data: dict
 
-    :return: arXiv code
-    :rtype: str
+    :return: arXiv code or None if it was not found
+    :rtype: str or NoneType
     """
     if 'primary_report_number' in data:
         report_number = data.get('primary_report_number')
