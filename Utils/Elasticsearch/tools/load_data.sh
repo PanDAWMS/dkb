@@ -1,1 +1,1 @@
-Dataflow/069_upload2es/load_data.sh
+../../Dataflow/069_upload2es/load_data.sh

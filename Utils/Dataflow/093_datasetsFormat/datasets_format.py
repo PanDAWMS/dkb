@@ -13,6 +13,7 @@ try:
     dkb_dir = os.path.join(base_dir, os.pardir)
     sys.path.append(dkb_dir)
     import pyDKB
+    from pyDKB.dataflow import messageType
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -20,18 +21,15 @@ except Exception, err:
 
 def main(argv):
     """ Program body. """
-    stage = pyDKB.dataflow.stage.JSONProcessorStage()
-    exit_code = 0
-    try:
-        stage.parse_args(argv)
-        stage.process = process
-        stage.run()
-    except (pyDKB.dataflow.exceptions.DataflowException, RuntimeError), err:
-        if str(err):
-            str_err = str(err).replace("\n", "\n(==) ")
-            sys.stderr.write("(ERROR) %s\n" % str_err)
-        exit_code = 2
-    finally:
+    stage = pyDKB.dataflow.stage.ProcessorStage()
+    stage.set_input_message_type(messageType.JSON)
+    stage.set_output_message_type(messageType.JSON)
+
+    stage.configure(argv)
+    stage.process = process
+    exit_code = stage.run()
+
+    if exit_code == 0:
         stage.stop()
 
     sys.exit(exit_code)
@@ -42,7 +40,7 @@ def process(stage, message):
     """
     msg = message.content()
     msg["data_format"] = dataset_format(msg.get('datasetname'))
-    stage.output(pyDKB.dataflow.messages.JSONMessage(msg))
+    stage.output(pyDKB.dataflow.communication.messages.JSONMessage(msg))
 
     return True
 

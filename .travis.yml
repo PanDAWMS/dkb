@@ -32,3 +32,18 @@ jobs:
               echo "$errors"
               false
             fi
+
+    - stage: README_checks
+      language: minimal
+      name: "Line length"
+      script: Tests/travis/README_long_lines.sh
+
+    - stage: README_checks
+      language: minimal
+      name: "Tabs"
+      script: Tests/travis/README_tabs.sh
+
+    - stage: README_checks
+      language: minimal
+      name: "Trailing spaces"
+      script: Tests/travis/README_trailing_spaces.sh

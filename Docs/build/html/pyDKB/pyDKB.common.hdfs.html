@@ -37,6 +37,19 @@
 <span id="pydkb-common-hdfs-module"></span><span id="pydkb-common-hdfs"></span><h1>pyDKB.common.hdfs module<a class="headerlink" href="#module-pyDKB.common.hdfs" title="Permalink to this headline">¶</a></h1>
 <p>Utils to interact with HDFS.</p>
 <dl class="function">
+<dt id="pyDKB.common.hdfs.File">
+<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">File</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#File"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.File" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get and open temporary local copy of HDFS file</p>
+<p>Return value: open file object (TemporaryFile).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyDKB.common.hdfs.basename">
+<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">basename</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#basename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.basename" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return file name without path.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="pyDKB.common.hdfs.check_stderr">
 <code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">check_stderr</code><span class="sig-paren">(</span><em>proc</em>, <em>timeout=None</em>, <em>max_lines=1</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#check_stderr"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.check_stderr" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait till the end of the subprocess and send its STDERR to STDERR.</p>
@@ -46,10 +59,22 @@ if MAX_LINES == None, output all the STDERR.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="pyDKB.common.hdfs.dirname">
+<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">dirname</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#dirname"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.dirname" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return dirname without filename.</p>
+</dd></dl>
+
+<dl class="function">
 <dt id="pyDKB.common.hdfs.getfile">
 <code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">getfile</code><span class="sig-paren">(</span><em>fname</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#getfile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.getfile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Download file from HDFS.</p>
 <p>Return value: file name (without directory)</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyDKB.common.hdfs.join">
+<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">join</code><span class="sig-paren">(</span><em>p</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#join"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.join" title="Permalink to this definition">¶</a></dt>
+<dd><p>Join given paths.</p>
 </dd></dl>
 
 <dl class="function">
@@ -71,6 +96,12 @@ mode    – ‘a’: list all objects</p>
 <dt id="pyDKB.common.hdfs.makedirs">
 <code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">makedirs</code><span class="sig-paren">(</span><em>dirname</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#makedirs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.makedirs" title="Permalink to this definition">¶</a></dt>
 <dd><p>Try to create directory (with parents).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="pyDKB.common.hdfs.movefile">
+<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">movefile</code><span class="sig-paren">(</span><em>fname</em>, <em>dest</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#movefile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.movefile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Move local file to HDFS.</p>
 </dd></dl>
 
 <dl class="function">

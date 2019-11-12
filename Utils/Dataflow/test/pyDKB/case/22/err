@@ -1,0 +1,15 @@
+(WARN) (ProcessorStage) Empty EOM marker specified!
+(INFO) (ProcessorStage) Configuration parameters:
+(INFO) (ProcessorStage)   hdfs         : 'False'
+(INFO) (ProcessorStage)   dest         : 's'
+(INFO) (ProcessorStage)   input_dir    : '.'
+(INFO) (ProcessorStage)   skip_process : 'False'
+(INFO) (ProcessorStage)   eom          : ''
+(INFO) (ProcessorStage)   output_dir   : 'out'
+(INFO) (ProcessorStage)   source       : 'f'
+(INFO) (ProcessorStage)   eop          : '\n'
+(INFO) (ProcessorStage)   mode         : 'f'
+(INFO) (ProcessorStage)   config       : 'None'
+(INFO) (ProcessorStage)   input_files  : '['input/jsonArray.json']'
+(INFO) (ProcessorStage) Starting stage execution.
+(INFO) (ProcessorStage) Stopping stage.

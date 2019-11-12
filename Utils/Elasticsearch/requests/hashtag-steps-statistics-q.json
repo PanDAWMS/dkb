@@ -33,15 +33,19 @@ GET <index>/task/_search
         "processed_events": {
           "sum": {"field": "processed_events"}
         },
-        "cpu": {
-          "sum": {"script": {"inline":"doc['hs06'].value * doc['total_events'].value"}}
+        "cpu_total": {
+          "sum": {"field": "toths06"}
+        },
+        "cpu_failed": {
+          "sum": {"field": "toths06_failed"}
         },
         "timestamp_defined": {
           "filter": {
             "bool": {
               "must": [
                 {"exists": {"field": "start_time"}},
-                {"exists": {"field": "end_time"}}
+                {"exists": {"field": "end_time"}},
+                {"script": {"script": "doc['end_time'].value > doc['start_time'].value"}}
               ]
             }
           },

@@ -15,8 +15,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pyDKB.dataflow.stage.processors module" href="pyDKB.dataflow.stage.processors.html" />
-    <link rel="prev" title="pyDKB.dataflow.stage.AbstractProcessorStage module" href="pyDKB.dataflow.stage.AbstractProcessorStage.html" />
+    <link rel="next" title="pyDKB.dataflow.stage.ProcessorStage module" href="pyDKB.dataflow.stage.ProcessorStage.html" />
+    <link rel="prev" title="pyDKB.dataflow.stage package" href="pyDKB.dataflow.stage.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -39,7 +39,7 @@
 <dl class="class">
 <dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage">
 <em class="property">class </em><code class="descclassname">pyDKB.dataflow.stage.AbstractStage.</code><code class="descname">AbstractStage</code><span class="sig-paren">(</span><em>description='DKB Dataflow stage'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="pyDKB.common.LoggableObject.html#pyDKB.common.LoggableObject.LoggableObject" title="pyDKB.common.LoggableObject.LoggableObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyDKB.common.LoggableObject.LoggableObject</span></code></a></p>
 <p>Class/instance variable description:
 * Argument parser (argparse.ArgumentParser)</p>
 <blockquote>
@@ -51,11 +51,35 @@
 </dd>
 </dl>
 </li>
+<li><dl class="first docutils">
+<dt>Stage config parser (ConfigParser.SafeConfigParser)</dt>
+<dd><p class="first last">__config</p>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Stage custom config (defaultdict(defaultdict(str)))</dt>
+<dd><p class="first last">CONFIG</p>
+</dd>
+</dl>
+</li>
 </ul>
 <dl class="method">
 <dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.add_argument">
 <code class="descname">add_argument</code><span class="sig-paren">(</span><em>*args</em>, <em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.add_argument"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.add_argument" title="Permalink to this definition">¶</a></dt>
 <dd><p>Add specific (not common) arguments.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.args_error">
+<code class="descname">args_error</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.args_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.args_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output USAGE, error message and exit with code 2.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.config_error">
+<code class="descname">config_error</code><span class="sig-paren">(</span><em>message='Failed to read config file:'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.config_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.config_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output error message and exit with code 3.</p>
 </dd></dl>
 
 <dl class="method">
@@ -65,9 +89,26 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.log_configuration">
+<code class="descname">log_configuration</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.log_configuration"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.log_configuration" title="Permalink to this definition">¶</a></dt>
+<dd><p>Log stage configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.output_error">
+<code class="descname">output_error</code><span class="sig-paren">(</span><em>message=None</em>, <em>exc_info=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.output_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.output_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Output traceback of the passed (or last) error with <cite>message</cite>.</p>
+</dd></dl>
+
+<dl class="method">
 <dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.parse_args">
 <code class="descname">parse_args</code><span class="sig-paren">(</span><em>args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.parse_args"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.parse_args" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse arguments and set dependant arguments if needed.</p>
+<dl class="docutils">
+<dt>Exits in case of error with code:</dt>
+<dd>2 – failed to parse arguments
+3 – failed to read config file</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
@@ -77,9 +118,35 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.read_config">
+<code class="descname">read_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.read_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.read_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Read stage custom config file.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">(True|False)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the stage.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.set_error">
+<code class="descname">set_error</code><span class="sig-paren">(</span><em>err_type</em>, <em>err_val</em>, <em>err_trace</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.set_error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.set_error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set object <cite>_err</cite> variable from the last error info.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stop running processes and output error information.</p>
 </dd></dl>
 
 </dd></dl>
@@ -120,8 +187,8 @@
   <li><a href="pyDKB.html">pyDKB package</a><ul>
   <li><a href="pyDKB.dataflow.html">pyDKB.dataflow package</a><ul>
   <li><a href="pyDKB.dataflow.stage.html">pyDKB.dataflow.stage package</a><ul>
-      <li>Previous: <a href="pyDKB.dataflow.stage.AbstractProcessorStage.html" title="previous chapter">pyDKB.dataflow.stage.AbstractProcessorStage module</a></li>
-      <li>Next: <a href="pyDKB.dataflow.stage.processors.html" title="next chapter">pyDKB.dataflow.stage.processors module</a></li>
+      <li>Previous: <a href="pyDKB.dataflow.stage.html" title="previous chapter">pyDKB.dataflow.stage package</a></li>
+      <li>Next: <a href="pyDKB.dataflow.stage.ProcessorStage.html" title="next chapter">pyDKB.dataflow.stage.ProcessorStage module</a></li>
   </ul></li>
   </ul></li>
   </ul></li>

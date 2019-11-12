@@ -40,6 +40,7 @@
 <span class="kn">import</span> <span class="nn">signal</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
+<span class="kn">from</span> <span class="nn">pyDKB.common.misc</span> <span class="k">import</span> <span class="p">(</span><span class="n">log</span><span class="p">,</span> <span class="n">logLevel</span><span class="p">)</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;CDSInvenioConnector&quot;</span><span class="p">,</span> <span class="s2">&quot;KerberizedCDSInvenioConnector&quot;</span><span class="p">]</span>
 
@@ -53,7 +54,7 @@
     <span class="kn">from</span> <span class="nn">invenio_client.contrib</span> <span class="k">import</span> <span class="n">cds</span>
     <span class="kn">import</span> <span class="nn">splinter</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-    <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(WARN) </span><span class="si">%s</span><span class="s2"> failed (</span><span class="si">%s</span><span class="s2">)</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">e</span><span class="p">))</span>
+    <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Submodule failed (</span><span class="si">%s</span><span class="s2">)&quot;</span> <span class="o">%</span> <span class="n">e</span><span class="p">,</span> <span class="n">logLevel</span><span class="o">.</span><span class="n">WARN</span><span class="p">)</span>
     <span class="n">__all__</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">else</span><span class="p">:</span>
 
@@ -114,9 +115,9 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">kerberos</span>
             <span class="k">except</span> <span class="ne">NameError</span><span class="p">:</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(ERROR) Kerberos Python package is not&quot;</span>
-                                 <span class="s2">&quot; installed. Can&#39;t proceed with Kerberos&quot;</span>
-                                 <span class="s2">&quot; authorization.</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Kerberos Python package is not&quot;</span>
+                    <span class="s2">&quot; installed. Can&#39;t proceed with Kerberos&quot;</span>
+                    <span class="s2">&quot; authorization.&quot;</span><span class="p">,</span> <span class="n">logLevel</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
 
             <span class="nb">super</span><span class="p">(</span><span class="n">KerberizedCDSInvenioConnector</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="s2">&quot;user&quot;</span><span class="p">,</span>
@@ -139,7 +140,7 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">browser</span><span class="o">.</span><span class="n">find_link_by_partial_text</span><span class="p">(</span><span class="s2">&quot;Sign in&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
 
             <span class="k">except</span> <span class="n">kerberos</span><span class="o">.</span><span class="n">GSSError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(ERROR) </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">))</span>
+                <span class="n">log</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="nb">str</span><span class="p">(</span><span class="n">e</span><span class="p">),</span> <span class="n">logLevel</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span></div>
 </pre></div>
 

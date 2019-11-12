@@ -6,6 +6,7 @@ import ConfigParser
 import sys
 from datetime import datetime, timedelta
 import time
+import pytz
 from collections import defaultdict
 
 from OffsetStorage import FileOffsetStorage
@@ -17,10 +18,15 @@ SQUASH_POLICY = 'SQUASH'
 
 # Global variables
 # ---
-# Operating mode
-mode = None
 # Output stream
 OUT = os.fdopen(sys.stdout.fileno(), 'w', 0)
+
+# Timezone of the data timestamps in the source DB
+# (used to adjust 'now' to the proper value)
+OFFSET_TZ = None
+# Delay
+# (used to adjust 'now' to avoid pulling of "unstable" data)
+OFFSET_DELAY = 0
 # ---
 
 
@@ -28,7 +34,7 @@ def main():
     """ Main program cycle.
 
     USAGE:
-       ./Oracle2JSON.py --config <config file> --mode <PLAIN|SQUASH>
+       ./Oracle2JSON.py --config <config file>
 
     TODO:
        Obtain the min(timestamp) from t_production_task
@@ -36,11 +42,10 @@ def main():
        Query: SELECT min(timestamp) from t_production_task;
     """
     args = parsingArguments()
-    global mode
-    mode = args.mode
 
     # read initial configuration
     config = read_config(args.config)
+    log_config(config)
     if config is None:
         sys.exit(1)
 
@@ -49,7 +54,12 @@ def main():
     if not offset_storage:
         sys.exit(2)
 
-    conn = OracleConnection(config['dsn'])
+    # Offset timezone initialization
+    init_offset_tz(config)
+    # Offset delay initialization
+    init_offset_delay(config)
+
+    conn = OracleConnection(config['__dsn'])
     if not conn.establish():
         sys.stderr.write("(ERROR) Failed to connect to Oracle. Exiting.\n")
         sys.exit(3)
@@ -60,6 +70,30 @@ def main():
         sys.exit(1)
 
     process(conn, offset_storage, config)
+
+
+def log_config(config):
+    """ Log stage configuration.
+
+    :param config: stage configuration
+    :type config: dict, NoneType
+    """
+    if config is None:
+        sys.stderr.write("(ERROR) Stage is not configured.\n")
+    if not isinstance(config, dict):
+        sys.stderr.write("(ERROR) Stage is misconfigured.\n")
+
+    sys.stderr.write("(INFO) Stage 009 configuration (%s):\n"
+                     % config['__file__'])
+
+    key_len = len(max(config.keys(), key=len))
+    pattern = "(INFO)  %%-%ds : '%%s'\n" % key_len
+    sys.stderr.write("(INFO) ---\n")
+    for p in config:
+        if p.startswith('__'):
+            continue
+        sys.stderr.write(pattern % (p, config[p]))
+    sys.stderr.write("(INFO) ---\n")
 
 
 def read_config(config_file):
@@ -73,11 +107,12 @@ def read_config(config_file):
     :rtype: dict|NoneType
     """
     result = {'__path__': os.path.dirname(os.path.abspath(config_file))}
+    result['__file__'] = os.path.join(result['__path__'], config_file)
     config = ConfigParser.SafeConfigParser()
     try:
         config.read(config_file)
         # Required parameters (with no defaults)
-        result['dsn'] = config.get('oracle', 'dsn')
+        result['__dsn'] = config.get('oracle', 'dsn')
         step = config.get('timestamps', 'step')
         result['step_seconds'] = interval_seconds(step)
         if result['step_seconds'] == 0:
@@ -103,11 +138,21 @@ def read_config(config_file):
         return None
 
     # Optional parameters
+    result['timestamp_tz'] = config_get(config, 'timestamps', 'tz',
+                                        time.tzname[0])
+    delay = config_get(config, 'timestamps', 'delay', '0')
+    result['delay'] = interval_seconds(delay)
+    if result['delay'] < 0:
+        # Delay is used when right border of the data taking interval is
+        # 'now'.
+        # It does not make much sense to ask for data from the future.
+        sys.stderr.write('(WARN) Delay is less than 0, setting it to 0.\n')
+        result['delay'] = 0
     if result['step_seconds'] > 0:
         default_initial = datetime.utcfromtimestamp(0)
         default_final = None
     else:
-        default_initial = datetime.now()
+        default_initial = offset_now(result['timestamp_tz'], result['delay'])
         default_final = datetime.utcfromtimestamp(0)
 
     result['final_date'] = str2date(config_get(config, 'timestamps', 'final',
@@ -117,6 +162,7 @@ def read_config(config_file):
     result['offset_file'] = config_path(config_get(config, 'logging',
                                                    'offset_file', '.offset'),
                                         result)
+    result['mode'] = config_get(config, 'process', 'mode', 'SQUASH')
 
     return result
 
@@ -163,6 +209,9 @@ def config_get(config, section, param, default=None):
                              % (param, section, default))
         result = default
 
+    if result == '' and default is not None:
+        result = default
+
     return result
 
 
@@ -182,6 +231,18 @@ def config_path(rel_path, config):
         config_dir = config['__path__']
         abs_path = os.path.join(config_dir, rel_path)
     return abs_path
+
+
+def init_offset_tz(config):
+    """ Initialize OFFSET_TZ. """
+    global OFFSET_TZ
+    OFFSET_TZ = pytz.timezone(config['timestamp_tz'])
+
+
+def init_offset_delay(config):
+    """ Initialize OFFSET_DELAY. """
+    global OFFSET_DELAY
+    OFFSET_DELAY = config['delay']
 
 
 def init_offset_storage(config):
@@ -255,6 +316,29 @@ def get_offset(offset_storage):
         timestamp = float(result)
         result = datetime.fromtimestamp(timestamp)
     return result
+
+
+def offset_now(tz=None, delay=None):
+    """ Get offset value corresonding to the current moment of time.
+
+    :param tz: time zone name. If not specified, default (globally set)
+               time zone is used.
+    :type tz: str, NoneType
+    :param delay: delay in seconds. If not specified, default (globally set)
+                  value is used.
+    :type delay: int, NoneType
+
+    :return: offset value (naive datetime, adjusted to OFFSET_TZ with
+             OFFSET_DELAY)
+    :rtype: datetime.datetime
+    """
+    TZ = OFFSET_TZ
+    if tz:
+        TZ = pytz.timezone(tz)
+    dl = OFFSET_DELAY
+    if delay is not None:
+        dl = delay
+    return datetime.now(TZ).replace(tzinfo=None) - timedelta(seconds=dl)
 
 
 def plain(conn, queries, start_date, end_date):
@@ -411,6 +495,7 @@ def process(conn, offset_storage, config):
     :type offset_storage: OffsetStorage
     :type config: dict
     """
+    mode = config['mode']
     reverse = config['step_seconds'] < 0
     final_date = config['final_date']
     step_seconds = config['step_seconds']
@@ -419,7 +504,7 @@ def process(conn, offset_storage, config):
         # In case of normal data load 'final_date' may be None:
         # it means we need to adjust it to current timestamp
         # before every check
-        final_date = datetime.now()
+        final_date = offset_now()
     full_interval = {'l': min(final_date, offset_date),
                      'r': max(final_date, offset_date)}
     break_loop = False
@@ -435,9 +520,10 @@ def process(conn, offset_storage, config):
             break
         start_date = min(offset_date, new_offset)
         end_date = max(offset_date, new_offset)
-        sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s\n"
-                         % (date2str(datetime.now()), date2str(start_date),
-                            date2str(end_date)))
+        sys.stderr.write("(TRACE) %s: Run queries for interval from %s to %s"
+                         " (%s)\n" % (date2str(datetime.now()),
+                                      date2str(start_date), date2str(end_date),
+                                      OFFSET_TZ.zone))
         if mode == SQUASH_POLICY:
             records = squash(conn, ['tasks', 'datasets'], start_date,
                              end_date)
@@ -448,7 +534,7 @@ def process(conn, offset_storage, config):
         offset_date = new_offset
         commit_offset(offset_storage, offset_date)
         if not config['final_date']:
-            full_interval['r'] = datetime.now()
+            full_interval['r'] = offset_now()
         if break_loop:
             break
 
@@ -475,7 +561,7 @@ def interval_seconds(step):
         raise ValueError("Failed to decode numeric part of the interval: %s"
                          % step)
     except KeyError:
-        raise ValueError("Failes to decode index of the interval: %s" % step)
+        raise ValueError("Failed to decode index of the interval: %s" % step)
 
 
 def str2date(str_date):
@@ -513,8 +599,6 @@ def parsingArguments():
                                      " connector stage.")
     parser.add_argument('--config', help="Configuration file path",
                         type=str, required=True)
-    parser.add_argument('--mode', help="Mode of execution: PLAIN | SQUASH",
-                        choices=[PLAIN_POLICY, SQUASH_POLICY])
     args = parser.parse_args()
     if not os.access(args.config, os.F_OK):
         sys.stderr.write("argument --config: '%s' file not exists\n"

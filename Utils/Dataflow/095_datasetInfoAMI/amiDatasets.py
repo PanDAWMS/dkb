@@ -9,7 +9,6 @@ try:
     import pyAMI.config
 except ImportError:
     sys.stderr.write("(ERROR) Unable to find pyAMI client.\n")
-    sys.exit(1)
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -17,6 +16,8 @@ try:
     dkb_dir = os.path.join(base_dir, os.pardir)
     sys.path.append(dkb_dir)
     import pyDKB
+    from pyDKB.dataflow import messageType
+    from pyDKB.dataflow.exceptions import DataflowException
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -34,30 +35,26 @@ FILTER = ['AOD', 'EVNT', 'HITS']
 
 def main(argv):
     """ Main program body. """
-    stage = pyDKB.dataflow.stage.JSONProcessorStage()
+    stage = pyDKB.dataflow.stage.ProcessorStage()
+    stage.set_input_message_type(messageType.JSON)
+    stage.set_output_message_type(messageType.JSON)
 
-    stage.add_argument('--userkey', help='PEM key file', required=True)
-    stage.add_argument('--usercert', help='PEM certificate file',
-                       required=True)
+    stage.add_argument('--userkey', help='PEM key file', default='')
+    stage.add_argument('--usercert', help='PEM certificate file', default='')
 
-    exit_code = 0
-    try:
-        stage.parse_args(argv)
-        stage.process = process
+    stage.configure(argv)
+    stage.process = process
+    if stage.ARGS.userkey and stage.ARGS.usercert:
         init_ami_client(stage.ARGS.userkey, stage.ARGS.usercert)
-        stage.run()
-    except (pyDKB.dataflow.exceptions.DataflowException, RuntimeError), err:
-        if str(err):
-            str_err = str(err).replace("\n", "\n(==) ")
-            sys.stderr.write("(ERROR) %s\n" % str_err)
-        exit_code = 2
-    finally:
+    exit_code = stage.run()
+
+    if exit_code == 0:
         stage.stop()
 
     sys.exit(exit_code)
 
 
-def init_ami_client(userkey, usercert):
+def init_ami_client(userkey='', usercert=''):
     """ Initialisation of AMI client into the global variable
 
     :param userkey: user key pem file
@@ -69,11 +66,28 @@ def init_ami_client(userkey, usercert):
         ami_client = pyAMI.client.Client('atlas', key_file=userkey,
                                          cert_file=usercert)
         AtlasAPI.init()
-    except Exception:
+    except NameError:
+        sys.stderr.write("(FATAL) Failed to initialise AMI client: "
+                         "pyAMI module is not loaded.\n")
+        raise DataflowException("Module not found: 'pyAMI'")
+    except Exception, err:
         sys.stderr.write(
             "(ERROR) Could not establish pyAMI session."
             " Are you sure you have a valid certificate?\n")
-        sys.exit(1)
+        raise DataflowException(str(err))
+    if ami_client.config.conn_mode == ami_client.config.CONN_MODE_LOGIN:
+        sys.stderr.write("(ERROR) Login authentication mode is not "
+                         "supported. Please provide user certificate or create"
+                         "proxy.\n")
+        raise DataflowException("Failed to initialise AMI client: certificate "
+                                "not provided or not found.")
+
+
+def get_ami_client():
+    """ Get configured AMI client. """
+    if not ami_client:
+        init_ami_client()
+    return ami_client
 
 
 def process(stage, message):
@@ -91,7 +105,7 @@ def process(stage, message):
     # or not set at all.
     if update or not formats:
         amiPhysValues(data)
-    stage.output(pyDKB.dataflow.messages.JSONMessage(data))
+    stage.output(pyDKB.dataflow.communication.messages.JSONMessage(data))
 
     return True
 
@@ -106,6 +120,7 @@ def amiPhysValues(data):
     """
     dataset = data['datasetname']
     container = remove_tid(dataset)
+    ami_client = get_ami_client()
     try:
         res = ami_client.execute(['GetPhysicsParamsForDataset',
                                   "--logicalDatasetName=%s" % container],

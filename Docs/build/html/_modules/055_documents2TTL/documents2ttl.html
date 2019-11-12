@@ -637,44 +637,32 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">exit_code</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">exc_info</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="n">stage</span> <span class="o">=</span> <span class="n">pyDKB</span><span class="o">.</span><span class="n">dataflow</span><span class="o">.</span><span class="n">stage</span><span class="o">.</span><span class="n">JSON2TTLProcessorStage</span><span class="p">()</span>
+    <span class="n">stage</span> <span class="o">=</span> <span class="n">pyDKB</span><span class="o">.</span><span class="n">dataflow</span><span class="o">.</span><span class="n">stage</span><span class="o">.</span><span class="n">ProcessorStage</span><span class="p">()</span>
+    <span class="n">stage</span><span class="o">.</span><span class="n">set_input_message_type</span><span class="p">(</span><span class="n">pyDKB</span><span class="o">.</span><span class="n">dataflow</span><span class="o">.</span><span class="n">messageType</span><span class="o">.</span><span class="n">JSON</span><span class="p">)</span>
+    <span class="n">stage</span><span class="o">.</span><span class="n">set_output_message_type</span><span class="p">(</span><span class="n">pyDKB</span><span class="o">.</span><span class="n">dataflow</span><span class="o">.</span><span class="n">messageType</span><span class="o">.</span><span class="n">TTL</span><span class="p">)</span>
     <span class="n">stage</span><span class="o">.</span><span class="n">process</span> <span class="o">=</span> <span class="n">process</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">stage</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="s1">&#39;--graph&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-                           <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span>
-                           <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Virtuoso DB graph name (default:&#39;</span>
-                                <span class="s1">&#39; </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">,</span>
-                           <span class="n">default</span><span class="o">=</span><span class="n">GRAPH</span><span class="p">,</span>
-                           <span class="n">const</span><span class="o">=</span><span class="n">GRAPH</span><span class="p">,</span>
-                           <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;GRAPH&#39;</span><span class="p">,</span>
-                           <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;GRAPH&#39;</span><span class="p">)</span>
-        <span class="n">stage</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-O&#39;</span><span class="p">,</span> <span class="s1">&#39;--ontology&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
-                           <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span>
-                           <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Virtuoso ontology prefix (default:&#39;</span>
-                                <span class="s1">&#39; </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">,</span>
-                           <span class="n">default</span><span class="o">=</span><span class="n">ONTOLOGY</span><span class="p">,</span>
-                           <span class="n">const</span><span class="o">=</span><span class="n">ONTOLOGY</span><span class="p">,</span>
-                           <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;ONT&#39;</span><span class="p">,</span>
-                           <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;ONTOLOGY&#39;</span><span class="p">)</span>
-        <span class="n">stage</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span>
-        <span class="n">define_globals</span><span class="p">(</span><span class="n">stage</span><span class="o">.</span><span class="n">ARGS</span><span class="p">)</span>
-        <span class="n">stage</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
-    <span class="k">except</span> <span class="p">(</span><span class="n">pyDKB</span><span class="o">.</span><span class="n">dataflow</span><span class="o">.</span><span class="n">DataflowException</span><span class="p">,</span> <span class="ne">RuntimeError</span><span class="p">),</span> <span class="n">err</span><span class="p">:</span>
-        <span class="k">if</span> <span class="nb">str</span><span class="p">(</span><span class="n">err</span><span class="p">):</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(ERROR) </span><span class="si">%s</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">err</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">exc_info</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
-        <span class="n">exit_code</span> <span class="o">=</span> <span class="mi">2</span>
-    <span class="k">except</span> <span class="ne">Exception</span><span class="p">,</span> <span class="n">err</span><span class="p">:</span>
-        <span class="n">exc_info</span> <span class="o">=</span> <span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">()</span>
-        <span class="n">exit_code</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="n">stage</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
+    <span class="n">stage</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="s1">&#39;--graph&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                       <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Virtuoso DB graph name (default:&#39;</span>
+                            <span class="s1">&#39; </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">,</span>
+                       <span class="n">default</span><span class="o">=</span><span class="n">GRAPH</span><span class="p">,</span>
+                       <span class="n">const</span><span class="o">=</span><span class="n">GRAPH</span><span class="p">,</span>
+                       <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;GRAPH&#39;</span><span class="p">,</span>
+                       <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;GRAPH&#39;</span><span class="p">)</span>
+    <span class="n">stage</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-O&#39;</span><span class="p">,</span> <span class="s1">&#39;--ontology&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span>
+                       <span class="n">nargs</span><span class="o">=</span><span class="s1">&#39;?&#39;</span><span class="p">,</span>
+                       <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Virtuoso ontology prefix (default:&#39;</span>
+                            <span class="s1">&#39; </span><span class="si">%(default)s</span><span class="s1">)&#39;</span><span class="p">,</span>
+                       <span class="n">default</span><span class="o">=</span><span class="n">ONTOLOGY</span><span class="p">,</span>
+                       <span class="n">const</span><span class="o">=</span><span class="n">ONTOLOGY</span><span class="p">,</span>
+                       <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;ONT&#39;</span><span class="p">,</span>
+                       <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;ONTOLOGY&#39;</span><span class="p">)</span>
+    <span class="n">stage</span><span class="o">.</span><span class="n">configure</span><span class="p">(</span><span class="n">argv</span><span class="p">)</span>
+    <span class="n">define_globals</span><span class="p">(</span><span class="n">stage</span><span class="o">.</span><span class="n">ARGS</span><span class="p">)</span>
+    <span class="n">exit_code</span> <span class="o">=</span> <span class="n">stage</span><span class="o">.</span><span class="n">run</span><span class="p">()</span>
 
-    <span class="k">if</span> <span class="n">exc_info</span><span class="p">:</span>
-        <span class="n">trace</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span><span class="o">*</span><span class="n">exc_info</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">trace</span><span class="p">:</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;(ERROR) </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">line</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">exit_code</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">stage</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
 
     <span class="n">exit</span><span class="p">(</span><span class="n">exit_code</span><span class="p">)</span></div>
 

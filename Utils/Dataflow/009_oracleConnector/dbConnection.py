@@ -117,13 +117,23 @@ class OracleConnection(dbConnection):
     def save_query_file(self, qname, src_filename, params=None):
         """ Read query from file and save it in query hash. """
         try:
-            f = open(src_filename)
-            q = f.read().rstrip().rstrip(';')
+            with open(src_filename) as f:
+                q = f.read().rstrip().rstrip(';')
             if isinstance(params, dict):
                 q = q % params
+            elif '%(' in q:
+                # Check for '%(' is done because a valid query without
+                # parameters (and their configuration) is possible.
+                sys.stderr.write("(WARN) '%s': query seems to be parametric, "
+                                 "but no query parameters were configured. "
+                                 "This can result in "
+                                 "'ORA-00911' error.\n" % qname)
             self.queries[qname]['query'] = q
         except IOError, err:
             sys.stderr.write("(ERROR) Failed to read query file: %s\n" % err)
+            return False
+        except KeyError, err:
+            sys.stderr.write("(ERROR) Query parameter missing: %s\n" % err)
             return False
 
         return True

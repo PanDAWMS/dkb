@@ -12,7 +12,7 @@ try:
     dkb_dir = os.path.join(base_dir, os.pardir)
     sys.path.append(dkb_dir)
     import pyDKB
-    from pyDKB.dataflow import messages
+    from pyDKB.dataflow.communication import messages
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -33,7 +33,7 @@ def process(stage, msg):
         return False
 
     for i in result:
-        stage.output(pyDKB.dataflow.messages.TTLMessage(i))
+        stage.output(messages.TTLMessage(i))
     return True
 
 
@@ -79,9 +79,9 @@ def doc_content_triples(data):
                            )
         if item == 'plain_text':
             try:
-                data_taking_year = data['content'][item]['data taking year']
+                data_taking_years = data['content'][item]['data taking years']
             except KeyError:
-                data_taking_year = None
+                data_taking_years = None
             try:
                 luminosity = data['content'][item]['luminosity'] \
                     .replace(' ', '_')
@@ -93,7 +93,6 @@ def doc_content_triples(data):
             except (KeyError, AttributeError):
                 energy = None
             PLAINTEXT = {
-                'data_taking_year': data_taking_year,
                 'luminosity': luminosity,
                 'energy': energy
             }
@@ -107,12 +106,13 @@ def doc_content_triples(data):
                        " <{graph}/document/{doc_ID}/{c_name}> ."
                        .format(**PLAINTEXT)
                        )
-            if data_taking_year:
-                ttl.append("<{graph}/document/{doc_ID}/{c_name}>"
-                           " <{ontology}#mentionsDataTakingYear>"
-                           " \"{data_taking_year}\" ."
-                           .format(**PLAINTEXT)
-                           )
+            if data_taking_years:
+                for year in data_taking_years:
+                    ttl.append("<{graph}/document/{doc_ID}/{c_name}>"
+                               " <{ontology}#mentionsDataTakingYear>"
+                               " \""
+                               .format(**PLAINTEXT) + year + "\" ."
+                               )
             if luminosity:
                 ttl.append("<{graph}/luminosity/{luminosity}>"
                            " a <{ontology}#Luminosity> ."
@@ -154,18 +154,15 @@ def main(args):
     """Parsing command line arguments and processing JSON
     string from file or from stream
     """
-    stage = pyDKB.dataflow.stage.JSON2TTLProcessorStage()
+    stage = pyDKB.dataflow.stage.ProcessorStage()
+    stage.set_input_message_type(messages.messageType.JSON)
+    stage.set_output_message_type(messages.messageType.TTL)
     stage.process = process
 
-    exit_code = 0
-    try:
-        stage.parse_args(args)
-        stage.run()
-    except (pyDKB.dataflow.DataflowException, RuntimeError), err:
-        if str(err):
-            sys.stderr.write("(ERROR) %s\n" % err)
-        exit_code = 1
-    finally:
+    stage.configure(args)
+    exit_code = stage.run()
+
+    if exit_code == 0:
         stage.stop()
 
     exit(exit_code)

@@ -1,5 +1,5 @@
 {
-  "took" : 36,
+  "took" : 99,
   "timed_out" : false,
   "_shards" : {
     "total" : 4,
@@ -22,22 +22,25 @@
           "output" : {
             "doc_count" : 890,
             "not_removed" : {
-              "doc_count" : 802,
+              "doc_count" : 801,
               "bytes" : {
-                "value" : 1.843975252907852E15
+                "value" : 1.838315348775601E15
               }
             }
           },
           "processed_events" : {
             "value" : 3.11532E9
           },
+          "cpu_failed" : {
+            "value" : 1.740464101781E12
+          },
           "input_events" : {
-            "value" : 3.12086314E9
+            "value" : 3.12087114E9
           },
           "not_deleted" : {
-            "doc_count" : 731,
+            "doc_count" : 698,
             "input_bytes" : {
-              "value" : 9.2578323257809E13
+              "value" : 8.6551288761914E13
             }
           },
           "timestamp_defined" : {
@@ -46,8 +49,8 @@
               "value" : 1.665009702247191E9
             }
           },
-          "cpu" : {
-            "value" : 2.325882592729E13
+          "cpu_total" : {
+            "value" : 1.2080621806698E13
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
@@ -72,20 +75,23 @@
             "not_removed" : {
               "doc_count" : 873,
               "bytes" : {
-                "value" : 1.611510871873012E15
+                "value" : 1.611504836125157E15
               }
             }
           },
           "processed_events" : {
             "value" : 3.08715E9
           },
+          "cpu_failed" : {
+            "value" : 8.89240876E8
+          },
           "input_events" : {
-            "value" : 3.08856748E9
+            "value" : 3.088623E9
           },
           "not_deleted" : {
-            "doc_count" : 69,
+            "doc_count" : 1,
             "input_bytes" : {
-              "value" : 1.25602037876142E14
+              "value" : 5.396989069335E12
             }
           },
           "timestamp_defined" : {
@@ -94,8 +100,8 @@
               "value" : 6.655076041189932E8
             }
           },
-          "cpu" : {
-            "value" : 2.899493302E10
+          "cpu_total" : {
+            "value" : 1.3323589686E10
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
@@ -118,14 +124,17 @@
           "output" : {
             "doc_count" : 874,
             "not_removed" : {
-              "doc_count" : 69,
+              "doc_count" : 1,
               "bytes" : {
-                "value" : 1.25602037876142E14
+                "value" : 5.396989069335E12
               }
             }
           },
           "processed_events" : {
             "value" : 3.08833E9
+          },
+          "cpu_failed" : {
+            "value" : 1.33454633469E11
           },
           "input_events" : {
             "value" : 3.08202245E9
@@ -142,8 +151,8 @@
               "value" : 1.0340005377574371E9
             }
           },
-          "cpu" : {
-            "value" : 4.86700169899E12
+          "cpu_total" : {
+            "value" : 2.660272366676E12
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
@@ -166,14 +175,17 @@
           "output" : {
             "doc_count" : 660,
             "not_removed" : {
-              "doc_count" : 346,
+              "doc_count" : 290,
               "bytes" : {
-                "value" : 5.3438348330422E13
+                "value" : 4.4392907304839E13
               }
             }
           },
           "processed_events" : {
             "value" : 2.72312326E9
+          },
+          "cpu_failed" : {
+            "value" : 4.5299121248E11
           },
           "input_events" : {
             "value" : 2.72912464E9
@@ -190,8 +202,8 @@
               "value" : 1.367617403053435E9
             }
           },
-          "cpu" : {
-            "value" : 9.70349375508E12
+          "cpu_total" : {
+            "value" : 4.419178006546E12
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
@@ -214,22 +226,25 @@
           "output" : {
             "doc_count" : 603,
             "not_removed" : {
-              "doc_count" : 281,
+              "doc_count" : 0,
               "bytes" : {
-                "value" : 1.39618809E8
+                "value" : 0.0
               }
             }
           },
           "processed_events" : {
             "value" : 2.307705E9
           },
+          "cpu_failed" : {
+            "value" : 1.331368735E9
+          },
           "input_events" : {
-            "value" : 2.30159525E9
+            "value" : 2.30158525E9
           },
           "not_deleted" : {
             "doc_count" : 603,
             "input_bytes" : {
-              "value" : 1.184385227092671E15
+              "value" : 1.184379191344816E15
             }
           },
           "timestamp_defined" : {
@@ -238,8 +253,8 @@
               "value" : 1.8828026036484244E8
             }
           },
-          "cpu" : {
-            "value" : 0.0
+          "cpu_total" : {
+            "value" : 5.254351203E9
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
@@ -262,22 +277,25 @@
           "output" : {
             "doc_count" : 603,
             "not_removed" : {
-              "doc_count" : 603,
+              "doc_count" : 592,
               "bytes" : {
-                "value" : 3.0760037E7
+                "value" : 3.0565762E7
               }
             }
           },
           "processed_events" : {
             "value" : 2.3465E9
           },
+          "cpu_failed" : {
+            "value" : 79333.0
+          },
           "input_events" : {
             "value" : 2.3465E9
           },
           "not_deleted" : {
-            "doc_count" : 281,
+            "doc_count" : 0,
             "input_bytes" : {
-              "value" : 1.39618809E8
+              "value" : 0.0
             }
           },
           "timestamp_defined" : {
@@ -286,8 +304,8 @@
               "value" : 2.2072077943615258E7
             }
           },
-          "cpu" : {
-            "value" : 0.0
+          "cpu_total" : {
+            "value" : 3796663.0
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
@@ -310,22 +328,25 @@
           "output" : {
             "doc_count" : 456,
             "not_removed" : {
-              "doc_count" : 456,
+              "doc_count" : 455,
               "bytes" : {
-                "value" : 4.7421588396214E13
+                "value" : 4.7047128896953E13
               }
             }
           },
           "processed_events" : {
             "value" : 1.99189304E9
           },
+          "cpu_failed" : {
+            "value" : 1.86247726E8
+          },
           "input_events" : {
             "value" : 1.99189804E9
           },
           "not_deleted" : {
-            "doc_count" : 142,
+            "doc_count" : 103,
             "input_bytes" : {
-              "value" : 2.4121442024259E13
+              "value" : 2.0572632798778E13
             }
           },
           "timestamp_defined" : {
@@ -334,8 +355,8 @@
               "value" : 2.708991030701754E8
             }
           },
-          "cpu" : {
-            "value" : 2.44529493E9
+          "cpu_total" : {
+            "value" : 6.75882322E8
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,
@@ -367,13 +388,16 @@
           "processed_events" : {
             "value" : 3.2440795E8
           },
+          "cpu_failed" : {
+            "value" : 5.1754116E7
+          },
           "input_events" : {
             "value" : 3.2461535E8
           },
           "not_deleted" : {
-            "doc_count" : 4,
+            "doc_count" : 3,
             "input_bytes" : {
-              "value" : 7.743374148466E12
+              "value" : 2.083470016215E12
             }
           },
           "timestamp_defined" : {
@@ -382,8 +406,8 @@
               "value" : 1.375414695652174E9
             }
           },
-          "cpu" : {
-            "value" : 2.76126855E9
+          "cpu_total" : {
+            "value" : 6.32578162E8
           },
           "status" : {
             "doc_count_error_upper_bound" : 0,

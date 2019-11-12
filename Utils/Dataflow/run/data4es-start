@@ -1,10 +1,14 @@
 #!/bin/bash -l
 
-START_OFFSET="09-05-2016 00:00:00"
+SCRIPT_NAME=data4es
+
 BATCH_SIZE=100
 DEBUG=
 
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
+lib="$base_dir/../shell_lib"
+
+source $lib/log
 
 # Directories with configuration files
 [ -n "$DATA4ES_CONFIG_PATH" ] && \
@@ -18,7 +22,7 @@ base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
 
 # Check if process is running
 DATA4ES_HOME=$HOME_DIR ${base_dir}/data4es-status &>/dev/null
-[ $? -eq 0 ] && echo "Process already running." >&2 && exit 1
+[ $? -eq 0 ] && log WARN "Process already running." && exit 1
 
 # Create / clean home directory
 AUX_FILES="pid"
@@ -40,29 +44,21 @@ pidfile="$HOME_DIR/pid"
 # Define commands to be used as dataflow nodes
 # ---
 
-# Find configuration file in $CONFIG_PATH
-get_config() {
-  [ -z "$1" ] && echo "get_config(): no argumets passed." && return 1
-  dirs=$CONFIG_PATH
-  while [ -n "$dirs" ]; do
-    dir=${dirs%%:*}
-    [ "$dirs" = "$dir" ] && \
-        dirs='' || \
-        dirs="${dirs#*:}"
-    [ -f "${dir}/${1}" ] && readlink -f "${dir}/${1}" && return 0
-  done
-}
+source $lib/get_config
 
 # Oracle Connector
 cmd_09="${base_dir}/../009_oracleConnector/Oracle2JSON.py"
 cfg_09=`get_config "009.cfg"`
-cmd_OC="$cmd_09 --config $cfg_09 --mode SQUASH"
+cmd_OC="$cmd_09 --config $cfg_09"
 
 # Stage 25
 cmd_25="${base_dir}/../025_chicagoES/stage.py -m s"
 
 # Stage 16
 cmd_16="${base_dir}/../016_task2es/task2es.py -m s"
+
+# Stage 17
+cmd_17="${base_dir}/../017_adjustMetadata/adjustMetadata.py -m s"
 
 # Stage 19
 cfg_19=`get_config "es"`
@@ -85,22 +81,14 @@ cmd_93="${base_dir}/../093_datasetsFormat/datasets_format.py -m s"
 auth_cfg=`get_config "095.cfg"`
 source $auth_cfg
 [ -r "$AUTH_KEY" -a -r "$AUTH_CRT" ] \
-  || { echo "Stage 095: wrong authentication parameters (failed to read certificate files: $AUTH_KEY and $AUTH_CRT)" >&2;
+  || { log ERROR "Stage 095: wrong authentication parameters (failed to read certificate files: $AUTH_KEY and $AUTH_CRT)";
        exit 1; }
 cmd_95="${base_dir}/../095_datasetInfoAMI/amiDatasets.py -m s --userkey $AUTH_KEY --usercert $AUTH_CRT"
 # ---
 
-# Reset offset value for Oracle Connector.
-[ -n "$START_OFFSET" ] \
-    && sed -i.bak -e"s/^offset = .*$/offset = $START_OFFSET/" \
-           $cfg_09
-
 # Service (glue) functions
 # ---
-# EOP filter (required due to the unconfigurable EOP marker in pyDKB)
-eop_filter() {
-  sed -e"s/\\x00//g"
-}
+source $lib/eop_filter
 
 # Buffer file name
 get_buffer() {
@@ -110,7 +98,7 @@ get_buffer() {
 
 # Flush Sink Connector buffer to STDOUT and reset it
 flush_buffer() {
-  bufer=`get_buffer "$1"`
+  buffer=`get_buffer "$1"`
   if [ -r "$buffer" ]; then
     cat $buffer
     echo -e '\x00'
@@ -137,7 +125,7 @@ mediator() {
 # ---
 branch() {
   [ -z "$1" ] \
-    && echo "Branch name not specified." >&2\
+    && log ERROR "branch(): Branch name not specified."\
     && return 1
 
   name="$pipe_dir/$1"
@@ -148,13 +136,13 @@ branch() {
   fi
 
   mkfifo $name \
-    || { echo "Failed to create named pipe for branch $1" >&2;
+    || { log ERROR "branch(): Failed to create named pipe for branch $1";
          return 1; }
 
   echo $name
 }
 
-b_91=`branch b_91` && b_16=`branch b_16` \
+b_91=`branch b_91` && b_17=`branch b_17` \
   || exit $?
 # ---
 
@@ -170,7 +158,7 @@ while [ -n "$1" ]; do
       shift
       break;;
     -*)
-      echo "Unknown option: $1" >&1;;
+      log ERROR "Unknown option: $1";;
     *)
       break;;
   esac
@@ -181,17 +169,19 @@ done
 # Define subchains
 # Source subchain: Oracle Connector
 source_chain() {
-  $cmd_OC | tee $b_16 $b_91
+  $cmd_OC | tee $b_17 $b_91
 }
 
-# Parallel subchains: 16 and 91
-chain_16() {
+# Parallel subchains: 17 and 91
+chain_17() {
   [ -n DEBUG ] \
     && out_91='91_in.out' \
-    && out_25='25.out'
-  cat $b_16 | $cmd_91_in | eop_filter | tee $out_91 \
+    && out_25='25.out' \
+    && out_16='16.out'
+  cat $b_17 | $cmd_91_in | eop_filter | tee $out_91 \
             | $cmd_25 | eop_filter | tee $out_25 \
-            | $cmd_16 | eop_filter
+            | $cmd_16 | eop_filter | tee $out_16 \
+            | $cmd_17 | eop_filter
 }
 
 chain_91() {
@@ -209,8 +199,11 @@ sink_chain() {
   [ -n "$DEBUG" ] \
     && cmd="tee 69.$1.inp" \
     || cmd=$cmd_69
-  $cmd_19 | eop_filter | mediator "$1" | $cmd > /dev/null
+  tr $'\n' $'\x1e' | $cmd_19 | tr -d $'\x1e' | eop_filter | mediator "$1" | $cmd > /dev/null
 }
+
+log "Starting process."
+t1=`date +%s`
 
 out=/dev/null
 [ -n "$DEBUG" ] \
@@ -218,17 +211,21 @@ out=/dev/null
 source_chain > $out &
 
 [ -n "$DEBUG" ] \
-  && out='16.out'
-chain_16 | tee $out | sink_chain b16 &
+  && out='17.out'
+chain_17 | tee $out | sink_chain b17 &
 
 [ -n "$DEBUG" ] \
   && out='95.out'
 chain_91 | tee $out | sink_chain b91 &
 
 ps ax | grep "$cmd_OC" | grep -v grep | awk '{print $1 " source"}' >> $pidfile
-for cmd in "$cmd_25" "$cmd_16" "$cmd_91_in" "$cmd_91_out" "$cmd_93" \
-           "$cmd_95" "$cmd_19" "$cmd_69"; do
+for cmd in "$cmd_25" "$cmd_16" "$cmd_17" "$cmd_91_in" "$cmd_91_out" \
+           "$cmd_93" "$cmd_95" "$cmd_19" "$cmd_69"; do
   ps ax | grep "$cmd" | awk '{print $1}' >> $pidfile
 done
 
 wait
+
+t2=`date +%s`
+let "took=$t2-$t1"
+log "Finished process (took: $took sec)." >&2

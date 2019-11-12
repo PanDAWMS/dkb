@@ -15,8 +15,8 @@
     <script type="text/javascript" src="../_static/doctools.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pyDKB.dataflow.stage.AbstractProcessorStage module" href="pyDKB.dataflow.stage.AbstractProcessorStage.html" />
-    <link rel="prev" title="pyDKB.dataflow package" href="pyDKB.dataflow.html" />
+    <link rel="next" title="pyDKB.dataflow.stage.AbstractStage module" href="pyDKB.dataflow.stage.AbstractStage.html" />
+    <link rel="prev" title="pyDKB.dataflow.communication.messages module" href="pyDKB.dataflow.communication.messages.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
   
@@ -37,65 +37,164 @@
 <span id="pydkb-dataflow-stage-package"></span><span id="pydkb-dataflow-stage"></span><h1>pyDKB.dataflow.stage package<a class="headerlink" href="#module-pyDKB.dataflow.stage" title="Permalink to this headline">¶</a></h1>
 <p>Stage submodule init file.</p>
 <dl class="class">
-<dt id="pyDKB.dataflow.stage.JSONProcessorStage">
-<em class="property">class </em><code class="descclassname">pyDKB.dataflow.stage.</code><code class="descname">JSONProcessorStage</code><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/processors.html#JSONProcessorStage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.JSONProcessorStage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage" title="pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage</span></code></a></p>
-<p>JSON2JSON Processor Stage</p>
-<p>Input message: JSON
-Output message: JSON</p>
+<dt id="pyDKB.dataflow.stage.ProcessorStage">
+<em class="property">class </em><code class="descclassname">pyDKB.dataflow.stage.</code><code class="descname">ProcessorStage</code><span class="sig-paren">(</span><em>description='DKB Dataflow data processing stage.'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage" title="pyDKB.dataflow.stage.AbstractStage.AbstractStage"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyDKB.dataflow.stage.AbstractStage.AbstractStage</span></code></a></p>
+<p>Abstract class to implement Processor stages</p>
+<p>Processor stage – is a stage for data processing/transformation.</p>
+<p>Class/instance variable description:</p>
+<ul>
+<li><dl class="first docutils">
+<dt>communication.consumer.Consumer instance</dt>
+<dd><p class="first last">__input</p>
+</dd>
+</dl>
+</li>
+<li><p class="first">Generator object for output file descriptor
+OR file descriptor (for (s)tream mode)</p>
+<blockquote>
+<div><p>__output</p>
+</div></blockquote>
+</li>
+<li><dl class="first docutils">
+<dt>List of objects to be “stopped”</dt>
+<dd><p class="first last">__stoppable</p>
+</dd>
+</dl>
+</li>
+</ul>
 <dl class="method">
-<dt id="pyDKB.dataflow.stage.JSONProcessorStage.file_input">
-<code class="descname">file_input</code><span class="sig-paren">(</span><em>fd</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/processors.html#JSONProcessorStage.file_input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.JSONProcessorStage.file_input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override AbstractProcessorStage.file_input</p>
+<dt id="pyDKB.dataflow.stage.ProcessorStage.clear_buffer">
+<code class="descname">clear_buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.clear_buffer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.clear_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Drop buffered output messages.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="pyDKB.dataflow.stage.JSONProcessorStage.file_nd_json">
-<code class="descname">file_nd_json</code><span class="sig-paren">(</span><em>fd</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/processors.html#JSONProcessorStage.file_nd_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.JSONProcessorStage.file_nd_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read file as NDJSON file.</p>
-<p>Raises ValueError if can`t read the first line.</p>
+<dt id="pyDKB.dataflow.stage.ProcessorStage.configure">
+<code class="descname">configure</code><span class="sig-paren">(</span><em>args=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.configure"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.configure" title="Permalink to this definition">¶</a></dt>
+<dd><p>Configure stage according to the config parameters.</p>
+<p>If $args specified, arguments will be parsed anew.</p>
 </dd></dl>
 
 <dl class="method">
-<dt id="pyDKB.dataflow.stage.JSONProcessorStage.file_true_json">
-<code class="descname">file_true_json</code><span class="sig-paren">(</span><em>fd</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/processors.html#JSONProcessorStage.file_true_json"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.JSONProcessorStage.file_true_json" title="Permalink to this definition">¶</a></dt>
-<dd><p>Read file as true JSON file.</p>
+<dt id="pyDKB.dataflow.stage.ProcessorStage.defaultArguments">
+<code class="descname">defaultArguments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.defaultArguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.defaultArguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Default parser configuration.</p>
 </dd></dl>
 
-</dd></dl>
-
-<dl class="class">
-<dt id="pyDKB.dataflow.stage.TTLProcessorStage">
-<em class="property">class </em><code class="descclassname">pyDKB.dataflow.stage.</code><code class="descname">TTLProcessorStage</code><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/processors.html#TTLProcessorStage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.TTLProcessorStage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pyDKB.dataflow.stage.AbstractProcessorStage.html#pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage" title="pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyDKB.dataflow.stage.AbstractProcessorStage.AbstractProcessorStage</span></code></a></p>
-<p>TTL2TTL Processor Stage</p>
-<p>Input message: TTL
-Output message: TTL</p>
 <dl class="method">
-<dt id="pyDKB.dataflow.stage.TTLProcessorStage.output">
-<code class="descname">output</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/processors.html#TTLProcessorStage.output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.TTLProcessorStage.output" title="Permalink to this definition">¶</a></dt>
+<dt id="pyDKB.dataflow.stage.ProcessorStage.flush_buffer">
+<code class="descname">flush_buffer</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.flush_buffer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.flush_buffer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Flush message buffer to the output.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.stage.ProcessorStage.forward">
+<code class="descname">forward</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.forward"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.forward" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send EOPMarker to the output stream.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.stage.ProcessorStage.get_source_info">
+<code class="descname">get_source_info</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.get_source_info"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.get_source_info" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get information about current source.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.stage.ProcessorStage.input">
+<code class="descname">input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.input" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generator for input messages.</p>
+<p>Returns iterable object.
+Every iteration returns single input message to be processed.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.stage.ProcessorStage.input_message_class">
+<code class="descname">input_message_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.input_message_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.input_message_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get input message class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.stage.ProcessorStage.output">
+<code class="descname">output</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.output" title="Permalink to this definition">¶</a></dt>
 <dd><p>Put the (list of) message(s) to the output buffer.</p>
 </dd></dl>
 
+<dl class="method">
+<dt id="pyDKB.dataflow.stage.ProcessorStage.output_message_class">
+<code class="descname">output_message_class</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.output_message_class"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.output_message_class" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get output message class.</p>
 </dd></dl>
 
-<dl class="class">
-<dt id="pyDKB.dataflow.stage.JSON2TTLProcessorStage">
-<em class="property">class </em><code class="descclassname">pyDKB.dataflow.stage.</code><code class="descname">JSON2TTLProcessorStage</code><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/processors.html#JSON2TTLProcessorStage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.JSON2TTLProcessorStage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.processors.JSONProcessorStage" title="pyDKB.dataflow.stage.processors.JSONProcessorStage"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyDKB.dataflow.stage.processors.JSONProcessorStage</span></code></a>, <a class="reference internal" href="pyDKB.dataflow.stage.processors.html#pyDKB.dataflow.stage.processors.TTLProcessorStage" title="pyDKB.dataflow.stage.processors.TTLProcessorStage"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyDKB.dataflow.stage.processors.TTLProcessorStage</span></code></a></p>
-<p>JSON2TTL Processor Stage</p>
-<p>Input message: JSON
-Output message: TTL</p>
-<dl class="method">
-<dt id="pyDKB.dataflow.stage.JSON2TTLProcessorStage.input">
-<code class="descname">input</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/processors.html#JSON2TTLProcessorStage.input"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.JSON2TTLProcessorStage.input" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override: Falls back to JSONProcessorStage.input</p>
+<dl class="staticmethod">
+<dt id="pyDKB.dataflow.stage.ProcessorStage.process">
+<em class="property">static </em><code class="descname">process</code><span class="sig-paren">(</span><em>stage</em>, <em>input_message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transform input_message -&gt; output_message.</p>
+<p>To be implemented individually for every stage.
+Takes the stage as first argument to allow calling output()</p>
+<blockquote>
+<div>from inside the function.</div></blockquote>
+<dl class="docutils">
+<dt>Return value:</dt>
+<dd>True  – processing successfully finished
+False – processing failed (skip the input message)</dd>
+</dl>
 </dd></dl>
 
 <dl class="method">
-<dt id="pyDKB.dataflow.stage.JSON2TTLProcessorStage.output">
-<code class="descname">output</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/processors.html#JSON2TTLProcessorStage.output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.JSON2TTLProcessorStage.output" title="Permalink to this definition">¶</a></dt>
-<dd><p>Override: Falls back to TTLProcessorStage.output</p>
+<dt id="pyDKB.dataflow.stage.ProcessorStage.run">
+<code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run process() for every input() message.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.stage.ProcessorStage.set_input_message_type">
+<code class="descname">set_input_message_type</code><span class="sig-paren">(</span><em>Type=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.set_input_message_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.set_input_message_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set input message type.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.stage.ProcessorStage.set_output_message_type">
+<code class="descname">set_output_message_type</code><span class="sig-paren">(</span><em>Type=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.set_output_message_type"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.set_output_message_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set output message class.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="pyDKB.dataflow.stage.ProcessorStage.skip_process">
+<em class="property">static </em><code class="descname">skip_process</code><span class="sig-paren">(</span><em>stage</em>, <em>input_message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.skip_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.skip_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input_message in “skip” processing mode.</p>
+<p>Skip mode is turned on with command line parameter <cite>–skip</cite>; in this
+mode stage is expected to skip its “semantic” part of the message
+transformation (like changes in data fields format, definition of
+additional data fields, etc) but perform actions required to keep
+the dataflow seamless.</p>
+<p>The simpliest way to achieve this is to send the input message to the
+output without changes (marking it as “incomplete”), and this is
+the default implementation of the method.</p>
+<p>In some cases it may be necessary to re-implement it (just like
+<cite>process()</cite>) to keep the dataflow unbroken.</p>
+<dl class="docutils">
+<dt>NOTE: the output messages in “skip” mode MUST be marked as</dt>
+<dd>“incomplete”.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_message</strong> (<em>pyDKB.messages.AbstractMessage</em>) – message to process</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True/False (success/failure)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.stage.ProcessorStage.stop">
+<code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.stop" title="Permalink to this definition">¶</a></dt>
+<dd><p>Finalize all the processes and prepare to exit.</p>
 </dd></dl>
 
 </dd></dl>
@@ -104,9 +203,8 @@ Output message: TTL</p>
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="pyDKB.dataflow.stage.AbstractProcessorStage.html">pyDKB.dataflow.stage.AbstractProcessorStage module</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pyDKB.dataflow.stage.AbstractStage.html">pyDKB.dataflow.stage.AbstractStage module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="pyDKB.dataflow.stage.processors.html">pyDKB.dataflow.stage.processors module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pyDKB.dataflow.stage.ProcessorStage.html">pyDKB.dataflow.stage.ProcessorStage module</a></li>
 </ul>
 </div>
 </div>
@@ -145,8 +243,8 @@ Output message: TTL</p>
   <li><a href="../index.html">Documentation overview</a><ul>
   <li><a href="pyDKB.html">pyDKB package</a><ul>
   <li><a href="pyDKB.dataflow.html">pyDKB.dataflow package</a><ul>
-      <li>Previous: <a href="pyDKB.dataflow.html" title="previous chapter">pyDKB.dataflow package</a></li>
-      <li>Next: <a href="pyDKB.dataflow.stage.AbstractProcessorStage.html" title="next chapter">pyDKB.dataflow.stage.AbstractProcessorStage module</a></li>
+      <li>Previous: <a href="pyDKB.dataflow.communication.messages.html" title="previous chapter">pyDKB.dataflow.communication.messages module</a></li>
+      <li>Next: <a href="pyDKB.dataflow.stage.AbstractStage.html" title="next chapter">pyDKB.dataflow.stage.AbstractStage module</a></li>
   </ul></li>
   </ul></li>
   </ul></li>

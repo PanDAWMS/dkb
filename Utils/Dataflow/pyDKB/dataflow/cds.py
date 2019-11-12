@@ -6,6 +6,7 @@ import sys
 import signal
 import os
 
+from pyDKB.common.misc import (log, logLevel)
 
 __all__ = ["CDSInvenioConnector", "KerberizedCDSInvenioConnector"]
 
@@ -19,7 +20,7 @@ try:
     from invenio_client.contrib import cds
     import splinter
 except ImportError, e:
-    sys.stderr.write("(WARN) %s failed (%s)\n" % (__name__, e))
+    log("Submodule failed (%s)" % e, logLevel.WARN)
     __all__ = []
 else:
 
@@ -80,9 +81,9 @@ else:
             try:
                 kerberos
             except NameError:
-                sys.stderr.write("(ERROR) Kerberos Python package is not"
-                                 " installed. Can't proceed with Kerberos"
-                                 " authorization.\n")
+                log("Kerberos Python package is not"
+                    " installed. Can't proceed with Kerberos"
+                    " authorization.", logLevel.ERROR)
                 sys.exit(4)
 
             super(KerberizedCDSInvenioConnector, self).__init__("user",
@@ -105,5 +106,5 @@ else:
                 self.browser.find_link_by_partial_text("Sign in").click()
 
             except kerberos.GSSError, e:
-                sys.stderr.write("(ERROR) %s\n" % str(e))
+                log("%s" % str(e), logLevel.ERROR)
                 sys.exit(3)

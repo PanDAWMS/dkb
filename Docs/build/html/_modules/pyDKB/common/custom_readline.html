@@ -54,6 +54,10 @@
 <span class="sd">    .. warning:: the last line can be incomplete, if the input data flow</span>
 <span class="sd">      is interrupted in the middle of data writing.</span>
 
+<span class="sd">    To check if iteration is not over without reading next value, one may</span>
+<span class="sd">    `send(True)` to the generator: it will return `True` if there is another</span>
+<span class="sd">    message to yield or raise `StopIteration` if nothing left.</span>
+
 <span class="sd">    :param f: readable file object</span>
 <span class="sd">    :type f: file</span>
 <span class="sd">    :param newline: delimeter to be used instead of ``\\n``</span>
@@ -75,17 +79,32 @@
     <span class="n">flags</span> <span class="o">=</span> <span class="n">fcntl</span><span class="o">.</span><span class="n">fcntl</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">fileno</span><span class="p">(),</span> <span class="n">fcntl</span><span class="o">.</span><span class="n">F_GETFL</span><span class="p">)</span>
     <span class="n">fcntl</span><span class="o">.</span><span class="n">fcntl</span><span class="p">(</span><span class="n">f</span><span class="o">.</span><span class="n">fileno</span><span class="p">(),</span> <span class="n">fcntl</span><span class="o">.</span><span class="n">F_SETFL</span><span class="p">,</span> <span class="n">flags</span> <span class="o">|</span> <span class="n">os</span><span class="o">.</span><span class="n">O_NONBLOCK</span><span class="p">)</span>
     <span class="n">buf</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="c1"># Flag variable to say send() from next()</span>
+    <span class="n">send_not_next</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">poller</span><span class="o">.</span><span class="n">poll</span><span class="p">(</span><span class="mi">500</span><span class="p">):</span>
             <span class="n">chunk</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">chunk</span><span class="p">:</span>
-                <span class="k">yield</span> <span class="n">buf</span>
+                <span class="k">if</span> <span class="n">buf</span><span class="p">:</span>
+                    <span class="k">while</span> <span class="n">send_not_next</span><span class="p">:</span>
+                        <span class="c1"># If we are here, the source is not empty for sure:</span>
+                        <span class="c1"># we have another message to yield</span>
+                        <span class="n">send_not_next</span> <span class="o">=</span> <span class="k">yield</span> <span class="kc">True</span>
+                    <span class="k">yield</span> <span class="n">buf</span>
                 <span class="k">break</span>
             <span class="n">buf</span> <span class="o">+=</span> <span class="n">chunk</span>
+        <span class="k">if</span> <span class="n">send_not_next</span><span class="p">:</span>
+            <span class="c1"># We keep on reading the stream, so it is not closed yet</span>
+            <span class="c1"># and (in theory) may provide another message sooner or later</span>
+            <span class="n">send_not_next</span> <span class="o">=</span> <span class="k">yield</span> <span class="kc">True</span>
         <span class="k">while</span> <span class="n">newline</span> <span class="ow">in</span> <span class="n">buf</span><span class="p">:</span>
-            <span class="n">pos</span> <span class="o">=</span> <span class="n">buf</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">newline</span><span class="p">)</span>
-            <span class="k">yield</span> <span class="n">buf</span><span class="p">[:</span><span class="n">pos</span><span class="p">]</span>
-            <span class="n">buf</span> <span class="o">=</span> <span class="n">buf</span><span class="p">[</span><span class="n">pos</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">newline</span><span class="p">):]</span></div>
+            <span class="n">pos</span> <span class="o">=</span> <span class="n">buf</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">newline</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">newline</span><span class="p">)</span>
+            <span class="k">while</span> <span class="n">send_not_next</span><span class="p">:</span>
+                <span class="c1"># If we are here, the source is not empty for sure:</span>
+                <span class="c1"># we have another message to yield</span>
+                <span class="n">send_not_next</span> <span class="o">=</span> <span class="k">yield</span> <span class="kc">True</span>
+            <span class="n">send_not_next</span> <span class="o">=</span> <span class="k">yield</span> <span class="n">buf</span><span class="p">[:</span><span class="n">pos</span><span class="p">]</span>
+            <span class="n">buf</span> <span class="o">=</span> <span class="n">buf</span><span class="p">[</span><span class="n">pos</span><span class="p">:]</span></div>
 </pre></div>
 
           </div>
