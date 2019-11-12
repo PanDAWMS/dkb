@@ -3,7 +3,7 @@
 Stage for converting JSON files (output of stage 015) into TTL files (input for
 stage 060).
 
-JSON file should have the following structure::
+Initial JSON document should have the following structure::
 
             {
               "GLANCE": {},
@@ -21,9 +21,9 @@ JSON file should have the following structure::
               ]
             }
 
-This is called 'initial JSON'. Some functions accept specific parts of this
-JSON - for example, if 'data' variable contains the initial JSON then
-"'CDS' part of the initial JSON" means "data.get('CDS')".
+Some functions accept specific parts of this JSON - for example, if 'data'
+variable contains the initial JSON then "'CDS' part of the initial JSON"
+means "data.get('CDS')".
 
 Resulting TTL file has the following structure::
 
