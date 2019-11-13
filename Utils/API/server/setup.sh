@@ -62,10 +62,18 @@ OPTIONS
                      destination directory for installation
                      Default: $WWW_DIR
 
-    -c, --cfg-dir DIR
+    -C, --cfg-dir DIR
                      path to directory with configuration files used
                      by the application (absolute or relative to WWW_DIR)
                      Default: WWW_DIR/$CFG_DIR
+
+    -L, --log-dir DIR
+                     directory for (application) log files
+                     Default: $LOG_DIR
+
+    -R, --run-dir DIR
+                     directory for .pid file
+                     Default: $RUN_DIR
 
     -s, --sock       socket name for communication between web-server
                      and API application
@@ -75,7 +83,7 @@ OPTIONS
                      Default: $APP_USER
 
   WEB-SERVER
-    --nginx-dir DIR         Nginx home directory
+    -N, --nginx-dir DIR     Nginx home directory
                             Default: $NGINX_DIR
 
     -l, --listen HOST:PORT  address for Nginx to listen
@@ -119,10 +127,18 @@ while [ $# -gt 0 ]; do
       WWW_DIR=`readlink -m "$2"`
       shift
       ;;
-    -c|--cfg-dir)
+    -C|--cfg-dir)
       [[ "$2" == /* || "$2" == .* ]] \
         && CFG_DIR=`readlink -m "$2"` \
         || CFG_DIR="$2"
+      shift
+      ;;
+    -L|--log-dir)
+      LOG_DIR=`readlink -m "$2"`
+      shift
+      ;;
+    -R|--run-dir)
+      RUN_DIR=`readlink -m "$2"`
       shift
       ;;
     -s|--sock)
@@ -142,7 +158,7 @@ while [ $# -gt 0 ]; do
     -n|--nginx)
       MANAGE_NGINX=1
       ;;
-    --nginx-dir)
+    -N|--nginx-dir)
       NGINX_DIR=`readlink -m "$2"`
       shift
       ;;
