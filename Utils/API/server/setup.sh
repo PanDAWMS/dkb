@@ -515,6 +515,7 @@ start_www() {
     su "$APP_USER" -c \
       "nohup '$app_file' >> '$logfile' &
        echo \$! > '$pidfile'"
+  chmod 0600 "$pidfile"
 }
 
 _clean() {
