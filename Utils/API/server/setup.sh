@@ -217,8 +217,6 @@ done
 
 save_cfg
 
-SOCK="$SOCK_DIR/$SOCK"
-
 get_nginx_user() {
   conf=$NGINX_DIR/nginx.conf
   [ ! -f "$conf" ] \
