@@ -78,6 +78,7 @@ def init():
         TASK_KWARGS['index'] = index['production_tasks']
     else:
         TASK_KWARGS['index'] = index
+        CONFIG['index']  = {'production_tasks': index}
     try:
         es = elasticsearch.Elasticsearch(hosts, http_auth=(user, passwd))
     except Exception, err:
