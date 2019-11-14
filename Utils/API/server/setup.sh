@@ -419,7 +419,7 @@ uninstall_www() {
     # Remove directory if it still exists...
     if [ -d "$d" ]; then
       # ...and does not contain files.
-      nfiles=`find $d -type f ! -name "*.pyc" | wc -l`
+      nfiles=`find $d -type f ! -name "*.pyc" ! -name "*.fcgic" | wc -l`
       [ $nfiles -eq 0 ] \
         && echo "> $d" >&2 \
         && rm -rf "$d" >/dev/null \
