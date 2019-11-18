@@ -24,6 +24,26 @@ $UPDATE_RETRIES = 3;
 # ES index where the documents should be indexed/updated.
 $ES_INDEX = NULL;
 
+function usage() {
+  /* Display information on how to use the script. */
+
+  $f = basename(__FILE__);
+  $msg = "usage: $f [-h] [-e EOM] [-E EOM] [--update] [FILE]
+
+optional arguments:
+  -h, --help                     show this help message and exit
+
+  -e EOM, --end-of-message EOM   custom end of message marker
+
+  -E EOP, --end-of-process EOP   custom end of process marker
+
+  --update                       use 'update' action for all records
+
+  FILE                           source file
+";
+  fwrite(STDERR, $msg);
+}
+
 function check_input($row) {
   /* Check the provided input's correctness.
 
@@ -201,7 +221,7 @@ function decode_escaped($string) {
 }
 
 # Process command line arguments.
-$opts = getopt("e:E:", Array("end-of-message:", "end-of-process:",
+$opts = getopt("he:E:", Array("help", "end-of-message:", "end-of-process:",
                              "update"));
 $args = $argv;
 
@@ -218,6 +238,11 @@ foreach ($opts as $key => $val) {
     unset($args[$mkey]);
   }
   switch ($key) {
+    case "h":
+    case "help":
+      usage();
+      exit(0);
+      break;
     case "e":
     case "end-of-message":
       $EOM_MARKER = decode_escaped($val);
