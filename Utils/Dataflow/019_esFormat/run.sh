@@ -10,8 +10,9 @@ Use -h or --help to get this help message.
 
 PARAMETERS:
   CONFIG -- Elasticsearch configuration file
-  ARGS   -- arguments to be passed to the PHP script
+  ARGS   -- arguments to be passed to the PHP script (see below)
 "
+$base_dir/esFormat.php -h
 }
 
 ES_CONFIG=$base_dir/../../Elasticsearch/config/es
