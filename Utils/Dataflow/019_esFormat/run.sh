@@ -3,14 +3,14 @@
 base_dir=$(cd "$(dirname "$(readlink -f "$0")")"; pwd)
 
 usage() {
-  echo "USAGE:
-$(basename "$0") [-h] [-c CONFIG] [--] [ARGS]
+  echo "usage: $(basename "$0") [-h] [-c CONFIG] [--] [ARGS]
+  
+optional arguments:
+  -h, --help   show this help message and exit
 
-Use -h or --help to get this help message.
+  -c CONFIG    Elasticsearch configuration file
 
-PARAMETERS:
-  CONFIG -- Elasticsearch configuration file
-  ARGS   -- arguments to be passed to the PHP script (see below)
+  ARGS         arguments to be passed to the PHP script (see below)
 "
 $base_dir/esFormat.php -h
 }
