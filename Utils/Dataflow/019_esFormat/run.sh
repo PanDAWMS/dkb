@@ -20,10 +20,10 @@ CONFIG_DEFAULT=TRUE
 while [ -n "$1" ]; do
   case "$1" in
     --help|-h)
-      usage >&2 && exit 1;;
+      usage >&2; exit 1;;
     --config|-c)
       [ -n "$2" ] && { ES_CONFIG="$2" && CONFIG_DEFAULT=""; } \
-                  || { usage >&2 && exit 1; }
+                  || { usage >&2; exit 1; }
       shift;;
     --)
       shift
