@@ -123,13 +123,7 @@ def process(stage, message):
 
 
 def amiPhysValues(data):
-    """ Add elements to JSON string according to their names in ES mapping.
-
-    - gen_filt_eff
-    - cross_section
-    - k_factor
-    - cross_section_ref
-    """
+    """ Update data with information from AMI. """
     dataset = data['datasetname']
     container = remove_tid(dataset)
     ami_client = get_ami_client()
