@@ -23,6 +23,7 @@ except Exception, err:
     sys.exit(1)
 
 ami_client = None
+# Field names in terms of AMI and ES schemes.
 PHYS_VALUES = [{"ami": "genFiltEff", "es": "gen_filt_eff"},
                {"ami": "crossSection", "es": "cross_section"},
                {"ami": "crossSectionRef", "es": "cross_section_ref"},
