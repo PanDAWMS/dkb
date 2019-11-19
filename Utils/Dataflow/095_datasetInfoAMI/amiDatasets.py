@@ -167,7 +167,7 @@ def amiPhysValues(data):
 
 
 def change_key_names(data):
-    """ Change parameter names according to PHYS_VALUES dictionary.
+    """ Change parameter names from ones used by AMI to corresponding ES ones.
 
     :param data: JSON string
     :return: JSON string
