@@ -143,6 +143,7 @@ def process(stage, message):
     # or not set at all.
     if update or not formats:
         amiPhysValues(data)
+        change_key_names(data)
     stage.output(pyDKB.dataflow.communication.messages.JSONMessage(data))
 
     return True
@@ -182,7 +183,6 @@ def amiPhysValues(data):
                     data[p_name] = p_val
                     p_name, p_val = None, None
                     continue
-        change_key_names(data)
         return True
     except Exception as e:
         sys.stderr.write("(ERROR) Failed to process dataset '%s': "
