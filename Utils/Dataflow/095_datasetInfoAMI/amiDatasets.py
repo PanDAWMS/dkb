@@ -166,29 +166,26 @@ def amiPhysValues(data):
     if not container:
         return False
     ami_client = get_ami_client()
-    try:
-        res = ami_client.execute(['GetPhysicsParamsForDataset',
-                                  '--logicalDatasetName=%s' % container],
-                                 format='json')
-        json_str = json.loads(res)
-        rowset = json_str['AMIMessage'][0]['Result'][0]['rowset']
-        if not rowset:
-            sys.stderr.write("(WARN) No values found in AMI for dataset '%s'\n"
-                             % data['datasetname'])
-            return False
-        for row in rowset[0]['row']:
-            p_name, p_val = None, None
-            for field in row['field']:
-                if field['@name'] == 'paramName':
-                    p_name = field['$']
-                elif field['@name'] == 'paramValue':
-                    p_val = field['$']
-                if p_name and p_val:
-                    data[p_name] = p_val
-                    break
-        return True
-    except Exception:
-        raise
+    res = ami_client.execute(['GetPhysicsParamsForDataset',
+                              '--logicalDatasetName=%s' % container],
+                             format='json')
+    json_str = json.loads(res)
+    rowset = json_str['AMIMessage'][0]['Result'][0]['rowset']
+    if not rowset:
+        sys.stderr.write("(WARN) No values found in AMI for dataset '%s'\n"
+                         % data['datasetname'])
+        return False
+    for row in rowset[0]['row']:
+        p_name, p_val = None, None
+        for field in row['field']:
+            if field['@name'] == 'paramName':
+                p_name = field['$']
+            elif field['@name'] == 'paramValue':
+                p_val = field['$']
+            if p_name and p_val:
+                data[p_name] = p_val
+                break
+    return True
 
 
 def change_key_names(data):
