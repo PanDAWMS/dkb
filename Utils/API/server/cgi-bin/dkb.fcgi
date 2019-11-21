@@ -103,9 +103,13 @@ def construct_response(data, **kwargs):
             body = 'error'
         result = {'status': str_status}
         for k in data.keys():
-            if k.startswith('_'):
-                item = data.pop(k)
-                result[k[1:]] = item
+            try:
+                if k.startswith('_'):
+                    item = data.pop(k)
+                    result[k[1:]] = item
+            except AttributeError:
+                # If key is not a string, we can simply skip
+                pass
         if body not in result:
             result[body] = data
         if t0 and result.get('took_total') is None:
