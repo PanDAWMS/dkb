@@ -41,6 +41,8 @@ optional arguments:
   --update                       use 'update' action for all records
 
   FILE                           source file
+                                 note: if no FILE is specified, the data
+                                 will be acquired from standard input
 ";
   fwrite(STDERR, $msg);
 }
