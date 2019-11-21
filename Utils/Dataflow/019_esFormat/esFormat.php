@@ -28,7 +28,8 @@ function usage() {
   /* Display information on how to use the script. */
 
   $f = basename(__FILE__);
-  $msg = "usage: $f [-h] [-e EOM] [-E EOM] [--update] [FILE]
+  $msg =
+"usage: $f [-h] [-e EOM] [-E EOM] [--update] [FILE]
 
 optional arguments:
   -h, --help                     show this help message and exit
