@@ -112,8 +112,8 @@ def construct_response(data, **kwargs):
                 pass
         if body not in result:
             result[body] = data
-        if t0 and result.get('took_total') is None:
-            result['took_total'] = int((time.time() - t0)*1000)
+        if t0 and result.get('took_total_ms') is None:
+            result['took_total_ms'] = int((time.time() - t0)*1000)
         indent = None
         newline = ''
         if kwargs.get('pretty'):

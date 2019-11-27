@@ -444,7 +444,7 @@ def task_kwsearch(**kwargs):
     :type timeout: int
 
     :return: tasks and related datasets metadata with additional info:
-             { _took_storage: <storage query execution time in ms>,
+             { _took_storage_ms: <storage query execution time in ms>,
                _total: <total number of matching tasks>,
                _data: [ ..., {..., output_dataset: [ {...}, ...], ... }, ... ]
              }
@@ -471,7 +471,7 @@ def task_kwsearch(**kwargs):
         logging.warn(msg)
     r = client().search(index=idx, body={"query": q}, size=kwargs['size'],
                         request_timeout=kwargs['timeout'])
-    result = {'_took_storage': r['took'], '_data': []}
+    result = {'_took_storage_ms': r['took'], '_data': []}
     if warn:
         result['_errors'] = warn
     if not r['hits']['hits']:
