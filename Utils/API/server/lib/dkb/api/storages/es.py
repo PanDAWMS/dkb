@@ -470,7 +470,7 @@ def task_kwsearch(**kwargs):
         warn.append(msg)
         logging.warn(msg)
     r = client().search(index=idx, body={"query": q}, size=kwargs['size'],
-                        request_timeout=kwargs['timeout'])
+                        request_timeout=kwargs['timeout'], doc_type='task')
     result = {'_took_storage_ms': r['took'], '_data': []}
     if warn:
         result['_errors'] = warn
