@@ -487,3 +487,7 @@ def task_kwsearch(**kwargs):
         task['output_dataset'] = [ds['_source'] for ds in datasets]
         result['_data'].append(task)
     return result
+
+
+def task_derivation_statistics(**kwargs):
+    raise DkbApiNotImplemented

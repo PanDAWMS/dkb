@@ -77,3 +77,7 @@ def task_kwsearch(**kwargs):
     :rtype: list
     """
     return es.task_kwsearch(**kwargs)
+
+
+def task_derivation_statistics(**kwargs):
+    return es.task_derivation_statistics(**kwargs)

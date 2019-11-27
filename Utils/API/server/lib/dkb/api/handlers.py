@@ -253,3 +253,10 @@ def task_kwsearch(path, **kwargs):
 
 
 methods.add('/task', 'kwsearch', task_kwsearch)
+
+
+def task_deriv(path, **kwargs):
+    return storages.task_derivation_statistics(**kwargs)
+
+
+methods.add('/task', 'deriv', task_deriv)
