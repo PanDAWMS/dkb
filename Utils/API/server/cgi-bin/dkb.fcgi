@@ -43,7 +43,7 @@ def parse_params(qs):
        has value ``False``;
      * parameter with single value (``?key=val&...``) has value passed
        as ``val``;
-     * parameters with number of values (``?key[]=val1&key[]=val2&...``)
+     * parameters with number of values (``?key=val1&key=val2&...``)
        has value of type ``list``: ``['val1', 'val2', ..]``.
 
     :param qs: query string
@@ -102,9 +102,18 @@ def construct_response(data, **kwargs):
             str_status = 'failed'
             body = 'error'
         result = {'status': str_status}
-        result[body] = data
-        if t0 and result.get('took_total') is None:
-            result['took_total'] = int((time.time() - t0)*1000)
+        for k in data.keys():
+            try:
+                if k.startswith('_'):
+                    item = data.pop(k)
+                    result[k[1:]] = item
+            except AttributeError:
+                # If key is not a string, we can simply skip
+                pass
+        if body not in result:
+            result[body] = data
+        if t0 and result.get('took_total_ms') is None:
+            result['took_total_ms'] = int((time.time() - t0)*1000)
         indent = None
         newline = ''
         if kwargs.get('pretty'):

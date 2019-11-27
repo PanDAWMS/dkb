@@ -72,7 +72,13 @@ def init():
     hosts = CONFIG.get('hosts', None)
     user = CONFIG.get('user', '')
     passwd = CONFIG.get('passwd', '')
-    TASK_KWARGS['index'] = CONFIG.get('index', None)
+    index = CONFIG.get('index', None)
+    # Setting default index name
+    if isinstance(index, dict):
+        TASK_KWARGS['index'] = index['production_tasks']
+    else:
+        TASK_KWARGS['index'] = index
+        CONFIG['index'] = {'production_tasks': index}
     try:
         es = elasticsearch.Elasticsearch(hosts, http_auth=(user, passwd))
     except Exception, err:
@@ -332,3 +338,151 @@ def _construct_chain(chain_data):
                     chain[tid].append(child)
                 child = tid
     return chain
+
+
+def _task_kwsearch_query(kw, ds_size=100):
+    """ Construct query for task keywords search.
+
+    :param kw: list of (string) keywords
+    :type kw: list
+    :param ds_size: number of output datasets to return
+                    (default: 100)
+    :type ds_size: int
+
+    :return: constructed query
+    :rtype: dict
+    """
+    qs_args = []
+    wildcard = False
+    for w in kw:
+        if '?' in w or '*' in w:
+            tokens = _get_tokens(w, analyzer='dsname_fields_wildcarded')
+            for t in tokens:
+                if '?' in w or '*' in w:
+                    qs_args.append('taskname.fields:%s' % w)
+                    wildcard = True
+                else:
+                    qs_args.append(w)
+        else:
+            qs_args.append(w)
+    q = {
+        "bool": {
+            "must": {
+                "query_string": {
+                    "query": " AND ".join(qs_args),
+                    "analyze_wildcard": wildcard,
+                    "all_fields": True
+                }
+            },
+            "should": {
+                "has_child": {
+                    "type": "output_dataset",
+                    "score_mode": "sum",
+                    "query": {"match_all": {}},
+                    "inner_hits": {"size": ds_size}
+                }
+            }
+        }
+    }
+    return q
+
+
+def _get_tokens(text, index='', field=None, analyzer=None):
+    """ Split text into tokens according to task/ds name fields.
+
+    :param text: text to split into tokens
+    :type text: str
+    :param index: ES index name (required for `field` usage)
+                  If not specified, configured default index is used;
+                  to ignore any index settings, should be set to ``None``
+    :type index: str
+    :param field: field name to derive analyzer (`index` is required)
+    :type field: str
+    :param analyzer: analyzer name or definition (if analyzer is defined
+                     for an index (not globally), `index` is required)
+    :type analyzer: str, dict
+
+    :return: list of tokens
+    :trype: list
+    """
+    if index is '':
+        index = TASK_KWARGS['index']
+    body = {"text": text}
+    result = []
+    if field:
+        if not index:
+            logging.warn("Index is not specified (will fail to tokenize string"
+                         " as field).")
+        body['field'] = field
+    elif analyzer:
+        body['analyzer'] = analyzer
+    try:
+        res = client().indices.analyze(index=index, body=body)
+        for r in res['tokens']:
+            result.append(r['token'])
+    except Exception, err:
+        logging.error("Failed to tokenize string: %r (index: %r). Reason: %s"
+                      % (body, index, err))
+        result = [text]
+    return result
+
+
+def task_kwsearch(**kwargs):
+    """ Implementation of ``task_kwsearch`` for ES.
+
+    :param kw: list of (string) keywords
+    :type kw: list
+    :param analysis: if analysis tasks should be searched
+    :type analysis: str, bool
+    :param production: if production tasks should be searched
+    :type production: str, bool
+    :param size: number of documents in response
+    :type size: int
+    :param ds_size: max number of output datasets to return for each task
+    :type ds_size: int
+    :param timeout: request execution timeout (sec)
+    :type timeout: int
+
+    :return: tasks and related datasets metadata with additional info:
+             { _took_storage_ms: <storage query execution time in ms>,
+               _total: <total number of matching tasks>,
+               _data: [ ..., {..., output_dataset: [ {...}, ...], ... }, ... ]
+             }
+    :rtype: dict
+    """
+    init()
+    q = _task_kwsearch_query(kwargs['kw'], kwargs['ds_size'])
+    logging.debug("Keyword search query: %r" % q)
+    warn = []
+    idx = []
+    try:
+        for name in ('production', 'analysis'):
+            idx_name = CONFIG['index'][name + '_tasks']
+            if kwargs[name]:
+                if idx_name:
+                    idx.append(idx_name)
+                else:
+                    msg = "Index name not configured (%s_tasks)." % name
+                    warn.append(msg)
+                    logging.warn(msg)
+    except KeyError, err:
+        msg = "Missed parameter in server configuration: %s" % str(err)
+        warn.append(msg)
+        logging.warn(msg)
+    r = client().search(index=idx, body={"query": q}, size=kwargs['size'],
+                        request_timeout=kwargs['timeout'])
+    result = {'_took_storage_ms': r['took'], '_data': []}
+    if warn:
+        result['_errors'] = warn
+    if not r['hits']['hits']:
+        return result
+    result['_total'] = r['hits']['total']
+    for hit in r['hits']['hits']:
+        task = hit['_source']
+        try:
+            datasets = hit['inner_hits']['output_dataset']['hits']['hits']
+        except KeyError:
+            datasets = []
+        task['output_dataset'] = [ds['_source'] for ds in datasets]
+        result['_data'].append(task)
+    return result

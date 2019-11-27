@@ -52,3 +52,28 @@ def task_chain(**kwargs):
     :rtype: dict
     """
     return es.task_chain(**kwargs)
+
+
+def task_kwsearch(**kwargs):
+    """ Search tasks and related datasets by keywords.
+
+    For wildcard keywords only ``taskname`` field is used.
+
+    :param kw: list of (string) keywords
+    :type kw: list
+    :param analysis: if analysis tasks should be searched
+    :type analysis: str, bool
+    :param production: if production tasks should be searched
+    :type production: str, bool
+    :param size: number of documents in response
+    :type size: str, int
+    :param ds_size: max number of datasets returned for each task
+    :type ds_size: str, int
+    :param timeout: request execution timeout (sec)
+    :type timeout: str, int
+
+    :return: task and related datasets info:
+             [ {..., output_dataset: [{...}, ...], ...}, ... ]
+    :rtype: list
+    """
+    return es.task_kwsearch(**kwargs)

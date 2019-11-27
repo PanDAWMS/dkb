@@ -196,3 +196,60 @@ def task_chain(path, **kwargs):
 
 
 methods.add('/task', 'chain', task_chain)
+
+
+def task_kwsearch(path, **kwargs):
+    """ Get list of tasks by keywords.
+
+    Wildcard search is performed by ``taskname`` only.
+
+    :param path: full path to the method
+    :type path: str
+    :param kw: list of keywords (or a single keyword)
+    :type kw: list, str
+    :param analysis: if analysis tasks should be searched
+                     (default: True)
+    :type analysis: str, bool
+    :param production: if production tasks should be searched
+                       (default: True)
+    :type production: str, bool
+    :param size: number of task documents in response (default: 2000)
+    :type size: str, int
+    :param ds_size: max number of dataset documents returned for each task
+                    (default: 20)
+    :type size: str, int
+    :param timeout: request execution timeout (sec) (default: 120)
+    :type timeout: str, int
+    """
+    method_name = '/task/kwsearch'
+    params = {
+        'analysis': True,
+        'production': True,
+        'size': 2000,
+        'ds_size': 20,
+        'timeout': 120
+    }
+    params.update(kwargs)
+    if (kwargs.get('analysis') is True):
+        params['production'] &= bool(kwargs.get('production'))
+    if (kwargs.get('production') is True):
+        params['analysis'] &= bool(kwargs.get('analysis'))
+    if not (params.get('analysis') or params.get('production')):
+        raise MethodException(method_name, "Parameters 'production' and "
+                              "'analysis' should not be set to False at the "
+                              "same time.")
+    kw = kwargs.get('kw')
+    if kw is None:
+        raise MissedArgument(method_name, 'kw')
+    if not isinstance(kw, list):
+        kw = [kw]
+    params['kw'] = kw
+    for p in ('size', 'ds_size', 'timeout'):
+        try:
+            params[p] = int(params[p])
+        except ValueError:
+            raise InvalidArgument(method_name, (p, params[p], int))
+    return storages.task_kwsearch(**params)
+
+
+methods.add('/task', 'kwsearch', task_kwsearch)
