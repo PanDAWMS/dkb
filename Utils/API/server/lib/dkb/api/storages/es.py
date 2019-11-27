@@ -78,7 +78,7 @@ def init():
         TASK_KWARGS['index'] = index['production_tasks']
     else:
         TASK_KWARGS['index'] = index
-        CONFIG['index']  = {'production_tasks': index}
+        CONFIG['index'] = {'production_tasks': index}
     try:
         es = elasticsearch.Elasticsearch(hosts, http_auth=(user, passwd))
     except Exception, err:
@@ -483,6 +483,6 @@ def task_kwsearch(**kwargs):
             datasets = hit['inner_hits']['output_dataset']['hits']['hits']
         except KeyError:
             datasets = []
-        task['output_dataset'] = [ ds['_source'] for ds in datasets ]
+        task['output_dataset'] = [ds['_source'] for ds in datasets]
         result['_data'].append(task)
     return result
