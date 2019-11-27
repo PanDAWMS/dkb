@@ -371,7 +371,8 @@ def _task_kwsearch_query(kw, ds_size=100):
                 "query_string": {
                     "query": " AND ".join(qs_args),
                     "analyze_wildcard": wildcard,
-                    "all_fields": True
+                    "all_fields": True,
+                    "default_operator": "AND"
                 }
             },
             "should": {
