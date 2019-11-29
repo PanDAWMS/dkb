@@ -3,11 +3,16 @@
 env_vars=.env
 ( set -o posix; set; ) > $env_vars
 
+# Change with caution, for this directory must have
+# specific permissions that allow nginx user
+# access to the socket files
+SOCK_DIR=/var/run/wsgi
+
 WWW_DIR=/data/www/dkb
-RUN_DIR=/var/run/wsgi
+RUN_DIR="$SOCK_DIR"
 LOG_DIR=/var/log/dkb
 CFG_DIR="conf"
-SOCK="$RUN_DIR"/api-fcgi.socket
+SOCK=api-fcgi.socket
 APP_USER=www
 APP_GROUP=
 ADDR=127.0.0.1:5080
@@ -18,7 +23,6 @@ NGINX_USER=
 NGINX_GROUP=
 MANAGE_SERVICE=
 MANAGE_SEL=
-
 
 base_dir=$(readlink -f $(cd $(dirname "$0"); pwd))
 build_dir="${base_dir}/build"
@@ -76,7 +80,7 @@ OPTIONS
                      Default: $RUN_DIR
 
     -s, --sock       socket name for communication between web-server
-                     and API application
+                     and API application (without path)
                      Default: $SOCK
 
     -u, --user       owner of application process
@@ -232,13 +236,14 @@ ensure_user() {
 }
 
 ensure_dirs() {
-  dirs="$WWW_DIR $LOG_DIR $RUN_DIR"
+  dirs="$WWW_DIR $LOG_DIR $RUN_DIR $SOCK_DIR"
   for dir in $dirs; do
     echo "Creating dir: $dir" >&2
     [ -d "$dir" ] && continue
     mkdir -p "$dir" &>/dev/null
     chown "$APP_USER:$NGINX_GROUP" "$dir"
     chmod 2750 "$dir"
+    [ "$dir" == "$SOCK_DIR" ] && chmod a+rwx "$dir"
   done
 }
 
@@ -382,9 +387,11 @@ install_www() {
     fi
     chown "$APP_USER" "$WWW_DIR/$f"
   done
-  sudo -u "$APP_USER" python -m compileall "$WWW_DIR/lib"
+  cmd_pref=""
+  [ "`whoami`" == "$APP_USER" ] || cmd_pref="sudo -u $APP_USER"
+  $cmd_pref python -m compileall "$WWW_DIR/lib"
   echo "Compiling $WWW_DIR/cgi-bin/dkb.fcgi ..." >&2
-  sudo -u "$APP_USER" python -m py_compile "$WWW_DIR/cgi-bin/dkb.fcgi"
+  $cmd_pref python -m py_compile "$WWW_DIR/cgi-bin/dkb.fcgi"
   echo "...done." >&2
   cd "$old_dir"
 }
@@ -411,7 +418,7 @@ uninstall_www() {
     # Remove directory if it still exists...
     if [ -d "$d" ]; then
       # ...and does not contain files.
-      nfiles=`find $d -type f ! -name "*.pyc" | wc -l`
+      nfiles=`find $d -type f ! -name "*.pyc" ! -name "*.fcgic" | wc -l`
       [ $nfiles -eq 0 ] \
         && echo "> $d" >&2 \
         && rm -rf "$d" >/dev/null \
@@ -499,9 +506,13 @@ start_www() {
   [ ! -f "$app_file" ] \
     && echo "Failed to restart application: file not found ($app_file)." >&2 \
     && exit 1
-  su "$APP_USER" -c \
-    "nohup '$app_file' >> '$logfile' &
-     echo \$! > '$pidfile'"
+  [ "`whoami`" == "$APP_USER" ] && \
+    { nohup "$app_file" >> "$logfile" &
+      echo $! > "$pidfile"; } || \
+    su "$APP_USER" -c \
+      "nohup '$app_file' >> '$logfile' &
+       echo \$! > '$pidfile'"
+  chmod 0600 "$pidfile"
 }
 
 _clean() {
