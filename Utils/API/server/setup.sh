@@ -3,8 +3,13 @@
 env_vars=.env
 ( set -o posix; set; ) > $env_vars
 
+# Change with caution, for this directory must have
+# specific permissions that allow nginx user
+# access to the socket files
+SOCK_DIR=/var/run/wsgi
+
 WWW_DIR=/data/www/dkb
-RUN_DIR=/var/run/wsgi
+RUN_DIR="$SOCK_DIR"
 LOG_DIR=/var/log/dkb
 CFG_DIR="conf"
 SOCK=api-fcgi.socket
@@ -18,12 +23,6 @@ NGINX_USER=
 NGINX_GROUP=
 MANAGE_SERVICE=
 MANAGE_SEL=
-
-# Change with caution, for this directory must have
-# specific permissions that allow nginx user
-# access to the socket files
-SOCK_DIR="$RUN_DIR"
-
 
 base_dir=$(readlink -f $(cd $(dirname "$0"); pwd))
 build_dir="${base_dir}/build"
