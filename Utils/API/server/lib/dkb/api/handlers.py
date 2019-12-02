@@ -343,6 +343,11 @@ def task_stat(path, **kwargs):
     """
     method_name = '/task/stat'
     allowed_types = ['steps', 'formats', 'ctag_formats']
+    required = {
+        allowed_types[0]: ['htag'],
+        allowed_types[1]: ['pr'],
+        allowed_types[2]: ['htag'],
+    }
     params = {
         'stat_type': allowed_types[0]
     }
@@ -350,6 +355,10 @@ def task_stat(path, **kwargs):
     if (not params['stat_type'] in allowed_types):
         raise InvalidArgument(method_name, ('stat_type', params['stat_type'],
                                             allowed_types))
+    req = required.get(params['stat_type'], [])
+    for r in req:
+        if not params.get(r):
+            raise MissedArgument(method_name, r)
     raise DkbApiNotImplemented
 
 
