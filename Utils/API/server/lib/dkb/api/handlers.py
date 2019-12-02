@@ -322,3 +322,39 @@ def campaign_stat(path, **kwargs):
 
 
 methods.add('/campaign', 'stat', campaign_stat)
+
+
+def task_stat(path, **kwargs):
+    """ Get tasks statistics.
+
+    :param path: full path to the method
+    :type path: str
+
+    :param step_type: step definition type: 'step', 'ctag_format'
+                      (default: 'step')
+    :type step_type: str
+
+    :param <selection_parameter>: defines condition to select tasks for
+                                  statistics. Parameter names are mapped
+                                  to storage record fields (names and/or
+                                  aliases). Values should be provided in
+                                  one of the following forms:
+                                  * ``None`` (field must not be presented
+                                    in selected records);
+                                  * exact field value;
+                                  * exact field value with logical prefix:
+                                    - ``&`` -- field must value this value;
+                                    - ``|`` -- field must have one of values
+                                               marked with this prefix
+                                               (default);
+                                    - ``!`` -- field must not have this value;
+                                  * list of field values (prefixed or not).
+    :type <selection_parameter>: NoneType, str, number, list
+
+    :return: calculated statistics for selected tasks by steps
+    :rtype: dict
+    """
+    raise DkbApiNotImplemented
+
+
+methods.add('/task', 'stat', task_stat)
