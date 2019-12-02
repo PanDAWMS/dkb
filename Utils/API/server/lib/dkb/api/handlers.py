@@ -322,3 +322,27 @@ def campaign_stat(path, **kwargs):
 
 
 methods.add('/campaign', 'stat', campaign_stat)
+
+
+def task_stat(path, **kwargs):
+    """ Get tasks statistics.
+
+    :param path: full path to the method
+    :type path: str
+    :param stat_type: statistics type: 'steps', 'formats', 'ctag_formats'
+                      (default: 'steps')
+    :type stat_type: str
+    :param pr: production request number (for `stat_type` value: 'formats')
+    :type pr: str, int
+    :param htag: hashtag (for `stat_type` values: 'steps', 'format_ctag').
+                 Hashtag may be prefixed by a modificator:
+                 * & -- all these hashtags must be presented;
+                 * | -- at least one of these hashtags must be presented (default);
+                 * ! -- these hatshtags must not be presented.
+    :type htag: str
+    """
+    raise DkbApiNotImplemented
+
+
+
+methods.add('/task', 'stat', task_stat)
