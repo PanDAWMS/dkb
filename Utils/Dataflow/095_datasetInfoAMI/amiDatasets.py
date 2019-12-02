@@ -78,7 +78,7 @@ def init_ami_client(userkey='', usercert=''):
     if ami_client.config.conn_mode == ami_client.config.CONN_MODE_LOGIN:
         sys.stderr.write("(ERROR) Login authentication mode is not "
                          "supported. Please provide user certificate or create"
-                         "proxy.\n")
+                         " proxy.\n")
         raise DataflowException("Failed to initialise AMI client: certificate "
                                 "not provided or not found.")
 
