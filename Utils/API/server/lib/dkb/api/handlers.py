@@ -354,6 +354,15 @@ def task_stat(path, **kwargs):
     :return: calculated statistics for selected tasks by steps
     :rtype: dict
     """
+    method_name = '/task/stat'
+    allowed_types = ['step', 'ctag_format']
+    params = {
+        'step_type': allowed_types[0]
+    }
+    params.update(kwargs)
+    if (params['step_type'] not in allowed_types):
+        raise InvalidArgument(method_name, ('step_type', params['step_type'],
+                                            allowed_types))
     raise DkbApiNotImplemented
 
 
