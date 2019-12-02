@@ -341,6 +341,15 @@ def task_stat(path, **kwargs):
                  * ! -- these hatshtags must not be presented.
     :type htag: str
     """
+    method_name = '/task/stat'
+    allowed_types = ['steps', 'formats', 'ctag_formats']
+    params = {
+        'stat_type': allowed_types[0]
+    }
+    params.update(kwargs)
+    if (not params['stat_type'] in allowed_types):
+        raise InvalidArgument(method_name, ('stat_type', params['stat_type'],
+                                            allowed_types))
     raise DkbApiNotImplemented
 
 
