@@ -1,7 +1,7 @@
 #!/bin/bash
 
 env_vars=.env
-( set -o posix; set | cut -f 1 -d '=' | grep ^[A-Za-z_] ) > $env_vars
+( set -o posix; set | cut -f 1 -d '=' | grep ^[A-Za-z_] | sed 's/^\(.*\)$/^\1=/' ) > $env_vars
 
 # Change with caution, for this directory must have
 # specific permissions that allow nginx user
