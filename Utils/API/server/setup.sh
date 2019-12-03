@@ -246,7 +246,9 @@ ensure_dirs() {
     mkdir -p "$dir" &>/dev/null
     chown "$APP_USER" "$dir"
     chmod 2750 "$dir"
-    [ "$dir" == "$SOCK_DIR" ] && chmod a+rwx "$dir"
+    [ "$dir" == "$SOCK_DIR" ] \
+      && chmod a+rwx "$dir" \
+      && chown ":$NGINX_GROUP" "$dir"
   done
 }
 
