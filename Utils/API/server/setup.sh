@@ -28,7 +28,8 @@ base_dir=$(readlink -f $(cd $(dirname "$0"); pwd))
 build_dir="${base_dir}/build"
 cfg_file=~/.dkb-api
 
-python_exec="LD_LIBRARY_PATH=$LD_LIBRARY_PATH `which python2.7`"
+python_exec="LD_LIBRARY_PATH=$LD_LIBRARY_PATH `which python2.7 2>/dev/null`" \
+  || { echo "ERROR: Python 2.7 required." >&2; exit 1; }
 
 usage() {
   echo "
