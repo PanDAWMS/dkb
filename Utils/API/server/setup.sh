@@ -243,7 +243,7 @@ ensure_dirs() {
     echo "Creating dir: $dir" >&2
     [ -d "$dir" ] && continue
     mkdir -p "$dir" &>/dev/null
-    chown "$APP_USER:$NGINX_GROUP" "$dir"
+    chown "$APP_USER" "$dir"
     chmod 2750 "$dir"
     [ "$dir" == "$SOCK_DIR" ] && chmod a+rwx "$dir"
   done
@@ -379,7 +379,7 @@ install_www() {
     echo "> $WWW_DIR/$f" >&2
     if [ -d "$build_dir/$f" ]; then
       mkdir -p "$WWW_DIR/$f"
-      chown "$APP_USER:$NGINX_GROUP" "$WWW_DIR/$f"
+      chown "$APP_USER" "$WWW_DIR/$f"
       chmod 0744 "$WWW_DIR/$f"
     else
       cp "$build_dir/$f" -T "$WWW_DIR/$f"
