@@ -28,7 +28,7 @@ base_dir=$(readlink -f $(cd $(dirname "$0"); pwd))
 build_dir="${base_dir}/build"
 cfg_file=~/.dkb-api
 
-python_exec="LD_LIBRARY_PATH=$LD_LIBRARY_PATH `which python2.7 2>/dev/null`" \
+python_exec="`which python2.7 2>/dev/null`" \
   || { echo "ERROR: Python 2.7 required." >&2; exit 1; }
 
 usage() {
@@ -390,11 +390,11 @@ install_www() {
     fi
     chown "$APP_USER" "$WWW_DIR/$f"
   done
-  cmd_pref=""
+  cmd_pref=
   [ "`whoami`" == "$APP_USER" ] || cmd_pref="sudo -u $APP_USER"
-  $cmd_pref $python_exec -m compileall "$WWW_DIR/lib"
+  $cmd_pref env LD_LIBRARY_PATH="$LD_LIBRARY_PATH" $python_exec -m compileall "$WWW_DIR/lib"
   echo "Compiling $WWW_DIR/cgi-bin/dkb.fcgi ..." >&2
-  $cmd_pref $python_exec -m py_compile "$WWW_DIR/cgi-bin/dkb.fcgi"
+  $cmd_pref env LD_LIBRARY_PATH="$LD_LIBRARY_PATH" $python_exec -m py_compile "$WWW_DIR/cgi-bin/dkb.fcgi"
   echo "...done." >&2
   cd "$old_dir"
 }
