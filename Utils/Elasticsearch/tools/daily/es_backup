@@ -1,0 +1,46 @@
+#!/bin/sh
+
+base_dir=/var/es
+data_dir=data
+backup_dir=$base_dir/backup
+
+
+[ -d $backup_dir ] \
+  || mkdir -m 0700 $backup_dir \
+  || exit 1
+
+backup_name=$backup_dir/`date +'%Y%m%d'`
+
+# Check that today's backup does not exist
+[ -f ${backup_name}.tar.gz ] \
+  && { echo "Today's backup for ES data already exists:" \
+            "manually remove it to create a new one" \
+            "(${backup_name}.tar.gz)." >&2 ;
+       exit 0;
+     }
+
+# Create today's backup file
+tar -C $base_dir -zcf ${backup_name}.tar.gz $data_dir
+EXIT_CODE=$?
+
+[ $EXIT_CODE -ne 0 ] \
+  && { echo "Failed to create backup file for ES data ($EXIT_CODE)." >&2 ;
+       exit $EXIT_CODE;
+     }
+
+# Create weekly/monthly/yearly copy
+[ `date +%u` -eq 7 ] && suffix='w'
+[ `date +%e` -eq 1 ] && suffix='m'
+[ `date +%_j` -eq 1 ] && suffix='y'
+[ -n "$suffix" ] && ln ${backup_name}.tar.gz ${backup_name}${suffix}.tar.gz
+
+# Keep daily backups only for 7 days
+find $backup_dir -type f -name "*[0-9].tar.gz" ! -newerct "`date -d '-7 days'`" -exec rm {} \;
+# ...weekly  -- 30 days
+find $backup_dir -type f -name "*w.tar.gz" ! -newerct "`date -d '-30 days'`" -exec rm {} \;
+# ...monthly -- 6 months
+find $backup_dir -type f -name "*m.tar.gz" ! -newerct "`date -d '-6 months'`" -exec rm {} \;
+# ...yearly  -- 3 years
+find $backup_dir -type f -name "*y.tar.gz" ! -newerct "`date -d '-3 years'`" -exec rm {} \;
+
+exit 0
