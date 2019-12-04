@@ -6,7 +6,7 @@ backup_dir=$base_dir/backup
 
 
 [ -d $backup_dir ] \
-  || mkdir -m 0700 $backup_dir \
+  || mkdir -p -m 0700 $backup_dir \
   || exit 1
 
 backup_name=$backup_dir/`date +'%Y%m%d'`
