@@ -28,6 +28,9 @@ QUERY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 # Default datetime format
 DATE_FORMAT = '%d-%m-%Y %H:%M:%S'
 
+with open('ctag_formats.json') as f:
+    OUTPUT_FORMATS = json.load(f)
+
 
 try:
     import elasticsearch
@@ -489,5 +492,19 @@ def task_kwsearch(**kwargs):
     return result
 
 
+def get_output_formats(tags):
+    formats = []
+    for tag in tags:
+        f = OUTPUT_FORMATS.get(tag)
+        if f:
+            formats += f
+    return formats
+
+
 def task_derivation_statistics(**kwargs):
-    raise DkbApiNotImplemented
+    init()
+    project = kwargs.get('project').lower()
+    tags = [tag for tag in kwargs.get('amitag').split(',') if tag]
+    outputs = get_output_formats(tags)
+    result = {'_data': outputs}
+    return result
