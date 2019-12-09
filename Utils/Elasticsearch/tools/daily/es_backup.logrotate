@@ -5,44 +5,39 @@ missingok
 dateext
 extension .tar.gz
 
-/var/es/backup/data.tar.gz {
-    daily
-    rotate 7
+/var/es/backup/weekly/snapshot.tar.gz {
+    weekly
+    rotate 4
     prerotate
         base_dir=/var/es/backup
-        # create dirs for weekly/monthly/yearly copies
-        for d in weekly monthly yearly; do
+        # create dirs for monthly/yearly copies
+        for d in monthly yearly; do
             mkdir -p -m 0700 "${base_dir}/$d"
         done
 
         fname=`basename $1`
 
         # copy rotated file:
-        # - to weekly backups every Sunday
-         [ $(date "+%u") -eq 7 ] && ln "$1" "${base_dir}/weekly/${fname}"
 
-        # - to monthly backups every 1st day of the month
-         [ $(date "+%e") -eq 1 ] && ln "$1" "${base_dir}/monthly/${fname}"
+        # - to monthly backups every 1st week of the month
+        day=`date +%_d`
+        [ $day -ge 1 -a $day -le 7 ] && ln "$1" "${base_dir}/monthly/${fname}"
 
-        # - to monthly backups every 1st day of the year
-         [ $(date "+%_j") -eq 1 ] && ln "$1" "${base_dir}/yearly/${fname}"
+        # - to yearly backups every 1st week of the year
+        day=`date +%_j`
+        [ $day -ge 1 -a $day -le 7 ] && ln "$1" "${base_dir}/yearly/${fname}"
 
         # make sure we return "success"
         true
     endscript
 }
 
-/var/es/backup/weekly/data.tar.gz {
-    weekly
-    rotate 4
-}
-
-/var/es/backup/monthly/data.tar.gz {
+/var/es/backup/monthly/snapshot.tar.gz {
     monthly
     rotate 6
 }
 
-/var/es/backup/yearly/data.tar.gz {
+/var/es/backup/yearly/snapshot.tar.gz {
     yearly
     rotate 3
 }
