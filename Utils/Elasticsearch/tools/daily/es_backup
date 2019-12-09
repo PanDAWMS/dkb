@@ -1,5 +1,23 @@
 #!/bin/sh
 
+# Creates local snapshots for ES indices and takes care of creating
+# weekly backups for the snapshot directory.
+#
+# For this script to work, ES snapshots should be configured:
+# * (/etc/elasticsearch/elasticsearch.yml) path.repo: $base_dir/$data_dir
+# * mkdir -p $base_dir/$data_dir
+# * chown elasticsearch:elasticsearch $base_dir/$data_dir
+# * service elasticsearch restart
+# * cat <<EOF | curl -X PUT 'http://127.0.0.1:9200/_snapshot/backup?pretty' -H 'Content-Type: application/json' -d@-
+# {
+#   "type": "fs",
+#   "settings": {
+#       "compress" : true,
+#       "location": "$base_dir/$data_dir"
+#   }
+# }
+# EOF
+
 base_dir=/var/es
 data_dir=snapshot
 backup_dir="$base_dir"/backup/weekly
