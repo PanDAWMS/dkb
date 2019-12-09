@@ -501,10 +501,40 @@ def get_output_formats(tags):
     return formats
 
 
+def get_derivation_statistics_for_output(project, tags, output_format):
+    query = dict(TASK_KWARGS)
+    kwargs = {'project': project, 'ctag': tags, 'output': output_format}
+    query['body'] = get_query('deriv', **kwargs)
+    r = client().search(**query)
+    try:
+        total = r['hits']['total']
+        result_events = (r['aggregations']['output_datasets']['not_removed']
+                         ['format']['sum_events']['value'])
+        result_bytes = (r['aggregations']['output_datasets']['not_removed']
+                        ['format']['sum_bytes']['value'])
+        input_events = r['aggregations']['input_events']['value']
+        input_bytes = r['aggregations']['input_bytes']['value']
+        ratio = 0
+        if input_bytes != 0:
+            ratio = float(result_bytes) / float(input_bytes)
+        events_ratio = 0
+        if input_events != 0:
+            events_ratio = float(result_events) / float(input_events)
+    except Exception:
+        total = 0
+        ratio = 0
+        events_ratio = 0
+    return {'total': total, 'ratio': ratio, 'events_ratio': events_ratio}
+
+
 def task_derivation_statistics(**kwargs):
     init()
     project = kwargs.get('project').lower()
     tags = [tag for tag in kwargs.get('amitag').split(',') if tag]
     outputs = get_output_formats(tags)
-    result = {'_data': outputs}
+    data = {}
+    for output in outputs:
+        r = get_derivation_statistics_for_output(project, tags, output)
+        data[output] = r
+    result = {'_data': data}
     return result
