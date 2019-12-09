@@ -15,15 +15,17 @@ extension .tar.gz
             mkdir -p -m 0700 "${base_dir}/$d"
         done
 
+        fname=`basename $1`
+
         # copy rotated file:
         # - to weekly backups every Sunday
-         [ $(date "+%u") -eq 7 ] && ln "$1" "${base_dir}/weekly/`basename $1`"
+         [ $(date "+%u") -eq 7 ] && ln "$1" "${base_dir}/weekly/${fname}"
 
         # - to monthly backups every 1st day of the month
-         [ $(date "+%e") -eq 1 ] && ln "$1" "${base_dir}/monthly/`basename $1`"
+         [ $(date "+%e") -eq 1 ] && ln "$1" "${base_dir}/monthly/${fname}"
 
         # - to monthly backups every 1st day of the year
-         [ $(date "+%_j") -eq 1 ] && ln "$1" "${base_dir}/yearly/`basename $1`"
+         [ $(date "+%_j") -eq 1 ] && ln "$1" "${base_dir}/yearly/${fname}"
 
         # make sure we return "success"
         true
