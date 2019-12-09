@@ -17,13 +17,13 @@ extension .tar.gz
 
         # copy rotated file:
         # - to weekly backups every Sunday
-         [ $(date "+%u") -eq 7 ] && ln "$1" "$base_dir"/weekly/"`basename $1`"
+         [ $(date "+%u") -eq 7 ] && ln "$1" "${base_dir}/weekly/`basename $1`"
 
         # - to monthly backups every 1st day of the month
-         [ $(date "+%e") -eq 1 ] && ln "$1" "$base_dir"/monthly/"`basename $1`"
+         [ $(date "+%e") -eq 1 ] && ln "$1" "${base_dir}/monthly/`basename $1`"
 
         # - to monthly backups every 1st day of the year
-         [ $(date "+%_j") -eq 1 ] && ln "$1" "$base_dir"/yearly/"`basename $1`"
+         [ $(date "+%_j") -eq 1 ] && ln "$1" "${base_dir}/yearly/`basename $1`"
 
         # make sure we return "success"
         true
