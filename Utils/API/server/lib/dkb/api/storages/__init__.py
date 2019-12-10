@@ -80,4 +80,27 @@ def task_kwsearch(**kwargs):
 
 
 def task_derivation_statistics(**kwargs):
+    """ Calculate statistics of derivation efficiency.
+
+    Resulting statistics has the following structure:
+    {
+      'data': {
+        ...
+        'some_output_format_name': {
+          'total': 123,
+          'ratio': 0.456,
+          'events_ratio': 0.789
+        },
+        ...
+      }
+    }
+
+    :param project: project name
+    :type project: str
+    :param amitag: amitag (or several)
+    :type amitag: str or list
+
+    :return: calculated statistics
+    :rtype: dict
+    """
     return es.task_derivation_statistics(**kwargs)

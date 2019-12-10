@@ -493,6 +493,14 @@ def task_kwsearch(**kwargs):
 
 
 def get_output_formats(tags):
+    """ Get output formats corresponding to given amitags.
+
+    :param tags: amitags
+    :type tags: list
+
+    :return: output formats
+    :rtype: list
+    """
     formats = []
     for tag in tags:
         f = OUTPUT_FORMATS.get(tag)
@@ -502,6 +510,26 @@ def get_output_formats(tags):
 
 
 def get_derivation_statistics_for_output(project, tags, output_format):
+    """ Calculate derivation efficiency for given output format.
+
+    Resulting data has the following structure:
+    {
+      'total': 123,
+      'ratio': 0.456,
+      'events_ratio': 0.789
+    }
+
+    :param project: project name
+    :type project: str
+    :param amitag: amitags
+    :type amitag: list
+    :param output_format: output format
+    :type output_format: str
+
+    :return: calculated efficiency
+    :rtype: dict
+
+    """
     query = dict(TASK_KWARGS)
     kwargs = {'project': project, 'ctag': tags, 'output': output_format}
     query['body'] = get_query('deriv', **kwargs)
@@ -528,6 +556,16 @@ def get_derivation_statistics_for_output(project, tags, output_format):
 
 
 def task_derivation_statistics(**kwargs):
+    """ Calculate statistics of derivation efficiency.
+
+    :param project: project name
+    :type project: str
+    :param amitag: amitag (or several)
+    :type amitag: str or list
+
+    :return: calculated statistics
+    :rtype: dict
+    """
     init()
     project = kwargs.get('project').lower()
     tags = kwargs.get('amitag')

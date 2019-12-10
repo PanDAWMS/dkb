@@ -256,6 +256,18 @@ methods.add('/task', 'kwsearch', task_kwsearch)
 
 
 def task_deriv(path, **kwargs):
+    """ Calculate statistics of derivation efficiency.
+
+    :param path: full path to the method
+    :type path: str
+    :param project: project name
+    :type project: str
+    :param amitag: amitag (or several)
+    :type amitag: str or list
+
+    :return: calculated statistics
+    :rtype: dict
+    """
     method_name = '/task/deriv'
     project = kwargs.get('project')
     if project is None:
