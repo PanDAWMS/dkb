@@ -530,7 +530,9 @@ def get_derivation_statistics_for_output(project, tags, output_format):
 def task_derivation_statistics(**kwargs):
     init()
     project = kwargs.get('project').lower()
-    tags = [tag for tag in kwargs.get('amitag').split(',') if tag]
+    tags = kwargs.get('amitag')
+    if isinstance(tags, (str, unicode)):
+        tags = [tags]
     outputs = get_output_formats(tags)
     data = {}
     for output in outputs:
