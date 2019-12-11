@@ -76,8 +76,8 @@ def init_ami_client(userkey='', usercert=''):
                                          cert_file=usercert)
         AtlasAPI.init()
     except NameError:
-        sys.stderr.write("(FATAL) Failed to initialise AMI client: "
-                         "pyAMI module is not loaded.\n")
+        sys.stderr.write("(FATAL) Failed to initialise AMI client:"
+                         " pyAMI module is not loaded.\n")
         raise DataflowException("Module not found: 'pyAMI'")
     except Exception, err:
         sys.stderr.write(
@@ -85,11 +85,11 @@ def init_ami_client(userkey='', usercert=''):
             " Are you sure you have a valid certificate?\n")
         raise DataflowException(str(err))
     if ami_client.config.conn_mode == ami_client.config.CONN_MODE_LOGIN:
-        sys.stderr.write("(ERROR) Login authentication mode is not "
-                         "supported. Please provide user certificate or create"
-                         " proxy.\n")
-        raise DataflowException("Failed to initialise AMI client: certificate "
-                                "not provided or not found.")
+        sys.stderr.write("(ERROR) Login authentication mode is not"
+                         " supported. Please provide user certificate or"
+                         " create proxy.\n")
+        raise DataflowException("Failed to initialise AMI client: certificate"
+                                " not provided or not found.")
 
 
 def get_ami_client():
