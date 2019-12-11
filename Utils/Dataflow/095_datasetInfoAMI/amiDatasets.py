@@ -97,9 +97,11 @@ def init_ami_client(userkey='', usercert=''):
     try:
         ami_client.execute('ListCommands')
     except Exception as e:
-        sys.stderr.write("(WARN) Failed to perform test command "
+        sys.stderr.write("(ERROR) Failed to perform test command "
                          "ListCommands. Are you sure you have"
                          " a valid certificate?\nException: %s\n" % str(e))
+        raise DataflowException("Failed to perform test command"
+                                " ListCommands.")
 
 
 def get_ami_client():
