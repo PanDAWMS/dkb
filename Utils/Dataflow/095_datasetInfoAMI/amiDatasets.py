@@ -50,12 +50,15 @@ def main(argv):
 
     stage.configure(argv)
     stage.process = process
-    if stage.ARGS.userkey and stage.ARGS.usercert:
+    try:
         init_ami_client(stage.ARGS.userkey, stage.ARGS.usercert)
-    exit_code = stage.run()
+    except Exception:
+        exit_code = 1
+    else:
+        exit_code = stage.run()
 
-    if exit_code == 0:
-        stage.stop()
+        if exit_code == 0:
+            stage.stop()
 
     sys.exit(exit_code)
 
