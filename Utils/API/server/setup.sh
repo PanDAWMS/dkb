@@ -1,7 +1,7 @@
 #!/bin/bash
 
 env_vars=.env
-( set -o posix; set; ) > $env_vars
+( set -o posix; set | cut -f 1 -d '=' | grep ^[A-Za-z_] | sed 's/^\(.*\)$/^\1=/' ) > $env_vars
 
 # Change with caution, for this directory must have
 # specific permissions that allow nginx user
@@ -27,6 +27,9 @@ MANAGE_SEL=
 base_dir=$(readlink -f $(cd $(dirname "$0"); pwd))
 build_dir="${base_dir}/build"
 cfg_file=~/.dkb-api
+
+python_exec="`which python2.7 2>/dev/null`" \
+  || { echo "ERROR: Python 2.7 required." >&2; exit 1; }
 
 usage() {
   echo "
@@ -241,9 +244,11 @@ ensure_dirs() {
     echo "Creating dir: $dir" >&2
     [ -d "$dir" ] && continue
     mkdir -p "$dir" &>/dev/null
-    chown "$APP_USER:$NGINX_GROUP" "$dir"
+    chown "$APP_USER" "$dir"
     chmod 2750 "$dir"
-    [ "$dir" == "$SOCK_DIR" ] && chmod a+rwx "$dir"
+    [ "$dir" -ef "$SOCK_DIR" ] \
+      && chmod a+rwx "$dir" \
+      && chown ":$NGINX_GROUP" "$dir"
   done
 }
 
@@ -377,7 +382,7 @@ install_www() {
     echo "> $WWW_DIR/$f" >&2
     if [ -d "$build_dir/$f" ]; then
       mkdir -p "$WWW_DIR/$f"
-      chown "$APP_USER:$NGINX_GROUP" "$WWW_DIR/$f"
+      chown "$APP_USER" "$WWW_DIR/$f"
       chmod 0744 "$WWW_DIR/$f"
     else
       cp "$build_dir/$f" -T "$WWW_DIR/$f"
@@ -387,11 +392,11 @@ install_www() {
     fi
     chown "$APP_USER" "$WWW_DIR/$f"
   done
-  cmd_pref=""
+  cmd_pref=
   [ "`whoami`" == "$APP_USER" ] || cmd_pref="sudo -u $APP_USER"
-  $cmd_pref python -m compileall "$WWW_DIR/lib"
+  $cmd_pref env LD_LIBRARY_PATH="$LD_LIBRARY_PATH" $python_exec -m compileall "$WWW_DIR/lib"
   echo "Compiling $WWW_DIR/cgi-bin/dkb.fcgi ..." >&2
-  $cmd_pref python -m py_compile "$WWW_DIR/cgi-bin/dkb.fcgi"
+  $cmd_pref env LD_LIBRARY_PATH="$LD_LIBRARY_PATH" $python_exec -m py_compile "$WWW_DIR/cgi-bin/dkb.fcgi"
   echo "...done." >&2
   cd "$old_dir"
 }
