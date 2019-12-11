@@ -230,6 +230,9 @@ def container_name(data):
                          "(==) Data: "
                          "%r\n" % (dataset.__class__.__name__, data))
         return False
+    if len(dataset) == 0:
+        sys.stderr.write("(WARN) Required field 'datasetname' is empty "
+                         "in data: %r\n" % data)
     return re.sub('_tid(.)+', '', dataset)
 
 
