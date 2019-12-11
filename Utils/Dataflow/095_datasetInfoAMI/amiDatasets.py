@@ -80,8 +80,8 @@ def init_ami_client(userkey='', usercert=''):
                                          cert_file=usercert)
         AtlasAPI.init()
     except NameError:
-        sys.stderr.write("(FATAL) Failed to initialise AMI client: "
-                         "pyAMI module is not loaded.\n")
+        sys.stderr.write("(FATAL) Failed to initialise AMI client:"
+                         " pyAMI module is not loaded.\n")
         raise DataflowException("Module not found: 'pyAMI'")
     except Exception, err:
         sys.stderr.write(
@@ -89,16 +89,16 @@ def init_ami_client(userkey='', usercert=''):
             " Are you sure you have a valid certificate?\n")
         raise DataflowException(str(err))
     if ami_client.config.conn_mode == ami_client.config.CONN_MODE_LOGIN:
-        sys.stderr.write("(ERROR) Login authentication mode is not "
-                         "supported. Please provide user certificate or create"
-                         " proxy.\n")
-        raise DataflowException("Failed to initialise AMI client: certificate "
-                                "not provided or not found.")
+        sys.stderr.write("(ERROR) Login authentication mode is not"
+                         " supported. Please provide user certificate or"
+                         " create proxy.\n")
+        raise DataflowException("Failed to initialise AMI client: certificate"
+                                " not provided or not found.")
     try:
         ami_client.execute('ListCommands')
     except Exception as e:
-        sys.stderr.write("(ERROR) Failed to perform test command "
-                         "ListCommands. Are you sure you have"
+        sys.stderr.write("(ERROR) Failed to perform test command"
+                         " ListCommands. Are you sure you have"
                          " a valid certificate?\nException: %s\n" % str(e))
         raise DataflowException("Failed to perform test command"
                                 " ListCommands.")
@@ -224,18 +224,18 @@ def container_name(data):
     if 'datasetname' in data:
         dataset = data['datasetname']
     else:
-        sys.stderr.write("(WARN) Required field 'datasetname' not found "
-                         "in data: %r\n" % data)
+        sys.stderr.write("(WARN) Required field 'datasetname' not found"
+                         " in data: %r\n" % data)
         return False
     if not isinstance(dataset, (str, unicode)):
-        sys.stderr.write("(WARN) Invalid type of 'datasetname' field: "
-                         "expected string, got %s.\n"
-                         "(==) Data: "
-                         "%r\n" % (dataset.__class__.__name__, data))
+        sys.stderr.write("(WARN) Invalid type of 'datasetname' field:"
+                         " expected string, got %s.\n"
+                         "(==) Data:"
+                         " %r\n" % (dataset.__class__.__name__, data))
         return False
     if len(dataset) == 0:
-        sys.stderr.write("(WARN) Required field 'datasetname' is empty "
-                         "in data: %r\n" % data)
+        sys.stderr.write("(WARN) Required field 'datasetname' is empty"
+                         " in data: %r\n" % data)
     return re.sub('_tid(.)+', '', dataset)
 
 
