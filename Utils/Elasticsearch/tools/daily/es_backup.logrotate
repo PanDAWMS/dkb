@@ -5,8 +5,9 @@ missingok
 dateext
 extension .tar.gz
 
-/var/es/backup/weekly/snapshot.tar.gz {
+/var/es/backup/snapshot.tar.gz {
     weekly
+    olddir weekly
     rotate 4
     prerotate
         base_dir=/var/es/backup

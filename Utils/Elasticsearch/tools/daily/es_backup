@@ -20,14 +20,14 @@
 
 base_dir=/var/es
 data_dir=snapshot
-backup_dir="$base_dir"/backup/weekly
-
+backup_dir="$base_dir"/backup
+backup_olddir=weekly
+backup_file="${data_dir}.tar.gz"
+backup_path="${backup_dir}/${backup_file}"
 
 [ -d "$backup_dir" ] \
   || mkdir -p -m 0700 "$backup_dir" \
   || exit 1
-
-backup_name="${backup_dir}/${data_dir}.tar.gz"
 
 create_snapshot() {
   snapshot_name=`date +%Y%m%d`
@@ -41,16 +41,20 @@ create_snapshot() {
        }
 }
 
+rotate_backup() {
+  mkdir -p "${backup_dir}/${backup_olddir}"
+  logrotate "$0.logrotate"
+}
+
 create_snapshot || exit $?
 
-# Rotate backup files
-logrotate "$0".logrotate
+rotate_backup
 
 # Create backup only if the previous one was rotated
-[ -f "$backup_name" ] && exit 0
+[ -f "$backup_path" ] && exit 0
 
 # Create backup file
-tar -C "$base_dir" -zcf "$backup_name" "$data_dir"
+tar -C "$base_dir" -zcf "$backup_path" "$data_dir"
 EXIT_CODE=$?
 
 [ "$EXIT_CODE" -ne 0 ] \
