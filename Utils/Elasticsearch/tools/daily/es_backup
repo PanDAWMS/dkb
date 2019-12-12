@@ -31,7 +31,7 @@ backup_name="${backup_dir}/${data_dir}.tar.gz"
 
 create_snapshot() {
   snapshot_name=`date +%Y%m%d`
-  response=`curl -X PUT "http://127.0.0.1:9200/_snapshot/backup/${snapshot_name}?pretty&wait_for_completion=true"`
+  response=`curl -s -X PUT "http://127.0.0.1:9200/_snapshot/backup/${snapshot_name}?pretty&wait_for_completion=true"`
   code=$?
   error=`echo "$response" | jq ".error"`
 
