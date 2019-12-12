@@ -42,8 +42,15 @@ create_snapshot() {
 }
 
 rotate_backup() {
+  conf="$0.logrotate"
+  tmp_conf=`mktemp`
   mkdir -p "${backup_dir}/${backup_olddir}"
-  logrotate "$0.logrotate"
+  sed -e "s#%%DIR%%#${backup_dir}#g" \
+      -e "s#%%OLDDIR%%#${backup_olddir}#g" \
+      -e "s#%%FILE%%#${backup_file}#g" \
+      "$conf" > "$tmp_conf"
+  logrotate "${tmp_conf}"
+  rm -rf "$tmp_conf"
 }
 
 create_snapshot || exit $?
