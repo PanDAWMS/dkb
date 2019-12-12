@@ -269,11 +269,9 @@ def task_deriv(path, **kwargs):
     :rtype: dict
     """
     method_name = '/task/deriv'
-    project = kwargs.get('project')
-    if project is None:
+    if 'project' not in kwargs:
         raise MissedArgument(method_name, 'project')
-    tags = kwargs.get('amitag')
-    if tags is None:
+    if 'amitag' not in kwargs:
         raise MissedArgument(method_name, 'amitag')
     return storages.task_derivation_statistics(**kwargs)
 
