@@ -36,7 +36,7 @@ create_snapshot() {
   error=`echo "$response" | jq ".error"`
 
   [ $code -ne 0 -o "$error" != "null" ] \
-    && { echo "Failed to create ES snapshot." >&2 ;
+    && { echo "Failed to create ES snapshot (${code}): ${error}" >&2 ;
          exit 1;
        }
 }
