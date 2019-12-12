@@ -506,7 +506,7 @@ def get_output_formats(tags):
         f = OUTPUT_FORMATS.get(tag)
         if f:
             formats += f
-    return formats
+    return list(set(formats))
 
 
 def get_derivation_statistics_for_output(project, tags, output_format):
