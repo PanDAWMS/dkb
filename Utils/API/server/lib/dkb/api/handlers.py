@@ -23,7 +23,8 @@ import methods
 from exceptions import (DkbApiNotImplemented,
                         MethodException,
                         MissedArgument,
-                        InvalidArgument
+                        InvalidArgument,
+                        MethodNotFound
                         )
 from . import __version__
 import storages
@@ -368,8 +369,12 @@ def task_stat(path, **kwargs):
         params['htags'] = sort_by_prefixes(htags, htag_prefixes, 1)
     if params['htags']['&'] or params['htags']['!']:
         raise DkbApiNotImplemented("Operations are not supported: AND (&), NOT (!).")
-    raise DkbApiNotImplemented
-
+    try:
+        result = methods.handler(method_name, params['stat_type'])(None, **params)
+    except MethodNotFound:
+        raise DkbApiNotImplemented("Method for statistics type '%s' is not"
+                                   " implemented yet." % params['stat_type'])
+    return result
 
 
 methods.add('/task', 'stat', task_stat)
