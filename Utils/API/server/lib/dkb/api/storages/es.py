@@ -878,3 +878,49 @@ def campaign_stat(**kwargs):
 
     r.update(data)
     return r
+
+
+def task_stat_steps(**kwargs):
+    """ Calculate statistics for tasks by execution steps.
+
+    :param htag: hash of hashtags divided into categories.
+                 Categories:
+                 * & -- all these hashtags must be presented (NOT SUPPORTED);
+                 * | -- at least one of these hashtags must be presented (default);
+                 * ! -- these hatshtags must not be presented (NOT SUPPORTED).
+                 Hash format:
+                 ```
+                 { '&': [htag1, htag2, ...],
+                   '|': [...],
+                   '!': [...]
+                 }
+                 ```
+    :type htag: dict
+
+    :return: hash with calculated statistics:
+             ```
+             { '_took_storage_ms': ...,
+               'data': [
+                 'name': ...,
+                 'total_events': ...,
+                 'input_events': ...,
+                 'input_bytes': ...,
+                 'input_not_removed_tasks': ...,
+                 'output_bytes': ...,
+                 'output_not_removed_tasks': ...,
+                 'total_tasks': ...,
+                 'hs06': ...,
+                 'cpu_failed': ...,
+                 'duration': ...,                   # days
+                 'step_status': {'Unknown'|'StepDone'|'StepProgressing'|'StepNotStarted'},
+                 'percent_done': ...,
+                 'percent_running': ...,
+                 'percent_pending': ...
+               ]
+             }
+             ```
+             Steps in `data` list are sorted according to the MC campaign
+             steps order (see `config.MC_STEPS`).
+    :rtype: hash
+    """
+    raise DkbApiNotImplemented

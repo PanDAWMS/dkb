@@ -11,6 +11,22 @@ import os
 import yaml
 
 
+# MC campaign steps order
+MC_STEPS = ['Evgen',
+            'Evgen Merge',
+            'Simul',
+            'Simul(Fast)',
+            'Merge',
+            'Digi',
+            'Reco',
+            'Rec Merge',
+            'Atlfast',
+            'Atlf Merge',
+            'TAG',
+            'Deriv',
+            'Deriv Merge']
+
+
 def get_config(cfg_type, cfg_name):
     """ Get configuration section corresponding type and name.
 

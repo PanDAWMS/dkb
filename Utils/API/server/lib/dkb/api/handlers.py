@@ -378,3 +378,34 @@ def task_stat(path, **kwargs):
 
 
 methods.add('/task', 'stat', task_stat)
+
+
+def task_stat_steps(path, **kwargs):
+    """ Get tasks statistics by steps for given hashtags combination.
+
+    :param path: full path to the method (if None, method was called
+                 by another method and all other parameters are considered to be
+                 already analyzed)
+    :type path: str, NoneType
+    :param htag: list of (unanalyzed) hashtags, or hash of analyzed hashtags.
+                 Each unanalyzed hashtag may be prefixed by a modificator:
+                 * & -- all these hashtags must be presented (NOT SUPPORTED);
+                 * | -- at least one of these hashtags must be presented (default);
+                 * ! -- these hatshtags must not be presented (NOT SUPPORTED).
+                 Hash of analyzed hashtags has the following format:
+                 ```
+                 { '&': [htag1, htag2, ...],
+                   '|': [...],
+                   '!': [...]
+                 }
+                 ```
+    :type htag: str, dict
+    """
+    if path is not None:
+        result = methods.handler('/task', 'stat')(None, stat_type='steps', **kwargs)
+    else:
+        result = storages.task_stat_steps(**kwargs)
+    return result
+
+
+methods.add('/task/stat', 'steps', task_stat_steps)
