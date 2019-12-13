@@ -447,8 +447,10 @@ def task_kwsearch(**kwargs):
     :return: tasks and related datasets metadata with additional info:
              { _took_storage_ms: <storage query execution time in ms>,
                _total: <total number of matching tasks>,
-               _data: [ ..., {..., output_dataset: [ {...}, ...], ... }, ... ]
+               _data: [ ..., {..., output_dataset: [ {...}, ...], ... }, ... ],
+               _errors: [ ..., <error message>, ... ]
              }
+             (field `_errors` may be omitted if no error has occured)
     :rtype: dict
     """
     init()
