@@ -11,22 +11,13 @@ extension .tar.gz
     rotate 4
     prerotate
         base_dir=%%DIR%%
-        # create dirs for monthly/yearly copies
+
+        # handle monthly/yearly copies
         for d in monthly yearly; do
             mkdir -p -m 0700 "${base_dir}/$d"
+            fname="${base_dir}/$d/`basename $1`"
+            [ -f "${fname}" ] || ln "$1" "$fname"
         done
-
-        fname=`basename $1`
-
-        # copy rotated file:
-
-        # - to monthly backups every 1st week of the month
-        day=`date +%_d`
-        [ $day -ge 1 -a $day -le 7 ] && ln "$1" "${base_dir}/monthly/${fname}"
-
-        # - to yearly backups every 1st week of the year
-        day=`date +%_j`
-        [ $day -ge 1 -a $day -le 7 ] && ln "$1" "${base_dir}/yearly/${fname}"
 
         # make sure we return "success"
         true
