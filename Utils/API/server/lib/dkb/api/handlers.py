@@ -27,6 +27,7 @@ from exceptions import (DkbApiNotImplemented,
                         )
 from . import __version__
 import storages
+from misc import sort_by_prefixes
 
 from cStringIO import StringIO
 
@@ -336,13 +337,14 @@ def task_stat(path, **kwargs):
     :type pr: str, int
     :param htag: hashtag (for `stat_type` values: 'steps', 'format_ctag').
                  Hashtag may be prefixed by a modificator:
-                 * & -- all these hashtags must be presented;
+                 * & -- all these hashtags must be presented (NOT SUPPORTED);
                  * | -- at least one of these hashtags must be presented (default);
-                 * ! -- these hatshtags must not be presented.
+                 * ! -- these hatshtags must not be presented (NOT SUPPORTED).
     :type htag: str
     """
     method_name = '/task/stat'
     allowed_types = ['steps', 'formats', 'ctag_formats']
+    htag_prefixes = ['&', '|', '!']
     required = {
         allowed_types[0]: ['htag'],
         allowed_types[1]: ['pr'],
@@ -359,6 +361,13 @@ def task_stat(path, **kwargs):
     for r in req:
         if not params.get(r):
             raise MissedArgument(method_name, r)
+    htags = params.get('htag', [])
+    if not isinstance(htags, list):
+        htags = [htags]
+    if htags:
+        params['htags'] = sort_by_prefixes(htags, htag_prefixes, 1)
+    if params['htags']['&'] or params['htags']['!']:
+        raise DkbApiNotImplemented
     raise DkbApiNotImplemented
 
 
