@@ -367,7 +367,7 @@ def task_stat(path, **kwargs):
     if htags:
         params['htags'] = sort_by_prefixes(htags, htag_prefixes, 1)
     if params['htags']['&'] or params['htags']['!']:
-        raise DkbApiNotImplemented
+        raise DkbApiNotImplemented("Operations are not supported: AND (&), NOT (!).")
     raise DkbApiNotImplemented
 
 
