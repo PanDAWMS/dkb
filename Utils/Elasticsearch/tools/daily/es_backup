@@ -65,8 +65,6 @@ tar -C "$base_dir" -zcf "$backup_path" "$data_dir"
 EXIT_CODE=$?
 
 [ "$EXIT_CODE" -ne 0 ] \
-  && { echo "Failed to create backup file for ES data ($EXIT_CODE)." >&2 ;
-       exit "$EXIT_CODE";
-     }
+  && echo "Failed to create backup file for ES data ($EXIT_CODE)." >&2
 
-exit 0
+exit "$EXIT_CODE"
