@@ -220,6 +220,15 @@ def task_kwsearch(path, **kwargs):
     :type size: str, int
     :param timeout: request execution timeout (sec) (default: 120)
     :type timeout: str, int
+
+    :return: tasks and related datasets metadata with additional info:
+             { _took_storage_ms: <storage query execution time in ms>,
+               _total: <total number of matching tasks>,
+               _data: [..., {..., output_dataset: [{...}, ...], ...}, ...],
+               _errors: [..., <error message>, ...]
+             }
+             (field `_errors` may be omitted if no error has occured)
+    :rtype: dict
     """
     method_name = '/task/kwsearch'
     params = {
