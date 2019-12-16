@@ -89,7 +89,7 @@ def task_derivation_statistics(**kwargs):
         {
           'output': 'SOME_OUTPUT_FORMAT',
           'tasks': 123,
-          'task_ids': [],
+          'task_ids': [id1, id2, ...],
           'ratio': 0.456,
           'events_ratio': 0.789
         },

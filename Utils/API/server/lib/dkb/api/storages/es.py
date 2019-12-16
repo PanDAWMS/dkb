@@ -516,7 +516,7 @@ def get_derivation_statistics_for_output(project, tags, output_format):
     {
       'output': 'SOME_OUTPUT_FORMAT',
       'tasks': 123,
-      'task_ids': [],
+      'task_ids': [id1, id2, ...],
       'ratio': 0.456,
       'events_ratio': 0.789
     }
@@ -535,6 +535,7 @@ def get_derivation_statistics_for_output(project, tags, output_format):
     query = dict(TASK_KWARGS)
     kwargs = {'project': project, 'ctag': tags, 'output': output_format}
     query['body'] = get_query('deriv', **kwargs)
+    query['_source'] = False
     r = client().search(**query)
     try:
         total = r['hits']['total']
@@ -550,11 +551,13 @@ def get_derivation_statistics_for_output(project, tags, output_format):
         events_ratio = 0
         if input_events != 0:
             events_ratio = float(result_events) / float(input_events)
+        task_ids = [hit['_id'] for hit in r['hits']['hits']]
     except Exception:
         total = 0
         ratio = 0
         events_ratio = 0
-    return {'output': output_format, 'tasks': total, 'task_ids': [],
+        task_ids = []
+    return {'output': output_format, 'tasks': total, 'task_ids': task_ids,
             'ratio': ratio, 'events_ratio': events_ratio}
 
 
