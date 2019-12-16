@@ -84,15 +84,17 @@ def task_derivation_statistics(**kwargs):
 
     Resulting statistics has the following structure:
     {
-      'data': {
+      'data': [
         ...
-        'some_output_format_name': {
-          'total': 123,
+        {
+          'output': 'SOME_OUTPUT_FORMAT',
+          'tasks': 123,
+          'task_ids': [],
           'ratio': 0.456,
           'events_ratio': 0.789
         },
         ...
-      }
+      ]
     }
 
     :param project: project name

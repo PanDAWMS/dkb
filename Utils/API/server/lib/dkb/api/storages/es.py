@@ -514,7 +514,9 @@ def get_derivation_statistics_for_output(project, tags, output_format):
 
     Resulting data has the following structure:
     {
-      'total': 123,
+      'output': 'SOME_OUTPUT_FORMAT',
+      'tasks': 123,
+      'task_ids': [],
       'ratio': 0.456,
       'events_ratio': 0.789
     }
@@ -552,7 +554,8 @@ def get_derivation_statistics_for_output(project, tags, output_format):
         total = 0
         ratio = 0
         events_ratio = 0
-    return {'total': total, 'ratio': ratio, 'events_ratio': events_ratio}
+    return {'output': output_format, 'tasks': total, 'task_ids': [],
+            'ratio': ratio, 'events_ratio': events_ratio}
 
 
 def task_derivation_statistics(**kwargs):
@@ -572,9 +575,11 @@ def task_derivation_statistics(**kwargs):
     if isinstance(tags, (str, unicode)):
         tags = [tags]
     outputs = get_output_formats(tags)
-    data = {}
+    outputs.sort()
+    data = []
     for output in outputs:
         r = get_derivation_statistics_for_output(project, tags, output)
-        data[output] = r
+        if r['tasks'] > 0:
+            data.append(r)
     result = {'_data': data}
     return result
