@@ -28,9 +28,6 @@ QUERY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 # Default datetime format
 DATE_FORMAT = '%d-%m-%Y %H:%M:%S'
 
-with open('ctag_formats.json') as f:
-    OUTPUT_FORMATS = json.load(f)
-
 
 try:
     import elasticsearch
@@ -502,10 +499,15 @@ def get_output_formats(tags):
     :rtype: list
     """
     formats = []
-    for tag in tags:
-        f = OUTPUT_FORMATS.get(tag)
-        if f:
-            formats += f
+    query = dict(TASK_KWARGS)
+    kwargs = {'tags': tags}
+    query['body'] = get_query('output_formats', **kwargs)
+    query['_source'] = ['data_format']
+    query['doc_type'] = 'output_dataset'
+    query['size'] = 500
+    r = client().search(**query)
+    for hit in r['hits']['hits']:
+        formats += hit['_source']['data_format']
     return list(set(formats))
 
 

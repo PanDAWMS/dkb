@@ -1,0 +1,11 @@
+{
+  "query": {
+    "has_parent": {
+      "type": "task",
+      "query": {
+        "terms": {"ctag": %(tags)s}
+      }
+    }
+  }
+}
+
