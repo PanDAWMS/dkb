@@ -106,11 +106,11 @@ function getAction($row) {
 function constructActionJson($row) {
   /* Generate a json with ES bulk API action information for a given document.
 
-  Action json is generated for each document to be processed in a single
-  bulk action, and includes directions about how exactly the document must
-  be processed. It contains a single key-value pair. The key is the action to
-  be taken, and is determined upon the presence of "update":true in the
-  document. The value is an array that contains the remaining information:
+  Action json is generated for each document and includes directions about how
+  exactly the document must be processed. It contains a single key-value pair.
+  The key is the action to be taken, and is determined upon the presence of
+  "update":true in the document. The value is an array that contains the
+  remaining information:
   - index name
   - number of retries if the action is update
   - document id
