@@ -10,9 +10,9 @@ optional arguments:
 
   -c CONFIG    Elasticsearch configuration file
 
-  ARGS         arguments to be passed to the PHP script (see below)
-"
-$base_dir/esFormat.php -h
+ARGS, arguments to be passed to the PHP script:"
+# Display part of esFormat.php's help describing its arguments.
+$base_dir/esFormat.php -h 2>&1 | sed 1,5d >&2
 }
 
 ES_CONFIG=$base_dir/../../Elasticsearch/config/es
