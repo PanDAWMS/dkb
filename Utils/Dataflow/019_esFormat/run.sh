@@ -2,21 +2,23 @@
 
 base_dir=$(cd "$(dirname "$(readlink -f "$0")")"; pwd)
 
+ES_CONFIG=$base_dir/../../Elasticsearch/config/es
+CONFIG_DEFAULT=TRUE
+
 usage() {
   echo "usage: $(basename "$0") [-h] [-c CONFIG] [--] [ARGS]
   
 optional arguments:
   -h, --help   show this help message and exit
 
-  -c CONFIG    Elasticsearch configuration file
+  -c CONFIG    configuration file with parameters required to
+               prepare data for indexing in Elasticsearch
+               Default value: $ES_CONFIG
 
 ARGS, arguments to be passed to the PHP script:"
 # Display part of esFormat.php's help describing its arguments.
 $base_dir/esFormat.php -h 2>&1 | sed 1,5d >&2
 }
-
-ES_CONFIG=$base_dir/../../Elasticsearch/config/es
-CONFIG_DEFAULT=TRUE
 
 while [ -n "$1" ]; do
   case "$1" in
