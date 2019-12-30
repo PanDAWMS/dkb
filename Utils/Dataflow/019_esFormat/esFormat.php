@@ -21,8 +21,6 @@ $EOM_DEFAULTS = Array("stream" => chr(30), "file" => chr(30));
 $DEFAULT_ACTION = 'index';
 # How many times the update should be retried in case of conflict.
 $UPDATE_RETRIES = 3;
-# ES index where the documents should be indexed/updated.
-$ES_INDEX = NULL;
 
 function usage() {
   /* Display information on how to use the script. */
