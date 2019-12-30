@@ -14,12 +14,7 @@ $EOP_DEFAULTS = Array("stream" => chr(0), "file" => "");
 $EOM_DEFAULTS = Array("stream" => chr(30), "file" => chr(30));
 # How many times the update should be retried in case of conflict.
 $UPDATE_RETRIES = 3;
-
-# Variable initialization.
-# Action. Possible values are 'index' and 'update'. Note: this variable is not
-# a constant and can be changed with command line argument. The "DEFAULT" in
-# its name refers to action not being specified in the data being processed,
-# not in the script's configuration (like the default values above).
+# Action. Possible values are 'index' and 'update'.
 $DEFAULT_ACTION = 'index';
 
 function usage() {
@@ -101,12 +96,12 @@ function getAction($row) {
   :return: action
   :rtype: str
   */
-  global $DEFAULT_ACTION;
+  global $ACTION;
 
   if (isset($row['_update']) and $row['_update'] === true) {
     $action = 'update';
   } else {
-    $action = $DEFAULT_ACTION;
+    $action = $ACTION;
   }
 
   return $action;
@@ -264,7 +259,7 @@ foreach ($opts as $key => $val) {
       $EOP_MARKER = decode_escaped($val);
       break;
     case "update":
-      $DEFAULT_ACTION = "update";
+      $ACTION = "update";
       break;
   }
 }
@@ -279,6 +274,8 @@ if (isset($args[1])) {
   $h = fopen('php://stdin', 'r');
   $mode = "stream";
 }
+
+if (!(isset($ACTION))) $ACTION = $DEFAULT_ACTION;
 
 # Set markers.
 if (!(isset($EOM_MARKER))) $EOM_MARKER = $EOM_DEFAULTS[$mode];
