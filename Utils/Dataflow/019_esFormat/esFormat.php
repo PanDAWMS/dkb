@@ -12,6 +12,8 @@ $DEFAULT_INDEX = 'tasks_production';
 $EOP_DEFAULTS = Array("stream" => chr(0), "file" => "");
 # End-of-message marker, depending on mode.
 $EOM_DEFAULTS = Array("stream" => chr(30), "file" => chr(30));
+# How many times the update should be retried in case of conflict.
+$UPDATE_RETRIES = 3;
 
 # Variable initialization.
 # Action. Possible values are 'index' and 'update'. Note: this variable is not
@@ -19,8 +21,6 @@ $EOM_DEFAULTS = Array("stream" => chr(30), "file" => chr(30));
 # its name refers to action not being specified in the data being processed,
 # not in the script's configuration (like the default values above).
 $DEFAULT_ACTION = 'index';
-# How many times the update should be retried in case of conflict.
-$UPDATE_RETRIES = 3;
 
 function usage() {
   /* Display information on how to use the script. */
