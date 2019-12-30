@@ -14,7 +14,10 @@ $EOP_DEFAULTS = Array("stream" => chr(0), "file" => "");
 $EOM_DEFAULTS = Array("stream" => chr(30), "file" => chr(30));
 # How many times the update should be retried in case of conflict.
 $UPDATE_RETRIES = 3;
-# Action. Possible values are 'index' and 'update'.
+# Action.
+# Possible values:
+# * 'index' - insert new record or overwrite existing one
+# * 'update' - update existing record or insert data as a new one
 $DEFAULT_ACTION = 'index';
 
 function usage() {
