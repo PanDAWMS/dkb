@@ -75,7 +75,9 @@ def try_to_import(modname, attrname=None):
             logLevel.ERROR)
     except AttributeError:
         if attrname:
-            log("Failed to import '%s' from '%s'" % (attrname, modname))
+            log("Failed to import '%s' from '%s'" % (attrname, modname),
+                logLevel.ERROR)
+            result = False
     except Exception, err:
         log(str(err), logLevel.ERROR)
     return result
