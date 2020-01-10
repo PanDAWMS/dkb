@@ -7,11 +7,15 @@ Miscellanious utility functions.
 import sys
 import inspect
 from datetime import datetime
+import importlib
 
 from types import logLevel
 
 # Datetime format for log messages
 DTFORMAT = '%Y-%m-%d %H:%M:%S'
+
+# Special value for `try_to_import()` to indicate failure
+NOT_IMPORTED = 'NOT IMPORTED VALUE'
 
 
 def log(message, level=logLevel.INFO, *args):
@@ -56,3 +60,35 @@ def log(message, level=logLevel.INFO, *args):
             out_message += "\n(==) %s" % l
         out_message += "\n"
         sys.stderr.write(out_message)
+
+
+def try_to_import(modname, attrname=None):
+    """ Try to import specified module or attribute from a module.
+
+    If module/attribute can not be imported, catch the exception and output log
+    message.
+
+    :param modname: module name
+    :type modname: str
+    :param attrname: attribute name (optional)
+    :type attrname: str
+
+    :return: imported module, attribute (or submodule);
+             ``NOT_IMPORTED`` in case of failure.
+    :rtype: object
+    """
+    if attrname:
+        err_msg = "Failed to import '%s' from '%s'.\nDetails: " \
+                  % (attrname, modname)
+    else:
+        err_msg = "Failed to import module '%s'.\nDetails: " % (modname)
+
+    try:
+        result = importlib.import_module(modname)
+        if attrname:
+            result = getattr(result, attrname)
+    except Exception, err:
+        log(err_msg + str(err), logLevel.ERROR)
+        result = NOT_IMPORTED
+
+    return result
