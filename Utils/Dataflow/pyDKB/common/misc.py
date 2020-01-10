@@ -65,19 +65,18 @@ def try_to_import(modname, attrname=None):
     If module/attribute can not be imported, catch the exception and output log
     message.
     """
-    result = False
+    if attrname:
+        err_msg = "Failed to import '%s' from '%s'.\nDetails: " \
+                  % (attrname, modname)
+    else:
+        err_msg = "Failed to import module '%s'.\nDetails: " % (modname)
+
     try:
         result = importlib.import_module(modname)
         if attrname:
             result = getattr(result, attrname)
-    except ImportError, err:
-        log("Failed to import '%s'.\nDetails: %s" % (modname, err),
-            logLevel.ERROR)
-    except AttributeError:
-        if attrname:
-            log("Failed to import '%s' from '%s'" % (attrname, modname),
-                logLevel.ERROR)
-            result = False
     except Exception, err:
-        log(str(err), logLevel.ERROR)
+        log(err_msg + str(err), logLevel.ERROR)
+        result = False
+
     return result
