@@ -95,8 +95,8 @@ function constructDataJson($row) {
   if (isset($incompl)) {
 
     # "_update_required" field must be specified explicitly in two cases:
-    #  * message is incomplete (so that record in ES get properly marked);
-    #  * we perfom "update" operation (since we want to use 'doc_as_upsert' ES
+    #  * message is incomplete (so that record in ES gets properly marked);
+    #  * we perform "update" operation (since we want to use 'doc_as_upsert' ES
     #    option, if possible, using "insert_data" for both cases --
     #    insert-if-missed and existing document update -- and still get
     #    resulting document properly marked)
