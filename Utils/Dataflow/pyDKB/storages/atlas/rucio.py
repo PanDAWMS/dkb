@@ -7,7 +7,7 @@ import os
 from ..client import Client
 from ..exceptions import (StorageException, NotFound)
 from pyDKB.common.misc import (log, logLevel)
-from pyDKB.common.misc import try_to_import
+from pyDKB.common.misc import (try_to_import, NOT_IMPORTED)
 
 
 if not os.environ.get("VIRTUAL_ENV", None):
@@ -29,7 +29,7 @@ _client = None
 def _initClient():
     """ Initialize client. """
     global _client
-    if not _RucioClient:
+    if _RucioClient is NOT_IMPORTED:
         raise StorageException("Failed to initialize Rucio client: required "
                                "module(s) not loaded.")
     _client = RucioClient()

@@ -14,6 +14,9 @@ from types import logLevel
 # Datetime format for log messages
 DTFORMAT = '%Y-%m-%d %H:%M:%S'
 
+# Special value for `try_to_import()` to indicate failure
+NOT_IMPORTED = 'NOT IMPORTED VALUE'
+
 
 def log(message, level=logLevel.INFO, *args):
     """ Output log message with given log level.
@@ -71,7 +74,7 @@ def try_to_import(modname, attrname=None):
     :type attrname: str
 
     :return: imported module, attribute (or submodule);
-             `False` in case of failure.
+             ``NOT_IMPORTED`` in case of failure.
     :rtype: object
     """
     if attrname:
@@ -86,6 +89,6 @@ def try_to_import(modname, attrname=None):
             result = getattr(result, attrname)
     except Exception, err:
         log(err_msg + str(err), logLevel.ERROR)
-        result = False
+        result = NOT_IMPORTED
 
     return result

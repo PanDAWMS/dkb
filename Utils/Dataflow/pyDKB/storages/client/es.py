@@ -3,13 +3,13 @@ pyDKB.storages.client.es
 """
 
 from Client import Client
-from pyDKB.common.misc import try_to_import
+from pyDKB.common.misc import (try_to_import, NOT_IMPORTED)
 from pyDKB.common.types import logLevel
 
 
 _ESClient = try_to_import('elasticsearch', 'Elasticsearch')
 
-ParentClientClass = _ESClient if _ESClient else object
+ParentClientClass = _ESClient if _ESClient is not NOT_IMPORTED else object
 
 
 class ESClient(Client, ParentClientClass):
