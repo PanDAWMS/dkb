@@ -49,6 +49,11 @@ source $lib/log
     HOME_DIR="$DATA4ES_HOME" || \
     HOME_DIR="${base_dir}/.data4es"
 
+# Service directories and files
+pipe_dir=$HOME_DIR/.pipe
+buffer_dir=$HOME_DIR/.buffer
+pidfile="$HOME_DIR/pid"
+
 # Initialize dataflow process
 init_process() {
   # Check if process is running
@@ -61,17 +66,11 @@ init_process() {
   for f in $AUX_FILES; do
     rm -rf "$HOME_DIR/$f"
   done
+
+  # Create aux directories
+  mkdir -p $pipe_dir
+  mkdir -p $buffer_dir
 }
-
-# Create aux directories and files
-# ---
-pipe_dir=$HOME_DIR/.pipe
-mkdir -p $pipe_dir
-
-buffer_dir=$HOME_DIR/.buffer
-mkdir -p $buffer_dir
-
-pidfile="$HOME_DIR/pid"
 
 # Define commands to be used as dataflow nodes
 # ---
