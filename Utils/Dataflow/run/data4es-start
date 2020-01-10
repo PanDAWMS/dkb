@@ -61,10 +61,10 @@ init_process() {
   [ $? -eq 0 ] && log WARN "Process already running." && return 1
 
   # Create / clean home directory
-  AUX_FILES="pid"
+  AUX_FILES="$pidfile"
   mkdir -p "$HOME_DIR"
   for f in $AUX_FILES; do
-    rm -rf "$HOME_DIR/$f"
+    rm -rf "$f"
   done
 
   # Create aux directories
