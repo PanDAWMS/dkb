@@ -49,6 +49,7 @@ source $lib/log
     HOME_DIR="$DATA4ES_HOME" || \
     HOME_DIR="${base_dir}/.data4es"
 
+# Initialize dataflow process
 init_process() {
   # Check if process is running
   DATA4ES_HOME=$HOME_DIR ${base_dir}/data4es-status &>/dev/null
