@@ -169,10 +169,9 @@ mediator() {
   done
   flush_buffer "$1"
 }
-# ---
 
-# Create named pipes for dataflow branching
-# ---
+# Define dataflow branch (subchain)
+# Creates entry point for the branch (named pipe) and returns its name
 branch() {
   [ -z "$1" ] \
     && log ERROR "branch(): Branch name not specified."\
@@ -191,9 +190,6 @@ branch() {
 
   echo $name
 }
-
-b_91=`branch b_91` && b_17=`branch b_17` \
-  || exit $?
 # ---
 
 # Run Dataflow
@@ -234,6 +230,10 @@ init_process || exit $?
 define_stages
 ret_code=$?
 [ $ret_code -ne 0 ] && exit $ret_code
+
+# Define entry points for the dataflow branches
+b_91=`branch b_91` && b_17=`branch b_17` \
+  || exit $?
 
 # Define subchains
 # Source subchain: Oracle Connector
