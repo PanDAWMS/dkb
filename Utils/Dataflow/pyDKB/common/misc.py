@@ -64,6 +64,15 @@ def try_to_import(modname, attrname=None):
 
     If module/attribute can not be imported, catch the exception and output log
     message.
+
+    :param modname: module name
+    :type modname: str
+    :param attrname: attribute name (optional)
+    :type attrname: str
+
+    :return: imported module, attribute (or submodule);
+             `False` in case of failure.
+    :rtype: object
     """
     if attrname:
         err_msg = "Failed to import '%s' from '%s'.\nDetails: " \
