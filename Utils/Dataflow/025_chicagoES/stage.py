@@ -47,9 +47,15 @@ finally:
 chicago_es = None
 
 chicago_hosts = [
-    {'host': '192.170.227.31', 'port': 9200},
-    {'host': '192.170.227.32', 'port': 9200},
-    {'host': '192.170.227.33', 'port': 9200}
+    {'host': '192.170.227.66', 'port': 9200},
+    {'host': '192.170.227.67', 'port': 9200},
+    {'host': '192.170.227.68', 'port': 9200},
+    {'host': '192.170.227.69', 'port': 9200},
+    {'host': '192.170.227.70', 'port': 9200},
+    {'host': '192.170.227.241', 'port': 9200},
+    {'host': '192.170.227.242', 'port': 9200},
+    {'host': '192.170.227.243', 'port': 9200},
+    {'host': '192.170.227.244', 'port': 9200}
 ]
 
 META_FIELDS = {
@@ -191,7 +197,7 @@ def agg_query(taskid, agg_names):
         "query": {
             "bool": {
                 "must": [
-                    {"term": {"taskid": taskid}},
+                    {"term": {"jeditaskid": taskid}},
                     {"terms": {"jobstatus": JOB_STATUSES}}
                 ]
             }
@@ -289,7 +295,7 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
                              " metadata.\n")
             raise
 
-    if r['hits']['total']:
+    if r['hits']['total']['value']:
         result = r['aggregations']
     else:
         result = {}
