@@ -4,9 +4,38 @@ SCRIPT_NAME=data4es
 
 BATCH_SIZE=100
 DEBUG=
+IGNORE=
 
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
 lib="$base_dir/../shell_lib"
+
+usage() {
+  echo "USAGE
+  $(basename $0) [-hl] [--debug] [-i STAGE...]
+
+  Run 'data4es' process of metadata integration from ATLAS systems (ProdSys,
+  AMI, Rucio, ...) to the DKB Elasticsearch.
+
+OPTIONS
+  -h, --help  show this message and exit
+
+  -l, --list  list known stage IDs and exit
+
+  --debug     do not actualy load integrated metadata to the DKB Elasticsearch
+              (will create files with data flow snapshots, taken between
+              the stages)
+
+  -i, --ignore STAGE...
+
+              ignore stages specified as a comma-separated list
+              in the integration process (stages will be run with '--skip'
+              option)
+" >&2
+}
+
+list_stages() {
+  compgen -A variable | grep 'cmd_' | sed 's/cmd_//' >&1
+}
 
 source $lib/log
 
@@ -20,71 +49,92 @@ source $lib/log
     HOME_DIR="$DATA4ES_HOME" || \
     HOME_DIR="${base_dir}/.data4es"
 
-# Check if process is running
-DATA4ES_HOME=$HOME_DIR ${base_dir}/data4es-status &>/dev/null
-[ $? -eq 0 ] && log WARN "Process already running." && exit 1
-
-# Create / clean home directory
-AUX_FILES="pid"
-mkdir -p "$HOME_DIR"
-for f in $AUX_FILES; do
-  rm -rf "$HOME_DIR/$f"
-done
-
-# Create aux directories and files
-# ---
+# Service directories and files
 pipe_dir=$HOME_DIR/.pipe
-mkdir -p $pipe_dir
-
 buffer_dir=$HOME_DIR/.buffer
-mkdir -p $buffer_dir
-
 pidfile="$HOME_DIR/pid"
+
+# Initialize dataflow process
+init_process() {
+  # Check if process is running
+  DATA4ES_HOME=$HOME_DIR ${base_dir}/data4es-status &>/dev/null
+  [ $? -eq 0 ] && log WARN "Process already running." && return 1
+
+  # Create / clean home directory
+  AUX_FILES="$pidfile"
+  mkdir -p "$HOME_DIR"
+  for f in $AUX_FILES; do
+    rm -rf "$f"
+  done
+
+  # Create aux directories
+  mkdir -p $pipe_dir
+  mkdir -p $buffer_dir
+}
 
 # Define commands to be used as dataflow nodes
 # ---
 
 source $lib/get_config
 
-# Oracle Connector
-cmd_09="${base_dir}/../009_oracleConnector/Oracle2JSON.py"
-cfg_09=`get_config "009.cfg"`
-cmd_OC="$cmd_09 --config $cfg_09"
+define_stages() {
+  return_code=0
 
-# Stage 25
-cmd_25="${base_dir}/../025_chicagoES/stage.py -m s"
+  # Oracle Connector
+  cmd_09="${base_dir}/../009_oracleConnector/Oracle2JSON.py"
+  cfg_09=`get_config "009.cfg"`
+  cmd_09="$cmd_09 --config $cfg_09"
 
-# Stage 16
-cmd_16="${base_dir}/../016_task2es/task2es.py -m s"
+  # Stage 25
+  cmd_25="${base_dir}/../025_chicagoES/stage.py -m s"
 
-# Stage 17
-cmd_17="${base_dir}/../017_adjustMetadata/adjustMetadata.py -m s"
+  # Stage 16
+  cmd_16="${base_dir}/../016_task2es/task2es.py -m s"
 
-# Stage 19
-cfg_19=`get_config "es"`
-cmd_19="${base_dir}/../019_esFormat/run.sh --config $cfg_19"
+  # Stage 17
+  cmd_17="${base_dir}/../017_adjustMetadata/adjustMetadata.py -m s"
 
-# Stage 69
-cfg_69=`get_config "es"`
-cmd_69="${base_dir}/../069_upload2es/load_data.sh --config $cfg_69"
+  # Stage 19
+  cfg_19=`get_config "es"`
+  cmd_19="${base_dir}/../019_esFormat/run.sh --config $cfg_19"
 
-# Stage 91 (input)
-cmd_91_in="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s -t i"
+  # Stage 69
+  cfg_69=`get_config "es"`
+  cmd_69="${base_dir}/../069_upload2es/load_data.sh --config $cfg_69"
 
-# Stage 91 (output)
-cmd_91_out="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
+  # Stage 91 (input)
+  cmd_91_in="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s -t i"
 
-# Stage 93
-cmd_93="${base_dir}/../093_datasetsFormat/datasets_format.py -m s"
+  # Stage 91 (output)
+  cmd_91_out="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
 
-# Stage 95
-auth_cfg=`get_config "095.cfg"`
-source $auth_cfg
-[ -r "$AUTH_KEY" -a -r "$AUTH_CRT" ] \
-  || { log ERROR "Stage 095: wrong authentication parameters (failed to read certificate files: $AUTH_KEY and $AUTH_CRT)";
-       exit 1; }
-cmd_95="${base_dir}/../095_datasetInfoAMI/amiDatasets.py -m s --userkey $AUTH_KEY --usercert $AUTH_CRT"
-# ---
+  # Stage 93
+  cmd_93="${base_dir}/../093_datasetsFormat/datasets_format.py -m s"
+
+  # Stage 95
+  auth_cfg=`get_config "095.cfg"`
+  source $auth_cfg
+  [ -r "$AUTH_KEY" -a -r "$AUTH_CRT" ] \
+    || { log ERROR "Stage 095: wrong authentication parameters (failed to read certificate files: $AUTH_KEY and $AUTH_CRT)";
+         return_code=1; }
+  cmd_95="${base_dir}/../095_datasetInfoAMI/amiDatasets.py -m s --userkey $AUTH_KEY --usercert $AUTH_CRT"
+
+  # Adjust stage commands according to IGNORE parameter
+  for s in $IGNORE; do
+    cmd="cmd_${s}"
+    [ -z "${!cmd}" ] \
+      && log ERROR "Unknown stage ID: $s (known IDs: --list)." \
+      && return_code=1 \
+      || eval "cmd_$s='${!cmd} --skip'"
+  done
+
+  if [ -n "$IGNORE" ]; then
+    cmd_19="$cmd_19 --update"
+    log INFO "Stage 19 set to update mode."
+  fi
+
+  return $return_code
+}
 
 # Service (glue) functions
 # ---
@@ -119,10 +169,9 @@ mediator() {
   done
   flush_buffer "$1"
 }
-# ---
 
-# Create named pipes for dataflow branching
-# ---
+# Define dataflow branch (subchain)
+# Creates entry point for the branch (named pipe) and returns its name
 branch() {
   [ -z "$1" ] \
     && log ERROR "branch(): Branch name not specified."\
@@ -141,9 +190,6 @@ branch() {
 
   echo $name
 }
-
-b_91=`branch b_91` && b_17=`branch b_17` \
-  || exit $?
 # ---
 
 # Run Dataflow
@@ -152,24 +198,47 @@ b_91=`branch b_91` && b_17=`branch b_17` \
 # Parse command line parameters
 while [ -n "$1" ]; do
   case $1 in
+    -h|--help)
+      usage
+      exit 0;;
     --debug)
       DEBUG=1;;
+    -i|--ignore)
+      IGNORE=$(echo "$2" | tr ',' ' ')
+      shift;;
+    -l|--list)
+      define_stages
+      list_stages
+      exit 0;;
     --)
       shift
       break;;
     -*)
-      log ERROR "Unknown option: $1";;
+      log ERROR "Unknown option: $1"
+      usage
+      exit 1;;
     *)
       break;;
   esac
   shift
 done
 
+# Try to init process and exit if it is already running
+init_process || exit $?
+
+# Define stages and exit if something went wrong
+define_stages
+ret_code=$?
+[ $ret_code -ne 0 ] && exit $ret_code
+
+# Define entry points for the dataflow branches
+b_91=`branch b_91` && b_17=`branch b_17` \
+  || exit $?
 
 # Define subchains
 # Source subchain: Oracle Connector
 source_chain() {
-  $cmd_OC | tee $b_17 $b_91
+  $cmd_09 | tee $b_17 $b_91
 }
 
 # Parallel subchains: 17 and 91
@@ -218,7 +287,7 @@ chain_17 | tee $out | sink_chain b17 &
   && out='95.out'
 chain_91 | tee $out | sink_chain b91 &
 
-ps ax | grep "$cmd_OC" | grep -v grep | awk '{print $1 " source"}' >> $pidfile
+ps ax | grep "$cmd_09" | grep -v grep | awk '{print $1 " source"}' >> $pidfile
 for cmd in "$cmd_25" "$cmd_16" "$cmd_17" "$cmd_91_in" "$cmd_91_out" \
            "$cmd_93" "$cmd_95" "$cmd_19" "$cmd_69"; do
   ps ax | grep "$cmd" | awk '{print $1}' >> $pidfile
