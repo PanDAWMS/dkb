@@ -497,7 +497,7 @@ def process(stage, msg):
 
     doc_ttl += documents_links(data)
     for item in doc_ttl.splitlines():
-        stage.output(pyDKB.dataflow.Message(
+        stage.output(pyDKB.dataflow.communication.Message(
             pyDKB.dataflow.messageType.TTL)(item))
     return True
 
