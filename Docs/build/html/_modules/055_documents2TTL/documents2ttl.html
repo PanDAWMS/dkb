@@ -34,10 +34,10 @@
   <h1>Source code for 055_documents2TTL.documents2ttl</h1><div class="highlight"><pre>
 <span></span><span class="ch">#!/usr/bin/env python</span>
 <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Stage for converting JSON files (output of stage 015) into TTL files (input for</span>
-<span class="sd">stage 060).</span>
+<span class="sd">Stage for converting JSON documents (output of stage 015) into</span>
+<span class="sd">TTL documents (input for stage 060).</span>
 
-<span class="sd">JSON file should have the following structure::</span>
+<span class="sd">Initial JSON document should have the following structure::</span>
 
 <span class="sd">            {</span>
 <span class="sd">              &quot;GLANCE&quot;: {},</span>
@@ -55,9 +55,9 @@
 <span class="sd">              ]</span>
 <span class="sd">            }</span>
 
-<span class="sd">This is called &#39;initial JSON&#39;. Some functions accept specific parts of this</span>
-<span class="sd">JSON - for example, if &#39;data&#39; variable contains the initial JSON then</span>
-<span class="sd">&quot;&#39;CDS&#39; part of the initial JSON&quot; means &quot;data.get(&#39;CDS&#39;)&quot;.</span>
+<span class="sd">Some functions accept specific parts of this JSON - for example, if &#39;data&#39;</span>
+<span class="sd">variable contains the initial JSON then &quot;&#39;CDS&#39; part of the initial JSON&quot;</span>
+<span class="sd">means &quot;data.get(&#39;CDS&#39;)&quot;.</span>
 
 <span class="sd">Resulting TTL file has the following structure::</span>
 

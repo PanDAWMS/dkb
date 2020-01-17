@@ -34,9 +34,9 @@
             
   <div class="section" id="module-055_documents2TTL.documents2ttl">
 <span id="stage-055"></span><span id="documents2ttl"></span><h1>Stage 055<a class="headerlink" href="#module-055_documents2TTL.documents2ttl" title="Permalink to this headline">¶</a></h1>
-<p>Stage for converting JSON files (output of stage 015) into TTL files (input for
-stage 060).</p>
-<p>JSON file should have the following structure:</p>
+<p>Stage for converting JSON documents (output of stage 015) into
+TTL documents (input for stage 060).</p>
+<p>Initial JSON document should have the following structure:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
   <span class="s2">&quot;GLANCE&quot;</span><span class="p">:</span> <span class="p">{},</span>
   <span class="s2">&quot;CDS&quot;</span> <span class="p">:</span> <span class="p">{},</span>
@@ -54,9 +54,9 @@ stage 060).</p>
 <span class="p">}</span>
 </pre></div>
 </div>
-<p>This is called ‘initial JSON’. Some functions accept specific parts of this
-JSON - for example, if ‘data’ variable contains the initial JSON then
-“‘CDS’ part of the initial JSON” means “data.get(‘CDS’)”.</p>
+<p>Some functions accept specific parts of this JSON - for example, if ‘data’
+variable contains the initial JSON then “‘CDS’ part of the initial JSON”
+means “data.get(‘CDS’)”.</p>
 <p>Resulting TTL file has the following structure:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">PAPER</span> <span class="n">a</span> <span class="n">atlas</span><span class="p">:</span><span class="n">Paper</span> <span class="o">.</span>
 <span class="n">PAPER</span> <span class="n">atlas</span><span class="p">:</span><span class="n">hasGLANCE_ID</span> <span class="n">__</span> <span class="o">.</span>
