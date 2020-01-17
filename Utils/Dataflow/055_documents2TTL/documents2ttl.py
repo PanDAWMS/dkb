@@ -561,7 +561,7 @@ def process(stage, msg):
     :param stage: stage instance
     :type stage: pyDKB.dataflow.stage.ProcessorStage
     :param msg: input message with initial JSON
-    :type msg: pyDKB.dataflow.Message
+    :type msg: pyDKB.dataflow.communication.messages.JSONMessage
 
     :return: True
     :rtype: bool
