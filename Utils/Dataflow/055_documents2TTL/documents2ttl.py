@@ -180,7 +180,8 @@ def document_links(data):
     """ Construct TTL sentences to link paper to its supporting documents.
 
     The result looks as following:
-    PAPER atlas:isBasedOn SUPPORTING_DOCUMENT
+
+    ``PAPER atlas:isBasedOn SUPPORTING_DOCUMENT``
 
     :param data: initial JSON
     :type data: dict
