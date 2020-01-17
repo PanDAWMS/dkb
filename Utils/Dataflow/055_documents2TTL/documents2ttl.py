@@ -359,6 +359,7 @@ def cds_parameter_extraction(param_name, json_data):
     :param param_name: name of the parameter, defined in *_CDS_ATTRS dict
     :type param_name: str
     :param json_data: 'CDS' part of the initial JSON
+    :type json_data: dict
 
     :return: parameter value or None if it was not found
     :rtype: int, str, NoneType
