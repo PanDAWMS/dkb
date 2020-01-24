@@ -21,7 +21,12 @@ $UPDATE_RETRIES = 3;
 $DEFAULT_ACTION = 'index';
 
 function usage() {
-  /* Display information on how to use the script. */
+  /* Display information on how to use the script.
+
+  Note: this help message is used in run.sh's one. If it is changed,
+  run.sh may also need change. Another option is to make run.sh's help
+  more adaptable.
+  */
 
   $f = basename(__FILE__);
   $msg =
