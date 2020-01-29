@@ -502,13 +502,10 @@ def get_output_formats(tags):
     query = dict(TASK_KWARGS)
     kwargs = {'tags': tags}
     query['body'] = get_query('output_formats', **kwargs)
-    query['_source'] = ['data_format']
     query['doc_type'] = 'output_dataset'
-    query['size'] = 500
     r = client().search(**query)
-    for hit in r['hits']['hits']:
-        formats += hit['_source']['data_format']
-    return list(set(formats))
+    return [bucket['key'] for bucket in
+            r['aggregations']['formats']['buckets']]
 
 
 def get_derivation_statistics_for_output(project, tags, output_format):
