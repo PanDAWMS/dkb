@@ -4,7 +4,12 @@
     "has_parent": {
       "type": "task",
       "query": {
-        "terms": {"ctag": %(tags)s}
+        "bool": {
+          "must": [
+            {"term": {"project": %(project)s}},
+            {"terms": {"ctag": %(tags)s}}
+          ]
+        }
       }
     }
   },

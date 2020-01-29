@@ -489,9 +489,11 @@ def task_kwsearch(**kwargs):
     return result
 
 
-def get_output_formats(tags):
-    """ Get output formats corresponding to given amitags.
+def get_output_formats(project, tags):
+    """ Get output formats corresponding to given project and amitags.
 
+    :param tags: project name
+    :type tags: str
     :param tags: amitags
     :type tags: list
 
@@ -500,7 +502,7 @@ def get_output_formats(tags):
     """
     formats = []
     query = dict(TASK_KWARGS)
-    kwargs = {'tags': tags}
+    kwargs = {'project': project, 'tags': tags}
     query['body'] = get_query('output_formats', **kwargs)
     query['doc_type'] = 'output_dataset'
     r = client().search(**query)
@@ -576,7 +578,7 @@ def task_derivation_statistics(**kwargs):
     tags = kwargs.get('amitag')
     if isinstance(tags, (str, unicode)):
         tags = [tags]
-    outputs = get_output_formats(tags)
+    outputs = get_output_formats(project, tags)
     outputs.sort()
     data = []
     for output in outputs:
