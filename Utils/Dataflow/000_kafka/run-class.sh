@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-[ -z "$KAFKA_HOME" ] && KAFKA_HOME=/usr/local/kafka/default
+[ -z "$KAFKA_HOME" ] && KAFKA_HOME=/data/kafka
 
 base_dir=`dirname $0`
 base_dir=$(cd $base_dir; pwd)
