@@ -267,11 +267,11 @@ head /home/dkb/Dataflow/053_datasets2TTL/input/impala-csv-example | \
 
 # Read TTL result
 bin/kafka-console-consumer.sh --topic dataset-metadata-ttl \
-  --zookeeper localhost:2181 --from-beginning
+  --bootstrap-server localhost:9092 --from-beginning
 ^C
 # Read SPARQL result
 bin/kafka-console-consumer.sh --topic dataset-metadata-sparql \
-  --zookeeper localhost:2181 --from-beginning
+  --bootstrap-server localhost:9092 --from-beginning
 ^C
 
 # After everything is done, please stop the csv2ttlProcessor, remove created
@@ -302,7 +302,7 @@ cd ../010_glancePapers/
 
 # Check data in Kafka topic
 cd /usr/lib/kafka
-bin/kafka-console-consumer.sh --topic glance-raw --zookeeper localhost:2181 \
+bin/kafka-console-consumer.sh --topic glance-raw --bootstrap-server localhost:9092 \
   --from-beginning
 
 # Don't forget to stop the connector
@@ -324,7 +324,7 @@ java -cp $CLASSPATH ru.kiae.dkb.kafka.streams.runGlanceProcessor --name gp_test 
 
 # Check the results in Kafka Topic
 cd /usr/lib/kafka
-bin/kafka-console-consumer.sh --topic glance-parsed --zookeeper localhost:2181 \
+bin/kafka-console-consumer.sh --topic glance-parsed --bootstrap-server localhost:9092 \
   --from-beginning
 
 # If no results are seen for a while, try to send new message to glance-raw
