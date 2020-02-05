@@ -254,7 +254,7 @@ bin/kafka-server-start.sh config/server.properties >~/kafka-server.log &
 
 # Create source topic
 bin/kafka-topics.sh --create --if-not-exists --topic dataset-metadata-csv \
-  --zookeeper localhost:2181 --partitions 1 --replication 1
+  --zookeeper localhost:2181 --partitions 1 --replication-factor 1
 
 # Send some data to the topic
 head /home/dkb/Dataflow/053_datasets2TTL/input/impala-csv-example | \
