@@ -157,7 +157,7 @@ flush_buffer() {
 }
 
 # Glue between processing functions and Sink Connector
-# Buffers records and then send them as batch of $BATCH_SIZE
+# Buffer records and then send them as batch of $BATCH_SIZE
 mediator() {
   buffer=`get_buffer "$1"`
   i=0
@@ -171,7 +171,7 @@ mediator() {
 }
 
 # Define dataflow branch (subchain)
-# Creates entry point for the branch (named pipe) and returns its name
+# Create entry point for the branch (named pipe) and returns its name
 branch() {
   [ -z "$1" ] \
     && log ERROR "branch(): Branch name not specified."\
