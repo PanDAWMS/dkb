@@ -1,2 +1,5 @@
-AUTH_CRT=%__auth_crt__%
-AUTH_KEY=%__auth_key__%
+[stage]
+# PEM certificate file
+usercert=%__auth_crt__%
+# PEM key file
+userkey=%__auth_key__%
