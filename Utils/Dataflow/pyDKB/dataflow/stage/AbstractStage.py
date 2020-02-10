@@ -145,6 +145,14 @@ class AbstractStage(LoggableObject):
         kwargs['help'] = msg
         self.__parser.add_argument(*args, **kwargs)
 
+    def set_default_arguments(self, **kwargs):
+        """ Set (or overwrite) default values for arguments.
+
+        :param <arg_name>: default value for argument <arg_name>
+        :type <arg_name>: object
+        """
+        self.__parser.set_defaults(**kwargs)
+
     def parse_args(self, args):
         """ Parse arguments and set dependant arguments if needed.
 
