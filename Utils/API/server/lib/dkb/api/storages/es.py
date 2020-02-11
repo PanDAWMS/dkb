@@ -489,3 +489,103 @@ def task_kwsearch(**kwargs):
         task['output_dataset'] = [ds['_source'] for ds in datasets]
         result['_data'].append(task)
     return result
+
+
+def get_output_formats(project, tags):
+    """ Get output formats corresponding to given project and amitags.
+
+    :param tags: project name
+    :type tags: str
+    :param tags: amitags
+    :type tags: list
+
+    :return: output formats
+    :rtype: list
+    """
+    formats = []
+    query = dict(TASK_KWARGS)
+    kwargs = {'project': project, 'tags': tags}
+    query['body'] = get_query('output_formats', **kwargs)
+    query['doc_type'] = 'output_dataset'
+    r = client().search(**query)
+    return [bucket['key'] for bucket in
+            r['aggregations']['formats']['buckets']]
+
+
+def get_derivation_statistics_for_output(project, tags, output_format):
+    """ Calculate derivation efficiency for given output format.
+
+    Resulting data has the following structure:
+    {
+      'output': 'SOME_OUTPUT_FORMAT',
+      'tasks': 123,
+      'task_ids': [id1, id2, ...],
+      'ratio': 0.456,
+      'events_ratio': 0.789
+    }
+
+    :param project: project name
+    :type project: str
+    :param amitag: amitags
+    :type amitag: list
+    :param output_format: output format
+    :type output_format: str
+
+    :return: calculated efficiency
+    :rtype: dict
+
+    """
+    query = dict(TASK_KWARGS)
+    kwargs = {'project': project, 'ctag': tags, 'output': output_format}
+    query['body'] = get_query('deriv', **kwargs)
+    query['_source'] = False
+    r = client().search(**query)
+    try:
+        total = r['hits']['total']
+        result_events = (r['aggregations']['output_datasets']['not_removed']
+                         ['format']['sum_events']['value'])
+        result_bytes = (r['aggregations']['output_datasets']['not_removed']
+                        ['format']['sum_bytes']['value'])
+        input_events = r['aggregations']['input_events']['value']
+        input_bytes = r['aggregations']['input_bytes']['value']
+        ratio = 0
+        if input_bytes != 0:
+            ratio = float(result_bytes) / float(input_bytes)
+        events_ratio = 0
+        if input_events != 0:
+            events_ratio = float(result_events) / float(input_events)
+        task_ids = [hit['_id'] for hit in r['hits']['hits']]
+    except Exception:
+        total = 0
+        ratio = 0
+        events_ratio = 0
+        task_ids = []
+    return {'output': output_format, 'tasks': total, 'task_ids': task_ids,
+            'ratio': ratio, 'events_ratio': events_ratio}
+
+
+def task_derivation_statistics(**kwargs):
+    """ Calculate statistics of derivation efficiency.
+
+    :param project: project name
+    :type project: str
+    :param amitag: amitag (or several)
+    :type amitag: str or list
+
+    :return: calculated statistics
+    :rtype: dict
+    """
+    init()
+    project = kwargs.get('project').lower()
+    tags = kwargs.get('amitag')
+    if isinstance(tags, (str, unicode)):
+        tags = [tags]
+    outputs = get_output_formats(project, tags)
+    outputs.sort()
+    data = []
+    for output in outputs:
+        r = get_derivation_statistics_for_output(project, tags, output)
+        if r['tasks'] > 0:
+            data.append(r)
+    result = {'_data': data}
+    return result

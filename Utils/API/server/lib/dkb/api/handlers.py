@@ -262,3 +262,27 @@ def task_kwsearch(path, **kwargs):
 
 
 methods.add('/task', 'kwsearch', task_kwsearch)
+
+
+def task_deriv(path, **kwargs):
+    """ Calculate statistics of derivation efficiency.
+
+    :param path: full path to the method
+    :type path: str
+    :param project: project name
+    :type project: str
+    :param amitag: amitag (or several)
+    :type amitag: str or list
+
+    :return: calculated statistics
+    :rtype: dict
+    """
+    method_name = '/task/deriv'
+    if 'project' not in kwargs:
+        raise MissedArgument(method_name, 'project')
+    if 'amitag' not in kwargs:
+        raise MissedArgument(method_name, 'amitag')
+    return storages.task_derivation_statistics(**kwargs)
+
+
+methods.add('/task', 'deriv', task_deriv)

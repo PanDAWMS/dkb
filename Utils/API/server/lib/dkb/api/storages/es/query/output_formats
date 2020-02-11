@@ -1,0 +1,22 @@
+{
+  "size": 0,
+  "query": {
+    "has_parent": {
+      "type": "task",
+      "query": {
+        "bool": {
+          "must": [
+            {"term": {"project": %(project)s}},
+            {"terms": {"ctag": %(tags)s}}
+          ]
+        }
+      }
+    }
+  },
+  "aggs": {
+    "formats": {
+      "terms": {"field": "data_format", "size": 500}
+    }
+  }
+}
+
