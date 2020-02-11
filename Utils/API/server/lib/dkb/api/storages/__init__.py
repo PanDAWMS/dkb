@@ -73,8 +73,13 @@ def task_kwsearch(**kwargs):
     :type timeout: str, int
 
     :return: task and related datasets info:
-             [ {..., output_dataset: [{...}, ...], ...}, ... ]
-    :rtype: list
+             { _took_storage_ms: <storage query execution time in ms>,
+               _total: <total number of matching tasks>,
+               _data: [..., {..., output_dataset: [{...}, ...], ...}, ...],
+               _errors: [..., <error message>, ...]
+             }
+             (field `_errors` may be omitted if no error has occured)
+    :rtype: dict
     """
     return es.task_kwsearch(**kwargs)
 
