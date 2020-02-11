@@ -47,7 +47,7 @@ SLEEP=5
 DELIMITER=`echo -e -n "\x00"`
 EOProcess=`echo -e -n "\x06"`
 
-cmd="curl $ES_AUTH http://$ES_HOST:$ES_PORT/_bulk?pretty --data-binary @"
+cmd="curl -sS $ES_AUTH http://$ES_HOST:$ES_PORT/_bulk?pretty --data-binary @"
 
 load_files () {
   [ -z "$1" -o ! -f "$1" ] && log $(usage) && exit 1
