@@ -112,7 +112,6 @@ def task_metadata(taskid, fields=[], retry=3):
         return {}
     kwargs = {
         'index': 'tasks_archive_*',
-        'doc_type': 'task_data',
         'body': '{ "query": { "term": {"_id": "%s"} } }' % taskid,
         '_source': fields
     }
