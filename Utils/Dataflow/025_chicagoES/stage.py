@@ -65,9 +65,6 @@ META_FIELDS = {
 AGG_FIELDS = {'hs06sec_sum': 'toths06'}
 JOB_STATUSES = ['finished', 'failed']
 
-TASK_FINAL_STATES = ['done', 'finished', 'obsolete', 'failed', 'broken',
-                     'aborted']
-
 
 def init_es_client():
     """ Initialize connection to Chicago ES. """
@@ -253,9 +250,6 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
         sys.stderr.write("(ERROR) Connection to Chicago ES is not"
                          " established.")
         return None
-
-    if status not in TASK_FINAL_STATES:
-        return {}
 
     if not es_args:
         dt_format = '%d-%m-%Y %H:%M:%S'
