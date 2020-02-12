@@ -45,10 +45,10 @@ def main(argv):
     stage.configure(argv)
     stage.process = process
 
-    if stage.CONFIG['stage'].get('userkey', '') \
-            and stage.CONFIG['stage'].get('usercert', ''):
-        init_ami_client(stage.CONFIG['stage']['userkey'],
-                        stage.CONFIG['stage']['usercert'])
+    if stage.CONFIG['ami'].get('userkey', '') \
+            and stage.CONFIG['ami'].get('usercert', ''):
+        init_ami_client(stage.CONFIG['ami']['userkey'],
+                        stage.CONFIG['ami']['usercert'])
 
     exit_code = stage.run()
 

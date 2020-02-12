@@ -1,4 +1,4 @@
-[stage]
+[ami]
 # PEM certificate file
 usercert=%__auth_crt__%
 # PEM key file
