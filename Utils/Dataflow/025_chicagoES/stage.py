@@ -69,11 +69,20 @@ TASK_FINAL_STATES = ['done', 'finished', 'obsolete', 'failed', 'broken',
                      'aborted']
 
 
-def init_es_client():
-    """ Initialize connection to Chicago ES. """
+def init_es_client(cfg=None):
+    """ Initialize connection to Chicago ES.
+
+    :param cfg: ES parameters
+    :type cfg: dict
+    """
     global chicago_es
+    http_auth = None
+    if cfg:
+        if cfg.get('user') and cfg.get('passwd'):
+            http_auth = (cfg['user'], cfg['passwd'])
     try:
-        chicago_es = elasticsearch.Elasticsearch(chicago_hosts)
+        chicago_es = elasticsearch.Elasticsearch(chicago_hosts,
+                                                 http_auth=http_auth)
     except NameError:
         sys.stderr.write("(FATAL) Failed to initialize Elasticsearch client: "
                          "module not loaded.\n")
@@ -353,12 +362,16 @@ def main(args):
     stage.set_input_message_type(messageType.JSON)
     stage.set_output_message_type(messageType.JSON)
 
+    stage.set_default_arguments(config=os.path.join(base_dir, os.pardir,
+                                                    'config', '025.cfg'))
+
     stage.process = process
 
     exit_code = 0
     exc_info = None
     try:
         stage.configure(args)
+        init_es_client(stage.CONFIG['ChicagoES'])
         stage.run()
     except (DataflowException, RuntimeError), err:
         if str(err):
