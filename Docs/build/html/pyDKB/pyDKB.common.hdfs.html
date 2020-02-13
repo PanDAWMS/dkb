@@ -45,7 +45,7 @@
 
 <dl class="function">
 <dt id="pyDKB.common.hdfs.basename">
-<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">basename</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#basename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.basename" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">basename</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#basename"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.basename" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return file name without path.</p>
 </dd></dl>
 
@@ -60,7 +60,7 @@ if MAX_LINES == None, output all the STDERR.</p>
 
 <dl class="function">
 <dt id="pyDKB.common.hdfs.dirname">
-<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">dirname</code><span class="sig-paren">(</span><em>path</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#dirname"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.dirname" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">dirname</code><span class="sig-paren">(</span><em>p</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#dirname"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.dirname" title="Permalink to this definition">¶</a></dt>
 <dd><p>Return dirname without filename.</p>
 </dd></dl>
 
@@ -73,8 +73,8 @@ if MAX_LINES == None, output all the STDERR.</p>
 
 <dl class="function">
 <dt id="pyDKB.common.hdfs.join">
-<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">join</code><span class="sig-paren">(</span><em>path</em>, <em>filename</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#join"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.join" title="Permalink to this definition">¶</a></dt>
-<dd><p>Join path and filename.</p>
+<code class="descclassname">pyDKB.common.hdfs.</code><code class="descname">join</code><span class="sig-paren">(</span><em>p</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/hdfs.html#join"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.hdfs.join" title="Permalink to this definition">¶</a></dt>
+<dd><p>Join given paths.</p>
 </dd></dl>
 
 <dl class="function">
@@ -136,6 +136,7 @@ mode    – ‘a’: list all objects</p>
 <li class="toctree-l2 current"><a class="reference internal" href="pyDKB.html#subpackages">Subpackages</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../Stages/Stages.html">Stages</a></li>
 </ul>
 
 <div class="relations">

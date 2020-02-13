@@ -11,6 +11,7 @@ Welcome to Data Knowledge Base  documentation pages
    :caption: Contents:
 
    pyDKB/pyDKB
+   Stages/Stages
 
 Indices and tables
 ==================

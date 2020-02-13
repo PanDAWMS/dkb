@@ -36,6 +36,42 @@
   <div class="section" id="module-pyDKB.dataflow.cds">
 <span id="pydkb-dataflow-cds-module"></span><span id="pydkb-dataflow-cds"></span><h1>pyDKB.dataflow.cds module<a class="headerlink" href="#module-pyDKB.dataflow.cds" title="Permalink to this headline">¶</a></h1>
 <p>Extended CDSInvenioConnector allowing us to login via Kerberos</p>
+<dl class="class">
+<dt id="pyDKB.dataflow.cds.CDSInvenioConnector">
+<em class="property">class </em><code class="descclassname">pyDKB.dataflow.cds.</code><code class="descname">CDSInvenioConnector</code><span class="sig-paren">(</span><em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/cds.html#CDSInvenioConnector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.cds.CDSInvenioConnector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">invenio_client.contrib.cds.CDSInvenioConnector</span></code></p>
+<p>CDSInvenioConnector which closes the browser in most cases.</p>
+<dl class="method">
+<dt id="pyDKB.dataflow.cds.CDSInvenioConnector.delete">
+<code class="descname">delete</code><span class="sig-paren">(</span><em>restore_handlers=True</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/cds.html#CDSInvenioConnector.delete"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.cds.CDSInvenioConnector.delete" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyDKB.dataflow.cds.CDSInvenioConnector.handlers">
+<code class="descname">handlers</code><em class="property"> = False</em><a class="headerlink" href="#pyDKB.dataflow.cds.CDSInvenioConnector.handlers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.cds.CDSInvenioConnector.kill">
+<code class="descname">kill</code><span class="sig-paren">(</span><em>signum</em>, <em>frame</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/cds.html#CDSInvenioConnector.kill"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.cds.CDSInvenioConnector.kill" title="Permalink to this definition">¶</a></dt>
+<dd><p>Run del and propagate signal.</p>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="pyDKB.dataflow.cds.CDSInvenioConnector.orig_handlers">
+<code class="descname">orig_handlers</code><em class="property"> = {}</em><a class="headerlink" href="#pyDKB.dataflow.cds.CDSInvenioConnector.orig_handlers" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="pyDKB.dataflow.cds.KerberizedCDSInvenioConnector">
+<em class="property">class </em><code class="descclassname">pyDKB.dataflow.cds.</code><code class="descname">KerberizedCDSInvenioConnector</code><span class="sig-paren">(</span><em>login='user'</em>, <em>password='password'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/cds.html#KerberizedCDSInvenioConnector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.cds.KerberizedCDSInvenioConnector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#pyDKB.dataflow.cds.CDSInvenioConnector" title="pyDKB.dataflow.cds.CDSInvenioConnector"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyDKB.dataflow.cds.CDSInvenioConnector</span></code></a></p>
+<p>Represents same CDSInvenioConnector, but this one is aware about
+SPNEGO: Simple and Protected GSSAPI Negotiation Mechanism</p>
+</dd></dl>
+
 </div>
 
 
@@ -62,6 +98,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="pyDKB.html#subpackages">Subpackages</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../Stages/Stages.html">Stages</a></li>
 </ul>
 
 <div class="relations">

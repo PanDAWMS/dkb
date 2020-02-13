@@ -48,16 +48,12 @@
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="kn">import</span> <span class="nn">Consumer</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">DataflowException</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">logLevel</span>
+<span class="kn">from</span> <span class="nn">pyDKB.common.types</span> <span class="k">import</span> <span class="n">logLevel</span>
 <span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">Message</span>
 
 
 <div class="viewcode-block" id="FileConsumer"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.FileConsumer.html#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer">[docs]</a><span class="k">class</span> <span class="nc">FileConsumer</span><span class="p">(</span><span class="n">Consumer</span><span class="o">.</span><span class="n">Consumer</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Data consumer implementation for HDFS data source. &quot;&quot;&quot;</span>
-
-    <span class="c1"># Input file names (iterable object)</span>
-    <span class="n">input_filenames</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="c1"># Current file</span>
     <span class="n">current_file</span> <span class="o">=</span> <span class="kc">None</span>
@@ -100,6 +96,11 @@
         <span class="sd">&quot;&quot;&quot; Return current source info. &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_file</span></div>
 
+<div class="viewcode-block" id="FileConsumer.init_sources"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.FileConsumer.html#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.init_sources">[docs]</a>    <span class="k">def</span> <span class="nf">init_sources</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initialize sources iterator if not initialized yet. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_files</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">input_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_files</span><span class="p">()</span></div>
+
 <div class="viewcode-block" id="FileConsumer.get_source"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.consumer.FileConsumer.html#pyDKB.dataflow.communication.consumer.FileConsumer.FileConsumer.get_source">[docs]</a>    <span class="k">def</span> <span class="nf">get_source</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Get nearest non-empty source (current or next). &quot;&quot;&quot;</span>
         <span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
@@ -115,7 +116,7 @@
 <span class="sd">            None (no files left)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_files</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">input_files</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_input_files</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init_sources</span><span class="p">()</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">current_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">input_files</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">get_source</span><span class="p">()</span>
@@ -200,6 +201,7 @@
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../pyDKB/pyDKB.html">pyDKB package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../Stages/Stages.html">Stages</a></li>
 </ul>
 
 <div class="relations">

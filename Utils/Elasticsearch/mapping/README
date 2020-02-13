@@ -17,3 +17,6 @@ toths06_failed: 'wasted' CPU resources (see description for `toths06`).
 input_events: derived value based on primary_input_events, requested_events,
               n_files_per_job, n_events_per_job, n_files_to_be_used.
 
+_update_required: service field to mark documents that contain incomplete
+                  information about object and thus must be updated sooner
+                  or later.
