@@ -24,6 +24,16 @@ cmd_016="$base_dir/../016_task2es/task2es.py -m s"
 cfg_es=`get_config "es"`
 cmd_071="$base_dir/../071_esConsistency/consistency.py -m s --conf $cfg_es"
 
+while [ -n "$1" ]; do
+  case $1 in
+    --debug)
+      DEBUG=1;;
+    *)
+      break;;
+  esac
+  shift
+done
+
 out_009=/dev/null
 out_016=/dev/null
 out_071=/dev/null
