@@ -41,12 +41,11 @@ if [ -n "$DEBUG" ]; then
   out_009=009.cons.out
   out_016=016.cons.out
   out_071=071.cons.out
+  log DEBUG "Transitional output files:
+  $out_009
+  $out_016
+  $out_071"
 fi
-log DEBUG "Transitional output files:
-$out_009
-$out_016
-$out_071
-"
 
 # 0      | 1              | 2        | 3          | 4
 # |  5        | 6          | 7
