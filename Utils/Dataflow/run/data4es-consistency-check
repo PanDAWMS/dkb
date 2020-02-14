@@ -37,4 +37,9 @@ $out_009
 $out_016
 $out_071
 "
-$cmd_009 | tee "$out_009" | $cmd_016 | eop_filter | tee "$out_016" | $cmd_071 | eop_filter | tee "$out_071"
+$cmd_009 | tee "$out_009" | $cmd_016 | eop_filter | tee "$out_016" | { $cmd_071; status=$?; } | eop_filter | tee "$out_071"
+
+[ -z "$status" ] && status_info=FAIL || status_info=OK
+log INFO "Consistency check finished, status: $status_info"
+
+exit $status
