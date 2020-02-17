@@ -14,7 +14,7 @@ import sys
 import os
 
 import Consumer
-from . import logLevel
+from pyDKB.common.types import logLevel
 from .. import Message
 
 

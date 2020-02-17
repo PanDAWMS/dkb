@@ -8,16 +8,18 @@ import ConfigParser
 from collections import defaultdict
 import textwrap
 
-from . import logLevel
+from pyDKB.common import LoggableObject
+from pyDKB.common.types import logLevel
+from pyDKB.common.misc import log
 
 try:
     import argparse
 except ImportError, e:
-    sys.stderr.write("(ERROR) argparse package is not installed.\n")
+    log("argparse package is not installed.", logLevel.ERROR)
     raise e
 
 
-class AbstractStage(object):
+class AbstractStage(LoggableObject):
     """
     Class/instance variable description:
     * Argument parser (argparse.ArgumentParser)
@@ -50,24 +52,6 @@ class AbstractStage(object):
         self.defaultArguments()
 
         self._error = None
-
-    def log(self, message, level=logLevel.INFO):
-        """ Output log message with given log level. """
-        if not logLevel.hasMember(level):
-            self.log("Unknown log level: %s" % level, logLevel.WARN)
-            level = logLevel.INFO
-        if type(message) == list:
-            lines = message
-        else:
-            lines = message.splitlines()
-        if lines:
-            out_message = "(%s) (%s) %s" % (logLevel.memberName(level),
-                                            self.__class__.__name__,
-                                            lines[0])
-            for l in lines[1:]:
-                out_message += "\n(==) %s" % l
-            out_message += "\n"
-            sys.stderr.write(out_message)
 
     def log_configuration(self):
         """ Log stage configuration. """
@@ -161,6 +145,14 @@ class AbstractStage(object):
         kwargs['help'] = msg
         self.__parser.add_argument(*args, **kwargs)
 
+    def set_default_arguments(self, **kwargs):
+        """ Set (or overwrite) default values for arguments.
+
+        :param <arg_name>: default value for argument <arg_name>
+        :type <arg_name>: object
+        """
+        self.__parser.set_defaults(**kwargs)
+
     def parse_args(self, args):
         """ Parse arguments and set dependant arguments if needed.
 
@@ -178,8 +170,8 @@ class AbstractStage(object):
             try:
                 self.ARGS.eom = self.ARGS.eom.decode('string_escape')
             except (ValueError), err:
-                sys.stderr.write("(ERROR) Failed to read arguments.\n"
-                                 "(ERROR) Case: %s\n" % (err))
+                self.log("Failed to read arguments.\n"
+                         "Case: %s" % (err), logLevel.ERROR)
                 sys.exit(1)
 
         if self.ARGS.eop is None:
@@ -193,8 +185,8 @@ class AbstractStage(object):
             try:
                 self.ARGS.eop = self.ARGS.eop.decode('string_escape')
             except (ValueError), err:
-                sys.stderr.write("(ERROR) Failed to read arguments.\n"
-                                 "(ERROR) Case: %s\n" % (err))
+                self.log("Failed to read arguments.\n"
+                         "Case: %s" % (err), logLevel.ERROR)
                 sys.exit(1)
 
         if self.ARGS.mode == 'm':

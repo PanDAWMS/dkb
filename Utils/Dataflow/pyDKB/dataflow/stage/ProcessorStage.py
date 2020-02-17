@@ -43,7 +43,7 @@ import sys
 
 from . import AbstractStage
 from . import messageType
-from . import logLevel
+from pyDKB.common.types import logLevel
 from pyDKB.dataflow import DataflowException
 from pyDKB.common import hdfs
 from pyDKB.dataflow import communication

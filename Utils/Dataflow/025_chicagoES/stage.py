@@ -47,9 +47,15 @@ finally:
 chicago_es = None
 
 chicago_hosts = [
-    {'host': '192.170.227.31', 'port': 9200},
-    {'host': '192.170.227.32', 'port': 9200},
-    {'host': '192.170.227.33', 'port': 9200}
+    {'host': '192.170.227.66', 'port': 9200},
+    {'host': '192.170.227.67', 'port': 9200},
+    {'host': '192.170.227.68', 'port': 9200},
+    {'host': '192.170.227.69', 'port': 9200},
+    {'host': '192.170.227.70', 'port': 9200},
+    {'host': '192.170.227.241', 'port': 9200},
+    {'host': '192.170.227.242', 'port': 9200},
+    {'host': '192.170.227.243', 'port': 9200},
+    {'host': '192.170.227.244', 'port': 9200}
 ]
 
 META_FIELDS = {
@@ -58,9 +64,6 @@ META_FIELDS = {
 
 AGG_FIELDS = {'hs06sec_sum': 'toths06'}
 JOB_STATUSES = ['finished', 'failed']
-
-TASK_FINAL_STATES = ['done', 'finished', 'obsolete', 'failed', 'broken',
-                     'aborted']
 
 
 def init_es_client():
@@ -106,7 +109,6 @@ def task_metadata(taskid, fields=[], retry=3):
         return {}
     kwargs = {
         'index': 'tasks_archive_*',
-        'doc_type': 'task_data',
         'body': '{ "query": { "term": {"_id": "%s"} } }' % taskid,
         '_source': fields
     }
@@ -191,7 +193,7 @@ def agg_query(taskid, agg_names):
         "query": {
             "bool": {
                 "must": [
-                    {"term": {"taskid": taskid}},
+                    {"term": {"jeditaskid": taskid}},
                     {"terms": {"jobstatus": JOB_STATUSES}}
                 ]
             }
@@ -249,9 +251,6 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
                          " established.")
         return None
 
-    if status not in TASK_FINAL_STATES:
-        return {}
-
     if not es_args:
         dt_format = '%d-%m-%Y %H:%M:%S'
         beg = end = None
@@ -262,7 +261,6 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
             end = datetime.datetime.strptime(end_time, dt_format)
         es_args = {
             'index': get_indices_by_interval(beg, end, wildcard=True),
-            'doc_type': 'jobs_data',
             'body': agg_query(taskid, agg_names),
             'size': 0,
             'request_timeout': 30
@@ -289,7 +287,7 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
                              " metadata.\n")
             raise
 
-    if r['hits']['total']:
+    if r['hits']['total']['value']:
         result = r['aggregations']
     else:
         result = {}

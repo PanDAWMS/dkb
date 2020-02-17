@@ -3,7 +3,6 @@ Consumer submodule init file.
 """
 
 from .. import messageType
-from .. import logLevel
 from .. import DataflowException
 
 from Consumer import Consumer

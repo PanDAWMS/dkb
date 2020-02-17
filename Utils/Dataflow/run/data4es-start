@@ -113,11 +113,7 @@ define_stages() {
 
   # Stage 95
   auth_cfg=`get_config "095.cfg"`
-  source $auth_cfg
-  [ -r "$AUTH_KEY" -a -r "$AUTH_CRT" ] \
-    || { log ERROR "Stage 095: wrong authentication parameters (failed to read certificate files: $AUTH_KEY and $AUTH_CRT)";
-         return_code=1; }
-  cmd_95="${base_dir}/../095_datasetInfoAMI/amiDatasets.py -m s --userkey $AUTH_KEY --usercert $AUTH_CRT"
+  cmd_95="${base_dir}/../095_datasetInfoAMI/amiDatasets.py -m s --config $auth_cfg"
 
   # Adjust stage commands according to IGNORE parameter
   for s in $IGNORE; do
