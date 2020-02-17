@@ -140,8 +140,10 @@ def process_output_ds(stage, message):
     if type(datasets) != list:
         datasets = [datasets]
 
+    mfields = META_FIELDS[OUTPUT]
     for dataset in datasets:
-        ds = get_output_ds_info(dataset)
+        ds = get_ds_info(dataset, mfields)
+        ds['datasetname'] = dataset
         ds['taskid'] = json_str.get('taskid')
         if not add_es_index_info(ds):
             sys.stderr.write("(WARN) Skip message (not enough info"
@@ -201,38 +203,34 @@ def process_input_ds(stage, message):
     mfields = META_FIELDS[INPUT]
     ds_name = data.get(SRC_FIELD[INPUT])
     if ds_name:
-        try:
-            mdata = get_metadata(ds_name, mfields.keys())
-            adjust_metadata(mdata)
-            for mkey in mdata:
-                data[mfields[mkey]] = mdata[mkey]
-        except RucioException:
-            data[mfields['bytes']] = -1
-            data[mfields['deleted']] = True
+        mdata = get_ds_info(ds_name, mfields)
+        data.update(mdata)
     stage.output(pyDKB.dataflow.communication.messages.JSONMessage(data))
 
     return True
 
 
-def get_output_ds_info(dataset):
+def get_ds_info(dataset, mfields):
     """ Construct dictionary with dataset info.
 
     Dict format:
-        {"deleted": true | false,
-         "datasetname": "<DS_NAME>",
-         "bytes": <BYTES>,
-         "events": <EVENTS>}
+        {<deleted>: true | false,
+         <bytes>: <BYTES>,
+         <events>: <EVENTS>,
+         ...}
 
     :param dataset: dataset name
     :type dataset: str
+    :param mfields: fields to get from Rucio metadata
+                    with aliases to be used instead of Rucio field names:
+                    ``{<rucio_field>: <alias>, ...}``
+    :type fields: dict
 
     :return: dict with dataset info
     :rtype: dict
     """
     ds_dict = {}
-    ds_dict['datasetname'] = dataset
     try:
-        mfields = META_FIELDS[OUTPUT]
         mdata = get_metadata(dataset, mfields.keys())
         adjust_metadata(mdata)
         for mkey in mfields:
