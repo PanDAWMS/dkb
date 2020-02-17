@@ -220,9 +220,14 @@ def get_output_ds_info(dataset):
     Dict format:
         {"deleted": true | false,
          "datasetname": "<DS_NAME>",
-         "bytes": <BYTES>}
+         "bytes": <BYTES>,
+         "events": <EVENTS>}
+
     :param dataset: dataset name
-    :return: dict
+    :type dataset: str
+
+    :return: dict with dataset info
+    :rtype: dict
     """
     ds_dict = {}
     ds_dict['datasetname'] = dataset
