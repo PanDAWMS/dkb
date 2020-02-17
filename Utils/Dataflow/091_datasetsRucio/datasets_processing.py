@@ -148,7 +148,7 @@ def process_output_ds(stage, message):
         if not add_es_index_info(ds):
             sys.stderr.write("(WARN) Skip message (not enough info"
                              " for ES indexing).\n")
-            return True
+            continue
         del(ds['taskid'])
         stage.output(pyDKB.dataflow.communication.messages.JSONMessage(ds))
 
@@ -183,7 +183,7 @@ def skip_process_output_ds(stage, message):
         if not add_es_index_info(ds):
             sys.stderr.write("(WARN) Skip message (not enough info"
                              " for ES indexing).\n")
-            return True
+            continue
         del(ds['taskid'])
         out_msg = pyDKB.dataflow.communication.messages.JSONMessage(ds)
         out_msg.incomplete(True)
