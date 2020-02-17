@@ -141,9 +141,9 @@ def process_output_ds(stage, message):
         datasets = [datasets]
 
     mfields = META_FIELDS[OUTPUT]
-    for dataset in datasets:
-        ds = get_ds_info(dataset, mfields)
-        ds['datasetname'] = dataset
+    for ds_name in datasets:
+        ds = get_ds_info(ds_name, mfields)
+        ds['datasetname'] = ds_name
         ds['taskid'] = json_str.get('taskid')
         if not add_es_index_info(ds):
             sys.stderr.write("(WARN) Skip message (not enough info"
@@ -203,8 +203,8 @@ def process_input_ds(stage, message):
     mfields = META_FIELDS[INPUT]
     ds_name = data.get(SRC_FIELD[INPUT])
     if ds_name:
-        mdata = get_ds_info(ds_name, mfields)
-        data.update(mdata)
+        ds = get_ds_info(ds_name, mfields)
+        data.update(ds)
     stage.output(pyDKB.dataflow.communication.messages.JSONMessage(data))
 
     return True
