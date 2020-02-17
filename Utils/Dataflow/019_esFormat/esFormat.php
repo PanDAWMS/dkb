@@ -45,6 +45,8 @@ function getAction($row) {
 
   if (isset($row['_update']) and $row['_update'] === true) {
     $action = 'update';
+  } elseif (isset($row['_incomplete']) and $row['_incomplete'] === true) {
+    $action = 'update';
   } else {
     $action = $DEFAULT_ACTION;
   }
