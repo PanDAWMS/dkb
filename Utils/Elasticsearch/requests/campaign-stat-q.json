@@ -1,4 +1,4 @@
-/* Overall events processing summary.
+/* Campaign processing summary.
 
 For now tasks are selected by (fixed set of) PR_IDs, but for real-life usage
 this part should be reconsidered.
