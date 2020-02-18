@@ -1,0 +1,183 @@
+{
+  "tasks_processing_summary": {
+    "Simul": {
+      "total": 777,
+      "done": 632,
+      "finished": 111,
+      "aborted": 30,
+      "obsolete": 3,
+      "broken": 1
+    },
+    "Deriv": {
+      "total": 758,
+      "done": 630,
+      "finished": 117,
+      "obsolete": 11
+    },
+    "Deriv Merge": {
+      "total": 758,
+      "done": 630,
+      "finished": 117,
+      "obsolete": 11
+    },
+    "Rec Merge": {
+      "total": 751,
+      "done": 631,
+      "finished": 116,
+      "aborted": 2,
+      "obsolete": 2
+    },
+    "Reco": {
+      "total": 751,
+      "done": 636,
+      "finished": 111,
+      "aborted": 2,
+      "obsolete": 2
+    },
+    "Merge": {
+      "total": 19,
+      "finished": 14,
+      "done": 2,
+      "obsolete": 2,
+      "aborted": 1
+    }
+  },
+  "overall_events_processing_summary": {
+    "Simul": {
+      "input": 2430259640,
+      "output": 1975894120,
+      "ratio": 0.8130382809632637
+    },
+    "Deriv": {
+      "input": 2037850000,
+      "output": 0,
+      "ratio": 0
+    },
+    "Deriv Merge": {
+      "input": 2067300000,
+      "output": 0,
+      "ratio": 0
+    },
+    "Rec Merge": {
+      "input": 2025718000,
+      "output": 2010623450,
+      "ratio": 0.9925485432819375
+    },
+    "Reco": {
+      "input": 2025729800,
+      "output": 0,
+      "ratio": 0
+    },
+    "Merge": {
+      "input": 29282050,
+      "output": 28740350,
+      "ratio": 0.9815006121497641
+    }
+  },
+  "tasks_updated_24h": {
+    "Simul": {
+      "done": {
+        "total": 632,
+        "updated": 0
+      },
+      "finished": {
+        "total": 111,
+        "updated": 0
+      },
+      "aborted": {
+        "total": 30,
+        "updated": 0
+      },
+      "obsolete": {
+        "total": 3,
+        "updated": 0
+      },
+      "broken": {
+        "total": 1,
+        "updated": 0
+      }
+    },
+    "Deriv": {
+      "done": {
+        "total": 630,
+        "updated": 6
+      },
+      "finished": {
+        "total": 117,
+        "updated": 3
+      },
+      "obsolete": {
+        "total": 11,
+        "updated": 9
+      }
+    },
+    "Deriv Merge": {
+      "done": {
+        "total": 630,
+        "updated": 6
+      },
+      "finished": {
+        "total": 117,
+        "updated": 3
+      },
+      "obsolete": {
+        "total": 11,
+        "updated": 9
+      }
+    },
+    "Rec Merge": {
+      "done": {
+        "total": 631,
+        "updated": 0
+      },
+      "finished": {
+        "total": 116,
+        "updated": 0
+      },
+      "aborted": {
+        "total": 2,
+        "updated": 0
+      },
+      "obsolete": {
+        "total": 2,
+        "updated": 0
+      }
+    },
+    "Reco": {
+      "done": {
+        "total": 636,
+        "updated": 0
+      },
+      "finished": {
+        "total": 111,
+        "updated": 0
+      },
+      "aborted": {
+        "total": 2,
+        "updated": 0
+      },
+      "obsolete": {
+        "total": 2,
+        "updated": 0
+      }
+    },
+    "Merge": {
+      "finished": {
+        "total": 14,
+        "updated": 0
+      },
+      "done": {
+        "total": 2,
+        "updated": 0
+      },
+      "obsolete": {
+        "total": 2,
+        "updated": 0
+      },
+      "aborted": {
+        "total": 1,
+        "updated": 0
+      }
+    }
+  }
+}
