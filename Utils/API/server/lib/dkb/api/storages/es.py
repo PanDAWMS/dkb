@@ -654,26 +654,27 @@ def campaign_stat(**kwargs):
                _total: <total number of matching tasks>,
                _errors: [..., <error message>, ...],
                _data: {
-                 'tasks_processing_summary': {
+                 tasks_processing_summary: {
                    <step>: {<status>: <n_tasks>, ...},
                    ...
                  },
-                 'overall_events_processing_summary': {
+                 overall_events_processing_summary: {
                    <step>: {
-                     'input': <n_events>,
-                     'output': <n_events>,
-                     'ratio': <output>/<input>
+                     input: <n_events>,
+                     output: <n_events>,
+                     ratio: <output>/<input>
                    },
                    ...
                  },
-                 'tasks_updated_24h': {
+                 tasks_updated_24h: {
                    <step>: {
                      <status>: {
-                       'total': <n_tasks>,
-                       'updated': <n_tasks>
+                       total: <n_tasks>,
+                       updated: <n_tasks>
                      },
                      ...
-                   }
+                   },
+                   ...
                  }
                }
              }
