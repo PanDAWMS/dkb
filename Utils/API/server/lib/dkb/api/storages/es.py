@@ -602,8 +602,8 @@ def _transform_campaign_stat(stat_data):
     """
     r = {}
     data = {}
-    r['_took_storage_ms'] = data.pop('took', None)
-    r['_total'] = data.get('hits', {}).pop('total', None)
+    r['_took_storage_ms'] = stat_data.pop('took', None)
+    r['_total'] = stat_data.get('hits', {}).pop('total', None)
     r['_data'] = data
 
     data['tasks_processing_summary'] = {}
