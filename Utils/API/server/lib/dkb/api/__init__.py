@@ -10,7 +10,7 @@ import methods
 CONFIG_DIR = '%%CFG_DIR%%'
 
 
-__version__ = '0.2.dev20200129'
+__version__ = '0.2.dev20200219'
 
 
 STATUS_CODES = {
