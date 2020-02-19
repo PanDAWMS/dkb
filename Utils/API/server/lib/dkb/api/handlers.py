@@ -286,3 +286,23 @@ def task_deriv(path, **kwargs):
 
 
 methods.add('/task', 'deriv', task_deriv)
+
+
+def campaign_stat(path, **kwargs):
+    """ Calculate values for campaign progress overview.
+
+    :param path: full path to the method
+    :type path: str
+    :param htag: hashtag to select campaign tasks
+    :type htag: str, list
+
+    :return: calculated campaign statistics
+    :rtype: dict
+    """
+    method_name = '/campaign/stat'
+    if 'htag' not in kwargs:
+        raise MissedArgument(method_name, 'htag')
+    return storages.campaign_stat(**kwargs)
+
+
+methods.add('/campaign', 'stat', campaign_stat)

@@ -111,3 +111,46 @@ def task_derivation_statistics(**kwargs):
     :rtype: dict
     """
     return es.task_derivation_statistics(**kwargs)
+
+
+def campaign_stat(**kwargs):
+    """ Calculate values for campaign progress overview.
+
+    :param path: full path to the method
+    :type path: str
+    :param htag: hashtag to select campaign tasks
+    :type htag: str, list
+
+    :return: calculated campaign statistics:
+             { _took_storage_ms: <storage query execution time in ms>,
+               _total: <total number of matching tasks>,
+               _errors: [..., <error message>, ...],
+               _data: {
+                 tasks_processing_summary: {
+                   <step>: {<status>: <n_tasks>, ...},
+                   ...
+                 },
+                 overall_events_processing_summary: {
+                   <step>: {
+                     input: <n_events>,
+                     output: <n_events>,
+                     ratio: <output>/<input>
+                   },
+                   ...
+                 },
+                 tasks_updated_24h: {
+                   <step>: {
+                     <status>: {
+                       total: <n_tasks>,
+                       updated: <n_tasks>
+                     },
+                     ...
+                   },
+                   ...
+                 }
+               }
+             }
+             (field `_errors` may be omitted if no error has occured)
+    :rtype: dict
+    """
+    return es.campaign_stat(**kwargs)
