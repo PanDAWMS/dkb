@@ -1,0 +1,42 @@
+{
+  "size": 0,
+  "query": {
+    "terms": {"hashtag_list": %(htags)s}
+  },
+  "aggs": {
+    "steps": {
+      "terms": {
+        "field": "step_name.keyword",
+        "size": 20
+      },
+      "aggs": {
+        "status": {
+          "terms": {
+            "field": "status",
+            "size": 20
+          },
+          "aggs": {
+            "updated_24h": {
+              "filter": {
+                "range": {
+                  "task_timestamp": {"gte": "now-1d"}
+                }
+              }
+            }
+          }
+        },
+        "input_events": {
+          "sum": {"field": "requested_events"}
+        },
+        "output_events": {
+          "children": {"type": "output_dataset"},
+          "aggs": {
+            "output_events": {
+              "sum": {"field": "events"}
+            }
+          }
+        }
+      }
+    }
+  }
+}

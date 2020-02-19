@@ -591,6 +591,56 @@ def task_derivation_statistics(**kwargs):
     return result
 
 
+def _transform_campaign_stat(stat_data):
+    """ Transform ES response into user-friendly format.
+
+    :param stat_data: ES response to 'campaign-stat' query
+    :type stat_data: dict
+
+    :return: properly formatted response for ``campaign_stat()``
+    :rtype: dict
+    """
+    r = {}
+    data = {}
+    r['_took_storage_ms'] = data.pop('took', None)
+    r['_total'] = data.get('hits', {}).pop('total', None)
+    r['_data'] = data
+
+    data['tasks_processing_summary'] = {}
+    data['overall_events_processing_summary'] = {}
+    data['tasks_updated_24h'] = {}
+
+    steps = stat_data.get('aggregations', {}) \
+                     .get('steps', {}) \
+                     .get('buckets', [])
+    for step in steps:
+        # Events processing summary
+        eps = {'input': step.get('input_events', {}).get('value', None),
+               'output': step.get('output_events', {}) \
+                             .get('output_events', {}) \
+                             .get('value', None),
+               'ratio': None
+              }
+        if eps['input'] and eps['output']:
+            eps['ratio'] = eps['output']/eps['input']
+
+        # Tasks processing: summary and updates
+        tps = {'total': step['doc_count']}
+        tu24h = {}
+        statuses = step.get('status', {}) \
+                       .get('buckets', [])
+        for status in statuses:
+            tps[status['key']] = status['doc_count']
+            tu24h[status['key']] = {}
+            tu24h[status['key']]['total'] = status.get('doc_count', None)
+            tu24h[status['key']]['updated'] = status.get('updated_24h', {}) \
+                                                    .get('doc_count', None)
+        data['tasks_processing_summary'][step['key']] = tps
+        data['overall_events_processing_summary'][step['key']] = eps
+        data['tasks_updated_24h'][step['key']] = tu24h
+    return r
+
+
 def campaign_stat(**kwargs):
     """ Calculate values for campaign progress overview.
 
@@ -630,4 +680,27 @@ def campaign_stat(**kwargs):
              (field `_errors` may be omitted if no error has occured)
     :rtype: dict
     """
-    raise DkbApiNotImplemented()
+    init()
+    htags = kwargs.get('htag', [])
+    if not isinstance(htags, list):
+        htags = [htags]
+    query = dict(TASK_KWARGS)
+    # Campaign is about "production", so we can say for sure
+    # what index we need
+    query['index'] = CONFIG['index']['production_tasks']
+    query_kwargs = {'htags': htags}
+    query['body'] = get_query('campaign-stat', **query_kwargs)
+    r = {}
+    try:
+        data = client().search(**query)
+        data = _transform_campaign_stat(data)
+    except KeyError, err:
+        msg = "Failed to parse storage response: %s." % str(err)
+        r['_errors'] = r.get('_errors', []).append(msg)
+    except Exception, err:
+        msg = "(%s) Failed to execute search query: %s." % (STORAGE_NAME,
+                                                            str(err))
+        r['_errors'] = r.get('_errors', []).append(msg)
+
+    r.update(data)
+    return r
