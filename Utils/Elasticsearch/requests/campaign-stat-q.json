@@ -14,9 +14,6 @@ GET /production_tasks/task/_search?pretty
     }
   },
   "aggs": {
-    "end": {
-      "max": {"field": "task_timestamp"}
-    },
     "steps": {
       "terms": {
         "field": "step_name.keyword",

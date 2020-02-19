@@ -12,10 +12,6 @@
     "hits" : [ ]
   },
   "aggregations" : {
-    "end" : {
-      "value" : 1.545574725E12,
-      "value_as_string" : "23-12-18 14:18:45"
-    },
     "steps" : {
       "doc_count_error_upper_bound" : 0,
       "sum_other_doc_count" : 0,
