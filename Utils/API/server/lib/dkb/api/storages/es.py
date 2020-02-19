@@ -616,13 +616,13 @@ def _transform_campaign_stat(stat_data):
     for step in steps:
         # Events processing summary
         eps = {'input': step.get('input_events', {}).get('value', None),
-               'output': step.get('output_events', {}) \
-                             .get('output_events', {}) \
+               'output': step.get('output_events', {})
+                             .get('output_events', {})
                              .get('value', None),
                'ratio': None
-              }
+               }
         if eps['input'] and eps['output']:
-            eps['ratio'] = eps['output']/eps['input']
+            eps['ratio'] = eps['output'] / eps['input']
 
         # Tasks processing: summary and updates
         tps = {'total': step['doc_count']}

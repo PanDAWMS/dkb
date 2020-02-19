@@ -153,4 +153,3 @@ def campaign_stat(**kwargs):
     :rtype: dict
     """
     return es.campaign_stat(**kwargs)
-
