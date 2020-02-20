@@ -35,8 +35,17 @@
               "sum": {"field": "events"}
             }
           }
+        },
+        "start": {
+          "min": {"field": "start_time"}
+        },
+        "end": {
+          "max": {"field": "end_time"}
         }
       }
+    },
+    "last_update": {
+      "max": {"field": "task_timestamp"}
     }
   }
 }

@@ -27,6 +27,7 @@ QUERY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 
 # Default datetime format
 DATE_FORMAT = '%d-%m-%Y %H:%M:%S'
+ES_DATE_FORMAT = '%d-%m-%y %H:%M:%S'
 
 
 try:
@@ -609,6 +610,10 @@ def _transform_campaign_stat(stat_data):
     data['tasks_processing_summary'] = {}
     data['overall_events_processing_summary'] = {}
     data['tasks_updated_24h'] = {}
+    data['last_update'] = stat_data.get('aggregations', {}) \
+                                   .get('last_update', {}) \
+                                   .get('value_as_string', None)
+    data['date_format'] = ES_DATE_FORMAT
 
     steps = stat_data.get('aggregations', {}) \
                      .get('steps', {}) \
@@ -625,7 +630,13 @@ def _transform_campaign_stat(stat_data):
             eps['ratio'] = eps['output'] / eps['input']
 
         # Tasks processing: summary and updates
-        tps = {'total': step['doc_count']}
+        tps = {}
+        tps['total'] = step['doc_count']
+        tps['start'] = step.get('start', {}) \
+                           .get('value_as_string', None)
+        tps['end'] = step.get('end', {}) \
+                         .get('value_as_string', None)
+
         tu24h = {}
         statuses = step.get('status', {}) \
                        .get('buckets', [])
@@ -654,10 +665,14 @@ def campaign_stat(**kwargs):
                _total: <total number of matching tasks>,
                _errors: [..., <error message>, ...],
                _data: {
+                 last_update: <last_registered_task_timestamp>,
+                 date_format: <datetime_format>,
                  tasks_processing_summary: {
-                   <step>: {<status>: <n_tasks>, ...},
-                   ...
-                 },
+                   <step>: {
+                     <status>: <n_tasks>, ...,
+                     start: <earliest_start_time>,
+                     end: <latest_end_time>
+                   },
                  overall_events_processing_summary: {
                    <step>: {
                      input: <n_events>,
