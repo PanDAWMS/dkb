@@ -707,6 +707,7 @@ def campaign_stat(**kwargs):
     query_kwargs = {'htags': htags}
     query['body'] = get_query('campaign-stat', **query_kwargs)
     r = {}
+    data = {}
     try:
         data = client().search(**query)
         data = _transform_campaign_stat(data)
