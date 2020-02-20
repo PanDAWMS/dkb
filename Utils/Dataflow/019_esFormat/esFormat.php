@@ -71,7 +71,7 @@ function constructActionJson($row) {
   }
 
   if (isset($row['_parent'])) {
-    $action['index']['_parent'] = $row['_parent'];
+    $action[$act]['_parent'] = $row['_parent'];
   }
 
   return $action;
