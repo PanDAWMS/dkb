@@ -611,6 +611,7 @@ def _transform_campaign_stat(stat_data):
     data['tasks_processing_summary'] = {}
     data['overall_events_processing_summary'] = {}
     data['tasks_updated_24h'] = {}
+    data['events_24h'] = {}
     data['last_update'] = stat_data.get('aggregations', {}) \
                                    .get('last_update', {}) \
                                    .get('value_as_string', None)
@@ -639,6 +640,7 @@ def _transform_campaign_stat(stat_data):
                          .get('value_as_string', None)
 
         tu24h = {}
+        e24h = None
         statuses = step.get('status', {}) \
                        .get('buckets', [])
         for status in statuses:
@@ -647,9 +649,22 @@ def _transform_campaign_stat(stat_data):
             tu24h[status['key']]['total'] = status.get('doc_count', None)
             tu24h[status['key']]['updated'] = status.get('updated_24h', {}) \
                                                     .get('doc_count', None)
+
+            # Events in last 24 hours
+            e24h_cur_ds = status.get('updated_24h', {}) \
+                                .get('finished', {}) \
+                                .get('output', {}) \
+                                .get('events', {}) \
+                                .get('value', None)
+            if e24h is None:
+                e24h = e24h_cur_ds
+            else:
+                e24h += e24h_cur_ds
+
         data['tasks_processing_summary'][step['key']] = tps
         data['overall_events_processing_summary'][step['key']] = eps
         data['tasks_updated_24h'][step['key']] = tu24h
+        data['events_24h'][step['key']] = e24h
     return r
 
 
@@ -690,6 +705,10 @@ def campaign_stat(**kwargs):
                      },
                      ...
                    },
+                   ...
+                 },
+                 events_24h: {
+                   <step>: <n_output_events_for_done_finisfed>,
                    ...
                  }
                }

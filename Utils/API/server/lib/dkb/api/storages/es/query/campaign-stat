@@ -21,6 +21,23 @@
                 "range": {
                   "task_timestamp": {"gte": "now-1d"}
                 }
+              },
+              "aggs": {
+                "finished": {
+                  "filter": {
+                    "terms": {"status": ["done", "finished"]}
+                  },
+                  "aggs": {
+                    "output": {
+                      "children": {"type": "output_dataset"},
+                      "aggs": {
+                        "events": {
+                          "sum": {"field": "events"}
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }

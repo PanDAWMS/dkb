@@ -153,6 +153,10 @@ def campaign_stat(**kwargs):
                      ...
                    },
                    ...
+                 },
+                 events_24h: {
+                   <step>: <n_output_events_for_done_finisfed>,
+                   ...
                  }
                }
              }
