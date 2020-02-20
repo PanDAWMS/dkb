@@ -10,7 +10,8 @@ import json
 from datetime import datetime
 import time
 
-from ..exceptions import DkbApiNotImplemented
+from ..exceptions import (DkbApiNotImplemented,
+                          MethodException)
 from exceptions import (StorageClientException,
                         QueryNotFound,
                         MissedParameter,
@@ -713,11 +714,11 @@ def campaign_stat(**kwargs):
         data = _transform_campaign_stat(data)
     except KeyError, err:
         msg = "Failed to parse storage response: %s." % str(err)
-        r['_errors'] = r.get('_errors', []) + [msg]
+        raise MethodException(msg)
     except Exception, err:
         msg = "(%s) Failed to execute search query: %s." % (STORAGE_NAME,
                                                             str(err))
-        r['_errors'] = r.get('_errors', []) + [msg]
+        raise MethodException(msg)
 
     r.update(data)
     return r
