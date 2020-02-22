@@ -35,6 +35,9 @@
                           "sum": {"field": "events"}
                         }
                       }
+                    },
+                    "processed_events": {
+                      "sum": {"field": "processed_events"}
                     }
                   }
                 }
@@ -50,6 +53,16 @@
           "aggs": {
             "output_events": {
               "sum": {"field": "events"}
+            }
+          }
+        },
+        "finished": {
+          "filter": {
+            "terms": {"status": ["done", "finished"]}
+          },
+          "aggs": {
+            "processed_events": {
+              "sum": {"field": "processed_events"}
             }
           }
         },

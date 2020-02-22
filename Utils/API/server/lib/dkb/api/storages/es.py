@@ -593,17 +593,30 @@ def task_derivation_statistics(**kwargs):
     return result
 
 
-def _transform_campaign_stat(stat_data):
+def _transform_campaign_stat(stat_data, events_src=None):
     """ Transform ES response into user-friendly format.
 
     :param stat_data: ES response to 'campaign-stat' query
     :type stat_data: dict
+    :param events_src: source of data for 'output' events.
+                       Possible values:
+                       * 'ds'   -- number of events in output datasets
+                                   (default);
+                       * 'task' -- number of processed events of 'done'
+                                   and 'finished' tasks;
+                       * 'all'  -- provide all possible values as hash.
+    :type events_src: str
 
     :return: properly formatted response for ``campaign_stat()``
     :rtype: dict
     """
     r = {}
     data = {}
+    events_src_values = ['ds', 'task', 'all']
+    if not events_src:
+        events_src = events_src_values[0]
+    elif events_src not in events_src_values:
+        raise ValueError('(events_src) unexpected value: %s' % events_src)
     r['_took_storage_ms'] = stat_data.pop('took', None)
     r['_total'] = stat_data.get('hits', {}).pop('total', None)
     r['_data'] = data
@@ -622,14 +635,24 @@ def _transform_campaign_stat(stat_data):
                      .get('buckets', [])
     for step in steps:
         # Events processing summary
+        esp_o = {}
+        esp_o['ds'] = step.get('output_events', {}) \
+                          .get('output_events', {}) \
+                          .get('value', None)
+        esp_o['task'] = step.get('finished', {}) \
+                            .get('processed_events', {}) \
+                            .get('value', None)
+        esp_o = esp_o[events_src] if events_src != 'all' else esp_o
+
         eps = {'input': step.get('input_events', {}).get('value', None),
-               'output': step.get('output_events', {})
-                             .get('output_events', {})
-                             .get('value', None),
+               'output': esp_o,
                'ratio': None
                }
-        if eps['input'] and eps['output']:
+        try:
             eps['ratio'] = eps['output'] / eps['input']
+        except TypeError:
+            # Values are not numeric (None or dict)
+            pass
 
         # Tasks processing: summary and updates
         tps = {}
@@ -640,7 +663,7 @@ def _transform_campaign_stat(stat_data):
                          .get('value_as_string', None)
 
         tu24h = {}
-        e24h = None
+        e24h = {}
         statuses = step.get('status', {}) \
                        .get('buckets', [])
         for status in statuses:
@@ -651,15 +674,26 @@ def _transform_campaign_stat(stat_data):
                                                     .get('doc_count', None)
 
             # Events in last 24 hours
-            e24h_cur_ds = status.get('updated_24h', {}) \
-                                .get('finished', {}) \
-                                .get('output', {}) \
-                                .get('events', {}) \
-                                .get('value', None)
-            if e24h is None:
-                e24h = e24h_cur_ds
-            else:
-                e24h += e24h_cur_ds
+            e24h_cur = {}
+            e24h_cur['ds'] = status.get('updated_24h', {}) \
+                                   .get('finished', {}) \
+                                   .get('output', {}) \
+                                   .get('events', {}) \
+                                   .get('value', None)
+            e24h_cur['task'] = status.get('updated_24h', {}) \
+                                     .get('finished', {}) \
+                                     .get('processed_events', {}) \
+                                     .get('value', None)
+            for key in e24h_cur.keys():
+                try:
+                    e24h[key] = e24h.get(key, 0) + e24h_cur[key]
+                except TypeError:
+                    # Current value is None
+                    pass
+
+        e24h = e24h.get(events_src, None) if events_src != 'all' else e24h
+        if e24h == {}:
+            e24h = None
 
         data['tasks_processing_summary'][step['key']] = tps
         data['overall_events_processing_summary'][step['key']] = eps
@@ -675,6 +709,13 @@ def campaign_stat(**kwargs):
     :type path: str
     :param htag: hashtag to select campaign tasks
     :type htag: str, list
+    :param events_src: source of data for 'output' events.
+                       Possible values:
+                       * 'ds'   -- number of events in output datasets;
+                       * 'task' -- number of processed events of 'done'
+                                   and 'finished' tasks;
+                       * 'all'  -- provide all possible values as hash.
+    :type events_src: str
 
     :return: calculated campaign statistics:
              { _took_storage_ms: <storage query execution time in ms>,
@@ -694,6 +735,7 @@ def campaign_stat(**kwargs):
                      input: <n_events>,
                      output: <n_events>,
                      ratio: <output>/<input>
+                            /* null if 'events_src' is 'all' */
                    },
                    ...
                  },
@@ -730,7 +772,7 @@ def campaign_stat(**kwargs):
     data = {}
     try:
         data = client().search(**query)
-        data = _transform_campaign_stat(data)
+        data = _transform_campaign_stat(data, kwargs.get('events_src', None))
     except KeyError, err:
         msg = "Failed to parse storage response: %s." % str(err)
         raise MethodException(msg)
