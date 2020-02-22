@@ -126,8 +126,14 @@ def campaign_stat(**kwargs):
                _total: <total number of matching tasks>,
                _errors: [..., <error message>, ...],
                _data: {
+                 last_update: <last_registered_task_timestamp>,
+                 date_format: <datetime_format>,
                  tasks_processing_summary: {
-                   <step>: {<status>: <n_tasks>, ...},
+                   <step>: {
+                     <status>: <n_tasks>, ...,
+                     start: <earliest_start_time>,
+                     end: <latest_end_time>
+                   },
                    ...
                  },
                  overall_events_processing_summary: {
