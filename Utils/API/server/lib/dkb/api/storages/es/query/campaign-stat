@@ -46,7 +46,7 @@
           }
         },
         "input_events": {
-          "sum": {"field": "requested_events"}
+          "sum": {"field": "input_events"}
         },
         "output_events": {
           "children": {"type": "output_dataset"},
