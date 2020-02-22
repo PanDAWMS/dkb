@@ -120,6 +120,13 @@ def campaign_stat(**kwargs):
     :type path: str
     :param htag: hashtag to select campaign tasks
     :type htag: str, list
+    :param events_src: source of data for 'output' events.
+                       Possible values:
+                       * 'ds'   -- number of events in output datasets;
+                       * 'task' -- number of processed events of 'done'
+                                   and 'finished' tasks;
+                       * 'all'  -- provide all possible values as hash.
+    :type events_src: str
 
     :return: calculated campaign statistics:
              { _took_storage_ms: <storage query execution time in ms>,
@@ -141,6 +148,7 @@ def campaign_stat(**kwargs):
                      input: <n_events>,
                      output: <n_events>,
                      ratio: <output>/<input>
+                            /* null if 'events_src' is 'all' */
                    },
                    ...
                  },
@@ -152,6 +160,10 @@ def campaign_stat(**kwargs):
                      },
                      ...
                    },
+                   ...
+                 },
+                 events_24h: {
+                   <step>: <n_output_events_for_done_finisfed>,
                    ...
                  }
                }

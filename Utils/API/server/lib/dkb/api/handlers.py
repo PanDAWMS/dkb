@@ -295,13 +295,29 @@ def campaign_stat(path, **kwargs):
     :type path: str
     :param htag: hashtag to select campaign tasks
     :type htag: str, list
+    :param events_src: source of data for 'output' events.
+                       Possible values:
+                       * 'ds'   -- number of events in output datasets
+                                   (default);
+                       * 'task' -- number of processed events of 'done'
+                                   and 'finished' tasks;
+                       * 'all'  -- provide all possible values as hash.
+    :type events_src: str
 
     :return: calculated campaign statistics
     :rtype: dict
     """
     method_name = '/campaign/stat'
+    events_src_values = ['ds', 'task', 'all']
     if 'htag' not in kwargs:
         raise MissedArgument(method_name, 'htag')
+    if 'events_src' in kwargs:
+        if kwargs['events_src'] not in events_src_values:
+            raise InvalidArgument(method_name, ('events_src',
+                                                kwargs['events_src'],
+                                                events_src_values))
+    else:
+        kwargs['events_src'] = events_src_values[0]
     return storages.campaign_stat(**kwargs)
 
 
