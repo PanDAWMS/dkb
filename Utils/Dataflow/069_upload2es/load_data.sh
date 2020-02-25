@@ -1,7 +1,4 @@
 #!/usr/bin/env bash
-log() {
-  echo "$(date): $*" >&2
-}
 
 usage() {
   echo "USAGE:
@@ -16,6 +13,9 @@ PARAMETERS:
 base_dir=$( cd "$( dirname "$( readlink -f "$0" )" )" && pwd )
 
 ES_CONFIG="${base_dir}/../../Elasticsearch/config/es"
+
+. "$base_dir"/../shell_lib/log
+
 
 while [ -n "$1" ]; do
   case "$1" in
