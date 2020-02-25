@@ -16,6 +16,14 @@ ES_CONFIG="${base_dir}/../../Elasticsearch/config/es"
 
 . "$base_dir"/../shell_lib/log
 
+verify_ndjson() {
+  while read -r json_line; do
+    err=`echo $json_line | jq "." 2>&1 >/dev/null`
+    [ -n "$err" ] && log WARN "Failed to parse input as JSON ($err): $json_line"
+  done
+}
+
+# ----------
 
 while [ -n "$1" ]; do
   case "$1" in
@@ -55,6 +63,7 @@ load_files () {
   log "Putting data to ES"
   for INPUTFILE in $*;
   do
+    cat ${INPUTFILE} | verify_ndjson
     ${cmd}${INPUTFILE} || exit 3
   done
 }
@@ -62,6 +71,7 @@ load_files () {
 load_stream () {
   log "Switched to the stream mode."
   while read -r -d "$DELIMITER" line; do
+    verify_ndjson <<< "$line"
     n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
     while [ $n -gt $CURL_N_MAX ]; do
       sleep $SLEEP
