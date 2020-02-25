@@ -911,21 +911,24 @@ def task_stat(**kwargs):
              ```
              { '_took_storage_ms': ...,
                'data': [
-                 'name': ...,
-                 'total_events': ...,
-                 'input_events': ...,
-                 'input_bytes': ...,
-                 'input_not_removed_tasks': ...,
-                 'output_bytes': ...,
-                 'output_not_removed_tasks': ...,
-                 'total_tasks': ...,
-                 'hs06': ...,
-                 'cpu_failed': ...,
-                 'duration': ...,                   # days
-                 'step_status': {'Unknown'|'StepDone'|'StepProgressing'|'StepNotStarted'},
-                 'percent_done': ...,
-                 'percent_running': ...,
-                 'percent_pending': ...
+                 { 'name': ...,                       # step name
+                   'total_events': ...,
+                   'input_events': ...,
+                   'input_bytes': ...,
+                   'input_not_removed_tasks': ...,
+                   'output_bytes': ...,
+                   'output_not_removed_tasks': ...,
+                   'total_tasks': ...,
+                   'hs06': ...,
+                   'cpu_failed': ...,
+                   'duration': ...,                   # days
+                   'step_status': {'Unknown'|'StepDone'|'StepProgressing'
+                                   |'StepNotStarted'},
+                   'percent_done': ...,
+                   'percent_running': ...,
+                   'percent_pending': ...
+                 },
+                 ...
                ]
              }
              ```
