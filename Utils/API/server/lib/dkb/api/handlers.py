@@ -343,7 +343,8 @@ def task_stat(path, **kwargs):
     :param htag: hashtag (tasks selection parameter)
                  Hashtag may be prefixed by a modificator:
                  * & -- all these hashtags must be presented (NOT SUPPORTED);
-                 * | -- at least one of these hashtags must be presented (default);
+                 * | -- at least one of these hashtags must be presented
+                        (default);
                  * ! -- these hatshtags must not be presented (NOT SUPPORTED).
     :type htag: str
     """
@@ -370,7 +371,8 @@ def task_stat(path, **kwargs):
     if htags:
         params['htags'] = sort_by_prefixes(htags, htag_prefixes, 1)
     if params['htags']['&'] or params['htags']['!']:
-        raise DkbApiNotImplemented("Operations are not supported: AND (&), NOT (!).")
+        raise DkbApiNotImplemented("Operations are not supported: AND (&),"
+                                   " NOT (!).")
     return storages.task_stat(**params)
 
 

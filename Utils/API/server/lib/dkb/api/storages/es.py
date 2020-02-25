@@ -896,7 +896,8 @@ def task_stat(**kwargs):
                  (tasks selection parameter).
                  Categories:
                  * & -- all these hashtags must be presented (NOT SUPPORTED);
-                 * | -- at least one of these hashtags must be presented (default);
+                 * | -- at least one of these hashtags must be presented
+                        (default);
                  * ! -- these hatshtags must not be presented (NOT SUPPORTED).
                  Hash format:
                  ```

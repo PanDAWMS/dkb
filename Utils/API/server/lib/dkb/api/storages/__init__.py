@@ -190,7 +190,8 @@ def task_stat(**kwargs):
                  (tasks selection parameter).
                  Categories:
                  * & -- all these hashtags must be presented (NOT SUPPORTED);
-                 * | -- at least one of these hashtags must be presented (default);
+                 * | -- at least one of these hashtags must be presented
+                        (default);
                  * ! -- these hatshtags must not be presented (NOT SUPPORTED).
                  Hash format:
                  ```
@@ -216,7 +217,8 @@ def task_stat(**kwargs):
                    'hs06': ...,
                    'cpu_failed': ...,
                    'duration': ...,                   # days
-                   'step_status': {'Unknown'|'StepDone'|'StepProgressing'|'StepNotStarted'},
+                   'step_status': {'Unknown'|'StepDone'|'StepProgressing'
+                                   |'StepNotStarted'},
                    'percent_done': ...,
                    'percent_running': ...,
                    'percent_pending': ...
