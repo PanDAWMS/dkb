@@ -23,6 +23,34 @@ verify_ndjson() {
   done
 }
 
+jq_response_parser='
+  (
+    "Succesfully loaded: " + (
+      if(.items) then (
+        .items | map(select(.[].error == null)) | length
+      ) else
+        0
+      end
+      | tostring
+    )
+  ),
+  (
+    select(.errors) | .items[][] | select(.error)
+    | "Failed to load record: " + ( {(._id): .error} | tostring )
+  ),
+  (
+    select(.error) | "Failed to load record:" + .error|tostring
+  )'
+
+parse_bulk_response() {
+  jq -c "$jq_response_parser" \
+  | sed -E -e 's/(^|[^\])"/\1/g' -e 's/\\"/"/g' \
+  | while read -r line; do
+      [[ "$line" =~ Failed* ]] && lvl=ERROR || lvl=
+      log $lvl "$line"
+    done;
+}
+
 # ----------
 
 while [ -n "$1" ]; do
@@ -64,7 +92,8 @@ load_files () {
   for INPUTFILE in $*;
   do
     cat ${INPUTFILE} | verify_ndjson
-    ${cmd}${INPUTFILE} || exit 3
+    ${cmd}${INPUTFILE} | parse_bulk_response
+    [ $PIPESTATUS[0] -ne 0 ] && exit 3
   done
 }
 
@@ -77,7 +106,7 @@ load_stream () {
       sleep $SLEEP
       n=`ps axf | grep '[c]url' | grep "$HOST:$PORT" | wc -l`
     done
-    echo "$line" | ${cmd}- &
+    { echo "$line" | ${cmd}- | parse_bulk_response; } &
     echo -n "$EOProcess"
   done
 }
