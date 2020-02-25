@@ -174,10 +174,20 @@ def campaign_stat(**kwargs):
     return es.campaign_stat(**kwargs)
 
 
-def task_stat_steps(**kwargs):
+def task_stat(**kwargs):
     """ Calculate statistics for tasks by execution steps.
 
-    :param htag: hash of hashtags divided into categories.
+    Task selection parameters define how to get tasks for statistics
+    calculation.
+
+    :param step_type: what should be considered as step:
+                      'step', 'ctag_format' (default: 'step')
+    :type step_type: str
+
+    :param pr: production request number (tasks selection parameter)
+    :type pr: str, int
+    :param htag: hash of hashtags divided into categories
+                 (tasks selection parameter).
                  Categories:
                  * & -- all these hashtags must be presented (NOT SUPPORTED);
                  * | -- at least one of these hashtags must be presented (default);
@@ -215,8 +225,9 @@ def task_stat_steps(**kwargs):
                ]
              }
              ```
-             Steps in `data` list are sorted according to the MC campaign
-             steps order (see `api.config.MC_STEPS`).
+             Steps in `data` list are sorted according to step type:
+             * 'step': the MC campaign steps order (see `api.config.MC_STEPS`);
+             * 'ctag_format': input events number.
     :rtype: hash
     """
-    return es.task_stat_steps(**kwargs)
+    return es.task_stat(**kwargs)

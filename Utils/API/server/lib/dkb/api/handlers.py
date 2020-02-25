@@ -329,14 +329,18 @@ methods.add('/campaign', 'stat', campaign_stat)
 def task_stat(path, **kwargs):
     """ Get tasks statistics.
 
+    Task selection parameters define how to get tasks for statistics
+    calculation.
+
     :param path: full path to the method
     :type path: str
-    :param stat_type: statistics type: 'steps', 'formats', 'ctag_formats'
-                      (default: 'steps')
-    :type stat_type: str
-    :param pr: production request number (for `stat_type` value: 'formats')
+    :param step_type: what should be considered as step:
+                      'step', 'ctag_format' (default: 'step')
+    :type step_type: str
+
+    :param pr: production request number (tasks selection parameter)
     :type pr: str, int
-    :param htag: hashtag (for `stat_type` values: 'steps', 'format_ctag').
+    :param htag: hashtag (tasks selection parameter)
                  Hashtag may be prefixed by a modificator:
                  * & -- all these hashtags must be presented (NOT SUPPORTED);
                  * | -- at least one of these hashtags must be presented (default);
@@ -344,24 +348,22 @@ def task_stat(path, **kwargs):
     :type htag: str
     """
     method_name = '/task/stat'
-    allowed_types = ['steps', 'formats', 'ctag_formats']
+    step_types = ['step', 'ctag_format']
+    selection_params = ['pr', 'htag']
     htag_prefixes = ['&', '|', '!']
-    required = {
-        allowed_types[0]: ['htag'],
-        allowed_types[1]: ['pr'],
-        allowed_types[2]: ['htag'],
-    }
     params = {
-        'stat_type': allowed_types[0]
+        'step_type': step_types[0]
     }
     params.update(kwargs)
-    if (not params['stat_type'] in allowed_types):
-        raise InvalidArgument(method_name, ('stat_type', params['stat_type'],
-                                            allowed_types))
-    req = required.get(params['stat_type'], [])
-    for r in req:
-        if not params.get(r):
-            raise MissedArgument(method_name, r)
+    if (not params['step_type'] in step_types):
+        raise InvalidArgument(method_name, ('step_type', params['step_type'],
+                                            step_types))
+    selection_set = False
+    for p in selection_params:
+        if params.get(p):
+            selection_set = True
+    if not selection_set:
+        raise MissedArgument(method_name, selection_params)
     htags = params.get('htag', [])
     if not isinstance(htags, list):
         htags = [htags]
@@ -369,43 +371,7 @@ def task_stat(path, **kwargs):
         params['htags'] = sort_by_prefixes(htags, htag_prefixes, 1)
     if params['htags']['&'] or params['htags']['!']:
         raise DkbApiNotImplemented("Operations are not supported: AND (&), NOT (!).")
-    try:
-        result = methods.handler(method_name, params['stat_type'])(None, **params)
-    except MethodNotFound:
-        raise DkbApiNotImplemented("Method for statistics type '%s' is not"
-                                   " implemented yet." % params['stat_type'])
-    return result
+    return storages.task_stat(**params)
 
 
 methods.add('/task', 'stat', task_stat)
-
-
-def task_stat_steps(path, **kwargs):
-    """ Get tasks statistics by steps for given hashtags combination.
-
-    :param path: full path to the method (if None, method was called
-                 by another method and all other parameters are considered to be
-                 already analyzed)
-    :type path: str, NoneType
-    :param htag: list of (unanalyzed) hashtags, or hash of analyzed hashtags.
-                 Each unanalyzed hashtag may be prefixed by a modificator:
-                 * & -- all these hashtags must be presented (NOT SUPPORTED);
-                 * | -- at least one of these hashtags must be presented (default);
-                 * ! -- these hatshtags must not be presented (NOT SUPPORTED).
-                 Hash of analyzed hashtags has the following format:
-                 ```
-                 { '&': [htag1, htag2, ...],
-                   '|': [...],
-                   '!': [...]
-                 }
-                 ```
-    :type htag: str, dict
-    """
-    if path is not None:
-        result = methods.handler('/task', 'stat')(None, stat_type='steps', **kwargs)
-    else:
-        result = storages.task_stat_steps(**kwargs)
-    return result
-
-
-methods.add('/task/stat', 'steps', task_stat_steps)
