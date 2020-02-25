@@ -177,30 +177,30 @@ def campaign_stat(**kwargs):
 def task_stat(**kwargs):
     """ Calculate statistics for tasks by execution steps.
 
-    Task selection parameters define how to get tasks for statistics
-    calculation.
-
+    :param selection_params: parameters that define how to get tasks
+                             for statistics calculation:
+                             * pr: production request number;
+                             * htag: hash of hashtags divided into categories
+                               (tasks selection parameter).
+                               Categories:
+                                 * & -- all these hashtags must be presented
+                                        (NOT SUPPORTED);
+                                 * | -- at least one of these hashtags must
+                                        be presented (default);
+                                 * ! -- these hatshtags must not be presented
+                                        (NOT SUPPORTED).
+                                 Hash format:
+                                 ```
+                                 { '&': [htag1, htag2, ...],
+                                   '|': [...],
+                                   '!': [...]
+                                 }
+                                 ```
+    :type selection_params: dict
+            
     :param step_type: what should be considered as step:
                       'step', 'ctag_format' (default: 'step')
     :type step_type: str
-
-    :param pr: production request number (tasks selection parameter)
-    :type pr: str, int
-    :param htag: hash of hashtags divided into categories
-                 (tasks selection parameter).
-                 Categories:
-                 * & -- all these hashtags must be presented (NOT SUPPORTED);
-                 * | -- at least one of these hashtags must be presented
-                        (default);
-                 * ! -- these hatshtags must not be presented (NOT SUPPORTED).
-                 Hash format:
-                 ```
-                 { '&': [htag1, htag2, ...],
-                   '|': [...],
-                   '!': [...]
-                 }
-                 ```
-    :type htag: dict
 
     :return: hash with calculated statistics:
              ```

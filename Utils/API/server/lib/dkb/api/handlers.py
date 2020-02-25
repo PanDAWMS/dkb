@@ -359,12 +359,7 @@ def task_stat(path, **kwargs):
     if (not params['step_type'] in step_types):
         raise InvalidArgument(method_name, ('step_type', params['step_type'],
                                             step_types))
-    selection_set = False
-    for p in selection_params:
-        if params.get(p):
-            selection_set = True
-    if not selection_set:
-        raise MissedArgument(method_name, selection_params)
+    s_params = {}
     htags = params.get('htag', [])
     if not isinstance(htags, list):
         htags = [htags]
@@ -373,6 +368,14 @@ def task_stat(path, **kwargs):
     if params['htags']['&'] or params['htags']['!']:
         raise DkbApiNotImplemented("Operations are not supported: AND (&),"
                                    " NOT (!).")
+
+    for p in selection_params:
+        if params.get(p):
+            s_params['p'] = params.pop(p)
+    if not s_params:
+        raise MissedArgument(method_name, selection_params)
+    params['selection_params'] = s_params
+
     return storages.task_stat(**params)
 
 
