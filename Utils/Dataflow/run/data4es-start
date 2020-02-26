@@ -113,11 +113,7 @@ define_stages() {
 
   # Stage 95
   auth_cfg=`get_config "095.cfg"`
-  source $auth_cfg
-  [ -r "$AUTH_KEY" -a -r "$AUTH_CRT" ] \
-    || { log ERROR "Stage 095: wrong authentication parameters (failed to read certificate files: $AUTH_KEY and $AUTH_CRT)";
-         return_code=1; }
-  cmd_95="${base_dir}/../095_datasetInfoAMI/amiDatasets.py -m s --userkey $AUTH_KEY --usercert $AUTH_CRT"
+  cmd_95="${base_dir}/../095_datasetInfoAMI/amiDatasets.py -m s --config $auth_cfg"
 
   # Adjust stage commands according to IGNORE parameter
   for s in $IGNORE; do
@@ -157,7 +153,7 @@ flush_buffer() {
 }
 
 # Glue between processing functions and Sink Connector
-# Buffers records and then send them as batch of $BATCH_SIZE
+# Buffer records and then send them as batch of $BATCH_SIZE
 mediator() {
   buffer=`get_buffer "$1"`
   i=0
@@ -171,7 +167,7 @@ mediator() {
 }
 
 # Define dataflow branch (subchain)
-# Creates entry point for the branch (named pipe) and returns its name
+# Create entry point for the branch (named pipe) and return its name
 branch() {
   [ -z "$1" ] \
     && log ERROR "branch(): Branch name not specified."\

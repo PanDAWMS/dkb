@@ -1,6 +1,6 @@
 #!/bin/bash -l
 
-DEBUG=1
+DEBUG=
 
 base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
 lib="$base_dir/../shell_lib"
@@ -24,6 +24,16 @@ cmd_016="$base_dir/../016_task2es/task2es.py -m s"
 cfg_es=`get_config "es"`
 cmd_071="$base_dir/../071_esConsistency/consistency.py -m s --conf $cfg_es"
 
+while [ -n "$1" ]; do
+  case $1 in
+    --debug)
+      DEBUG=1;;
+    *)
+      break;;
+  esac
+  shift
+done
+
 out_009=/dev/null
 out_016=/dev/null
 out_071=/dev/null
@@ -31,15 +41,20 @@ if [ -n "$DEBUG" ]; then
   out_009=009.cons.out
   out_016=016.cons.out
   out_071=071.cons.out
+  log DEBUG "Transitional output files:
+  $out_009
+  $out_016
+  $out_071"
 fi
-log DEBUG "Transitional output files:
-$out_009
-$out_016
-$out_071
-"
-$cmd_009 | tee "$out_009" | $cmd_016 | eop_filter | tee "$out_016" | { $cmd_071; status=$?; } | eop_filter | tee "$out_071"
 
-[ -z "$status" ] && status_info=FAIL || status_info=OK
+# 0      | 1              | 2        | 3          | 4
+# |  5        | 6          | 7
+$cmd_009 | tee "$out_009" | $cmd_016 | eop_filter | tee "$out_016" \
+  |  $cmd_071 | eop_filter | tee "$out_071"
+
+status="${PIPESTATUS[5]}"
+
+[ $status -eq 0 ] && status_info=OK || status_info=FAIL
 log INFO "Consistency check finished, status: $status_info"
 
 exit $status
