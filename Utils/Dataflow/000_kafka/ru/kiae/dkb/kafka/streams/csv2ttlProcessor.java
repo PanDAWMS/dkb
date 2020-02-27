@@ -27,7 +27,7 @@ import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.Serdes;
 import org.apache.kafka.streams.StreamsConfig;
 import org.apache.kafka.streams.KafkaStreams;
-import org.apache.kafka.streams.processor.TopologyBuilder;
+import org.apache.kafka.streams.Topology;
 
 import ru.kiae.dkb.kafka.streams.processor.external.ExternalProcessorSupplier;
 import ru.kiae.dkb.kafka.streams.processor.external.ExternalProcessorConfig;
@@ -49,7 +49,7 @@ public class csv2ttlProcessor {
         // Demo version: every time it reads source from the beginning
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
 
-        TopologyBuilder builder = new TopologyBuilder();
+        Topology builder = new Topology();
 
         builder.addSource("Source", "dataset-metadata-csv");
 
