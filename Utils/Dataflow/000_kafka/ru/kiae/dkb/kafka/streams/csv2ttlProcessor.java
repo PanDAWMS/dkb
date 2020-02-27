@@ -43,8 +43,8 @@ public class csv2ttlProcessor {
         props.put(StreamsConfig.APPLICATION_ID_CONFIG, "streams-csv2ttl-processor");
         props.put(StreamsConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 //        props.put(StreamsConfig.ZOOKEEPER_CONNECT_CONFIG, "localhost:2181");
-        props.put(StreamsConfig.KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
-        props.put(StreamsConfig.VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+        props.put(StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass());
+        props.put(StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG, Serdes.String().getClass());
 
         // Demo version: every time it reads source from the beginning
         props.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG, "earliest");
