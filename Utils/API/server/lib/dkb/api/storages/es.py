@@ -968,13 +968,13 @@ def _agg_units(units):
         agg = aggs
         u = unit
         for p in prefix_aggs:
-            if unit.startswith(p + '_'):
+            if unit.startswith(p + '__'):
                 agg[p] = aggs.get(p, prefix_aggs[p])
                 agg[p]['aggs'] = agg = aggs[p].get('aggs', {})
                 if p == 'output':
                     agg['not_removed']['aggs'] = agg \
                         = agg['not_removed'].get('aggs', {})
-                u = unit[(len(p) + 1):]
+                u = unit[(len(p) + 2):]
         if not u:
             raise ValueError(unit, 'Invalid aggregation unit name.')
         agg_field = field_mapping.get(u, u)
@@ -1082,7 +1082,7 @@ def _get_stat_values(data, units=[]):
                 data = data.get(p, {})
                 if p == 'output':
                     data = data.get('not_removed', {})
-                u0 = unit[(len(p) + 1):]
+                u0 = unit[(len(p) + 2):]
                 r0 = result[p] = result.get(p, {})
                 break
         buckets = data.get('buckets', None)
@@ -1221,8 +1221,8 @@ def task_stat(**kwargs):
     step_agg = _step_aggregation(step_type, selection_params)
     agg_units = ['input_events', 'input_bytes', 'processed_events',
                  'total_events', 'hs06', 'hs06_failed', 'task_duration',
-                 'output_bytes', 'output_events', 'status',
-                 'status_input_events', 'status_total_events']
+                 'output__bytes', 'output__events', 'status',
+                 'status__input_events', 'status__total_events']
     instep_aggs = _agg_units(agg_units)
     instep_clause = step_agg['steps']
     while instep_clause.get('aggs'):
