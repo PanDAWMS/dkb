@@ -984,7 +984,7 @@ def _agg_units(units):
 def steps_iterator(data):
     """ Gerenator for iterator over steps data.
 
-    .. warning:: passed data will be spoiked (yielded items
+    .. warning:: passed data will be spoiled (yielded items
                  will be removed)
 
     :param data: full data to extract steps information from
