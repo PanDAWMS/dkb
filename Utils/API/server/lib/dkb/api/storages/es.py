@@ -884,7 +884,7 @@ def _step_aggregation(step_type=None, selection_params={}):
     """ Construct "aggs" part of ES query for steps aggregation.
 
     :raises: `ValueError`: unknown step type.
-    
+
     :param step_type: what should be considered as step:
                       'step', 'ctag_format' (default: 'step')
     :type step_type: str
@@ -1047,7 +1047,7 @@ def _get_stat_values(data, units=[]):
     1. {<unit_name>: <desired_value>}
     2. {<prefix>: {<bucket_name>: {'total': <n>, <sub-items>}}}
     ```
-    
+
     ``<Sub-items>`` here are supposed to be of one of the views 1-2 for input
     data and of view 1 for output.
 
@@ -1056,7 +1056,7 @@ def _get_stat_values(data, units=[]):
 
     .. warning:: This parser does not support nested prefixes
                  like `status_output_events`.
-           
+
     :param data: part of ES response containing statistic values
                  for a single item (e.g. processing step)
     :type data: dict
