@@ -984,8 +984,8 @@ def _agg_units(units):
 def steps_iterator(data):
     """ Gerenator for iterator over steps data.
 
-    .. warning:: passed data will be spoiled (yielded items
-                 will be removed)
+    Recursively check all buckets within `steps` and `substeps`
+    clauses of the `data`.
 
     :param data: full data to extract steps information from
     :type data: dict
@@ -995,38 +995,31 @@ def steps_iterator(data):
               (``step_name``, ``step_data``)
     :rtype: iterable object
     """
-    bucket_layers = [data.get('steps', {})
-                         .get('buckets', None)]
-    layer_names = []
-    while bucket_layers[0]:
-        # Items on the deepest known layer (steps or sub-buckets)
-        items = bucket_layers[-1]
+    if data.get('steps'):
+        # `data` contains information about steps
+        # (first or recursive calls of the generator)
+        buckets = data['steps'].get('buckets', None)
+    elif data.get('substeps'):
+        # `data` contains information about substeps
+        # (recursive calls of the generator)
+        buckets = data['substeps'].get('buckets', None)
+    else:
+        # `data` is data of a single step
+        yield None, data
+        raise StopIteration
 
-        # Get current layer name and content
-        try:
-            if isinstance(items, list):
-                layer = items.pop()
-                layer_name = layer.get('key', None)
-            elif isinstance(items, dict):
-                layer_name, layer = items.popitem()
-        except IndexError, KeyError:
-            # No more items in given (sub)bucket
-            # Popping up to the previous layer 
-            bucket_layers.pop()
-            layer_names.pop()
-            continue
-
-        # Check if we reached a step itself
-        # or still at some intermediate (sub)buckets layer
-        if layer.get('substeps', {}).get('buckets', None):
-            # Store current item as another layer and start over
-            bucket_layers.append(layer['substeps']['buckets'])
-            layer_names.append(layer_name)
-            continue
-
-        # Current layer is a step itself
-        step_name = ':'.join(layer_names + [layer_name])
-        yield step_name, layer
+    # Call `steps_iterator` for each bucket
+    # (in case there are some sub-steps)
+    for bucket in buckets:
+        if isinstance(buckets, list):
+            bucket_name = bucket.get('key', None)
+        elif isinstance(buckets, dict):
+            bucket_name = bucket
+            bucket = buckets[bucket_name]
+        for step_name, step in steps_iterator(bucket):
+            step_name = ':'.join([bucket_name, step_name]) if step_name \
+                        else bucket_name
+            yield step_name, step
 
 
 def _get_stat_values(data, units=[]):
