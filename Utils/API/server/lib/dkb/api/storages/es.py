@@ -947,6 +947,23 @@ def _agg_units(units):
                               'aggs': {'not_removed':
                                   {'filter': {'term': {'deleted': False}}}}}
                    }
+    special_aggs = {'input_bytes':
+                        {'filter': {'range': {'input_bytes': {'gt': 0}}},
+                         'aggs': {'input_bytes': {'sum': {'field': 'input_bytes'}}}
+                         },
+                    'task_duration':
+                        {'filter' : {'bool': {'must':
+                             [{'exists' : { 'field' : 'end_time' }},
+                              {'exists' : { 'field' : 'start_time' }},
+                              {'script':
+                                  {'script': "doc['end_time'].value >"
+                                             " doc['start_time'].value"}}]}},
+                         'aggs': {'task_duration': {'avg':
+                             {'script': {'inline': "doc['end_time'].value -"
+                                                   " doc['start_time'].value"}}}}
+                         }
+                     }
+
     for unit in units:
         agg = aggs
         u = unit
@@ -961,23 +978,10 @@ def _agg_units(units):
         if not u:
             raise ValueError(unit, 'Invalid aggregation unit name.')
         agg_field = field_mapping.get(u, u)
-        if u == 'input_bytes':
-            agg[u] = {'filter': {'range': {'input_bytes': {'gt': 0}}},
-                      'aggs': {u: {'sum': {'field': 'input_bytes'}}}}
-        elif u == 'task_duration':
-            agg[u] = {'filter' : {'bool': {'must':
-                         [{'exists' : { 'field' : 'end_time' }},
-                          {'exists' : { 'field' : 'start_time' }},
-                          {'script': {'script': "doc['end_time'].value >"
-                                                " doc['start_time'].value"}}
-                          ]}},
-                      'aggs': {u: {'avg':
-                          {'script': {'inline': "doc['end_time'].value -"
-                                                " doc['start_time'].value"}}
-                          }}
-                      }
-        elif u == 'status':
-            agg[u] = {'terms': {'field': 'status'}}
+        if u in special_aggs:
+            agg[u] = special_aggs[u]
+        elif u in prefix_aggs:
+            agg[u] = prefix_aggs[u]
         else:
             agg[u] = {'sum': {'field': agg_field}}
     return aggs
