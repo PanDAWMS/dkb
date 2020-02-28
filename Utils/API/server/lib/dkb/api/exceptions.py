@@ -118,7 +118,8 @@ class MissedArgument(MethodException):
             super(MissedArgument, self).__init__(method)
         else:
             args_str = "'" + "', '".join(args) + "'"
-            reason = "required arguments are missed (%s)." % args_str
+            reason = "one or more required arguments are missed (%s)." \
+                     % args_str
             super(MissedArgument, self).__init__(method, reason)
 
 
