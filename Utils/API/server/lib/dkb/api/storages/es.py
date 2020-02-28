@@ -1078,7 +1078,7 @@ def _get_stat_values(data, units=[]):
         u0 = unit
         r0 = result
         for p in prefixes:
-            if unit.startswith(p):
+            if unit.startswith(p + '__'):
                 data = data.get(p, {})
                 if p == 'output':
                     data = data.get('not_removed', {})
