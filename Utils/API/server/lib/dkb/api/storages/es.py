@@ -932,6 +932,9 @@ def _agg_units(units):
                   * in-status aggregation (with prefix 'status_').
     :type units: list(str)
 
+    .. warning:: This constructor does not support nested prefixes
+                 like `status_output_events`.
+
     :returns: part of ES query "aggs" section
     :rtype: dict
     """
@@ -1050,6 +1053,9 @@ def _get_stat_values(data, units=[]):
 
     ``<Unit_name>`` in ``<items>`` is one of the passed ``units``,
     while in ``<sub-items>`` -- the one with stripped ``<prefix>_``.
+
+    .. warning:: This parser does not support nested prefixes
+                 like `status_output_events`.
            
     :param data: part of ES response containing statistic values
                  for a single item (e.g. processing step)
