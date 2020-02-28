@@ -942,12 +942,11 @@ def _agg_units(units):
     field_mapping = {'hs06': 'toths06',
                      'hs06_failed': 'toths06_failed',
                      }
-    prefix_aggs = {'status': {'terms': {'field': 'status'}, 'aggs': {}},
+    prefix_aggs = {'status': {'terms': {'field': 'status'}},
                    'output': {'children': {'type': 'output_dataset'},
                               'aggs': {'not_removed':
-                                  {'filter': {'term': {'deleted': False}},
-                                   'aggs': {}}}
-                   }}
+                                  {'filter': {'term': {'deleted': False}}}}}
+                   }
     for unit in units:
         agg = aggs
         u = unit
