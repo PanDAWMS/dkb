@@ -1028,6 +1028,20 @@ def steps_iterator(data):
             yield step_name, step
 
 
+def _get_single_stat_value(data, unit):
+    """ Get single stat value from data.
+    """
+    if unit == 'total':
+        val = data.get('doc_count', None)
+    elif unit:
+        while data.get(unit):
+            data = data[unit]
+        val = data.get('value', None)
+    else:
+        val = data.get('value', None)
+    return val
+
+
 def _get_stat_values(data, units=[]):
     """ Get value of statistics units from ES response.
 
@@ -1073,46 +1087,54 @@ def _get_stat_values(data, units=[]):
     prefixes = ['output', 'status']
     result = {}
     orig_data = data
+    prefixed_units = {}
+    clean_units = list(units)
+
     for unit in units:
-        data = orig_data
-        u0 = unit
-        r0 = result
         for p in prefixes:
+            if unit == p:
+                clean_units.remove(unit)
+                prefixed_units[p] = prefixed_units.get(p, [])
+                prefixed_units[p].append('total')
             if unit.startswith(p + '__'):
-                data = data.get(p, {})
-                if p == 'output':
-                    data = data.get('not_removed', {})
-                u0 = unit[(len(p) + 2):]
-                r0 = result[p] = result.get(p, {})
+                clean_units.remove(unit)
+                u = unit[(len(p) + 2):]
+                prefixed_units[p] = prefixed_units.get(p, [])
+                prefixed_units[p].append(u)
                 break
-        buckets = data.get('buckets', None)
-        for i in data.get('buckets', [data]):
-            # Find name of the current bucket
-            # and its content (source of <desired value>)
-            if isinstance(buckets, list):
-                u = i.get('key', None)
-                src = i
-            elif isinstance(buckets, dict):
-                u = i
-                src = data[i]
-            elif buckets is None:
-                u = None
-                src = i
-            else:
-                raise MethodException("Failed to parse ES response.")
-            # Find where to write `<desired_value>`
-            if u:
-                r = r0[u] = r0.get(u, {})
-            else:
-                r = r0
-            if not u0:
-                # `unit` name was one of the prefixes ->
-                # -> we need only the number of documets
-                r['total'] = src.get('doc_count', None)
-            else:
-                while src.get(u0):
-                    src = src[u0]
-                r[u0] = src.get('value')
+
+    for p in prefixed_units:
+        data = orig_data.get(p, {})
+        r = result[p] = {}
+        if p == 'output':
+            data = data.get('not_removed', {})
+        logging.debug('Data:\n%s' % json.dumps(data, indent=2))
+        r.update(_get_stat_values(data, prefixed_units[p]))
+        logging.debug('Result:\n%s' % json.dumps(r, indent=2))
+
+    if 'buckets' not in data:
+        for unit in clean_units:
+            result[unit] = _get_single_stat_value(orig_data, unit)
+        return result
+
+
+    buckets = data['buckets']
+    for bucket in buckets:
+        if isinstance(buckets, list):
+            bucket_name = bucket.get('key', None)
+        elif isinstance(buckets, dict):
+            bucket_name = i
+            bucket = data[i]
+        else:
+            raise MethodException("Failed to parse ES response.")
+        r = result[bucket_name] = {}
+        for unit in units:
+            logging.debug('Unit: %s' % unit)
+            logging.debug('Unit: %s' % unit)
+            val = _get_single_stat_value(bucket, unit)
+            r[unit] = val
+        if set(r.keys()) == set(['total']):
+            result[bucket_name] = r['total']
     return result
 
 
