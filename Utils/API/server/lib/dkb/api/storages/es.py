@@ -1244,7 +1244,7 @@ def task_stat(**kwargs):
     agg_units = ['input_events', 'input_bytes', 'processed_events',
                  'total_events', 'hs06', 'hs06_failed', 'task_duration',
                  'output__bytes', 'output__events', 'status',
-                 'status__input_events', 'status__total_events']
+                 'status__input_events', 'status__total_events', 'output']
     instep_aggs = _agg_units(agg_units)
     instep_clause = step_agg['steps']
     while instep_clause.get('aggs'):
