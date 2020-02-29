@@ -49,6 +49,9 @@ TASK_KWARGS = {
     'doc_type': 'task'
 }
 
+# ES field aliases
+FIELD_ALIASES = {'amitag': 'ctag'}
+
 
 def init():
     """ Configure and initialize DKB ElasticSearch client.
@@ -133,6 +136,95 @@ def get_query(qname, **kwargs):
         raise QueryNotFound(qname, fname)
     except KeyError, err:
         raise MissedParameter(qname, str(err))
+    return query
+
+
+def get_selection_query(**kwargs):
+    """ Construct 'query' part of ES query to select tasks.
+
+    :raises: `MethodException`: no task selection parameters specified.
+
+    Parameter names are ES fields or can be mapped to ones
+    (see `FIELD_ALIASES`).
+    Values should be provided in one of the following forms:
+    * ``None`` (field must not be presented in the document);
+    * exact field value (to be used in 'term' query);
+    * list of values (to be used in 'terms' query);
+    * dict, containing parameter values by categories: `&`,`|`,`!`
+      (to form `bool` query). Categories:
+      * & -- all these values must be presented
+             (NOT SUPPORTED);
+      * | -- at least one of these values must
+             be presented (default);
+      * ! -- these values must not be presented.
+      Hash format:
+      ```
+      { '&': [htag1, htag2, ...],
+        '|': [...],
+        '!': [...]
+      }
+      ```
+
+    :return: query
+    :rtype: hash
+    """
+    query = {}
+    queries = []
+    params = dict(kwargs)
+
+    logging.debug('Selection params: %s' % kwargs)
+    # Change and/or/not fields representation
+    for (key, val) in kwargs.items():
+        if not isinstance(val, dict):
+            continue
+        if val.get('&'):
+            raise DkbApiNotImplemented("Operations are not supported:"
+                                       " AND (&).")
+        if '!' in val and val['!']:
+            params['!' + str(key)] = val.pop('!')
+        if '|' in val and val['|']:
+            params[key] = val['|']
+        else:
+            del params[key]
+
+    for (key, val) in params.items():
+        must_not = False
+        if str(key).startswith('!'):
+            must_not = True
+            key = key[1:]
+        fname = FIELD_ALIASES.get(key, key)
+        if val and isinstance(val, list):
+            q = {'terms': {fname: val}}
+        elif val is not None:
+            q = {'term': {fname: val}}
+        else:
+            must_not = not must_not
+            q = {'exists': {'field': fname}}
+        if must_not:
+            q = {'bool': {'must_not': q}}
+        queries.append(q)
+
+    if len(queries) > 1:
+        # Squash all ``must_not`` sub-queries
+        bool_q = None
+        transform_to_list = None
+        for q in list(queries):
+            if isinstance(q, dict) and q.get('bool', {}).get('must_not'):
+                if bool_q is None:
+                    bool_q = q
+                    transform_to_list = True
+                    continue
+                if transform_to_list is True:
+                    bool_q['bool']['must_not'] = [bool_q['bool']['must_not']]
+                    transform_to_list = False
+                bool_q['bool']['must_not'].append(q['bool']['must_not'])
+                queries.remove(q)
+        # Join all queries under single ``must`` query
+        query['bool'] = {'must': queries}
+    elif len(queries) == 1:
+        query = queries[0]
+    else:
+        raise MethodException(reason='No selection parameters specified.')
     return query
 
 
@@ -284,7 +376,7 @@ def _chain_data(chain_id):
     :rtype: list
     """
     kwargs = dict(TASK_KWARGS)
-    kwargs['body'] = {'query': {'term': {'chain_id': chain_id}}}
+    kwargs['body'] = {'query': get_selection_query(chain_id=chain_id)}
     kwargs['_source'] = ['chain_data']
     kwargs['from_'] = 0
     kwargs['size'] = 2000
@@ -506,9 +598,12 @@ def get_output_formats(project, tags):
     """
     formats = []
     query = dict(TASK_KWARGS)
-    kwargs = {'project': project, 'tags': tags}
-    query['body'] = get_query('output_formats', **kwargs)
+    task_q = get_selection_query(project=project, amitag=tags)
+    ds_q = {"has_parent": {"type": "task", "query": task_q}}
+    agg = {"formats": {"terms": {"field": "data_format", "size": 500}}}
+    query['body'] = {"query": ds_q, "aggs": agg}
     query['doc_type'] = 'output_dataset'
+    query['size'] = 0
     r = client().search(**query)
     return [bucket['key'] for bucket in
             r['aggregations']['formats']['buckets']]
