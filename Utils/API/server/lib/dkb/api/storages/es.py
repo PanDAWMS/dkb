@@ -1196,7 +1196,7 @@ def _transform_task_stat(data, agg_units=[], step_type=None):
     r['_took_storage_ms'] = data.pop('took')
     r['_total'] = data.get('hits', {}) \
                       .get('total', None)
-    r['data'] = []
+    r['_data'] = []
 
     if not step_type:
         step_type = STEP_TYPES[0]
@@ -1274,7 +1274,7 @@ def _transform_task_stat(data, agg_units=[], step_type=None):
 
         del parsed['status']
         d.update(parsed)
-        r['data'].append(d)
+        r['_data'].append(d)
     return r
 
 
