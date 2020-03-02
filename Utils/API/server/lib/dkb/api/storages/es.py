@@ -949,7 +949,7 @@ def _agg_units(units):
                    'output': {'children': {'type': 'output_dataset'},
                               'aggs': {'not_removed':
                                   {'filter': {'term': {'deleted': False}}}}},
-                   'input': {'filter': {'range': {'input_events': {'gt': 0}}}}
+                   'input': {'filter': {'range': {'input_bytes': {'gt': 0}}}}
                    }
     special_aggs = {'task_duration':
                         {'filter' : {'bool': {'must':
