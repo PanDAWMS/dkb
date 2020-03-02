@@ -1055,6 +1055,38 @@ def _get_single_stat_value(data, unit):
     return val
 
 
+def _get_bucketed_stat_values(data, units=[]):
+    """ Get values of stat units from data with 'buckets'.
+
+    :param data: part of ES response containing statistic values
+                 for a single item (e.g. processing step)
+    :type data: dict
+    :param units: statistics units (:py:func:`_agg_units`)
+
+    :returns: simplified statistics representation, containing
+              unit names as keys, and values -- as values
+    :rtype: dict
+    """
+    if not 'buckets' in data:
+        raise ValueError('_get_bucketed_stat_values() expects `data` param to'
+                         ' contain "buckets".')
+    result = {}
+    buckets = data['buckets']
+    for bucket in buckets:
+        if isinstance(buckets, list):
+            bucket_name = bucket.get('key', None)
+        elif isinstance(buckets, dict):
+            bucket_name = i
+            bucket = data[i]
+        else:
+            raise MethodException("Failed to parse ES response.")
+        r = result[bucket_name] = {}
+        r.update(_get_stat_values(bucket, units))
+        if set(r.keys()) == set(['total']):
+            result[bucket_name] = r['total']
+    return result
+
+
 def _get_stat_values(data, units=[]):
     """ Get value of statistics units from ES response.
 
@@ -1122,7 +1154,10 @@ def _get_stat_values(data, units=[]):
         if p == 'output':
             data = data.get('not_removed', {})
         logging.debug('Data:\n%s' % json.dumps(data, indent=2))
-        r.update(_get_stat_values(data, prefixed_units[p]))
+        if 'buckets' not in data:
+            r.update(_get_stat_values(data, prefixed_units[p]))
+        else:
+            r.update(_get_bucketed_stat_values(data, prefixed_units[p]))
         logging.debug('Result:\n%s' % json.dumps(r, indent=2))
 
     if 'buckets' not in data:
@@ -1130,24 +1165,12 @@ def _get_stat_values(data, units=[]):
             result[unit] = _get_single_stat_value(orig_data, unit)
         return result
 
-
-    buckets = data['buckets']
-    for bucket in buckets:
-        if isinstance(buckets, list):
-            bucket_name = bucket.get('key', None)
-        elif isinstance(buckets, dict):
-            bucket_name = i
-            bucket = data[i]
-        else:
-            raise MethodException("Failed to parse ES response.")
-        r = result[bucket_name] = {}
-        for unit in units:
-            logging.debug('Unit: %s' % unit)
-            logging.debug('Unit: %s' % unit)
-            val = _get_single_stat_value(bucket, unit)
-            r[unit] = val
+    bucketed = _get_bucketed_stat_values(data, clean_units)
+    for b in bucketed:
+        r = result.get(b, {})
+        r.update(bucketed[b])
         if set(r.keys()) == set(['total']):
-            result[bucket_name] = r['total']
+            result[b] = r['total']
     return result
 
 
