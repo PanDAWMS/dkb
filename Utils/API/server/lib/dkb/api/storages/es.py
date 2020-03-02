@@ -1177,7 +1177,7 @@ def _get_stat_values(data, units=[]):
 def _transform_task_stat(data, agg_units=[]):
     """ Transform ES query response to required response format.
 
-    :param data: ES respons
+    :param data: ES response
     :type data: dict
 
     :returns: prepared response data
