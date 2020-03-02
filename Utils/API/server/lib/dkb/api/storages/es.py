@@ -1375,5 +1375,5 @@ def task_stat(**kwargs):
     # Execute query
     r = client().search(**query)
     # ...and parse its results
-    r = _transform_task_stat(r, agg_units)
+    r = _transform_task_stat(r, agg_units, step_type)
     return r
