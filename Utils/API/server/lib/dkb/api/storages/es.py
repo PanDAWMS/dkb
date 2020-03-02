@@ -1179,6 +1179,9 @@ def _transform_task_stat(data, agg_units=[]):
 
     :param data: ES response
     :type data: dict
+    :param agg_units: list of aggregation units to look for
+                      in the ES response
+    :type agg_units: list
 
     :returns: prepared response data
     :rtype: dict
