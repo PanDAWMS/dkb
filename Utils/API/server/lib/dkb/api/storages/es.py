@@ -1164,7 +1164,9 @@ def _transform_task_stat(data, agg_units=[]):
         simplified = _get_stat_values(step_data, agg_units)
         logging.debug('Step data:\n%s' % json.dumps(step_data, indent=2))
         logging.debug('Simplified step data:\n%s' % json.dumps(simplified, indent=2))
-    raise DkbApiNotImplemented
+        d.update(simplified)
+        r['data'].append(d)
+    return r
 
 
 def task_stat(**kwargs):
