@@ -989,7 +989,10 @@ def _agg_units(units):
         aggs[p] = agg
 
     for unit in clean_units:
-        aggs[unit] = agg = aggs.get(unit, {})
+        agg = aggs[unit] = aggs.get(unit, {})
+        if agg and unit in prefix_aggs:
+            # Already addressed during prefixed fields handling
+            continue
         agg_field = field_mapping.get(unit, unit)
         if unit in special_aggs:
             agg.update(special_aggs[unit])
@@ -1150,7 +1153,7 @@ def _get_stat_values(data, units=[]):
 
     for p in prefixed_units:
         data = orig_data.get(p, {})
-        r = result[p] = {}
+        r = result[p] = result.get(p, {})
         if p == 'output':
             data = data.get('not_removed', {})
         logging.debug('Data:\n%s' % json.dumps(data, indent=2))
