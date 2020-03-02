@@ -1250,6 +1250,7 @@ def _transform_task_stat(data, agg_units=[], step_type=None):
             tres = statuses.keys()
             tres.sort()
             tres.reverse()
+            d['step_status'] = statuses[0]
             for t in tres:
                 if d['percent_done'] > t:
                     d['step_status'] = statuses[t]
