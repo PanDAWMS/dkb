@@ -9,6 +9,7 @@ import traceback
 import json
 from datetime import datetime
 import time
+import copy
 
 from ..exceptions import (DkbApiNotImplemented,
                           MethodException)
@@ -947,13 +948,10 @@ def _agg_units(units):
     prefix_aggs = {'status': {'terms': {'field': 'status'}},
                    'output': {'children': {'type': 'output_dataset'},
                               'aggs': {'not_removed':
-                                  {'filter': {'term': {'deleted': False}}}}}
+                                  {'filter': {'term': {'deleted': False}}}}},
+                   'input': {'filter': {'range': {'input_events': {'gt': 0}}}}
                    }
-    special_aggs = {'input_bytes':
-                        {'filter': {'range': {'input_bytes': {'gt': 0}}},
-                         'aggs': {'input_bytes': {'sum': {'field': 'input_bytes'}}}
-                         },
-                    'task_duration':
+    special_aggs = {'task_duration':
                         {'filter' : {'bool': {'must':
                              [{'exists' : { 'field' : 'end_time' }},
                               {'exists' : { 'field' : 'start_time' }},
@@ -965,27 +963,40 @@ def _agg_units(units):
                                                    " doc['start_time'].value"}}}}
                          }
                      }
+    prefixed_units = {}
+    clean_units = list(units)
 
     for unit in units:
-        agg = aggs
         u = unit
         for p in prefix_aggs:
             if unit.startswith(p + '__'):
-                agg[p] = aggs.get(p, prefix_aggs[p])
-                agg[p]['aggs'] = agg = aggs[p].get('aggs', {})
-                if p == 'output':
-                    agg['not_removed']['aggs'] = agg \
-                        = agg['not_removed'].get('aggs', {})
+                clean_units.remove(unit)
                 u = unit[(len(p) + 2):]
+                prefixed_units[p] = prefixed_units.get(p, [])
+                prefixed_units[p].append(u)
+                break
         if not u:
             raise ValueError(unit, 'Invalid aggregation unit name.')
-        agg_field = field_mapping.get(u, u)
-        if u in special_aggs:
-            agg[u] = special_aggs[u]
-        elif u in prefix_aggs:
-            agg[u] = prefix_aggs[u]
+
+    for p in prefixed_units:
+        agg = copy.deepcopy(prefix_aggs[p])
+        add_aggs =_agg_units(prefixed_units[p])
+        if p == 'output':
+            agg['aggs']['not_removed']['aggs'] = add_aggs
         else:
-            agg[u] = {'sum': {'field': agg_field}}
+            agg['aggs'] = add_aggs
+
+        aggs[p] = agg
+
+    for unit in clean_units:
+        aggs[unit] = agg = aggs.get(unit, {})
+        agg_field = field_mapping.get(unit, unit)
+        if unit in special_aggs:
+            agg.update(special_aggs[unit])
+        elif unit in prefix_aggs:
+            agg.update(prefix_aggs[unit])
+        else:
+            agg.update({'sum': {'field': agg_field}})
     return aggs
 
 
@@ -1086,7 +1097,7 @@ def _get_stat_values(data, units=[]):
               unit names as keys, and values -- as values
     :rtype: dict
     """
-    prefixes = ['output', 'status']
+    prefixes = ['output', 'input', 'status']
     result = {}
     orig_data = data
     prefixed_units = {}
@@ -1244,10 +1255,11 @@ def task_stat(**kwargs):
     # * and query body...
     q = get_selection_query(**selection_params)
     step_agg = _step_aggregation(step_type, selection_params)
-    agg_units = ['input_events', 'input_bytes', 'processed_events',
+    agg_units = ['input_events', 'input__input_bytes', 'processed_events',
                  'total_events', 'hs06', 'hs06_failed', 'task_duration',
                  'output__bytes', 'output__events', 'status',
-                 'status__input_events', 'status__total_events', 'output']
+                 'status__input_events', 'status__processed_events',
+                 'status__input__input_bytes', 'output']
     instep_aggs = _agg_units(agg_units)
     instep_clause = step_agg['steps']
     while instep_clause.get('aggs'):
