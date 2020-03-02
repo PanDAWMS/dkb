@@ -52,7 +52,9 @@ TASK_KWARGS = {
 }
 
 # ES field aliases
-FIELD_ALIASES = {'amitag': 'ctag'}
+FIELD_ALIASES = {'amitag': 'ctag',
+                 'htag': 'hashtag_list',
+                 'pr': 'pr_id'}
 
 
 def init():
