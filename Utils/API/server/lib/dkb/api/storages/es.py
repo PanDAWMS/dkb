@@ -1206,7 +1206,7 @@ def _transform_task_stat(data, agg_units=[], step_type=None):
 
     if step_type == 'step':
         total_events = 'total_events'
-    elif step_type == 'ctag_formats':
+    elif step_type == 'ctag_format':
         total_events = 'processed_events'
     elif step_type not in STEP_TYPES:
         raise ValueError(step_type, "Unknown step type (expected one of: %s)"
