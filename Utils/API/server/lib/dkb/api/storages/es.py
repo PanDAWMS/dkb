@@ -1174,7 +1174,7 @@ def _get_stat_values(data, units=[]):
     return result
 
 
-def _transform_task_stat(data, agg_units=[]):
+def _transform_task_stat(data, agg_units=[], step_type=None):
     """ Transform ES query response to required response format.
 
     :param data: ES response
@@ -1182,6 +1182,8 @@ def _transform_task_stat(data, agg_units=[]):
     :param agg_units: list of aggregation units to look for
                       in the ES response
     :type agg_units: list
+    :param step_type: 'step' or 'format_ctag'; defines which value
+                      should be used for completion percents calculation.
 
     :returns: prepared response data
     :rtype: dict
@@ -1195,13 +1197,83 @@ def _transform_task_stat(data, agg_units=[]):
     r['_total'] = data.get('hits', {}) \
                       .get('total', None)
     r['data'] = []
+
+    if not step_type:
+        step_type = STEP_TYPES[0]
+
+    if step_type == 'step':
+        total_events = 'total_events'
+    elif step_type == 'ctag_formats':
+        total_events = 'processed_events'
+    elif step_type not in STEP_TYPES:
+        raise ValueError(step_type, "Unknown step type (expected one of: %s)"
+                                    % STEP_TYPES)
+
     steps = steps_iterator(data.get('aggregations', {}))
     for name, step_data in steps:
         d = {'name': name}
-        simplified = _get_stat_values(step_data, agg_units)
+        parsed = _get_stat_values(step_data, agg_units + ['total'])
         logging.debug('Step data:\n%s' % json.dumps(step_data, indent=2))
-        logging.debug('Simplified step data:\n%s' % json.dumps(simplified, indent=2))
-        d.update(simplified)
+        logging.debug('Simplified step data:\n%s' % json.dumps(parsed, indent=2))
+
+        input_ds_data = parsed.pop('input', {})
+        d['input_bytes'] = input_ds_data.get('input_bytes', None)
+        d['input_not_removed_tasks'] = input_ds_data.get('total', None)
+
+        output_ds_data = parsed.pop('output', {})
+        d['output_bytes'] = output_ds_data.get('output', {}).get('bytes', None)
+        d['output_not_removed_tasks'] = output_ds_data.get('total', None)
+
+        d['cpu_failed'] = parsed.pop('hs06_failed', None)
+        d['total_tasks'] = parsed.pop('total', None)
+
+        try:
+            d['duration'] = parsed.pop('task_duration') / 86400.0 / 1000
+        except KeyError, TypeError:
+            d['duration'] = None
+
+        # Calculate completion percentage and status
+        inp = parsed.get('input_events', 0)
+        if not inp:
+            d['step_status'] = 'Unknown'
+            d['percent_done'] = 0.0
+            d['percent_runnning'] = 0.0
+            d['percent_pending'] = 0.0
+            d['percent_not_started'] = 100.0
+            d['finished_tasks'] = 0
+            d['finished_bytes'] = 0
+        else:
+            d['percent_done'] = float(parsed[total_events]) / inp
+            tres = statuses.keys()
+            tres.sort()
+            tres.reverse()
+            for t in tres:
+                if d['percent_done'] > t:
+                    d['step_status'] = statuses[t]
+                    break
+            try:
+                running = parsed['status']['running']
+                running_events = running['input_events'] - running[total_events]
+            except KeyError, TypeError:
+                running_events = 0
+            finished = parsed.get('status', {}).get('finished', {})
+            done = parsed.get('status', {}).get('done', {})
+            finished_events = finished.get('input_events', 0) \
+                                  + done.get('input_events', 0) \
+                                  - (finished.get(total_events, 0) \
+                                     + done.get(total_events, 0))
+            d['percent_running'] = float(running_events) / parsed['input_events'] \
+                                   * 100
+            d['percent_pending'] = float(inp - parsed[total_events] \
+                                    - running_events - finished_events) \
+                                   / inp * 100
+            d['percent_pending'] = max(0, d['percent_pending'])
+            d['finished_tasks'] = finished.get('total', 0) + done.get('total', 0)
+            d['finished_bytes'] = finished.get('input', {}).get('input_bytes', 0) \
+                                  + done.get('input', {}).get('input_bytes', 0)
+
+        del parsed['status']
+        d.update(parsed)
         r['data'].append(d)
     return r
 
@@ -1285,7 +1357,7 @@ def task_stat(**kwargs):
                  'total_events', 'hs06', 'hs06_failed', 'task_duration',
                  'output__bytes', 'output__events', 'status',
                  'status__input_events', 'status__processed_events',
-                 'status__input__input_bytes', 'output']
+                 'status__input__input_bytes', 'output', 'input']
     instep_aggs = _agg_units(agg_units)
     instep_clause = step_agg['steps']
     while instep_clause.get('aggs'):
