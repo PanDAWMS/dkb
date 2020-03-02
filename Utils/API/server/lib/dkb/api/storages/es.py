@@ -1224,7 +1224,7 @@ def _transform_task_stat(data, agg_units=[], step_type=None):
         d['input_not_removed_tasks'] = input_ds_data.get('total', None)
 
         output_ds_data = parsed.pop('output', {})
-        d['output_bytes'] = output_ds_data.get('output', {}).get('bytes', None)
+        d['output_bytes'] = output_ds_data.get('bytes', None)
         d['output_not_removed_tasks'] = output_ds_data.get('total', None)
 
         d['cpu_failed'] = parsed.pop('hs06_failed', None)
