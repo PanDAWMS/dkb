@@ -1215,8 +1215,25 @@ def _transform_task_stat(data, agg_units=[]):
         d = {'name': name}
         logging.debug('Step data (%s):\n%s' % (name, json.dumps(step_data,
                                                                 indent=2)))
-        step = _get_stat_values(step_data, agg_units)
+        step = _get_stat_values(step_data, agg_units + ['total'])
         logging.debug('Parsed step data:\n%s' % json.dumps(step, indent=2))
+
+        input_ds_data = step.pop('input', {})
+        d['input_bytes'] = input_ds_data.get('input_bytes', None)
+        d['input_not_removed_tasks'] = input_ds_data.get('total', None)
+
+        output_ds_data = step.pop('output', {})
+        d['output_bytes'] = output_ds_data.get('bytes', None)
+        d['output_not_removed_tasks'] = output_ds_data.get('total', None)
+
+        d['cpu_failed'] = step.pop('hs06_failed', None)
+        d['total_tasks'] = step.pop('total', None)
+
+        try:
+            d['duration'] = step.pop('task_duration') / 86400.0 / 1000
+        except KeyError, TypeError:
+            d['duration'] = None
+
         d.update(step)
         r['_data'].append(d)
     return r
