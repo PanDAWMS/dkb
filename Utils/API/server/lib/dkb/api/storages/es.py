@@ -1014,6 +1014,97 @@ def get_agg_units_query(units):
     return aggs
 
 
+def steps_iterator(data):
+    """ Gerenator for iterator over steps data.
+
+    Input ``data`` are supposed to have outer key "steps" and may have
+    nested keys "substeps" or "steps".
+
+    :param data: full data to extract steps information from
+    :type data: dict
+
+    :returns: steps data in iterable representation.
+              Each call of `next()` methor returns tuple:
+              (``step_name``, ``step_data``)
+    :rtype: iterable object
+    """
+    raise DkbApiNotImplemented
+
+
+def _get_stat_values(data, units=[]):
+    """ Get value of statistics units from ES response.
+
+    Input data contains items of one of the following views:
+    ```
+    1. {<unit_name>: {... {<unit_name>: <data>}...}}
+    2. {<prefix>: {... {<prefix>: <data>}}}
+    ```
+
+    ``<Data>`` part may have one of the following views:
+    ```
+    1. {'value': <desired_value>}
+    2. {'doc_count': <desired_value>}
+    3. {'buckets': [{'key': <bucket_name>, 'doc_count': <n>, <sub-items>},
+                    ...]}
+    4. {'buckets': {<bucket_name>: {'doc_count': <n>, <sub-items>}, ...}}
+    ```
+
+    In ``<data>`` of types 3-4 ``<sub-items>`` are optional.
+    For items of type 2 (with ``<prefix>``), ``<data>`` must be of type 2
+    (with ``'doc_count'``) or 3-4 (with or without ``<sub-items>``).
+
+    Output data contains items of one of the following simplified views:
+    ```
+    1. {<unit_name>: <desired_value>}
+    2. {<prefix>: {<bucket_name>: {'total': <n>, <sub-items>}}}
+    ```
+
+    ``<Unit_name>`` in ``<items>`` is one of the passed ``units``,
+    while in ``<sub-items>`` -- the one with stripped ``<prefix>__``.
+
+    :param data: part of ES response containing statistic values
+                 for a single item (e.g. processing step)
+    :type data: dict
+    :param units: statistics units (:py:func:`get_agg_units_query`)
+    :type units: list
+
+    :returns: simplified statistics representation, containing
+              unit names as keys, and values -- as values
+    :rtype: dict
+    """
+    raise DkbApiNotImplemented
+
+
+def _transform_task_stat(data, agg_units=[]):
+    """ Transform ES query response to required response format.
+
+    :param data: ES response
+    :type data: dict
+    :param agg_units: list of aggregation units to look for
+                      in the ES response
+    :type agg_units: list
+
+    :returns: prepared response data
+    :rtype: dict
+    """
+    r = {}
+    r['_took_storage_ms'] = data.pop('took')
+    r['_total'] = data.get('hits', {}) \
+                      .get('total', None)
+    r['_data'] = []
+    logging.debug('ES response data:\n%s' % json.dumps(data, indent=2))
+    steps = steps_iterator(data.get('aggregations', {}))
+    for name, step_data in steps:
+        d = {'name': name}
+        logging.debug('Step data (%s):\n%s' % (name, json.dumps(step_data,
+                                                                indent=2)))
+        step = _get_stat_values(step_data, agg_units)
+        logging.debug('Parsed step data:\n%s' % json.dumps(step, indent=2))
+        d.update(step)
+        r['_data'].append(d)
+    return r
+
+
 def task_stat(selection_params, step_type='step'):
     """ Calculate statistics for tasks by execution steps.
 
@@ -1093,4 +1184,6 @@ def task_stat(selection_params, step_type='step'):
     # Execute query
     r = client().search(**query)
     logging.debug('ES response:\n%s' % json.dumps(r, indent=2))
-    raise DkbApiNotImplemented
+    # ...and parse its response
+    r = _transform_task_stat(r, agg_units)
+    return r
