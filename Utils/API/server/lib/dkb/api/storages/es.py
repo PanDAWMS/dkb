@@ -9,6 +9,7 @@ import traceback
 import json
 from datetime import datetime
 import time
+import copy
 
 from ..exceptions import (DkbApiNotImplemented,
                           MethodException)
@@ -924,6 +925,95 @@ def get_step_aggregation_query(step_type=None, selection_params={}):
     return aggs
 
 
+def get_agg_units_query(units):
+    """ Construct part of ES query "aggs" section for specific units.
+
+    :param units: list of unit names. Possible values:
+                  * ES task field name (to get sum of values);
+                  * ES task field alias ('hs06', 'hs06_failed', ...);
+                  * units with special aggregation rules
+                    (e.g. 'task_duration');
+                  * prefixed values (prefix is separated from the rest of the
+                    value with '__'). Supported prefixes are:
+                    - 'output': for not removed output datasets
+                                (ds size (bytes) > 0);
+                    - 'input': same for input datasets;
+                    - 'status': for values calculated separately for tasks
+                                with different task statuses;
+                  * prefixes themselves (to get number of records over which
+                    prefixed units are aggregated).
+    :type units: list(str)
+
+    :returns: part of ES query "aggs" section
+    :rtype: dict
+    """
+    aggs = {}
+    field_mapping = {'hs06': 'toths06',
+                     'hs06_failed': 'toths06_failed',
+                     }
+    # NOTE: all intermediate aggregations MUST be named after the prefix name
+    prefix_aggs = {
+        'status': {'terms': {'field': 'status'}},
+        'output': {
+            'children': {'type': 'output_dataset'},
+            'aggs': {'output': {{'filter': {'term': {'deleted': False}}}}}},
+        'input': {'filter': {'range': {'input_bytes': {'gt': 0}}}}
+    }
+    # NOTE: all intermediate aggregations MUST be named after the unit name
+    special_aggs = {
+        'task_duration': {
+            'filter': {'bool': {'must': [
+                {'exists': {'field': 'end_time'}},
+                {'exists': {'field': 'start_time'}},
+                {'script': {'script': "doc['end_time'].value >"
+                                      " doc['start_time'].value"}}]}},
+            'aggs': {'task_duration': {'avg': {
+                'script': {'inline': "doc['end_time'].value -"
+                                     " doc['start_time'].value"}}}}}
+    }
+    prefixed_units = {}
+    clean_units = list(units)
+
+    for unit in units:
+        u = unit
+        for p in prefix_aggs:
+            if unit.startswith(p + '__'):
+                clean_units.remove(unit)
+                u = unit[(len(p) + 2):]
+                prefixed_units[p] = prefixed_units.get(p, [])
+                prefixed_units[p].append(u)
+                break
+        if not u:
+            raise ValueError(unit, 'Invalid aggregation unit name.')
+
+    for p in prefixed_units:
+        agg = copy.deepcopy(prefix_aggs[p])
+        add_aggs = get_agg_units_query(prefixed_units[p])
+        try:
+            a = agg
+            while a and a.get('aggs'):
+                a = a['aggs'][p]
+        except KeyError:
+            raise MethodException(reason="Invalid prefix aggregation rule"
+                                         "('%s')" % p)
+        a['aggs'] = add_aggs
+        aggs[p] = agg
+
+    for unit in clean_units:
+        agg = aggs[unit] = aggs.get(unit, {})
+        if agg and unit in prefix_aggs:
+            # Already addressed during prefixed fields handling
+            continue
+        agg_field = field_mapping.get(unit, unit)
+        if unit in special_aggs:
+            agg.update(special_aggs[unit])
+        elif unit in prefix_aggs:
+            agg.update(prefix_aggs[unit])
+        else:
+            agg.update({'sum': {'field': agg_field}})
+    return aggs
+
+
 def task_stat(selection_params, step_type='step'):
     """ Calculate statistics for tasks by execution steps.
 
@@ -984,6 +1074,19 @@ def task_stat(selection_params, step_type='step'):
     # * and query body...
     q = get_selection_query(**selection_params)
     step_agg = get_step_aggregation_query(step_type, selection_params)
+    agg_units = ['input_events', 'input', 'input__input_bytes',
+                 'processed_events', 'total_events', 'hs06', 'hs06_failed',
+                 'task_duration', 'output', 'output__bytes', 'output__events',
+                 'status', 'status__input_events', 'status__processed_events',
+                 'status__input__input_bytes']
+    instep_aggs = get_agg_units_query(agg_units)
+    instep_clause = step_agg['steps']
+    while instep_clause.get('aggs'):
+        instep_clause = instep_clause['aggs'].get('substeps')
+    if instep_clause:
+        instep_clause['aggs'] = {}
+        instep_clause = instep_clause['aggs']
+    instep_clause.update(instep_aggs)
     query['body'] = {'query': q, 'aggs': step_agg}
     logging.debug('Steps aggregation query:\n%s' % json.dumps(query, indent=2))
 
