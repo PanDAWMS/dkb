@@ -1017,6 +1017,9 @@ def get_agg_units_query(units):
 def steps_iterator(data):
     """ Gerenator for iterator over steps data.
 
+    Recursively check all buckets within `steps` and `substeps`
+    clauses of the ``data``.
+
     Input ``data`` are supposed to have outer key "steps" and may have
     nested keys "substeps" or "steps".
 
@@ -1028,7 +1031,31 @@ def steps_iterator(data):
               (``step_name``, ``step_data``)
     :rtype: iterable object
     """
-    raise DkbApiNotImplemented
+    if data.get('steps'):
+        # `data` contains information about steps
+        # (first or recursive calls of the generator)
+        buckets = data['steps'].get('buckets', None)
+    elif data.get('substeps'):
+        # `data` contains information about substeps
+        # (recursive calls of the generator)
+        buckets = data['substeps'].get('buckets', None)
+    else:
+        # `data` is data of a single step
+        yield None, data
+        raise StopIteration
+
+    # Call `steps_iterator` for each bucket
+    # (in case there are some sub-steps)
+    for bucket in buckets:
+        if isinstance(buckets, list):
+            bucket_name = bucket.get('key', None)
+        elif isinstance(buckets, dict):
+            bucket_name = bucket
+            bucket = buckets[bucket_name]
+        for step_name, step in steps_iterator(bucket):
+            step_name = ':'.join([bucket_name, step_name]) if step_name \
+                        else bucket_name
+            yield step_name, step
 
 
 def _get_stat_values(data, units=[]):
