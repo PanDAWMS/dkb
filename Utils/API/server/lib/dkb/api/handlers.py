@@ -29,8 +29,11 @@ from exceptions import (DkbApiNotImplemented,
                         )
 from . import __version__
 import storages
+from misc import sort_by_prefixes
 
 from cStringIO import StringIO
+import logging
+import json
 
 try:
     import matplotlib
@@ -353,7 +356,7 @@ def campaign_stat(path, **kwargs):
 methods.add('/campaign', 'stat', campaign_stat)
 
 
-def task_stat(path, **kwargs):
+def task_stat(path, rtype='json', step_type=None, **kwargs):
     """ Get tasks statistics.
 
     :param path: full path to the method
@@ -386,17 +389,26 @@ def task_stat(path, **kwargs):
     :rtype: dict
     """
     method_name = '/task/stat'
-    if kwargs.get('rtype', 'json') is not 'json':
+    if rtype is not 'json':
         raise MethodException(method_name, "Unsupported response type: '%s'"
-                                           % kwargs['rtype'])
+                                           % rtype)
     allowed_types = ['step', 'ctag_format']
-    params = {
-        'step_type': allowed_types[0]
-    }
-    params.update(kwargs)
-    if (params['step_type'] not in allowed_types):
-        raise InvalidArgument(method_name, ('step_type', params['step_type'],
+    if step_type is None:
+        step_type = allowed_types[0]
+    if (step_type not in allowed_types):
+        raise InvalidArgument(method_name, ('step_type', step_type,
                                             allowed_types))
+    params = {}
+    for param in kwargs:
+        vals = kwargs[param]
+        if not isinstance(vals, list):
+            vals = [vals]
+        if vals:
+            vals = sort_by_prefixes(vals, ['|', '&', '!'])
+        params[param] = vals
+    logging.debug('(%s) parsed parameters:\n%s' % (method_name,
+                                                   json.dumps(params,
+                                                              indent=2)))
     raise DkbApiNotImplemented
 
 
