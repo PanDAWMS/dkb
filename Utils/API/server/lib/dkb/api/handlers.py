@@ -355,6 +355,7 @@ def task_stat(path, **kwargs):
     :rtype: dict
     """
     method_name = '/task/stat'
+    rtype = kwargs.get('rtype', 'json')
     allowed_types = ['step', 'ctag_format']
     params = {
         'step_type': allowed_types[0]
