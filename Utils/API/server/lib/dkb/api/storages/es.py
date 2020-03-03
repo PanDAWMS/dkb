@@ -57,6 +57,15 @@ FIELD_ALIASES = {'amitag': 'ctag',
                  'htag': 'hashtag_list',
                  'pr': 'pr_id'}
 
+# ES prefix aggregations
+# NOTE: all intermediate aggregations MUST be named after the prefix name
+PREFIX_AGGS = {
+    'status': {'terms': {'field': 'status'}},
+    'output': {'children': {'type': 'output_dataset'},
+               'aggs': {'output': {'filter': {'term': {'deleted': False}}}}},
+    'input': {'filter': {'range': {'input_bytes': {'gt': 0}}}}
+}
+
 
 def init():
     """ Configure and initialize DKB ElasticSearch client.
@@ -951,14 +960,7 @@ def get_agg_units_query(units):
     field_mapping = {'hs06': 'toths06',
                      'hs06_failed': 'toths06_failed',
                      }
-    # NOTE: all intermediate aggregations MUST be named after the prefix name
-    prefix_aggs = {
-        'status': {'terms': {'field': 'status'}},
-        'output': {
-            'children': {'type': 'output_dataset'},
-            'aggs': {'output': {{'filter': {'term': {'deleted': False}}}}}},
-        'input': {'filter': {'range': {'input_bytes': {'gt': 0}}}}
-    }
+    prefix_aggs = copy.deepcopy(PREFIX_AGGS)
     # NOTE: all intermediate aggregations MUST be named after the unit name
     special_aggs = {
         'task_duration': {
@@ -1058,6 +1060,52 @@ def steps_iterator(data):
             yield step_name, step
 
 
+def _get_single_stat_value(data, unit):
+    """ Get single stat value from data.
+    """
+    if unit == 'total':
+        val = data.get('doc_count', None)
+    elif unit:
+        while data.get(unit):
+            data = data[unit]
+        val = data.get('value', None)
+    else:
+        val = data.get('value', None)
+    return val
+
+
+def _get_bucketed_stat_values(data, units=[]):
+    """ Get values of stat units from data with 'buckets'.
+
+    :param data: part of ES response containing statistic values
+                 for a single item (e.g. processing step)
+    :type data: dict
+    :param units: statistics units (:py:func:`_agg_units`)
+
+    :returns: simplified statistics representation, containing
+              unit names as keys, and values -- as values
+    :rtype: dict
+    """
+    if 'buckets' not in data:
+        raise ValueError('_get_bucketed_stat_values() expects `data` param to'
+                         ' contain "buckets".')
+    result = {}
+    buckets = data['buckets']
+    for bucket in buckets:
+        if isinstance(buckets, list):
+            bucket_name = bucket.get('key', None)
+        elif isinstance(buckets, dict):
+            bucket_name = i
+            bucket = data[i]
+        else:
+            raise MethodException("Failed to parse ES response.")
+        r = result[bucket_name] = {}
+        r.update(_get_stat_values(bucket, units))
+        if set(r.keys()) == set(['total']):
+            result[bucket_name] = r['total']
+    return result
+
+
 def _get_stat_values(data, units=[]):
     """ Get value of statistics units from ES response.
 
@@ -1099,7 +1147,49 @@ def _get_stat_values(data, units=[]):
               unit names as keys, and values -- as values
     :rtype: dict
     """
-    raise DkbApiNotImplemented
+    prefixes = PREFIX_AGGS.keys()
+    result = {}
+    orig_data = data
+    prefixed_units = {}
+    clean_units = list(units)
+
+    for unit in units:
+        for p in prefixes:
+            if unit == p:
+                clean_units.remove(unit)
+                prefixed_units[p] = prefixed_units.get(p, [])
+                prefixed_units[p].append('total')
+            if unit.startswith(p + '__'):
+                clean_units.remove(unit)
+                u = unit[(len(p) + 2):]
+                prefixed_units[p] = prefixed_units.get(p, [])
+                prefixed_units[p].append(u)
+                break
+
+    for p in prefixed_units:
+        data = orig_data.get(p, {})
+        while p in data:
+            data = data.get(p, {})
+        r = result[p] = {}
+        logging.debug('Data:\n%s' % json.dumps(data, indent=2))
+        if 'buckets' not in data:
+            r.update(_get_stat_values(data, prefixed_units[p]))
+        else:
+            r.update(_get_bucketed_stat_values(data, prefixed_units[p]))
+        logging.debug('Result:\n%s' % json.dumps(r, indent=2))
+
+    if 'buckets' not in data:
+        for unit in clean_units:
+            result[unit] = _get_single_stat_value(orig_data, unit)
+        return result
+
+    bucketed = _get_bucketed_stat_values(data, clean_units)
+    for b in bucketed:
+        r = result.get(b, {})
+        r.update(bucketed[b])
+        if set(r.keys()) == set(['total']):
+            result[b] = r['total']
+    return result
 
 
 def _transform_task_stat(data, agg_units=[]):
