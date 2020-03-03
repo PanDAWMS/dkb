@@ -409,7 +409,7 @@ def task_stat(path, rtype='json', step_type=None, **kwargs):
     logging.debug('(%s) parsed parameters:\n%s' % (method_name,
                                                    json.dumps(params,
                                                               indent=2)))
-    raise DkbApiNotImplemented
+    return storages.task_stat(step_type=step_type, selection_params=params)
 
 
 methods.add('/task', 'stat', task_stat)

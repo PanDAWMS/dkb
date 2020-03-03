@@ -172,3 +172,48 @@ def campaign_stat(**kwargs):
     :rtype: dict
     """
     return es.campaign_stat(**kwargs)
+
+
+def task_stat(**kwargs):
+    """ Calculate statistics for tasks by execution steps.
+
+    :param selection_params: hash of parameters defining task selections
+                             (for details see :py:func:`get_selection_query`)
+    :type selection_params: dict
+    :param step_type: step definition type: 'step', 'ctag_format'
+                      (default: 'step')
+    :type step_type: str
+
+    :return: hash with calculated statistics:
+             ```
+             { '_took_storage_ms': ...,
+               '_total': ...,
+               'data': [
+                 { 'name': ...,
+                   'total_events': ...,
+                   'input_events': ...,
+                   'input_bytes': ...,
+                   'input_not_removed_tasks': ...,
+                   'output_bytes': ...,
+                   'output_not_removed_tasks': ...,
+                   'total_tasks': ...,
+                   'hs06': ...,
+                   'cpu_failed': ...,
+                   'duration': ...,                   # days
+                   'step_status': {'Unknown'|'StepDone'|'StepProgressing'
+                                   |'StepNotStarted'},
+                   'percent_done': ...,
+                   'percent_running': ...,
+                   'percent_pending': ...
+                 },
+                 ...
+               ]
+             }
+             ```
+             Steps in "data" list are sorted according to:
+             * for 'step' steps: the MC campaign steps order
+               (see `config.MC_STEPS`);
+             * for 'ctag_format': number of step input events.
+    :rtype: hash
+    """
+    return es.task_stat(**kwargs)
