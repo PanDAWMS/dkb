@@ -50,7 +50,9 @@ TASK_KWARGS = {
 }
 
 # ES field aliases
-FIELD_ALIASES = {'amitag': 'ctag'}
+FIELD_ALIASES = {'amitag': 'ctag',
+                 'htag': 'hashtag_list',
+                 'pr': 'pr_id'}
 
 
 def init():
@@ -922,4 +924,27 @@ def task_stat(selection_params, step_type='step'):
              * for 'ctag_format': number of step input events.
     :rtype: hash
     """
+    init()
+    # Aborted/failed/broken/obsolete tasks should be excluded form statistics
+    status = {}
+    skip_statuses = ['aborted', 'failed', 'broken', 'obsolete']
+    status = selection_params['status'] = selection_params.get('status', {})
+    if '!' in status:
+        status['!'] += skip_statuses
+    else:
+        status['!'] = skip_statuses
+    # Construct query
+    query = dict(TASK_KWARGS)
+    # * for now we don't need any statistics for user (analysis) tasks
+    query['index'] = CONFIG['index']['production_tasks']
+    # * for statistics query we don't need any source documents
+    query['size'] = 0
+    # * and query body...
+    q = get_selection_query(**selection_params)
+    query['body'] = {'query': q}
+    logging.debug('Steps aggregation query:\n%s' % json.dumps(query, indent=2))
+
+    # Execute query
+    r = client().search(**query)
+    logging.debug('ES response:\n%s' % json.dumps(r, indent=2))
     raise DkbApiNotImplemented
