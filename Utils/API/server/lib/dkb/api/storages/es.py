@@ -1192,7 +1192,7 @@ def _get_stat_values(data, units=[]):
     return result
 
 
-def _transform_task_stat(data, agg_units=[]):
+def _transform_task_stat(data, agg_units=[], step_type=None):
     """ Transform ES query response to required response format.
 
     :param data: ES response
@@ -1200,10 +1200,31 @@ def _transform_task_stat(data, agg_units=[]):
     :param agg_units: list of aggregation units to look for
                       in the ES response
     :type agg_units: list
+    :param step_type: 'step' or 'format_ctag'; defines which value
+                      should be used for completion percents calculation.
+    :type step_type: str
 
     :returns: prepared response data
     :rtype: dict
     """
+    if not step_type:
+        step_type = STEP_TYPES[0]
+
+    # Depending on step type, different fields should be used for steps
+    # completion calculation
+    if step_type == 'step':
+        events_field = 'total_events'
+    elif step_type == 'ctag_format':
+        events_field = 'processed_events'
+    elif step_type not in STEP_TYPES:
+        raise ValueError(step_type, "Unknown step type (expected one of: %s)"
+                                    % STEP_TYPES)
+
+    statuses = {0: 'StepNotStarted',
+                0.1: 'StepProgressing',
+                0.9: 'StepDone'
+                }
+
     r = {}
     r['_took_storage_ms'] = data.pop('took')
     r['_total'] = data.get('hits', {}) \
@@ -1234,6 +1255,50 @@ def _transform_task_stat(data, agg_units=[]):
         except KeyError, TypeError:
             d['duration'] = None
 
+        # Calculate completion percentage and step status
+        inp = step.get('input_events', 0)
+        if not inp:
+            d['step_status'] = 'Unknown'
+            d['percent_done'] = 0.0
+            d['percent_runnning'] = 0.0
+            d['percent_pending'] = 0.0
+            d['percent_not_started'] = 100.0
+            d['finished_tasks'] = 0
+            d['finished_bytes'] = 0
+        else:
+            # Completion
+            d['percent_done'] = float(step[events_field]) / inp
+            try:
+                run = step['status']['running']
+                running_events = run['input_events'] - run[events_field]
+            except KeyError, TypeError:
+                running_events = 0
+            fin = step.get('status', {}).get('finished', {})
+            done = step.get('status', {}).get('done', {})
+            finished_events = \
+                fin.get('input_events', 0) + done.get('input_events', 0) \
+                - fin.get(events_field, 0) - done.get(events_field, 0)
+            d['percent_running'] = \
+                float(running_events) / step['input_events'] * 100
+            d['percent_pending'] = \
+                float(inp - step[events_field] - running_events
+                      - finished_events) / inp * 100
+            d['percent_pending'] = max(0, d['percent_pending'])
+            d['finished_tasks'] = fin.get('total', 0) + done.get('total', 0)
+            d['finished_bytes'] = fin.get('input', {}).get('input_bytes', 0) \
+                + done.get('input', {}).get('input_bytes', 0)
+
+            # Step status
+            tres = statuses.keys()
+            tres.sort()
+            tres.reverse()
+            d['step_status'] = statuses[tres[-1]]
+            for t in tres:
+                if d['percent_done'] > t:
+                    d['step_status'] = statuses[t]
+                    break
+
+        del step['status']
         d.update(step)
         r['_data'].append(d)
     return r
@@ -1319,5 +1384,5 @@ def task_stat(selection_params, step_type='step'):
     r = client().search(**query)
     logging.debug('ES response:\n%s' % json.dumps(r, indent=2))
     # ...and parse its response
-    r = _transform_task_stat(r, agg_units)
+    r = _transform_task_stat(r, agg_units, step_type)
     return r
