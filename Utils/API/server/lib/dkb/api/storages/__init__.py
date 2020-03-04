@@ -211,10 +211,6 @@ def task_stat(**kwargs):
                ]
              }
              ```
-             Steps in "data" list are sorted according to:
-             * for 'step' steps: the MC campaign steps order
-               (see `config.MC_STEPS`);
-             * for 'ctag_format': number of step input events.
     :rtype: hash
     """
     return es.task_stat(**kwargs)

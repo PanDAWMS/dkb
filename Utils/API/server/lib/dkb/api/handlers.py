@@ -29,6 +29,7 @@ from exceptions import (DkbApiNotImplemented,
                         )
 from . import __version__
 import storages
+from config import MC_STEPS
 from misc import sort_by_prefixes
 
 from cStringIO import StringIO
@@ -385,7 +386,12 @@ def task_stat(path, rtype='json', step_type=None, **kwargs):
                                   * list of field values (prefixed or not).
     :type <selection_parameter>: NoneType, str, number, list
 
-    :return: calculated statistics for selected tasks by steps
+    :return: calculated statistics for selected tasks by steps.
+             Steps in "data" list are sorted according to:
+             * for 'step' steps: the MC campaign steps order
+               (see `config.MC_STEPS`);
+             * else: number of step input events (desc).
+
     :rtype: dict
     """
     method_name = '/task/stat'
@@ -409,7 +415,30 @@ def task_stat(path, rtype='json', step_type=None, **kwargs):
     logging.debug('(%s) parsed parameters:\n%s' % (method_name,
                                                    json.dumps(params,
                                                               indent=2)))
-    return storages.task_stat(step_type=step_type, selection_params=params)
+    r = storages.task_stat(step_type=step_type, selection_params=params)
+    if step_type == 'step':
+        def steps_cmp(x, y):
+            """ Compare processing steps for ordering. """
+            try:
+                x = MC_STEPS.index(x['name'])
+                y = MC_STEPS.index(y['name'])
+                return cmp(x, y)
+            except KeyError, ValueError:
+                pass
+            return 0
+    else:
+        def steps_cmp(x, y):
+            """ Compare processing steps for ordering. """
+            try:
+                x = x['input_events']
+                y = y['input_events']
+                return - cmp(x, y)
+            except KeyError:
+                pass
+            return 0
+    r['_data'].sort(steps_cmp)
+
+    return r
 
 
 methods.add('/task', 'stat', task_stat)
