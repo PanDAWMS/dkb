@@ -55,6 +55,7 @@ class AbstractMessage(object):
     encoded = None
 
     incompl = None
+    update = None
 
     def __init__(self, message=None):
         """ Save initial message. """
@@ -109,6 +110,20 @@ class AbstractMessage(object):
             self.incompl = bool(status)
         return old
 
+    def for_update(self, status=None):
+        """ Set message for-update marker and/or get previous/current value.
+
+        :param status: new status (if not passed, current status is returned)
+        :type status: bool, NoneType
+
+        :return: for-update marker status (previous value, if reset)
+        :rtype: bool
+        """
+        old = self.update
+        if status is not None:
+            self.update = bool(status)
+        return old
+
 
 class JSONMessage(AbstractMessage):
     """ Message in JSON format. """
@@ -118,6 +133,7 @@ class JSONMessage(AbstractMessage):
     _ext = ".json"
 
     incompl_key = "_incomplete"
+    update_key = "_update"
 
     def decode(self, code=codeType.STRING):
         """ Decode original data as JSON. """
@@ -158,6 +174,24 @@ class JSONMessage(AbstractMessage):
             decoded[self.incompl_key] = status
             self.encoded = None
         return super(JSONMessage, self).incomplete(status)
+
+    def for_update(self, status=None):
+        """ Set message for-update marker and/or get previous/current value.
+
+        For JSON messages the marker is implemented as additional field:
+        "_update".
+
+        :param status: new status (if not passed, current status is returned)
+        :type status: bool, NoneType
+
+        :return: for-update marker status (previous value, if reset)
+        :rtype: bool
+        """
+        if status is not None:
+            decoded = self.decode()
+            decoded[self.update_key] = status
+            self.encoded = None
+        return super(JSONMessage, self).for_update(status)
 
 
 __message_class[messageType.JSON] = JSONMessage
