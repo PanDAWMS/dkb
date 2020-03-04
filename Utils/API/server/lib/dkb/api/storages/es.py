@@ -17,7 +17,9 @@ from exceptions import (StorageClientException,
                         MissedParameter,
                         NoDataFound
                         )
+from . import STEP_TYPES
 from .. import config
+
 
 # To ensure storages are named same way in all messages
 STORAGE_NAME = 'Elasticsearch'
@@ -587,20 +589,18 @@ def task_kwsearch(**kwargs):
     return result
 
 
-def get_output_formats(project, tags):
+def get_output_formats(**kwargs):
     """ Get output formats corresponding to given project and amitags.
 
-    :param tags: project name
-    :type tags: str
-    :param tags: amitags
-    :type tags: list
+    Accepts keyword parameters in form supported by
+    :py:func:`get_selection_query`.
 
     :return: output formats
     :rtype: list
     """
     formats = []
     query = dict(TASK_KWARGS)
-    task_q = get_selection_query(project=project, amitag=tags)
+    task_q = get_selection_query(**kwargs)
     ds_q = {"has_parent": {"type": "task", "query": task_q}}
     agg = {"formats": {"terms": {"field": "data_format", "size": 500}}}
     query['body'] = {"query": ds_q, "aggs": agg}
@@ -679,7 +679,7 @@ def task_derivation_statistics(**kwargs):
     tags = kwargs.get('amitag')
     if isinstance(tags, (str, unicode)):
         tags = [tags]
-    outputs = get_output_formats(project, tags)
+    outputs = get_output_formats(project=project, amitag=tags)
     outputs.sort()
     data = []
     for output in outputs:
@@ -882,6 +882,48 @@ def campaign_stat(**kwargs):
     return r
 
 
+def get_step_aggregation_query(step_type=None, selection_params={}):
+    """ Construct "aggs" part of ES query for steps aggregation.
+
+    :raises: `ValueError`: unknown step type.
+
+    :param step_type: what should be considered as step:
+                      'step', 'ctag_format' (default: 'step')
+    :type step_type: str
+    :param selection_params: parameters that define set of tasks for which
+                             the aggregation will be performed
+                             (see :py:func:`get_selection_query`)
+    :type selection_params: dict
+
+    :return: "aggs" part of ES query
+    :rtype: dict
+    """
+    aggs = {}
+    if not step_type:
+        step_type = STEP_TYPES[0]
+    elif step_type not in STEP_TYPES:
+        raise ValueError(step_type, "Unknown step type (expected one of: %s)"
+                                    % STEP_TYPES)
+    if step_type == 'ctag_format':
+        formats = get_output_formats(**selection_params)
+        filters = {}
+        for f in formats:
+            filters[f] = {
+                'has_child': {
+                    'type': 'output_dataset',
+                    'query': {'term': {'data_format': f}}
+                }
+            }
+        aggs = {'steps': {'filters': {'filters': filters},
+                          'aggs': {'substeps': {'terms': {'field': 'ctag'}}}}}
+    elif step_type == 'step':
+        aggs = {'steps': {'terms': {'field': 'step_name.keyword'}}}
+    else:
+        raise DkbApiNotImplemented("Aggregation by steps of type '%s' is not"
+                                   " implemented yet.")
+    return aggs
+
+
 def task_stat(selection_params, step_type='step'):
     """ Calculate statistics for tasks by execution steps.
 
@@ -941,7 +983,8 @@ def task_stat(selection_params, step_type='step'):
     query['size'] = 0
     # * and query body...
     q = get_selection_query(**selection_params)
-    query['body'] = {'query': q}
+    step_agg = get_step_aggregation_query(step_type, selection_params)
+    query['body'] = {'query': q, 'aggs': step_agg}
     logging.debug('Steps aggregation query:\n%s' % json.dumps(query, indent=2))
 
     # Execute query

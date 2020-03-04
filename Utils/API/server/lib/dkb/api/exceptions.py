@@ -10,6 +10,11 @@ class DkbApiException(Exception):
     code = 500
     details = 'Unknown error'
 
+    def __init__(self, message=None):
+        if message:
+            self.details = message
+            super(DkbApiException, self).__init__()
+
 
 class DkbApiNotImplemented(DkbApiException, NotImplementedError):
     """ Exception for not implemented functional. """

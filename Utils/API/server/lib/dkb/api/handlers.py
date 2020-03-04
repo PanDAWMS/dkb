@@ -392,7 +392,7 @@ def task_stat(path, rtype='json', step_type=None, **kwargs):
     if rtype is not 'json':
         raise MethodException(method_name, "Unsupported response type: '%s'"
                                            % rtype)
-    allowed_types = ['step', 'ctag_format']
+    allowed_types = storages.STEP_TYPES
     if step_type is None:
         step_type = allowed_types[0]
     if (step_type not in allowed_types):
