@@ -10,6 +10,8 @@ def my_method_handler(path, **kwargs):
 
     :param path: request path
     :type path: str
+    :param rtype: response type (supported types: ...)
+    :type rtype: str
 
     :return: hash with method response.
              Special field ``'_status'`` can be used to specify return code.
@@ -74,6 +76,9 @@ def task_hist(path, **kwargs):
 
     :param path: full path to the method
     :type path: str
+    :param rtype: response type (supported types: 'json', 'img')
+    :type rtype: str
+
     :param detailed: keep all "* Merge" steps instead of joining them
                      into single "Merge"
     :type detailed: bool
@@ -178,6 +183,9 @@ def task_chain(path, **kwargs):
 
     :param path: full path to the method
     :type path: str
+    :param rtype: response type (only 'json' supported)
+    :type rtype: str
+
     :param tid: task id
     :type tid: str, int
 
@@ -185,6 +193,9 @@ def task_chain(path, **kwargs):
     :rtype: dict
     """
     method_name = '/task/chain'
+    if kwargs.get('rtype', 'json') is not 'json':
+        raise MethodException(method_name, "Unsupported response type: '%s'"
+                                           % kwargs['rtype'])
     tid = kwargs.get('tid', None)
     if tid is None:
         raise MissedArgument(method_name, 'tid')
@@ -205,6 +216,9 @@ def task_kwsearch(path, **kwargs):
 
     :param path: full path to the method
     :type path: str
+    :param rtype: response type (only 'json' supported)
+    :type rtype: str
+
     :param kw: list of keywords (or a single keyword)
     :type kw: list, str
     :param analysis: if analysis tasks should be searched
@@ -231,6 +245,9 @@ def task_kwsearch(path, **kwargs):
     :rtype: dict
     """
     method_name = '/task/kwsearch'
+    if kwargs.get('rtype', 'json') is not 'json':
+        raise MethodException(method_name, "Unsupported response type: '%s'"
+                                           % kwargs['rtype'])
     params = {
         'analysis': True,
         'production': True,
@@ -269,6 +286,9 @@ def task_deriv(path, **kwargs):
 
     :param path: full path to the method
     :type path: str
+    :param rtype: response type (only 'json' supported)
+    :type rtype: str
+
     :param project: project name
     :type project: str
     :param amitag: amitag (or several)
@@ -278,6 +298,9 @@ def task_deriv(path, **kwargs):
     :rtype: dict
     """
     method_name = '/task/deriv'
+    if kwargs.get('rtype', 'json') is not 'json':
+        raise MethodException(method_name, "Unsupported response type: '%s'"
+                                           % kwargs['rtype'])
     if 'project' not in kwargs:
         raise MissedArgument(method_name, 'project')
     if 'amitag' not in kwargs:
@@ -293,6 +316,9 @@ def campaign_stat(path, **kwargs):
 
     :param path: full path to the method
     :type path: str
+    :param rtype: response type (only 'json' supported)
+    :type rtype: str
+
     :param htag: hashtag to select campaign tasks
     :type htag: str, list
     :param events_src: source of data for 'output' events.
@@ -309,6 +335,9 @@ def campaign_stat(path, **kwargs):
     """
     method_name = '/campaign/stat'
     events_src_values = ['ds', 'task', 'all']
+    if kwargs.get('rtype', 'json') is not 'json':
+        raise MethodException(method_name, "Unsupported response type: '%s'"
+                                           % kwargs['rtype'])
     if 'htag' not in kwargs:
         raise MissedArgument(method_name, 'htag')
     if 'events_src' in kwargs:
@@ -329,6 +358,8 @@ def task_stat(path, **kwargs):
 
     :param path: full path to the method
     :type path: str
+    :param rtype: response type (only 'json' supported)
+    :type rtype: str
 
     :param step_type: step definition type: 'step', 'ctag_format'
                       (default: 'step')
@@ -355,7 +386,9 @@ def task_stat(path, **kwargs):
     :rtype: dict
     """
     method_name = '/task/stat'
-    rtype = kwargs.get('rtype', 'json')
+    if kwargs.get('rtype', 'json') is not 'json':
+        raise MethodException(method_name, "Unsupported response type: '%s'"
+                                           % kwargs['rtype'])
     allowed_types = ['step', 'ctag_format']
     params = {
         'step_type': allowed_types[0]
