@@ -873,11 +873,11 @@ def campaign_stat(**kwargs):
         data = _transform_campaign_stat(data, kwargs.get('events_src', None))
     except KeyError, err:
         msg = "Failed to parse storage response: %s." % str(err)
-        raise MethodException(msg)
+        raise MethodException(reason=msg)
     except Exception, err:
         msg = "(%s) Failed to execute search query: %s." % (STORAGE_NAME,
                                                             str(err))
-        raise MethodException(msg)
+        raise MethodException(reason=msg)
 
     r.update(data)
     return r
