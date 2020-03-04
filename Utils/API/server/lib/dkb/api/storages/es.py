@@ -1374,6 +1374,11 @@ def task_stat(selection_params, step_type='step'):
         instep_clause = instep_clause['aggs']
     instep_clause.update(instep_aggs)
     query['body'] = {'query': q, 'aggs': step_agg}
+
+    # Default request timeout (10 sec) is not always enough
+    # (but hopefully it'll be enough after the ES scheme change)
+    query['request_timeout'] = 60
+
     logging.debug('Steps aggregation query:\n%s' % json.dumps(query, indent=2))
 
     # Execute query
