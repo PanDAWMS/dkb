@@ -189,7 +189,7 @@ def task_stat(**kwargs):
              ```
              { '_took_storage_ms': ...,
                '_total': ...,
-               'data': [
+               '_data': [
                  { 'name': ...,
                    'total_events': ...,
                    'input_events': ...,

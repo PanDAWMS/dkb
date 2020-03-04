@@ -1318,7 +1318,7 @@ def task_stat(selection_params, step_type='step'):
              ```
              { '_took_storage_ms': ...,
                '_total': ...,
-               'data': [
+               '_data': [
                  { 'name': ...,                       # step name
                    'total_events': ...,
                    'input_events': ...,
