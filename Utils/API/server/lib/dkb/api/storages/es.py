@@ -1395,6 +1395,6 @@ def step_stat(selection_params, step_type='step'):
     logging.debug('ES response:\n%s' % json.dumps(r, indent=2))
     # ...and parse its response
     r = _transform_step_stat(r, agg_units, step_type)
-    if WARNINGS.get('output_formats'):
+    if step_type == 'ctag_format' and WARNINGS.get('output_formats'):
         r['_warning'] = WARNINGS['output_formats']
     return r
