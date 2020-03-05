@@ -309,11 +309,11 @@ def _raw_task_steps_hist(**kwargs):
     kwargs['current_ts_ms'] = int(time.mktime(current_ts.timetuple())) * 1000
     q['body'] = get_query('task-steps-hist', **kwargs)
     if kwargs.get('start'):
-        r = {"range": {"end_time": {"gte":
+        r = {'range': {'end_time': {'gte':
                                     kwargs['start'].strftime(DATE_FORMAT)}}}
         q['body']['query']['bool']['must'].append(r)
     if kwargs.get('end'):
-        r = {"range": {"start_time": {"lte":
+        r = {'range': {'start_time': {'lte':
                                       kwargs['end'].strftime(DATE_FORMAT)}}}
         q['body']['query']['bool']['must'].append(r)
     r = client().search(**q)
@@ -474,21 +474,21 @@ def _task_kwsearch_query(kw, ds_size=100):
         else:
             qs_args.append(w)
     q = {
-        "bool": {
-            "must": {
-                "query_string": {
-                    "query": " AND ".join(qs_args),
-                    "analyze_wildcard": wildcard,
-                    "all_fields": True,
-                    "default_operator": "AND"
+        'bool': {
+            'must': {
+                'query_string': {
+                    'query': ' AND '.join(qs_args),
+                    'analyze_wildcard': wildcard,
+                    'all_fields': True,
+                    'default_operator': 'AND'
                 }
             },
-            "should": {
-                "has_child": {
-                    "type": "output_dataset",
-                    "score_mode": "sum",
-                    "query": {"match_all": {}},
-                    "inner_hits": {"size": ds_size}
+            'should': {
+                'has_child': {
+                    'type': 'output_dataset',
+                    'score_mode': 'sum',
+                    'query': {'match_all': {}},
+                    'inner_hits': {'size': ds_size}
                 }
             }
         }
@@ -516,7 +516,7 @@ def _get_tokens(text, index='', field=None, analyzer=None):
     """
     if index is '':
         index = TASK_KWARGS['index']
-    body = {"text": text}
+    body = {'text': text}
     result = []
     if field:
         if not index:
@@ -580,7 +580,7 @@ def task_kwsearch(**kwargs):
         msg = "Missed parameter in server configuration: %s" % str(err)
         warn.append(msg)
         logging.warn(msg)
-    r = client().search(index=idx, body={"query": q}, size=kwargs['size'],
+    r = client().search(index=idx, body={'query': q}, size=kwargs['size'],
                         request_timeout=kwargs['timeout'], doc_type='task')
     result = {'_took_storage_ms': r['took'], '_data': []}
     if warn:
@@ -611,9 +611,9 @@ def get_output_formats(**kwargs):
     formats = []
     query = dict(TASK_KWARGS)
     task_q = get_selection_query(**kwargs)
-    ds_q = {"has_parent": {"type": "task", "query": task_q}}
-    agg = {"formats": {"terms": {"field": "data_format", "size": 500}}}
-    query['body'] = {"query": ds_q, "aggs": agg}
+    ds_q = {'has_parent': {'type': 'task', 'query': task_q}}
+    agg = {'formats': {'terms': {'field': 'data_format', 'size': 500}}}
+    query['body'] = {'query': ds_q, 'aggs': agg}
     query['doc_type'] = 'output_dataset'
     query['size'] = 0
     r = client().search(**query)
