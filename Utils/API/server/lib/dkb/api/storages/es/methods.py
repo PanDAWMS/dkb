@@ -57,35 +57,6 @@ def task_steps_hist(**kwargs):
     :rtype: dict
     """
     init()
-    raw_data = _raw_task_steps_hist(**kwargs)
-    start = kwargs.get('start')
-    end = kwargs.get('end')
-    result = {'legend': [], 'data': {'x': [], 'y': []}}
-    if raw_data is None:
-        return result
-    for step in raw_data['aggregations']['steps']['buckets']:
-        step_name = step['key']
-        x = []
-        y = []
-        for data in step['chart_data']['buckets']:
-            dt = datetime.fromtimestamp(data['key'] / 1000)
-            if (not kwargs.get('start') or kwargs['start'] <= dt) \
-                    and (not kwargs.get('end') or kwargs['end'] >= dt):
-                x.append(dt.date())
-                y.append(data['doc_count'])
-        result['legend'].append(step_name)
-        result['data']['x'].append(x)
-        result['data']['y'].append(y)
-    return result
-
-
-def _raw_task_steps_hist(**kwargs):
-    """ Get raw data from ES for hist data construction.
-
-    :return: hash with ES response
-    :rtype: dict, NoneType
-    """
-    logging.debug("_raw_task_steps_hist(%s)" % kwargs)
     q = dict(TASK_KWARGS)
     if kwargs.get('end'):
         current_ts = kwargs['end']
@@ -101,8 +72,10 @@ def _raw_task_steps_hist(**kwargs):
         r = {'range': {'start_time': {'lte':
                                       kwargs['end'].strftime(DATE_FORMAT)}}}
         q['body']['query']['bool']['must'].append(r)
-    r = client().search(**q)
-    return r
+    data = client().search(**q)
+    result = transform.task_steps_hist(data, kwargs.get('start'),
+                                       kwargs.get('end'))
+    return result
 
 
 def task_chain(**kwargs):

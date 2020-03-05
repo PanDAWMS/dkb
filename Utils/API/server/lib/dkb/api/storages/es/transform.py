@@ -4,6 +4,7 @@ Transformation scenarios for ES data.
 
 import logging
 import json
+from datetime import datetime
 
 from api.common import STEP_TYPES
 from common import (ES_DATE_FORMAT,
@@ -216,6 +217,34 @@ def get_agg_values(data, units=[]):
 
 # Specific functions for different API methods
 # --->
+
+
+def task_steps_hist(data, start=None, end=None):
+    """ Transform ES response for :py:func:`methods.task_steps_hist`.
+
+    :param data: ES response
+    :type data: dict
+
+    :return: transformed data
+    :rtype: dict
+    """
+    result = {'legend': [], 'data': {'x': [], 'y': []}}
+    if data is None:
+        return result
+    for step in data['aggregations']['steps']['buckets']:
+        step_name = step['key']
+        x = []
+        y = []
+        for bucket in step['chart_data']['buckets']:
+            dt = datetime.fromtimestamp(bucket['key'] / 1000)
+            if (not start or start <= dt) and (not end or end >= dt):
+                x.append(dt.date())
+                y.append(bucket['doc_count'])
+        result['legend'].append(step_name)
+        result['data']['x'].append(x)
+        result['data']['y'].append(y)
+    return result
+
 
 def construct_chain(chain_data):
     """ Reconstruct chain structure from the chain_data.
