@@ -2,10 +2,12 @@
 -- Query tables, in "owner.table_name" format:
 ------------------------------------------------
 -- ATLAS_DEFT.t_production_task
+-- ATLAS_DEFT.t_prodmanager_request
 -- ATLAS_DEFT.t_production_step
 -- ATLAS_DEFT.t_step_template
 -- ATLAS_DEFT.t_ht_to_task
 -- ATLAS_DEFT.t_hashtag
+-- ATLAS_DEFT.t_task
 -- ATLAS_PANDA.jedi_datasets
 -- ATLAS_DEFT.t_production_dataset
 --
