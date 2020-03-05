@@ -10,6 +10,8 @@ def my_method_handler(path, **kwargs):
 
     :param path: request path
     :type path: str
+    :param rtype: response type (supported types: ...)
+    :type rtype: str
 
     :return: hash with method response.
              Special field ``'_status'`` can be used to specify return code.
@@ -27,8 +29,12 @@ from exceptions import (DkbApiNotImplemented,
                         )
 from . import __version__
 import storages
+from config import MC_STEPS
+from misc import sort_by_prefixes
 
 from cStringIO import StringIO
+import logging
+import json
 
 try:
     import matplotlib
@@ -74,6 +80,9 @@ def task_hist(path, **kwargs):
 
     :param path: full path to the method
     :type path: str
+    :param rtype: response type (supported types: 'json', 'img')
+    :type rtype: str
+
     :param detailed: keep all "* Merge" steps instead of joining them
                      into single "Merge"
     :type detailed: bool
@@ -178,6 +187,9 @@ def task_chain(path, **kwargs):
 
     :param path: full path to the method
     :type path: str
+    :param rtype: response type (only 'json' supported)
+    :type rtype: str
+
     :param tid: task id
     :type tid: str, int
 
@@ -185,6 +197,9 @@ def task_chain(path, **kwargs):
     :rtype: dict
     """
     method_name = '/task/chain'
+    if kwargs.get('rtype', 'json') is not 'json':
+        raise MethodException(method_name, "Unsupported response type: '%s'"
+                                           % kwargs['rtype'])
     tid = kwargs.get('tid', None)
     if tid is None:
         raise MissedArgument(method_name, 'tid')
@@ -205,6 +220,9 @@ def task_kwsearch(path, **kwargs):
 
     :param path: full path to the method
     :type path: str
+    :param rtype: response type (only 'json' supported)
+    :type rtype: str
+
     :param kw: list of keywords (or a single keyword)
     :type kw: list, str
     :param analysis: if analysis tasks should be searched
@@ -231,6 +249,9 @@ def task_kwsearch(path, **kwargs):
     :rtype: dict
     """
     method_name = '/task/kwsearch'
+    if kwargs.get('rtype', 'json') is not 'json':
+        raise MethodException(method_name, "Unsupported response type: '%s'"
+                                           % kwargs['rtype'])
     params = {
         'analysis': True,
         'production': True,
@@ -269,6 +290,9 @@ def task_deriv(path, **kwargs):
 
     :param path: full path to the method
     :type path: str
+    :param rtype: response type (only 'json' supported)
+    :type rtype: str
+
     :param project: project name
     :type project: str
     :param amitag: amitag (or several)
@@ -278,6 +302,9 @@ def task_deriv(path, **kwargs):
     :rtype: dict
     """
     method_name = '/task/deriv'
+    if kwargs.get('rtype', 'json') is not 'json':
+        raise MethodException(method_name, "Unsupported response type: '%s'"
+                                           % kwargs['rtype'])
     if 'project' not in kwargs:
         raise MissedArgument(method_name, 'project')
     if 'amitag' not in kwargs:
@@ -293,6 +320,9 @@ def campaign_stat(path, **kwargs):
 
     :param path: full path to the method
     :type path: str
+    :param rtype: response type (only 'json' supported)
+    :type rtype: str
+
     :param htag: hashtag to select campaign tasks
     :type htag: str, list
     :param events_src: source of data for 'output' events.
@@ -309,6 +339,9 @@ def campaign_stat(path, **kwargs):
     """
     method_name = '/campaign/stat'
     events_src_values = ['ds', 'task', 'all']
+    if kwargs.get('rtype', 'json') is not 'json':
+        raise MethodException(method_name, "Unsupported response type: '%s'"
+                                           % kwargs['rtype'])
     if 'htag' not in kwargs:
         raise MissedArgument(method_name, 'htag')
     if 'events_src' in kwargs:
@@ -322,3 +355,90 @@ def campaign_stat(path, **kwargs):
 
 
 methods.add('/campaign', 'stat', campaign_stat)
+
+
+def task_stat(path, rtype='json', step_type=None, **kwargs):
+    """ Get tasks statistics.
+
+    :param path: full path to the method
+    :type path: str
+    :param rtype: response type (only 'json' supported)
+    :type rtype: str
+
+    :param step_type: step definition type: 'step', 'ctag_format'
+                      (default: 'step')
+    :type step_type: str
+
+    :param <selection_parameter>: defines condition to select tasks for
+                                  statistics. Parameter names are mapped
+                                  to storage record fields (names and/or
+                                  aliases). Values should be provided in
+                                  one of the following forms:
+                                  * ``None`` (field must not be presented
+                                    in selected records);
+                                  * exact field value;
+                                  * exact field value with logical prefix:
+                                    - ``&`` -- field must value this value;
+                                    - ``|`` -- field must have one of values
+                                               marked with this prefix
+                                               (default);
+                                    - ``!`` -- field must not have this value;
+                                  * list of field values (prefixed or not).
+    :type <selection_parameter>: NoneType, str, number, list
+
+    :return: calculated statistics for selected tasks by steps.
+             Steps in "data" list are sorted according to:
+             * for 'step' steps: the MC campaign steps order
+               (see `config.MC_STEPS`);
+             * else: number of step input events (desc).
+
+    :rtype: dict
+    """
+    method_name = '/task/stat'
+    if rtype is not 'json':
+        raise MethodException(method_name, "Unsupported response type: '%s'"
+                                           % rtype)
+    allowed_types = storages.STEP_TYPES
+    if step_type is None:
+        step_type = allowed_types[0]
+    if (step_type not in allowed_types):
+        raise InvalidArgument(method_name, ('step_type', step_type,
+                                            allowed_types))
+    params = {}
+    for param in kwargs:
+        vals = kwargs[param]
+        if not isinstance(vals, list):
+            vals = [vals]
+        if vals:
+            vals = sort_by_prefixes(vals, ['|', '&', '!'])
+        params[param] = vals
+    logging.debug('(%s) parsed parameters:\n%s' % (method_name,
+                                                   json.dumps(params,
+                                                              indent=2)))
+    r = storages.task_stat(step_type=step_type, selection_params=params)
+    if step_type == 'step':
+        def steps_cmp(x, y):
+            """ Compare processing steps for ordering. """
+            try:
+                x = MC_STEPS.index(x['name'])
+                y = MC_STEPS.index(y['name'])
+                return cmp(x, y)
+            except KeyError, ValueError:
+                pass
+            return 0
+    else:
+        def steps_cmp(x, y):
+            """ Compare processing steps for ordering. """
+            try:
+                x = x['input_events']
+                y = y['input_events']
+                return - cmp(x, y)
+            except KeyError:
+                pass
+            return 0
+    r['_data'].sort(steps_cmp)
+
+    return r
+
+
+methods.add('/task', 'stat', task_stat)

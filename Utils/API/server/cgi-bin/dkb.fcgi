@@ -74,11 +74,13 @@ def parse_params(qs):
     return params
 
 
-def construct_response(data, **kwargs):
+def construct_response(data, rtime=None, rtype='json', pretty=False):
     """ Construct HTTP response according to the requested type.
 
     :param data: response content
     :type data: dict
+    :param rtime: request timestamp (when processing started)
+    :type rtime: float
     :param rtype: requested content type (default: 'json')
     :type rtype: str
     :param pretty: if JSON should be pretty-formatted (default: False)
@@ -87,9 +89,7 @@ def construct_response(data, **kwargs):
     :returns: status, response
     :rtype: tuple(int, str)
     """
-    rtype = kwargs.get('rtype', 'json')
     status = data.pop('_status', 200)
-    t0 = kwargs.pop('__start_time', None)
     if status/100 != 2:
         # Some error occured, so we need to return error info,
         # not the request results
@@ -112,11 +112,11 @@ def construct_response(data, **kwargs):
                 pass
         if body not in result:
             result[body] = data
-        if t0 and result.get('took_total_ms') is None:
-            result['took_total_ms'] = int((time.time() - t0)*1000)
+        if rtime and result.get('took_total_ms') is None:
+            result['took_total_ms'] = int((time.time() - rtime)*1000)
         indent = None
         newline = ''
-        if kwargs.get('pretty'):
+        if pretty:
             indent = 2
             newline = '\n'
         result = json.dumps(result, indent=indent).encode('utf-8') + newline
@@ -137,23 +137,28 @@ def construct_response(data, **kwargs):
 
 
 def dkb_app(environ, start_response):
-    t0 = time.time()
+    rtime = time.time()
     path = environ.get('SCRIPT_NAME')
     logging.debug('REQUEST: %s' % path)
     params = parse_params(environ.get('QUERY_STRING', ''))
-    params['__start_time'] = t0
-    logging.debug('PARAMS: %s' % params)
+    logging.debug('ALL PARAMS: %s' % params)
+    # Remove ``pretty`` from parameters,
+    # for it should not be passed to the method handler
+    pretty = params.pop('pretty', False)
+    # Parameter ``rtype`` is to be passed to some methods,
+    # so left in the params
+    rtype = params.get('rtype', 'json')
+    logging.debug('METHOD PARAMS: %s' % params)
     try:
-        rtype = params.get('rtype', 'json')
         if rtype not in RESPONSE_TYPE:
             raise InvalidArgument(None, ('rtype', rtype, RESPONSE_TYPE.keys()))
         handler = methods.handler(path)
         response = handler(path, **params)
-        status, result = construct_response(response, **params)
+        status, result = construct_response(response, rtime, rtype, pretty)
     except Exception, err:
         error = methods.error_handler(sys.exc_info())
         rtype = 'json'
-        status, result = construct_response(error, **params)
+        status, result = construct_response(error, rtime, rtype, pretty)
     status_line = "%(code)d %(reason)s" % {
         'code': status,
         'reason': STATUS_CODES.get(status, 'Unknown')

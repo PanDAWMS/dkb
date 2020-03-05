@@ -9,6 +9,7 @@ import traceback
 import json
 from datetime import datetime
 import time
+import copy
 
 from ..exceptions import (DkbApiNotImplemented,
                           MethodException)
@@ -17,7 +18,9 @@ from exceptions import (StorageClientException,
                         MissedParameter,
                         NoDataFound
                         )
+from . import STEP_TYPES
 from .. import config
+
 
 # To ensure storages are named same way in all messages
 STORAGE_NAME = 'Elasticsearch'
@@ -47,6 +50,20 @@ es = None
 TASK_KWARGS = {
     'index': None,
     'doc_type': 'task'
+}
+
+# ES field aliases
+FIELD_ALIASES = {'amitag': 'ctag',
+                 'htag': 'hashtag_list',
+                 'pr': 'pr_id'}
+
+# ES prefix aggregations
+# NOTE: all intermediate aggregations MUST be named after the prefix name
+PREFIX_AGGS = {
+    'status': {'terms': {'field': 'status'}},
+    'output': {'children': {'type': 'output_dataset'},
+               'aggs': {'output': {'filter': {'term': {'deleted': False}}}}},
+    'input': {'filter': {'range': {'input_bytes': {'gt': 0}}}}
 }
 
 
@@ -133,6 +150,95 @@ def get_query(qname, **kwargs):
         raise QueryNotFound(qname, fname)
     except KeyError, err:
         raise MissedParameter(qname, str(err))
+    return query
+
+
+def get_selection_query(**kwargs):
+    """ Construct 'query' part of ES query to select tasks.
+
+    :raises: `MethodException`: no task selection parameters specified.
+
+    Parameter names are ES fields or can be mapped to ones
+    (see `FIELD_ALIASES`).
+    Values should be provided in one of the following forms:
+    * ``None`` (field must not be presented in the document);
+    * exact field value (to be used in 'term' query);
+    * list of values (to be used in 'terms' query);
+    * dict, containing parameter values by categories: `&`,`|`,`!`
+      (to form `bool` query). Categories:
+      * & -- all these values must be presented
+             (NOT SUPPORTED);
+      * | -- at least one of these values must
+             be presented (default);
+      * ! -- these values must not be presented.
+      Hash format:
+      ```
+      { '&': [htag1, htag2, ...],
+        '|': [...],
+        '!': [...]
+      }
+      ```
+
+    :return: query
+    :rtype: hash
+    """
+    query = {}
+    queries = []
+    params = dict(kwargs)
+
+    logging.debug('Selection params: %s' % kwargs)
+    # Change and/or/not fields representation
+    for (key, val) in kwargs.items():
+        if not isinstance(val, dict):
+            continue
+        if val.get('&'):
+            raise DkbApiNotImplemented("Operations are not supported:"
+                                       " AND (&).")
+        if '!' in val and val['!']:
+            params['!' + str(key)] = val.pop('!')
+        if '|' in val and val['|']:
+            params[key] = val['|']
+        else:
+            del params[key]
+
+    for (key, val) in params.items():
+        must_not = False
+        if str(key).startswith('!'):
+            must_not = True
+            key = key[1:]
+        fname = FIELD_ALIASES.get(key, key)
+        if val and isinstance(val, list):
+            q = {'terms': {fname: val}}
+        elif val is not None:
+            q = {'term': {fname: val}}
+        else:
+            must_not = not must_not
+            q = {'exists': {'field': fname}}
+        if must_not:
+            q = {'bool': {'must_not': q}}
+        queries.append(q)
+
+    if len(queries) > 1:
+        # Squash all ``must_not`` sub-queries
+        bool_q = None
+        transform_to_list = None
+        for q in list(queries):
+            if isinstance(q, dict) and q.get('bool', {}).get('must_not'):
+                if bool_q is None:
+                    bool_q = q
+                    transform_to_list = True
+                    continue
+                if transform_to_list is True:
+                    bool_q['bool']['must_not'] = [bool_q['bool']['must_not']]
+                    transform_to_list = False
+                bool_q['bool']['must_not'].append(q['bool']['must_not'])
+                queries.remove(q)
+        # Join all queries under single ``must`` query
+        query['bool'] = {'must': queries}
+    elif len(queries) == 1:
+        query = queries[0]
+    else:
+        raise MethodException(reason='No selection parameters specified.')
     return query
 
 
@@ -284,7 +390,7 @@ def _chain_data(chain_id):
     :rtype: list
     """
     kwargs = dict(TASK_KWARGS)
-    kwargs['body'] = {'query': {'term': {'chain_id': chain_id}}}
+    kwargs['body'] = {'query': get_selection_query(chain_id=chain_id)}
     kwargs['_source'] = ['chain_data']
     kwargs['from_'] = 0
     kwargs['size'] = 2000
@@ -493,22 +599,23 @@ def task_kwsearch(**kwargs):
     return result
 
 
-def get_output_formats(project, tags):
+def get_output_formats(**kwargs):
     """ Get output formats corresponding to given project and amitags.
 
-    :param tags: project name
-    :type tags: str
-    :param tags: amitags
-    :type tags: list
+    Accepts keyword parameters in form supported by
+    :py:func:`get_selection_query`.
 
     :return: output formats
     :rtype: list
     """
     formats = []
     query = dict(TASK_KWARGS)
-    kwargs = {'project': project, 'tags': tags}
-    query['body'] = get_query('output_formats', **kwargs)
+    task_q = get_selection_query(**kwargs)
+    ds_q = {"has_parent": {"type": "task", "query": task_q}}
+    agg = {"formats": {"terms": {"field": "data_format", "size": 500}}}
+    query['body'] = {"query": ds_q, "aggs": agg}
     query['doc_type'] = 'output_dataset'
+    query['size'] = 0
     r = client().search(**query)
     return [bucket['key'] for bucket in
             r['aggregations']['formats']['buckets']]
@@ -582,7 +689,7 @@ def task_derivation_statistics(**kwargs):
     tags = kwargs.get('amitag')
     if isinstance(tags, (str, unicode)):
         tags = [tags]
-    outputs = get_output_formats(project, tags)
+    outputs = get_output_formats(project=project, amitag=tags)
     outputs.sort()
     data = []
     for output in outputs:
@@ -775,11 +882,508 @@ def campaign_stat(**kwargs):
         data = _transform_campaign_stat(data, kwargs.get('events_src', None))
     except KeyError, err:
         msg = "Failed to parse storage response: %s." % str(err)
-        raise MethodException(msg)
+        raise MethodException(reason=msg)
     except Exception, err:
         msg = "(%s) Failed to execute search query: %s." % (STORAGE_NAME,
                                                             str(err))
-        raise MethodException(msg)
+        raise MethodException(reason=msg)
 
     r.update(data)
+    return r
+
+
+def get_step_aggregation_query(step_type=None, selection_params={}):
+    """ Construct "aggs" part of ES query for steps aggregation.
+
+    :raises: `ValueError`: unknown step type.
+
+    :param step_type: what should be considered as step:
+                      'step', 'ctag_format' (default: 'step')
+    :type step_type: str
+    :param selection_params: parameters that define set of tasks for which
+                             the aggregation will be performed
+                             (see :py:func:`get_selection_query`)
+    :type selection_params: dict
+
+    :return: "aggs" part of ES query
+    :rtype: dict
+    """
+    aggs = {}
+    if not step_type:
+        step_type = STEP_TYPES[0]
+    elif step_type not in STEP_TYPES:
+        raise ValueError(step_type, "Unknown step type (expected one of: %s)"
+                                    % STEP_TYPES)
+    if step_type == 'ctag_format':
+        formats = get_output_formats(**selection_params)
+        filters = {}
+        for f in formats:
+            filters[f] = {
+                'has_child': {
+                    'type': 'output_dataset',
+                    'query': {'term': {'data_format': f}}
+                }
+            }
+        aggs = {'steps': {'filters': {'filters': filters},
+                          'aggs': {'substeps': {'terms': {'field': 'ctag'}}}}}
+    elif step_type == 'step':
+        aggs = {'steps': {'terms': {'field': 'step_name.keyword'}}}
+    else:
+        raise DkbApiNotImplemented("Aggregation by steps of type '%s' is not"
+                                   " implemented yet.")
+    return aggs
+
+
+def get_agg_units_query(units):
+    """ Construct part of ES query "aggs" section for specific units.
+
+    :param units: list of unit names. Possible values:
+                  * ES task field name (to get sum of values);
+                  * ES task field alias ('hs06', 'hs06_failed', ...);
+                  * units with special aggregation rules
+                    (e.g. 'task_duration');
+                  * prefixed values (prefix is separated from the rest of the
+                    value with '__'). Supported prefixes are:
+                    - 'output': for not removed output datasets
+                                (ds size (bytes) > 0);
+                    - 'input': same for input datasets;
+                    - 'status': for values calculated separately for tasks
+                                with different task statuses;
+                  * prefixes themselves (to get number of records over which
+                    prefixed units are aggregated).
+    :type units: list(str)
+
+    :returns: part of ES query "aggs" section
+    :rtype: dict
+    """
+    aggs = {}
+    field_mapping = {'hs06': 'toths06',
+                     'hs06_failed': 'toths06_failed',
+                     }
+    prefix_aggs = copy.deepcopy(PREFIX_AGGS)
+    # NOTE: all intermediate aggregations MUST be named after the unit name
+    special_aggs = {
+        'task_duration': {
+            'filter': {'bool': {'must': [
+                {'exists': {'field': 'end_time'}},
+                {'exists': {'field': 'start_time'}},
+                {'script': {'script': "doc['end_time'].value >"
+                                      " doc['start_time'].value"}}]}},
+            'aggs': {'task_duration': {'avg': {
+                'script': {'inline': "doc['end_time'].value -"
+                                     " doc['start_time'].value"}}}}}
+    }
+    prefixed_units = {}
+    clean_units = list(units)
+
+    for unit in units:
+        u = unit
+        for p in prefix_aggs:
+            if unit.startswith(p + '__'):
+                clean_units.remove(unit)
+                u = unit[(len(p) + 2):]
+                prefixed_units[p] = prefixed_units.get(p, [])
+                prefixed_units[p].append(u)
+                break
+        if not u:
+            raise ValueError(unit, 'Invalid aggregation unit name.')
+
+    for p in prefixed_units:
+        agg = copy.deepcopy(prefix_aggs[p])
+        add_aggs = get_agg_units_query(prefixed_units[p])
+        try:
+            a = agg
+            while a and a.get('aggs'):
+                a = a['aggs'][p]
+        except KeyError:
+            raise MethodException(reason="Invalid prefix aggregation rule"
+                                         "('%s')" % p)
+        a['aggs'] = add_aggs
+        aggs[p] = agg
+
+    for unit in clean_units:
+        agg = aggs[unit] = aggs.get(unit, {})
+        if agg and unit in prefix_aggs:
+            # Already addressed during prefixed fields handling
+            continue
+        agg_field = field_mapping.get(unit, unit)
+        if unit in special_aggs:
+            agg.update(special_aggs[unit])
+        elif unit in prefix_aggs:
+            agg.update(prefix_aggs[unit])
+        else:
+            agg.update({'sum': {'field': agg_field}})
+    return aggs
+
+
+def steps_iterator(data):
+    """ Gerenator for iterator over steps data.
+
+    Recursively check all buckets within `steps` and `substeps`
+    clauses of the ``data``.
+
+    Input ``data`` are supposed to have outer key "steps" and may have
+    nested keys "substeps" or "steps".
+
+    :param data: full data to extract steps information from
+    :type data: dict
+
+    :returns: steps data in iterable representation.
+              Each call of `next()` methor returns tuple:
+              (``step_name``, ``step_data``)
+    :rtype: iterable object
+    """
+    if data.get('steps'):
+        # `data` contains information about steps
+        # (first or recursive calls of the generator)
+        buckets = data['steps'].get('buckets', None)
+    elif data.get('substeps'):
+        # `data` contains information about substeps
+        # (recursive calls of the generator)
+        buckets = data['substeps'].get('buckets', None)
+    else:
+        # `data` is data of a single step
+        yield None, data
+        raise StopIteration
+
+    # Call `steps_iterator` for each bucket
+    # (in case there are some sub-steps)
+    for bucket in buckets:
+        if isinstance(buckets, list):
+            bucket_name = bucket.get('key', None)
+        elif isinstance(buckets, dict):
+            bucket_name = bucket
+            bucket = buckets[bucket_name]
+        for step_name, step in steps_iterator(bucket):
+            step_name = ':'.join([bucket_name, step_name]) if step_name \
+                        else bucket_name
+            yield step_name, step
+
+
+def _get_single_stat_value(data, unit):
+    """ Get single stat value from data.
+    """
+    if unit == 'total':
+        val = data.get('doc_count', None)
+    elif unit:
+        while data.get(unit):
+            data = data[unit]
+        val = data.get('value', None)
+    else:
+        val = data.get('value', None)
+    return val
+
+
+def _get_bucketed_stat_values(data, units=[]):
+    """ Get values of stat units from data with 'buckets'.
+
+    :param data: part of ES response containing statistic values
+                 for a single item (e.g. processing step)
+    :type data: dict
+    :param units: statistics units (:py:func:`_agg_units`)
+
+    :returns: simplified statistics representation, containing
+              unit names as keys, and values -- as values
+    :rtype: dict
+    """
+    if 'buckets' not in data:
+        raise ValueError('_get_bucketed_stat_values() expects `data` param to'
+                         ' contain "buckets".')
+    result = {}
+    buckets = data['buckets']
+    for bucket in buckets:
+        if isinstance(buckets, list):
+            bucket_name = bucket.get('key', None)
+        elif isinstance(buckets, dict):
+            bucket_name = i
+            bucket = data[i]
+        else:
+            raise MethodException("Failed to parse ES response.")
+        r = result[bucket_name] = {}
+        r.update(_get_stat_values(bucket, units))
+        if set(r.keys()) == set(['total']):
+            result[bucket_name] = r['total']
+    return result
+
+
+def _get_stat_values(data, units=[]):
+    """ Get value of statistics units from ES response.
+
+    Input data contains items of one of the following views:
+    ```
+    1. {<unit_name>: {... {<unit_name>: <data>}...}}
+    2. {<prefix>: {... {<prefix>: <data>}}}
+    ```
+
+    ``<Data>`` part may have one of the following views:
+    ```
+    1. {'value': <desired_value>}
+    2. {'doc_count': <desired_value>}
+    3. {'buckets': [{'key': <bucket_name>, 'doc_count': <n>, <sub-items>},
+                    ...]}
+    4. {'buckets': {<bucket_name>: {'doc_count': <n>, <sub-items>}, ...}}
+    ```
+
+    In ``<data>`` of types 3-4 ``<sub-items>`` are optional.
+    For items of type 2 (with ``<prefix>``), ``<data>`` must be of type 2
+    (with ``'doc_count'``) or 3-4 (with or without ``<sub-items>``).
+
+    Output data contains items of one of the following simplified views:
+    ```
+    1. {<unit_name>: <desired_value>}
+    2. {<prefix>: {<bucket_name>: {'total': <n>, <sub-items>}}}
+    ```
+
+    ``<Unit_name>`` in ``<items>`` is one of the passed ``units``,
+    while in ``<sub-items>`` -- the one with stripped ``<prefix>__``.
+
+    :param data: part of ES response containing statistic values
+                 for a single item (e.g. processing step)
+    :type data: dict
+    :param units: statistics units (:py:func:`get_agg_units_query`)
+    :type units: list
+
+    :returns: simplified statistics representation, containing
+              unit names as keys, and values -- as values
+    :rtype: dict
+    """
+    prefixes = PREFIX_AGGS.keys()
+    result = {}
+    orig_data = data
+    prefixed_units = {}
+    clean_units = list(units)
+
+    for unit in units:
+        for p in prefixes:
+            if unit == p:
+                clean_units.remove(unit)
+                prefixed_units[p] = prefixed_units.get(p, [])
+                prefixed_units[p].append('total')
+            if unit.startswith(p + '__'):
+                clean_units.remove(unit)
+                u = unit[(len(p) + 2):]
+                prefixed_units[p] = prefixed_units.get(p, [])
+                prefixed_units[p].append(u)
+                break
+
+    for p in prefixed_units:
+        data = orig_data.get(p, {})
+        while p in data:
+            data = data.get(p, {})
+        r = result[p] = {}
+        logging.debug('Data:\n%s' % json.dumps(data, indent=2))
+        if 'buckets' not in data:
+            r.update(_get_stat_values(data, prefixed_units[p]))
+        else:
+            r.update(_get_bucketed_stat_values(data, prefixed_units[p]))
+        logging.debug('Result:\n%s' % json.dumps(r, indent=2))
+
+    if 'buckets' not in data:
+        for unit in clean_units:
+            result[unit] = _get_single_stat_value(orig_data, unit)
+        return result
+
+    bucketed = _get_bucketed_stat_values(data, clean_units)
+    for b in bucketed:
+        r = result.get(b, {})
+        r.update(bucketed[b])
+        if set(r.keys()) == set(['total']):
+            result[b] = r['total']
+    return result
+
+
+def _transform_task_stat(data, agg_units=[], step_type=None):
+    """ Transform ES query response to required response format.
+
+    :param data: ES response
+    :type data: dict
+    :param agg_units: list of aggregation units to look for
+                      in the ES response
+    :type agg_units: list
+    :param step_type: 'step' or 'format_ctag'; defines which value
+                      should be used for completion percents calculation.
+    :type step_type: str
+
+    :returns: prepared response data
+    :rtype: dict
+    """
+    if not step_type:
+        step_type = STEP_TYPES[0]
+
+    # Depending on step type, different fields should be used for steps
+    # completion calculation
+    if step_type == 'step':
+        events_field = 'total_events'
+    elif step_type == 'ctag_format':
+        events_field = 'processed_events'
+    elif step_type not in STEP_TYPES:
+        raise ValueError(step_type, "Unknown step type (expected one of: %s)"
+                                    % STEP_TYPES)
+
+    statuses = {0: 'StepNotStarted',
+                0.1: 'StepProgressing',
+                0.9: 'StepDone'
+                }
+
+    r = {}
+    r['_took_storage_ms'] = data.pop('took')
+    r['_total'] = data.get('hits', {}) \
+                      .get('total', None)
+    r['_data'] = []
+    logging.debug('ES response data:\n%s' % json.dumps(data, indent=2))
+    steps = steps_iterator(data.get('aggregations', {}))
+    for name, step_data in steps:
+        d = {'name': name}
+        logging.debug('Step data (%s):\n%s' % (name, json.dumps(step_data,
+                                                                indent=2)))
+        step = _get_stat_values(step_data, agg_units + ['total'])
+        logging.debug('Parsed step data:\n%s' % json.dumps(step, indent=2))
+
+        input_ds_data = step.pop('input', {})
+        d['input_bytes'] = input_ds_data.get('input_bytes', None)
+        d['input_not_removed_tasks'] = input_ds_data.get('total', None)
+
+        output_ds_data = step.pop('output', {})
+        d['output_bytes'] = output_ds_data.get('bytes', None)
+        d['output_not_removed_tasks'] = output_ds_data.get('total', None)
+
+        d['cpu_failed'] = step.pop('hs06_failed', None)
+        d['total_tasks'] = step.pop('total', None)
+
+        try:
+            d['duration'] = step.pop('task_duration') / 86400.0 / 1000
+        except KeyError, TypeError:
+            d['duration'] = None
+
+        # Calculate completion percentage and step status
+        inp = step.get('input_events', 0)
+        if not inp:
+            d['step_status'] = 'Unknown'
+            d['percent_done'] = 0.0
+            d['percent_runnning'] = 0.0
+            d['percent_pending'] = 0.0
+            d['percent_not_started'] = 100.0
+            d['finished_tasks'] = 0
+            d['finished_bytes'] = 0
+        else:
+            # Completion
+            d['percent_done'] = float(step[events_field]) / inp
+            try:
+                run = step['status']['running']
+                running_events = run['input_events'] - run[events_field]
+            except KeyError, TypeError:
+                running_events = 0
+            fin = step.get('status', {}).get('finished', {})
+            done = step.get('status', {}).get('done', {})
+            finished_events = \
+                fin.get('input_events', 0) + done.get('input_events', 0) \
+                - fin.get(events_field, 0) - done.get(events_field, 0)
+            d['percent_running'] = \
+                float(running_events) / step['input_events'] * 100
+            d['percent_pending'] = \
+                float(inp - step[events_field] - running_events
+                      - finished_events) / inp * 100
+            d['percent_pending'] = max(0, d['percent_pending'])
+            d['finished_tasks'] = fin.get('total', 0) + done.get('total', 0)
+            d['finished_bytes'] = fin.get('input', {}).get('input_bytes', 0) \
+                + done.get('input', {}).get('input_bytes', 0)
+
+            # Step status
+            tres = statuses.keys()
+            tres.sort()
+            tres.reverse()
+            d['step_status'] = statuses[tres[-1]]
+            for t in tres:
+                if d['percent_done'] > t:
+                    d['step_status'] = statuses[t]
+                    break
+
+        del step['status']
+        d.update(step)
+        r['_data'].append(d)
+    return r
+
+
+def task_stat(selection_params, step_type='step'):
+    """ Calculate statistics for tasks by execution steps.
+
+    :param selection_params: hash of parameter defining task selection
+                              (for details see :py:func:`get_selection_query`)
+    :type selection_params: dict
+    :param step_type: step definition type: 'step', 'ctag_format'
+                      (default: 'step')
+    :type step_type: str
+
+    :return: hash with calculated statistics:
+             ```
+             { '_took_storage_ms': ...,
+               '_total': ...,
+               '_data': [
+                 { 'name': ...,                       # step name
+                   'total_events': ...,
+                   'input_events': ...,
+                   'input_bytes': ...,
+                   'input_not_removed_tasks': ...,
+                   'output_bytes': ...,
+                   'output_not_removed_tasks': ...,
+                   'total_tasks': ...,
+                   'hs06': ...,
+                   'cpu_failed': ...,
+                   'duration': ...,                   # days
+                   'step_status': {'Unknown'|'StepDone'|'StepProgressing'
+                                   |'StepNotStarted'},
+                   'percent_done': ...,
+                   'percent_running': ...,
+                   'percent_pending': ...
+                 },
+                 ...
+               ]
+             }
+             ```
+    :rtype: hash
+    """
+    init()
+    # Aborted/failed/broken/obsolete tasks should be excluded form statistics
+    status = {}
+    skip_statuses = ['aborted', 'failed', 'broken', 'obsolete']
+    status = selection_params['status'] = selection_params.get('status', {})
+    if '!' in status:
+        status['!'] += skip_statuses
+    else:
+        status['!'] = skip_statuses
+    # Construct query
+    query = dict(TASK_KWARGS)
+    # * for now we don't need any statistics for user (analysis) tasks
+    query['index'] = CONFIG['index']['production_tasks']
+    # * for statistics query we don't need any source documents
+    query['size'] = 0
+    # * and query body...
+    q = get_selection_query(**selection_params)
+    step_agg = get_step_aggregation_query(step_type, selection_params)
+    agg_units = ['input_events', 'input', 'input__input_bytes',
+                 'processed_events', 'total_events', 'hs06', 'hs06_failed',
+                 'task_duration', 'output', 'output__bytes', 'output__events',
+                 'status', 'status__input_events', 'status__processed_events',
+                 'status__input__input_bytes']
+    instep_aggs = get_agg_units_query(agg_units)
+    instep_clause = step_agg['steps']
+    while instep_clause.get('aggs'):
+        instep_clause = instep_clause['aggs'].get('substeps')
+    if instep_clause:
+        instep_clause['aggs'] = {}
+        instep_clause = instep_clause['aggs']
+    instep_clause.update(instep_aggs)
+    query['body'] = {'query': q, 'aggs': step_agg}
+
+    # Default request timeout (10 sec) is not always enough
+    # (but hopefully it'll be enough after the ES scheme change)
+    query['request_timeout'] = 60
+
+    logging.debug('Steps aggregation query:\n%s' % json.dumps(query, indent=2))
+
+    # Execute query
+    r = client().search(**query)
+    logging.debug('ES response:\n%s' % json.dumps(r, indent=2))
+    # ...and parse its response
+    r = _transform_task_stat(r, agg_units, step_type)
     return r
