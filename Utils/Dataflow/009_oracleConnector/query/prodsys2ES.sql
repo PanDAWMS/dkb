@@ -1,5 +1,5 @@
 -- Select all tasks for specified period of time
--- Query tables:
+-- Query tables, in "owner.table_name" format:
 ------------------------------------------------
 -- ATLAS_DEFT.t_production_task
 -- ATLAS_DEFT.t_production_step
