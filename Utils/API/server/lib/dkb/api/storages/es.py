@@ -66,6 +66,12 @@ PREFIX_AGGS = {
     'input': {'filter': {'range': {'input_bytes': {'gt': 0}}}}
 }
 
+# Frequently used warning messages
+WARNINGS = {
+    'output_formats': "Formats 'DAOD', 'DRAW' are excluded from"
+                      " the statistics."
+}
+
 
 def init():
     """ Configure and initialize DKB ElasticSearch client.
@@ -698,6 +704,8 @@ def task_derivation_statistics(**kwargs):
         if r['tasks'] > 0:
             data.append(r)
     result = {'_data': data}
+    if WARNINGS.get('output_formats'):
+        result['_warning'] = WARNINGS['output_formats']
     return result
 
 
@@ -1387,4 +1395,6 @@ def task_stat(selection_params, step_type='step'):
     logging.debug('ES response:\n%s' % json.dumps(r, indent=2))
     # ...and parse its response
     r = _transform_task_stat(r, agg_units, step_type)
+    if WARNINGS.get('output_formats'):
+        r['_warning'] = WARNINGS['output_formats']
     return r
