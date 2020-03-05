@@ -357,7 +357,7 @@ def campaign_stat(path, **kwargs):
 methods.add('/campaign', 'stat', campaign_stat)
 
 
-def task_stat(path, rtype='json', step_type=None, **kwargs):
+def step_stat(path, rtype='json', step_type=None, **kwargs):
     """ Get tasks statistics.
 
     :param path: full path to the method
@@ -394,7 +394,7 @@ def task_stat(path, rtype='json', step_type=None, **kwargs):
 
     :rtype: dict
     """
-    method_name = '/task/stat'
+    method_name = '/step/stat'
     if rtype is not 'json':
         raise MethodException(method_name, "Unsupported response type: '%s'"
                                            % rtype)
@@ -415,7 +415,7 @@ def task_stat(path, rtype='json', step_type=None, **kwargs):
     logging.debug('(%s) parsed parameters:\n%s' % (method_name,
                                                    json.dumps(params,
                                                               indent=2)))
-    r = storages.task_stat(step_type=step_type, selection_params=params)
+    r = storages.step_stat(step_type=step_type, selection_params=params)
     if step_type == 'step':
         def steps_cmp(x, y):
             """ Compare processing steps for ordering. """
@@ -441,4 +441,4 @@ def task_stat(path, rtype='json', step_type=None, **kwargs):
     return r
 
 
-methods.add('/task', 'stat', task_stat)
+methods.add('/step', 'stat', step_stat)
