@@ -59,6 +59,27 @@ def steps_iterator(data):
 
 def get_single_agg_value(data, unit):
     """ Get single stat value from data.
+
+    Input data are supposed to be in one of the following forms:
+    ```
+    1. {<unit_name>: {... {<unit_name>: {'value': <desired_value>}}}}
+    2. {'value': <desired_value>}
+    3. {'doc_count': <desired_value>}
+    ```
+
+    (the 3rd variant is for special ``unit`` value 'total').
+
+    :param data: part of ES response with value for a single agg unit
+                 (without buckets)
+    :type data: dict
+    :param unit: aggregation unit name (without prefix)
+                 (see :py:func:`common.get_agg_units_query`);
+                 'total' (for the number of documents in given
+                 aggregation)
+    :type unit: str
+
+    :return: unit value or None if can not extract value
+    :rtype: object
     """
     if unit == 'total':
         val = data.get('doc_count', None)
