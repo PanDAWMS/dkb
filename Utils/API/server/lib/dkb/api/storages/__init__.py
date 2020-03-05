@@ -175,7 +175,7 @@ def campaign_stat(**kwargs):
     return es.campaign_stat(**kwargs)
 
 
-def task_stat(**kwargs):
+def step_stat(**kwargs):
     """ Calculate statistics for tasks by execution steps.
 
     :param selection_params: hash of parameters defining task selections
@@ -213,4 +213,4 @@ def task_stat(**kwargs):
              ```
     :rtype: hash
     """
-    return es.task_stat(**kwargs)
+    return es.step_stat(**kwargs)

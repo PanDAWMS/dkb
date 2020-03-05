@@ -1201,7 +1201,7 @@ def _get_stat_values(data, units=[]):
     return result
 
 
-def _transform_task_stat(data, agg_units=[], step_type=None):
+def _transform_step_stat(data, agg_units=[], step_type=None):
     """ Transform ES query response to required response format.
 
     :param data: ES response
@@ -1313,7 +1313,7 @@ def _transform_task_stat(data, agg_units=[], step_type=None):
     return r
 
 
-def task_stat(selection_params, step_type='step'):
+def step_stat(selection_params, step_type='step'):
     """ Calculate statistics for tasks by execution steps.
 
     :param selection_params: hash of parameter defining task selection
@@ -1394,7 +1394,7 @@ def task_stat(selection_params, step_type='step'):
     r = client().search(**query)
     logging.debug('ES response:\n%s' % json.dumps(r, indent=2))
     # ...and parse its response
-    r = _transform_task_stat(r, agg_units, step_type)
+    r = _transform_step_stat(r, agg_units, step_type)
     if WARNINGS.get('output_formats'):
         r['_warning'] = WARNINGS['output_formats']
     return r
