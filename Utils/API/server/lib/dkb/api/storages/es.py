@@ -613,6 +613,7 @@ def get_output_formats(**kwargs):
     task_q = get_selection_query(**kwargs)
     ds_q = {'has_parent': {'type': 'task', 'query': task_q}}
     agg = {'formats': {'terms': {'field': 'data_format', 'size': 500}}}
+    agg['formats']['terms']['exclude'] = ['DAOD', 'DRAW']
     query['body'] = {'query': ds_q, 'aggs': agg}
     query['doc_type'] = 'output_dataset'
     query['size'] = 0
