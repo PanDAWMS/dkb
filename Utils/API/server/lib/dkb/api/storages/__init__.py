@@ -2,7 +2,6 @@
 Module responsible for interaction with DKB storages.
 """
 
-from common import STEP_TYPES
 import es
 
 

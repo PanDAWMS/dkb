@@ -15,7 +15,8 @@ from api.exceptions import (DkbApiNotImplemented,
 from api.storages.exceptions import (StorageClientException,
                                      QueryNotFound,
                                      MissedParameter)
-from api.storages import STEP_TYPES
+from api.common import (STEP_TYPES,
+                        DATE_FORMAT)
 from api import config
 
 
@@ -33,8 +34,7 @@ except ImportError:
 QUERY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                          'query')
 
-# Default datetime format
-DATE_FORMAT = '%d-%m-%Y %H:%M:%S'
+# Default datetime format for ES
 ES_DATE_FORMAT = '%d-%m-%y %H:%M:%S'
 
 # ES configuration

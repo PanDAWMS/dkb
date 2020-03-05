@@ -9,11 +9,11 @@ import time
 
 from api.exceptions import MethodException
 from api.storages.exceptions import NoDataFound
+from api.common import DATE_FORMAT
 
 from . import STORAGE_NAME
 import common
-from common import (DATE_FORMAT,
-                    TASK_KWARGS,
+from common import (TASK_KWARGS,
                     WARNINGS)
 from common import (init,
                     client,

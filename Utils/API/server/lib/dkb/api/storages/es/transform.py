@@ -5,7 +5,7 @@ Transformation scenarios for ES data.
 import logging
 import json
 
-from api.storages.common import STEP_TYPES
+from api.common import STEP_TYPES
 from common import (ES_DATE_FORMAT,
                     PREFIX_AGGS)
 

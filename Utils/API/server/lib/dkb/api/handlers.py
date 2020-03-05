@@ -29,7 +29,8 @@ from exceptions import (DkbApiNotImplemented,
                         )
 from . import __version__
 import storages
-from config import MC_STEPS
+from common import (MC_STEPS,
+                    STEP_TYPES)
 from misc import sort_by_prefixes
 
 from cStringIO import StringIO
@@ -389,7 +390,7 @@ def step_stat(path, rtype='json', step_type=None, **kwargs):
     :return: calculated statistics for selected tasks by steps.
              Steps in "data" list are sorted according to:
              * for 'step' steps: the MC campaign steps order
-               (see `config.MC_STEPS`);
+               (see `common.MC_STEPS`);
              * else: number of step input events (desc).
 
     :rtype: dict
@@ -398,7 +399,7 @@ def step_stat(path, rtype='json', step_type=None, **kwargs):
     if rtype is not 'json':
         raise MethodException(method_name, "Unsupported response type: '%s'"
                                            % rtype)
-    allowed_types = storages.STEP_TYPES
+    allowed_types = STEP_TYPES
     if step_type is None:
         step_type = allowed_types[0]
     if (step_type not in allowed_types):
