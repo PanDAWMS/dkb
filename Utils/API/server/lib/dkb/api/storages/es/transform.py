@@ -228,9 +228,12 @@ def task_steps_hist(data, start=None, end=None):
     :return: transformed data
     :rtype: dict
     """
-    result = {'legend': [], 'data': {'x': [], 'y': []}}
+    result = {}
+    result['_data'] = {'legend': [], 'data': {'x': [], 'y': []}}
     if data is None:
         return result
+    result['_took_storage_ms'] = data.get('took')
+    result['_total'] = data.get('hits', {}).get('total')
     for step in data['aggregations']['steps']['buckets']:
         step_name = step['key']
         x = []
@@ -240,9 +243,9 @@ def task_steps_hist(data, start=None, end=None):
             if (not start or start <= dt) and (not end or end >= dt):
                 x.append(dt.date())
                 y.append(bucket['doc_count'])
-        result['legend'].append(step_name)
-        result['data']['x'].append(x)
-        result['data']['y'].append(y)
+        result['_data']['legend'].append(step_name)
+        result['_data']['data']['x'].append(x)
+        result['_data']['data']['y'].append(y)
     return result
 
 

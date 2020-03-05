@@ -138,7 +138,8 @@ def task_hist(path, **kwargs):
         raise InvalidArgument('/task/hist', ('htags', htags))
     if not isinstance(htags, list):
         kwargs['htags'] = htags.split(',')
-    data = storages.task_steps_hist(**kwargs)
+    result = storages.task_steps_hist(**kwargs)
+    data = result.pop('_data', {})
     if 'detailed' not in kwargs:
         # Join all '* Merge' steps under common label 'Merge'
         if 'Merge' not in data['legend']:
@@ -156,14 +157,13 @@ def task_hist(path, **kwargs):
             del data['legend'][idx]
             del data['data']['x'][idx]
             del data['data']['y'][idx]
-    result = {}
     if rtype == 'json':
         # json module doesn't know how to serialize `datetime` objects
         x_data = data['data']['x']
         for i, _ in enumerate(x_data):
             for j, d in enumerate(x_data[i]):
                 x_data[i][j] = str(d)
-        result = data
+        result['_data'] = data
     if rtype == 'img':
         # Reorder data series according to the steps order
         steps_order = ['Evgen', 'Simul', 'Reco', 'Deriv', 'Merge']
