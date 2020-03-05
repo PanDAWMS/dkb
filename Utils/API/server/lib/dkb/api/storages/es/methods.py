@@ -58,23 +58,22 @@ def task_steps_hist(**kwargs):
     """
     init()
     q = dict(TASK_KWARGS)
-    if kwargs.get('end'):
-        current_ts = kwargs['end']
+    start = kwargs.get('start')
+    end = kwargs.get('end')
+    if end:
+        current_ts = end
     else:
         current_ts = datetime.utcnow()
     kwargs['current_ts_ms'] = int(time.mktime(current_ts.timetuple())) * 1000
     q['body'] = get_query('task-steps-hist', **kwargs)
-    if kwargs.get('start'):
-        r = {'range': {'end_time': {'gte':
-                                    kwargs['start'].strftime(DATE_FORMAT)}}}
+    if start:
+        r = {'range': {'end_time': {'gte': start.strftime(DATE_FORMAT)}}}
         q['body']['query']['bool']['must'].append(r)
-    if kwargs.get('end'):
-        r = {'range': {'start_time': {'lte':
-                                      kwargs['end'].strftime(DATE_FORMAT)}}}
+    if end:
+        r = {'range': {'start_time': {'lte': end.strftime(DATE_FORMAT)}}}
         q['body']['query']['bool']['must'].append(r)
     data = client().search(**q)
-    result = transform.task_steps_hist(data, kwargs.get('start'),
-                                       kwargs.get('end'))
+    result = transform.task_steps_hist(data, start, end)
     return result
 
 
