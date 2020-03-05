@@ -98,7 +98,7 @@ def get_bucketed_agg_values(data, units=[]):
     :param data: part of ES response containing statistic values
                  for a single item (e.g. processing step)
     :type data: dict
-    :param units: statistics units (:py:func:`_agg_units`)
+    :param units: statistics units (:py:func:`common.get_agg_units_query`)
 
     :returns: simplified statistics representation, containing
               unit names as keys, and values -- as values
@@ -158,7 +158,7 @@ def get_agg_values(data, units=[]):
     :param data: part of ES response containing statistic values
                  for a single item (e.g. processing step)
     :type data: dict
-    :param units: statistics units (:py:func:`get_agg_units_query`)
+    :param units: statistics units (:py:func:`common.get_agg_units_query`)
     :type units: list
 
     :returns: simplified statistics representation, containing
@@ -225,7 +225,7 @@ def construct_chain(chain_data):
     child's input).
 
     :param chain_data: chain_data of all tasks in the chain (in the form
-                       corresponding outcome of ``method.chain_data()``)
+                       corresponding outcome of :py:func:`methods.chain_data`)
     :type chain_data: list
 
     :return: constructed chain -- hash with keys of task IDs and values of the
@@ -272,7 +272,8 @@ def campaign_stat(stat_data, events_src=None):
                        * 'all'  -- provide all possible values as hash.
     :type events_src: str
 
-    :return: properly formatted response for ``method.campaign_stat()``
+    :return: properly formatted response for
+            :py:func:`methods.campaign_stat`
     :rtype: dict
     """
     r = {}

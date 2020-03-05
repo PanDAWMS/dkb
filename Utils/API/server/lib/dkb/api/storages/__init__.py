@@ -178,7 +178,8 @@ def step_stat(**kwargs):
     """ Calculate statistics for tasks by execution steps.
 
     :param selection_params: hash of parameters defining task selections
-                             (for details see :py:func:`get_selection_query`)
+                             (for details see
+                              :py:func:`es.common.get_selection_query`)
     :type selection_params: dict
     :param step_type: step definition type: 'step', 'ctag_format'
                       (default: 'step')

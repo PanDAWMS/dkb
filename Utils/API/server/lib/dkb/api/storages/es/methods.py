@@ -28,7 +28,7 @@ import transform
 
 
 def task_steps_hist(**kwargs):
-    """ Implementation of ``task_steps_hist`` for ES.
+    """ Implementation of :py:func:`storages.task_steps_hist` for ES.
 
     Result hash is of following format:
 
@@ -216,7 +216,7 @@ def _task_kwsearch_query(kw, ds_size=100):
 
 
 def task_kwsearch(**kwargs):
-    """ Implementation of ``task_kwsearch`` for ES.
+    """ Implementation of :py:func:`storages.task_kwsearch` for ES.
 
     :param kw: list of (string) keywords
     :type kw: list
@@ -446,7 +446,8 @@ def step_stat(selection_params, step_type='step'):
     """ Calculate statistics for tasks by execution steps.
 
     :param selection_params: hash of parameter defining task selection
-                              (for details see :py:func:`get_selection_query`)
+                             (for details see
+                              :py:func:`common.get_selection_query`)
     :type selection_params: dict
     :param step_type: step definition type: 'step', 'ctag_format'
                       (default: 'step')
