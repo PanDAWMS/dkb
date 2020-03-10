@@ -282,6 +282,31 @@ def construct_chain(chain_data):
     return chain
 
 
+def task_info(data):
+    """ Transform ES response into list of dicts with task info.
+
+    :param data: ES response
+    :type data: dict
+
+    :return: task and related datasets metadata in format required
+             for :py:func:`api.handlers.task_kwsearch`
+    :rtype: list
+    """
+    result = {'_took_storage_ms': data['took'], '_data': []}
+    if not data['hits']['hits']:
+        return result
+    result['_total'] = data['hits']['total']
+    for hit in data['hits']['hits']:
+        task = hit['_source']
+        try:
+            datasets = hit['inner_hits']['output_dataset']['hits']['hits']
+        except KeyError:
+            datasets = []
+        task['output_dataset'] = [ds['_source'] for ds in datasets]
+        result['_data'].append(task)
+    return result
+
+
 def campaign_stat(stat_data, events_src=None):
     """ Transform ES response into user-friendly format.
 

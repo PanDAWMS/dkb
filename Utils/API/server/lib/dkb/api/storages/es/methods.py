@@ -199,20 +199,9 @@ def task_kwsearch(**kwargs):
         logging.warn(msg)
     r = client().search(index=idx, body={'query': q}, size=kwargs['size'],
                         request_timeout=kwargs['timeout'], doc_type='task')
-    result = {'_took_storage_ms': r['took'], '_data': []}
+    result = transform.task_info(r)
     if warn:
         result['_errors'] = warn
-    if not r['hits']['hits']:
-        return result
-    result['_total'] = r['hits']['total']
-    for hit in r['hits']['hits']:
-        task = hit['_source']
-        try:
-            datasets = hit['inner_hits']['output_dataset']['hits']['hits']
-        except KeyError:
-            datasets = []
-        task['output_dataset'] = [ds['_source'] for ds in datasets]
-        result['_data'].append(task)
     return result
 
 
