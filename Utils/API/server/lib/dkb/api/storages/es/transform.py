@@ -307,6 +307,45 @@ def task_info(data):
     return result
 
 
+def derivation_statistics(data, format):
+    """ Transform ES response to be used in the API method response.
+
+    Format of the returned values corresponds the format of a single
+    element of returned data for method ``task/deriv`` (see
+    :py:func:`api.handlers.task_deriv`).
+
+    :param data: ES response
+    :type data: dict
+    :param format: data format to which ``data`` value is referred
+    :type format: str
+
+    :return: derivation efficiency data for given format
+    :rtype: dict
+    """
+    try:
+        total = data['hits']['total']
+        result_events = (data['aggregations']['output_datasets']['not_removed']
+                         ['format']['sum_events']['value'])
+        result_bytes = (data['aggregations']['output_datasets']['not_removed']
+                        ['format']['sum_bytes']['value'])
+        input_events = data['aggregations']['input_events']['value']
+        input_bytes = data['aggregations']['input_bytes']['value']
+        ratio = 0
+        if input_bytes != 0:
+            ratio = float(result_bytes) / float(input_bytes)
+        events_ratio = 0
+        if input_events != 0:
+            events_ratio = float(result_events) / float(input_events)
+        task_ids = [hit['_id'] for hit in data['hits']['hits']]
+    except Exception:
+        total = 0
+        ratio = 0
+        events_ratio = 0
+        task_ids = []
+    return {'output': format, 'tasks': total, 'task_ids': task_ids,
+            'ratio': ratio, 'events_ratio': events_ratio}
+
+
 def campaign_stat(stat_data, events_src=None):
     """ Transform ES response into user-friendly format.
 

@@ -224,28 +224,7 @@ def get_derivation_statistics_for_output(project, tags, output_format):
     query['body'] = get_query('deriv', **kwargs)
     query['_source'] = False
     r = client().search(**query)
-    try:
-        total = r['hits']['total']
-        result_events = (r['aggregations']['output_datasets']['not_removed']
-                         ['format']['sum_events']['value'])
-        result_bytes = (r['aggregations']['output_datasets']['not_removed']
-                        ['format']['sum_bytes']['value'])
-        input_events = r['aggregations']['input_events']['value']
-        input_bytes = r['aggregations']['input_bytes']['value']
-        ratio = 0
-        if input_bytes != 0:
-            ratio = float(result_bytes) / float(input_bytes)
-        events_ratio = 0
-        if input_events != 0:
-            events_ratio = float(result_events) / float(input_events)
-        task_ids = [hit['_id'] for hit in r['hits']['hits']]
-    except Exception:
-        total = 0
-        ratio = 0
-        events_ratio = 0
-        task_ids = []
-    return {'output': output_format, 'tasks': total, 'task_ids': task_ids,
-            'ratio': ratio, 'events_ratio': events_ratio}
+    return transform.derivation_statistics(r, output_format)
 
 
 def task_derivation_statistics(**kwargs):
