@@ -30,29 +30,6 @@ import transform
 def task_steps_hist(**kwargs):
     """ Implementation of :py:func:`storages.task_steps_hist` for ES.
 
-    Result hash is of following format:
-
-    ```
-    {
-      'legend': ['series1_name', 'series2_name', ...],
-      'data': {
-        'x': [
-          [x1_1, x1_2, ...],
-          [x2_1, x2_2, ...],
-          ...
-        ],
-        'y': [
-          [y1_1, y1_2, ...],
-          [y2_1, y2_2, ...],
-          ...
-        ]
-      }
-    }
-    ```
-
-    Series can be of different length, but ``xN`` and ``yN`` arrays
-    have same length.
-
     :return: hash with histogram data
     :rtype: dict
     """
@@ -87,12 +64,7 @@ def task_chain(**kwargs):
     :param tid: task ID
     :type tid: int, str
 
-    :return: task chain:
-             {
-                 ...,
-                 taskidN: [childN1_id, childN2_id, ...],
-                 ...
-             }
+    :return: task chain data
     :rtype: dict
     """
     init()
@@ -203,13 +175,7 @@ def task_kwsearch(**kwargs):
     :param timeout: request execution timeout (sec)
     :type timeout: int
 
-    :return: tasks and related datasets metadata with additional info:
-             { _took_storage_ms: <storage query execution time in ms>,
-               _total: <total number of matching tasks>,
-               _data: [..., {..., output_dataset: [{...}, ...], ...}, ...],
-               _errors: [..., <error message>, ...]
-             }
-             (field `_errors` may be omitted if no error has occured)
+    :return: tasks and related datasets metadata
     :rtype: dict
     """
     init()
@@ -252,15 +218,6 @@ def task_kwsearch(**kwargs):
 
 def get_derivation_statistics_for_output(project, tags, output_format):
     """ Calculate derivation efficiency for given output format.
-
-    Resulting data has the following structure:
-    {
-      'output': 'SOME_OUTPUT_FORMAT',
-      'tasks': 123,
-      'task_ids': [id1, id2, ...],
-      'ratio': 0.456,
-      'events_ratio': 0.789
-    }
 
     :param project: project name
     :type project: str
@@ -310,7 +267,8 @@ def task_derivation_statistics(**kwargs):
     :param amitag: amitag (or several)
     :type amitag: str or list
 
-    :return: calculated statistics
+    :return: calculated statistics in format required by
+             :py:func:`api.handlers.task_deriv`
     :rtype: dict
     """
     init()
@@ -346,45 +304,7 @@ def campaign_stat(**kwargs):
                        * 'all'  -- provide all possible values as hash.
     :type events_src: str
 
-    :return: calculated campaign statistics:
-             { _took_storage_ms: <storage query execution time in ms>,
-               _total: <total number of matching tasks>,
-               _errors: [..., <error message>, ...],
-               _data: {
-                 last_update: <last_registered_task_timestamp>,
-                 date_format: <datetime_format>,
-                 tasks_processing_summary: {
-                   <step>: {
-                     <status>: <n_tasks>, ...,
-                     start: <earliest_start_time>,
-                     end: <latest_end_time>
-                   },
-                 overall_events_processing_summary: {
-                   <step>: {
-                     input: <n_events>,
-                     output: <n_events>,
-                     ratio: <output>/<input>
-                            /* null if 'events_src' is 'all' */
-                   },
-                   ...
-                 },
-                 tasks_updated_24h: {
-                   <step>: {
-                     <status>: {
-                       total: <n_tasks>,
-                       updated: <n_tasks>
-                     },
-                     ...
-                   },
-                   ...
-                 },
-                 events_24h: {
-                   <step>: <n_output_events_for_done_finisfed>,
-                   ...
-                 }
-               }
-             }
-             (field `_errors` may be omitted if no error has occured)
+    :return: calculated campaign statistics
     :rtype: dict
     """
     init()
@@ -425,35 +345,8 @@ def step_stat(selection_params, step_type='step'):
                       (default: 'step')
     :type step_type: str
 
-    :return: hash with calculated statistics:
-             ```
-             { '_took_storage_ms': ...,
-               '_total': ...,
-               '_data': [
-                 { 'name': ...,                       # step name
-                   'total_events': ...,
-                   'input_events': ...,
-                   'processed_events': ...,
-                   'input_bytes': ...,
-                   'input_not_removed_tasks': ...,
-                   'finished_bytes': ...,
-                   'finished_tasks': ...,
-                   'output_bytes': ...,
-                   'output_not_removed_tasks': ...,
-                   'total_tasks': ...,
-                   'hs06': ...,
-                   'cpu_failed': ...,
-                   'duration': ...,                   # days
-                   'step_status': {'Unknown'|'StepDone'|'StepProgressing'
-                                   |'StepNotStarted'},
-                   'percent_done': ...,
-                   'percent_running': ...,
-                   'percent_pending': ...
-                 },
-                 ...
-               ]
-             }
-             ```
+    :return: hash with calculated statistics for ``step/stat`` method
+             (see :py:func:`api.handlers.step_stat`)
     :rtype: hash
     """
     init()

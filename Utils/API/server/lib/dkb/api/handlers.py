@@ -79,6 +79,33 @@ methods.add('/', 'server_info', server_info)
 def task_hist(path, **kwargs):
     """ Generate histogram with task steps distribution over time.
 
+    If ``rtype`` is set to 'json', the method returns JSON document
+    of the following format:
+
+    ```
+    {
+      ...
+      "data": {
+        "legend": ["series1_name", "series2_name", ...],
+        "data": {
+          "x": [
+            [x1_1, x1_2, ...],
+            [x2_1, x2_2, ...],
+            ...
+          ],
+          "y": [
+            [y1_1, y1_2, ...],
+            [y2_1, y2_2, ...],
+            ...
+          ]
+        }
+      }
+    }
+    ```
+
+    Series can be of different length, but ``xN`` and ``yN`` arrays
+    have same length.
+
     :param path: full path to the method
     :type path: str
     :param rtype: response type (supported types: 'json', 'img')
@@ -93,6 +120,9 @@ def task_hist(path, **kwargs):
     :type stop: datetime.datetime
     :param bins: number of bins in the histogram
     :type bins: int
+
+    :return: PNG image or JSON document with data for histogram
+    :rtype: object
     """
     rtype = kwargs.get('rtype', 'img')
     if rtype == 'img':
@@ -186,6 +216,23 @@ methods.add('/task', 'hist', task_hist)
 def task_chain(path, **kwargs):
     """ Get list of tasks belonging to same chain as ``tid``.
 
+    Returns JSON document of the following format:
+
+    ```
+    {
+      ...
+      "data": {
+        ...,
+        taskidN: [childN1_id, childN2_id, ...],
+        ...
+      }
+    }
+    ```
+
+    Each element of ``"data"`` clause corresponds to one of the tasks
+    in the chain (with task ID ``taskidN``) and provides list of IDs
+    of the successor tasks that take given task's output dataset as input.
+
     :param path: full path to the method
     :type path: str
     :param rtype: response type (only 'json' supported)
@@ -194,7 +241,7 @@ def task_chain(path, **kwargs):
     :param tid: task id
     :type tid: str, int
 
-    :return: list of Task IDs, ordered from first to last task in chain
+    :return: task chain data
     :rtype: dict
     """
     method_name = '/task/chain'
@@ -217,7 +264,19 @@ methods.add('/task', 'chain', task_chain)
 def task_kwsearch(path, **kwargs):
     """ Get list of tasks by keywords.
 
-    Wildcard search is performed by ``taskname`` only.
+    .. note: Wildcard search is performed by ``taskname`` only.
+
+    Returns JSON document of the following format:
+
+    ```
+    {
+      ...
+      "data": [..., {..., "output_dataset": [{...}, ...], ...}, ...]
+    }
+    ```
+
+    Each element of the ``"data"`` clause represents single task with
+    all its output datasets.
 
     :param path: full path to the method
     :type path: str
@@ -240,13 +299,7 @@ def task_kwsearch(path, **kwargs):
     :param timeout: request execution timeout (sec) (default: 120)
     :type timeout: str, int
 
-    :return: tasks and related datasets metadata with additional info:
-             { _took_storage_ms: <storage query execution time in ms>,
-               _total: <total number of matching tasks>,
-               _data: [..., {..., output_dataset: [{...}, ...], ...}, ...],
-               _errors: [..., <error message>, ...]
-             }
-             (field `_errors` may be omitted if no error has occured)
+    :return: tasks and related datasets metadata
     :rtype: dict
     """
     method_name = '/task/kwsearch'
@@ -289,6 +342,27 @@ methods.add('/task', 'kwsearch', task_kwsearch)
 def task_deriv(path, **kwargs):
     """ Calculate statistics of derivation efficiency.
 
+    Returns JSON document of the following format:
+
+    ```
+    {
+      ...
+      "data": [
+        {
+          "output": <output_format>,
+          "tasks": <n_tasks>,
+          "task_ids": [id1, id2, ...],
+          "ratio": <output_to_input_bytes_ratio>,
+          "events_ratio": <output_to_input_events_ratio>
+        },
+        ...
+      ]
+    }
+    ```
+
+    Elements of the ``"data"`` clause are ordered by the
+    ``<output_format>`` values (in the alphanumeric order).
+
     :param path: full path to the method
     :type path: str
     :param rtype: response type (only 'json' supported)
@@ -318,6 +392,49 @@ methods.add('/task', 'deriv', task_deriv)
 
 def campaign_stat(path, **kwargs):
     """ Calculate values for campaign progress overview.
+
+    Returns JSON document of the following format:
+
+    ```
+    {
+      ...
+      "data": {
+        "last_update": <last_registered_task_timestamp>,
+        "date_format": <datetime_format>,
+        "tasks_processing_summary": {
+          <step>: {
+            <status>: <n_tasks>, ...,
+            "start": <earliest_start_time>,
+            "end": <latest_end_time>
+          },
+          ...
+        },
+        "overall_events_processing_summary": {
+          <step>: {
+            "input": <n_events>,
+            "output": <n_events>,
+            "ratio": <output>/<input>
+                   /* null if 'events_src' is 'all' */
+          },
+          ...
+        },
+        "tasks_updated_24h": {
+          <step>: {
+            <status>: {
+              "total": <n_tasks>,
+              "updated": <n_tasks>
+            },
+            ...
+          },
+          ...
+        },
+        "events_24h": {
+          <step>: <n_output_events_for_done_finisfed>,
+          ...
+        }
+      }
+    }
+    ```
 
     :param path: full path to the method
     :type path: str
@@ -360,6 +477,38 @@ methods.add('/campaign', 'stat', campaign_stat)
 
 def step_stat(path, rtype='json', step_type=None, **kwargs):
     """ Get tasks statistics.
+
+    Returns JSON document of the following format:
+
+    ```
+    {
+      ...
+      "data": [
+        {
+          'name': ...,
+          'total_events': ...,
+          'input_events': ...,
+          'processed_events': ...,
+          'input_bytes': ...,
+          'input_not_removed_tasks': ...,
+          'finished_bytes': ...,
+          'finished_tasks': ...,
+          'output_bytes': ...,
+          'output_not_removed_tasks': ...,
+          'total_tasks': ...,
+          'hs06': ...,
+          'cpu_failed': ...,
+          'duration': ...,                   # days
+          'step_status': {'Unknown'|'StepDone'|'StepProgressing'
+                          |'StepNotStarted'},
+          'percent_done': ...,
+          'percent_running': ...,
+          'percent_pending': ...
+        },
+        ...
+      ]
+   }
+    ```
 
     :param path: full path to the method
     :type path: str

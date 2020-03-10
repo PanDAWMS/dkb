@@ -257,13 +257,8 @@ def construct_chain(chain_data):
                        corresponding outcome of :py:func:`methods.chain_data`)
     :type chain_data: list
 
-    :return: constructed chain -- hash with keys of task IDs and values of the
-             given task's child IDs:
-             {
-                 ...,
-                 taskidN: [childN1_id, childN2_id, ...],
-                 ...
-             }
+    :return: constructed chain in the format corresponding "data" part of the
+             ``task/chain`` method (see :py:func:`api.handlers.task_chain`)
     :rtype: dict
     """
     chain = {}
@@ -301,8 +296,8 @@ def campaign_stat(stat_data, events_src=None):
                        * 'all'  -- provide all possible values as hash.
     :type events_src: str
 
-    :return: properly formatted response for
-            :py:func:`methods.campaign_stat`
+    :return: properly formatted response for ``campaign/stat`` method
+             (see :py:func:`api.handlers.campaign_stat`)
     :rtype: dict
     """
     r = {}
@@ -409,7 +404,8 @@ def step_stat(data, agg_units=[], step_type=None):
                       should be used for completion percents calculation.
     :type step_type: str
 
-    :returns: prepared response data
+    :returns: prepared response data for ``step/stat`` method
+              (see :py:func:`api.handlers.step_stat`)
     :rtype: dict
     """
     if not step_type:
