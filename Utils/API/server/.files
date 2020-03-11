@@ -7,6 +7,7 @@ lib/dkb/api/*.py
 lib/dkb/api/storages/
 lib/dkb/api/storages/*.py
 lib/dkb/api/storages/es/
+lib/dkb/api/storages/es/*.py
 lib/dkb/api/storages/es/query/
 lib/dkb/api/storages/es/query/*
 conf/
