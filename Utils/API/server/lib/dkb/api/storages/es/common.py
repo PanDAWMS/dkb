@@ -381,7 +381,7 @@ def get_agg_units_query(units):
                   * ES task field name (to get sum of values);
                   * ES task field alias ('hs06', 'hs06_failed', ...);
                   * units with special aggregation rules
-                    (e.g. 'task_duration');
+                    (e.g. 'task_duration', 'last_update');
                   * prefixed values (prefix is separated from the rest of the
                     value with '__'). Supported prefixes are:
                     - 'output': for not removed output datasets
@@ -411,7 +411,8 @@ def get_agg_units_query(units):
                                       " doc['start_time'].value"}}]}},
             'aggs': {'task_duration': {'avg': {
                 'script': {'inline': "doc['end_time'].value -"
-                                     " doc['start_time'].value"}}}}}
+                                     " doc['start_time'].value"}}}}},
+        'last_update': {'max': {'field': 'task_timestamp'}}
     }
     prefixed_units = {}
     clean_units = list(units)

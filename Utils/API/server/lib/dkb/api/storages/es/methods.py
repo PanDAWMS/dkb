@@ -257,7 +257,7 @@ def task_derivation_statistics(**kwargs):
     return result
 
 
-def campaign_stat(**kwargs):
+def campaign_stat(selection_params, step_type='step', events_src=None):
     """ Calculate values for campaign progress overview.
 
     :param path: full path to the method
@@ -276,20 +276,42 @@ def campaign_stat(**kwargs):
     :rtype: dict
     """
     init()
-    htags = kwargs.get('htag', [])
-    if not isinstance(htags, list):
-        htags = [htags]
+    # Construct query
     query = dict(TASK_KWARGS)
-    # Campaign is about "production", so we can say for sure
-    # what index we need
+    # * campaign is about "production", so we can say for sure
+    #   what index we need
     query['index'] = common.CONFIG['index']['production_tasks']
-    query_kwargs = {'htags': htags}
-    query['body'] = get_query('campaign-stat', **query_kwargs)
+    # * for statistics query we don't need any source documents
+    query['size'] = 0
+    # * and query body:
+    #  - select tasks
+    q = get_selection_query(**selection_params)
+    #  - divide them into 'steps'
+    step_agg = get_step_aggregation_query(step_type, selection_params)
+    #  - get agg values for each step ('instep' aggs)
+    instep_aggs = get_query('campaign-stat-step-aggs')
+    #  - construct 'last_update' part
+    last_update = get_agg_units_query(['last_update'])
+    #  - put 'instep' aggs into the innermost (sub) step clause
+    instep_clause = step_agg['steps']
+    while instep_clause.get('aggs'):
+        instep_clause = instep_clause['aggs'].get('substeps')
+    if instep_clause:
+        instep_clause['aggs'] = {}
+        instep_clause = instep_clause['aggs']
+    instep_clause.update(instep_aggs)
+    #  - join 'query' and 'aggs' parts within request body
+    q_body = {'query': q, 'aggs': step_agg}
+    #  - add 'last_update' part into the 'aggs' part
+    q_body['aggs'].update(last_update)
+
+    query['body'] = q_body
+
     r = {}
     data = {}
     try:
         data = client().search(**query)
-        data = transform.campaign_stat(data, kwargs.get('events_src', None))
+        data = transform.campaign_stat(data, events_src)
     except KeyError, err:
         msg = "Failed to parse storage response: %s." % str(err)
         raise MethodException(reason=msg)

@@ -69,7 +69,7 @@ class MethodException(DkbApiException):
     """ Base exception for method failures. """
     code = 470
 
-    def __init__(self, method, reason=None):
+    def __init__(self, method=None, reason=None):
         message = "Method failed"
         if method:
             message += ": '%s'" % method

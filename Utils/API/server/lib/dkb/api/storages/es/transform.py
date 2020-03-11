@@ -387,10 +387,8 @@ def campaign_stat(stat_data, events_src=None):
                                    .get('value_as_string', None)
     data['date_format'] = ES_DATE_FORMAT
 
-    steps = stat_data.get('aggregations', {}) \
-                     .get('steps', {}) \
-                     .get('buckets', [])
-    for step in steps:
+    steps = steps_iterator(stat_data.get('aggregations', {}))
+    for step_name, step in steps:
         # Events processing summary
         esp_o = {}
         esp_o['ds'] = step.get('output_events', {}) \
@@ -452,10 +450,10 @@ def campaign_stat(stat_data, events_src=None):
         if e24h == {}:
             e24h = None
 
-        data['tasks_processing_summary'][step['key']] = tps
-        data['overall_events_processing_summary'][step['key']] = eps
-        data['tasks_updated_24h'][step['key']] = tu24h
-        data['events_24h'][step['key']] = e24h
+        data['tasks_processing_summary'][step_name] = tps
+        data['overall_events_processing_summary'][step_name] = eps
+        data['tasks_updated_24h'][step_name] = tu24h
+        data['events_24h'][step_name] = e24h
     return r
 
 

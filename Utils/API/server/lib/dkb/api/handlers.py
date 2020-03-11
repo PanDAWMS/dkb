@@ -390,7 +390,8 @@ def task_deriv(path, **kwargs):
 methods.add('/task', 'deriv', task_deriv)
 
 
-def campaign_stat(path, **kwargs):
+def campaign_stat(path, rtype='json', step_type=None, events_src=None,
+                  **kwargs):
     """ Calculate values for campaign progress overview.
 
     Returns JSON document of the following format:
@@ -441,8 +442,27 @@ def campaign_stat(path, **kwargs):
     :param rtype: response type (only 'json' supported)
     :type rtype: str
 
-    :param htag: hashtag to select campaign tasks
-    :type htag: str, list
+    :param step_type: step definition type: 'step', 'ctag_format'
+                      (default: 'step')
+    :type step_type: str
+
+    :param <selection_parameter>: defines condition to select tasks for
+                                  statistics. Parameter names are mapped
+                                  to storage record fields (names and/or
+                                  aliases). Values should be provided in
+                                  one of the following forms:
+                                  * ``None`` (field must not be presented
+                                    in selected records);
+                                  * exact field value;
+                                  * exact field value with logical prefix:
+                                    - ``&`` -- field must value this value;
+                                    - ``|`` -- field must have one of values
+                                               marked with this prefix
+                                               (default);
+                                    - ``!`` -- field must not have this value;
+                                  * list of field values (prefixed or not).
+    :type <selection_parameter>: NoneType, str, number, list
+
     :param events_src: source of data for 'output' events.
                        Possible values:
                        * 'ds'   -- number of events in output datasets
@@ -456,20 +476,34 @@ def campaign_stat(path, **kwargs):
     :rtype: dict
     """
     method_name = '/campaign/stat'
-    events_src_values = ['ds', 'task', 'all']
     if kwargs.get('rtype', 'json') is not 'json':
         raise MethodException(method_name, "Unsupported response type: '%s'"
                                            % kwargs['rtype'])
-    if 'htag' not in kwargs:
-        raise MissedArgument(method_name, 'htag')
-    if 'events_src' in kwargs:
-        if kwargs['events_src'] not in events_src_values:
-            raise InvalidArgument(method_name, ('events_src',
-                                                kwargs['events_src'],
-                                                events_src_values))
-    else:
-        kwargs['events_src'] = events_src_values[0]
-    return storages.campaign_stat(**kwargs)
+    allowed_types = STEP_TYPES
+    if step_type is None:
+        step_type = allowed_types[0]
+    if (step_type not in allowed_types):
+        raise InvalidArgument(method_name, ('step_type', step_type,
+                                            allowed_types))
+
+    events_src_values = ['ds', 'task', 'all']
+    if not events_src:
+        events_src = events_src_values[0]
+    elif events_src not in events_src_values:
+        raise InvalidArgument(method_name, ('events_src', events_src,
+                                            events_src_values))
+
+    params = {}
+    for param in kwargs:
+        vals = kwargs[param]
+        if not isinstance(vals, list):
+            vals = [vals]
+        if vals:
+            vals = sort_by_prefixes(vals, ['|', '&', '!'])
+        params[param] = vals
+
+    return storages.campaign_stat(step_type=step_type, selection_params=params,
+                                  events_src=events_src)
 
 
 methods.add('/campaign', 'stat', campaign_stat)
