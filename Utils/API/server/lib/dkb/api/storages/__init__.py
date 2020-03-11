@@ -68,10 +68,14 @@ def task_derivation_statistics(**kwargs):
 def campaign_stat(**kwargs):
     """ Calculate values for campaign progress overview.
 
-    :param path: full path to the method
-    :type path: str
-    :param htag: hashtag to select campaign tasks
-    :type htag: str, list
+    :param selection_params: hash of parameters defining task selections
+                             (for details see
+                              :py:func:`es.common.get_selection_query`)
+    :type selection_params: dict
+    :param step_type: step definition type: 'step', 'ctag_format'
+                      (default: 'step')
+    :type step_type: str
+
     :param events_src: source of data for 'output' events.
                        Possible values:
                        * 'ds'   -- number of events in output datasets;
@@ -80,7 +84,8 @@ def campaign_stat(**kwargs):
                        * 'all'  -- provide all possible values as hash.
     :type events_src: str
 
-    :return: calculated campaign statistics
+    :return: hash with calculated statistics for ``campaign/stat`` method
+             (see :py:func:`api.handlers.campaign_stat`)
     :rtype: dict
     """
     return es.campaign_stat(**kwargs)
