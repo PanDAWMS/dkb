@@ -566,5 +566,12 @@ def step_stat(data, agg_units=[], step_type=None):
 
         del step['status']
         d.update(step)
+
+        # Adjust 'percent done' value to avoid getting '100%' when it's not
+        # (due to a roundoff)
+        if d['percent_done'] > 99.99 and \
+                d.get(events_field, 0) < d.get('input_events', 0):
+            d['percent_done'] = 99.99
+
         r['_data'].append(d)
     return r
