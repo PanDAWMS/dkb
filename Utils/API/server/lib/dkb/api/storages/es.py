@@ -1331,8 +1331,11 @@ def step_stat(selection_params, step_type='step'):
                  { 'name': ...,                       # step name
                    'total_events': ...,
                    'input_events': ...,
+                   'processed_events': ...,
                    'input_bytes': ...,
                    'input_not_removed_tasks': ...,
+                   'finished_bytes': ...,
+                   'finished_tasks': ...,
                    'output_bytes': ...,
                    'output_not_removed_tasks': ...,
                    'total_tasks': ...,
