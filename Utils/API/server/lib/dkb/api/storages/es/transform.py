@@ -487,8 +487,8 @@ def step_stat(data, agg_units=[], step_type=None):
                                     % STEP_TYPES)
 
     statuses = {0: 'StepNotStarted',
-                0.1: 'StepProgressing',
-                0.9: 'StepDone'
+                10: 'StepProgressing',
+                90: 'StepDone'
                 }
 
     r = {}
@@ -533,7 +533,7 @@ def step_stat(data, agg_units=[], step_type=None):
             d['finished_bytes'] = 0
         else:
             # Completion
-            d['percent_done'] = float(step[events_field]) / inp
+            d['percent_done'] = float(step[events_field]) / inp * 100
             try:
                 run = step['status']['running']
                 running_events = run['input_events'] - run[events_field]
@@ -566,5 +566,12 @@ def step_stat(data, agg_units=[], step_type=None):
 
         del step['status']
         d.update(step)
+
+        # Adjust 'percent done' value to avoid getting '100%' when it's not
+        # (due to a roundoff)
+        if d['percent_done'] > 99.99 and \
+                d.get(events_field, 0) < d.get('input_events', 0):
+            d['percent_done'] = 99.99
+
         r['_data'].append(d)
     return r
