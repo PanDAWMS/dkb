@@ -355,7 +355,8 @@ def main(args):
     stage.set_output_message_type(messageType.JSON)
 
     stage.set_default_arguments(config=os.path.join(base_dir, os.pardir,
-                                                    'config', '025.cfg'))
+                                                    'config', '025.cfg'),
+                                ignore_on_skip=True)
 
     stage.process = process
 
