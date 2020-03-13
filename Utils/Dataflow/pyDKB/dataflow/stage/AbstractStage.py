@@ -25,6 +25,9 @@ class AbstractStage(LoggableObject):
     * Argument parser (argparse.ArgumentParser)
         __parser
 
+    * Default argument values (dict)
+        _default_args
+
     * Parsed arguments (argparse.Namespace)
         ARGS
 
@@ -49,6 +52,7 @@ class AbstractStage(LoggableObject):
             formatter_class=argparse.RawTextHelpFormatter,
             description=description
         )
+        self._default_args = {}
         self.defaultArguments()
 
         self._error = None
@@ -133,6 +137,7 @@ class AbstractStage(LoggableObject):
 
     def add_argument(self, *args, **kwargs):
         """ Add specific (not common) arguments. """
+        # Format help message
         wrapper = textwrap.TextWrapper(width=55, replace_whitespace=False)
         msg = textwrap.dedent(kwargs.get('help', ''))
         if kwargs.get('default', None) is not None \
@@ -143,7 +148,33 @@ class AbstractStage(LoggableObject):
         msg = '\n'.join(wrapped_lines)
         msg += '\n '
         kwargs['help'] = msg
+
+        # Get the argument name (to make sure argparse and we use the same)
+        arg_name = None
+        no_dest = False
+        if 'dest' in kwargs:
+            arg_name = kwargs['dest']
+        else:
+            for arg in args:
+                if not arg.startswith('-'):
+                    # `arg` is a positional argument name
+                    arg_name = arg
+                    no_dest = True
+                    break
+                if arg.startswith('--'):
+                    # first long option will be used as argument name
+                    arg_name = arg[2:]
+                    break
+                if not arg_name and arg.startswith('-'):
+                    # if no long options specifies, first short one will
+                    # be used
+                    arg_name = arg[1:]
+        if not no_dest:
+            kwargs['dest'] = arg_name
         self.__parser.add_argument(*args, **kwargs)
+
+        # Store default values that are considered to be safe
+        self._default_args[arg_name] = self.__parser.get_default(arg_name)
 
     def set_default_arguments(self, **kwargs):
         """ Set (or overwrite) default values for arguments.
@@ -152,6 +183,25 @@ class AbstractStage(LoggableObject):
         :type <arg_name>: object
         """
         self.__parser.set_defaults(**kwargs)
+
+    def reset_default_arguments(self, args=None):
+        """ Reset default argument values to "safe" ones.
+
+        :param args: list of arguments to be reset. If not specified
+                     or set to None, all known arguments will be reset
+        :type args: list, NoneType
+        """
+        if args is None:
+            default_args = self._default_args
+        else:
+            default_args = {}
+            for arg in args:
+                if arg not in self._default_args:
+                    self.log("Can't reset default value for argument: '%s'"
+                             % arg, logLevel.WARN)
+                    continue
+                default_args[arg] = self._default_args[arg]
+        self.set_default_arguments(**default_args)
 
     def parse_args(self, args):
         """ Parse arguments and set dependant arguments if needed.
