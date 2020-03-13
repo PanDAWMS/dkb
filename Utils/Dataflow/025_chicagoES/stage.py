@@ -364,7 +364,8 @@ def main(args):
     exc_info = None
     try:
         stage.configure(args)
-        init_es_client(stage.CONFIG['ChicagoES'])
+        if not stage.ARGS.skip_process:
+            init_es_client(stage.CONFIG['ChicagoES'])
         stage.run()
     except (DataflowException, RuntimeError), err:
         if str(err):
