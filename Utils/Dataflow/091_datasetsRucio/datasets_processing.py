@@ -230,6 +230,7 @@ def process_input_ds(stage, message):
                        "Reason: %s." % str(err)],
                       logLevel.WARN)
             incompl = True
+            ds = {}
         data.update(ds)
         if not is_data_complete(data, mfields.values()):
             incompl = True
