@@ -153,8 +153,11 @@ class AbstractStage(LoggableObject):
         arg_name = None
         no_dest = False
         if 'dest' in kwargs:
+            # Use the user-specified argument name
             arg_name = kwargs['dest']
         else:
+            # Get the name from `args` (a list of synonymous options
+            # or a single positional argument name)
             for arg in args:
                 if not arg.startswith('-'):
                     # `arg` is a positional argument name
@@ -169,6 +172,11 @@ class AbstractStage(LoggableObject):
                     # if no long options specifies, first short one will
                     # be used
                     arg_name = arg[1:]
+
+        # Set 'dest' (arg name used within the parser) to the value
+        #  we're going to use in code (except for the positional ones
+        # (witout leadig `-`) that do not support explicit 'dest',
+        #  using the first (and only) argument value for this purpose)
         if not no_dest:
             kwargs['dest'] = arg_name
         self.__parser.add_argument(*args, **kwargs)
