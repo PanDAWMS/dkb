@@ -60,11 +60,7 @@ class AbstractMessage(object):
     def __init__(self, message=None):
         """ Save initial message. """
         self.__orig = message
-        if type(message) in self.native_types:
-            self.decoded = message
-            self.incompl = False
-        else:
-            self.decode()
+        self.decode()
 
     def getOriginal(self):
         """ Return original message. """
@@ -130,18 +126,20 @@ class JSONMessage(AbstractMessage):
         """ Decode original data as JSON. """
         if not self.decoded:
             orig = self.getOriginal()
-            if code == codeType.STRING:
+            if isinstance(orig, tuple(self.native_types)):
+                self.decoded = orig
+            elif code == codeType.STRING:
                 self.decoded = json.loads(orig)
-                if isinstance(self.decoded, dict):
-                    self.incomplete(self.decoded.pop(self.incompl_key, False))
-                else:
-                    if self._non_dict_not_implemented_warn:
-                        log(self._non_dict_not_implemented_warn, logLevel.WARN)
-                        JSONMessage._non_dict_not_implemented_warn = None
-                    self.incomplete(False)
+                self.encoded = orig
             else:
                 raise DecodeUnknownType(code, self.__class__)
-            self.encoded = orig
+            if isinstance(self.decoded, dict):
+                self.incomplete(self.decoded.pop(self.incompl_key, False))
+            else:
+                if self._non_dict_not_implemented_warn:
+                    log(self._non_dict_not_implemented_warn, logLevel.WARN)
+                    JSONMessage._non_dict_not_implemented_warn = None
+                self.incomplete(False)
         return copy.deepcopy(self.decoded)
 
     def encode(self, code=codeType.STRING):
@@ -188,11 +186,13 @@ class TTLMessage(AbstractMessage):
         """
         if not self.decoded:
             orig = self.getOriginal()
-            if code == codeType.STRING:
+            if isinstance(orig, tuple(self.native_types)):
                 self.decoded = orig
+            elif code == codeType.STRING:
+                self.decoded = orig
+                self.encoded = orig
             else:
                 raise DecodeUnknownType(code, self.__class__)
-            self.encoded = orig
         return copy.deepcopy(self.decoded)
 
     def encode(self, code=codeType.STRING):
