@@ -58,7 +58,7 @@ def main(args):
 
     stage.add_argument('--decode', action='store_true',
                        help=u"Try to decode generated output messages"
-                             " during 'process()'",
+                            " during 'process()'",
                        default=False)
 
     stage.process = process
