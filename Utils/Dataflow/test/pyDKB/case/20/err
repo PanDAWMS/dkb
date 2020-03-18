@@ -15,19 +15,19 @@
 (INFO) (ProcessorStage) Starting stage execution.
 (ERROR) (ProcessorStage) File already exists: ./input/out/NDjson.ttl
 (DEBUG) (ProcessorStage) Traceback (most recent call last):
-(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 232, in run
+(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line <NNN>, in run
 (==)     self.flush_buffer()
-(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line 341, in flush_buffer
+(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line <NNN>, in flush_buffer
 (==)     self.__output.flush()
-(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line 107, in flush
+(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line <NNN>, in flush
 (==)     self.get_stream().flush()
-(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line 54, in get_stream
+(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line <NNN>, in get_stream
 (==)     self.reset_stream()
-(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line 64, in reset_stream
+(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line <NNN>, in reset_stream
 (==)     dest = self.get_dest()
-(==)   File "./../../pyDKB/dataflow/communication/producer/FileProducer.py", line 60, in get_dest
+(==)   File "./../../pyDKB/dataflow/communication/producer/FileProducer.py", line <NNN>, in get_dest
 (==)     self.reset_file()
-(==)   File "./../../pyDKB/dataflow/communication/producer/FileProducer.py", line 171, in reset_file
+(==)   File "./../../pyDKB/dataflow/communication/producer/FileProducer.py", line <NNN>, in reset_file
 (==)     % cur['local_path'])
 (==) ProducerException: File already exists: ./input/out/NDjson.ttl
 (INFO) (ProcessorStage) Stopping stage.
