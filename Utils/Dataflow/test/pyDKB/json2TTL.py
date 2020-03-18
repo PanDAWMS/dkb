@@ -38,7 +38,7 @@ def process(stage, msg):
     Output message: TTL
     """
     cls = pyDKB.dataflow.communication.Message(pyDKB.dataflow.messageType.TTL)
-    myMessage = cls(msg.content())
+    myMessage = cls(str(msg.content()))
     try:
         if "stop" in msg.content():
             pre_stop_process("Key 'stop' in input message.")
