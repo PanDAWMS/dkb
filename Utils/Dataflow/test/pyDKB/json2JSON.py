@@ -38,9 +38,16 @@ def process(stage, msg):
     Output message: JSON
     """
     cls = pyDKB.dataflow.communication.Message(pyDKB.dataflow.messageType.JSON)
-    myMessage = cls(msg.content())
-    if "stop" in msg.content():
-        pre_stop_process("Key 'stop' in input message.")
+    content = msg.content()
+    if isinstance(content, (str, unicode)):
+        content = '"%s"' % content
+    myMessage = cls(content)
+    myMessage.decode()
+    try:
+        if "stop" in msg.content():
+            pre_stop_process("Key 'stop' in input message.")
+    except TypeError:
+        pass
     stage.output(myMessage)
     return True
 

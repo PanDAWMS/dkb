@@ -39,8 +39,11 @@ def process(stage, msg):
     """
     cls = pyDKB.dataflow.communication.Message(pyDKB.dataflow.messageType.TTL)
     myMessage = cls(msg.content())
-    if "stop" in msg.content():
-        pre_stop_process("Key 'stop' in input message.")
+    try:
+        if "stop" in msg.content():
+            pre_stop_process("Key 'stop' in input message.")
+    except TypeError:
+        pass
     stage.output(myMessage)
     return True
 
