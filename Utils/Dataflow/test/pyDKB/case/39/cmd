@@ -1,1 +1,1 @@
-cat input/NDjson-natives.json | ./json2JSON.py -m s
+cat input/NDjson-natives.json | ./json2JSON.py -m s --decode
