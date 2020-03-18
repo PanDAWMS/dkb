@@ -113,7 +113,7 @@ class AbstractMessage(object):
 class JSONMessage(AbstractMessage):
     """ Message in JSON format. """
     msg_type = messageType.JSON
-    native_types = [dict]
+    native_types = [dict, list, int, float]
 
     _ext = ".json"
 
