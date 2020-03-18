@@ -6,6 +6,7 @@
 (INFO) (ProcessorStage)   skip_process : 'False'
 (INFO) (ProcessorStage)   eom          : ''
 (INFO) (ProcessorStage)   output_dir   : 'out'
+(INFO) (ProcessorStage)   decode       : 'False'
 (INFO) (ProcessorStage)   source       : 'f'
 (INFO) (ProcessorStage)   eop          : '\n'
 (INFO) (ProcessorStage)   mode         : 'f'
