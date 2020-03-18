@@ -123,13 +123,22 @@ class JSONMessage(AbstractMessage):
 
     incompl_key = "_incomplete"
 
+    _non_dict_not_implemented_warn = "JSON messages with non-dict content" \
+                                     " are not fully implemented."
+
     def decode(self, code=codeType.STRING):
         """ Decode original data as JSON. """
         if not self.decoded:
             orig = self.getOriginal()
             if code == codeType.STRING:
                 self.decoded = json.loads(orig)
-                self.incomplete(self.decoded.pop(self.incompl_key, False))
+                if isinstance(self.decoded, dict):
+                    self.incomplete(self.decoded.pop(self.incompl_key, False))
+                else:
+                    if self._non_dict_not_implemented_warn:
+                        log(self._non_dict_not_implemented_warn, logLevel.WARN)
+                        JSONMessage._non_dict_not_implemented_warn = None
+                    self.incomplete(False)
             else:
                 raise DecodeUnknownType(code, self.__class__)
             self.encoded = orig
@@ -140,7 +149,12 @@ class JSONMessage(AbstractMessage):
         if not self.encoded:
             content = self.content()
             if self.incomplete():
-                content[self.incompl_key] = True
+                if isinstance(content, dict):
+                    content[self.incompl_key] = True
+                else:
+                    raise NotImplementedError("Incomplete marker for JSON"
+                                              " message with non-dict content"
+                                              " is not implemented.")
             if code == codeType.STRING:
                 self.encoded = json.dumps(content)
             else:
