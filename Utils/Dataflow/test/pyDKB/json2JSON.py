@@ -42,9 +42,12 @@ def process(stage, msg):
     if isinstance(content, (str, unicode)):
         content = '"%s"' % content
     myMessage = cls(content)
-    if "stop" in msg.content():
-        pre_stop_process("Key 'stop' in input message.")
     myMessage.decode()
+    try:
+        if "stop" in msg.content():
+            pre_stop_process("Key 'stop' in input message.")
+    except TypeError:
+        pass
     stage.output(myMessage)
     return True
 
