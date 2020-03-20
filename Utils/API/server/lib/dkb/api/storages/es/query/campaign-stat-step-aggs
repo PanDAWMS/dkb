@@ -10,26 +10,6 @@
           "range": {
             "task_timestamp": {"gte": "now-1d"}
           }
-        },
-        "aggs": {
-          "finished": {
-            "filter": {
-              "terms": {"status": ["done", "finished"]}
-            },
-            "aggs": {
-              "output": {
-                "children": {"type": "output_dataset"},
-                "aggs": {
-                  "events": {
-                    "sum": {"field": "events"}
-                  }
-                }
-              },
-              "processed_events": {
-                "sum": {"field": "processed_events"}
-              }
-            }
-          }
         }
       }
     }
@@ -52,6 +32,27 @@
     "aggs": {
       "processed_events": {
         "sum": {"field": "processed_events"}
+      },
+      "daily": {
+        "date_histogram": {
+          "interval": "day",
+          "field": "end_time",
+          "keyed": true,
+          "min_doc_count" : 1
+        },
+        "aggs": {
+          "output": {
+            "children": {"type": "output_dataset"},
+            "aggs": {
+              "events": {
+                "sum": {"field": "events"}
+              }
+            }
+          },
+          "processed_events": {
+            "sum": {"field": "processed_events"}
+          }
+        }
       }
     }
   },
