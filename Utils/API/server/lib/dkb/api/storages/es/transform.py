@@ -381,7 +381,7 @@ def campaign_stat(stat_data, events_src=None):
     data['tasks_processing_summary'] = {}
     data['overall_events_processing_summary'] = {}
     data['tasks_updated_24h'] = {}
-    data['events_24h'] = {}
+    data['events_daily_progress'] = {}
     data['last_update'] = stat_data.get('aggregations', {}) \
                                    .get('last_update', {}) \
                                    .get('value_as_string', None)
@@ -418,7 +418,6 @@ def campaign_stat(stat_data, events_src=None):
                          .get('value_as_string', None)
 
         tu24h = {}
-        e24h = {}
         statuses = step.get('status', {}) \
                        .get('buckets', [])
         for status in statuses:
@@ -428,32 +427,26 @@ def campaign_stat(stat_data, events_src=None):
             tu24h[status['key']]['updated'] = status.get('updated_24h', {}) \
                                                     .get('doc_count', None)
 
-            # Events in last 24 hours
-            e24h_cur = {}
-            e24h_cur['ds'] = status.get('updated_24h', {}) \
-                                   .get('finished', {}) \
-                                   .get('output', {}) \
-                                   .get('events', {}) \
-                                   .get('value', None)
-            e24h_cur['task'] = status.get('updated_24h', {}) \
-                                     .get('finished', {}) \
-                                     .get('processed_events', {}) \
-                                     .get('value', None)
-            for key in e24h_cur.keys():
-                try:
-                    e24h[key] = e24h.get(key, 0) + e24h_cur[key]
-                except TypeError:
-                    # Current value is None
-                    pass
-
-        e24h = e24h.get(events_src, None) if events_src != 'all' else e24h
-        if e24h == {}:
-            e24h = None
+        events_daily = {}
+        hist_data = step.get('finished', {}) \
+                        .get('daily', {}) \
+                        .get('buckets', {})
+        for key in hist_data:
+            e_cur = {}
+            e_cur['ds'] = hist_data[key].get('output', {}) \
+                                        .get('events', {}) \
+                                        .get('value', None)
+            e_cur['task'] = hist_data[key].get('processed_events', {}) \
+                                          .get('value', None)
+            events_daily[key] = \
+                e_cur.get(events_src, None) if events_src != 'all' else e_cur
+        if events_daily == {}:
+            events_daily = None
 
         data['tasks_processing_summary'][step_name] = tps
         data['overall_events_processing_summary'][step_name] = eps
         data['tasks_updated_24h'][step_name] = tu24h
-        data['events_24h'][step_name] = e24h
+        data['events_daily_progress'][step_name] = events_daily
     return r
 
 

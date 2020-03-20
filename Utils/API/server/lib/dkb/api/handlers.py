@@ -429,8 +429,11 @@ def campaign_stat(path, rtype='json', step_type=None, events_src=None,
           },
           ...
         },
-        "events_24h": {
-          <step>: <n_output_events_for_done_finisfed>,
+        "events_daily_progress": {
+          <step>: {
+            <date>: <n_events_processed_by_tasks_finished_"today">,
+            ...
+          },
           ...
         }
       }
