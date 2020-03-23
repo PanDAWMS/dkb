@@ -15,6 +15,10 @@ optional arguments:
                prepare data for indexing in Elasticsearch
                Default value: $ES_CONFIG
 
+  --           separator for explicit division of arguments to
+               be passed further to PHP script (after) and 
+               ones indended for this script (before).
+
 ARGS, arguments to be passed to the PHP script:"
 # Display part of esFormat.php's help describing its arguments.
 $base_dir/esFormat.php -h 2>&1 | sed 1,5d >&2
