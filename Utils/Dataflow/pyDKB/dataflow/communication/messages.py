@@ -10,6 +10,7 @@ from pyDKB.common.misc import (log, logLevel)
 
 import json
 import sys
+import copy
 
 __message_class = {}
 
@@ -65,7 +66,7 @@ class AbstractMessage(object):
 
     def getOriginal(self):
         """ Return original message. """
-        return self.__orig
+        return copy.deepcopy(self.__orig)
 
     def decode(self, code):
         """ Decode original from CODE to TYPE-specific format.
@@ -88,7 +89,7 @@ class AbstractMessage(object):
 
     def content(self):
         """ Return message content. """
-        return self.decode()
+        return copy.deepcopy(self.decode())
 
     @classmethod
     def extension(cls):
@@ -128,7 +129,7 @@ class JSONMessage(AbstractMessage):
             else:
                 raise DecodeUnknownType(code, self.__class__)
             self.encoded = orig
-        return self.decoded
+        return copy.deepcopy(self.decoded)
 
     def encode(self, code=codeType.STRING):
         """ Encode JSON as CODE. """
@@ -139,7 +140,7 @@ class JSONMessage(AbstractMessage):
             else:
                 raise EncodeUnknownType(code, self.__class__)
             self.decoded = orig
-        return self.encoded
+        return copy.deepcopy(self.encoded)
 
     def incomplete(self, status=None):
         """ Set message incomplete marker and/or get previous/current value.
@@ -154,8 +155,8 @@ class JSONMessage(AbstractMessage):
         :rtype: bool
         """
         if status is not None:
-            decoded = self.decode()
-            decoded[self.incompl_key] = status
+            self.decode()
+            self.decoded[self.incompl_key] = status
             self.encoded = None
         return super(JSONMessage, self).incomplete(status)
 
@@ -190,7 +191,7 @@ class TTLMessage(AbstractMessage):
             else:
                 raise DecodeUnknownType(code, self.__class__)
             self.encoded = orig
-        return self.decoded
+        return copy.deepcopy(self.decoded)
 
     def encode(self, code=codeType.STRING):
         """ Encode TTL as CODE. """
@@ -201,7 +202,7 @@ class TTLMessage(AbstractMessage):
             else:
                 raise EncodeUnknownType(code, self.__class__)
             self.decoded = orig
-        return self.encoded
+        return copy.deepcopy(self.encoded)
 
 
 __message_class[messageType.TTL] = TTLMessage
