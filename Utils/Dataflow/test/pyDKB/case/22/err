@@ -13,4 +13,5 @@
 (INFO) (ProcessorStage)   config       : 'None'
 (INFO) (ProcessorStage)   input_files  : '['input/jsonArray.json']'
 (INFO) (ProcessorStage) Starting stage execution.
+(WARN) (pyDKB.dataflow.communication.messages) JSON messages with non-dict content are not fully implemented.
 (INFO) (ProcessorStage) Stopping stage.
