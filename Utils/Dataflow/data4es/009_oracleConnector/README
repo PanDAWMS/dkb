@@ -50,9 +50,9 @@ infinite cycles. Therefore, only the input/output mechanism was implemented
 ----------
 The 'output' directory contains two samples of production data:
 
-  sample2016.ndjson - collected with timestamps [09-05-2016 12:12:00, 09-05-2016 13:32:30]
-  sample2020.ndjson - collected with timestamps [01-03-2020 12:00:00, 01-03-2020 14:00:00]
+  sample2016.ndjson (timestamps: [09-05-2016 12:12:00, 09-05-2016 13:32:30])
+  sample2020.ndjson (timestamps: [01-03-2020 12:00:00, 01-03-2020 14:00:00])
 
 Also, it contains a consistency checking sample:
 
-  consistency.ndjson - collected with timestamps [21-07-2018 00:00:00, 22-07-2018 00:00:00]
+  consistency.ndjson (timestamps: [21-07-2018 00:00:00, 22-07-2018 00:00:00])
