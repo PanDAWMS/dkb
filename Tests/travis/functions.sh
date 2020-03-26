@@ -14,7 +14,7 @@ getLinesFromFile() {
   lines="$2"
 
   echo "$lines" | sort -u | while IFS= read -r l; do
-      grep -n "^$l\$" -- "$file"
+      grep -Fxn "$l" -- "$file"
   done | sort -n
 }
 
