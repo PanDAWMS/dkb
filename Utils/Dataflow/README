@@ -13,8 +13,8 @@
 "Dataflow" is a series of "Stages", applied to a stream of data in a specific
 order. Each Stage is nothing but a program capable of operating in a "stream
 mode". It means, basically, that the program can read input stream of
-"Messages" and/or generate the output one according to a set of rules common
-for all the stages.
+"Messages" (smallest structural units of the data flow) and/or generate the
+output one according to a set of rules common for all the stages.
 
 
 2. Libraries
