@@ -10,7 +10,8 @@ import textwrap
 
 from pyDKB.common import LoggableObject
 from pyDKB.common.types import logLevel
-from pyDKB.common.misc import log
+from pyDKB.common.misc import (log,
+                               ensure_argparse_arg_name)
 
 try:
     import argparse
@@ -149,36 +150,8 @@ class AbstractStage(LoggableObject):
         msg += '\n '
         kwargs['help'] = msg
 
-        # Get the argument name (to make sure argparse and we use the same)
-        arg_name = None
-        no_dest = False
-        if 'dest' in kwargs:
-            # Use the user-specified argument name
-            arg_name = kwargs['dest']
-        else:
-            # Get the name from `args` (a list of synonymous options
-            # or a single positional argument name)
-            for arg in args:
-                if not arg.startswith('-'):
-                    # `arg` is a positional argument name
-                    arg_name = arg
-                    no_dest = True
-                    break
-                if arg.startswith('--'):
-                    # first long option will be used as argument name
-                    arg_name = arg[2:]
-                    break
-                if not arg_name and arg.startswith('-'):
-                    # if no long options specifies, first short one will
-                    # be used
-                    arg_name = arg[1:]
+        arg_name = ensure_argparse_arg_name(args, kwargs)
 
-        # Set 'dest' (arg name used within the parser) to the value
-        #  we're going to use in code (except for the positional ones
-        # (witout leadig `-`) that do not support explicit 'dest',
-        #  using the first (and only) argument value for this purpose)
-        if not no_dest:
-            kwargs['dest'] = arg_name
         self.__parser.add_argument(*args, **kwargs)
 
         # Store default values that are considered to be safe
