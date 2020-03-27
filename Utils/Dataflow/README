@@ -2,7 +2,89 @@
 * Detailed description of the dataflow *
 =======================================
 
-*** NOTE: stages are to be named with three leading digits (XXX_StageName). ***
+=======================
+* General information *
+=======================
+
+====================
+* 1. Main concepts *
+====================
+
+"Dataflow" is a series of "Stages", applied to a stream of data in a specific
+order. Each Stage is nothing but a program capable of operating in a "stream
+mode". It means, basically, that the program can read input stream of
+"Messages" and/or generate the output one according to a set of rules, common
+for all the stages.
+
+================
+* 2. Libraries *
+================
+
+./shell_lib/
+
+-- common functions for Shell scripts. Currently used by scripts run/*.sh, but
+   may also be useful for stage scripts. Usage example:
+
+       lib_dir="$base_dir/../shell_lib"
+
+       if ! [ -d "$lib_dir" ]; then
+         echo "Library directory '$lib_dir' not found!"
+         exit 1
+       fi
+
+       . "$lib_dir/log"
+
+       log DEBUG "My debug message here."
+
+
+./pyDKB/
+
+-- Python (v.2.7) library for stage scripts. Contains implementation of basic
+   operations on the data flow (read/write messages) for different versions of
+   the flow (local files, HDFS files, STDIN/OUT, map/reduce), provides default
+   parser for stage configuration files, etc. Most of this functionality is not
+   necessary to make program to operate as a Stage -- but was found useful for
+   reliability and uniformity.
+
+   The library can be installed system-wide or in a virtual environment:
+
+       # Install current version (will exist independently of source files)
+       $ ./pyDKB-setup.py install
+
+       # Install development version (will use local source files)
+       $ ./pyDKB-setup.py develop
+
+       # Install in a virtual environment
+       $ virtualenv -p `which python2.7` dkb-dev-env
+       $ . dkb-dev-env/bin/activate
+       (dkb-dev-env)$ ./pyDKB-setup.py develop
+       (dkb-dev-env)$ <...>
+       (dkb-dev-env)$ deactivate
+       $ <...>
+
+   Usage example can be found in directory: ./skel/
+
+   Documentation can be found at the top level of the repository in directory:
+   /Docs/
+
+========================
+* 3. Other directories *
+========================
+
+./config/ -- examples of configuration files for stages.
+
+./run/    -- dataflow process management files (start/stop/status/...).
+
+./test/   -- misc tools for this or that functionality testing:
+  pyDKB/    -- tests for main pyDKB usage scenatios;
+  utils/    -- misc tools
+
+./XXX_StageName/
+	  -- Dataflow stage (see below).
+	     Stages are named with three leading digits (XXX), usualy referred
+	     to as stage ID. But the number assignment logic is long gone, so
+             it's safe to think about them simply as unique IDs.
+
 
 ======================
 * Stages description *
