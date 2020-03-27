@@ -4,6 +4,7 @@ RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
 
+exit_code=0
 # Test stage run modes.
 
 base_dir=$(cd "$(dirname "$(readlink -f "$0")")"; pwd)
@@ -75,8 +76,14 @@ test_case() {
   else
     rm "${case_id}_err.diff"
   fi
+
+  result=0
+
   ! [ -f "${case_id}_err.diff" ] && ! [ -f "${case_id}_out.diff" ] && \
-    echo -e " ${GREEN}OK${NC} : $case_id"
+    echo -e " ${GREEN}OK${NC} : $case_id" || \
+    result=1
+
+  return $result
 }
 
 CASES=""
@@ -123,9 +130,12 @@ rm *.{err,out} 2>/dev/null
 for c in $CASES; do
   if [ -d "$c" ]; then
     test_case $c
+    result=$?
+    [ $exit_code -eq 0 -a $result -eq 1 ] && exit_code=$result
   else
     echo "Invalid test: '$c' (directory not found)." >&2
   fi
 done
 
 cd $orig_dir
+exit $exit_code
