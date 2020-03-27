@@ -80,9 +80,9 @@ for all the stages.
   utils/    -- misc tools
 
 ./XXX_StageName/
-	  -- Dataflow stage (see below).
-	     Stages are named with three leading digits (XXX), usualy referred
-	     to as stage ID. But the number assignment logic is long gone, so
+          -- Dataflow stage (see below).
+             Stages are named with three leading digits (XXX), usualy referred
+             to as stage ID. But the number assignment logic is long gone, so
              it's safe to think about them simply as unique IDs.
 
 
