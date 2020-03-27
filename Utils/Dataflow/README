@@ -6,9 +6,9 @@
 * General information *
 =======================
 
-====================
-* 1. Main concepts *
-====================
+
+1. Main concepts
+----------------
 
 "Dataflow" is a series of "Stages", applied to a stream of data in a specific
 order. Each Stage is nothing but a program capable of operating in a "stream
@@ -16,9 +16,9 @@ mode". It means, basically, that the program can read input stream of
 "Messages" and/or generate the output one according to a set of rules, common
 for all the stages.
 
-================
-* 2. Libraries *
-================
+
+2. Libraries
+------------
 
 ./shell_lib/
 
@@ -67,9 +67,9 @@ for all the stages.
    Documentation can be found at the top level of the repository in directory:
    /Docs/
 
-========================
-* 3. Other directories *
-========================
+
+3. Other directories
+--------------------
 
 ./config/ -- examples of configuration files for stages.
 
@@ -137,8 +137,9 @@ for all the stages.
 * Dataflows description *
 =========================
 
+
 1. Document analysis
----
+--------------------
 
 010 --> 015 --> *                    | Get papers and supporting docs metadata
                                      |
@@ -151,8 +152,9 @@ for all the stages.
                                      |
     ** ---> 060                      | Upload prepared metadata to Virtuoso
 
+
 2. Tasks and data samples (DS) metadata integration (ProdSys2)
----
+--------------------------------------------------------------
 
 009 ---> *                                | Get task metadata from ProdSys2 DB
                                           |
@@ -163,8 +165,9 @@ for all the stages.
                                           |
   ** ----> 019 -> 069                     | Prepare and upload metadata to ES
 
+
 3. Tasks metadata consistency check
----
+-----------------------------------
 
 009 ---> 016 ---> 071
 
@@ -178,9 +181,9 @@ fields, and checks that it is present in ES rather than uploading it.
 ==============
 Conventions, in-between data location in HDFS storage etc.
 
-===========================
-* 1. Data Samples in HDFS *
-===========================
+
+1. Data Samples in HDFS
+-----------------------
 
 HOME folder: /user/DKB
 
@@ -191,9 +194,9 @@ Stage  HDFS                           Description
 015    $HOME/store/document-metadata  ATLAS documents metadata from CDS/GLANCE
 
 
-=======================================
-* 2. Streaming mode (data processing) *
-=======================================
+2. Streaming mode (data processing)
+-----------------------------------
+
 To automate all the processes in the DataFlow, we need to run all the stages in
 a streaming mode. It means, that every (processing) stage is to meet the
 following requirements:
@@ -215,9 +218,10 @@ following requirements:
 
 [3] EOP, End-of-Process marker. Default value: '\0' (NULL)
 
-==================
-* 3. Stage types *
-==================
+
+3. Stage types
+--------------
+
 There are three types of stages:
 
 1. Source stage - an initial stage in a dataflow pipeline that gets data
@@ -242,9 +246,10 @@ and uploads them without any re-formatting. It does not care about messages
 content. If message does not follow the template, most likely it
 will be rejected by the storage load API.
 
-=====================================
-* 4. External sources (data mining) *
-=====================================
+
+4. External sources (data mining)
+---------------------------------
+
 There are two general cases of external data sources.
 1. Standard sources (like RDBMS) - here we can use standard connectors.
 2. Non-standard sources (like GLANCE).
