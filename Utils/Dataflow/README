@@ -10,7 +10,7 @@
 1. Main concepts
 ----------------
 
-"Dataflow" is a series of "Stages", applied to a stream of data in a specific
+"Dataflow" is a series of "Stages" applied to a stream of data in a specific
 order. Each Stage is nothing but a program capable of operating in a "stream
 mode". It means, basically, that the program can read input stream of
 "Messages" (smallest structural units of the data flow) and/or generate the
