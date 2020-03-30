@@ -81,7 +81,7 @@ output one according to a set of rules common for all the stages.
 
 ./XXX_StageName/
           -- Dataflow stage (see below).
-             Stages are named with three leading digits (XXX), usualy referred
+             Stages are named with three leading digits (XXX), usually referred
              to as stage ID. But the number assignment logic is long gone, so
              it's safe to think about them simply as unique IDs.
 
