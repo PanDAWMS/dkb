@@ -256,6 +256,8 @@ class AbstractStage(LoggableObject):
         if exc_info:
             if exc_info[0] == KeyboardInterrupt:
                 self.log("Interrupted by user.")
+            elif exc_info[0] == SystemExit:
+                self.log("Exit code: %s" % exc_info[1].code)
             else:
                 trace = traceback.format_exception(*exc_info)
                 self.log(''.join(trace), logLevel.DEBUG)
