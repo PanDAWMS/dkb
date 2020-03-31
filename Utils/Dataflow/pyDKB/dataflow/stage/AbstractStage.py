@@ -249,8 +249,6 @@ class AbstractStage(LoggableObject):
             err = self._error
             if err:
                 exc_info = (err['etype'], err['exception'], err['trace'])
-        if not message and exc_info:
-            message = str(exc_info[1])
         if message:
             self.log(message, logLevel.ERROR)
         if exc_info:
@@ -259,6 +257,9 @@ class AbstractStage(LoggableObject):
             elif exc_info[0] == SystemExit:
                 self.log("Exit code: %s" % exc_info[1].code)
             else:
+                if not message:
+                    message = str(exc_info[1])
+                    self.log(message, logLevel.ERROR)
                 trace = traceback.format_exception(*exc_info)
                 self.log(''.join(trace), logLevel.DEBUG)
 
