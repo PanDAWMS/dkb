@@ -37,6 +37,7 @@ finally:
         RucioException
     except NameError:
         RucioException = None
+        DataIdentifierNotFound = None
 
 try:
     dkb_dir = os.path.join(base_dir, os.pardir)
