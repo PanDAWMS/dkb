@@ -248,7 +248,7 @@ class ProcessorStage(AbstractStage):
                 pass
             self.stop()
         finally:
-            # If something went wrong in `except` clause, we will still
+            # NOTE: If something went wrong in `except` clause, we will still
             # get here and return, so the exceptions from there will never
             # reach the user
             if err and not isinstance(err, Exception):
