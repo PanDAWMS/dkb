@@ -237,7 +237,10 @@ class ProcessorStage(AbstractStage):
             # Catch everything for uniform exception handling
             # Clear buffer -- just in case someone will decide
             # to reuse the object.
-            exit_code = 1
+            if isinstance(err, SystemExit):
+                exit_code = err.code
+            else:
+                exit_code = 1
             self.set_error(*sys.exc_info())
             try:
                 self.clear_buffer()
