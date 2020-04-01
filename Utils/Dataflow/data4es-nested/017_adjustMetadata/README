@@ -16,5 +16,5 @@ Transform task metadata to fit ES scheme:
 ----------
 The 'output' directory contains 2 samples of production data:
 
-sample2016.ndjson - 2016 data (from 016's 2016 sample)
-sample2020.ndjson - 2020 data (from 016's 2020 sample)
+  sample2016.ndjson - 2016 data (from 016's 2016 sample)
+  sample2020.ndjson - 2020 data (from 016's 2020 sample)
