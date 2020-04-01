@@ -21,6 +21,15 @@ fi
 SLEEP=1
 CURL_N_MAX=10
 
+BATCHMODE="d"
+EOB_DEFAULT="NOT_SPECIFIED"
+EOB="$EOB_DEFAULT"
+EOMessage='\n'
+
+EOP_set="N"
+EOB_set="N"
+EOM_set="N"
+
 usage () {
   echo "
 Upload TTL or SPARQL query files to Virtuoso.
@@ -55,15 +64,32 @@ OPTIONS:
                                 * in a (s)tream mode waits for input from STDIN,
                                   sending data to Virtuoso;
                                   messages are to be delimited by <delimiter>.
-  -d, --delimiter <delimiter>   Specifies the delimiter between sets of input
-                                data in the stream mode.
-                                Default: \n
-                                Kafka-style: \0
+  -e, --eom                     Specifies EOM (End-of-message) marker.
+                                Default: '\n'
+  -E, --eop                     Specifies EOP (End-of-process) marker.
+                                Default:
+                                File mode: ''
+                                Stream mode: '\0'
+  -b, --batch {e[abled]|d[isabled]} Specifies batch-mode: (e)nabled|(d)isabled.
+  -B, --eob <EOB>               Specifies the delimiter between sets of input
+                                Default ('\x11' is a random one):
+
+   -b   ||  X   |  X   |   X    |   X    ||  'e'   | 'e'  |  'e'   |  'e'   |
+------- || ---- | ---- | ------ | ------ || ------ | ---- | ------ | ------ |
+   -B   ||  X   |  ''  | '\x17' | '\x11' ||   X    |  ''  | '\x17' | '\x11' |
+======= || ==== | ==== | ====== | ====== || ====== | ==== | ====== | ====== |
+EOBatch || '\n' | '\n' | '\x17' | '\x11' || '\x17' | '\n' | '\x17' | '\x11' |
+
   -h, --help                    Print this message and exit.
 "
 }
 
 upload_files () {
+  if [ "$EOP_set" == "N" ] ; then
+    EOProcess=""
+  else
+    EOProcess="$EOP"
+  fi
 
   if [ -z "$1" ] ; then
     echo "(ERROR) Input file is not specified." >&2
@@ -115,7 +141,7 @@ upload_files () {
     esac
 
     eval "$cmd" || { echo "(ERROR) An error occured while uploading file: $INPUTFILE" >&2; continue; }
-
+    echo -ne "$EOProcess"
   done
 
   return 0;
@@ -123,7 +149,12 @@ upload_files () {
 }
 
 upload_stream () {
-  local delimiter=$'\n'
+
+  if [ "$EOP_set" == "N" ] ; then
+    EOProcess="\0"
+  else
+    EOProcess="$EOP"
+  fi
 
   [ -z "$TYPE" ] && { echo "(ERROR) input data format is not specified. Exiting." >&2; return 2;}
   while [[ $# > 0 ]]
@@ -158,15 +189,33 @@ upload_stream () {
   esac
 
   while true; do
-    while read -r -d "$delimiter" line; do
-      n=`ps ax | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
-      while [ $n -gt $CURL_N_MAX ]; do
-        sleep $SLEEP
-        n=`ps axf | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
+    if [ -z "$(echo -ne $delimiter)" ] ; then
+      while eval "read -d \$'$delimiter' line"; do
+        if [ "$EOMessage" != "\n" ]; then
+          $line=${line/$EOMessage/"\n"}
+        fi
+        n=`ps ax | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
+        while [ $n -gt $CURL_N_MAX ]; do
+          sleep $SLEEP
+          n=`ps axf | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
+        done
+        echo "$line" | $cmd &>/dev/null || { echo "(ERROR) An error occured while uploading stream data." >&2; continue; } &
+        echo -ne "$EOProcess"
       done
-      echo "$line" | $cmd &>/dev/null || { echo "(ERROR) An error occured while uploading stream data." >&2; continue; } &
-      echo -n $'\6'
-    done
+    else
+      while read -r -d "$delimiter" line; do
+        if [ "$EOMessage" != "\n" ]; then
+          $line=${line/$EOMessage/"\n"}
+        fi
+        n=`ps ax | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
+        while [ $n -gt $CURL_N_MAX ]; do
+          sleep $SLEEP
+          n=`ps axf | grep 'curl' | grep "$HOST:$PORT" | grep -v 'grep' | wc -l`
+        done
+        echo "$line" | $cmd &>/dev/null || { echo "(ERROR) An error occured while uploading stream data." >&2; continue; } &
+        echo -ne "$EOProcess"
+      done
+    fi
   done
 }
 
@@ -200,8 +249,28 @@ do
       MODE="${2,,}"
       shift
       ;;
-    -d|--delimiter)
-      DELIMITER=`echo -e $2`
+    -b|--batch)
+      if [ -z "$2" ] || [[ "$2" == -* ]];
+      then
+        BATCHMODE="e"
+      else
+        BATCHMODE="$2"
+        shift
+      fi
+      ;;
+    -B|--eob)
+      EOB="$2"
+      EOB_set="Y"
+      shift
+      ;;
+    -E|--eop)
+      EOP="$2"
+      EOP_set="Y"
+      shift
+      ;;
+    -e|--eom)
+      EOM="$2"
+      EOM_set="Y"
       shift
       ;;
     -u|--user)
@@ -231,8 +300,24 @@ done
 [ -z "$HOST" ] && echo "(ERROR) empty host value." >&2 && exit 2
 [ -z "$PORT" ] && echo "(ERROR) empty port value." >&2 && exit 2
 [ -z "$GRAPH" ] && GRAPH=http://$HOST:$PORT/$GRAPH_PATH
-[ -z "$DELIMITER" ]  && DELIMITER=$'\0'
-[ "x$DELIMITER" = "xNOT SPECIFIED" ] && DELIMITER=$'\n'
+
+[ "$EOM_set" == "Y" ] && EOMessage="$EOM"
+[ -z "$EOMessage" ] && EOMessage='\n'
+
+[ "$EOB_set" == "Y" ] && EOBatch="$EOB"
+[ -z "$EOB" ] && EOBatch='\n'
+
+case $BATCHMODE in
+  "e"|"enabled")
+    [ "$EOB" == "$EOB_DEFAULT" ] && EOBatch='\x17'
+    ;;
+  "d"|"disabled")
+    [ "$EOB" == "$EOB_DEFAULT" ] && EOBatch='\n'
+    ;;
+  *)
+    log "Unexpected batch-mode parameter."
+    ;;
+esac
 
 cmdTTL="curl --retry 3 -s -f -X POST --digest -u $USER:$PASSWD -H Content-Type:text/turtle -G http://$HOST:$PORT/sparql-graph-crud-auth --data-urlencode graph=$GRAPH"
 cmdSPARQL="curl --retry 3 -s -f -H 'Accept: text/csv' -G http://$HOST:$PORT/sparql --data-urlencode query"
@@ -242,7 +327,7 @@ case $MODE in
     upload_files $*;
     ;;
   s)
-    upload_stream -d "$DELIMITER";
+    upload_stream -d "$EOBatch";
     ;;
   *)
     echo "(ERROR) $MODE: unsupported mode."  >&2
