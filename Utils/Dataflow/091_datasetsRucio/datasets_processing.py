@@ -107,10 +107,7 @@ def init_rucio_client():
                          "module not loaded.\n")
         raise DataflowException("Module not found or misconfigured: 'rucio'")
     except RucioException as err:
-        sys.stderr.write("(ERROR) Failed to initialize Rucio client.\n")
-        err_str = str(err).replace("\n", "\n(==) ")
-        sys.stderr.write("(ERROR) %s.\n" % err_str)
-        sys.exit(1)
+        raise DataflowException("Failed to initialize Rucio client: %s" % err)
 
 
 def get_rucio_client():
