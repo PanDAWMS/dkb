@@ -11,6 +11,7 @@ Authors:
 
 import sys
 import os
+import traceback
 
 base_dir = os.path.abspath(os.path.dirname(__file__))
 
@@ -106,6 +107,20 @@ def init_rucio_client():
         sys.stderr.write("(FATAL) Failed to initialize Rucio client: "
                          "module not loaded.\n")
         raise DataflowException("Module not found or misconfigured: 'rucio'")
+    except IOError as err:
+        # When Client fails to read the certificate files for some reason,
+        # it does not handle the IOError in any way, so we have to read
+        # a pretty long traceback to realise what's the problem.
+        # This is an attempt to detect a familiar situation -- problem with
+        # the certificate files -- and distinguish it from any other possible
+        # `IOError`s.
+        tb = traceback.extract_tb(sys.exc_info()[2])
+        if '.load_cert_chain(' in tb[-1][-1]:
+            # The innermost context to which we can get
+            # is the line containing 'load_cert_chain' method call
+            raise DataflowException("Failed to inilialize Rucio client:"
+                                    " can not load certificate.", reason=err)
+        raise
     except RucioException as err:
         raise DataflowException("Failed to initialize Rucio client: %s" % err)
 
