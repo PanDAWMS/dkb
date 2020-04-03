@@ -1,6 +1,11 @@
 {u'a': u'value_1'}
 {u'c': u'val_3', u'b': u'val_2'}
 {u'd': None}
+{u'a': u'b'}
+[u'a', u'b']
+123
+aaaaaa
+15.5
 {u'a': 11}
 {u'c': 33, u'b': 22}
 {u'd': 44}

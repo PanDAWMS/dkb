@@ -39,13 +39,17 @@ def main(argv):
     stage.set_input_message_type(messageType.JSON)
     stage.set_output_message_type(messageType.JSON)
 
-    stage.add_argument('--userkey', help='PEM key file', default='')
-    stage.add_argument('--usercert', help='PEM certificate file', default='')
+    stage.set_default_arguments(config=os.path.join(base_dir, os.pardir,
+                                                    'config', '095.cfg'))
 
     stage.configure(argv)
     stage.process = process
-    if stage.ARGS.userkey and stage.ARGS.usercert:
-        init_ami_client(stage.ARGS.userkey, stage.ARGS.usercert)
+
+    if stage.CONFIG['ami'].get('userkey', '') \
+            and stage.CONFIG['ami'].get('usercert', ''):
+        init_ami_client(stage.CONFIG['ami']['userkey'],
+                        stage.CONFIG['ami']['usercert'])
+
     exit_code = stage.run()
 
     if exit_code == 0:
