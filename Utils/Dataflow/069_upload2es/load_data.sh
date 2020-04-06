@@ -93,7 +93,7 @@ load_files () {
   do
     cat ${INPUTFILE} | verify_ndjson
     ${cmd}${INPUTFILE} | parse_bulk_response
-    [ $PIPESTATUS[0] -ne 0 ] && exit 3
+    [ ${PIPESTATUS[0]} -ne 0 ] && exit 3
   done
 }
 
