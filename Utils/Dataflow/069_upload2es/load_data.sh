@@ -95,6 +95,7 @@ load_files () {
     ${cmd}${INPUTFILE} | parse_bulk_response
     [ ${PIPESTATUS[0]} -ne 0 ] && exit 3
   done
+  return 0
 }
 
 load_stream () {
@@ -109,6 +110,7 @@ load_stream () {
     { echo "$line" | ${cmd}- | parse_bulk_response; } &
     echo -n "$EOProcess"
   done
+  return 0
 }
 
 if [ -z "$1" ] ; then
