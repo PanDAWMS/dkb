@@ -39,7 +39,7 @@ jq_response_parser='
     | "Failed to load record: " + ( {(._id): .error} | tostring )
   ),
   (
-    select(.error) | "Failed to load record:" + (.error|tostring)
+    select(.error) | "Failed to load record: " + (.error|tostring)
   )'
 
 parse_bulk_response() {
