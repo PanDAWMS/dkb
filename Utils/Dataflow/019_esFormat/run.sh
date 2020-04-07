@@ -27,7 +27,7 @@ $base_dir/esFormat.php -h 2>&1 | sed 1,5d >&2
 while [ -n "$1" ]; do
   case "$1" in
     --help|-h)
-      usage >&2; exit 1;;
+      usage >&2; exit 0;;
     --config|-c)
       [ -n "$2" ] && { ES_CONFIG="$2" && CONFIG_DEFAULT=""; } \
                   || { usage >&2; exit 1; }
