@@ -131,6 +131,9 @@ function constructActionJson($row) {
 
   The latter three values are taken from the document.
 
+  For additional information please refer to the Elasticsearch documentation:
+  www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html
+
   :param row: document for which the action json should be generated
   :type row: array
 
