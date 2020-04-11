@@ -29,7 +29,7 @@ while [ -n "$1" ]; do
     --help|-h)
       usage >&2; exit 0;;
     --config|-c)
-      [ -n "$2" ] && { ES_CONFIG="$2" && CONFIG_DEFAULT=""; } \
+      [ -n "$2" ] && ES_CONFIG="$2" && CONFIG_DEFAULT="" \
                   || { usage >&2; exit 1; }
       shift;;
     --)
