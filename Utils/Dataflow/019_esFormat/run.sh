@@ -6,7 +6,7 @@ ES_CONFIG=$base_dir/../../Elasticsearch/config/es
 CONFIG_DEFAULT=TRUE
 
 usage() {
-  echo "usage: $(basename "$0") [-h] [-c CONFIG] [--] [ARGS]
+  echo "usage: $(basename "$0") [-h] [-c CONFIG] [-- [ARGS]]
   
 optional arguments:
   -h, --help   show this help message and exit
