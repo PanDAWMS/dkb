@@ -95,8 +95,9 @@ function convertIndexToLowerCase(&$a) {
 function getAction($row) {
   /* Determine action for the document.
 
-  Action is 'update' if {'_update': true} key-value pair is 
-  present in the document. Otherwise, default value is returned.
+  Action is 'update' if either {'_update': true} or {'_incomplete': true}
+  key-value pair is present in the document. Otherwise, default value
+  is returned.
 
   :param row: document for which the action should be determined
   :type row: array
