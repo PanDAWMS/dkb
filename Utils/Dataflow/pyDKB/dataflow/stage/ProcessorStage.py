@@ -78,7 +78,8 @@ class ProcessorStage(AbstractStage):
     # Name of the option that switches stage into 'skip' mode
     _skip_option = '--skip'
 
-    # Arguments to be reset to "safe" default values if stage is to be skipped
+    # Arguments to be reset to original default values if stage is to be
+    # skipped
     # NOTE: values specified explicitly (in command line) won't be reset
     _reset_on_skip = []
 

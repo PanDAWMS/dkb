@@ -154,7 +154,7 @@ class AbstractStage(LoggableObject):
 
         self.__parser.add_argument(*args, **kwargs)
 
-        # Store default values that are considered to be safe
+        # Store original default values
         self._default_args[arg_name] = self.__parser.get_default(arg_name)
 
     def set_default_arguments(self, **kwargs):
@@ -166,7 +166,10 @@ class AbstractStage(LoggableObject):
         self.__parser.set_defaults(**kwargs)
 
     def reset_default_arguments(self, args=None):
-        """ Reset default argument values to "safe" ones.
+        """ Reset default argument values to the original ones.
+
+        Original default value is a value, passed to the ``add_argument()``
+        method.
 
         :param args: list of arguments to be reset. If not specified
                      or set to None, all known arguments will be reset
