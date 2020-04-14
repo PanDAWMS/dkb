@@ -5,14 +5,61 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 }
 set_error_handler("exception_error_handler");
 
+# Default values.
+# ES index where the documents should be indexed/updated.
 $DEFAULT_INDEX = 'tasks_production';
-$DEFAULT_ACTION = 'index';
-$UPDATE_RETRIES = 3;
-$ES_INDEX = NULL;
+# End-of-process marker, depending on mode.
 $EOP_DEFAULTS = Array("stream" => chr(0), "file" => "");
+# End-of-message marker, depending on mode.
 $EOM_DEFAULTS = Array("stream" => chr(30), "file" => chr(30));
+# How many times the update should be retried in case of conflict.
+$UPDATE_RETRIES = 3;
+# Action.
+# Possible values:
+# * 'index' - insert new record or overwrite existing one
+# * 'update' - update existing record or insert data as a new one
+$DEFAULT_ACTION = 'index';
+
+function usage() {
+  /* Display information on how to use the script.
+
+  Note: this help message is used in run.sh's one. If it is changed,
+  run.sh may also need change. Another option is to make run.sh's help
+  more adaptable.
+  */
+
+  $f = basename(__FILE__);
+  $msg =
+"usage: $f [-h] [-e EOM] [-E EOM] [--update] [FILE]
+
+optional arguments:
+  -h, --help                     show this help message and exit
+
+  -e EOM, --end-of-message EOM   custom end of message marker
+
+  -E EOP, --end-of-process EOP   custom end of process marker
+
+  --update                       use 'update' action for all records
+
+  FILE                           source file
+                                 note: if no FILE is specified, the data
+                                 will be acquired from standard input
+";
+  fwrite(STDERR, $msg);
+}
 
 function check_input($row) {
+  /* Check the provided input's correctness.
+
+  The input must:
+  - be an array;
+  - contain non-empty fields '_id' and '_type'.
+
+  :param row: input to check
+
+  :return: TRUE if input is correct, FALSE if it is not
+  :rtype: bool
+  */
   $required_fields = array('_id', '_type');
 
   if (!is_array($row)) {
@@ -31,6 +78,11 @@ function check_input($row) {
 }
 
 function convertIndexToLowerCase(&$a) {
+  /* Convert array's keys to lowercase, in place.
+
+  :param a: array to process
+  :type a: array
+  */
   $result = array();
 
   foreach (array_keys($a) as $i) {
@@ -41,20 +93,56 @@ function convertIndexToLowerCase(&$a) {
 }
 
 function getAction($row) {
-  global $DEFAULT_ACTION;
+  /* Determine action for the document.
+
+  Action is 'update' if either {'_update': true} or {'_incomplete': true}
+  key-value pair is present in the document. Otherwise, default value
+  is returned.
+
+  :param row: document for which the action should be determined
+  :type row: array
+
+  :return: action
+  :rtype: str
+  */
+  global $ACTION;
 
   if (isset($row['_update']) and $row['_update'] === true) {
     $action = 'update';
   } elseif (isset($row['_incomplete']) and $row['_incomplete'] === true) {
     $action = 'update';
   } else {
-    $action = $DEFAULT_ACTION;
+    $action = $ACTION;
   }
 
   return $action;
 }
 
 function constructActionJson($row) {
+  /* Generate a json with ES bulk API action information for a given document.
+
+  Action json is generated for each document and includes directions about how
+  exactly the document must be processed. It contains a single key-value pair.
+  The key is the action to be taken, and is determined upon the presence of
+  "update":true in the document. The value is an array that contains the
+  remaining information:
+  - index name
+  - number of retries if the action is update
+  - document id
+  - document type
+  - document's parent, if it is specified.
+
+  The latter three values are taken from the document.
+
+  For additional information please refer to the Elasticsearch documentation:
+  www.elastic.co/guide/en/elasticsearch/reference/current/docs-bulk.html
+
+  :param row: document for which the action json should be generated
+  :type row: array
+
+  :return: generated action json
+  :rtype: array
+  */
   global $ES_INDEX;
   global $UPDATE_RETRIES;
 
@@ -80,6 +168,23 @@ function constructActionJson($row) {
 }
 
 function constructDataJson($row) {
+  /* Prepare the document for bulk operation.
+
+  - Remove fields starting with an underscore. These are service fields
+    that are processed separately and should not be included into the
+    resulting data.
+  - If action is 'update' then 'doc_as_upsert' is set to 'true' if the data
+    is complete. This means that the same document should be used as a new
+    document to be indexed if there is no existing document to update.
+    For incomplete data it is set to 'false', and different copies of data
+    are provided for indexing and updating.
+
+  :param row: document to be prepared
+  :type row: array
+
+  :return: prepared document
+  :rtype: array
+  */
   $data = $row;
 
   if (isset($data['_incomplete'])) {
@@ -136,7 +241,8 @@ function decode_escaped($string) {
                       'stripcslashes("$0")', $string);
 }
 
-$opts = getopt("e:E:", Array("end-of-message:", "end-of-process:",
+# Process command line arguments.
+$opts = getopt("he:E:", Array("help", "end-of-message:", "end-of-process:",
                              "update"));
 $args = $argv;
 
@@ -153,6 +259,11 @@ foreach ($opts as $key => $val) {
     unset($args[$mkey]);
   }
   switch ($key) {
+    case "h":
+    case "help":
+      usage();
+      exit(0);
+      break;
     case "e":
     case "end-of-message":
       $EOM_MARKER = decode_escaped($val);
@@ -162,13 +273,14 @@ foreach ($opts as $key => $val) {
       $EOP_MARKER = decode_escaped($val);
       break;
     case "update":
-      $DEFAULT_ACTION = "update";
+      $ACTION = "update";
       break;
   }
 }
 
 $args = array_values($args);
 
+# Determine mode depending on whether the input file was supplied or not.
 if (isset($args[1])) {
   $h = fopen($args[1], "r");
   $mode = "file";
@@ -177,12 +289,16 @@ if (isset($args[1])) {
   $mode = "stream";
 }
 
+if (!(isset($ACTION))) $ACTION = $DEFAULT_ACTION;
+
+# Set markers.
 if (!(isset($EOM_MARKER))) $EOM_MARKER = $EOM_DEFAULTS[$mode];
 if (!(isset($EOP_MARKER))) $EOP_MARKER = $EOP_DEFAULTS[$mode];
 
 $EOM_HEX = implode(unpack("H*", $EOM_MARKER));
 $EOP_HEX = implode(unpack("H*", $EOP_MARKER));
 
+# Check that markers are valid.
 if ($EOM_MARKER == '') {
   fwrite(STDERR, "(ERROR) EOM marker can not be empty string.\n");
   exit(1);
@@ -203,6 +319,7 @@ if (!$ES_INDEX) {
   $ES_INDEX = $DEFAULT_INDEX;
 }
 
+# Process data.
 if ($h) {
   while (($line = stream_get_line($h, 0, $EOM_MARKER)) !== false) {
     $row = json_decode($line,true);
