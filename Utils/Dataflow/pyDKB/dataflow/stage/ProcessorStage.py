@@ -75,6 +75,7 @@ class ProcessorStage(AbstractStage):
     __input = None
     _out_stream = None
 
+    # Name of the option that switches stage into 'skip' mode
     _skip_option = '--skip'
 
     # Arguments to be reset to "safe" default values if stage is to be skipped
