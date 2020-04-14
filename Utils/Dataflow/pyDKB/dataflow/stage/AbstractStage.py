@@ -26,7 +26,8 @@ class AbstractStage(LoggableObject):
     * Argument parser (argparse.ArgumentParser)
         __parser
 
-    * Default argument values (dict)
+    * Original default argument values (dict)
+    * (filled by ``add_argument()`` method)
         _default_args
 
     * Parsed arguments (argparse.Namespace)
