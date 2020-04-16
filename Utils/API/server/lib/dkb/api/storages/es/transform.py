@@ -410,6 +410,9 @@ def campaign_stat(stat_data, events_src=None):
         except TypeError:
             # Values are not numeric (None or dict)
             pass
+        except ZeroDivisionError:
+            # Number of input events is -- somehow -- zero
+            pass
 
         # Tasks processing: summary and updates
         tps = {}
