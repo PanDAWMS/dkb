@@ -399,7 +399,9 @@ def campaign_stat(stat_data, events_src=None):
                             .get('value', None)
         esp_o = esp_o[events_src] if events_src != 'all' else esp_o
 
-        eps = {'input': step.get('input_events', {}).get('value', None),
+        eps = {'input': step.get('input_events', {})
+                            .get('input_events', {})
+                            .get('value', None),
                'output': esp_o,
                'ratio': None
                }
