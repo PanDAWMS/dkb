@@ -255,7 +255,7 @@ class AbstractStage(LoggableObject):
             if exc_info[0] == KeyboardInterrupt:
                 self.log("Interrupted by user.")
             elif exc_info[0] == SystemExit:
-                self.log("Exit code: %s" % exc_info[1].code)
+                self.log("Exit code: %s." % exc_info[1].code)
             else:
                 if not message:
                     message = str(exc_info[1])
