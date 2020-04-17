@@ -311,13 +311,14 @@ def campaign_stat(selection_params, step_type='step', events_src=None):
     data = {}
     try:
         data = client().search(**query)
-        data = transform.campaign_stat(data, events_src)
-    except KeyError, err:
-        msg = "Failed to parse storage response: %s." % str(err)
-        raise MethodException(reason=msg)
     except Exception, err:
         msg = "(%s) Failed to execute search query: %s." % (STORAGE_NAME,
                                                             str(err))
+        raise MethodException(reason=msg)
+    try:
+        data = transform.campaign_stat(data, events_src)
+    except Exception, err:
+        msg = "Failed to parse storage response: %s." % str(err)
         raise MethodException(reason=msg)
 
     r.update(data)

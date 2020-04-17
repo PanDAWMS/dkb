@@ -15,7 +15,14 @@
     }
   },
   "input_events": {
-    "sum": {"field": "input_events"}
+    "filter": {
+      "bool": {"must_not": {"terms": {"status": ["aborted", "failed", "broken", "obsolete"]}}}
+    },
+    "aggs": {
+      "input_events": {
+        "sum": {"field": "input_events"}
+      }
+    }
   },
   "output_events": {
     "children": {"type": "output_dataset"},
