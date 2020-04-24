@@ -169,7 +169,7 @@ class AbstractStage(LoggableObject):
     def reset_default_arguments(self, args=None):
         """ Reset default argument values to the original ones.
 
-        Original default value is a value, passed to the ``add_argument()``
+        Original default value is a value passed to the ``add_argument()``
         method.
 
         :param args: list of arguments to be reset. If not specified
