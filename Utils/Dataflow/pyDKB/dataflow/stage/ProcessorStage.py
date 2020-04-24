@@ -75,6 +75,14 @@ class ProcessorStage(AbstractStage):
     __input = None
     _out_stream = None
 
+    # Name of the option that switches stage into 'skip' mode
+    _skip_option = '--skip'
+
+    # Arguments to be reset to original default values if stage is to be
+    # skipped
+    # NOTE: values specified explicitly (in command line) won't be reset
+    _reset_on_skip = []
+
     def __init__(self, description="DKB Dataflow data processing stage."):
         """ Initialize the stage
 
@@ -173,12 +181,26 @@ class ProcessorStage(AbstractStage):
                           default=False,
                           dest='hdfs'
                           )
-        self.add_argument('--skip', action='store_true',
+        self.add_argument(self._skip_option, action='store_true',
                           help=u'Skip process and push input message '
                           'forward as-is (marking it as "incomplete").',
                           default=False,
                           dest='skip_process'
                           )
+
+    def set_default_arguments(self, ignore_on_skip=False, **kwargs):
+        """ Set (or overwrite) default values for arguments.
+
+        :param ignore_on_skip: ignore new default value when the stage
+                               is to be skipped
+        :type ignore_on_skip: bool
+
+        :param <arg_name>: default value for argument <arg_name>
+        :type <arg_name>: object
+        """
+        super(ProcessorStage, self).set_default_arguments(**kwargs)
+        if ignore_on_skip:
+            self._reset_on_skip += kwargs.keys()
 
     def configure(self, args=None):
         """ Configure stage according to the config parameters.
@@ -186,6 +208,8 @@ class ProcessorStage(AbstractStage):
         If $args specified, arguments will be parsed anew.
         """
         if args:
+            if self._skip_option in args:
+                self.reset_default_arguments(self._reset_on_skip)
             self.parse_args(args)
         elif self.ARGS is None:
             # Need to initialize ARGS to proceed
