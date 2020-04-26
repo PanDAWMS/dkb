@@ -2,7 +2,7 @@
 * Stage 19 *
 ============
 
-Description
+1. Description
 -----------
 Prepare data before uploading to ElasticSearch:
  * turn JSON keys to lower case
@@ -14,7 +14,7 @@ Use ./run.sh to run stage with common configuration from
 Use `--update` option to produce records intended to *update* data in ES,
   not replace.
 
-Input
+2. Input
 -----
 Expects data in JSON format with special fields.
 Required:
@@ -26,7 +26,7 @@ Optional:
 * '_update' (corresponding ES record should be "updated", not
              "inserted"/"indexed").
 
-Output
+3. Output
 ------
 JSON documents, one document per line:
 {{{
@@ -37,7 +37,7 @@ JSON documents, one document per line:
  ...
 }}}
 
-Samples
+4. Samples
 -------
 To produce regular (seamless NDJSON) samples, run:
 

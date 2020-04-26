@@ -5,6 +5,7 @@
 (INFO) (ProcessorStage)   skip_process : 'False'
 (INFO) (ProcessorStage)   eom          : '\n'
 (INFO) (ProcessorStage)   output_dir   : 'out'
+(INFO) (ProcessorStage)   decode       : 'False'
 (INFO) (ProcessorStage)   source       : 'f'
 (INFO) (ProcessorStage)   eop          : ''
 (INFO) (ProcessorStage)   mode         : 'f'
@@ -22,6 +23,7 @@
 (WARN) (InputStream) Failed to read input message as JSON.
 (==) Cause: Extra data: line 1 column 4 - line 1 column 37 (char 3 - 36)
 (==) Original message: '"E":"F"}EOM"Unfinished message......'
+(WARN) (pyDKB.dataflow.communication.messages) JSON messages with non-dict content are not fully implemented.
 (WARN) (InputStream) Unexpected end of stream, skipping rest of input:
 (==) 'Unfinished<...>ge is here'
 (WARN) (InputStream) Failed to read input message as JSON.

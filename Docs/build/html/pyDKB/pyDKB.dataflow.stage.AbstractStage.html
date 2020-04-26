@@ -39,25 +39,28 @@
 <dl class="class">
 <dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage">
 <em class="property">class </em><code class="descclassname">pyDKB.dataflow.stage.AbstractStage.</code><code class="descname">AbstractStage</code><span class="sig-paren">(</span><em>description='DKB Dataflow stage'</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dd><p>Bases: <a class="reference internal" href="pyDKB.common.LoggableObject.html#pyDKB.common.LoggableObject.LoggableObject" title="pyDKB.common.LoggableObject.LoggableObject"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyDKB.common.LoggableObject.LoggableObject</span></code></a></p>
 <p>Class/instance variable description:
 * Argument parser (argparse.ArgumentParser)</p>
 <blockquote>
 <div>__parser</div></blockquote>
-<ul class="simple">
+<ul>
 <li><dl class="first docutils">
 <dt>Parsed arguments (argparse.Namespace)</dt>
-<dd>ARGS</dd>
+<dd><p class="first last">ARGS</p>
+</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>Stage config parser (ConfigParser.SafeConfigParser)</dt>
-<dd>__config</dd>
+<dd><p class="first last">__config</p>
+</dd>
 </dl>
 </li>
 <li><dl class="first docutils">
 <dt>Stage custom config (defaultdict(defaultdict(str)))</dt>
-<dd>CONFIG</dd>
+<dd><p class="first last">CONFIG</p>
+</dd>
 </dl>
 </li>
 </ul>
@@ -83,12 +86,6 @@
 <dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.defaultArguments">
 <code class="descname">defaultArguments</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.defaultArguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.defaultArguments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Config argument parser with parameters common for all stages.</p>
-</dd></dl>
-
-<dl class="method">
-<dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.log">
-<code class="descname">log</code><span class="sig-paren">(</span><em>message</em>, <em>level=3</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.log" title="Permalink to this definition">¶</a></dt>
-<dd><p>Output log message with given log level.</p>
 </dd></dl>
 
 <dl class="method">
@@ -123,7 +120,7 @@
 <dl class="method">
 <dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.read_config">
 <code class="descname">read_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.read_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.read_config" title="Permalink to this definition">¶</a></dt>
-<dd><p>Reads stage custom config file.</p>
+<dd><p>Read stage custom config file.</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -180,6 +177,7 @@
 <li class="toctree-l2 current"><a class="reference internal" href="pyDKB.html#subpackages">Subpackages</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../Stages/Stages.html">Stages</a></li>
 </ul>
 
 <div class="relations">

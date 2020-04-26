@@ -38,9 +38,17 @@ def process(stage, msg):
     Output message: JSON
     """
     cls = pyDKB.dataflow.communication.Message(pyDKB.dataflow.messageType.JSON)
-    myMessage = cls(msg.content())
-    if "stop" in msg.content():
-        pre_stop_process("Key 'stop' in input message.")
+    content = msg.content()
+    if isinstance(content, (str, unicode)):
+        content = '"%s"' % content
+    myMessage = cls(content)
+    try:
+        if "stop" in msg.content():
+            pre_stop_process("Key 'stop' in input message.")
+    except TypeError:
+        pass
+    if stage.ARGS.decode:
+        myMessage.decode()
     stage.output(myMessage)
     return True
 
@@ -50,6 +58,11 @@ def main(args):
     stage = pyDKB.dataflow.stage.ProcessorStage()
     stage.set_input_message_type(messageType.JSON)
     stage.set_output_message_type(messageType.JSON)
+
+    stage.add_argument('--decode', action='store_true',
+                       help=u"Try to decode generated output messages"
+                            " during 'process()'",
+                       default=False)
 
     stage.process = process
 
