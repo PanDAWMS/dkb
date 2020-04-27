@@ -4,7 +4,7 @@
 
 1. Description
 --------------
-Obtain physics parameters' values from AMI and append it to the supplied
+Obtain physics parameters' values from AMI and append them to the supplied
 metadata of output datasets.
 
 AMI maintains valid physics parameters only for datasets with the following
