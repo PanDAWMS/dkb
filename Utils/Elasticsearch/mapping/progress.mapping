@@ -1,0 +1,39 @@
+{
+  "template": "daily_progress*",
+  "settings": {
+    "number_of_shards": 4
+  },
+  "mappings": {
+    "task_progress": {
+      "properties": {
+        "taskid": {
+          "type": "integer",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
+        },
+        "date": {
+          "type": "date",
+          "format": "yyyy-MM-dd HH:mm:ss||epoch_millis"
+        },
+        "processed_events": {
+          "type": "long"
+        },
+        "hashtag_list": {
+          "type": "keyword"
+        },
+        "ami_tags_format_step": {
+          "type": "keyword"
+        },
+        "mc_step": {
+          "type": "keyword"
+        },
+        "ctag_format_step": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}
