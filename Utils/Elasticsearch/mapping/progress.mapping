@@ -1,0 +1,27 @@
+{
+  "template": "daily_progress*",
+  "settings": {
+    "number_of_shards": 4
+  },
+  "mappings": {
+    "task_progress": {
+      "properties": {
+        "taskid": {
+          "type": "integer",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
+        },
+        "date": {
+          "type": "date",
+          "format": "YYYY-MM-DD HH:mm:ss"
+        },
+        "processed_events": {
+          "type": "long"
+        }
+      }
+    }
+  }
+}
