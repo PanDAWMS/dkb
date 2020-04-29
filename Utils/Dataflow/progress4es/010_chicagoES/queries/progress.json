@@ -1,0 +1,28 @@
+{
+  "size": 0,
+  "query": {
+    "bool": {
+      "must": [
+        {"term": {"jobstatus": "finished"}},
+        {"range": {"statechangetime": {"gte": %(left_ts)s, "lt": %(right_ts)s}}}
+      ]}},
+  "aggs": {
+    "progress": {
+      "composite": {
+        "size": 1000,
+        "sources": [
+          {"date": {
+            "date_histogram": {
+              "field": "statechangetime",
+              "fixed_interval": "1d"
+            }
+          }},
+          {"task": {
+            "terms": {"field": "jeditaskid"}
+          }}
+        ]
+      },
+      "aggs": {"events": {"sum": {"field": "nevents"}}}
+    }
+  }
+}
