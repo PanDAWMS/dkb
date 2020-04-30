@@ -4,7 +4,9 @@
     "bool": {
       "must": [
         {"term": {"jobstatus": "finished"}},
-        {"range": {"statechangetime": {"gte": %(left_ts)s, "lt": %(right_ts)s}}}
+        {"term": {"prodsourcelabel": "managed"}},
+        {"range": {"statechangetime": {"gte": %(left_ts)s, "lt": %(right_ts)s}}},
+        {"range": {"nevents": {"gt": 0}}}
       ]}},
   "aggs": {
     "progress": {
