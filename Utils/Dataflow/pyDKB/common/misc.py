@@ -52,8 +52,8 @@ def log(message, level=logLevel.INFO, *args):
         dtime = datetime.now().strftime(DTFORMAT)
         out_message = "%s (%s)%s %s" % (dtime, logLevel.memberName(level),
                                         prefix, lines[0])
-        for l in lines[1:]:
-            out_message += "\n(==) %s" % l
+        for line in lines[1:]:
+            out_message += "\n(==) %s" % line
         out_message += "\n"
         sys.stderr.write(out_message)
 
