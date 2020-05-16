@@ -74,6 +74,11 @@ def init_ami_client(userkey='', usercert=''):
     :type userkey: str
     :param usercert: user certificate pem file
     :type usercert: str
+    :raises DataflowException: if:
+                               - pyAMI module not found
+                               - failed to establish pyAMI session
+                                 (can be incorrect key/certificate)
+                               - key and/or certificate not found
     """
     global ami_client
     try:
