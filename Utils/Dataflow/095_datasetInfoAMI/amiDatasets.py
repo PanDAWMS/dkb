@@ -38,7 +38,7 @@ FILTER = ['AOD', 'EVNT', 'HITS']
 def main(argv):
     """ Main program body.
 
-    :param argv: arguments
+    :param argv: command line arguments
     :type argv: list
     """
     stage = pyDKB.dataflow.stage.ProcessorStage()
