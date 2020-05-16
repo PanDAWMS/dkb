@@ -62,12 +62,12 @@ def load_config(fname):
     }
     with open(fname) as f:
         lines = f.readlines()
-    for l in lines:
-        if l.startswith('ES'):
+    for line in lines:
+        if line.startswith('ES'):
             key = False
             value = False
             try:
-                (key, value) = l.split()[0].split('=')
+                (key, value) = line.split()[0].split('=')
             except ValueError:
                 pass
             if key in cfg:
