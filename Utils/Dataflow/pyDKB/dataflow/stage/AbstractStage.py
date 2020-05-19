@@ -10,7 +10,8 @@ import textwrap
 
 from pyDKB.common import LoggableObject
 from pyDKB.common.types import logLevel
-from pyDKB.common.misc import log
+from pyDKB.common.misc import (log,
+                               ensure_argparse_arg_name)
 
 try:
     import argparse
@@ -24,6 +25,10 @@ class AbstractStage(LoggableObject):
     Class/instance variable description:
     * Argument parser (argparse.ArgumentParser)
         __parser
+
+    * Original default argument values (dict)
+    * (filled by ``add_argument()`` method)
+        _default_args
 
     * Parsed arguments (argparse.Namespace)
         ARGS
@@ -49,6 +54,7 @@ class AbstractStage(LoggableObject):
             formatter_class=argparse.RawTextHelpFormatter,
             description=description
         )
+        self._default_args = {}
         self.defaultArguments()
 
         self._error = None
@@ -133,6 +139,7 @@ class AbstractStage(LoggableObject):
 
     def add_argument(self, *args, **kwargs):
         """ Add specific (not common) arguments. """
+        # Format help message
         wrapper = textwrap.TextWrapper(width=55, replace_whitespace=False)
         msg = textwrap.dedent(kwargs.get('help', ''))
         if kwargs.get('default', None) is not None \
@@ -143,7 +150,13 @@ class AbstractStage(LoggableObject):
         msg = '\n'.join(wrapped_lines)
         msg += '\n '
         kwargs['help'] = msg
+
+        arg_name = ensure_argparse_arg_name(args, kwargs)
+
         self.__parser.add_argument(*args, **kwargs)
+
+        # Store original default values
+        self._default_args[arg_name] = self.__parser.get_default(arg_name)
 
     def set_default_arguments(self, **kwargs):
         """ Set (or overwrite) default values for arguments.
@@ -152,6 +165,28 @@ class AbstractStage(LoggableObject):
         :type <arg_name>: object
         """
         self.__parser.set_defaults(**kwargs)
+
+    def reset_default_arguments(self, args=None):
+        """ Reset default argument values to the original ones.
+
+        Original default value is a value passed to the ``add_argument()``
+        method.
+
+        :param args: list of arguments to be reset. If not specified
+                     or set to None, all known arguments will be reset
+        :type args: list, NoneType
+        """
+        if args is None:
+            default_args = self._default_args
+        else:
+            default_args = {}
+            for arg in args:
+                if arg not in self._default_args:
+                    self.log("Can't reset default value for argument: '%s'"
+                             % arg, logLevel.WARN)
+                    continue
+                default_args[arg] = self._default_args[arg]
+        self.set_default_arguments(**default_args)
 
     def parse_args(self, args):
         """ Parse arguments and set dependant arguments if needed.
@@ -249,14 +284,17 @@ class AbstractStage(LoggableObject):
             err = self._error
             if err:
                 exc_info = (err['etype'], err['exception'], err['trace'])
-        if not message and exc_info:
-            message = str(exc_info[1])
         if message:
             self.log(message, logLevel.ERROR)
         if exc_info:
             if exc_info[0] == KeyboardInterrupt:
                 self.log("Interrupted by user.")
+            elif exc_info[0] == SystemExit:
+                self.log("Exit code: %s." % exc_info[1].code)
             else:
+                if not message:
+                    message = str(exc_info[1])
+                    self.log(message, logLevel.ERROR)
                 trace = traceback.format_exception(*exc_info)
                 self.log(''.join(trace), logLevel.DEBUG)
 
