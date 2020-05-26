@@ -20,6 +20,18 @@
         },
         "processed_events": {
           "type": "long"
+        },
+        "hashtag": {
+          "type": "keyword"
+        },
+        "ami_tags_format_step": {
+          "type": "keyword"
+        },
+        "mc_step": {
+          "type": "keyword"
+        },
+        "ctag_format_step": {
+          "type": "keyword"
         }
       }
     }
