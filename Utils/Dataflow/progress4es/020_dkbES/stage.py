@@ -235,12 +235,16 @@ def process(stage, message):
     :rtype: bool
     """
     data = message.content()
-    mdata = task_metadata(data.get('taskid'))[0]
+    mdata = task_metadata(data.get('taskid'))
     sys.stderr.write("(DEBUG) MDATA: %s\n" % mdata)
-    if mdata is None:
-        return False
-    data.update(mdata)
-    out_message = Message(messageType.JSON)(data)
+    if mdata:
+        data.update(mdata[0])
+        out_message = Message(messageType.JSON)(data)
+    else:
+        sys.stderr.write("(INFO) No information found (taskID: %s).\n"
+                         % data.get('taskid', 'undefined'))
+        out_message = Message(messageType.JSON)(data)
+        out_message.incomplete(True)
     stage.output(out_message)
     return True
 
