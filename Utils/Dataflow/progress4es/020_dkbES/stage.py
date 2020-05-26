@@ -118,15 +118,16 @@ def task_metadata(taskids, retry=3):
     :param retry: number of retries for ES query
     :type retry: int
 
-    :returns: requested task(s) metadata from ES
-    :rtype: list
+    :returns: hash of the requested task(s) metadata from ES (with
+              numeric task ID(s) as hash kays)
+    :rtype: dict
     """
     dkb_es = get_es_client()
     if not dkb_es:
         raise DataflowException("ES client is not initialized.")
     if not taskids:
         sys.stderr.write("(WARN) Invalid task id: %s\n" % taskids)
-        return []
+        return {}
     if not isinstance(taskids, list):
         taskids = [taskids]
     qname = 'task_metadata'
@@ -169,12 +170,12 @@ def task_metadata(taskids, retry=3):
         else:
             sys.stderr.write("(FATAL) Failed to get task metadata.\n")
             raise
-    results = []
+    results = {}
     if r['hits']['hits']:
         for task in r['hits']['hits']:
             try:
                 result = transform_task_info(task)
-                results.append(result)
+                results[int(result['taskid'])] = result
             except Exception, e:
                 try:
                     taskid = task.get('_id')
@@ -238,7 +239,7 @@ def process(stage, message):
     mdata = task_metadata(data.get('taskid'))
     sys.stderr.write("(DEBUG) MDATA: %s\n" % mdata)
     if mdata:
-        data.update(mdata[0])
+        data.update(mdata.get(int(data.get('taskid')), {}))
         out_message = Message(messageType.JSON)(data)
     else:
         sys.stderr.write("(INFO) No information found (taskID: %s).\n"
