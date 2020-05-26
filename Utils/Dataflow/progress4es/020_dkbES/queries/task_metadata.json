@@ -1,0 +1,24 @@
+{
+  "_source": ["hashtag_list", "taskname", "step_name"],
+  "query": {
+    "bool": {
+      "must": {
+        "ids": {
+          "type": "task",
+          "values": %(taskids)s
+        }
+      },
+      "should": {
+        "has_child": {
+          "type": "output_dataset",
+          "query": {"match_all": {}},
+          "inner_hits": {
+            "name": "dataset",
+            "size": 100,
+            "_source": ["data_format"]
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,5 @@
+[dkbES]
+user: USER
+passwd: PASSWD
+hosts: HOST:PORT,HOST:PORT
+index: INDEX
