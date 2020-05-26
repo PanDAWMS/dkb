@@ -18,9 +18,6 @@ import time
 import json
 
 try:
-    base_dir = os.path.dirname(__file__)
-    dkb_dir = os.path.join(base_dir, os.pardir)
-    sys.path.append(dkb_dir)
     import pyDKB
     from pyDKB.dataflow.stage import ProcessorStage
     from pyDKB.dataflow import messageType
@@ -42,6 +39,9 @@ finally:
         ElasticsearchException
     except NameError:
         ElasticsearchException = None
+
+
+base_dir = os.path.dirname(__file__)
 
 STAGE_ID = '020'
 dkb_es = None
