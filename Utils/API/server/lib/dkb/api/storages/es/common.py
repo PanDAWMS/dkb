@@ -332,7 +332,8 @@ def output_formats(**kwargs):
             r['aggregations']['formats']['buckets']]
 
 
-def get_step_aggregation_query(step_type=None, selection_params={}):
+def get_step_aggregation_query(step_type=None, selection_params={},
+                               progress=False):
     """ Construct "aggs" part of ES query for steps aggregation.
 
     :raises: `ValueError`: unknown step type.
@@ -345,6 +346,9 @@ def get_step_aggregation_query(step_type=None, selection_params={}):
                              (see :py:func:`get_selection_query`)
     :type selection_params: dict
 
+    :param progress: flag parameter for progress data
+    :type progress: bool
+
     :return: "aggs" part of ES query
     :rtype: dict
     """
@@ -354,7 +358,11 @@ def get_step_aggregation_query(step_type=None, selection_params={}):
     elif step_type not in STEP_TYPES:
         raise ValueError(step_type, "Unknown step type (expected one of: %s)"
                                     % STEP_TYPES)
-    step_fields = {'step': 'step_name.keyword'}
+    step_fields = {'progress_ctag_format': 'ctag_format_step',
+                   'progress_step': 'mc_step',
+                   'step': 'step_name.keyword'}
+    if progress:
+        step_type = 'progress_' + step_type
     if step_type in step_fields:
         aggs = {'steps': {'terms': {'field': step_fields[step_type]}}}
     elif step_type == 'ctag_format':

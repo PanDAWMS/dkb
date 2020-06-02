@@ -512,6 +512,81 @@ def campaign_stat(path, rtype='json', step_type=None, events_src=None,
 methods.add('/campaign', 'stat', campaign_stat)
 
 
+def campaign_daily_progress(path, rtype='json', step_type=None, **kwargs):
+    """ Get daily progress in terms of events processing.
+
+    Returns JSON document of the following format:
+    ```
+    {
+      ...
+      "data": {
+        <step>: {
+          <date>: <n_events_processed_by_tasks_finished_"today">,
+          ...
+        },
+        ...
+      }
+    }
+    ```
+
+    :param path: full path to the method
+    :type path: str
+    :param rtype: response type (only 'json' supported)
+    :type rtype: str
+
+    :param step_type: step definition type: 'step', 'ctag_format'
+                      (default: 'step')
+    :type step_type: str
+
+    :param <selection_parameter>: defines condition to select tasks for
+                                  statistics. Parameter names are mapped
+                                  to storage record fields (names and/or
+                                  aliases). Values should be provided in
+                                  one of the following forms:
+                                  * ``None`` (field must not be presented
+                                    in selected records);
+                                  * exact field value;
+                                  * exact field value with logical prefix:
+                                    - ``&`` -- field must value this value;
+                                    - ``|`` -- field must have one of values
+                                               marked with this prefix
+                                               (default);
+                                    - ``!`` -- field must not have this value;
+                                  * list of field values (prefixed or not).
+                                  Supported parameters are:
+                                  * htag (hashtag_list);
+                                  * taskid.
+    :type <selection_parameter>: NoneType, str, number, list
+
+    :returns: campaign (or task) daily progress
+    :rtype: dict
+    """
+    method_name = '/campaign/daily_progress'
+    if kwargs.get('rtype', 'json') is not 'json':
+        raise MethodException(method_name, "Unsupported response type: '%s'"
+                                           % kwargs['rtype'])
+    allowed_types = STEP_TYPES
+    if step_type is None:
+        step_type = allowed_types[0]
+    if (step_type not in allowed_types):
+        raise InvalidArgument(method_name, ('step_type', step_type,
+                                            allowed_types))
+    params = {}
+    for param in kwargs:
+        vals = kwargs[param]
+        if not isinstance(vals, list):
+            vals = [vals]
+        if vals:
+            vals = sort_by_prefixes(vals, ['|', '&', '!'])
+        params[param] = vals
+
+    return storages.campaign_daily_progress(selection_params=params,
+                                            step_type=step_type)
+
+
+methods.add('/campaign', 'daily_progress', campaign_daily_progress)
+
+
 def step_stat(path, rtype='json', step_type=None, **kwargs):
     """ Get tasks statistics.
 

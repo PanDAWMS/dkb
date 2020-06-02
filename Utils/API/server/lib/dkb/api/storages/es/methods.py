@@ -351,6 +351,92 @@ def campaign_stat(selection_params, step_type='step', events_src=None):
     return r
 
 
+def campaign_daily_progress(selection_params, step_type='step'):
+    """ Generate events processing daily progress report.
+
+    :param step_type: step definition type: 'step', 'ctag_format'
+                      (default: 'step')
+    :type step_type: str
+
+    :param selection_params: defines conditions to select tasks for
+                             statistics. Parameter names are mapped
+                             to storage record fields (names and/or
+                             aliases). Values should be provided in
+                             one of the following forms:
+                             * ``None`` (field must not be presented
+                               in selected records);
+                             * (list of) exact field value(s).
+                             Field values are broken into categories:
+                             * ``&`` -- field must have all these values;
+                             * ``|`` -- field must have at least one of
+                                        these values;
+                             * ``!`` -- field must not have none of these
+                                        values.
+                             Expected format:
+                             ```
+                             {
+                               <selection_param>: {
+                                 <category>: [<values>],
+                                 ...
+                               },
+                               ...
+                             }
+                             ```
+    :type selection_params: dict
+
+    :returns: daily progress of events processing in the form required
+              by :py:func:`api.handlers.campaign_daily_progress`
+    :rtype: dict
+    """
+    init()
+    # Construct query
+    query = {}
+    # * index with progress data
+    try:
+        query['index'] = common.CONFIG['index']['daily_progress']
+    except KeyError, e:
+        raise MethodException("Missed ES index name in configuration: %s" % e)
+    # * doc type
+    query['doc_type'] = 'task_progress'
+    # * and query body:
+    #  - select tasks
+    q = get_selection_query(**selection_params)
+    #  - divide them into 'steps'
+    step_agg = get_step_aggregation_query(step_type, progress=True)
+    #  - get agg values for each step ('instep' aggs)
+    instep_aggs = get_query('campaign-daily-progress-aggs')
+    #  - put 'instep' aggs into the innermost (sub) step clause
+    instep_clause = step_agg['steps']
+    while instep_clause.get('aggs'):
+        instep_clause = instep_clause['aggs'].get('substeps')
+    if instep_clause:
+        instep_clause['aggs'] = {}
+        instep_clause = instep_clause['aggs']
+    instep_clause.update(instep_aggs)
+    #  - join 'query' and 'aggs' parts within request body
+    q_body = {'query': q, 'aggs': step_agg}
+
+    query['body'] = q_body
+    query['size'] = 0
+
+    r = {}
+    data = {}
+    try:
+        data = client().search(**query)
+    except Exception, err:
+        msg = "(%s) Failed to execute search query: %s." % (STORAGE_NAME,
+                                                            str(err))
+        raise MethodException(reason=msg)
+    try:
+        data = transform.campaign_daily_progress(data)
+    except Exception, err:
+        msg = "Failed to parse storage response: %s." % str(err)
+        raise MethodException(reason=msg)
+
+    r.update(data)
+    return r
+
+
 def step_stat(selection_params, step_type='step'):
     """ Calculate statistics for tasks by execution steps.
 

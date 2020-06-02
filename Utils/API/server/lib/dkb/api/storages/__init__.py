@@ -91,6 +91,46 @@ def campaign_stat(**kwargs):
     return es.campaign_stat(**kwargs)
 
 
+def campaign_daily_progress(**kwargs):
+    """ Generate events processing daily progress report.
+
+    :param step_type: step definition type: 'step', 'ctag_format'
+                      (default: 'step')
+    :type step_type: str
+
+    :param selection_params: defines conditions to select tasks for
+                             statistics. Parameter names are mapped
+                             to storage record fields (names and/or
+                             aliases). Values should be provided in
+                             one of the following forms:
+                             * ``None`` (field must not be presented
+                               in selected records);
+                             * (list of) exact field value(s).
+                             Field values are broken into categories:
+                             * ``&`` -- field must have all these values;
+                             * ``|`` -- field must have at least one of
+                                        these values;
+                             * ``!`` -- field must not have none of these
+                                        values.
+                             Expected format:
+                             ```
+                             {
+                               <selection_param>: {
+                                 <category>: [<values>],
+                                 ...
+                               },
+                               ...
+                             }
+                             ```
+    :type selection_params: dict
+
+    :returns: daily progress of events processing in the form required
+              by :py:func:`api.handlers.campaign_daily_progress`
+    :rtype: dict
+    """
+    return es.campaign_daily_progress(**kwargs)
+
+
 def step_stat(**kwargs):
     """ Calculate statistics for tasks by execution steps.
 

@@ -455,6 +455,34 @@ def campaign_stat(stat_data, events_src=None):
     return r
 
 
+def campaign_daily_progress(es_data):
+    """ ES query response transformation for ``campaign/daily_progress``.
+
+    :param data: ES response
+    :type data: dict
+
+    :return: prepared API response for ``campaign/daily_progress``
+    :rtype: dict
+    """
+    r = {}
+    data = {}
+    r['_took_storage_ms'] = es_data.pop('took', None)
+    r['_total'] = es_data.get('hits', {}).pop('total', None)
+    r['_data'] = data
+    data['date_format'] = '%y-%m-%d'
+    steps = steps_iterator(es_data.get('aggregations', {}))
+    for name, step_data in steps:
+        data[name] = {}
+        hist_data = step_data.get('daily_progress', {}) \
+                             .get('buckets', [])
+        for d in hist_data:
+            date = d.get('key_as_string')
+            data[name][date] = d.get('processed_events', {}) \
+                                .get('value')
+
+    return r
+
+
 def step_stat(data, agg_units=[], step_type=None):
     """ Transform ES query response to required response format.
 
