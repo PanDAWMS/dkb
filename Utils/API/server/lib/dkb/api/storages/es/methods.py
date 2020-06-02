@@ -260,10 +260,36 @@ def task_derivation_statistics(**kwargs):
 def campaign_stat(selection_params, step_type='step', events_src=None):
     """ Calculate values for campaign progress overview.
 
-    :param path: full path to the method
-    :type path: str
-    :param htag: hashtag to select campaign tasks
-    :type htag: str, list
+    :param step_type: step definition type: 'step', 'ctag_format'
+                      (default: 'step')
+    :type step_type: str
+
+    :param selection_params: defines conditions to select tasks for
+                             statistics. Parameter names are mapped
+                             to storage record fields (names and/or
+                             aliases). Values should be provided in
+                             one of the following forms:
+                             * ``None`` (field must not be presented
+                               in selected records);
+                             * (list of) exact field value(s).
+                             Field values are broken into categories:
+                             * ``&`` -- field must have all these values;
+                             * ``|`` -- field must have at least one of
+                                        these values;
+                             * ``!`` -- field must not have none of these
+                                        values.
+                             Expected format:
+                             ```
+                             {
+                               <selection_param>: {
+                                 <category>: [<values>],
+                                 ...
+                               },
+                               ...
+                             }
+                             ```
+    :type selection_params: dict
+
     :param events_src: source of data for 'output' events.
                        Possible values:
                        * 'ds'   -- number of events in output datasets;
