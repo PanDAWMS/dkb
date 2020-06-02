@@ -1,0 +1,1 @@
+cat input/NDjson-natives.json | ./json2TTL.py -m s --decode

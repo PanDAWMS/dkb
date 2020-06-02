@@ -72,18 +72,15 @@
 
 <span class="sd">&quot;&quot;&quot;</span>
 
-<span class="kn">import</span> <span class="nn">subprocess</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">AbstractStage</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">messageType</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">logLevel</span>
+<span class="kn">from</span> <span class="nn">pyDKB.common.types</span> <span class="k">import</span> <span class="n">logLevel</span>
 <span class="kn">from</span> <span class="nn">pyDKB.dataflow</span> <span class="k">import</span> <span class="n">DataflowException</span>
 <span class="kn">from</span> <span class="nn">pyDKB.common</span> <span class="k">import</span> <span class="n">hdfs</span>
-<span class="kn">from</span> <span class="nn">pyDKB.common</span> <span class="k">import</span> <span class="n">custom_readline</span>
 <span class="kn">from</span> <span class="nn">pyDKB.dataflow</span> <span class="k">import</span> <span class="n">communication</span>
-<span class="kn">from</span> <span class="nn">pyDKB.dataflow.communication</span> <span class="k">import</span> <span class="n">stream</span>
 <span class="kn">from</span> <span class="nn">pyDKB.dataflow.communication</span> <span class="k">import</span> <span class="n">consumer</span>
 <span class="kn">from</span> <span class="nn">pyDKB.dataflow.communication</span> <span class="k">import</span> <span class="n">producer</span>
 
@@ -209,6 +206,12 @@
                           <span class="s1">&#39;be ignored&#39;</span><span class="p">,</span>
                           <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                           <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;hdfs&#39;</span>
+                          <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--skip&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                          <span class="n">help</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;Skip process and push input message &#39;</span>
+                          <span class="s1">&#39;forward as-is (marking it as &quot;incomplete&quot;).&#39;</span><span class="p">,</span>
+                          <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                          <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;skip_process&#39;</span>
                           <span class="p">)</span></div>
 
 <div class="viewcode-block" id="ProcessorStage.configure"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -249,12 +252,17 @@
 
 <div class="viewcode-block" id="ProcessorStage.run"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.run">[docs]</a>    <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Run process() for every input() message. &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Starting stage execution.&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span><span class="o">.</span><span class="n">skip_process</span><span class="p">:</span>
+            <span class="n">process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">skip_process</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Starting stage execution (skip mode).&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">process</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Starting stage execution.&quot;</span><span class="p">)</span>
         <span class="n">exit_code</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">err</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">for</span> <span class="n">msg</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">input</span><span class="p">():</span>
-                <span class="k">if</span> <span class="n">msg</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">msg</span> <span class="ow">and</span> <span class="n">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">):</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">flush_buffer</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">clear_buffer</span><span class="p">()</span>
@@ -314,6 +322,37 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="s2">&quot;Stage method process() is not implemented&quot;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="ProcessorStage.skip_process"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.skip_process">[docs]</a>    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">skip_process</span><span class="p">(</span><span class="n">stage</span><span class="p">,</span> <span class="n">input_message</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Process input_message in &quot;skip&quot; processing mode.</span>
+
+<span class="sd">        Skip mode is turned on with command line parameter `--skip`; in this</span>
+<span class="sd">        mode stage is expected to skip its &quot;semantic&quot; part of the message</span>
+<span class="sd">        transformation (like changes in data fields format, definition of</span>
+<span class="sd">        additional data fields, etc) but perform actions required to keep</span>
+<span class="sd">        the dataflow seamless.</span>
+
+<span class="sd">        The simpliest way to achieve this is to send the input message to the</span>
+<span class="sd">        output without changes (marking it as &quot;incomplete&quot;), and this is</span>
+<span class="sd">        the default implementation of the method.</span>
+
+<span class="sd">        In some cases it may be necessary to re-implement it (just like</span>
+<span class="sd">        `process()`) to keep the dataflow unbroken.</span>
+
+<span class="sd">        NOTE: the output messages in &quot;skip&quot; mode MUST be marked as</span>
+<span class="sd">              &quot;incomplete&quot;.</span>
+
+<span class="sd">        :param input_message: message to process</span>
+<span class="sd">        :type input_message: pyDKB.messages.AbstractMessage</span>
+
+<span class="sd">        :return: True/False (success/failure)</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">out_msg</span> <span class="o">=</span> <span class="n">stage</span><span class="o">.</span><span class="n">output_message_class</span><span class="p">()(</span><span class="n">input_message</span><span class="o">.</span><span class="n">content</span><span class="p">())</span>
+        <span class="n">out_msg</span><span class="o">.</span><span class="n">incomplete</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="n">stage</span><span class="o">.</span><span class="n">output</span><span class="p">(</span><span class="n">out_msg</span><span class="p">)</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
 <div class="viewcode-block" id="ProcessorStage.input"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.input">[docs]</a>    <span class="k">def</span> <span class="nf">input</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Generator for input messages.</span>
 
@@ -364,6 +403,7 @@
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../pyDKB/pyDKB.html">pyDKB package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Stages/Stages.html">Stages</a></li>
 </ul>
 
 <div class="relations">

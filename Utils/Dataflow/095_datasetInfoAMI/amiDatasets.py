@@ -23,29 +23,39 @@ except Exception, err:
     sys.exit(1)
 
 ami_client = None
-PHYS_VALUES = [{"ami": "genFiltEff", "es": "gen_filt_eff"},
-               {"ami": "crossSection", "es": "cross_section"},
-               {"ami": "crossSectionRef", "es": "cross_section_ref"},
-               {"ami": "kFactor", "es": "k_factor"},
-               {"ami": "processGroup", "es": "process_group"},
-               {"ami": "mePDF", "es": "me_pdf"},
+
+# Field names in terms of AMI and ES schemes.
+PHYS_VALUES = [{'ami': 'genFiltEff', 'es': 'gen_filt_eff'},
+               {'ami': 'crossSection', 'es': 'cross_section'},
+               {'ami': 'crossSectionRef', 'es': 'cross_section_ref'},
+               {'ami': 'kFactor', 'es': 'k_factor'},
+               {'ami': 'processGroup', 'es': 'process_group'},
+               {'ami': 'mePDF', 'es': 'me_pdf'},
                ]
 FILTER = ['AOD', 'EVNT', 'HITS']
 
 
 def main(argv):
-    """ Main program body. """
+    """ Main program body.
+
+    :param argv: command line arguments
+    :type argv: list
+    """
     stage = pyDKB.dataflow.stage.ProcessorStage()
     stage.set_input_message_type(messageType.JSON)
     stage.set_output_message_type(messageType.JSON)
 
-    stage.add_argument('--userkey', help='PEM key file', default='')
-    stage.add_argument('--usercert', help='PEM certificate file', default='')
+    stage.set_default_arguments(config=os.path.join(base_dir, os.pardir,
+                                                    'config', '095.cfg'))
 
     stage.configure(argv)
     stage.process = process
-    if stage.ARGS.userkey and stage.ARGS.usercert:
-        init_ami_client(stage.ARGS.userkey, stage.ARGS.usercert)
+
+    if stage.CONFIG['ami'].get('userkey', '') \
+            and stage.CONFIG['ami'].get('usercert', ''):
+        init_ami_client(stage.CONFIG['ami']['userkey'],
+                        stage.CONFIG['ami']['usercert'])
+
     exit_code = stage.run()
 
     if exit_code == 0:
@@ -55,11 +65,20 @@ def main(argv):
 
 
 def init_ami_client(userkey='', usercert=''):
-    """ Initialisation of AMI client into the global variable
+    """ Establish a connection to AMI.
+
+    Initialize the global variable ami_client with the resulting
+    client object.
 
     :param userkey: user key pem file
+    :type userkey: str
     :param usercert: user certificate pem file
-    :return:
+    :type usercert: str
+    :raises DataflowException: if:
+                               - pyAMI module not found
+                               - failed to establish pyAMI session
+                                 (can be incorrect key/certificate)
+                               - key and/or certificate not found
     """
     global ami_client
     try:
@@ -67,8 +86,8 @@ def init_ami_client(userkey='', usercert=''):
                                          cert_file=usercert)
         AtlasAPI.init()
     except NameError:
-        sys.stderr.write("(FATAL) Failed to initialise AMI client: "
-                         "pyAMI module is not loaded.\n")
+        sys.stderr.write("(FATAL) Failed to initialise AMI client:"
+                         " pyAMI module is not loaded.\n")
         raise DataflowException("Module not found: 'pyAMI'")
     except Exception, err:
         sys.stderr.write(
@@ -76,22 +95,38 @@ def init_ami_client(userkey='', usercert=''):
             " Are you sure you have a valid certificate?\n")
         raise DataflowException(str(err))
     if ami_client.config.conn_mode == ami_client.config.CONN_MODE_LOGIN:
-        sys.stderr.write("(ERROR) Login authentication mode is not "
-                         "supported. Please provide user certificate or create"
-                         "proxy.\n")
-        raise DataflowException("Failed to initialise AMI client: certificate "
-                                "not provided or not found.")
+        sys.stderr.write("(ERROR) Login authentication mode is not"
+                         " supported. Please provide user certificate or"
+                         " create proxy.\n")
+        raise DataflowException("Failed to initialise AMI client: certificate"
+                                " not provided or not found.")
 
 
 def get_ami_client():
-    """ Get configured AMI client. """
+    """ Get configured AMI client.
+
+    :return: AMI client instance (global variable)
+    :rtype: pyAMI.client.Client
+    """
     if not ami_client:
         init_ami_client()
     return ami_client
 
 
 def process(stage, message):
-    """ Single message processing. """
+    """ Process a message.
+
+    Implementation of :py:meth:`.ProcessorStage.process` for hooking
+    the stage into DKB workflow.
+
+    :param stage: stage instance
+    :type stage: pyDKB.dataflow.stage.ProcessorStage
+    :param message: input message with data
+    :type message: pyDKB.dataflow.communication.messages.JSONMessage
+
+    :return: False (failed to process message) or True (otherwise)
+    :rtype: bool
+    """
     data = message.content()
     # 'data_format' field contains a list of strings,
     # e.g. ['DAOD_SUSY5', 'DAOD']
@@ -111,19 +146,20 @@ def process(stage, message):
 
 
 def amiPhysValues(data):
-    """ Add elements in JSON string, according to theirs names in ES mapping
+    """ Update data with information from AMI.
 
-    - gen_filt_eff
-    - cross_section
-    - k_factor
-    - cross_section_ref
+    :param data: data to update
+    :type data: dict
+
+    :return: True (update was successful) or False (otherwise)
+    :rtype: bool
     """
     dataset = data['datasetname']
     container = remove_tid(dataset)
     ami_client = get_ami_client()
     try:
         res = ami_client.execute(['GetPhysicsParamsForDataset',
-                                  "--logicalDatasetName=%s" % container],
+                                  '--logicalDatasetName=%s' % container],
                                  format='json')
         json_str = json.loads(res)
         for row in json_str['AMIMessage'][0]['Result'][0]['rowset'][0]['row']:
@@ -137,21 +173,26 @@ def amiPhysValues(data):
                     data[p_name] = p_val
                     p_name, p_val = None, None
                     continue
-        return change_key_names(data)
+        change_key_names(data)
+        return True
     except Exception:
         sys.stderr.write("(WARN) No values found in AMI for dataset '%s'\n"
                          % data['datasetname'])
+        return False
 
 
 def change_key_names(data):
-    """ Changing parameter names according to PHYS_VALUES dictionary.
+    """ Change parameter names from ones used by AMI to corresponding ES ones.
 
-    :param data: JSON string
-    :return: JSON string
+    :param data: data to update
+    :type data: dict
+
+    :return: updated data
+    :rtype: dict
     """
     for item in PHYS_VALUES:
-        if item["ami"] in data:
-            data[item["es"]] = data.pop(item["ami"])
+        if item['ami'] in data:
+            data[item['es']] = data.pop(item['ami'])
     return data
 
 
