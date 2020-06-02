@@ -354,7 +354,10 @@ def get_step_aggregation_query(step_type=None, selection_params={}):
     elif step_type not in STEP_TYPES:
         raise ValueError(step_type, "Unknown step type (expected one of: %s)"
                                     % STEP_TYPES)
-    if step_type == 'ctag_format':
+    step_fields = {'step': 'step_name.keyword'}
+    if step_type in step_fields:
+        aggs = {'steps': {'terms': {'field': step_fields[step_type]}}}
+    elif step_type == 'ctag_format':
         formats = output_formats(**selection_params)
         filters = {}
         for f in formats:
@@ -366,8 +369,6 @@ def get_step_aggregation_query(step_type=None, selection_params={}):
             }
         aggs = {'steps': {'filters': {'filters': filters},
                           'aggs': {'substeps': {'terms': {'field': 'ctag'}}}}}
-    elif step_type == 'step':
-        aggs = {'steps': {'terms': {'field': 'step_name.keyword'}}}
     else:
         raise DkbApiNotImplemented("Aggregation by steps of type '%s' is not"
                                    " implemented yet.")
