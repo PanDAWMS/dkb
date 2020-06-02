@@ -47,9 +47,15 @@ finally:
 chicago_es = None
 
 chicago_hosts = [
-    {'host': '192.170.227.31', 'port': 9200},
-    {'host': '192.170.227.32', 'port': 9200},
-    {'host': '192.170.227.33', 'port': 9200}
+    {'host': '192.170.227.66', 'port': 9200},
+    {'host': '192.170.227.67', 'port': 9200},
+    {'host': '192.170.227.68', 'port': 9200},
+    {'host': '192.170.227.69', 'port': 9200},
+    {'host': '192.170.227.70', 'port': 9200},
+    {'host': '192.170.227.241', 'port': 9200},
+    {'host': '192.170.227.242', 'port': 9200},
+    {'host': '192.170.227.243', 'port': 9200},
+    {'host': '192.170.227.244', 'port': 9200}
 ]
 
 META_FIELDS = {
@@ -59,15 +65,21 @@ META_FIELDS = {
 AGG_FIELDS = {'hs06sec_sum': 'toths06'}
 JOB_STATUSES = ['finished', 'failed']
 
-TASK_FINAL_STATES = ['done', 'finished', 'obsolete', 'failed', 'broken',
-                     'aborted']
 
+def init_es_client(cfg=None):
+    """ Initialize connection to Chicago ES.
 
-def init_es_client():
-    """ Initialize connection to Chicago ES. """
+    :param cfg: ES parameters
+    :type cfg: dict
+    """
     global chicago_es
+    http_auth = None
+    if cfg:
+        if cfg.get('user') and cfg.get('passwd'):
+            http_auth = (cfg['user'], cfg['passwd'])
     try:
-        chicago_es = elasticsearch.Elasticsearch(chicago_hosts)
+        chicago_es = elasticsearch.Elasticsearch(chicago_hosts,
+                                                 http_auth=http_auth)
     except NameError:
         sys.stderr.write("(FATAL) Failed to initialize Elasticsearch client: "
                          "module not loaded.\n")
@@ -106,7 +118,6 @@ def task_metadata(taskid, fields=[], retry=3):
         return {}
     kwargs = {
         'index': 'tasks_archive_*',
-        'doc_type': 'task_data',
         'body': '{ "query": { "term": {"_id": "%s"} } }' % taskid,
         '_source': fields
     }
@@ -191,7 +202,7 @@ def agg_query(taskid, agg_names):
         "query": {
             "bool": {
                 "must": [
-                    {"term": {"taskid": taskid}},
+                    {"term": {"jeditaskid": taskid}},
                     {"terms": {"jobstatus": JOB_STATUSES}}
                 ]
             }
@@ -249,9 +260,6 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
                          " established.")
         return None
 
-    if status not in TASK_FINAL_STATES:
-        return {}
-
     if not es_args:
         dt_format = '%d-%m-%Y %H:%M:%S'
         beg = end = None
@@ -262,7 +270,6 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
             end = datetime.datetime.strptime(end_time, dt_format)
         es_args = {
             'index': get_indices_by_interval(beg, end, wildcard=True),
-            'doc_type': 'jobs_data',
             'body': agg_query(taskid, agg_names),
             'size': 0,
             'request_timeout': 30
@@ -289,7 +296,7 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
                              " metadata.\n")
             raise
 
-    if r['hits']['total']:
+    if r['hits']['total']['value']:
         result = r['aggregations']
     else:
         result = {}
@@ -347,12 +354,18 @@ def main(args):
     stage.set_input_message_type(messageType.JSON)
     stage.set_output_message_type(messageType.JSON)
 
+    stage.set_default_arguments(config=os.path.join(base_dir, os.pardir,
+                                                    'config', '025.cfg'),
+                                ignore_on_skip=True)
+
     stage.process = process
 
     exit_code = 0
     exc_info = None
     try:
         stage.configure(args)
+        if not stage.ARGS.skip_process:
+            init_es_client(stage.CONFIG['ChicagoES'])
         stage.run()
     except (DataflowException, RuntimeError), err:
         if str(err):

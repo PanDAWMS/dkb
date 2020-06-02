@@ -228,6 +228,38 @@ False – processing failed (skip the input message)</dd>
 <dd><p>Set output message class.</p>
 </dd></dl>
 
+<dl class="staticmethod">
+<dt id="pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.skip_process">
+<em class="property">static </em><code class="descname">skip_process</code><span class="sig-paren">(</span><em>stage</em>, <em>input_message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.skip_process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.skip_process" title="Permalink to this definition">¶</a></dt>
+<dd><p>Process input_message in “skip” processing mode.</p>
+<p>Skip mode is turned on with command line parameter <cite>–skip</cite>; in this
+mode stage is expected to skip its “semantic” part of the message
+transformation (like changes in data fields format, definition of
+additional data fields, etc) but perform actions required to keep
+the dataflow seamless.</p>
+<p>The simpliest way to achieve this is to send the input message to the
+output without changes (marking it as “incomplete”), and this is
+the default implementation of the method.</p>
+<p>In some cases it may be necessary to re-implement it (just like
+<cite>process()</cite>) to keep the dataflow unbroken.</p>
+<dl class="docutils">
+<dt>NOTE: the output messages in “skip” mode MUST be marked as</dt>
+<dd>“incomplete”.</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>input_message</strong> (<em>pyDKB.messages.AbstractMessage</em>) – message to process</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">True/False (success/failure)</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">bool</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 <dl class="method">
 <dt id="pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.stop">
 <code class="descname">stop</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/ProcessorStage.html#ProcessorStage.stop"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.ProcessorStage.ProcessorStage.stop" title="Permalink to this definition">¶</a></dt>
@@ -262,6 +294,7 @@ False – processing failed (skip the input message)</dd>
 <li class="toctree-l2 current"><a class="reference internal" href="pyDKB.html#subpackages">Subpackages</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="../Stages/Stages.html">Stages</a></li>
 </ul>
 
 <div class="relations">

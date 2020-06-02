@@ -468,8 +468,8 @@ def join_results(tasks, datasets):
     buffers = (tasks, datasets)
     join_buffer = {}
     req_n = len(buffers)
-    for l in buffers:
-        for elem in l:
+    for buf in buffers:
+        for elem in buf:
             tid = elem['taskid']
             d[tid].update(elem)
             n = join_buffer.get(tid, 0) + 1

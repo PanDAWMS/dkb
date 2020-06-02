@@ -13,9 +13,12 @@ Submodules
 
 .. toctree::
 
+   pyDKB.common.LoggableObject
    pyDKB.common.Type
    pyDKB.common.custom_readline
    pyDKB.common.exceptions
    pyDKB.common.hdfs
    pyDKB.common.json_utils
+   pyDKB.common.misc
+   pyDKB.common.types
 

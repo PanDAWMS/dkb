@@ -40,6 +40,7 @@
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">messageType</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">codeType</span>
+<span class="kn">from</span> <span class="nn">pyDKB.common.misc</span> <span class="k">import</span> <span class="p">(</span><span class="n">log</span><span class="p">,</span> <span class="n">logLevel</span><span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">sys</span>
@@ -69,9 +70,8 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Message type must be a member of messageType&quot;</span><span class="p">)</span>
     <span class="bp">cls</span> <span class="o">=</span> <span class="n">__message_class</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">msg_type</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="bp">cls</span><span class="p">:</span>
-        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
-            <span class="s2">&quot;(WARN) Message class for type </span><span class="si">%s</span><span class="s2"> is not implemented. &quot;</span>
-            <span class="s2">&quot;Using AbstractMessage instead.&quot;</span><span class="p">)</span>
+        <span class="n">log</span><span class="p">(</span><span class="s2">&quot;Message class for type </span><span class="si">%s</span><span class="s2"> is not implemented. &quot;</span>
+            <span class="s2">&quot;Using AbstractMessage instead.&quot;</span><span class="p">,</span> <span class="n">logLevel</span><span class="o">.</span><span class="n">WARN</span><span class="p">)</span>
         <span class="bp">cls</span> <span class="o">=</span> <span class="n">AbstractMessage</span>
 
     <span class="k">return</span> <span class="bp">cls</span></div>
@@ -88,11 +88,14 @@
     <span class="n">decoded</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">encoded</span> <span class="o">=</span> <span class="kc">None</span>
 
+    <span class="n">incompl</span> <span class="o">=</span> <span class="kc">None</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Save initial message. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">__orig</span> <span class="o">=</span> <span class="n">message</span>
         <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">native_types</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">decoded</span> <span class="o">=</span> <span class="n">message</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">incompl</span> <span class="o">=</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="AbstractMessage.getOriginal"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.AbstractMessage.getOriginal">[docs]</a>    <span class="k">def</span> <span class="nf">getOriginal</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return original message. &quot;&quot;&quot;</span>
@@ -124,7 +127,21 @@
 <div class="viewcode-block" id="AbstractMessage.extension"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.AbstractMessage.extension">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">extension</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Return file extension corresponding to this message type. &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_ext</span></div></div>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_ext</span></div>
+
+<div class="viewcode-block" id="AbstractMessage.incomplete"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.AbstractMessage.incomplete">[docs]</a>    <span class="k">def</span> <span class="nf">incomplete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set message incomplete marker and/or get previous/current value.</span>
+
+<span class="sd">        :param status: new status (if not passed, current status is returned)</span>
+<span class="sd">        :type status: bool, NoneType</span>
+
+<span class="sd">        :return: incomplete marker status (previous value, if reset)</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">old</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">incompl</span>
+        <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">incompl</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">status</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">old</span></div></div>
 
 
 <div class="viewcode-block" id="JSONMessage"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.JSONMessage">[docs]</a><span class="k">class</span> <span class="nc">JSONMessage</span><span class="p">(</span><span class="n">AbstractMessage</span><span class="p">):</span>
@@ -133,6 +150,8 @@
     <span class="n">native_types</span> <span class="o">=</span> <span class="p">[</span><span class="nb">dict</span><span class="p">]</span>
 
     <span class="n">_ext</span> <span class="o">=</span> <span class="s2">&quot;.json&quot;</span>
+
+    <span class="n">incompl_key</span> <span class="o">=</span> <span class="s2">&quot;_incomplete&quot;</span>
 
 <div class="viewcode-block" id="JSONMessage.decode"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.JSONMessage.decode">[docs]</a>    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">code</span><span class="o">=</span><span class="n">codeType</span><span class="o">.</span><span class="n">STRING</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Decode original data as JSON. &quot;&quot;&quot;</span>
@@ -154,7 +173,25 @@
             <span class="k">else</span><span class="p">:</span>
                 <span class="k">raise</span> <span class="n">EncodeUnknownType</span><span class="p">(</span><span class="n">code</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">decoded</span> <span class="o">=</span> <span class="n">orig</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoded</span></div></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">encoded</span></div>
+
+<div class="viewcode-block" id="JSONMessage.incomplete"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.JSONMessage.incomplete">[docs]</a>    <span class="k">def</span> <span class="nf">incomplete</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set message incomplete marker and/or get previous/current value.</span>
+
+<span class="sd">        For JSON messages the marker is implemented as additional field:</span>
+<span class="sd">        &quot;_incomplete&quot;.</span>
+
+<span class="sd">        :param status: new status (if not passed, current status is returned)</span>
+<span class="sd">        :type status: bool, NoneType</span>
+
+<span class="sd">        :return: incomplete marker status (previous value, if reset)</span>
+<span class="sd">        :rtype: bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">status</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">decoded</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+            <span class="n">decoded</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">incompl_key</span><span class="p">]</span> <span class="o">=</span> <span class="n">status</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">encoded</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">(</span><span class="n">JSONMessage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">incomplete</span><span class="p">(</span><span class="n">status</span><span class="p">)</span></div></div>
 
 
 <span class="n">__message_class</span><span class="p">[</span><span class="n">messageType</span><span class="o">.</span><span class="n">JSON</span><span class="p">]</span> <span class="o">=</span> <span class="n">JSONMessage</span>
@@ -223,6 +260,7 @@
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../pyDKB/pyDKB.html">pyDKB package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Stages/Stages.html">Stages</a></li>
 </ul>
 
 <div class="relations">

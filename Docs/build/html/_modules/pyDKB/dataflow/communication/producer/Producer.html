@@ -38,8 +38,7 @@
 
 <span class="kn">import</span> <span class="nn">sys</span>
 
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">messageType</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">logLevel</span>
+<span class="kn">from</span> <span class="nn">pyDKB.common</span> <span class="k">import</span> <span class="n">LoggableObject</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">DataflowException</span>
 
 <span class="kn">from</span> <span class="nn">..</span> <span class="k">import</span> <span class="n">Message</span>
@@ -51,7 +50,7 @@
     <span class="k">pass</span></div>
 
 
-<div class="viewcode-block" id="Producer"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer">[docs]</a><span class="k">class</span> <span class="nc">Producer</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+<div class="viewcode-block" id="Producer"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer">[docs]</a><span class="k">class</span> <span class="nc">Producer</span><span class="p">(</span><span class="n">LoggableObject</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Data producer implementation. &quot;&quot;&quot;</span>
 
     <span class="n">config</span> <span class="o">=</span> <span class="kc">None</span>
@@ -64,23 +63,6 @@
         <span class="sd">&quot;&quot;&quot; Initialize Producer instance. &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">reconfigure</span><span class="p">()</span>
-
-<div class="viewcode-block" id="Producer.log"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.log">[docs]</a>    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">level</span><span class="o">=</span><span class="n">logLevel</span><span class="o">.</span><span class="n">INFO</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Output log message with given log level. &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">logLevel</span><span class="o">.</span><span class="n">hasMember</span><span class="p">(</span><span class="n">level</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Unknown log level: </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">level</span><span class="p">,</span> <span class="n">logLevel</span><span class="o">.</span><span class="n">WARN</span><span class="p">)</span>
-            <span class="n">level</span> <span class="o">=</span> <span class="n">logLevel</span><span class="o">.</span><span class="n">INFO</span>
-        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">message</span><span class="p">)</span> <span class="o">==</span> <span class="nb">list</span><span class="p">:</span>
-            <span class="n">lines</span> <span class="o">=</span> <span class="n">message</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">lines</span> <span class="o">=</span> <span class="n">message</span><span class="o">.</span><span class="n">splitlines</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">lines</span><span class="p">:</span>
-            <span class="n">out_message</span> <span class="o">=</span> <span class="s2">&quot;(</span><span class="si">%s</span><span class="s2">) (</span><span class="si">%s</span><span class="s2">) </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="p">(</span><span class="n">logLevel</span><span class="o">.</span><span class="n">memberName</span><span class="p">(</span><span class="n">level</span><span class="p">),</span>
-                                            <span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">lines</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-            <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lines</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span>
-                <span class="n">out_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">(==) </span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">l</span>
-            <span class="n">out_message</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">out_message</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Producer.reconfigure"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.producer.Producer.html#pyDKB.dataflow.communication.producer.Producer.Producer.reconfigure">[docs]</a>    <span class="k">def</span> <span class="nf">reconfigure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{}):</span>
         <span class="sd">&quot;&quot;&quot; (Re)initialize producer with stage config arguments. &quot;&quot;&quot;</span>
@@ -188,6 +170,7 @@
 <p class="caption"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../pyDKB/pyDKB.html">pyDKB package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../Stages/Stages.html">Stages</a></li>
 </ul>
 
 <div class="relations">

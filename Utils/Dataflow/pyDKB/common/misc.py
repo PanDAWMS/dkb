@@ -52,7 +52,63 @@ def log(message, level=logLevel.INFO, *args):
         dtime = datetime.now().strftime(DTFORMAT)
         out_message = "%s (%s)%s %s" % (dtime, logLevel.memberName(level),
                                         prefix, lines[0])
-        for l in lines[1:]:
-            out_message += "\n(==) %s" % l
+        for line in lines[1:]:
+            out_message += "\n(==) %s" % line
         out_message += "\n"
         sys.stderr.write(out_message)
+
+
+def ensure_argparse_arg_name(args, kwargs):
+    """ Ensure cmgline argument name for `argparse.add_argument()`.
+
+    Returns the expected argument name and updates ``kwargs['dest']``
+    value.
+
+    When :python:func:`argparse.add_argument()` is called, `argparse`
+    decides how to name the new argument basing on the passed parameters
+    (to use this name in `argparse.Namespace` object).
+    This function returns the name, that (supposedly) will be used in
+    `argparse`; but to make sure, ``kwargs['dest']`` is (re)set to the same
+    value (if applicable).
+
+    For parameters description please refer to `argparse` documentation:
+    https://docs.python.org/2.7/library/argparse.html#the-add-argument-method
+
+    :param args: list of `argparse.add_argument()` positional parameters
+    :type args: list
+    :param kwargs: hash of `argparse.add_argument()` keyword parameters
+    :type kwargs: dict
+
+    :return: argument name
+    :rtype: string
+    """
+    arg_name = None
+    positional = False
+    if 'dest' in kwargs:
+        # Use the user-specified argument name
+        arg_name = kwargs['dest']
+    else:
+        # Get the name from `args` (a list of synonymous options
+        # or a single positional argument name)
+        for arg in args:
+            if not arg.startswith('-'):
+                # `arg` is a positional argument name
+                arg_name = arg
+                positional = True
+                break
+            if arg.startswith('--'):
+                # first long option will be used as argument name
+                arg_name = arg[2:]
+                break
+            if not arg_name and arg.startswith('-'):
+                # if no long options specified, the first short one will
+                # be used
+                arg_name = arg[1:]
+
+    # Set 'dest' (arg name used within the parser) to the value
+    # we're going to use in code, if applicable (positional argument
+    # with explicit `dest` will produce a error)
+    if not positional:
+        kwargs['dest'] = arg_name
+
+    return arg_name

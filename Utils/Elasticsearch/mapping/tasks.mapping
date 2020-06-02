@@ -166,7 +166,7 @@
         "core_count": {
           "type": "short"
         },
-        "conditions_tag": {
+        "conditions_tags": {
           "type": "keyword",
           "ignore_above": 2048
         },
@@ -277,6 +277,9 @@
         },
         "n_files_to_be_used": {
           "type": "integer"
+        },
+        "_update_required": {
+          "type": "boolean"
         }
       }
     },
@@ -332,6 +335,9 @@
         "me_pdf": {
           "type": "keyword",
           "ignore_above": 256
+        },
+        "_update_required": {
+          "type": "boolean"
         }
       }
     }

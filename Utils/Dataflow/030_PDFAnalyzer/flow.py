@@ -89,7 +89,8 @@ def process(stage, msg):
     # Construct the output.
     if "dkbID" in inp:
         outp["dkbID"] = inp["dkbID"]
-    outMessage = pyDKB.dataflow.Message(pyDKB.dataflow.messageType.JSON)(outp)
+    outMessage = pyDKB.dataflow.communication.Message(pyDKB.dataflow
+                                                      .messageType.JSON)(outp)
     stage.output(outMessage)
     return True
 
