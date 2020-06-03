@@ -42,7 +42,7 @@ source $lib/log
 # Directories with configuration files
 [ -n "$DATA4ES_CONFIG_PATH" ] && \
     CONFIG_PATH="$DATA4ES_CONFIG_PATH" || \
-    CONFIG_PATH="${base_dir}/../config:${base_dir}/../../Elasticsearch/config"
+    CONFIG_PATH="${base_dir}/../config:${base_dir}/../../../Elasticsearch/config"
 
 # Process home dir
 [ -n "$DATA4ES_HOME" ] && \
