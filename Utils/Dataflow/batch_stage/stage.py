@@ -41,6 +41,25 @@ def process(stage, message):
     return True
 
 
+def batch_process(stage, messages):
+    """ Batch of messages processing. """
+    batch_data = [message.content() for message in messages]
+    # Optimized machinery for processing bunches of messages
+    new_batch = []
+    for data in batch_data:
+        if 'df' in data and isinstance(data['df'], (str, unicode)):
+            data['df'] = 'processed ' + data['df']
+        else:
+            stage.log("Failed to process data %s, required field 'df' not"
+                      " found or contains non-str"
+                      " value." % data, logLevel.WARN)
+        new_batch.append(data)
+    for msg in new_batch:
+        out_message = JSONMessage(msg)
+        stage.output(out_message)
+    return True
+
+
 def main(args):
     """ Program body. """
     stage = ProcessorStage()
@@ -48,6 +67,7 @@ def main(args):
     stage.set_output_message_type(messageType.JSON)
 
     stage.process = process
+    stage.batch_process = batch_process
 
     exit_code = 0
     exc_info = None

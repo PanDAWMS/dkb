@@ -187,6 +187,12 @@ class ProcessorStage(AbstractStage):
                           default=False,
                           dest='skip_process'
                           )
+        self.add_argument('-b', '--batch', help=u'Process messages in batches'
+                          ' of given size (must be more than 1).',
+                          type=int,
+                          default=1,
+                          dest='batch'
+                          )
 
     def set_default_arguments(self, ignore_on_skip=False, **kwargs):
         """ Set (or overwrite) default values for arguments.
@@ -248,15 +254,41 @@ class ProcessorStage(AbstractStage):
         else:
             process = self.process
             self.log("Starting stage execution.")
+        if self.ARGS.batch > 1:
+            try:
+                batch_process = self.batch_process
+            except AttributeError:
+                self.log("Stage does not support batch processing."
+                         " Switching to normal mode.", logLevel.WARN)
+                self.ARGS.batch = 1
         exit_code = 0
         err = None
         try:
-            for msg in self.input():
-                if msg and process(self, msg):
-                    self.flush_buffer()
-                else:
-                    self.clear_buffer()
-                self.forward()
+            if self.ARGS.batch == 1:
+                for msg in self.input():
+                    if msg and process(self, msg):
+                        self.flush_buffer()
+                    else:
+                        self.clear_buffer()
+                    self.forward()
+            else:
+                msgs = []
+                for msg in self.input():
+                    if msg:
+                        msgs.append(msg)
+                    if len(msgs) == self.ARGS.batch:
+                        if batch_process(self, msgs):
+                            self.flush_buffer()
+                        else:
+                            self.clear_buffer()
+                        self.forward()
+                        msgs = []
+                if msgs:
+                    if batch_process(self, msgs):
+                        self.flush_buffer()
+                    else:
+                        self.clear_buffer()
+                    self.forward()
         except BaseException, err:
             # Catch everything for uniform exception handling
             # Clear buffer -- just in case someone will decide
