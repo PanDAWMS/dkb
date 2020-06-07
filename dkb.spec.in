@@ -1,0 +1,65 @@
+# Generic macros
+#---------------
+%define name dkb
+%define dkbVersion @DKB_VERSION@
+%define dkbRelease @DKB_RELEASE@
+
+# Neutral packaging (for srpm)
+#-----------------------------
+%if 0%{?neutralpackage:1} > 0
+%define mydist %{nil}
+%else
+%define mydist %{?dist}
+%endif
+
+# General settings
+#-----------------
+Summary: Data Knowledge Base for HENP experiments
+Name: %{name}
+Version: %{dkbVersion}
+Release: %{dkbRelease}%{mydist}
+Source: %{name}-%{dkbVersion}-%{dkbRelease}.tar.gz
+License: GPLv3+
+Group: Application/dkb
+
+BuildRoot: %{_builddir}/%{name}-%{version}-root
+BuildRequires: cmake >= 2.6 redhat-rpm-config
+
+%description
+The DKB project is the Data Knowledge Base for HENP experiments.
+
+%prep
+%setup -q -n %{name}-%{dkbVersion}-%{dkbRelease}
+
+%build
+
+mkdir -p build
+cd build
+# The cmake step does the selection between client/server compilation or just client
+DKB_VERSION=%{dkbVersion} cmake .. -DCOMPILE_PACKAGING:STRING=0 -DVCS_VERSION=%{dkbRelease}
+
+
+%install
+%{__rm} -rf ${RPM_BUILD_ROOT}
+
+cd build
+%{__make} install DESTDIR=${RPM_BUILD_ROOT} EXPORTMAN=${RPM_BUILD_ROOT}/usr/share/man
+
+%clean
+%{__rm} -rf $RPM_BUILD_ROOT
+%{__rm} -rf $RPM_BUILD_DIR/%{name}-%{version}
+
+%package -n dkb-pylib
+Summary:  Data Knowledge Base python libraries
+Group: Application/DKB
+%description -n dkb-pylib
+Data Knowledge Base:
+The python libraries
+%files -n dkb-pylib
+%defattr(0644,root,root,0755)
+/opt/%{name}/pyDKB
+
+%changelog
+* Wed Apr 15 2020 victor.kotlyar (at) cern.ch - 0.0-0
+- initial rpm's
+
