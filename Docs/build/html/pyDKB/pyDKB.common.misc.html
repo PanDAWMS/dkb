@@ -38,6 +38,40 @@
 <p>pyDKB.common.misc</p>
 <p>Miscellanious utility functions.</p>
 <dl class="function">
+<dt id="pyDKB.common.misc.ensure_argparse_arg_name">
+<code class="descclassname">pyDKB.common.misc.</code><code class="descname">ensure_argparse_arg_name</code><span class="sig-paren">(</span><em>args</em>, <em>kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/misc.html#ensure_argparse_arg_name"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.misc.ensure_argparse_arg_name" title="Permalink to this definition">¶</a></dt>
+<dd><p>Ensure cmgline argument name for <cite>argparse.add_argument()</cite>.</p>
+<p>Returns the expected argument name and updates <code class="docutils literal notranslate"><span class="pre">kwargs['dest']</span></code>
+value.</p>
+<p>When <a href="#id1"><span class="problematic" id="id2">:python:func:`argparse.add_argument()`</span></a> is called, <cite>argparse</cite>
+decides how to name the new argument basing on the passed parameters
+(to use this name in <cite>argparse.Namespace</cite> object).
+This function returns the name, that (supposedly) will be used in
+<cite>argparse</cite>; but to make sure, <code class="docutils literal notranslate"><span class="pre">kwargs['dest']</span></code> is (re)set to the same
+value (if applicable).</p>
+<p>For parameters description please refer to <cite>argparse</cite> documentation:
+<a class="reference external" href="https://docs.python.org/2.7/library/argparse.html#the-add-argument-method">https://docs.python.org/2.7/library/argparse.html#the-add-argument-method</a></p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>args</strong> (<em>list</em>) – list of <cite>argparse.add_argument()</cite> positional parameters</li>
+<li><strong>kwargs</strong> (<em>dict</em>) – hash of <cite>argparse.add_argument()</cite> keyword parameters</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">argument name</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">string</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="pyDKB.common.misc.log">
 <code class="descclassname">pyDKB.common.misc.</code><code class="descname">log</code><span class="sig-paren">(</span><em>message</em>, <em>level=3</em>, <em>*args</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/common/misc.html#log"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.common.misc.log" title="Permalink to this definition">¶</a></dt>
 <dd><p>Output log message with given log level.</p>

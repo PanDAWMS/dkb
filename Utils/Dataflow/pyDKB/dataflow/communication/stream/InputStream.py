@@ -38,6 +38,16 @@ class InputStream(Stream):
         """ Reset current stream with new file descriptor.
 
         Overrides parent method to reset __iterator property.
+
+        :param fd: new file descriptor
+        :type fd: file
+        :param close: if True, close the old file descriptor
+        :type close: bool
+        :param force: if True, force the reset of iterator
+        :type force: bool
+
+        :returns: old file descriptor
+        :rtype: file
         """
         old_fd = super(InputStream, self).reset(fd, close)
         # We do not want to reset iterator if `reset()` was called
@@ -106,9 +116,11 @@ class InputStream(Stream):
     def parse_message(self, message):
         """ Verify and parse input message.
 
-        Retrun value:
-            Message object
-            False (failed to parse)
+        :param message: message to parse
+        :type message: pyDKB.dataflow.communication.messages.AbstractMessage
+
+        :returns: decoded message or False if parsing failed
+        :rtype: pyDKB.dataflow.communication.messages.AbstractMessage, bool
         """
         messageClass = Message(self.message_type)
 
@@ -127,10 +139,11 @@ class InputStream(Stream):
     def get_message(self):
         """ Get next message from the input stream.
 
-        Return values:
-            Message object
-            False (failed to parse message)
-            None  (no messages left)
+        :returns: parsed next message,
+                  False -- parsing failed,
+                  None -- no messages left
+        :rtype: pyDKB.dataflow.communication.messages.AbstractMessage,
+                bool, NoneType
         """
         try:
             result = self.next()
@@ -139,7 +152,12 @@ class InputStream(Stream):
         return result
 
     def next(self):
-        """ Get next message from the input stream. """
+        """ Get next message from the input stream.
+
+        :returns: parsed next message,
+                  False -- parsing failed or unexpected end of stream occurred
+        :rtype: pyDKB.dataflow.communication.messages.AbstractMessage, bool
+        """
         if not self.__iterator:
             self._reset_iterator()
         msg = self.__iterator.next()
