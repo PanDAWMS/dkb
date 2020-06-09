@@ -27,10 +27,17 @@ except Exception, err:
     sys.exit(1)
 
 
+def throw_error():
+    """ Throw an exception, for testing purposes."""
+    a = b + c
+
+
 def process(stage, message):
     """ Single message processing. """
     data = message.content()
     # Processing machinery
+    if data.get('ERROR'):
+        throw_error()
     if 'df' in data and isinstance(data['df'], (str, unicode)):
         data['df'] = 'processed ' + data['df']
     else:
@@ -47,6 +54,8 @@ def batch_process(stage, messages):
     # Optimized machinery for processing bunches of messages
     new_batch = []
     for data in batch_data:
+        if data.get('ERROR'):
+            throw_error()
         if 'df' in data and isinstance(data['df'], (str, unicode)):
             data['df'] = 'processed ' + data['df']
         else:
