@@ -38,6 +38,10 @@ def process(stage, message):
     # Processing machinery
     if data.get('ERROR'):
         throw_error()
+    if data.get('DISCARD'):
+        stage.log("Discarding data %s because it's very wrong."
+                  % data, logLevel.WARN)
+        return True
     if 'df' in data and isinstance(data['df'], (str, unicode)):
         data['df'] = 'processed ' + data['df']
     else:
@@ -56,6 +60,10 @@ def batch_process(stage, messages):
     for data in batch_data:
         if data.get('ERROR'):
             throw_error()
+        if data.get('DISCARD'):
+            stage.log("Discarding data %s because it's very wrong."
+                      % data, logLevel.WARN)
+            continue
         if 'df' in data and isinstance(data['df'], (str, unicode)):
             data['df'] = 'processed ' + data['df']
         else:

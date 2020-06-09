@@ -1,0 +1,21 @@
+{}
+{"!@#$": true}
+{"DISCARD": true}
+{"df": 1}
+{"DISCARD": true}
+{"df": "abc"}
+{"DISCARD": true}
+{"df": "abc1"}
+{"DISCARD": true}
+{"DISCARD": true}
+{"DISCARD": true}
+{"df": "absdfg"}
+{"df": "Some text here."}
+{"DISCARD": true}
+{"df": "abc", "fd": true}
+{"DISCARD": true}
+{"d": "abc"}
+{"df": "abc"}
+{"DISCARD": true}
+{"DISCARD": true}
+{"DISCARD": true}
