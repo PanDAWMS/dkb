@@ -2,4 +2,20 @@ ES_HOST=%__es_host__%           #elasticsearch host
 ES_PORT=%__es_port__%           #elasticsearch port
 ES_USER=%__es_user__%           #elasticsearch username for basic auth
 ES_PASSWORD=%__es_password__%   #password for basic auth
-ES_INDEX=tasks_production       #default index to work with; avail: tasks_production, tasks_analysis
+
+ES_INDEX_TASKS=tasks_production  #default index for tasks metadata
+                                 # avail: tasks_production, tasks_analysis
+
+ES_INDEX_PROGRESS=production_progress
+                                 #default index for tasks
+                                 # processing progress metadata
+                                 # avail: production_progress,
+                                 #        analysis_progress
+
+
+# ---
+#
+# This variable is left for backwards compatibility:
+# some stages of the `data4es` dataflow rely on it.
+# TODO: replace with ES_INDEX_TASKS everywhere
+ES_INDEX=tasks_production        #default index to work with
