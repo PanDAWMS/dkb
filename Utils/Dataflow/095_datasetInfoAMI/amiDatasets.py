@@ -186,8 +186,8 @@ def amiPhysValues(data):
     json_str = json.loads(res)
     try:
         rowset = json_str['AMIMessage'][0]['Result'][0]['rowset']
-    except KeyError:
-        raise KeyError("Unexpected AMI response: %s" % json_str)
+    except Exception:
+        raise Exception("Unexpected AMI response: %s" % json_str)
     if not rowset:
         sys.stderr.write("(WARN) No values found in AMI for dataset '%s'\n"
                          % data['datasetname'])
