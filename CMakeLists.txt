@@ -35,3 +35,5 @@ add_subdirectory(Utils/Dataflow/069_upload2es)
 add_subdirectory(Utils/Dataflow/091_datasetsRucio)
 add_subdirectory(Utils/Dataflow/093_datasetsFormat)
 add_subdirectory(Utils/Dataflow/095_datasetInfoAMI)
+
+add_subdirectory(Utils/Dataflow/run)

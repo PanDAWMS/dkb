@@ -88,6 +88,7 @@ getent passwd dkb >/dev/null || useradd -r -g dkb -s /sbin/nologin -c "DKB syste
 %attr(0755, dkb, dkb) /opt/%{name}/093_datasetsFormat/datasets_format.py
 /opt/%{name}/095_datasetInfoAMI
 %attr(0755, dkb, dkb) /opt/%{name}/095_datasetInfoAMI/amiDatasets.py
+%attr(0755, dkb, dkb) /opt/%{name}/run
 
 %changelog
 * Wed Jun 10 2020 victor.kotlyar (at) cern.ch - 0.0-1
