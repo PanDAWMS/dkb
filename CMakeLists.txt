@@ -25,3 +25,13 @@ if (${COMPILE_PACKAGING} STREQUAL "1")
 endif (${COMPILE_PACKAGING} STREQUAL "1")
 
 add_subdirectory(Utils/Dataflow/pyDKB)
+
+add_subdirectory(Utils/Dataflow/009_oracleConnector)
+add_subdirectory(Utils/Dataflow/016_task2es)
+add_subdirectory(Utils/Dataflow/017_adjustMetadata)
+add_subdirectory(Utils/Dataflow/019_esFormat)
+add_subdirectory(Utils/Dataflow/025_chicagoES)
+add_subdirectory(Utils/Dataflow/069_upload2es)
+add_subdirectory(Utils/Dataflow/091_datasetsRucio)
+add_subdirectory(Utils/Dataflow/093_datasetsFormat)
+add_subdirectory(Utils/Dataflow/095_datasetInfoAMI)

@@ -38,7 +38,6 @@ cd build
 # The cmake step does the selection between client/server compilation or just client
 DKB_VERSION=%{dkbVersion} cmake .. -DCOMPILE_PACKAGING:STRING=0 -DVCS_VERSION=%{dkbRelease}
 
-
 %install
 %{__rm} -rf ${RPM_BUILD_ROOT}
 
@@ -59,7 +58,38 @@ The python libraries
 %defattr(0644,root,root,0755)
 /opt/%{name}/pyDKB
 
+%package -n dkb-atlas-dataflow
+Summary:  Data Knowledge Base dataflow utils for Atlas experiment
+Group: Application/DKB
+%description -n dkb-atlas-dataflow
+Data Knowledge Base:
+The dataflow utils for Atlas experiment
+%pre -n dkb-atlas-dataflow
+getent group dkb >/dev/null || groupadd -r dkb
+getent passwd dkb >/dev/null || useradd -r -g dkb -s /sbin/nologin -c "DKB system account" dkb
+%files -n dkb-atlas-dataflow
+%defattr(0644,dkb,dkb,0755)
+/opt/%{name}/009_oracleConnector
+%attr(0755, dkb, dkb) /opt/%{name}/009_oracleConnector/Oracle2JSON.py
+/opt/%{name}/016_task2es
+%attr(0755, dkb, dkb) /opt/%{name}/016_task2es/task2es.py
+/opt/%{name}/017_adjustMetadata
+%attr(0755, dkb, dkb) /opt/%{name}/017_adjustMetadata/adjustMetadata.py
+/opt/%{name}/019_esFormat
+%attr(0755, dkb, dkb) /opt/%{name}/019_esFormat/run.sh
+%attr(0755, dkb, dkb) /opt/%{name}/019_esFormat/esFormat.php
+/opt/%{name}/025_chicagoES
+%attr(0755, dkb, dkb) /opt/%{name}/025_chicagoES/stage.py
+/opt/%{name}/069_upload2es
+%attr(0755, dkb, dkb) /opt/%{name}/069_upload2es/load_data.sh
+/opt/%{name}/091_datasetsRucio
+%attr(0755, dkb, dkb) /opt/%{name}/091_datasetsRucio/datasets_processing.py
+/opt/%{name}/093_datasetsFormat
+%attr(0755, dkb, dkb) /opt/%{name}/093_datasetsFormat/datasets_format.py
+/opt/%{name}/095_datasetInfoAMI
+%attr(0755, dkb, dkb) /opt/%{name}/095_datasetInfoAMI/amiDatasets.py
+
 %changelog
-* Wed Apr 15 2020 victor.kotlyar (at) cern.ch - 0.0-0
+* Wed Jun 10 2020 victor.kotlyar (at) cern.ch - 0.0-1
 - initial rpm's
 
