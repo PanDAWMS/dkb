@@ -219,7 +219,9 @@ False – parsing failed or unexpected end of stream occurred</td>
 <tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
 <li><strong>fd</strong> (<em>file</em>) – new file descriptor</li>
 <li><strong>close</strong> (<em>bool</em>) – if True, close the old file descriptor</li>
-<li><strong>force</strong> (<em>bool</em>) – if True, force the reset of iterator</li>
+<li><strong>force</strong> (<em>bool</em>) – if True, force the reset of iterator
+(normally, iterator is not reset if the new
+file descriptor is the same as the old one)</li>
 </ul>
 </td>
 </tr>

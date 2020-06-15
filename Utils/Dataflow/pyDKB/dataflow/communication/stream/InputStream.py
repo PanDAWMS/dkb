@@ -44,6 +44,8 @@ class InputStream(Stream):
         :param close: if True, close the old file descriptor
         :type close: bool
         :param force: if True, force the reset of iterator
+                      (normally, iterator is not reset if the new
+                      file descriptor is the same as the old one)
         :type force: bool
 
         :returns: old file descriptor
