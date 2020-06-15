@@ -153,6 +153,76 @@ def input_events(data):
     return result
 
 
+def input_events_v2(data):
+    """ Calculate derived value 'input_events_v2'.
+
+    For the first tasks in a chain:
+     * total_req_events (if defined);
+     * else: primary_input_events (if defined);
+     * else: requested_events.
+
+    For other tasks:
+     * parent_total_events (if parent is not derivation);
+     * else: requested_events.
+
+    For details please contact Mikhail Borodin <Mikhail.Borodin@cern.ch>.
+
+    :param data: task metadata
+    :type data: dict
+
+    :return: derived value 'input_events_v2'
+             (None if input data do not provide enough information)
+    :rtype: int, NoneType
+    """
+    result = None
+
+    # First task in chain
+    if data['taskid'] == data['chain_id']:
+        if data.get('total_req_events'):
+            result = data['total_req_events']
+        elif data.get('primary_input_events'):
+            result = data['primary_input_events']
+        else:
+            result = data.get('requested_events')
+    # Other tasks
+    else:
+        if data.get('parent_task_name') is not None and \
+                '.deriv.' not in data.get('parent_task_name', ''):
+            result = data.get('parent_total_events')
+        else:
+            result = data.get('requested_events')
+
+    return result
+
+
+def processed_events_v2(data):
+    """ Calculate number of processed events (v2).
+
+    V1 is calculated at Stage 009; V2 is suggested by Mikhail Borodin
+    <Mikhail.Borodin@cern.ch> to take into account wider range of possible
+    situations.
+
+    :param data: task metadata
+    :type data: dict
+
+    :return: derived value 'input_events_v2'
+             (None if input data do not provide enough information)
+    :rtype: int, NoneType
+    """
+    result = None
+    if data.get('input_events_v2') and \
+            data.get('processed_events') and \
+            data.get('requested_events'):
+        result = int(data['input_events_v2'] *
+                     data['processed_events'] / data['requested_events'])
+    # For EVNT tasks 'requested_events' is None, so we use 'total_events'
+    # (just as in v1)
+    elif data.get('step_name', '').lower() == 'evgen':
+        result = data['total_events']
+
+    return result
+
+
 def transform_chain_data(data):
     """ Transform chain_data into proper task metadata fields.
 
@@ -244,6 +314,14 @@ def process(stage, message):
         data['input_events'] = inp_events
     # 5. Save chain_data as array of integers, extract chain_id from it
     transform_chain_data(data)
+    # 6. Calculate 'input_events_v2'
+    inp_events = input_events_v2(data)
+    if inp_events is not None:
+        data['input_events_v2'] = inp_events
+    # 7. Calculate 'processed_events_v2'
+    pr_events = processed_events_v2(data)
+    if pr_events is not None:
+        data['processed_events_v2'] = pr_events
 
     out_message = JSONMessage(data)
     stage.output(out_message)
