@@ -1,0 +1,18 @@
+=============
+* Stage 040 *
+=============
+
+1. Description
+--------------
+Generate documents with information about task current progress.
+
+Original messages are passed as they are.
+
+Stage's output goes to stage 019, so it must contain meta-fields for ES bulk
+load.
+
+2. ToDo
+-------
+Currently it is merely a placeholder that does nothing but passes the input
+messages to the output -- so "ToDo" is "To implement the requred messages
+processing logic."
