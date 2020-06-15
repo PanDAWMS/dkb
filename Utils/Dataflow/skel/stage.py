@@ -26,7 +26,16 @@ except Exception, err:
 
 
 def process(stage, message):
-    """ Single message processing. """
+    """ Single message processing.
+
+    :param stage: ETL processing stage
+    :type stage: pyDKB.dataflow.stage.ProcessorStage
+    :param message: input message with data to be processed
+    :type message: pyDKB.dataflow.communication.messages.JSONMessage
+
+    :returns: True or False in case of failure
+    :rtype: bool
+    """
     data = message.content()
     # Processing machinery
     out_data = {"key": "value"}
