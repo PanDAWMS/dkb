@@ -2,10 +2,16 @@
 dsn: %__ora_user__%/%__ora_password__%@%__ora_tns__%
 
 [queries]
-# absolute (or relative to config file) path to tasks query
-tasks: %__009_query_dir__%/prodsys2ES.sql
-# absolute (or relative to config file) path to datasets query
-datasets: %__009_query_dir__%/datasets.sql
+# Query type (e.g. DF process for which it is used)
+# To be used if the stage is to be used in multiple scenarios
+# with different query sets.
+# The value will be mapped to queries subdir in the stage
+# source directory; if not specified, the queries directory
+# itself will be used
+type: data4es
+
+# Comma-separated list of query names to use (no spaces)
+use: tasks,datasets
 
 [queries.params]
 # Query parameters for all queries:
