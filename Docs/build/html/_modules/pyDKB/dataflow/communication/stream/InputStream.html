@@ -72,6 +72,18 @@
         <span class="sd">&quot;&quot;&quot; Reset current stream with new file descriptor.</span>
 
 <span class="sd">        Overrides parent method to reset __iterator property.</span>
+
+<span class="sd">        :param fd: new file descriptor</span>
+<span class="sd">        :type fd: file</span>
+<span class="sd">        :param close: if True, close the old file descriptor</span>
+<span class="sd">        :type close: bool</span>
+<span class="sd">        :param force: if True, force the reset of iterator</span>
+<span class="sd">                      (normally, iterator is not reset if the new</span>
+<span class="sd">                      file descriptor is the same as the old one)</span>
+<span class="sd">        :type force: bool</span>
+
+<span class="sd">        :returns: old file descriptor</span>
+<span class="sd">        :rtype: file</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">old_fd</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">InputStream</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">reset</span><span class="p">(</span><span class="n">fd</span><span class="p">,</span> <span class="n">close</span><span class="p">)</span>
         <span class="c1"># We do not want to reset iterator if `reset()` was called</span>
@@ -140,9 +152,11 @@
 <div class="viewcode-block" id="InputStream.parse_message"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.stream.InputStream.html#pyDKB.dataflow.communication.stream.InputStream.parse_message">[docs]</a>    <span class="k">def</span> <span class="nf">parse_message</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Verify and parse input message.</span>
 
-<span class="sd">        Retrun value:</span>
-<span class="sd">            Message object</span>
-<span class="sd">            False (failed to parse)</span>
+<span class="sd">        :param message: message to parse</span>
+<span class="sd">        :type message: pyDKB.dataflow.communication.messages.AbstractMessage</span>
+
+<span class="sd">        :returns: decoded message or False if parsing failed</span>
+<span class="sd">        :rtype: pyDKB.dataflow.communication.messages.AbstractMessage, bool</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">messageClass</span> <span class="o">=</span> <span class="n">Message</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">message_type</span><span class="p">)</span>
 
@@ -161,10 +175,11 @@
 <div class="viewcode-block" id="InputStream.get_message"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.stream.InputStream.html#pyDKB.dataflow.communication.stream.InputStream.get_message">[docs]</a>    <span class="k">def</span> <span class="nf">get_message</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Get next message from the input stream.</span>
 
-<span class="sd">        Return values:</span>
-<span class="sd">            Message object</span>
-<span class="sd">            False (failed to parse message)</span>
-<span class="sd">            None  (no messages left)</span>
+<span class="sd">        :returns: parsed next message,</span>
+<span class="sd">                  False -- parsing failed,</span>
+<span class="sd">                  None -- no messages left</span>
+<span class="sd">        :rtype: pyDKB.dataflow.communication.messages.AbstractMessage,</span>
+<span class="sd">                bool, NoneType</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>
@@ -173,7 +188,12 @@
         <span class="k">return</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="InputStream.next"><a class="viewcode-back" href="../../../../../pyDKB/pyDKB.dataflow.communication.stream.InputStream.html#pyDKB.dataflow.communication.stream.InputStream.next">[docs]</a>    <span class="k">def</span> <span class="nf">next</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot; Get next message from the input stream. &quot;&quot;&quot;</span>
+        <span class="sd">&quot;&quot;&quot; Get next message from the input stream.</span>
+
+<span class="sd">        :returns: parsed next message,</span>
+<span class="sd">                  False -- parsing failed or unexpected end of stream occurred</span>
+<span class="sd">        :rtype: pyDKB.dataflow.communication.messages.AbstractMessage, bool</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">__iterator</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_reset_iterator</span><span class="p">()</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__iterator</span><span class="o">.</span><span class="n">next</span><span class="p">()</span>

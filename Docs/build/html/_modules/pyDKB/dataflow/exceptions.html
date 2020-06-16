@@ -41,7 +41,22 @@
 
 <div class="viewcode-block" id="DataflowException"><a class="viewcode-back" href="../../../pyDKB/pyDKB.dataflow.exceptions.html#pyDKB.dataflow.exceptions.DataflowException">[docs]</a><span class="k">class</span> <span class="nc">DataflowException</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot; Base Exception for Dataflow modules. &quot;&quot;&quot;</span>
-    <span class="k">pass</span></div>
+    <span class="n">reason</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">reason</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initialise exception instance. &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">DataflowException</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">reason</span> <span class="o">=</span> <span class="n">reason</span>
+
+    <span class="k">def</span> <span class="nf">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Cast exception to string. &quot;&quot;&quot;</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">DataflowException</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__str__</span><span class="p">()</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+        <span class="k">if</span> <span class="n">msg</span><span class="p">:</span>
+            <span class="n">prefix</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Reason: &#39;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">reason</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">+=</span> <span class="n">prefix</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">reason</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">msg</span></div>
 </pre></div>
 
           </div>

@@ -45,6 +45,14 @@
 <blockquote>
 <div>__parser</div></blockquote>
 <ul>
+<li><p class="first">Original default argument values (dict)</p>
+</li>
+<li><dl class="first docutils">
+<dt>(filled by <code class="docutils literal notranslate"><span class="pre">add_argument()</span></code> method)</dt>
+<dd><p class="first last">_default_args</p>
+</dd>
+</dl>
+</li>
 <li><dl class="first docutils">
 <dt>Parsed arguments (argparse.Namespace)</dt>
 <dd><p class="first last">ARGS</p>
@@ -132,9 +140,40 @@
 </dd></dl>
 
 <dl class="method">
+<dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.reset_default_arguments">
+<code class="descname">reset_default_arguments</code><span class="sig-paren">(</span><em>args=None</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.reset_default_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.reset_default_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reset default argument values to the original ones.</p>
+<p>Original default value is a value passed to the <code class="docutils literal notranslate"><span class="pre">add_argument()</span></code>
+method.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>args</strong> (<em>list</em><em>, </em><em>NoneType</em>) – list of arguments to be reset. If not specified
+or set to None, all known arguments will be reset</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
 <dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.run">
 <code class="descname">run</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.run"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.run" title="Permalink to this definition">¶</a></dt>
 <dd><p>Run the stage.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyDKB.dataflow.stage.AbstractStage.AbstractStage.set_default_arguments">
+<code class="descname">set_default_arguments</code><span class="sig-paren">(</span><em>**kwargs</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/stage/AbstractStage.html#AbstractStage.set_default_arguments"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.stage.AbstractStage.AbstractStage.set_default_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set (or overwrite) default values for arguments.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>&lt;arg_name&gt;</strong> (<em>object</em>) – default value for argument &lt;arg_name&gt;</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">

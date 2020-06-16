@@ -44,7 +44,8 @@
 
 <span class="kn">from</span> <span class="nn">pyDKB.common</span> <span class="k">import</span> <span class="n">LoggableObject</span>
 <span class="kn">from</span> <span class="nn">pyDKB.common.types</span> <span class="k">import</span> <span class="n">logLevel</span>
-<span class="kn">from</span> <span class="nn">pyDKB.common.misc</span> <span class="k">import</span> <span class="n">log</span>
+<span class="kn">from</span> <span class="nn">pyDKB.common.misc</span> <span class="k">import</span> <span class="p">(</span><span class="n">log</span><span class="p">,</span>
+                               <span class="n">ensure_argparse_arg_name</span><span class="p">)</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">argparse</span>
@@ -58,6 +59,10 @@
 <span class="sd">    Class/instance variable description:</span>
 <span class="sd">    * Argument parser (argparse.ArgumentParser)</span>
 <span class="sd">        __parser</span>
+
+<span class="sd">    * Original default argument values (dict)</span>
+<span class="sd">    * (filled by ``add_argument()`` method)</span>
+<span class="sd">        _default_args</span>
 
 <span class="sd">    * Parsed arguments (argparse.Namespace)</span>
 <span class="sd">        ARGS</span>
@@ -83,6 +88,7 @@
             <span class="n">formatter_class</span><span class="o">=</span><span class="n">argparse</span><span class="o">.</span><span class="n">RawTextHelpFormatter</span><span class="p">,</span>
             <span class="n">description</span><span class="o">=</span><span class="n">description</span>
         <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_args</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">defaultArguments</span><span class="p">()</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">_error</span> <span class="o">=</span> <span class="kc">None</span>
@@ -167,6 +173,7 @@
 
 <div class="viewcode-block" id="AbstractStage.add_argument"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.add_argument">[docs]</a>    <span class="k">def</span> <span class="nf">add_argument</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Add specific (not common) arguments. &quot;&quot;&quot;</span>
+        <span class="c1"># Format help message</span>
         <span class="n">wrapper</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">TextWrapper</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="mi">55</span><span class="p">,</span> <span class="n">replace_whitespace</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="n">textwrap</span><span class="o">.</span><span class="n">dedent</span><span class="p">(</span><span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;help&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">))</span>
         <span class="k">if</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> \
@@ -177,7 +184,43 @@
         <span class="n">msg</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">wrapped_lines</span><span class="p">)</span>
         <span class="n">msg</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1"> &#39;</span>
         <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;help&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">msg</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+        <span class="n">arg_name</span> <span class="o">=</span> <span class="n">ensure_argparse_arg_name</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="c1"># Store original default values</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_default_args</span><span class="p">[</span><span class="n">arg_name</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span><span class="o">.</span><span class="n">get_default</span><span class="p">(</span><span class="n">arg_name</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractStage.set_default_arguments"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.set_default_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">set_default_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set (or overwrite) default values for arguments.</span>
+
+<span class="sd">        :param &lt;arg_name&gt;: default value for argument &lt;arg_name&gt;</span>
+<span class="sd">        :type &lt;arg_name&gt;: object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">__parser</span><span class="o">.</span><span class="n">set_defaults</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="AbstractStage.reset_default_arguments"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.reset_default_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">reset_default_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Reset default argument values to the original ones.</span>
+
+<span class="sd">        Original default value is a value passed to the ``add_argument()``</span>
+<span class="sd">        method.</span>
+
+<span class="sd">        :param args: list of arguments to be reset. If not specified</span>
+<span class="sd">                     or set to None, all known arguments will be reset</span>
+<span class="sd">        :type args: list, NoneType</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">args</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">default_args</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_args</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">default_args</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">arg</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">arg</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_args</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Can&#39;t reset default value for argument: &#39;</span><span class="si">%s</span><span class="s2">&#39;&quot;</span>
+                             <span class="o">%</span> <span class="n">arg</span><span class="p">,</span> <span class="n">logLevel</span><span class="o">.</span><span class="n">WARN</span><span class="p">)</span>
+                    <span class="k">continue</span>
+                <span class="n">default_args</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_default_args</span><span class="p">[</span><span class="n">arg</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_default_arguments</span><span class="p">(</span><span class="o">**</span><span class="n">default_args</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="AbstractStage.parse_args"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.AbstractStage.html#pyDKB.dataflow.stage.AbstractStage.AbstractStage.parse_args">[docs]</a>    <span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Parse arguments and set dependant arguments if needed.</span>
@@ -275,14 +318,17 @@
             <span class="n">err</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_error</span>
             <span class="k">if</span> <span class="n">err</span><span class="p">:</span>
                 <span class="n">exc_info</span> <span class="o">=</span> <span class="p">(</span><span class="n">err</span><span class="p">[</span><span class="s1">&#39;etype&#39;</span><span class="p">],</span> <span class="n">err</span><span class="p">[</span><span class="s1">&#39;exception&#39;</span><span class="p">],</span> <span class="n">err</span><span class="p">[</span><span class="s1">&#39;trace&#39;</span><span class="p">])</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span> <span class="ow">and</span> <span class="n">exc_info</span><span class="p">:</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">exc_info</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">if</span> <span class="n">message</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">logLevel</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">exc_info</span><span class="p">:</span>
             <span class="k">if</span> <span class="n">exc_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Interrupted by user.&quot;</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="n">exc_info</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="ne">SystemExit</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s2">&quot;Exit code: </span><span class="si">%s</span><span class="s2">.&quot;</span> <span class="o">%</span> <span class="n">exc_info</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">code</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">message</span><span class="p">:</span>
+                    <span class="n">message</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">exc_info</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">logLevel</span><span class="o">.</span><span class="n">ERROR</span><span class="p">)</span>
                 <span class="n">trace</span> <span class="o">=</span> <span class="n">traceback</span><span class="o">.</span><span class="n">format_exception</span><span class="p">(</span><span class="o">*</span><span class="n">exc_info</span><span class="p">)</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">trace</span><span class="p">),</span> <span class="n">logLevel</span><span class="o">.</span><span class="n">DEBUG</span><span class="p">)</span></div>
 
