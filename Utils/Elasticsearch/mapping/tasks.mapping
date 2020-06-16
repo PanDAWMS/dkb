@@ -91,6 +91,19 @@
           "index": false,
           "doc_values": false
         },
+        "parent_taskname": {
+          "type": "text",
+          "analyzer": "task_dataset_analyzer",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "parent_total_events": {
+          "type": "long"
+        },
         "taskname": {
           "type": "text",
           "analyzer": "task_dataset_analyzer",
