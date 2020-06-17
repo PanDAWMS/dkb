@@ -23,6 +23,7 @@ try:
     from pyDKB.dataflow.communication.messages import JSONMessage
     from pyDKB.dataflow import messageType
     from pyDKB.dataflow.exceptions import DataflowException
+    from pyDKB import atlas
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -302,6 +303,44 @@ def ami_tags_chain(data):
     return ami_tags
 
 
+def generate_step_names(data):
+    """ Add fields with name of step to which task belongs.
+
+    There are different ways to say one step from another:
+    - MC production step name (already exists as 'step_name' field);
+    - current AMI tag + output data format;
+    - chain of AMI tags + output data format.
+
+    The latter is supposed to be the most universal, but initially was used
+    only the first one, then for some cases the second was invened, and...
+    ...and there's no good way to make things as they are supposed to be
+    all at once. So we need all the possible namings.
+
+    :param data: task metadata (will be altered in place)
+    :type data: dict
+
+    :returns: None
+    :rtype: NoneType
+    """
+    output_ds = data.get('output', [])
+    if not isinstance(output_ds, list):
+        output_ds = [output_ds]
+    ctag = data.get('ctag')
+    tags = data.get('ami_tags')
+    data['ctag_format_step'] = []
+    data['ami_tags_format_step'] = []
+    for ds in output_ds:
+        data_format = pyDKB.atlas.misc.dataset_data_format(ds)
+        if ctag:
+            data['ctag_format_step'].append(':'.join([ctag, data_format]))
+        if tags:
+            data['ami_tags_format_step'].append(':'.join([tags, data_format]))
+    if not data['ctag_format_step']:
+        del data['ctag_format_step']
+    if not data['ami_tags_format_step']:
+        del data['ami_tags_format_step']
+
+
 def process(stage, message):
     """ Single message processing. """
     data = message.content()
@@ -345,6 +384,8 @@ def process(stage, message):
     ami_tags = ami_tags_chain(data)
     if ami_tags:
         data['ami_tags'] = ami_tags
+    # 9. Step names
+    generate_step_names(data)
 
     out_message = JSONMessage(data)
     stage.output(out_message)
