@@ -103,6 +103,24 @@
         "step_id": {
           "type": "integer"
         },
+        "ctag_format_step": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+        "ami_tags_format_step": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
         "status": {
           "type": "keyword",
           "ignore_above": 256
