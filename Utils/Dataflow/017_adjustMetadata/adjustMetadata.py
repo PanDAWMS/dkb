@@ -213,8 +213,8 @@ def processed_events_v2(data):
     if data.get('input_events_v2') and \
             data.get('processed_events') and \
             data.get('requested_events'):
-        result = int(data['input_events_v2'] *
-                     data['processed_events'] / data['requested_events'])
+        result = int(data['input_events_v2']
+                     * data['processed_events'] / data['requested_events'])
     # For EVNT tasks 'requested_events' is None, so we use 'total_events'
     # (just as in v1)
     elif data.get('step_name', '').lower() == 'evgen':
