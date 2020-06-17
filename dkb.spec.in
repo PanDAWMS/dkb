@@ -48,6 +48,12 @@ cd build
 %{__rm} -rf $RPM_BUILD_ROOT
 %{__rm} -rf $RPM_BUILD_DIR/%{name}-%{version}
 
+
+%check
+cd build
+%{__make} unittests
+
+
 %package -n dkb-pylib
 Summary:  Data Knowledge Base python libraries
 Group: Application/DKB
@@ -89,6 +95,17 @@ getent passwd dkb >/dev/null || useradd -r -g dkb -s /sbin/nologin -c "DKB syste
 /opt/%{name}/095_datasetInfoAMI
 %attr(0755, dkb, dkb) /opt/%{name}/095_datasetInfoAMI/amiDatasets.py
 %attr(0755, dkb, dkb) /opt/%{name}/run
+
+%package -n dkb-test
+Summary:  Data Knowledge Base system test
+Group: Application/DKB
+%description -n dkb-test
+Data Knowledge Base:
+The system test
+%files -n dkb-test
+%defattr(0644,root,root,0755)
+/opt/%{name}/test/pyDKB
+%attr(0755, root, root) /opt/%{name}/test/pyDKB/test.sh
 
 %changelog
 * Wed Jun 10 2020 victor.kotlyar (at) cern.ch - 0.0-1
