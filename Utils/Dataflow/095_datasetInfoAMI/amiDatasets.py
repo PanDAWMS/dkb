@@ -161,6 +161,8 @@ def process(stage, message):
         except Exception:
             stage.output_error("Failed to process dataset '%s'"
                                % data['datasetname'], sys.exc_info())
+        # Do not put this into try/except above - any exception produced by it
+        # indicates a problem with the stage code that demands a full stop.
         change_key_names(data)
     stage.output(pyDKB.dataflow.communication.messages.JSONMessage(data))
 
