@@ -283,6 +283,25 @@ def transform_chain_data(data):
     return True
 
 
+def ami_tags_chain(data):
+    """ Get AMI tags chain from task name.
+
+    :param data: task metadata
+    :type data: dict
+
+    :returns: AMI tags chain,
+              None if input data do not provide enough information
+    :rtype: str, NoneType
+    """
+    taskname = data.get('taskname')
+    try:
+        ami_tags = taskname.split('.')[-1]
+    except AttributeError:
+        # `taskname` is None or something else, but not a string
+        ami_tags = None
+    return ami_tags
+
+
 def process(stage, message):
     """ Single message processing. """
     data = message.content()
@@ -322,6 +341,10 @@ def process(stage, message):
     pr_events = processed_events_v2(data)
     if pr_events is not None:
         data['processed_events_v2'] = pr_events
+    # 8. AMI tags chain
+    ami_tags = ami_tags_chain(data)
+    if ami_tags:
+        data['ami_tags'] = ami_tags
 
     out_message = JSONMessage(data)
     stage.output(out_message)

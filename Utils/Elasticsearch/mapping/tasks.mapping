@@ -170,6 +170,15 @@
           "type": "keyword",
           "ignore_above": 256
         },
+        "ami_tags": {
+          "analyzer": "dsname",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            }
+          }
+        }
         "description": {
           "type": "text"
         },
