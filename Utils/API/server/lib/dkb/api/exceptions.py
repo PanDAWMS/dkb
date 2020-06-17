@@ -44,7 +44,7 @@ class CategoryException(DkbApiException):
 
 
 class CategoryNotFound(CategoryException):
-    """ Exception indicating that category not found. """
+    """ Exception indicating that category was not found. """
     code = 461
 
     def __init__(self, category):
