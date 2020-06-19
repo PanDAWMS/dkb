@@ -331,6 +331,7 @@ def generate_step_names(data):
     :returns: None
     :rtype: NoneType
     """
+    ignore_formats = ['LOG']
     output_formats = data.get('output_formats', [])
     if not isinstance(output_formats, list):
         output_formats = [output_formats]
@@ -339,6 +340,8 @@ def generate_step_names(data):
     data['ctag_format_step'] = []
     data['ami_tags_format_step'] = []
     for data_format in output_formats:
+        if data_format in ignore_formats:
+            continue
         if ctag:
             data['ctag_format_step'].append(':'.join([ctag, data_format]))
         if tags:
