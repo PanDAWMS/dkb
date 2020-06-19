@@ -79,6 +79,7 @@ def init_ami_client(userkey='', usercert=''):
                                - failed to establish pyAMI session
                                  (can be incorrect key/certificate)
                                - key and/or certificate not found
+                               - test command failed
     """
     global ami_client
     try:
@@ -100,6 +101,17 @@ def init_ami_client(userkey='', usercert=''):
                          " create proxy.\n")
         raise DataflowException("Failed to initialise AMI client: certificate"
                                 " not provided or not found.")
+    sys.stderr.write("(INFO) Sending test command ListCommands to check"
+                     " that AMI client works and the credentials are"
+                     " correct...\n")
+    try:
+        ami_client.execute('ListCommands')
+    except Exception as e:
+        sys.stderr.write("(ERROR) Test command ListCommands failed. Are you"
+                         " sure you have a valid certificate?\n"
+                         "(==) Exception: %s\n" % str(e))
+        raise DataflowException("Test command ListCommands failed.")
+    sys.stderr.write("(INFO) Success.\n")
 
 
 def get_ami_client():
@@ -128,6 +140,9 @@ def process(stage, message):
     :rtype: bool
     """
     data = message.content()
+    if not isinstance(data, dict):
+        sys.stderr.write("(WARN) Cannot update non-dict data: %r\n" % data)
+        return False
     # 'data_format' field contains a list of strings,
     # e.g. ['DAOD_SUSY5', 'DAOD']
     formats = data.get('data_format', [])
@@ -139,7 +154,16 @@ def process(stage, message):
     # 'data_format' list contains one of the allowed formats
     # or not set at all.
     if update or not formats:
-        amiPhysValues(data)
+        try:
+            amiPhysValues(data)
+        except DataflowException:
+            raise
+        except Exception:
+            stage.output_error("Failed to process dataset '%s'"
+                               % data['datasetname'], sys.exc_info())
+        # Do not put this into try/except above - any exception produced by it
+        # indicates a problem with the stage code that demands a full stop.
+        change_key_names(data)
     stage.output(pyDKB.dataflow.communication.messages.JSONMessage(data))
 
     return True
@@ -154,31 +178,33 @@ def amiPhysValues(data):
     :return: True (update was successful) or False (otherwise)
     :rtype: bool
     """
-    dataset = data['datasetname']
-    container = remove_tid(dataset)
+    container = container_name(data)
+    if not container:
+        return False
     ami_client = get_ami_client()
+    res = ami_client.execute(['GetPhysicsParamsForDataset',
+                              '--logicalDatasetName=%s' % container],
+                             format='json')
+    json_str = json.loads(res)
     try:
-        res = ami_client.execute(['GetPhysicsParamsForDataset',
-                                  '--logicalDatasetName=%s' % container],
-                                 format='json')
-        json_str = json.loads(res)
-        for row in json_str['AMIMessage'][0]['Result'][0]['rowset'][0]['row']:
-            p_name, p_val = None, None
-            for field in row['field']:
-                if field['@name'] == 'paramName':
-                    p_name = field['$']
-                elif field['@name'] == 'paramValue':
-                    p_val = field['$']
-                if p_name and p_val:
-                    data[p_name] = p_val
-                    p_name, p_val = None, None
-                    continue
-        change_key_names(data)
-        return True
+        rowset = json_str['AMIMessage'][0]['Result'][0]['rowset']
     except Exception:
+        raise Exception("Unexpected AMI response: %s" % json_str)
+    if not rowset:
         sys.stderr.write("(WARN) No values found in AMI for dataset '%s'\n"
                          % data['datasetname'])
         return False
+    for row in rowset[0]['row']:
+        p_name, p_val = None, None
+        for field in row['field']:
+            if field['@name'] == 'paramName':
+                p_name = field['$']
+            elif field['@name'] == 'paramValue':
+                p_val = field['$']
+            if p_name and p_val:
+                data[p_name] = p_val
+                break
+    return True
 
 
 def change_key_names(data):
@@ -196,16 +222,33 @@ def change_key_names(data):
     return data
 
 
-def remove_tid(dataset):
-    """ Remove TaskID (_tidXX) part from dataset name.
+def container_name(data):
+    """ Retrieve container name from information about dataset.
 
-    As AMI GetPhysicsParamsForDataset works with containers,
-    we construct the container name from each dataset name,
-    removing the _tid{...} part
+    The container name is extracted from dataset name by removing
+    the '_tid...' part.
 
-    :param dataset: dataset name
-    :return: dataset name without _tid => container name
+    :param data: dataset information, must contain 'datasetname' field
+    :type data: dict
+
+    :return: container name if it was determined successfully, False otherwise
+    :rtype: str or bool
     """
+    if 'datasetname' in data:
+        dataset = data['datasetname']
+    else:
+        sys.stderr.write("(WARN) Required field 'datasetname' not found"
+                         " in data: %r\n" % data)
+        return False
+    if not isinstance(dataset, (str, unicode)):
+        sys.stderr.write("(WARN) Invalid type of 'datasetname' field:"
+                         " expected string, got %s.\n"
+                         "(==) Data:"
+                         " %r\n" % (dataset.__class__.__name__, data))
+        return False
+    if len(dataset) == 0:
+        sys.stderr.write("(WARN) Required field 'datasetname' is empty"
+                         " in data: %r\n" % data)
     return re.sub('_tid(.)+', '', dataset)
 
 

@@ -109,6 +109,14 @@
     <span class="n">__input</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">_out_stream</span> <span class="o">=</span> <span class="kc">None</span>
 
+    <span class="c1"># Name of the option that switches stage into &#39;skip&#39; mode</span>
+    <span class="n">_skip_option</span> <span class="o">=</span> <span class="s1">&#39;--skip&#39;</span>
+
+    <span class="c1"># Arguments to be reset to original default values if stage is to be</span>
+    <span class="c1"># skipped</span>
+    <span class="c1"># NOTE: values specified explicitly (in command line) won&#39;t be reset</span>
+    <span class="n">_reset_on_skip</span> <span class="o">=</span> <span class="p">[]</span>
+
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;DKB Dataflow data processing stage.&quot;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Initialize the stage</span>
 
@@ -207,12 +215,26 @@
                           <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                           <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;hdfs&#39;</span>
                           <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--skip&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_skip_option</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
                           <span class="n">help</span><span class="o">=</span><span class="sa">u</span><span class="s1">&#39;Skip process and push input message &#39;</span>
                           <span class="s1">&#39;forward as-is (marking it as &quot;incomplete&quot;).&#39;</span><span class="p">,</span>
                           <span class="n">default</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
                           <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;skip_process&#39;</span>
                           <span class="p">)</span></div>
+
+<div class="viewcode-block" id="ProcessorStage.set_default_arguments"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.set_default_arguments">[docs]</a>    <span class="k">def</span> <span class="nf">set_default_arguments</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ignore_on_skip</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Set (or overwrite) default values for arguments.</span>
+
+<span class="sd">        :param ignore_on_skip: ignore new default value when the stage</span>
+<span class="sd">                               is to be skipped</span>
+<span class="sd">        :type ignore_on_skip: bool</span>
+
+<span class="sd">        :param &lt;arg_name&gt;: default value for argument &lt;arg_name&gt;</span>
+<span class="sd">        :type &lt;arg_name&gt;: object</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ProcessorStage</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">set_default_arguments</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">ignore_on_skip</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_reset_on_skip</span> <span class="o">+=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ProcessorStage.configure"><a class="viewcode-back" href="../../../../pyDKB/pyDKB.dataflow.stage.ProcessorStage.html#pyDKB.dataflow.stage.ProcessorStage.configure">[docs]</a>    <span class="k">def</span> <span class="nf">configure</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Configure stage according to the config parameters.</span>
@@ -220,6 +242,8 @@
 <span class="sd">        If $args specified, arguments will be parsed anew.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_skip_option</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">reset_default_arguments</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_reset_on_skip</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">ARGS</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="c1"># Need to initialize ARGS to proceed</span>
@@ -271,7 +295,10 @@
             <span class="c1"># Catch everything for uniform exception handling</span>
             <span class="c1"># Clear buffer -- just in case someone will decide</span>
             <span class="c1"># to reuse the object.</span>
-            <span class="n">exit_code</span> <span class="o">=</span> <span class="mi">1</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="ne">SystemExit</span><span class="p">):</span>
+                <span class="n">exit_code</span> <span class="o">=</span> <span class="n">err</span><span class="o">.</span><span class="n">code</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">exit_code</span> <span class="o">=</span> <span class="mi">1</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_error</span><span class="p">(</span><span class="o">*</span><span class="n">sys</span><span class="o">.</span><span class="n">exc_info</span><span class="p">())</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">clear_buffer</span><span class="p">()</span>
@@ -282,7 +309,7 @@
                 <span class="k">pass</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">stop</span><span class="p">()</span>
         <span class="k">finally</span><span class="p">:</span>
-            <span class="c1"># If something went wrong in `except` clause, we will still</span>
+            <span class="c1"># NOTE: If something went wrong in `except` clause, we will still</span>
             <span class="c1"># get here and return, so the exceptions from there will never</span>
             <span class="c1"># reach the user</span>
             <span class="k">if</span> <span class="n">err</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">err</span><span class="p">,</span> <span class="ne">Exception</span><span class="p">):</span>

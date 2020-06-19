@@ -139,12 +139,19 @@ TODO: IOBase objects</td>
 <dt id="pyDKB.dataflow.communication.stream.InputStream.get_message">
 <code class="descname">get_message</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/communication/stream/InputStream.html#InputStream.get_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.communication.stream.InputStream.get_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get next message from the input stream.</p>
-<dl class="docutils">
-<dt>Return values:</dt>
-<dd>Message object
-False (failed to parse message)
-None  (no messages left)</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">parsed next message,
+False – parsing failed,
+None – no messages left</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.AbstractMessage" title="pyDKB.dataflow.communication.messages.AbstractMessage">pyDKB.dataflow.communication.messages.AbstractMessage</a>,
+bool, NoneType</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -169,17 +176,35 @@ True  – not empty</td>
 <dt id="pyDKB.dataflow.communication.stream.InputStream.next">
 <code class="descname">next</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/communication/stream/InputStream.html#InputStream.next"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.communication.stream.InputStream.next" title="Permalink to this definition">¶</a></dt>
 <dd><p>Get next message from the input stream.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">parsed next message,
+False – parsing failed or unexpected end of stream occurred</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.AbstractMessage" title="pyDKB.dataflow.communication.messages.AbstractMessage">pyDKB.dataflow.communication.messages.AbstractMessage</a>, bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="pyDKB.dataflow.communication.stream.InputStream.parse_message">
 <code class="descname">parse_message</code><span class="sig-paren">(</span><em>message</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/communication/stream/InputStream.html#InputStream.parse_message"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.communication.stream.InputStream.parse_message" title="Permalink to this definition">¶</a></dt>
 <dd><p>Verify and parse input message.</p>
-<dl class="docutils">
-<dt>Retrun value:</dt>
-<dd>Message object
-False (failed to parse)</dd>
-</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>message</strong> (<a class="reference internal" href="pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.AbstractMessage" title="pyDKB.dataflow.communication.messages.AbstractMessage"><em>pyDKB.dataflow.communication.messages.AbstractMessage</em></a>) – message to parse</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">decoded message or False if parsing failed</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference internal" href="pyDKB.dataflow.communication.messages.html#pyDKB.dataflow.communication.messages.AbstractMessage" title="pyDKB.dataflow.communication.messages.AbstractMessage">pyDKB.dataflow.communication.messages.AbstractMessage</a>, bool</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
@@ -187,6 +212,27 @@ False (failed to parse)</dd>
 <code class="descname">reset</code><span class="sig-paren">(</span><em>fd</em>, <em>close=True</em>, <em>force=False</em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pyDKB/dataflow/communication/stream/InputStream.html#InputStream.reset"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyDKB.dataflow.communication.stream.InputStream.reset" title="Permalink to this definition">¶</a></dt>
 <dd><p>Reset current stream with new file descriptor.</p>
 <p>Overrides parent method to reset __iterator property.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>fd</strong> (<em>file</em>) – new file descriptor</li>
+<li><strong>close</strong> (<em>bool</em>) – if True, close the old file descriptor</li>
+<li><strong>force</strong> (<em>bool</em>) – if True, force the reset of iterator
+(normally, iterator is not reset if the new
+file descriptor is the same as the old one)</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">old file descriptor</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">file</p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>

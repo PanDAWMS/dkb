@@ -12,6 +12,12 @@ from collections import defaultdict
 from OffsetStorage import FileOffsetStorage
 from dbConnection import OracleConnection
 
+
+base_dir = os.path.dirname(__file__)
+
+# Queries location
+QUERY_DIR = os.path.join(base_dir, 'query')
+
 # Policies
 PLAIN_POLICY = 'PLAIN'
 SQUASH_POLICY = 'SQUASH'
@@ -117,10 +123,11 @@ def read_config(config_file):
         result['step_seconds'] = interval_seconds(step)
         if result['step_seconds'] == 0:
             raise ConfigParser.Error("'timestamps.step': unacceptable value")
-        queries_cfg = config.items('queries')
+        queries_in_use = config.get('queries', 'use').split(',')
+        qtype = config.get('queries', 'type')
         queries = {}
-        for (qname, f) in queries_cfg:
-            queries[qname] = {'file': config_path(f, result)}
+        for qname in queries_in_use:
+            queries[qname] = {'file': query_path(qname, qtype)}
         if 'queries.params' in config.sections():
             qparams = {}
             for (param, val) in config.items('queries.params'):
@@ -231,6 +238,23 @@ def config_path(rel_path, config):
         config_dir = config['__path__']
         abs_path = os.path.join(config_dir, rel_path)
     return abs_path
+
+
+def query_path(qname, qtype=''):
+    """ Construct path to file with SQL query.
+
+    :param qname: query name
+    :type qname: str
+    :param qtype: query type
+    :type qtype: str
+
+    :return: path to the query file
+    :rtype: str
+    """
+    result = QUERY_DIR
+    if qtype:
+        result = os.path.join(result, qtype)
+    return os.path.join(result, qname)
 
 
 def init_offset_tz(config):
