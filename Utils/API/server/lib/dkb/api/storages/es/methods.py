@@ -59,7 +59,7 @@ def task_chain(**kwargs):
 
     If task not found in the ES, raises ``NoDataFound``.
 
-    If no ``chain_id`` was found for given task, its taskiID is used instead.
+    If no ``chain_id`` was found for given task, its taskID is used instead.
 
     :param tid: task ID
     :type tid: int, str
