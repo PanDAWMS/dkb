@@ -106,6 +106,8 @@ The system test
 %defattr(0644,root,root,0755)
 /opt/%{name}/test/pyDKB
 %attr(0755, root, root) /opt/%{name}/test/pyDKB/test.sh
+%attr(0755, root, root) /opt/%{name}/test/pyDKB/json2JSON.py
+%attr(0755, root, root) /opt/%{name}/test/pyDKB/json2TTL.py
 
 %changelog
 * Wed Jun 10 2020 victor.kotlyar (at) cern.ch - 0.0-1
