@@ -332,6 +332,7 @@ def generate_step_names(data):
     :returns: None
     :rtype: NoneType
     """
+    ignore_formats = ['LOG', 'TXT']
     output_ds = data.get('output', [])
     if not isinstance(output_ds, list):
         output_ds = [output_ds]
@@ -341,6 +342,8 @@ def generate_step_names(data):
     data['ami_tags_format_step'] = []
     for ds in output_ds:
         data_format = pyDKB.atlas.misc.dataset_data_format(ds)
+        if data_format in ignore_formats:
+            continue
         if ctag:
             data['ctag_format_step'].append(':'.join([ctag, data_format]))
         if tags:
