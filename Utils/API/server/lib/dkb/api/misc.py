@@ -6,11 +6,11 @@ from collections import defaultdict
 def sort_by_prefixes(values, prefixes, default=0):
     """ Classify values by 1-char prefixes.
 
-    Generate hash with prefixes as a keys and lists of values -- as value:
+    Generate hash with prefixes as keys and lists of values -- as values:
     ```
     { prefix: [val1, val2, ...], ... }
     ```
-    If there's no values for some prefix, empty list is set as its value.
+    If there are no values for some prefix, empty list is set as its value.
 
     :raise TypeError:
 
@@ -18,7 +18,7 @@ def sort_by_prefixes(values, prefixes, default=0):
     :type values: list
     :param prefixes: allowed 1-char prefixes
     :type profixes: list
-    :param default: id of the prefix to be used ias default when none
+    :param default: id of the prefix to be used as a default one when none
                     specified. If set to None value without prefix will
                     produce a error.
     :type default: int, NoneType

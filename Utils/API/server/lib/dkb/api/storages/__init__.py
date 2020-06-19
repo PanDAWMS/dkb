@@ -15,7 +15,7 @@ def task_steps_hist(**kwargs):
 
 
 def task_chain(**kwargs):
-    """ Reconstruct task chain form given task ID.
+    """ Reconstruct task chain from given task ID.
 
     :param tid: task ID
     :type tid: int, str

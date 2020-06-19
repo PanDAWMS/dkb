@@ -11,11 +11,11 @@ from common import (ES_DATE_FORMAT,
                     PREFIX_AGGS)
 
 
-# Common functions for ES respomse parsing
+# Common functions for ES response parsing
 # --->
 
 def steps_iterator(data):
-    """ Gerenator for iterator over steps data.
+    """ Generator for iterator over steps data.
 
     Recursively check all buckets within `steps` and `substeps`
     clauses of the ``data``.
