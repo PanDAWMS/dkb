@@ -1,0 +1,15 @@
+[Unit]
+Description=The DKB REST API server
+Requires=data.mount
+After=data.mount
+
+[Service]
+Type=simple
+User=www
+ExecStart=%%WWW_DIR%%/cgi-bin/dkb.fcgi
+KillSignal=SIGQUIT
+TimeoutStopSec=5
+KillMode=process
+
+[Install]
+WantedBy=multi-user.target
