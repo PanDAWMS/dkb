@@ -24,7 +24,7 @@ class StorageClientException(StorageException):
 
 
 class NoDataFound(StorageException):
-    """ Exception indicating that requested data not found. """
+    """ Exception indicating that requested data were not found. """
     code = 552
 
     def __init__(self, storage, message=None):
@@ -35,7 +35,7 @@ class NoDataFound(StorageException):
 
 
 class QueryException(StorageException):
-    """ Exception indicating any failure in query prepatation. """
+    """ Exception indicating any failure in query preparation. """
     code = 560
 
     def __init__(self, details="Query failed"):

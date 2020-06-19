@@ -59,7 +59,7 @@ def task_chain(**kwargs):
 
     If task not found in the ES, raises ``NoDataFound``.
 
-    If for given task no ``chain_id`` found, task ID is used instead.
+    If no ``chain_id`` was found for given task, its taskiID is used instead.
 
     :param tid: task ID
     :type tid: int, str
@@ -367,7 +367,7 @@ def step_stat(selection_params, step_type='step'):
     :rtype: hash
     """
     init()
-    # Aborted/failed/broken/obsolete tasks should be excluded form statistics
+    # Aborted/failed/broken/obsolete tasks should be excluded from statistics
     status = {}
     skip_statuses = ['aborted', 'failed', 'broken', 'obsolete']
     status = selection_params['status'] = selection_params.get('status', {})
