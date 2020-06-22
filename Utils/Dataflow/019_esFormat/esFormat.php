@@ -133,13 +133,13 @@ function getIndex($row) {
   global $ES_INDEX;
   global $DEFAULT_INDEX_ALIAS;
 
-  if (isset($row['_index'])) {
+  if (array_key_exists('_index', $row)) {
     $index_name = $row['_index'];
   } else {
     $index_name = $DEFAULT_INDEX_ALIAS;
   }
 
-  if ($ES_INDEX[$index_name]) {
+  if (array_key_exists($index_name, $ES_INDEX) and $ES_INDEX[$index_name]) {
     $index = $ES_INDEX[$index_name];
   } else {
     $index = $ES_INDEX['default'];
