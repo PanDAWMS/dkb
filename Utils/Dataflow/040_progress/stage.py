@@ -97,7 +97,7 @@ def progress_data(data, granularity=86400):
     rounded_ts_ms = rounded_ts_sec * 10**3
     result['_id'] = '%s_%s' % (rounded_ts_ms, result['taskid'])
     result['_type'] = 'task_progress'
-    result['_index'] = 'production_progress'
+    result['_index'] = 'progress'
 
     return result
 
