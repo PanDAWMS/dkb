@@ -1,5 +1,5 @@
 {
-  "template": "daily_progress*",
+  "template": "*_progress",
   "settings": {
     "number_of_shards": 4
   },
