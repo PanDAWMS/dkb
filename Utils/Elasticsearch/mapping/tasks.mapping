@@ -126,10 +126,10 @@
         "parent_taskname": {
           "type": "text",
           "analyzer": "dsname",
-          "fields" : {
-            "keyword" : {
-              "type" : "keyword",
-              "ignore_above" : 256
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
             },
             "fields": {
               "type": "text",
@@ -239,6 +239,9 @@
         "processed_events": {
           "type": "long"
         },
+        "processed_events_v2": {
+          "type": "long"
+        },
         "phys_category": {
           "type": "keyword",
           "ignore_above": 256
@@ -287,6 +290,9 @@
           "type": "boolean"
         },
         "input_events": {
+          "type": "long"
+        },
+        "input_events_v2": {
           "type": "long"
         },
         "n_files_per_job": {
