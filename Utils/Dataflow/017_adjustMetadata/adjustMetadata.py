@@ -322,7 +322,7 @@ def generate_step_names(data):
     :returns: None
     :rtype: NoneType
     """
-    ignore_formats = ['LOG', 'TXT']
+    ignore_formats = ['LOG']
     output_ds = data.get('output', [])
     if not isinstance(output_ds, list):
         output_ds = [output_ds]
