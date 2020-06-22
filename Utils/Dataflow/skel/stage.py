@@ -10,7 +10,6 @@ Authors:
 
 import os
 import sys
-import traceback
 
 try:
     base_dir = os.path.dirname(__file__)
@@ -27,7 +26,16 @@ except Exception, err:
 
 
 def process(stage, message):
-    """ Single message processing. """
+    """ Single message processing.
+
+    :param stage: ETL processing stage
+    :type stage: pyDKB.dataflow.stage.ProcessorStage
+    :param message: input message with data to be processed
+    :type message: pyDKB.dataflow.communication.messages.JSONMessage
+
+    :returns: True or False in case of failure
+    :rtype: bool
+    """
     data = message.content()
     # Processing machinery
     out_data = {"key": "value"}
@@ -44,25 +52,12 @@ def main(args):
 
     stage.process = process
 
-    exit_code = 0
-    exc_info = None
-    try:
-        stage.configure(args)
-        stage.run()
-    except (DataflowException, RuntimeError), err:
-        if str(err):
-            sys.stderr.write("(ERROR) %s\n" % err)
-        exit_code = 2
-    except Exception:
-        exc_info = sys.exc_info()
-        exit_code = 3
-    finally:
-        stage.stop()
+    stage.configure(args)
 
-    if exc_info:
-        trace = traceback.format_exception(*exc_info)
-        for line in trace:
-            sys.stderr.write("(ERROR) %s" % line)
+    exit_code = stage.run()
+
+    if exit_code == 0:
+        stage.stop()
 
     exit(exit_code)
 
