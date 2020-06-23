@@ -196,7 +196,7 @@
               "ignore_above" : 256
             }
           }
-        }
+        },
         "description": {
           "type": "text"
         },
