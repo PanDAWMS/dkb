@@ -1,0 +1,6 @@
+err_wrapper(){
+  comm=$@
+  processor=${1##*/}
+  $comm 2> >(while read line; do echo -e "$processor: $line" >&2; done)
+}
+
