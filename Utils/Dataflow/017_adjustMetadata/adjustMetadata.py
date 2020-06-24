@@ -209,6 +209,16 @@ def transform_chain_data(data):
     except ValueError, err:
         sys.stderr.write('(WARN) Invalid chain_data item: %s (tid: %s).\n'
                          % (err, data.get('taskid')))
+        taskid = data.get('taskid')
+        if not taskid:
+            sys.stderr.write('(WARN) Task id is missed; skip'
+                             ' transform_chain_data().')
+            return False
+        sys.stderr.write('(INFO) Setting chain_id=%s, chain_data=[%s]'
+                         ' (tid: %s).\n'
+                         % (taskid, taskid, taskid))
+        data['chain_id'] = taskid
+        data['chain_data'] = [taskid]
         return False
     return True
 
