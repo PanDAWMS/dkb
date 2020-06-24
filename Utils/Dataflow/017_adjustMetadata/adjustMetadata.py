@@ -184,7 +184,7 @@ def transform_chain_data(data):
             return False
         sys.stderr.write('(WARN) Task %s: chain_data field is empty.'
                          'Setting chain_id=%s, chain_data=[%s].\n'
-                         % (taskid, chain_data, taskid, taskid))
+                         % (taskid, taskid, taskid))
         data['chain_id'] = taskid
         data['chain_data'] = [taskid]
         return False
