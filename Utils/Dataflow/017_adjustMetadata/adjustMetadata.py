@@ -154,9 +154,14 @@ def input_events(data):
 
 
 def transform_chain_data(data):
-    """ Transform chain_data into array of integers and get chain_id from it.
+    """ Transform chain_data into proper task metadata fields.
 
-    chain_id is the taskid of the task chain's root.
+    New/updated fields:
+      - chain_data:          task IDs of all tasks in chain prior to (and
+                             including) the current one (array of integers);
+      - chain_id:            first task ID in the chain (chain's root);
+      - parent_taskname:     name of the parent task;
+      - parent_total_events: total_events parameter of the parent task.
 
     :param data: data to be updated, must contain proper chain_data
                  (string of numbers separated by commas) or taskid
@@ -170,23 +175,51 @@ def transform_chain_data(data):
                          'non-dict data: %s. Skipping.\n' % str(data))
         return False
     chain_data = data.get('chain_data')
-    if not chain_data or not chain_data.replace(',', '').isdigit():
+    if not chain_data:
         taskid = data.get('taskid')
         if not taskid:
             sys.stderr.write('(WARN) Function transform_chain_data() '
-                             'received data with incorrect chain_data and '
+                             'received data with empty chain_data and '
                              'without taskid: %s. Skipping.\n' % str(data))
             return False
-        sys.stderr.write('(WARN) Task %s: cannot transform chain_data "%s", '
-                         'it seems to be incorrect. Setting chain_id=%s, '
-                         'chain_data=[%s].\n'
-                         % (taskid, chain_data, taskid, taskid))
+        sys.stderr.write('(WARN) Task %s: chain_data field is empty.'
+                         'Setting chain_id=%s, chain_data=[%s].\n'
+                         % (taskid, taskid, taskid))
         data['chain_id'] = taskid
         data['chain_data'] = [taskid]
         return False
-    chain_data = [int(i) for i in chain_data.split(',')]
-    data['chain_id'] = chain_data[0]
-    data['chain_data'] = chain_data
+    chain_items = chain_data.split(',')
+    try:
+        parent_id, parent_name, parent_events = chain_items[-2].split(':')
+        chain_items[-2] = parent_id
+        data['parent_taskname'] = parent_name
+        data['parent_total_events'] = parent_events
+    except IndexError:
+        # No parent (chain root)
+        pass
+    except ValueError:
+        # Invalid parent data
+        sys.stderr.write('(WARN) Invalid parent task data (expected format:'
+                         ' "p_tid:p_name:p_total_events"): %s (tid: %s).\n'
+                         % (chain_items[-2], data.get('taskid')))
+    try:
+        chain_data = [int(i) for i in chain_items]
+        data['chain_id'] = chain_data[0]
+        data['chain_data'] = chain_data
+    except ValueError, err:
+        sys.stderr.write('(WARN) Invalid chain_data item: %s (tid: %s).\n'
+                         % (err, data.get('taskid')))
+        taskid = data.get('taskid')
+        if not taskid:
+            sys.stderr.write('(WARN) Task id is missed; skip'
+                             ' transform_chain_data().')
+            return False
+        sys.stderr.write('(INFO) Setting chain_id=%s, chain_data=[%s]'
+                         ' (tid: %s).\n'
+                         % (taskid, taskid, taskid))
+        data['chain_id'] = taskid
+        data['chain_data'] = [taskid]
+        return False
     return True
 
 

@@ -123,6 +123,23 @@
           "index": false,
           "doc_values": false
         },
+        "parent_taskname": {
+          "type": "text",
+          "analyzer": "dsname",
+          "fields" : {
+            "keyword" : {
+              "type" : "keyword",
+              "ignore_above" : 256
+            },
+            "fields": {
+              "type": "text",
+              "analyzer": "dsname_fields"
+            }
+          }
+        },
+        "parent_total_events": {
+          "type": "long"
+        },
         "taskname" : {
           "type" : "text",
           "analyzer": "dsname",
