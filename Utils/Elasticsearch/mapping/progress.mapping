@@ -16,7 +16,7 @@
         },
         "date": {
           "type": "date",
-          "format": "yyyy-MM-dd HH:mm:ss||epoch_millis"
+          "format": "dd-MM-yy HH:mm:ss||epoch_millis"
         },
         "processed_events": {
           "type": "long"
