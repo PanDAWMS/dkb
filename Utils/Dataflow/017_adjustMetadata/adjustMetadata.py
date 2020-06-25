@@ -157,8 +157,8 @@ def transform_chain_data(data):
     """ Transform chain_data into proper task metadata fields.
 
     New/updated fields:
-      - chain_data:          task IDs of all previous tasks in chain
-                             (array of integers);
+      - chain_data:          task IDs of all tasks in chain prior to (and
+                             including) the current one (array of integers);
       - chain_id:            first task ID in the chain (chain's root);
       - parent_taskname:     name of the parent task;
       - parent_total_events: total_events parameter of the parent task.
