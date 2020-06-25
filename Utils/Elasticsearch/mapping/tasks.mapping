@@ -230,6 +230,9 @@
         "total_events": {
           "type": "long"
         },
+        "total_req_events": {
+          "type": "long"
+        },
         "requested_events": {
           "type": "long"
         },

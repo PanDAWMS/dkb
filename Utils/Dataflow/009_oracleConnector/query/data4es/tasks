@@ -16,7 +16,7 @@
 -- energy_gev, evgen_job_opts, geometry_version, hashtag_list, job_config, physics_list, processed_events,
 -- phys_group, project, pr_id, requested_events, run_number, site, start_time, step_name, status, subcampaign,
 -- taskid, taskname, task_timestamp,  ticket_id, trans_home, trans_path, trans_uses, trigger_config, user_name, vo,
--- n_files_per_job, n_events_per_job, n_files_to_be_used,
+-- n_files_per_job, n_events_per_job, n_files_to_be_used, total_req_events,
 
 -- RESTRICTIONS:
 -- 1. taskID must be more than 4 000 000 OR from the date > 12-03-2014
@@ -36,6 +36,7 @@ with tasks as (
       t.phys_group,
       t.status,
       t.total_events,
+      t.total_req_events,
       t.pr_id,
       t.username as user_name,
       t.primary_input,
