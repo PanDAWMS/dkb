@@ -131,7 +131,15 @@ with tasks as (
       sum(jd.neventsused) OVER (PARTITION BY t.taskid),
       t.total_events) AS processed_events,
     (
-      SELECT LISTAGG(tpt.taskid, ',') WITHIN GROUP(ORDER BY LEVEL DESC)
+      SELECT LISTAGG(
+        tpt.taskid ||
+          CASE
+            WHEN LEVEL = 2 THEN
+              ':' || tpt.taskname || ':' || tpt.total_events
+            ELSE
+              ''
+          END
+        , ',') WITHIN GROUP(ORDER BY LEVEL DESC)
       FROM ATLAS_DEFT.t_production_task tpt JOIN ATLAS_DEFT.t_production_dataset tpd ON tpt.taskid = tpd.taskid
       START WITH tpt.taskid = t.taskid AND ROWNUM = 1 CONNECT BY NOCYCLE PRIOR tpt.primary_input = tpd.name
     ) AS chain_data
