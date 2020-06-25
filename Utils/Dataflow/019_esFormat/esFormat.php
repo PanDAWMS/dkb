@@ -6,7 +6,10 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 set_error_handler("exception_error_handler");
 
 # Default values.
-# ES index where the documents should be indexed/updated.
+# Alias of ES index to be used when input data does not provide one
+$DEFAULT_INDEX_ALIAS = 'tasks';
+# Name of ES index where the documents should be indexed/updated,
+# if unknown alias is used
 $DEFAULT_INDEX = 'tasks_production';
 # End-of-process marker, depending on mode.
 $EOP_DEFAULTS = Array("stream" => chr(0), "file" => "");
@@ -118,6 +121,33 @@ function getAction($row) {
   return $action;
 }
 
+function getIndex($row) {
+  /* Get destination index name for the row.
+
+  :param row: document for which the index should be determined
+  :type row: array
+
+  :return: index name
+  :rtype: str
+  */
+  global $ES_INDEX;
+  global $DEFAULT_INDEX_ALIAS;
+
+  if (array_key_exists('_index', $row)) {
+    $index_name = $row['_index'];
+  } else {
+    $index_name = $DEFAULT_INDEX_ALIAS;
+  }
+
+  if (array_key_exists($index_name, $ES_INDEX) and $ES_INDEX[$index_name]) {
+    $index = $ES_INDEX[$index_name];
+  } else {
+    $index = $ES_INDEX['default'];
+  }
+
+  return $index;
+}
+
 function constructActionJson($row) {
   /* Generate a json with ES bulk API action information for a given document.
 
@@ -143,14 +173,14 @@ function constructActionJson($row) {
   :return: generated action json
   :rtype: array
   */
-  global $ES_INDEX;
   global $UPDATE_RETRIES;
 
   $act = getAction($row);
+  $index = getIndex($row);
 
   $action = Array(
     $act => Array(
-      '_index' => $ES_INDEX,
+      '_index' => $index,
       '_type'  => $row['_type'],
       '_id'    => $row['_id'],
     )
@@ -314,10 +344,11 @@ fwrite(STDERR, "(DEBUG) End-of-message marker: '" . $EOM_MARKER . "' (hex: " . $
 fwrite(STDERR, "(DEBUG) End-of-process marker: '" . $EOP_MARKER . "' (hex: " . $EOP_HEX . ").\n");
 
 
-$ES_INDEX = getenv('ES_INDEX');
-if (!$ES_INDEX) {
-  $ES_INDEX = $DEFAULT_INDEX;
-}
+$ES_INDEX = Array(
+              'tasks' => getenv('ES_INDEX_TASKS'),
+              'progress' => getenv('ES_INDEX_PROGRESS'),
+              'default' => $DEFAULT_INDEX
+            );
 
 # Process data.
 if ($h) {
