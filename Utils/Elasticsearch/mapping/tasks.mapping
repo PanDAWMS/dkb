@@ -189,6 +189,7 @@
           "ignore_above": 256
         },
         "ami_tags": {
+          "type": "text",
           "analyzer": "dsname",
           "fields" : {
             "keyword" : {
