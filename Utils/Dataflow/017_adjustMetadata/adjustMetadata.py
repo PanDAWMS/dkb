@@ -156,7 +156,7 @@ def input_events(data):
 def input_events_v2(data):
     """ Calculate derived value 'input_events_v2'.
 
-    For the first tasks in a chain:
+    For a first task in a chain:
      * total_req_events (if defined);
      * else: primary_input_events (if defined);
      * else: requested_events.
