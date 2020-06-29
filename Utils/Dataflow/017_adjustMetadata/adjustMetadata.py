@@ -322,7 +322,7 @@ def generate_step_names(data):
     - chain of AMI tags + output data format.
 
     The latter is supposed to be the most universal, but initially was used
-    only the first one, then for some cases the second was invened, and...
+    only the first one, then for some cases the second was invented, and...
     ...and there's no good way to make things as they are supposed to be
     all at once. So we need all the possible namings.
 
