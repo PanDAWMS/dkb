@@ -316,7 +316,7 @@ def ami_tags_chain(data):
 def generate_step_names(data):
     """ Add fields with name of step to which task belongs.
 
-    There are different ways to say one step from another:
+    There are different ways to tell one step from another:
     - MC production step name (already exists as 'step_name' field);
     - current AMI tag + output data format;
     - chain of AMI tags + output data format.
