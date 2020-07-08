@@ -343,7 +343,7 @@ def get_offset(offset_storage):
 
 
 def offset_now(tz=None, delay=None):
-    """ Get offset value corresonding to the current moment of time.
+    """ Get offset value corresponding to the current moment of time.
 
     :param tz: time zone name. If not specified, default (globally set)
                time zone is used.
