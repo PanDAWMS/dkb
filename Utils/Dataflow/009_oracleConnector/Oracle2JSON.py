@@ -538,7 +538,7 @@ def process(conn, offset_storage, config):
             # Get outside the configured full interval:
             # need to adjust current interval
             new_offset = full_interval['l'] if reverse else full_interval['r']
-            # and break the loop before next interation
+            # and break the loop before next iteration
             break_loop = True
         if new_offset == offset_date:
             break
