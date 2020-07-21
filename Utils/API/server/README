@@ -81,10 +81,20 @@ For the full list of supported options and commands use:
   ./setup.sh --help
 
 
-There are two main steps of the installation process: building and installaton
-itself.
+The installation process can manage any of the following components:
 
-1. Building replaces some special strings with real values:
+ - WWW application files   -- (-w|-www), (-W|--no-www): managed by default, but
+                                                        can be disabled;
+ - Nginx configuration     -- (-n|--nginx);
+ - Systemd configuration   -- (-S|--service);
+ - SELinux customisaton    -- (--sel): make sure that WWW application execution
+                                       is allowed.
+
+
+There are two main steps of the installation process: building and installaton
+itself. At the building step some special strings in managed files (templates
+of system files and in the application files, listed in .files) are replaced
+with real values:
 
  - %%SOCK%%    -- full path to socket file:
                   - directory is hardcoded ($SOCK_DIR);
@@ -93,15 +103,4 @@ itself.
  - %%WWW_DIR%% -- installation directory for the application (-d|--dest);
  - %%CFG_DIR%% -- directory with app's configuration files (-c|--cfg-dir).
 
-These special strings may be used in the templates of system files and in the
-application files (those listed in .files).
-
-
-2. Installation copies built files to system directories. Can manage (or not)
-   any combination of:
-
- - WWW application files   -- (-w|-www), (-W|--no-www);
- - Nginx configuration     -- (-n|--nginx);
- - Systemd configuration   -- (-S|--service);
- - SELinux customisaton    -- (--sel): make sure that WWW application execution
-                                       is allowed.
+At the installation step built files are copied to system directories.
