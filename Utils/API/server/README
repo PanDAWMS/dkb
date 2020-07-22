@@ -91,7 +91,7 @@ The installation process can manage any of the following components:
                                        is allowed.
 
 
-There are two main steps of the installation process: building and installaton
+There are two main steps of the installation process: building and installation
 itself. At the building step some special strings in managed files (templates
 of system files and in the application files, listed in .files) are replaced
 with real values:
