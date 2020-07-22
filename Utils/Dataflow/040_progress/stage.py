@@ -114,10 +114,16 @@ def process(stage, message):
     :rtype: bool
     """
     data = message.content()
-    out_data = progress_data(data)
-    out_message = JSONMessage(out_data)
-    stage.output(message)
-    stage.output(out_message)
+    try:
+        out_data = progress_data(data)
+    except KeyError:
+        stage.output_error("Invalid input message: %s" % data,
+                           sys.exc_info())
+    else:
+        out_message = JSONMessage(out_data)
+        stage.output(out_message)
+    finally:
+        stage.output(message)
     return True
 
 
