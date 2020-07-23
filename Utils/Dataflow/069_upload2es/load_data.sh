@@ -18,7 +18,7 @@ ES_CONFIG="${base_dir}/../../Elasticsearch/config/es"
 
 verify_ndjson() {
   while read -r json_line; do
-    err=`echo $json_line | jq "." 2>&1 >/dev/null`
+    err=`echo "$json_line" | jq "." 2>&1 >/dev/null`
     [ -n "$err" ] && log WARN "Failed to parse input as JSON ($err): $json_line"
   done
 }
