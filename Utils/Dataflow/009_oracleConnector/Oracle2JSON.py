@@ -343,7 +343,7 @@ def get_offset(offset_storage):
 
 
 def offset_now(tz=None, delay=None):
-    """ Get offset value corresonding to the current moment of time.
+    """ Get offset value corresponding to the current moment of time.
 
     :param tz: time zone name. If not specified, default (globally set)
                time zone is used.
@@ -538,7 +538,7 @@ def process(conn, offset_storage, config):
             # Get outside the configured full interval:
             # need to adjust current interval
             new_offset = full_interval['l'] if reverse else full_interval['r']
-            # and break the loop before next interation
+            # and break the loop before next iteration
             break_loop = True
         if new_offset == offset_date:
             break
