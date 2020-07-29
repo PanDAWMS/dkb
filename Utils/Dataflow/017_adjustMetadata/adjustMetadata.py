@@ -293,6 +293,65 @@ def transform_chain_data(data):
     return True
 
 
+def ami_tags_chain(data):
+    """ Get AMI tags chain from task name.
+
+    :param data: task metadata
+    :type data: dict
+
+    :returns: AMI tags chain,
+              None if input data do not provide enough information
+    :rtype: str, NoneType
+    """
+    taskname = data.get('taskname')
+    try:
+        ami_tags = taskname.split('.')[-1]
+    except AttributeError:
+        # `taskname` is None or something else, but not a string
+        ami_tags = None
+    return ami_tags
+
+
+def generate_step_names(data):
+    """ Add fields with name of step to which task belongs.
+
+    There are different ways to tell one step from another:
+    - MC production step name (already exists as 'step_name' field);
+    - current AMI tag + output data format;
+    - chain of AMI tags + output data format.
+
+    The latter is supposed to be the most universal, but initially only the
+    first one was used, then for some cases the second was invented, and...
+    ...and there's no good way to make things as they are supposed to be
+    all at once. So we need all the possible namings.
+
+    :param data: task metadata (will be altered in place)
+    :type data: dict
+
+    :returns: None
+    :rtype: NoneType
+    """
+    ignore_formats = ['LOG']
+    output_formats = data.get('output_formats', [])
+    if not isinstance(output_formats, list):
+        output_formats = [output_formats]
+    ctag = data.get('ctag')
+    tags = data.get('ami_tags')
+    data['ctag_format_step'] = []
+    data['ami_tags_format_step'] = []
+    for data_format in output_formats:
+        if data_format in ignore_formats:
+            continue
+        if ctag:
+            data['ctag_format_step'].append(':'.join([ctag, data_format]))
+        if tags:
+            data['ami_tags_format_step'].append(':'.join([tags, data_format]))
+    if not data['ctag_format_step']:
+        del data['ctag_format_step']
+    if not data['ami_tags_format_step']:
+        del data['ami_tags_format_step']
+
+
 def process(stage, message):
     """ Single message processing. """
     data = message.content()
@@ -332,6 +391,12 @@ def process(stage, message):
     pr_events = processed_events_v2(data)
     if pr_events is not None:
         data['processed_events_v2'] = pr_events
+    # 8. AMI tags chain
+    ami_tags = ami_tags_chain(data)
+    if ami_tags:
+        data['ami_tags'] = ami_tags
+    # 9. Step names
+    generate_step_names(data)
 
     out_message = JSONMessage(data)
     stage.output(out_message)
