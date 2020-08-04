@@ -56,12 +56,12 @@ Comment:
 The 'output' directory contains following samples (in regular NDJSON format):
 
 * with 2016 data:
-  * tasks2016.ndjson (from 017's 2016 sample)
-  * datasets2016.ndjson (from 095's 2016 sample)
+  * tasks2016.ndjson
+  * datasets2016.ndjson
 
 * with 2018 data:
-  * tasks2018.ndjson (from 017's 2018 sample)
-  * datasets2018.ndjson (from 095's 2018 sample)
+  * tasks2018.ndjson
+  * datasets2018.ndjson
 
 * extra samples:
   * <SAMPLE>.update.ndjson -- same as <SAMPLE>.ndjson, but generated with
