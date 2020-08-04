@@ -10,3 +10,11 @@ Original messages are passed as they are.
 
 Stage's output goes to stage 019, so it must contain meta-fields for ES bulk
 load.
+
+
+2. Samples
+----------
+The 'output' directory contains 2 samples of production tasks metadata:
+
+sample2016.ndjson - 2016 data
+sample2018.ndjson - 2018 data
