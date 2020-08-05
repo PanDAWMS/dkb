@@ -94,6 +94,9 @@ define_stages() {
   # Stage 17
   cmd_17="${base_dir}/../017_adjustMetadata/adjustMetadata.py -m s"
 
+  # Stage 40
+  cmd_40="${base_dir}/../040_progress/stage.py -m s"
+
   # Stage 19
   cfg_19=`get_config "es"`
   cmd_19="${base_dir}/../019_esFormat/run.sh --config $cfg_19"
@@ -228,25 +231,27 @@ ret_code=$?
 [ $ret_code -ne 0 ] && exit $ret_code
 
 # Define entry points for the dataflow branches
-b_91=`branch b_91` && b_17=`branch b_17` \
+b_91=`branch b_91` && b_40=`branch b_40` \
   || exit $?
 
 # Define subchains
 # Source subchain: Oracle Connector
 source_chain() {
-  $cmd_09 | tee $b_17 $b_91
+  $cmd_09 | tee $b_40 $b_91
 }
 
-# Parallel subchains: 17 and 91
-chain_17() {
+# Parallel subchains: 40 and 91
+chain_40() {
   [ -n DEBUG ] \
     && out_91='91_in.out' \
     && out_25='25.out' \
-    && out_16='16.out'
-  cat $b_17 | $cmd_91_in | eop_filter | tee $out_91 \
+    && out_16='16.out' \
+    && out_17='17.out'
+  cat $b_40 | $cmd_91_in | eop_filter | tee $out_91 \
             | $cmd_25 | eop_filter | tee $out_25 \
             | $cmd_16 | eop_filter | tee $out_16 \
-            | $cmd_17 | eop_filter
+            | $cmd_17 | eop_filter | tee $out_17 \
+            | $cmd_40 | eop_filter
 }
 
 chain_91() {
@@ -276,16 +281,16 @@ out=/dev/null
 source_chain > $out &
 
 [ -n "$DEBUG" ] \
-  && out='17.out'
-chain_17 | tee $out | sink_chain b17 &
+  && out='40.out'
+chain_40 | tee $out | sink_chain b40 &
 
 [ -n "$DEBUG" ] \
   && out='95.out'
 chain_91 | tee $out | sink_chain b91 &
 
 ps ax | grep "$cmd_09" | grep -v grep | awk '{print $1 " source"}' >> $pidfile
-for cmd in "$cmd_25" "$cmd_16" "$cmd_17" "$cmd_91_in" "$cmd_91_out" \
-           "$cmd_93" "$cmd_95" "$cmd_19" "$cmd_69"; do
+for cmd in "$cmd_25" "$cmd_16" "$cmd_17" "$cmd_40" "$cmd_91_in" \
+           "$cmd_91_out" "$cmd_93" "$cmd_95" "$cmd_19" "$cmd_69"; do
   ps ax | grep "$cmd" | awk '{print $1}' >> $pidfile
 done
 
