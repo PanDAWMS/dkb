@@ -1,0 +1,15 @@
+{
+  "daily_progress": {
+    "date_histogram": {
+      "field": "date",
+      "interval": "day",
+      "format": "yyyy-MM-dd",
+      "min_doc_count": 1
+    },
+    "aggs": {
+      "processed_events": {
+        "sum": {"field": "processed_events"}
+      }
+    }
+  }
+}
