@@ -294,7 +294,10 @@ def extract_scope(dsn):
       mc15_13TeV:YYY.XXX
 
     :param dsn: full dataset name
-    :return tuple: dataset scope, dataset name
+    :type dsn: str
+
+    :return: dataset scope, dataset name
+    :rtype: tuple
     """
     pos = dsn.find(':')
     if pos > -1:
