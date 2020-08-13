@@ -1,6 +1,9 @@
 err_wrapper(){
   comm=$@
   processor=${1##*/}
-  $comm 2> >(while read line; do echo -e "$processor: $line" >&2; done)
+  varname=${!#}
+  stage=${varname#*_}
+  stage=${stage%_*}
+  $comm 2> >(while read line; do echo -e "Stage $stage, $processor: $line" >&2; done)
 }
 
