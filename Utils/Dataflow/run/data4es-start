@@ -136,6 +136,7 @@ define_stages() {
 # ---
 source $lib/eop_filter
 source $lib/err_wrapper
+source $lib/var_wrapper
 
 # Buffer file name
 get_buffer() {
@@ -235,7 +236,7 @@ b_91=`branch b_91` && b_17=`branch b_17` \
 # Define subchains
 # Source subchain: Oracle Connector
 source_chain() {
-  err_wrapper $cmd_09 | tee $b_17 $b_91
+  err_wrapper $(var_wrapper cmd_09) | tee $b_17 $b_91
 }
 
 # Parallel subchains: 17 and 91
@@ -244,10 +245,10 @@ chain_17() {
     && out_91='91_in.out' \
     && out_25='25.out' \
     && out_16='16.out'
-  cat $b_17 | err_wrapper $cmd_91_in | eop_filter | tee $out_91 \
-            | err_wrapper $cmd_25 | eop_filter | tee $out_25 \
-            | err_wrapper $cmd_16 | eop_filter | tee $out_16 \
-            | err_wrapper $cmd_17 | eop_filter
+  cat $b_17 | err_wrapper $(var_wrapper cmd_91_in) | eop_filter | tee $out_91 \
+            | err_wrapper $(var_wrapper cmd_25) | eop_filter | tee $out_25 \
+            | err_wrapper $(var_wrapper cmd_16) | eop_filter | tee $out_16 \
+            | err_wrapper $(var_wrapper cmd_17) | eop_filter
 }
 
 chain_91() {
@@ -255,9 +256,9 @@ chain_91() {
   [ -n "$DEBUG" ] \
     && out_91='91_out.out' \
     && out_93='93.out'
-  cat $b_91 | err_wrapper $cmd_91_out | eop_filter | tee $out_91 \
-            | err_wrapper $cmd_93 | eop_filter | tee $out_93 \
-            | err_wrapper $cmd_95 | eop_filter
+  cat $b_91 | err_wrapper $(var_wrapper cmd_91_out) | eop_filter | tee $out_91 \
+            | err_wrapper $(var_wrapper cmd_93) | eop_filter | tee $out_93 \
+            | err_wrapper $(var_wrapper cmd_95) | eop_filter
 }
 
 # Sink chain
@@ -265,7 +266,7 @@ sink_chain() {
   [ -n "$DEBUG" ] \
     && cmd="tee 69.$1.inp" \
     || cmd=$cmd_69
-  tr $'\n' $'\x1e' | err_wrapper $cmd_19 | tr -d $'\x1e' | eop_filter | mediator "$1" | err_wrapper $cmd > /dev/null
+  tr $'\n' $'\x1e' | err_wrapper $(var_wrapper cmd_19) | tr -d $'\x1e' | eop_filter | mediator "$1" | err_wrapper $(var_wrapper cmd) > /dev/null
 }
 
 log "Starting process."
