@@ -23,7 +23,7 @@ jobs:
     - name: Install pip packages
       uses: BSFishy/pip-action@v1
       with:
-        packages: Sphinx
+        packages: Sphinx sphinx-apidoc
     
     - name: make
       working-directory: ./Docs
