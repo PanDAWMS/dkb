@@ -67,6 +67,9 @@ class ProcessorStage(AbstractStage):
 
     * List of objects to be "stopped"
         __stoppable
+
+    * The stage will try to process messages in batches of this size.
+        _batch_size
     """
 
     __input_message_type = None
@@ -92,6 +95,7 @@ class ProcessorStage(AbstractStage):
         * ...
         """
         self.__stoppable = []
+        self._batch_size = 1
         super(ProcessorStage, self).__init__(description)
 
     def set_input_message_type(self, Type=None):
@@ -201,6 +205,14 @@ class ProcessorStage(AbstractStage):
         super(ProcessorStage, self).set_default_arguments(**kwargs)
         if ignore_on_skip:
             self._reset_on_skip += kwargs.keys()
+
+    def set_batch_size(self, size):
+        """ Set batch size.
+
+        :param size: size
+        :type size: int
+        """
+        self._batch_size = size
 
     def configure(self, args=None):
         """ Configure stage according to the config parameters.
