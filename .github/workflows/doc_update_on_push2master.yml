@@ -1,0 +1,46 @@
+name: Update documentation after push to master
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Set up Python 2.7
+      uses: actions/setup-python@v2
+      with:
+        python-version: '2.7'
+        architecture: 'x64'
+
+    - name: Get short SHA
+      id: slug
+      run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-7)"
+
+    #https://github.com/marketplace/actions/get-package
+    - name: Install OS packages
+      uses: mstksg/get-package@v1
+      with:
+        apt-get: texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra latexmk
+
+    - name: Install pip packages
+      uses: BSFishy/pip-action@v1
+      with:
+        packages: sphinx
+
+    - name: make
+      working-directory: ./Docs
+      run: make pdf
+
+    #https://github.com/marketplace/actions/create-pull-request
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
+      with:
+        base: master
+        branch: pdf-builds
+        commit-message: Documentation rebuild after ${{ steps.slug.outputs.sha8 }}
+        title: Documentation update after ${{ steps.slug.outputs.sha8 }}
+        body: Automatically rebuild documentation
