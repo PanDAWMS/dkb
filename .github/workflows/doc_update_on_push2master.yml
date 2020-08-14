@@ -18,7 +18,7 @@ jobs:
     - name: Install OS packages
       uses: mstksg/get-package@v1
       with:        
-        apt-get: texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra python3-sphinx
+        apt-get: texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra python2-sphinx
     
     - name: make
       working-directory: ./Docs
