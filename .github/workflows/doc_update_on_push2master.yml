@@ -20,7 +20,7 @@ jobs:
       
     - name: Get short SHA
       id: slug
-      run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
+      run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-7)"
     
     #https://github.com/marketplace/actions/get-package
     - name: Install OS packages
