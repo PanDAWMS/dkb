@@ -1,9 +1,0 @@
-.. _pyDKB.dataflow.communication.messages:
-
-pyDKB.dataflow.communication.messages module
-============================================
-
-.. automodule:: pyDKB.dataflow.communication.messages
-    :members:
-    :undoc-members:
-    :show-inheritance:

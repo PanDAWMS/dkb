@@ -1,9 +1,0 @@
-.. _pyDKB.common.json_utils:
-
-pyDKB.common.json\_utils module
-===============================
-
-.. automodule:: pyDKB.common.json_utils
-    :members:
-    :undoc-members:
-    :show-inheritance:
