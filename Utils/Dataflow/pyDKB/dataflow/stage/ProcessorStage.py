@@ -363,6 +363,10 @@ class ProcessorStage(AbstractStage):
         """ Send EOPMarker to the output stream. """
         self.__output.eop()
 
+    def bnc(self):
+        """ Send BNCMarker to the output stream. """
+        self.__output.bnc()
+
     def flush_buffer(self):
         """ Flush message buffer to the output. """
         self.__output.flush()
