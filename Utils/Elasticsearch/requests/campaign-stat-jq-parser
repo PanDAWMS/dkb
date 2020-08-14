@@ -1,0 +1,39 @@
+{
+  tasks_processing_summary: (
+    .aggregations.steps.buckets |
+      map({
+        (.key) : (
+          {total: .doc_count} +
+          (.status.buckets | 
+            map({(.key) : .doc_count}) |
+            add)
+          )
+      }) |
+      add
+  ),
+  overall_events_processing_summary: (
+    .aggregations.steps.buckets |
+      map({
+        (.key) : {
+          input: .input_events.value,
+          output: .output_events.output_events.value,
+          ratio: (.output_events.output_events.value / .input_events.value)
+        }
+      }) |
+      add
+  ),
+  tasks_updated_24h: (
+    .aggregations.steps.buckets |
+      map({
+        (.key): (
+          .status.buckets | 
+          map({ (.key): {
+            total: .doc_count,
+            updated: .updated_24h.doc_count
+          }}) |
+          add
+        )
+      }) |
+      add
+  )
+}

@@ -1,0 +1,297 @@
+{
+  "took" : 5,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 4,
+    "successful" : 4,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 3814,
+    "max_score" : 0.0,
+    "hits" : [ ]
+  },
+  "aggregations" : {
+    "steps" : {
+      "doc_count_error_upper_bound" : 0,
+      "sum_other_doc_count" : 0,
+      "buckets" : [
+        {
+          "key" : "Simul",
+          "doc_count" : 777,
+          "input_events" : {
+            "value" : 2.43025964E9
+          },
+          "output_events" : {
+            "doc_count" : 777,
+            "output_events" : {
+              "value" : 1.97589412E9
+            }
+          },
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "done",
+                "doc_count" : 632,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              },
+              {
+                "key" : "finished",
+                "doc_count" : 111,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              },
+              {
+                "key" : "aborted",
+                "doc_count" : 30,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              },
+              {
+                "key" : "obsolete",
+                "doc_count" : 3,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              },
+              {
+                "key" : "broken",
+                "doc_count" : 1,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key" : "Deriv",
+          "doc_count" : 758,
+          "input_events" : {
+            "value" : 2.03785E9
+          },
+          "output_events" : {
+            "doc_count" : 758,
+            "output_events" : {
+              "value" : 0.0
+            }
+          },
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "done",
+                "doc_count" : 630,
+                "updated_24h" : {
+                  "doc_count" : 6
+                }
+              },
+              {
+                "key" : "finished",
+                "doc_count" : 117,
+                "updated_24h" : {
+                  "doc_count" : 3
+                }
+              },
+              {
+                "key" : "obsolete",
+                "doc_count" : 11,
+                "updated_24h" : {
+                  "doc_count" : 9
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key" : "Deriv Merge",
+          "doc_count" : 758,
+          "input_events" : {
+            "value" : 2.0673E9
+          },
+          "output_events" : {
+            "doc_count" : 758,
+            "output_events" : {
+              "value" : 0.0
+            }
+          },
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "done",
+                "doc_count" : 630,
+                "updated_24h" : {
+                  "doc_count" : 6
+                }
+              },
+              {
+                "key" : "finished",
+                "doc_count" : 117,
+                "updated_24h" : {
+                  "doc_count" : 3
+                }
+              },
+              {
+                "key" : "obsolete",
+                "doc_count" : 11,
+                "updated_24h" : {
+                  "doc_count" : 9
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key" : "Rec Merge",
+          "doc_count" : 751,
+          "input_events" : {
+            "value" : 2.025718E9
+          },
+          "output_events" : {
+            "doc_count" : 749,
+            "output_events" : {
+              "value" : 2.01062345E9
+            }
+          },
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "done",
+                "doc_count" : 631,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              },
+              {
+                "key" : "finished",
+                "doc_count" : 116,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              },
+              {
+                "key" : "aborted",
+                "doc_count" : 2,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              },
+              {
+                "key" : "obsolete",
+                "doc_count" : 2,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key" : "Reco",
+          "doc_count" : 751,
+          "input_events" : {
+            "value" : 2.0257298E9
+          },
+          "output_events" : {
+            "doc_count" : 751,
+            "output_events" : {
+              "value" : 0.0
+            }
+          },
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "done",
+                "doc_count" : 636,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              },
+              {
+                "key" : "finished",
+                "doc_count" : 111,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              },
+              {
+                "key" : "aborted",
+                "doc_count" : 2,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              },
+              {
+                "key" : "obsolete",
+                "doc_count" : 2,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              }
+            ]
+          }
+        },
+        {
+          "key" : "Merge",
+          "doc_count" : 19,
+          "input_events" : {
+            "value" : 2.928205E7
+          },
+          "output_events" : {
+            "doc_count" : 19,
+            "output_events" : {
+              "value" : 2.874035E7
+            }
+          },
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "finished",
+                "doc_count" : 14,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              },
+              {
+                "key" : "done",
+                "doc_count" : 2,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              },
+              {
+                "key" : "obsolete",
+                "doc_count" : 2,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              },
+              {
+                "key" : "aborted",
+                "doc_count" : 1,
+                "updated_24h" : {
+                  "doc_count" : 0
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
