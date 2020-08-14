@@ -1,0 +1,32 @@
+/* Get data for Gantt chart for production steps with given hashtag.
+
+Parameter values:
+  HASHTAGS_LOWERCASE -- list of hashtags (["mc16e_pa"])
+
+GET <index>/task/_search
+*/
+{
+  "size": 0,
+  "query": {
+    "bool": {
+      "must": [
+        {"terms": {"hashtag_list": %%HASHTAGS_LOWERCASE%%}},
+        {"bool": {"must_not": [{"terms": {"status": ["aborted", "failed", "broken", "obsolete"]}}]}}
+      ]
+    }
+  },
+  "aggs": {
+    "stages": {
+      "terms": {"field": "step_name.keyword"},
+      "aggs": {
+        "gantt_data": {
+          "date_histogram": {
+            "script": "long interval = 86400000; List list = []; for (long i = doc['start_time'].value / interval * interval; i <= doc['end_time'].value; i += interval) { list.add(i); } return list;",
+            "interval": "day",
+            "min_doc_count": 1
+          }
+        }
+      }
+    }
+  }
+}
