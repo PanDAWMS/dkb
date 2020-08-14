@@ -9,6 +9,14 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
+    
+    - name: Set up Python 2.7
+      uses: actions/setup-python@v2
+      with:
+        # Semantic version range syntax or exact version of a Python version
+        python-version: '2.7' 
+        # Optional - x64 or x86 architecture, defaults to x64
+        architecture: 'x64' 
       
     - name: Get short SHA
       id: slug
@@ -18,8 +26,13 @@ jobs:
     - name: Install OS packages
       uses: mstksg/get-package@v1
       with:        
-        apt-get: texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra python2-sphinx
-    
+        apt-get: texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra
+                
+    - name: Install pip packages
+      uses: BSFishy/pip-action@v1
+      with:
+        packages: sphinx
+        
     - name: make
       working-directory: ./Docs
       run: |
