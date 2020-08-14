@@ -38,35 +38,14 @@ jobs:
       run: |
         make clean
         make pdf
-        
-    - name: Create Branch
-      uses: peterjgrainger/action-create-branch@v2.0.0
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:      
-        branch: pdf-builds
-          
-    - name: Add & Commit
-      uses: EndBug/add-and-commit@v4.4.0
-      with:
-        add: ./Docs/build/pdf/DKB.pdf
-        author_name: Doc generating bot
-        message: Documentation rebuild after ${{ steps.slug.outputs.sha8 }}
-        ref: pdf-builds  
-      env:
-        # This is necessary in order to push a commit to the repo
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
-    - name: Checkout to pdf-builds  
-      uses: actions/checkout@v2        
-      with:
-        ref: pdf-builds  
-        
+               
     #https://github.com/marketplace/actions/create-pull-request    
     - name: Create Pull Request
       uses: peter-evans/create-pull-request@v3  
       with:        
         base: i383-test
         branch: pdf-builds
+        commit-message: Documentation rebuild after ${{ steps.slug.outputs.sha8 }}        
         title: Documentation update after ${{ steps.slug.outputs.sha8 }}
         body: Automatically rebuild documentation
      
