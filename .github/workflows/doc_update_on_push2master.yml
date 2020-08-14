@@ -33,9 +33,7 @@ jobs:
 
     - name: make
       working-directory: ./Docs
-      run: |
-        make clean
-        make pdf
+      run: make pdf
 
     #https://github.com/marketplace/actions/create-pull-request
     - name: Create Pull Request
