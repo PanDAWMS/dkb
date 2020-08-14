@@ -1,0 +1,58 @@
+name: Update documentation after push to master
+on:
+  push:
+    branches: [ master, i383-test ]
+
+jobs:  
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      
+    - name: Get short SHA
+      id: slug
+      run: echo "::set-output name=sha8::$(echo ${GITHUB_SHA} | cut -c1-8)"
+    
+    #https://github.com/marketplace/actions/get-package
+    - name: Install OS packages
+      uses: mstksg/get-package@v1
+      with:        
+        apt-get: texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra
+          
+    - name: Install pip packages
+      uses: BSFishy/pip-action@v1
+      with:
+        packages: Sphinx
+    
+    - name: make
+      working-directory: ./Docs
+      run: |
+        make clean
+        make pdf
+        
+    - name: Create Branch
+      uses: peterjgrainger/action-create-branch@v2.0.0
+      with:      
+        branch: pdf-builds
+          
+    - name: Add & Commit
+      uses: EndBug/add-and-commit@v4.4.0
+      with:
+        add: ./Docs/build/pdf/DKB.pdf
+        author_name: Doc generating bot
+        message: Documentation rebuild after ${{ steps.slug.outputs.sha8 }}
+        ref: pdf-builds  
+      env:
+        # This is necessary in order to push a commit to the repo
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Leave this line unchanged
+        
+    #https://github.com/marketplace/actions/create-pull-request    
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3  
+      with:
+        base: pdf-builds
+        branch: i383-test 
+        title: Documentation update after ${{ steps.slug.outputs.sha8 }}
+        body: Automatically rebuild documentation
+     
