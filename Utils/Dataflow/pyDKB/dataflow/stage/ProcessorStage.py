@@ -264,6 +264,9 @@ class ProcessorStage(AbstractStage):
         err = None
         try:
             for msg in self.input():
+                if type(msg) == str:
+                    # Normal processing mode expects no markers.
+                    continue
                 if msg and process(self, msg):
                     self.flush_buffer()
                 else:

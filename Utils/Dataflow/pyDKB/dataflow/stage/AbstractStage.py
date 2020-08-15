@@ -138,6 +138,12 @@ class AbstractStage(LoggableObject):
                           default=None,
                           dest='bnc'
                           )
+        self.add_argument('--end-of-batch', action='store', type=str,
+                          help=u'custom end-of-batch marker\n'
+                          'DEFAULT: \'\'',
+                          default=None,
+                          dest='eob'
+                          )
 
     def _is_flag_option(self, **kwargs):
         """ Check if added argument is a flag option. """
@@ -232,6 +238,9 @@ class AbstractStage(LoggableObject):
 
         if self.ARGS.bnc is None:
             self.ARGS.bnc = ''
+
+        if self.ARGS.eob is None:
+            self.ARGS.eob = ''
 
         if self.ARGS.mode == 'm':
             if 'f' in (self.ARGS.source, self.ARGS.dest):

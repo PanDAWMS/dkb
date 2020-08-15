@@ -10,12 +10,20 @@ import os
 import fcntl
 
 
-def custom_readline(f, newline):
+def custom_readline(f, newline, markers={}):
     """ Read lines with custom line separator.
 
     Construct generator with readline-like functionality:
     with every call of ``next()`` method it will read data from ``f``
-    untill the ``newline`` separator is found; then yields what was read.
+    until the ``newline`` separator is found; then yields what was read.
+    If ``markers`` are supplied, then check for their presence: markers
+    are special strings that can occur:
+    - At the beginning of ``f``.
+    - Immediately after a ``newline``.
+    - Immediately after another marker.
+    If a marker's value is found in such place, its name is yielded instead
+    of another chunk of text and the value is removed. Markers in other
+    places are ignored.
 
     .. warning:: the last line can be incomplete, if the input data flow
       is interrupted in the middle of data writing.
@@ -28,6 +36,8 @@ def custom_readline(f, newline):
     :type f: file
     :param newline: delimeter to be used instead of ``\\n``
     :type newline: str
+    :param markers: markers to look for, {name:value}
+    :type markers: dict
 
     :return: iterable object
     :rtype: generator
@@ -52,6 +62,19 @@ def custom_readline(f, newline):
             chunk = f.read()
             if not chunk:
                 if buf:
+                    if markers:
+                        # Look for markers after last newline.
+                        look_for_markers = True
+                        while look_for_markers:
+                            look_for_markers = False
+                            for name, value in markers.iteritems():
+                                if buf.startswith(value):
+                                    buf = buf[len(value):]
+                                    look_for_markers = True
+                                    while send_not_next:
+                                        send_not_next = yield True
+                                    send_not_next = yield name
+                                    break
                     while send_not_next:
                         # If we are here, the source is not empty for sure:
                         # we have another message to yield
@@ -64,6 +87,20 @@ def custom_readline(f, newline):
             # and (in theory) may provide another message sooner or later
             send_not_next = yield True
         while newline in buf:
+            if markers:
+                # Look for markers before each yielded "line".
+                # This includes start of f.
+                look_for_markers = True
+                while look_for_markers:
+                    look_for_markers = False
+                    for name, value in markers.iteritems():
+                        if buf.startswith(value):
+                            buf = buf[len(value):]
+                            look_for_markers = True
+                            while send_not_next:
+                                send_not_next = yield True
+                            send_not_next = yield name
+                            break
             pos = buf.index(newline) + len(newline)
             while send_not_next:
                 # If we are here, the source is not empty for sure:
