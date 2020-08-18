@@ -105,11 +105,8 @@ define_stages() {
   cfg_69=`get_config "es"`
   cmd_69="${base_dir}/../069_upload2es/load_data.sh --config $cfg_69"
 
-  # Stage 91 (input)
-  cmd_91_in="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s -t i"
-
-  # Stage 91 (output)
-  cmd_91_out="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
+  # Stage 91
+  cmd_91="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
 
   # Stage 93
   cmd_93="${base_dir}/../093_datasetsFormat/datasets_format.py -m s"
@@ -231,37 +228,30 @@ ret_code=$?
 [ $ret_code -ne 0 ] && exit $ret_code
 
 # Define entry points for the dataflow branches
-b_91=`branch b_91` && b_40=`branch b_40` \
-  || exit $?
+b_process=`branch b_process` || exit $?
 
 # Define subchains
 # Source subchain: Oracle Connector
 source_chain() {
-  $cmd_09 | tee $b_40 $b_91
+  $cmd_09 | tee $b_process
 }
 
-# Parallel subchains: 40 and 91
-chain_40() {
-  [ -n DEBUG ] \
-    && out_91='91_in.out' \
+process_chain() {
+  [ -n "$DEBUG" ] \
+    && out_91='91.out' \
     && out_25='25.out' \
     && out_16='16.out' \
-    && out_17='17.out'
-  cat $b_40 | $cmd_91_in | eop_filter | tee $out_91 \
-            | $cmd_25 | eop_filter | tee $out_25 \
-            | $cmd_16 | eop_filter | tee $out_16 \
-            | $cmd_17 | eop_filter | tee $out_17 \
-            | $cmd_40 | eop_filter
-}
-
-chain_91() {
-  out=/dev/null
-  [ -n "$DEBUG" ] \
-    && out_91='91_out.out' \
-    && out_93='93.out'
-  cat $b_91 | $cmd_91_out | eop_filter | tee $out_91 \
-            | $cmd_93 | eop_filter | tee $out_93 \
-            | $cmd_95 | eop_filter
+    && out_17='17.out' \
+    && out_40='40.out' \
+    && out_93='93.out' \
+    && out_95='95.out'
+  cat $b_process | $cmd_91 | eop_filter | tee $out_91 \
+                 | $cmd_25 | eop_filter | tee $out_25 \
+                 | $cmd_16 | eop_filter | tee $out_16 \
+                 | $cmd_17 | eop_filter | tee $out_17 \
+                 | $cmd_40 | eop_filter | tee $out_40 \
+                 | $cmd_93 | eop_filter | tee $out_93 \
+                 | $cmd_95 | eop_filter | tee $out_95
 }
 
 # Sink chain
@@ -281,16 +271,12 @@ out=/dev/null
 source_chain > $out &
 
 [ -n "$DEBUG" ] \
-  && out='40.out'
-chain_40 | tee $out | sink_chain b40 &
-
-[ -n "$DEBUG" ] \
   && out='95.out'
-chain_91 | tee $out | sink_chain b91 &
+process_chain | tee $out | sink_chain from95 &
 
 ps ax | grep "$cmd_09" | grep -v grep | awk '{print $1 " source"}' >> $pidfile
-for cmd in "$cmd_25" "$cmd_16" "$cmd_17" "$cmd_40" "$cmd_91_in" \
-           "$cmd_91_out" "$cmd_93" "$cmd_95" "$cmd_19" "$cmd_69"; do
+for cmd in "$cmd_25" "$cmd_16" "$cmd_17" "$cmd_40" "$cmd_91" \
+           "$cmd_93" "$cmd_95" "$cmd_19" "$cmd_69"; do
   ps ax | grep "$cmd" | awk '{print $1}' >> $pidfile
 done
 
