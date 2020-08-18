@@ -75,21 +75,9 @@ def main(argv):
     stage = pyDKB.dataflow.stage.ProcessorStage()
     stage.set_input_message_type(messageType.JSON)
     stage.set_output_message_type(messageType.JSON)
-    stage.add_argument('-t', '--dataset-type', action='store', type=str,
-                       help=u'Type of datasets to work with: (i)nput'
-                             ' or (o)utput',
-                       nargs='?',
-                       default=OUTPUT,
-                       choices=[INPUT, OUTPUT],
-                       dest='ds_type'
-                       )
 
     stage.configure(argv)
-    if stage.ARGS.ds_type == OUTPUT:
-        stage.process = process_output_ds
-        stage.skip_process = skip_process_output_ds
-    elif stage.ARGS.ds_type == INPUT:
-        stage.process = process_input_ds
+    stage.process = process
     exit_code = stage.run()
 
     if exit_code == 0:
@@ -132,30 +120,71 @@ def get_rucio_client():
     return rucio_client
 
 
-def process_output_ds(stage, message):
+def process(stage, message):
+    """ Process input message (both input and output datasets).
+
+    Output JSON will contain same fields as the input and additional ones:
+
+    ```
+    {
+      "output_dataset": [
+        {"name": ..., "events": ..., "bytes": ..., "deleted": ...},
+        ...
+      ],
+      "input_bytes": ...,
+      "primary_input_events": ...,
+      "primary_input_deleted": ...
+    }
+    ```
+
+    :param stage: Processor stage for which this function is a method
+    :type stage: :py:class:`pyDKB.dataflow.stage.ProcessorStage`
+    :param message: input message to be processed
+    :type message: :py:class:
+                   `pyDKB.dataflow.communication.messages.AbstractMessage`
+
+    :return: processing status: True(success)/False(failure)
+    :rtype: bool
+    """
+    result = process_input_ds(message)
+    output_ds = process_output_ds(message)
+    incompl = result.incomplete()
+    data = result.content()
+    if output_ds:
+        data['output_dataset'] = []
+        for ds in output_ds:
+            incompl |= ds.incomplete()
+            data['output_dataset'].append(ds.content())
+
+    msg = stage.output_message_class()(data)
+    msg.incomplete(incompl)
+
+    stage.output(msg)
+    return True
+
+
+def process_output_ds(message):
     """ Process output datasets from input message.
 
     Generate output JSON document of the following structure:
-        { "datasetname": <DSNAME>
+        { "name": <DSNAME>,
           "deleted": <bool>,
-          "bytes": <...>,
-          ...
-          "_type": "output_dataset",
-          "_parent": <TASKID>,
-          "_id": <DSNAME>
+          "events": <...>,
+          "bytes": <...>
         }
     """
     json_str = message.content()
 
     if not json_str.get(SRC_FIELD[OUTPUT]):
         # Nothing to process; over.
-        return True
+        return None
 
     datasets = json_str[SRC_FIELD[OUTPUT]]
     if type(datasets) != list:
         datasets = [datasets]
 
     mfields = META_FIELDS[OUTPUT]
+    result = []
     for ds_name in datasets:
         incompl = None
         try:
@@ -167,63 +196,16 @@ def process_output_ds(stage, message):
                       logLevel.WARN)
             incompl = True
             ds = {}
-
-        ds['datasetname'] = ds_name
-        ds['taskid'] = json_str.get('taskid')
-        if not add_es_index_info(ds):
-            sys.stderr.write("(WARN) Skip message (not enough info"
-                             " for ES indexing).\n")
-            continue
-        del(ds['taskid'])
-
+        ds['name'] = ds_name
         if not is_data_complete(ds, mfields.values()):
             incompl = True
-
         msg = pyDKB.dataflow.communication.messages.JSONMessage(ds)
         msg.incomplete(incompl)
-        stage.output(msg)
-
-    return True
-
-
-def skip_process_output_ds(stage, message):
-    """ Implementation of `ProcessorStage.skip_process()` method.
-
-    Convert input message (representing task) into a set of messages
-    representing the task output datasets.
-    Each output message contains dataset UID (name) and service fields:
-        { "datasetname": <DSNAME>,
-          "_type": "output_dataset",
-          "_parent": <TASKID>,
-          "_id": <DSNAME>
-        }
-    """
-    json_str = message.content()
-
-    if not json_str.get(SRC_FIELD[OUTPUT]):
-        # Nothing to process; over.
-        return True
-
-    datasets = json_str[SRC_FIELD[OUTPUT]]
-    if type(datasets) != list:
-        datasets = [datasets]
-
-    for dataset in datasets:
-        ds = {'datasetname': dataset}
-        ds['taskid'] = json_str.get('taskid')
-        if not add_es_index_info(ds):
-            sys.stderr.write("(WARN) Skip message (not enough info"
-                             " for ES indexing).\n")
-            continue
-        del(ds['taskid'])
-        out_msg = pyDKB.dataflow.communication.messages.JSONMessage(ds)
-        out_msg.incomplete(True)
-        stage.output(out_msg)
-
-    return True
+        result.append(msg)
+    return result
 
 
-def process_input_ds(stage, message):
+def process_input_ds(message):
     """ Process input dataset from input message.
 
     Add to original JSON fields:
@@ -250,9 +232,7 @@ def process_input_ds(stage, message):
 
     msg = pyDKB.dataflow.communication.messages.JSONMessage(data)
     msg.incomplete(incompl)
-    stage.output(msg)
-
-    return True
+    return(msg)
 
 
 def get_ds_info(dataset, mfields):
@@ -394,28 +374,6 @@ def is_data_complete(data, fields):
     :rtype: bool
     """
     return set(fields).issubset(set(data.keys()))
-
-
-def add_es_index_info(data):
-    """ Update data with required for ES indexing info.
-
-    Add fields:
-      _id => datasetname
-      _type => 'output_dataset'
-      _parent => taskid
-
-    Return value:
-      False -- update failed, skip the record
-      True  -- update successful
-    """
-    if type(data) is not dict:
-        return False
-    if not (data.get('datasetname') and data.get('taskid')):
-        return False
-    data['_id'] = data['datasetname']
-    data['_type'] = 'output_dataset'
-    data['_parent'] = data['taskid']
-    return True
 
 
 if __name__ == '__main__':
