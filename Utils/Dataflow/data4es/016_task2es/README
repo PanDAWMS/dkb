@@ -13,7 +13,7 @@ Add ES-specific service fields to task metadata:
 The 'output' directory contains 2 samples of production data:
 
 sample2016.ndjson - 2016 data (from 025's 2016 sample)
-sample2018.ndjson - 2018 data (from 025's 2018 sample)
+sample2020.ndjson - 2020 data (from 025's 2020 sample)
 
 Also, it contains a consistency checking sample:
 
