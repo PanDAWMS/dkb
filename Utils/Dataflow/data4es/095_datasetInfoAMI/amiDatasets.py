@@ -34,6 +34,9 @@ PHYS_VALUES = [{'ami': 'genFiltEff', 'es': 'gen_filt_eff'},
                {'ami': 'mePDF', 'es': 'me_pdf'},
                ]
 FILTER = ['AOD', 'EVNT', 'HITS']
+# Scope parts - AMI only has data for datasets with scopes that start
+# with something from this list.
+SCOPES = ('mc15', 'mc16')
 
 
 def main(argv):
@@ -186,7 +189,10 @@ def amiPhysValues(data):
     exec_args = ['GetPhysicsParamsForDataset',
                  '--logicalDatasetName=%s' % container]
     scope = pyDKB.atlas.misc.extract_scope_from_dataset_name(container)
-    exec_args.append('-scope=%s' % scope)
+    if scope.startswith(SCOPES):
+        exec_args.append('-scope=%s' % scope)
+    else:
+        return True
     res = ami_client.execute(exec_args, format='json')
     json_str = json.loads(res)
     try:
