@@ -41,9 +41,10 @@ jobs:
       id: mkdiff
       working-directory: ./Docs
       run: |      
-        pdf_diff=$(diff -U1 <(pdftotext -layout ./build/pdf/DKB.pdf.orig /dev/stdout) <(pdftotext -layout ./build/pdf/DKB.pdf /dev/stdout))
-        echo "::set-output name=pdf_diff::${pdf_diff//$'\n'/'%0A'}"
+        pdf_diff=$(diff -U1 <\(pdftotext -layout ./build/pdf/DKB.pdf.orig /dev/stdout\) <\(pdftotext -layout ./build/pdf/DKB.pdf /dev/stdout\))
         rm -f ./build/pdf/DKB.pdf.orig
+        echo "::set-output name=pdf_diff::${pdf_diff//$'\n'/'%0A'}"
+        
 
     #https://github.com/marketplace/actions/create-pull-request
     - name: Create Pull Request
