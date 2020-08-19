@@ -45,8 +45,10 @@ jobs:
         echo "orig=$pdf_text_orig"
         pdf_text_new=$(mktemp pdf_new.XXX)
         echo "new=$pdf_text_new"
-        pdftotext -layout ./DKB.pdf.orig "${pdf_text_orig}"
-        pdftotext -layout ./build/pdf/DKB.pdf "${pdf_text_new}"
+        pdftotext -layout ./DKB.pdf.orig "${pdf_text_orig}" || true
+        ls -al $pdf_text_orig
+        pdftotext -layout ./build/pdf/DKB.pdf "${pdf_text_new}" ||  true
+        ls -al $pdf_text_new
         pdf_diff=$(diff -U1 "${pdf_text_orig}" "${pdf_text_new}")
         echo rm -f ./DKB.pdf.orig
         echo "$pdf_diff"
