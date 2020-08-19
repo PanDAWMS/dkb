@@ -34,3 +34,27 @@ def dataset_data_format(datasetname):
         elif N > 5:
             ds_format = splitted[4]
     return ds_format
+
+
+def extract_scope_from_dataset_name(dsn):
+    """ Extract the first field from the dataset name
+
+    Example:
+      mc15_13TeV.XXX
+      mc15_13TeV:YYY.XXX
+
+    :param dsn: full dataset name
+    :type dsn: str
+
+    :return: dataset scope
+    :rtype: str
+    """
+    pos = dsn.find(':')
+    if pos > -1:
+        result = dsn[:pos]
+    else:
+        scope = dsn.split('.')[0]
+        if dsn.startswith('user') or dsn.startswith('group'):
+            scope = '.'.join(dsn.split('.')[0:2])
+        result = scope
+    return result

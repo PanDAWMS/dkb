@@ -18,6 +18,7 @@ try:
     import pyDKB
     from pyDKB.dataflow import messageType
     from pyDKB.dataflow.exceptions import DataflowException
+    from pyDKB import atlas
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -182,9 +183,11 @@ def amiPhysValues(data):
     if not container:
         return False
     ami_client = get_ami_client()
-    res = ami_client.execute(['GetPhysicsParamsForDataset',
-                              '--logicalDatasetName=%s' % container],
-                             format='json')
+    exec_args = ['GetPhysicsParamsForDataset',
+                 '--logicalDatasetName=%s' % container]
+    scope = pyDKB.atlas.misc.extract_scope_from_dataset_name(container)
+    exec_args.append('-scope=%s' % scope)
+    res = ami_client.execute(exec_args, format='json')
     json_str = json.loads(res)
     try:
         rowset = json_str['AMIMessage'][0]['Result'][0]['rowset']
