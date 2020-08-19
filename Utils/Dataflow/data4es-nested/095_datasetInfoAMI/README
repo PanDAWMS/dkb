@@ -1,0 +1,56 @@
+=============
+* Stage 095 *
+=============
+
+1. Description
+--------------
+Obtain physics parameters' values from AMI and append them to the supplied
+metadata of output datasets.
+
+AMI maintains valid physics parameters only for datasets with the following
+data types/formats:
+   - AOD
+   - EVNT
+   - HITS
+
+Since requesting information from AMI is a very time-consuming process,
+the supplied datasets are filtered by data format - the ones with formats
+mentioned above are included into request to AMI and their metadata are
+updated, while all the others are left unchanged. Request will also include
+datasets with undefined data format (missing 'data_format' field).
+
+2. Requirements
+---------------
+Proper memberships and grid certificate are required to run the stage.
+This includes:
+
+1) Registering in CERN systems (discuss this with your supervisor).
+2) Obtaining a grid certificate (see [1]).
+3) Registering in ATLAS Virtual Organization (see [2]).
+4) Registering on AMI site with the grid certificate (see [3]).
+
+Useful links:
+
+[1] https://ca.cern.ch/ca/
+[2] https://twiki.ific.uv.es/twiki/bin/view/Atlas/AtlasDataProcessingAtIFIC
+[3] https://ami.in2p3.fr/pages/getting-started
+
+3. Running the stage
+--------------------
+Stage can be run as following:
+
+   ./amiDatasets.py --userkey /path/to/key --usercert /path/to/certificate
+   /path/to/file.ndjson
+
+which will process the input file "/path/to/file.ndjson" and save the result
+in a new file "/path/to/file.json". For more information about running the
+stage and its arguments, use:
+
+  ./amiDatasets.py -h
+
+4. Samples
+----------
+The 'output' directory contains 2 samples:
+
+datasets2016.ndjson - 2016 data (from 093's 2016 sample)
+datasets2018.ndjson - 2018 data (from 093's 2018 sample)
