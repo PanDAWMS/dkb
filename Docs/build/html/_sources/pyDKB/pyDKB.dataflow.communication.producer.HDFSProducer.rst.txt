@@ -1,9 +1,0 @@
-.. _pyDKB.dataflow.communication.producer.HDFSProducer:
-
-pyDKB.dataflow.communication.producer.HDFSProducer module
-=========================================================
-
-.. automodule:: pyDKB.dataflow.communication.producer.HDFSProducer
-    :members:
-    :undoc-members:
-    :show-inheritance:

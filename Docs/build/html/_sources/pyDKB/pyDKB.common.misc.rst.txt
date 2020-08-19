@@ -1,9 +1,0 @@
-.. _pyDKB.common.misc:
-
-pyDKB.common.misc module
-========================
-
-.. automodule:: pyDKB.common.misc
-    :members:
-    :undoc-members:
-    :show-inheritance:
