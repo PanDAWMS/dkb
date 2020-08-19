@@ -49,10 +49,13 @@ jobs:
         ls -al $pdf_text_orig
         pdftotext -layout ./build/pdf/DKB.pdf "${pdf_text_new}" ||  true
         ls -al $pdf_text_new
+        echo "Running diff"
+        diff -U1 "${pdf_text_orig}" "${pdf_text_new}"
+        echo "Done"
         pdf_diff=$(diff -U1 "${pdf_text_orig}" "${pdf_text_new}")
         echo "diff is"
         echo "$pdf_diff"
-        echo rm -f ./DKB.pdf.orig
+        echo "rm -f ./DKB.pdf.orig"
         echo "$pdf_diff"
         echo "${pdf_diff/\n/%0A}"
         echo "::set-output name=pdf_diff::${pdf_diff/'\n'/'%0A'}"
