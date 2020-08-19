@@ -1,0 +1,301 @@
+#!/bin/bash -l
+
+SCRIPT_NAME=data4es
+
+BATCH_SIZE=100
+DEBUG=
+IGNORE=
+
+base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
+lib="$base_dir/../shell_lib"
+
+usage() {
+  echo "USAGE
+  $(basename $0) [-hl] [--debug] [-i STAGE...]
+
+  Run 'data4es' process of metadata integration from ATLAS systems (ProdSys,
+  AMI, Rucio, ...) to the DKB Elasticsearch.
+
+OPTIONS
+  -h, --help  show this message and exit
+
+  -l, --list  list known stage IDs and exit
+
+  --debug     do not actualy load integrated metadata to the DKB Elasticsearch
+              (will create files with data flow snapshots, taken between
+              the stages)
+
+  -i, --ignore STAGE...
+
+              ignore stages specified as a comma-separated list
+              in the integration process (stages will be run with '--skip'
+              option)
+" >&2
+}
+
+list_stages() {
+  compgen -A variable | grep 'cmd_' | sed 's/cmd_//' >&1
+}
+
+source $lib/log
+
+# Directories with configuration files
+[ -n "$DATA4ES_CONFIG_PATH" ] && \
+    CONFIG_PATH="$DATA4ES_CONFIG_PATH" || \
+    CONFIG_PATH="${base_dir}/../config:${base_dir}/../../../Elasticsearch/config"
+
+# Process home dir
+[ -n "$DATA4ES_HOME" ] && \
+    HOME_DIR="$DATA4ES_HOME" || \
+    HOME_DIR="${base_dir}/.data4es"
+
+# Service directories and files
+pipe_dir=$HOME_DIR/.pipe
+buffer_dir=$HOME_DIR/.buffer
+pidfile="$HOME_DIR/pid"
+
+# Initialize dataflow process
+init_process() {
+  # Check if process is running
+  DATA4ES_HOME=$HOME_DIR ${base_dir}/data4es-status &>/dev/null
+  [ $? -eq 0 ] && log WARN "Process already running." && return 1
+
+  # Create / clean home directory
+  AUX_FILES="$pidfile"
+  mkdir -p "$HOME_DIR"
+  for f in $AUX_FILES; do
+    rm -rf "$f"
+  done
+
+  # Create aux directories
+  mkdir -p $pipe_dir
+  mkdir -p $buffer_dir
+}
+
+# Define commands to be used as dataflow nodes
+# ---
+
+source $lib/get_config
+
+define_stages() {
+  return_code=0
+
+  # Oracle Connector
+  cmd_09="${base_dir}/../009_oracleConnector/Oracle2JSON.py"
+  cfg_09=`get_config "009.cfg"`
+  cmd_09="$cmd_09 --config $cfg_09"
+
+  # Stage 25
+  cmd_25="${base_dir}/../025_chicagoES/stage.py -m s"
+
+  # Stage 16
+  cmd_16="${base_dir}/../016_task2es/task2es.py -m s"
+
+  # Stage 17
+  cmd_17="${base_dir}/../017_adjustMetadata/adjustMetadata.py -m s"
+
+  # Stage 40
+  cmd_40="${base_dir}/../040_progress/stage.py -m s"
+
+  # Stage 19
+  cfg_19=`get_config "es"`
+  cmd_19="${base_dir}/../019_esFormat/run.sh --config $cfg_19"
+
+  # Stage 69
+  cfg_69=`get_config "es"`
+  cmd_69="${base_dir}/../069_upload2es/load_data.sh --config $cfg_69"
+
+  # Stage 91 (input)
+  cmd_91_in="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s -t i"
+
+  # Stage 91 (output)
+  cmd_91_out="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
+
+  # Stage 93
+  cmd_93="${base_dir}/../093_datasetsFormat/datasets_format.py -m s"
+
+  # Stage 95
+  auth_cfg=`get_config "095.cfg"`
+  cmd_95="${base_dir}/../095_datasetInfoAMI/amiDatasets.py -m s --config $auth_cfg"
+
+  # Adjust stage commands according to IGNORE parameter
+  for s in $IGNORE; do
+    cmd="cmd_${s}"
+    [ -z "${!cmd}" ] \
+      && log ERROR "Unknown stage ID: $s (known IDs: --list)." \
+      && return_code=1 \
+      || eval "cmd_$s='${!cmd} --skip'"
+  done
+
+  if [ -n "$IGNORE" ]; then
+    cmd_19="$cmd_19 --update"
+    log INFO "Stage 19 set to update mode."
+  fi
+
+  return $return_code
+}
+
+# Service (glue) functions
+# ---
+source $lib/eop_filter
+
+# Buffer file name
+get_buffer() {
+  [ -n "$1" ] && name=$1 || name=default
+  echo $buffer_dir/$name
+}
+
+# Flush Sink Connector buffer to STDOUT and reset it
+flush_buffer() {
+  buffer=`get_buffer "$1"`
+  if [ -r "$buffer" ]; then
+    cat $buffer
+    echo -e '\x00'
+    rm -f $buffer
+  fi
+}
+
+# Glue between processing functions and Sink Connector
+# Buffer records and then send them as batch of $BATCH_SIZE
+mediator() {
+  buffer=`get_buffer "$1"`
+  i=0
+  while read -r line; do
+    echo "$line" >> $buffer
+    let i=$i+1
+    let f=$i%$BATCH_SIZE
+    [ $f -eq 0 ] && flush_buffer "$1"
+  done
+  flush_buffer "$1"
+}
+
+# Define dataflow branch (subchain)
+# Create entry point for the branch (named pipe) and return its name
+branch() {
+  [ -z "$1" ] \
+    && log ERROR "branch(): Branch name not specified."\
+    && return 1
+
+  name="$pipe_dir/$1"
+  if [ -e "$name" ]; then
+    [ -p "$name" ] \
+      && { echo $name; return 0; } \
+      || name=`mktemp -u $name.XXXX`
+  fi
+
+  mkfifo $name \
+    || { log ERROR "branch(): Failed to create named pipe for branch $1";
+         return 1; }
+
+  echo $name
+}
+# ---
+
+# Run Dataflow
+# ---
+
+# Parse command line parameters
+while [ -n "$1" ]; do
+  case $1 in
+    -h|--help)
+      usage
+      exit 0;;
+    --debug)
+      DEBUG=1;;
+    -i|--ignore)
+      IGNORE=$(echo "$2" | tr ',' ' ')
+      shift;;
+    -l|--list)
+      define_stages
+      list_stages
+      exit 0;;
+    --)
+      shift
+      break;;
+    -*)
+      log ERROR "Unknown option: $1"
+      usage
+      exit 1;;
+    *)
+      break;;
+  esac
+  shift
+done
+
+# Try to init process and exit if it is already running
+init_process || exit $?
+
+# Define stages and exit if something went wrong
+define_stages
+ret_code=$?
+[ $ret_code -ne 0 ] && exit $ret_code
+
+# Define entry points for the dataflow branches
+b_91=`branch b_91` && b_40=`branch b_40` \
+  || exit $?
+
+# Define subchains
+# Source subchain: Oracle Connector
+source_chain() {
+  $cmd_09 | tee $b_40 $b_91
+}
+
+# Parallel subchains: 40 and 91
+chain_40() {
+  [ -n DEBUG ] \
+    && out_91='91_in.out' \
+    && out_25='25.out' \
+    && out_16='16.out' \
+    && out_17='17.out'
+  cat $b_40 | $cmd_91_in | eop_filter | tee $out_91 \
+            | $cmd_25 | eop_filter | tee $out_25 \
+            | $cmd_16 | eop_filter | tee $out_16 \
+            | $cmd_17 | eop_filter | tee $out_17 \
+            | $cmd_40 | eop_filter
+}
+
+chain_91() {
+  out=/dev/null
+  [ -n "$DEBUG" ] \
+    && out_91='91_out.out' \
+    && out_93='93.out'
+  cat $b_91 | $cmd_91_out | eop_filter | tee $out_91 \
+            | $cmd_93 | eop_filter | tee $out_93 \
+            | $cmd_95 | eop_filter
+}
+
+# Sink chain
+sink_chain() {
+  [ -n "$DEBUG" ] \
+    && cmd="tee 69.$1.inp" \
+    || cmd=$cmd_69
+  tr $'\n' $'\x1e' | $cmd_19 | tr -d $'\x1e' | eop_filter | mediator "$1" | $cmd > /dev/null
+}
+
+log "Starting process."
+t1=`date +%s`
+
+out=/dev/null
+[ -n "$DEBUG" ] \
+  && out='src.out'
+source_chain > $out &
+
+[ -n "$DEBUG" ] \
+  && out='40.out'
+chain_40 | tee $out | sink_chain b40 &
+
+[ -n "$DEBUG" ] \
+  && out='95.out'
+chain_91 | tee $out | sink_chain b91 &
+
+ps ax | grep "$cmd_09" | grep -v grep | awk '{print $1 " source"}' >> $pidfile
+for cmd in "$cmd_25" "$cmd_16" "$cmd_17" "$cmd_40" "$cmd_91_in" \
+           "$cmd_91_out" "$cmd_93" "$cmd_95" "$cmd_19" "$cmd_69"; do
+  ps ax | grep "$cmd" | awk '{print $1}' >> $pidfile
+done
+
+wait
+
+t2=`date +%s`
+let "took=$t2-$t1"
+log "Finished process (took: $took sec)." >&2

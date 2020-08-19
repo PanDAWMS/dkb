@@ -1,0 +1,60 @@
+#!/bin/bash -l
+
+DEBUG=
+
+base_dir=$( cd "$(dirname "$(readlink -f "$0")")"; pwd)
+lib="$base_dir/../shell_lib"
+
+# Directories with configuration files
+[ -n "$DATA4ES_CONSISTENCY_CONFIG_PATH" ] && \
+    CONFIG_PATH="$DATA4ES_CONSISTENCY_CONFIG_PATH" || \
+    CONFIG_PATH="${base_dir}/../config:${base_dir}/../../Elasticsearch/config"
+
+source $lib/get_config
+source $lib/eop_filter
+
+# Oracle
+cfg009=`get_config "consistency009.cfg"`
+cmd_009="$base_dir/../009_oracleConnector/Oracle2JSON.py --config $cfg009"
+
+# Formatting
+cmd_016="$base_dir/../016_task2es/task2es.py -m s"
+
+# ES
+cfg_es=`get_config "es"`
+cmd_071="$base_dir/../071_esConsistency/consistency.py -m s --conf $cfg_es"
+
+while [ -n "$1" ]; do
+  case $1 in
+    --debug)
+      DEBUG=1;;
+    *)
+      break;;
+  esac
+  shift
+done
+
+out_009=/dev/null
+out_016=/dev/null
+out_071=/dev/null
+if [ -n "$DEBUG" ]; then
+  out_009=009.cons.out
+  out_016=016.cons.out
+  out_071=071.cons.out
+  log DEBUG "Transitional output files:
+  $out_009
+  $out_016
+  $out_071"
+fi
+
+# 0      | 1              | 2        | 3          | 4
+# |  5        | 6          | 7
+$cmd_009 | tee "$out_009" | $cmd_016 | eop_filter | tee "$out_016" \
+  |  $cmd_071 | eop_filter | tee "$out_071"
+
+status="${PIPESTATUS[5]}"
+
+[ $status -eq 0 ] && status_info=OK || status_info=FAIL
+log INFO "Consistency check finished, status: $status_info"
+
+exit $status

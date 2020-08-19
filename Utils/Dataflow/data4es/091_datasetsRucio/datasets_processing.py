@@ -294,16 +294,41 @@ def extract_scope(dsn):
       mc15_13TeV:YYY.XXX
 
     :param dsn: full dataset name
-    :return tuple: dataset scope, dataset name
+    :type dsn: str
+
+    :return: dataset scope
+    :rtype: str
     """
     pos = dsn.find(':')
     if pos > -1:
-        result = (dsn[:pos], dsn[(pos + 1):])
+        result = dsn[:pos]
     else:
         scope = dsn.split('.')[0]
         if dsn.startswith('user') or dsn.startswith('group'):
             scope = '.'.join(dsn.split('.')[0:2])
-        result = (scope, dsn)
+        result = scope
+    return result
+
+
+def normalize_dataset_name(dsn):
+    """ Remove an explicitly stated scope from a dataset name.
+
+    According to dataset nomenclature, dataset name cannot include
+    a ':' symbol. If a dataset name is in 'A:B' format, then A,
+    probably, is an explicitly stated scope that should be removed.
+
+    :param dsn: dataset name
+    :type dsn: str
+
+    :return: dataset name without explicit scope,
+             unchanged dataset name if it was already normal
+    :rtype: str
+    """
+    pos = dsn.find(':')
+    if pos > -1:
+        result = dsn[(pos + 1):]
+    else:
+        result = dsn
     return result
 
 
@@ -318,7 +343,8 @@ def get_metadata(dsn, attributes=None):
     :rtype:  dict
     """
     rucio_client = get_rucio_client()
-    scope, dataset = extract_scope(dsn)
+    scope = extract_scope(dsn)
+    dataset = normalize_dataset_name(dsn)
     try:
         metadata = rucio_client.get_metadata(scope=scope, name=dataset)
     except ValueError, err:
