@@ -1,7 +1,7 @@
 name: Update documentation after push to master
 on:
   push:
-    branches: [ master ]
+    branches: [ master, i383-test ]
 
 jobs:
   build:
