@@ -45,7 +45,7 @@ jobs:
         pdf_text_new=$(mktemp pdf_new.XXX)
         pdftotext -layout ./DKB.pdf.orig "${pdf_text_orig}"
         pdftotext -layout ./build/pdf/DKB.pdf "${pdf_text_new}"
-        pdf_diff=$(diff -U1 "${pdf_text_orig}" "${pdf_text_new})"
+        pdf_diff=$(diff -U1 "${pdf_text_orig}" "${pdf_text_new}")
         rm -f ./DKB.pdf.orig
         echo "::set-output name=pdf_diff::${pdf_diff//$'\n'/'%0A'}"
         
