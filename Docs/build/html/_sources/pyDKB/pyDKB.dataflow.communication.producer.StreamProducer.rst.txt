@@ -1,9 +1,0 @@
-.. _pyDKB.dataflow.communication.producer.StreamProducer:
-
-pyDKB.dataflow.communication.producer.StreamProducer module
-===========================================================
-
-.. automodule:: pyDKB.dataflow.communication.producer.StreamProducer
-    :members:
-    :undoc-members:
-    :show-inheritance:

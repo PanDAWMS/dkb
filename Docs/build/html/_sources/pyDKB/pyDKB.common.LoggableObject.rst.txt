@@ -1,9 +1,0 @@
-.. _pyDKB.common.LoggableObject:
-
-pyDKB.common.LoggableObject module
-==================================
-
-.. automodule:: pyDKB.common.LoggableObject
-    :members:
-    :undoc-members:
-    :show-inheritance:
