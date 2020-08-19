@@ -47,6 +47,8 @@ jobs:
         pdftotext -layout ./build/pdf/DKB.pdf "${pdf_text_new}"
         pdf_diff=$(diff -U1 "${pdf_text_orig}" "${pdf_text_new}")
         rm -f ./DKB.pdf.orig
+        echo "$pdf_diff"
+        echo "${pdf_diff/\n/%0A}"
         echo "::set-output name=pdf_diff::${pdf_diff/'\n'/'%0A'}"
         
 
