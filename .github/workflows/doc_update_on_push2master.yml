@@ -46,12 +46,10 @@ jobs:
         pdftotext -layout ./DKB.pdf.orig "${pdf_text_orig}"
         pdftotext -layout ./build/pdf/DKB.pdf "${pdf_text_new}"
         echo "" >> "${pdf_text_orig}"
-        echo "" >> "${pdf_text_new}"
-        diff -U1 "${pdf_text_orig}" "${pdf_text_new}"        
-        echo "exit code is $?"
-        pdf_diff=$(diff -U1 "${pdf_text_orig}" "${pdf_text_new}")        
+        echo "" >> "${pdf_text_new}"        
+        pdf_diff=$(diff -U1 "${pdf_text_orig}" "${pdf_text_new}" || true)        
         echo "S2"
-        rm -f ./DKB.pdf.orig "$pdf_text_orig" "$pdf_text_new" || true
+        rm -f ./DKB.pdf.orig "$pdf_text_orig" "$pdf_text_new" 
         echo "$pdf_diff"
         echo "${pdf_diff/\n/%0A}"
         echo "::set-output name=pdf_diff::${pdf_diff/'\n'/'%0A'}"
