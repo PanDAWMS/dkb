@@ -18,7 +18,7 @@ Uploads ontolody into Virtuoso graph.
 
 DEFAULT (without parameters)
 ----------------------------
-Uploads file ../../DB/Virtuoso/ATLAS.owl to TPU Virtuoso (nosql.tpu.ru:8890), 
+Uploads file ontology/ATLAS.owl to TPU Virtuoso (nosql.tpu.ru:8890), 
 graph <http://nosql.tpu.ru:8890/DAV/home/dba/ATLAS>
 
 
@@ -38,3 +38,9 @@ tools/create_graph.sh
 =====================
 
 Creates Virtuoso graph.
+
+
+tools/ttl
+=========
+
+Tools for TTL generation from data samples.
