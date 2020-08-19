@@ -14,7 +14,7 @@ fi
 
 CLEAR='n'
 
-INPUTFILE="../../DB/Virtuoso/ATLAS.owl"
+INPUTFILE="../ontology/ATLAS.owl"
 
 usage () {
   echo "
