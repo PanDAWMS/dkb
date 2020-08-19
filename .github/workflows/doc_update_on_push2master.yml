@@ -42,7 +42,10 @@ jobs:
     - name: create diff
       id: mkdiff
       working-directory: ./Docs
-      run: |      
+      run: |         
+        pdftotext -layout ./build/pdf/DKB.pdf /dev/stdout
+        pdftotext -layout ${orig_pdf} /dev/stdout
+        echo "original pdf is ${orig_pdf}"     
         pdf_diff=$(diff -U1 <(pdftotext -layout ${orig_pdf} /dev/stdout) <(pdftotext -layout ./build/pdf/DKB.pdf /dev/stdout))
         rm -f ${orig_pdf}
         echo "::set-output name=pdf_diff::${pdf_diff//$'\n'/'%0A'}"
