@@ -24,7 +24,7 @@ jobs:
     - name: Install OS packages
       uses: mstksg/get-package@v1
       with:
-        apt-get: texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra latexmk
+        apt-get: texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra latexmk poppler-utils 
 
     - name: Install pip packages
       uses: BSFishy/pip-action@v1
@@ -33,7 +33,24 @@ jobs:
 
     - name: make
       working-directory: ./Docs
-      run: make pdf
+      run: |
+        cp ./build/pdf/DKB.pdf ./DKB.pdf.orig
+        make pdf      
+    
+    - name: create diff
+      id: mkdiff
+      working-directory: ./Docs
+      run: |     
+        pdf_text_orig=$(mktemp pdf_orig.XXX)        
+        pdf_text_new=$(mktemp pdf_new.XXX)        
+        pdftotext -f 2 -layout ./DKB.pdf.orig "${pdf_text_orig}"
+        pdftotext -f 2 -layout ./build/pdf/DKB.pdf "${pdf_text_new}"
+        echo "" >> "${pdf_text_orig}"
+        echo "" >> "${pdf_text_new}"
+        pdf_diff=$(diff -U1 "${pdf_text_orig}" "${pdf_text_new}" || true)                
+        rm -f ./DKB.pdf.orig "$pdf_text_orig" "$pdf_text_new"         
+        echo "::set-output name=pdf_diff::${pdf_diff//$'\n'/'%0A'}"
+        
 
     #https://github.com/marketplace/actions/create-pull-request
     - name: Create Pull Request
@@ -43,4 +60,9 @@ jobs:
         branch: pdf-builds
         commit-message: Documentation rebuild after ${{ steps.slug.outputs.sha8 }}
         title: Documentation update after ${{ steps.slug.outputs.sha8 }}
-        body: Automatically rebuild documentation
+        body: |
+          Automatically rebuild documentation
+          Diff after first page is:
+          ```diff
+          ${{ steps.mkdiff.outputs.pdf_diff }}}
+          ```
