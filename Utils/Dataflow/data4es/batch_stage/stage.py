@@ -30,6 +30,9 @@ except Exception, err:
 def process(stage, message):
     """ Single message processing. """
     data = message.content()
+    if not isinstance(data, dict):
+        stage.log("Cannot process non-dict data: %s." % data, logLevel.WARN)
+        return False
     # Processing machinery
     if 'df' in data and isinstance(data['df'], (str, unicode)):
         data['df'] = 'processed ' + data['df']
