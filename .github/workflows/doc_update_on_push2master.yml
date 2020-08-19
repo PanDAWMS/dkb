@@ -34,15 +34,17 @@ jobs:
     - name: make
       working-directory: ./Docs
       run: |
-        cp ./build/pdf/DKB.pdf{,.orig}
+        cp ./build/pdf/DKB.pdf ${orig_pdf}
         make pdf
+      env:
+        orig_pdf: ./DKB.pdf.orig 
     
     - name: create diff
       id: mkdiff
       working-directory: ./Docs
       run: |      
-        pdf_diff=$(diff -U1 <\(pdftotext -layout ./build/pdf/DKB.pdf.orig /dev/stdout\) <\(pdftotext -layout ./build/pdf/DKB.pdf /dev/stdout\))
-        rm -f ./build/pdf/DKB.pdf.orig
+        pdf_diff=$(diff -U1 <\(pdftotext -layout ${orig_pdf} /dev/stdout\) <\(pdftotext -layout ./build/pdf/DKB.pdf /dev/stdout\))
+        rm -f ${orig_pdf}
         echo "::set-output name=pdf_diff::${pdf_diff//$'\n'/'%0A'}"
         
 
