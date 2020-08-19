@@ -24,7 +24,7 @@ jobs:
     - name: Install OS packages
       uses: mstksg/get-package@v1
       with:
-        apt-get: texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra latexmk diffpdf
+        apt-get: texlive-latex-base texlive-fonts-recommended texlive-fonts-extra texlive-latex-extra latexmk pdftotext 
 
     - name: Install pip packages
       uses: BSFishy/pip-action@v1
@@ -41,7 +41,7 @@ jobs:
       id: mkdiff
       working-directory: ./Docs
       run: |      
-        pdf_diff=$(diffpdf ./build/pdf/DKB.pdf{.orig,})
+        pdf_diff=$(diff -U1 <(pdftotext -layout ./build/pdf/DKB.pdf.orig /dev/stdout) <(pdftotext -layout ./build/pdf/DKB.pdf /dev/stdout))
         echo "::set-output name=pdf_diff::${pdf_diff//$'\n'/'%0A'}"
         rm -f ./build/pdf/DKB.pdf.orig
 
