@@ -34,15 +34,16 @@ jobs:
     - name: make
       working-directory: ./Docs
       run: |
-        cp Docs/build/pdf/DKB.pdf{,.orig}
+        cp ./build/pdf/DKB.pdf{,.orig}
         make pdf
     
     - name: create diff
       id: mkdiff
+      working-directory: ./Docs
       run: |      
-        pdf_diff=$(diffpdf Docs/build/pdf/DKB.pdf{.orig,})
+        pdf_diff=$(diffpdf ./build/pdf/DKB.pdf{.orig,})
         echo "::set-output name=pdf_diff::${pdf_diff//$'\n'/'%0A'}"
-        rm -f Docs/build/pdf/DKB.pdf.orig
+        rm -f ./build/pdf/DKB.pdf.orig
 
     #https://github.com/marketplace/actions/create-pull-request
     - name: Create Pull Request
