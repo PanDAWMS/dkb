@@ -27,20 +27,32 @@ except Exception, err:
     sys.exit(1)
 
 
-def process(stage, message):
-    """ Single message processing. """
-    data = message.content()
-    if not isinstance(data, dict):
-        stage.log("Cannot process non-dict data: %s." % data, logLevel.WARN)
-        return False
-    # Processing machinery
-    if 'df' in data and isinstance(data['df'], (str, unicode)):
-        data['df'] = 'processed ' + data['df']
-    else:
-        stage.log("Failed to process data %s, required field 'df' not found"
-                  " or contains non-str value." % data, logLevel.WARN)
-    out_message = JSONMessage(data)
-    stage.output(out_message)
+def process(stage, messages):
+    """ Single or batch message processing.
+
+    This form of batch processing is pretty pointless in terms of efficiency:
+    using it will replace, for example, ProcessorStage cycling over 100
+    messages with it cycling over 10 batches, and this stage cycling
+    over 10 messages in each batch. But for testing and illustrative purposes
+    it will do.
+    """
+    if not isinstance(messages, list):
+        messages = [messages]
+    for message in messages:
+        data = message.content()
+        if not isinstance(data, dict):
+            stage.log("Cannot process non-dict data: %s." % data,
+                      logLevel.WARN)
+            continue
+        # Processing machinery
+        if 'df' in data and isinstance(data['df'], (str, unicode)):
+            data['df'] = 'processed ' + data['df']
+        else:
+            stage.log("Failed to process data %s, required field 'df' not"
+                      " found or contains non-str value." % data,
+                      logLevel.WARN)
+        out_message = JSONMessage(data)
+        stage.output(out_message)
     return True
 
 
