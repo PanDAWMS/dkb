@@ -43,8 +43,10 @@ jobs:
       run: |     
         pdf_text_orig=$(mktemp pdf_orig.XXX)        
         pdf_text_new=$(mktemp pdf_new.XXX)        
-        pdftotext -layout ./DKB.pdf.orig "${pdf_text_orig}"
-        pdftotext -layout ./build/pdf/DKB.pdf "${pdf_text_new}"        
+        pdftotext -f 1 -layout ./DKB.pdf.orig "${pdf_text_orig}"
+        pdftotext -f 1 -layout ./build/pdf/DKB.pdf "${pdf_text_new}"
+        echo "" >> "${pdf_text_orig}"
+        echo "" >> "${pdf_text_new}"
         pdf_diff=$(diff -U1 "${pdf_text_orig}" "${pdf_text_new}" || true)                
         rm -f ./DKB.pdf.orig "$pdf_text_orig" "$pdf_text_new"         
         echo "::set-output name=pdf_diff::${pdf_diff//$'\n'/'%0A'}"
@@ -61,6 +63,6 @@ jobs:
         body: |
           Automatically rebuild documentation
           Diff:
-          ```
+          ```diff
           ${{ steps.mkdiff.outputs.pdf_diff }}}
           ```
