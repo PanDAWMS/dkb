@@ -11,8 +11,8 @@ username
 password
 }}}
 
-load_ontology.sh
-================
+tools/load_ontology.sh
+======================
 
 Uploads ontolody into Virtuoso graph.
 
@@ -34,7 +34,7 @@ $FILENAME -G http://$HOST:$PORT/sparql-graph-crud-auth
 --data-urlencode graph=$GRAPH
 
 
-create_graph.sh
-===============
+tools/create_graph.sh
+=====================
 
 Creates Virtuoso graph.
