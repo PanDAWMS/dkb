@@ -58,3 +58,25 @@ def extract_scope_from_dataset_name(dsn):
             scope = '.'.join(dsn.split('.')[0:2])
         result = scope
     return result
+
+
+def normalize_dataset_name(dsn):
+    """ Remove an explicitly stated scope from a dataset name.
+
+    According to dataset nomenclature, dataset name cannot include
+    a ':' symbol. If a dataset name is in 'A:B' format, then A,
+    probably, is an explicitly stated scope that should be removed.
+
+    :param dsn: dataset name
+    :type dsn: str
+
+    :return: dataset name without explicit scope,
+             unchanged dataset name if it was already normal
+    :rtype: str
+    """
+    pos = dsn.find(':')
+    if pos > -1:
+        result = dsn[(pos + 1):]
+    else:
+        result = dsn
+    return result

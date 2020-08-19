@@ -287,28 +287,6 @@ def get_ds_info(dataset, mfields):
     return ds_dict
 
 
-def normalize_dataset_name(dsn):
-    """ Remove an explicitly stated scope from a dataset name.
-
-    According to dataset nomenclature, dataset name cannot include
-    a ':' symbol. If a dataset name is in 'A:B' format, then A,
-    probably, is an explicitly stated scope that should be removed.
-
-    :param dsn: dataset name
-    :type dsn: str
-
-    :return: dataset name without explicit scope,
-             unchanged dataset name if it was already normal
-    :rtype: str
-    """
-    pos = dsn.find(':')
-    if pos > -1:
-        result = dsn[(pos + 1):]
-    else:
-        result = dsn
-    return result
-
-
 def get_metadata(dsn, attributes=None):
     """ Get attribute value from Rucio
 
@@ -321,7 +299,7 @@ def get_metadata(dsn, attributes=None):
     """
     rucio_client = get_rucio_client()
     scope = pyDKB.atlas.misc.extract_scope_from_dataset_name(dsn)
-    dataset = normalize_dataset_name(dsn)
+    dataset = pyDKB.atlas.misc.normalize_dataset_name(dsn)
     try:
         metadata = rucio_client.get_metadata(scope=scope, name=dataset)
     except ValueError, err:

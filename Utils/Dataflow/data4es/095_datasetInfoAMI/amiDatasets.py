@@ -234,7 +234,7 @@ def change_key_names(data):
 def container_name(data):
     """ Retrieve container name from information about dataset.
 
-    The container name is extracted from dataset name by removing
+    The container name is extracted from normalized dataset name by removing
     the '_tid...' part.
 
     :param data: dataset information, must contain 'datasetname' field
@@ -258,6 +258,7 @@ def container_name(data):
     if len(dataset) == 0:
         sys.stderr.write("(WARN) Required field 'datasetname' is empty"
                          " in data: %r\n" % data)
+    dataset = pyDKB.atlas.misc.normalize_dataset_name(dataset)
     return re.sub('_tid(.)+', '', dataset)
 
 
