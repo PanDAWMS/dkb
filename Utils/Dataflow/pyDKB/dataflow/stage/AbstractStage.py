@@ -134,7 +134,7 @@ class AbstractStage(LoggableObject):
                           )
         self.add_argument('--batch-not-complete', action='store', type=str,
                           help=u'custom batch-not-complete marker\n'
-                          'DEFAULT: \'\'',
+                          'DEFAULT: \'BNC\'',
                           default=None,
                           dest='bnc'
                           )
@@ -237,7 +237,7 @@ class AbstractStage(LoggableObject):
                 sys.exit(1)
 
         if self.ARGS.bnc is None:
-            self.ARGS.bnc = ''
+            self.ARGS.bnc = 'BNC'
 
         if self.ARGS.eob is None:
             self.ARGS.eob = ''
