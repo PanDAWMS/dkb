@@ -273,10 +273,6 @@ class ProcessorStage(AbstractStage):
         err = None
         try:
             for msg in self.input():
-                if type(msg) == str:
-                    # Normal processing mode expects no markers.
-                    raise DataflowException("Unexpected marker"
-                                            " received: %s." % msg)
                 if msg and process(self, msg):
                     self.flush_buffer()
                 else:
@@ -378,6 +374,10 @@ class ProcessorStage(AbstractStage):
         Every iteration returns single input message to be processed.
         """
         for r in self.__input:
+            if type(r) == str:
+                # Normal processing mode expects no markers.
+                raise DataflowException("Unexpected marker"
+                                        " received: %s." % r)
             yield r
 
     def output(self, message):
