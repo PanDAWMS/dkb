@@ -266,7 +266,8 @@ class ProcessorStage(AbstractStage):
             for msg in self.input():
                 if type(msg) == str:
                     # Normal processing mode expects no markers.
-                    continue
+                    raise DataflowException("Unexpected marker"
+                                            " received: %s." % msg)
                 if msg and process(self, msg):
                     self.flush_buffer()
                 else:
