@@ -212,6 +212,15 @@ class ProcessorStage(AbstractStage):
         :param size: size
         :type size: int
         """
+        if type(size) != int:
+            self.log("Cannot set batch size to %s: non-integer value." % size,
+                     logLevel.WARN)
+            return False
+        if size < 1:
+            self.log("Cannot set batch size to %d: value must"
+                     " be positive." % size,
+                     logLevel.WARN)
+            return False
         self._batch_size = size
 
     def configure(self, args=None):
