@@ -149,13 +149,16 @@ def process(stage, message):
     data = message.content()
 
     incompl = None
-    input_ds = process_input_ds(data.get(SRC_FIELD[INPUT]))
-    if input_ds:
+    input_ds = process_ds(data.get(SRC_FIELD[INPUT]), INPUT)
+    try:
+        input_ds = input_ds[0]
         if not input_ds.pop('_status'):
             incompl = True
         data.update(input_ds)
+    except (TypeError, IndexError):
+        pass
 
-    output_ds = process_output_ds(data.get(SRC_FIELD[OUTPUT]))
+    output_ds = process_ds(data.get(SRC_FIELD[OUTPUT]), OUTPUT)
     if output_ds:
         data['output_dataset'] = output_ds
         for ds in output_ds:
@@ -169,18 +172,21 @@ def process(stage, message):
     return True
 
 
-def process_output_ds(datasets):
-    """ Process output datasets.
+def process_ds(datasets, ds_type):
+    """ Process datasets.
 
-    Generate output JSON documents of the following structure:
-        { "name": <DSNAME>,
-          "deleted": <bool>,
-          "events": <...>,
-          "bytes": <...>
+    Generate output JSON documents of the following structure (according
+    to ``ds_type``):
+        { "name": <DSNAME>, /* for ds_type == OUTPUT */
+          <deleted>: <bool>,
+          <events>: <...>,
+          <bytes>: <...>
         }
 
     :param datasets: list of DS names
     :type datasets: list
+    :param ds_type: defines processing type (INPUT or OUTPUT)
+    :type ds_type: str
 
     :return: list of documents with DS metadata,
              each with service field ``_status``
@@ -195,7 +201,7 @@ def process_output_ds(datasets):
     if type(datasets) != list:
         datasets = [datasets]
 
-    mfields = META_FIELDS[OUTPUT]
+    mfields = META_FIELDS[ds_type]
     result = []
     for ds_name in datasets:
         status = True
@@ -208,46 +214,13 @@ def process_output_ds(datasets):
                       logLevel.WARN)
             status = False
             ds = {}
-        ds['name'] = ds_name
+        if ds_type == OUTPUT:
+            ds['name'] = ds_name
         if not is_data_complete(ds, mfields.values()):
             status = False
         ds['_status'] = status
         result.append(ds)
     return result
-
-
-def process_input_ds(ds_name):
-    """ Process input dataset from input message.
-
-    Add to original JSON fields:
-     * bytes
-     * deleted
-
-    :param ds_name: dataset name
-    :type ds_name: str
-
-    :return: dataset metadata with service field ``_status``
-             for processing status: successful (True) or failed (False)
-    :rtype: dict
-    """
-    mfields = META_FIELDS[INPUT]
-    status = True
-    ds = None
-    if ds_name:
-        try:
-            ds = get_ds_info(ds_name, mfields)
-        except RucioException, err:
-            stage.log(["Failed to get information"
-                       " from Rucio for: %s." % ds_name,
-                       "Reason: %s." % str(err)],
-                      logLevel.WARN)
-            status = False
-            ds = {}
-        if not is_data_complete(ds, mfields.values()):
-            status = False
-        ds['_status'] = status
-
-    return ds
 
 
 def get_ds_info(dataset, mfields):
