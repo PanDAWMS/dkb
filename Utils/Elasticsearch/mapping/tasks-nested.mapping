@@ -211,7 +211,7 @@
         "core_count": {
           "type": "short"
         },
-        "conditions_tags": {
+        "conditions_tag": {
           "type": "keyword",
           "ignore_above": 2048
         },
