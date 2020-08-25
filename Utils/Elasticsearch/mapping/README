@@ -2,7 +2,25 @@
 * ES mapping *
 ==============
 
-1. Field descriptions
+1. Mappings (templates)
+-----------------------
+
+tasks: template for the main index with tasks metadata.
+       Contains mappings for documents of two types:
+       - task (parent)
+       - output_dataset (child)
+
+progress: template for index with events processing historical data.
+          Contains mapping for documents of type:
+          - task_progress
+
+tasks-nested: 'tasks' template with parent/child relationship replaced
+              with nested field.
+              Contains mapping for documents of type:
+              - task
+
+
+2. Field descriptions
 ---------------------
 
 toths06: CPU resources used by the task. Origins from ChicagoES:
