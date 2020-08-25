@@ -63,12 +63,22 @@ def main(args):
     stage.set_output_message_type(messageType.JSON)
     stage.set_default_arguments(bnc='')
 
+    # Accept batch size from command line.
+    # This is cheating because batch size is supposed to be set by
+    # stage developer, not received from command line (so,
+    # from supervisor). However, this is done in this illustrative
+    # stage to simplify a process of comparing the results of
+    # normal mode and batch mode with different batch sizes.
+    stage.add_argument('-b', action='store', type=int, help='Batch size.',
+                       default=1, dest='bsize')
+
     stage.process = process
 
     exit_code = 0
     exc_info = None
     try:
         stage.configure(args)
+        stage.set_batch_size(stage.ARGS.bsize)
         stage.run()
     except (DataflowException, RuntimeError), err:
         if str(err):
