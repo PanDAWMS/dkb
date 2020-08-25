@@ -397,6 +397,8 @@ def process(stage, message):
         data['ami_tags'] = ami_tags
     # 9. Step names
     generate_step_names(data)
+    # 10. Remove not needed fields
+    data.pop('output', None)
 
     out_message = JSONMessage(data)
     stage.output(out_message)
