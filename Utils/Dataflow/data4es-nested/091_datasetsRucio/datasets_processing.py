@@ -152,12 +152,12 @@ def process(stage, message):
     if not process_input_ds(data):
         incompl = True
 
-    output_ds = process_output_ds(message)
+    output_ds = process_output_ds(data.get(SRC_FIELD[OUTPUT]))
     if output_ds:
-        data['output_dataset'] = []
+        data['output_dataset'] = output_ds
         for ds in output_ds:
-            incompl |= ds.incomplete()
-            data['output_dataset'].append(ds.content())
+            if not ds.pop('_status', True):
+                incompl = True
 
     msg = stage.output_message_class()(data)
     msg.incomplete(incompl)
@@ -166,45 +166,50 @@ def process(stage, message):
     return True
 
 
-def process_output_ds(message):
-    """ Process output datasets from input message.
+def process_output_ds(datasets):
+    """ Process output datasets.
 
-    Generate output JSON document of the following structure:
+    Generate output JSON documents of the following structure:
         { "name": <DSNAME>,
           "deleted": <bool>,
           "events": <...>,
           "bytes": <...>
         }
-    """
-    json_str = message.content()
 
-    if not json_str.get(SRC_FIELD[OUTPUT]):
+    :param datasets: list of DS names
+    :type datasets: list
+
+    :return: list of documents with DS metadata,
+             each with service field ``_status``
+             representing processing status -- if it
+             was successful (True) or failed (False)
+    :rtype: list
+    """
+    if not datasets:
         # Nothing to process; over.
         return None
 
-    datasets = json_str[SRC_FIELD[OUTPUT]]
     if type(datasets) != list:
         datasets = [datasets]
 
     mfields = META_FIELDS[OUTPUT]
     result = []
     for ds_name in datasets:
-        incompl = None
+        status = True
         try:
             ds = get_ds_info(ds_name, mfields)
         except RucioException, err:
-            stage.log(["Mark message as incomplete (failed to get information"
-                       " from Rucio for: %s)." % ds_name,
+            stage.log(["Failed to get information"
+                       " from Rucio for: %s." % ds_name,
                        "Reason: %s." % str(err)],
                       logLevel.WARN)
-            incompl = True
+            status = False
             ds = {}
         ds['name'] = ds_name
         if not is_data_complete(ds, mfields.values()):
-            incompl = True
-        msg = pyDKB.dataflow.communication.messages.JSONMessage(ds)
-        msg.incomplete(incompl)
-        result.append(msg)
+            status = False
+        ds['_status'] = status
+        result.append(ds)
     return result
 
 
