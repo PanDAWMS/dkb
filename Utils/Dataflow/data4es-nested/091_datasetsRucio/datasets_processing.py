@@ -149,8 +149,11 @@ def process(stage, message):
     data = message.content()
 
     incompl = None
-    if not process_input_ds(data):
-        incompl = True
+    input_ds = process_input_ds(data.get(SRC_FIELD[INPUT]))
+    if input_ds:
+        if not input_ds.pop('_status'):
+            incompl = True
+        data.update(input_ds)
 
     output_ds = process_output_ds(data.get(SRC_FIELD[OUTPUT]))
     if output_ds:
@@ -213,22 +216,23 @@ def process_output_ds(datasets):
     return result
 
 
-def process_input_ds(data):
+def process_input_ds(ds_name):
     """ Process input dataset from input message.
 
     Add to original JSON fields:
      * bytes
      * deleted
 
-    :param data: task metadata (updated in-place)
-    :type data: dict
+    :param ds_name: dataset name
+    :type ds_name: str
 
-    :return: processing status: successful (True) or failed (False)
-    :rtype: bool
+    :return: dataset metadata with service field ``_status``
+             for processing status: successful (True) or failed (False)
+    :rtype: dict
     """
     mfields = META_FIELDS[INPUT]
-    ds_name = data.get(SRC_FIELD[INPUT])
     status = True
+    ds = None
     if ds_name:
         try:
             ds = get_ds_info(ds_name, mfields)
@@ -239,11 +243,11 @@ def process_input_ds(data):
                       logLevel.WARN)
             status = False
             ds = {}
-        data.update(ds)
-        if not is_data_complete(data, mfields.values()):
+        if not is_data_complete(ds, mfields.values()):
             status = False
+        ds['_status'] = status
 
-    return status
+    return ds
 
 
 def get_ds_info(dataset, mfields):
