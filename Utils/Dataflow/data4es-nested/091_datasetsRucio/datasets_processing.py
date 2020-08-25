@@ -146,10 +146,13 @@ def process(stage, message):
     :return: processing status: True(success)/False(failure)
     :rtype: bool
     """
-    result = process_input_ds(message)
+    data = message.content()
+
+    incompl = None
+    if not process_input_ds(data):
+        incompl = True
+
     output_ds = process_output_ds(message)
-    incompl = result.incomplete()
-    data = result.content()
     if output_ds:
         data['output_dataset'] = []
         for ds in output_ds:
@@ -205,34 +208,37 @@ def process_output_ds(message):
     return result
 
 
-def process_input_ds(message):
+def process_input_ds(data):
     """ Process input dataset from input message.
 
     Add to original JSON fields:
      * bytes
      * deleted
+
+    :param data: task metadata (updated in-place)
+    :type data: dict
+
+    :return: processing status: successful (True) or failed (False)
+    :rtype: bool
     """
-    data = message.content()
     mfields = META_FIELDS[INPUT]
     ds_name = data.get(SRC_FIELD[INPUT])
-    incompl = None
+    status = True
     if ds_name:
         try:
             ds = get_ds_info(ds_name, mfields)
         except RucioException, err:
-            stage.log(["Mark message as incomplete (failed to get information"
-                       " from Rucio for: %s)." % ds_name,
+            stage.log(["Failed to get information"
+                       " from Rucio for: %s." % ds_name,
                        "Reason: %s." % str(err)],
                       logLevel.WARN)
-            incompl = True
+            status = False
             ds = {}
         data.update(ds)
         if not is_data_complete(data, mfields.values()):
-            incompl = True
+            status = False
 
-    msg = pyDKB.dataflow.communication.messages.JSONMessage(data)
-    msg.incomplete(incompl)
-    return(msg)
+    return status
 
 
 def get_ds_info(dataset, mfields):
