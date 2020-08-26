@@ -47,7 +47,16 @@
   "mappings": {
     "task": {
       "properties": {
-        "cloud": {
+        "site": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword",
+              "ignore_above": 256
+            }
+          }
+        },
+         "cloud": {
           "type": "text",
           "fields": {
             "keyword": {
