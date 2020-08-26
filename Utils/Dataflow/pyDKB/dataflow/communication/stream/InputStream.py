@@ -24,10 +24,14 @@ class InputStream(Stream):
         """ Configure instance. """
         super(InputStream, self).configure(config)
         self.markers = {}
-        for name in self.marker_names:
-            value = config.get(name)
-            if value:
-                self.markers[name] = value
+        # If batch size is 1, meaning non-batch mode will be used, then
+        # markers are unnecessary (and even can be a hindrance by forcing
+        # usage of custom_readline() without need).
+        if config.get('bsize', 1) > 1:
+            for name in self.marker_names:
+                value = config.get(name)
+                if value:
+                    self.markers[name] = value
 
     def __iter__(self):
         """ Initialize iteration. """
