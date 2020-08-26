@@ -140,7 +140,7 @@ class AbstractStage(LoggableObject):
                           )
         self.add_argument('--end-of-batch', action='store', type=str,
                           help=u'custom end-of-batch marker\n'
-                          'DEFAULT: \'\'',
+                          'DEFAULT: \'EOB\'',
                           default=None,
                           dest='eob'
                           )
@@ -240,7 +240,7 @@ class AbstractStage(LoggableObject):
             self.ARGS.bnc = 'BNC'
 
         if self.ARGS.eob is None:
-            self.ARGS.eob = ''
+            self.ARGS.eob = 'EOB'
 
         if self.ARGS.mode == 'm':
             if 'f' in (self.ARGS.source, self.ARGS.dest):
