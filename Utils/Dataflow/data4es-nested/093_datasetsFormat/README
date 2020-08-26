@@ -1,0 +1,25 @@
+=============
+* Stage 093 *
+=============
+
+1. Description
+--------------
+Update dataset metadata:
+* add "data_format" field (field value type: list)
+
+
+2. Input
+--------
+Comes from stage 040.
+
+
+3. Output
+---------
+Same as input, with additional field(s).
+
+4. Samples
+----------
+The 'output' directory contains 2 samples of production data:
+
+  sample2016.ndjson - 2016 data (from 040's 2016 sample)
+  sample2020.ndjson - 2020 data (from 040's 2020 sample)

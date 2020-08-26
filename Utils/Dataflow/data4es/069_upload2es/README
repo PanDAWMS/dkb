@@ -1,0 +1,23 @@
+============
+* Stage 69 *
+============
+
+Description
+-----------
+Uploads prepared data to ElasticSearch.
+
+Input
+-----
+...comes from Stage 19 (oracle2esFormat).
+JSON documents, one per line:
+{{{
+<index info>
+<data>
+<index info>
+<data>
+...
+}}}
+
+TODO
+----
+Make the stage aware of EOProcess/EOMessage markers

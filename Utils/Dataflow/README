@@ -68,6 +68,13 @@ output one according to a set of rules common for all the stages.
    /Docs/
 
 
+./000_kafka/
+
+-- Kafka (v.2.11-0.11.0.1) library (and utils) for DF management:
+   * buildind DFs out of stages;
+   * stages supervising.
+
+
 3. Other directories
 --------------------
 
@@ -79,25 +86,19 @@ output one according to a set of rules common for all the stages.
   pyDKB/    -- tests for main pyDKB usage scenarios;
   utils/    -- misc tools
 
-./XXX_StageName/
-          -- Dataflow stage (see below).
-             Stages are named with three leading digits (XXX), usually referred
-             to as stage ID. But the number assignment logic is long gone, so
-             it's safe to think about them simply as unique IDs.
+./DFname/ -- isolated dataflow
+  XXX_StageName/
+            -- Dataflow stage (see below).
+               Stages are named with three leading digits (XXX), usually
+               referred to as stage ID. But the number assignment logic is long
+               gone, so it's safe to think about them simply as unique IDs.
 
 
-======================
-* Stages description *
-======================
+====================
+* Dataflows stages *
+====================
 
-               Supervisor Stages
----------------------------------------------------
-#       Name                           Description
----------------------------------------------------
-0.0     000_kafka                      Dataflow managing Kafka applications
-
-
-           Document analysis Stages
+     docs4virtuoso (Document analysis Stages)
 ---------------------------------------------------
 #       Name                           Description
 ---------------------------------------------------
@@ -115,7 +116,7 @@ output one according to a set of rules common for all the stages.
 6.0     060_upload2virtuoso            Upload data to Virtuoso
 
 
-     Task and DS metadata integration Stages
+ data4es (Task and DS metadata integration Stages)
 ---------------------------------------------------
 #       Name                           Description
 ---------------------------------------------------
@@ -139,8 +140,8 @@ output one according to a set of rules common for all the stages.
 =========================
 
 
-1. Document analysis
---------------------
+1. docs4virtuoso (Document analysis)
+------------------------------------
 
 010 --> 015 --> *                    | Get papers and supporting docs metadata
                                      |
@@ -154,8 +155,8 @@ output one according to a set of rules common for all the stages.
     ** ---> 060                      | Upload prepared metadata to Virtuoso
 
 
-2. Tasks and data samples (DS) metadata integration (ProdSys2)
---------------------------------------------------------------
+2. data4es (Tasks and data samples (DS) metadata integration (ProdSys2))
+------------------------------------------------------------------------
 
 009 ---> *                                | Get task metadata from ProdSys2 DB
                                           |
@@ -167,8 +168,21 @@ output one according to a set of rules common for all the stages.
   *** ----> 019 -> 069                    | Prepare and upload metadata to ES
 
 
-3. Tasks metadata consistency check
------------------------------------
+3. data4es-nested (data4es adapted for a new ES storage scheme)
+------------------------------------------------------------------------
+
+009 ---> *                                | Get task metadata from ProdSys2 DB
+                                          |
+  * -> 091 -> 025 -> 016 -> 017 -> **     | Append task metadata with that from
+                        ** -> 040 -> ***  |   Rucio and Chicago ES
+                                          |
+  *** -> 093 -> 095 -> ****               | Get DS metadata from AMI
+                                          |
+  **** -> 019 -> 069                      | Prepare and upload metadata to ES
+
+
+4. data4es (Tasks metadata consistency check)
+---------------------------------------------
 
 009 ---> 016 ---> 071
 

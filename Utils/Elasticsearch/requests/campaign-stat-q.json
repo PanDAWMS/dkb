@@ -1,0 +1,53 @@
+/* Campaign processing summary.
+
+For now tasks are selected by (fixed set of) PR_IDs, but for real-life usage
+this part should be reconsidered.
+
+GET /production_tasks/task/_search?pretty
+*/
+{
+  "size": 0,
+  "query": {
+    "terms": {
+      "pr_id": [ 11035, 11034, 11048, 11049, 11050, 11051,
+                 11052, 11198, 11197, 11222, 11359 ]
+    }
+  },
+  "aggs": {
+    "steps": {
+      "terms": {
+        "field": "step_name.keyword",
+        "size": 20
+      },
+      "aggs": {
+        "status": {
+          "terms": {
+            "field": "status",
+            "size": 20
+          },
+          "aggs": {
+            "updated_24h": {
+              "filter": {
+                "range": {
+/*                  "task_timestamp": {"gte": "now-1d"} */
+                  "task_timestamp": {"gte": "20-12-2018 00:00:00"}
+                }
+              }
+            }
+          }
+        },
+        "input_events": {
+          "sum": {"field": "requested_events"}
+        },
+        "output_events": {
+          "children": {"type": "output_dataset"},
+          "aggs": {
+            "output_events": {
+              "sum": {"field": "events"}
+            }
+          }
+        }
+      }
+    }
+  }
+}

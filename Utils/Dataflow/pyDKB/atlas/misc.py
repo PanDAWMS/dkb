@@ -12,7 +12,7 @@ def dataset_data_format(datasetname):
         mcNN_subProject.datasetNumber.physicsShort.prodStep.dataType.Version
     for Real Data:
         DataNN_subProject.runNumber.streamName.prodStep.dataType.Version
-    In both cases the dataType filed is required.
+    In both cases the dataType field is required.
 
     :param datasetname: dataset name
     :type datasetname: str
