@@ -61,6 +61,7 @@ def main(args):
     stage = ProcessorStage()
     stage.set_input_message_type(messageType.JSON)
     stage.set_output_message_type(messageType.JSON)
+    stage.set_default_arguments(bnc='')
 
     stage.process = process
 
