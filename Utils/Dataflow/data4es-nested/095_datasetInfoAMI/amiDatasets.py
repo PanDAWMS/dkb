@@ -145,17 +145,8 @@ def process(stage, message):
         return False
     datasets = data.get('output_dataset', [])
     for ds in datasets:
-        # 'data_format' field contains a list of strings,
-        # e.g. ['DAOD_SUSY5', 'DAOD']
-        formats = ds.get('data_format', [])
-        update = False
-        for f in formats:
-            if f in FILTER:
-                update = True
-        # Update data with information from AMI only if
-        # 'data_format' list contains one of the allowed formats
-        # or not set at all.
-        if update or not formats:
+        ds_format = ds.get('data_format')
+        if ds_format in FILTER or not ds_format:
             try:
                 amiPhysValues(ds)
             except DataflowException:
