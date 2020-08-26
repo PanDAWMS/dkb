@@ -42,40 +42,10 @@ def process(stage, message):
     msg = message.content()
     datasets = msg.get('output_dataset', [])
     for ds in datasets:
-        ds['data_format'] = dataset_format(ds.get('name'))
+        ds['data_format'] = atlas.misc.dataset_data_format(ds.get('name'))
     stage.output(pyDKB.dataflow.communication.messages.JSONMessage(msg))
 
     return True
-
-
-def dataset_format(datasetname):
-    """
-    Extract data format from datasetname
-    According to dataset naming nomenclature:
-    https://dune.bnl.gov/w/images/9/9e/Gen-int-2007-001_%28NOMENCLATURE%29.pdf
-    for MC datasets:
-        mcNN_subProject.datasetNumber.physicsShort.prodStep.dataType.Version
-    for Real Data:
-        DataNN_subProject.runNumber.streamName.prodStep.dataType.Version
-    In both cases the dataType filed is required.
-
-    In case of complex data formats, like 'DAOD_SUSY5',
-    the field is splitted by '_' and returns it's full name
-    and first part ('DAOD'), defining the general name of the data format.
-
-    :param datasetname:
-    :return: list
-    """
-    if not datasetname:
-        return None
-    ds_format = pyDKB.atlas.misc.dataset_data_format(datasetname)
-    if ds_format and re.match(r'\w+_\w+', ds_format) is not None:
-        result = [ds_format, ds_format.split('_')[0]]
-    elif ds_format:
-        result = [ds_format]
-    else:
-        result = []
-    return result
 
 
 if __name__ == '__main__':

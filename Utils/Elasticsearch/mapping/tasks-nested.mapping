@@ -371,8 +371,14 @@
               "type": "boolean"
             },
             "data_format": {
-              "type": "keyword",
-              "ignore_above": 256
+              "type": "text",
+              "analyzer": "dsname",
+              "fields": {
+                "keyword": {
+                  "type": "keyword",
+                  "ignore_above": 256
+                }
+              }
             },
             "k_factor": {
               "type": "double"
