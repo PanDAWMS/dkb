@@ -11,6 +11,7 @@ Transform task metadata to fit ES scheme:
 * split dot-separated 'output_formats' to the actual list structure
 * extract 'chain_id' from 'chain_data' and turn the latter into array
   of integers
+* remove no longer needed field 'output'
 
 2. Samples
 ----------
