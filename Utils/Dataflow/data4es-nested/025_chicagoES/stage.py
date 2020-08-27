@@ -151,13 +151,16 @@ def get_indices_by_interval(start_time, end_time, prefix='jobs_archive_',
                      number of indices in the result list)
     :type wildcard: bool
 
-    :returns: indices for dates between specified times; if start or end
+    :returns: indices for dates between specified times; if start
               time is not specified, default wildcard-appended index
               is returned
     :rtype: list
     """
-    if not start_time or not end_time:
+    if not start_time:
         return [prefix + '*']
+    if not end_time:
+        # Use current time to limit index names
+        end_time = datetime.datetime.now()
     d_format = '%Y-%m-%d'
     delta = datetime.timedelta(days=1)
     if (end_time - start_time).days > 30:
