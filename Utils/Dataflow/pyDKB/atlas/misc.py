@@ -36,7 +36,7 @@ def dataset_data_format(datasetname):
     return ds_format
 
 
-def extract_scope_from_dataset_name(dsn):
+def dataset_scope(dsn):
     """ Extract the first field from the dataset name
 
     Example:

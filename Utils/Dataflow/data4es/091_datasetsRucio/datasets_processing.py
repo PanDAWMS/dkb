@@ -298,7 +298,7 @@ def get_metadata(dsn, attributes=None):
     :rtype:  dict
     """
     rucio_client = get_rucio_client()
-    scope = pyDKB.atlas.misc.extract_scope_from_dataset_name(dsn)
+    scope = pyDKB.atlas.misc.dataset_scope(dsn)
     dataset = pyDKB.atlas.misc.normalize_dataset_name(dsn)
     try:
         metadata = rucio_client.get_metadata(scope=scope, name=dataset)

@@ -185,7 +185,7 @@ def amiPhysValues(data):
     container = container_name(data)
     if not container:
         return False
-    scope = pyDKB.atlas.misc.extract_scope_from_dataset_name(container)
+    scope = pyDKB.atlas.misc.dataset_scope(container)
     if not scope.startswith(SCOPES):
         return True
     ami_client = get_ami_client()
