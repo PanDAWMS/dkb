@@ -186,14 +186,13 @@ def amiPhysValues(data):
     if not container:
         return False
     ami_client = get_ami_client()
-    exec_args = ['GetPhysicsParamsForDataset',
-                 '--logicalDatasetName=%s' % container]
     scope = pyDKB.atlas.misc.extract_scope_from_dataset_name(container)
-    if scope.startswith(SCOPES):
-        exec_args.append('-scope=%s' % scope)
-    else:
+    if not scope.startswith(SCOPES):
         return True
-    res = ami_client.execute(exec_args, format='json')
+    res = ami_client.execute(['GetPhysicsParamsForDataset',
+                              '--logicalDatasetName=%s' % container,
+                              '-scope=%s' % scope],
+                             format='json')
     json_str = json.loads(res)
     try:
         rowset = json_str['AMIMessage'][0]['Result'][0]['rowset']
