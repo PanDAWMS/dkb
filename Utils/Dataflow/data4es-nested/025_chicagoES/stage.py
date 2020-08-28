@@ -201,9 +201,10 @@ def get_indices_by_interval(start_time, end_time, index='jobs',
     end = end_time.date()
     cur = beg
     result = []
-    while cur <= end + delta - datetime.timedelta(days=1):
+    while cur < end:
         result += [prefix + cur.strftime(d_format) + '*' * wildcard]
         cur += delta
+    result += [prefix + end.strftime(d_format) + '*' * wildcard]
     return list(set(result))
 
 
