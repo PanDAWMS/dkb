@@ -57,6 +57,14 @@ META_FIELDS = {
 AGG_FIELDS = {'hs06sec_sum': 'toths06'}
 JOB_STATUSES = ['finished', 'failed']
 
+INDICES = {'jobs': {'prefix': 'jobs_archive_',
+                    'date_format': '%Y-%m-%d',
+                    'delta': datetime.timedelta(days=1)},
+           'tasks': {'prefix': 'tasks_archive_',
+                     'date_format': '%Y',
+                     'delta': datetime.timedelta(days=365)}
+           }
+
 
 def init_es_client(cfg=None):
     """ Initialize connection to Chicago ES.
@@ -85,11 +93,11 @@ def get_es_client():
     return chicago_es
 
 
-def task_metadata(taskid, fields=[], retry=3):
+def task_metadata(task_data, fields=[], retry=3):
     """ Get additional metadata for given task.
 
-    :param taskid: Task ID or None
-    :type taskid: str, NoneType
+    :param task_data: task metadata
+    :type task_data: dict
     :param fields: requested ES fields; if empty list or nothing is
                    passed, all the fields available will be used
     :type fields: list
@@ -100,6 +108,10 @@ def task_metadata(taskid, fields=[], retry=3):
               ES connection is established
     :rtype: dict, NoneType
     """
+    taskid = task_data.get('taskid')
+    start_time = task_data.get('start_time')
+    end_time = task_data.get('end_time')
+
     chicago_es = get_es_client()
     if not chicago_es:
         sys.stderr.write("(ERROR) Connection to Chicago ES is not"
@@ -108,8 +120,15 @@ def task_metadata(taskid, fields=[], retry=3):
     if not taskid:
         sys.stderr.write("(WARN) Invalid task id: %s" % taskid)
         return {}
+    dt_format = '%d-%m-%Y %H:%M:%S'
+    beg = end = None
+    if start_time:
+        beg = datetime.datetime.strptime(start_time, dt_format)
+    if end_time:
+        end = datetime.datetime.strptime(end_time, dt_format)
+
     kwargs = {
-        'index': 'tasks_archive_*',
+        'index': get_indices_by_interval(beg, end, 'tasks'),
         'body': '{ "query": { "term": {"_id": "%s"} } }' % taskid,
         '_source': fields
     }
@@ -124,7 +143,7 @@ def task_metadata(taskid, fields=[], retry=3):
         if retry > 0:
             sys.stderr.write("(INFO) Sleep 5 sec before retry...\n")
             time.sleep(5)
-            return task_metadata(taskid, fields, retry - 1)
+            return task_metadata(task_data, fields, retry - 1)
         else:
             sys.stderr.write("(FATAL) Failed to get task metadata.\n")
             raise
@@ -135,7 +154,7 @@ def task_metadata(taskid, fields=[], retry=3):
     return result
 
 
-def get_indices_by_interval(start_time, end_time, prefix='jobs_archive_',
+def get_indices_by_interval(start_time, end_time, index='jobs',
                             wildcard=False):
     """ Get list of Chicago ES indices for jobs between two dates.
 
@@ -143,7 +162,8 @@ def get_indices_by_interval(start_time, end_time, prefix='jobs_archive_',
     :type start_time: datetime.datetime, NoneType
     :param end_time: ending of the interval
     :type end_time: datetime.datetime, NoneType
-    :param prefix: prefix for the index names
+    :param index: index alias (see ``INDICES``).
+                  Acceptable values: 'jobs', 'tasks'
     :type prefix: str
     :param wildcard: indicates if the index names should be appended with '*';
                      if interval between start and end date is longer than one
@@ -151,16 +171,29 @@ def get_indices_by_interval(start_time, end_time, prefix='jobs_archive_',
                      number of indices in the result list)
     :type wildcard: bool
 
-    :returns: indices for dates between specified times; if start or end
+    :returns: indices for dates between specified times; if start
               time is not specified, default wildcard-appended index
               is returned
     :rtype: list
     """
-    if not start_time or not end_time:
+    if not INDICES.get(index):
+        raise DataflowException("Invalid stage configuration (unknown index):"
+                                " '%s'." % index)
+    try:
+        prefix = INDICES[index]['prefix']
+        d_format = INDICES[index]['date_format']
+        delta = INDICES[index]['delta']
+    except KeyError as err:
+        raise DataflowException("Invalid stage configuration (index"
+                                " '%s' misconfigured): parameter '%s' is not"
+                                " defined." % (index, str(err)))
+    if not start_time:
         return [prefix + '*']
-    d_format = '%Y-%m-%d'
-    delta = datetime.timedelta(days=1)
-    if (end_time - start_time).days > 30:
+    if not end_time:
+        # Use current time to limit index names
+        end_time = datetime.datetime.now()
+    if delta == datetime.timedelta(days=1) \
+            and (end_time - start_time).days > 30:
         d_format = '%Y-%m'
         delta = datetime.timedelta(days=28)
         wildcard = True
@@ -309,7 +342,7 @@ def process(stage, message):
     data = message.content()
 
     # Get task metadata (direct values)
-    mdata = task_metadata(data.get('taskid'), META_FIELDS.keys())
+    mdata = task_metadata(data, META_FIELDS.keys())
     if mdata is None:
         return False
     for key in mdata:
