@@ -8,7 +8,7 @@ lib="$base_dir/../shell_lib"
 # Directories with configuration files
 [ -n "$DATA4ES_CONSISTENCY_CONFIG_PATH" ] && \
     CONFIG_PATH="$DATA4ES_CONSISTENCY_CONFIG_PATH" || \
-    CONFIG_PATH="${base_dir}/../config:${base_dir}/../../Elasticsearch/config"
+    CONFIG_PATH="${base_dir}/../config:${base_dir}/../../../Elasticsearch/config"
 
 source $lib/get_config
 source $lib/eop_filter
