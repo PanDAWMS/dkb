@@ -18,7 +18,9 @@ run_stage() {
   # | 1 \
   # | 2
   tee $inp \
-    | ${!cmd} \
+    | ${!cmd} 2> >(while read line; do
+                     echo -e "($1) $line" >&2
+                   done) \
     | tee $out
 
   # return the command execution status, not `tee`'s
