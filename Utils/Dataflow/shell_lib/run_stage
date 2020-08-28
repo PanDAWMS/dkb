@@ -1,0 +1,15 @@
+run_stage() {
+  [ -z "$1" ] \
+    && { log ERROR "run_stage(): no stage ID passed."; exit 1; }
+  cmd=cmd_${1}
+  [ -z "${!cmd}" ] \
+    && { log ERROR "run_stage(): stage not defined (ID: $1)."; exit 2; }
+
+  [ -n "$DEBUG" ] \
+    && { out="$1.out"; inp="$1.inp"; } \
+    || { out=""; inp=""; }
+
+  tee $inp \
+    | ${!cmd} \
+    | tee $out
+}
