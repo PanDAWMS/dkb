@@ -1,0 +1,26 @@
+# Params:
+#  $1 -- (required) stage/command ID;
+#  $2 -- (optional) stage version (for debug file names).
+run_stage() {
+  [ -z "$1" ] \
+    && { log ERROR "run_stage(): no stage ID passed."; exit 1; }
+  cmd=cmd_${1}
+  [ -z "${!cmd}" ] \
+    && { log ERROR "run_stage(): stage not defined (ID: $1)."; exit 2; }
+
+  [ -n "$2" ] && suff="-${2}" || suff=''
+
+  [ -n "$DEBUG" ] \
+    && { out="$1${suff}.out"; inp="$1${suff}.inp"; } \
+    || { out=""; inp=""; }
+
+  # 0 \
+  # | 1 \
+  # | 2
+  tee $inp \
+    | ${!cmd} \
+    | tee $out
+
+  # return the command execution status, not `tee`'s
+  return "${PIPESTATUS[1]}"
+}
