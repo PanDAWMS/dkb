@@ -12,6 +12,7 @@ lib="$base_dir/../shell_lib"
 
 source $lib/get_config
 source $lib/eop_filter
+source $lib/run_stage
 
 # Oracle
 cfg009=`get_config "consistency009.cfg"`
@@ -34,25 +35,13 @@ while [ -n "$1" ]; do
   shift
 done
 
-out_009=/dev/null
-out_016=/dev/null
-out_071=/dev/null
-if [ -n "$DEBUG" ]; then
-  out_009=009.cons.out
-  out_016=016.cons.out
-  out_071=071.cons.out
-  log DEBUG "Transitional output files:
-  $out_009
-  $out_016
-  $out_071"
-fi
 
-# 0      | 1              | 2        | 3          | 4
-# |  5        | 6          | 7
-$cmd_009 | tee "$out_009" | $cmd_016 | eop_filter | tee "$out_016" \
-  |  $cmd_071 | eop_filter | tee "$out_071"
+# 0             | 1               | 2
+# | 3                | 4
+run_stage '009' | run_stage '016' | eop_filter \
+  |  run_stage '071' | eop_filter
 
-status="${PIPESTATUS[5]}"
+status="${PIPESTATUS[3]}"
 
 [ $status -eq 0 ] && status_info=OK || status_info=FAIL
 log INFO "Consistency check finished, status: $status_info"
