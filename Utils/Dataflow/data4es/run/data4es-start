@@ -260,7 +260,8 @@ chain_91() {
 sink_chain() {
   [ -n "$DEBUG" ] \
     && cmd_69="tee"
-  tr $'\n' $'\x1e' | run_stage '19' | tr -d $'\x1e' | eop_filter | mediator "$1" | run_stage '69' > /dev/null
+  tr $'\n' $'\x1e' | run_stage '19' "$1" | tr -d $'\x1e' | eop_filter | mediator "$1" \
+                   | run_stage '69' "$1" > /dev/null
 }
 
 log "Starting process."

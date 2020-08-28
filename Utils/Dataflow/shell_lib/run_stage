@@ -1,3 +1,6 @@
+# Params:
+#  $1 -- (required) stage/command ID;
+#  $2 -- (optional) stage version (for debug file names).
 run_stage() {
   [ -z "$1" ] \
     && { log ERROR "run_stage(): no stage ID passed."; exit 1; }
@@ -5,8 +8,10 @@ run_stage() {
   [ -z "${!cmd}" ] \
     && { log ERROR "run_stage(): stage not defined (ID: $1)."; exit 2; }
 
+  [ -n "$2" ] && suff="-${2}" || suff=''
+
   [ -n "$DEBUG" ] \
-    && { out="$1.out"; inp="$1.inp"; } \
+    && { out="$1${suff}.out"; inp="$1${suff}.inp"; } \
     || { out=""; inp=""; }
 
   # 0 \
