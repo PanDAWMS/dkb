@@ -9,7 +9,13 @@ run_stage() {
     && { out="$1.out"; inp="$1.inp"; } \
     || { out=""; inp=""; }
 
+  # 0 \
+  # | 1 \
+  # | 2
   tee $inp \
     | ${!cmd} \
     | tee $out
+
+  # return the command execution status, not `tee`'s
+  return "${PIPESTATUS[1]}"
 }
