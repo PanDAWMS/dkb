@@ -62,7 +62,7 @@ INDICES = {'jobs': {'prefix': 'jobs_archive_',
                     'delta': datetime.timedelta(days=1)},
            'tasks': {'prefix': 'tasks_archive_',
                      'date_format': '%Y',
-                     'delta': datetime.timedelta(days=365.25)}
+                     'delta': datetime.timedelta(days=365)}
            }
 
 
