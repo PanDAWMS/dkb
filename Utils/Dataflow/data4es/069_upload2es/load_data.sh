@@ -12,7 +12,7 @@ PARAMETERS:
 
 base_dir=$( cd "$( dirname "$( readlink -f "$0" )" )" && pwd )
 
-ES_CONFIG="${base_dir}/../../Elasticsearch/config/es"
+ES_CONFIG="${base_dir}/../../../Elasticsearch/config/es"
 
 . "$base_dir"/../shell_lib/log
 
