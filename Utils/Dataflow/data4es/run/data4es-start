@@ -38,6 +38,7 @@ list_stages() {
 }
 
 source $lib/log
+source $lib/run_stage
 
 # Directories with configuration files
 [ -n "$DATA4ES_CONFIG_PATH" ] && \
@@ -237,39 +238,30 @@ b_91=`branch b_91` && b_40=`branch b_40` \
 # Define subchains
 # Source subchain: Oracle Connector
 source_chain() {
-  $cmd_09 | tee $b_40 $b_91
+  run_stage '09' | tee $b_40 $b_91
 }
 
 # Parallel subchains: 40 and 91
 chain_40() {
-  [ -n DEBUG ] \
-    && out_91='91_in.out' \
-    && out_25='25.out' \
-    && out_16='16.out' \
-    && out_17='17.out'
-  cat $b_40 | $cmd_91_in | eop_filter | tee $out_91 \
-            | $cmd_25 | eop_filter | tee $out_25 \
-            | $cmd_16 | eop_filter | tee $out_16 \
-            | $cmd_17 | eop_filter | tee $out_17 \
-            | $cmd_40 | eop_filter
+  cat $b_40 | run_stage '91_in' | eop_filter \
+            | run_stage '25' | eop_filter \
+            | run_stage '16' | eop_filter \
+            | run_stage '17' | eop_filter \
+            | run_stage '40' | eop_filter
 }
 
 chain_91() {
-  out=/dev/null
-  [ -n "$DEBUG" ] \
-    && out_91='91_out.out' \
-    && out_93='93.out'
-  cat $b_91 | $cmd_91_out | eop_filter | tee $out_91 \
-            | $cmd_93 | eop_filter | tee $out_93 \
-            | $cmd_95 | eop_filter
+  cat $b_91 | run_stage '91_out' | eop_filter \
+            | run_stage '93' | eop_filter \
+            | run_stage '95' | eop_filter
 }
 
 # Sink chain
 sink_chain() {
   [ -n "$DEBUG" ] \
-    && cmd="tee 69.$1.inp" \
-    || cmd=$cmd_69
-  tr $'\n' $'\x1e' | $cmd_19 | tr -d $'\x1e' | eop_filter | mediator "$1" | $cmd > /dev/null
+    && cmd_69="tee"
+  tr $'\n' $'\x1e' | run_stage '19' "$1" | tr -d $'\x1e' | eop_filter | mediator "$1" \
+                   | run_stage '69' "$1" > /dev/null
 }
 
 log "Starting process."

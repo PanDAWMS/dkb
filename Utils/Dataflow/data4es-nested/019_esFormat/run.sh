@@ -2,7 +2,7 @@
 
 base_dir=$(cd "$(dirname "$(readlink -f "$0")")"; pwd)
 
-ES_CONFIG=$base_dir/../../Elasticsearch/config/es
+ES_CONFIG=$base_dir/../../../Elasticsearch/config/es
 CONFIG_DEFAULT=TRUE
 
 usage() {
