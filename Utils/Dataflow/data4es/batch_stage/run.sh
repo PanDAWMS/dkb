@@ -1,15 +1,15 @@
-source ../../shell_lib/eop_filter
-
-cmd="./stage.py -m s"
-cmd_batch2="./stage.py -b 2 -m s"
-cmd_batch100="./stage.py -b 100 -m s"
+# $1 has to be used as a workaround to pass empty string as a value for
+# -E, since "... -E ''" will treat the single quotes literally due to double
+# quotes around them.
+cmd="./stage.py -m s -E $1"
+cmd_batch2="./stage.py -b 2 -m s -E $1"
+cmd_batch100="./stage.py -b 100 -m s -E $1"
 
 # Various tests that should produce the same results.
 
 # Stage chains.
-# these differ by size without eop_filter at the end
-cat inp | $cmd | eop_filter | $cmd | eop_filter > outp1
-cat inp | $cmd_batch2 | eop_filter | $cmd_batch2 | eop_filter > outp2
-cat inp | $cmd_batch100 | eop_filter | $cmd_batch100 | eop_filter > outp100
-cat inp | $cmd | eop_filter | $cmd_batch2 | eop_filter > outp12
-cat inp | $cmd_batch2 | eop_filter | $cmd | eop_filter > outp21
+cat inp | $cmd "" | $cmd "" > outp1
+cat inp | $cmd_batch2 "" | $cmd_batch2 "" > outp2
+cat inp | $cmd_batch100 "" | $cmd_batch100 "" > outp100
+cat inp | $cmd "" | $cmd_batch2 "" > outp12
+cat inp | $cmd_batch2 "" | $cmd "" > outp21
