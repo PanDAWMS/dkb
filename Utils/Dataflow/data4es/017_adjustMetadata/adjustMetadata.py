@@ -333,7 +333,9 @@ def generate_step_names(data):
     """
     ignore_formats = ['LOG']
     output_formats = data.get('output_formats', [])
-    if not isinstance(output_formats, list):
+    if not output_formats:
+        output_formats = []
+    elif not isinstance(output_formats, list):
         output_formats = [output_formats]
     ctag = data.get('ctag')
     tags = data.get('ami_tags')
