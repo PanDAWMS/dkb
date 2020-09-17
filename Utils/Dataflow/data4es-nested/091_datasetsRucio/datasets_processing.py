@@ -47,6 +47,7 @@ try:
     from pyDKB.dataflow import messageType
     from pyDKB.dataflow.exceptions import DataflowException
     from pyDKB.common.types import logLevel
+    from pyDKB import atlas
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -254,52 +255,6 @@ def get_ds_info(dataset, mfields):
     return ds_dict
 
 
-def extract_scope(dsn):
-    """ Extract the first field from the dataset name
-
-    Example:
-      mc15_13TeV.XXX
-      mc15_13TeV:YYY.XXX
-
-    :param dsn: full dataset name
-    :type dsn: str
-
-    :return: dataset scope
-    :rtype: str
-    """
-    pos = dsn.find(':')
-    if pos > -1:
-        result = dsn[:pos]
-    else:
-        scope = dsn.split('.')[0]
-        if dsn.startswith('user') or dsn.startswith('group'):
-            scope = '.'.join(dsn.split('.')[0:2])
-        result = scope
-    return result
-
-
-def normalize_dataset_name(dsn):
-    """ Remove an explicitly stated scope from a dataset name.
-
-    According to dataset nomenclature, dataset name cannot include
-    a ':' symbol. If a dataset name is in 'A:B' format, then A,
-    probably, is an explicitly stated scope that should be removed.
-
-    :param dsn: dataset name
-    :type dsn: str
-
-    :return: dataset name without explicit scope,
-             unchanged dataset name if it was already normal
-    :rtype: str
-    """
-    pos = dsn.find(':')
-    if pos > -1:
-        result = dsn[(pos + 1):]
-    else:
-        result = dsn
-    return result
-
-
 def get_metadata(dsn, attributes=None):
     """ Get attribute value from Rucio
 
@@ -311,8 +266,8 @@ def get_metadata(dsn, attributes=None):
     :rtype:  dict
     """
     rucio_client = get_rucio_client()
-    scope = extract_scope(dsn)
-    dataset = normalize_dataset_name(dsn)
+    scope = pyDKB.atlas.misc.dataset_scope(dsn)
+    dataset = pyDKB.atlas.misc.normalize_dataset_name(dsn)
     try:
         metadata = rucio_client.get_metadata(scope=scope, name=dataset)
     except ValueError, err:
