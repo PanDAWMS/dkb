@@ -7,6 +7,7 @@ Miscellanious utility functions.
 import sys
 import inspect
 from datetime import datetime
+import time
 
 from types import logLevel
 
@@ -112,3 +113,42 @@ def ensure_argparse_arg_name(args, kwargs):
         kwargs['dest'] = arg_name
 
     return arg_name
+
+
+def execute_with_retry(f, args=[], kwargs={}, retry_on=(Exception,),
+                       max_tries=3, sleep=5):
+    """ Try to call function `f` and retry in case of error.
+
+    :param f: function to call
+    :type f: callable
+    :param args: positional arguments
+    :type args: list
+    :param kwargs: keyword arguments
+    :type kwargs: dict
+
+    :param retry_on: which exceptions should be retried
+    :type retry_on: set
+    :param max_tries: max number of retries
+    :type max_tries: int
+    :param sleep: pause between retries (sec)
+    :type sleep: int
+
+    :return: `f` execution result
+    :rtype: object
+    """
+    attempt = 0
+    result = None
+    while attempt < max_tries:
+        attempt += 1
+        try:
+            result = f(*args, **kwargs)
+            break
+        except retry_on, e:
+            if attempt >= max_tries:
+                raise e
+            log("Function call failed ('%s': %i/%i).\n"
+                "Reason: %s.\n"
+                "Wait for %i sec before retry..."
+                % (f.__name__, attempt, max_tries, str(e), sleep))
+            time.sleep(sleep)
+    return result
