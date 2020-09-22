@@ -7,6 +7,8 @@ try:
     import pyAMI.client
     import pyAMI.atlas.api as AtlasAPI
     import pyAMI.config
+    from pyAMI.exception import Error as AMIError
+    from pyAMI.httpclient import http_client
 except ImportError:
     sys.stderr.write("(ERROR) Unable to find pyAMI client.\n")
 
@@ -19,6 +21,7 @@ try:
     from pyDKB.dataflow import messageType
     from pyDKB.dataflow.exceptions import DataflowException
     from pyDKB import atlas
+    from pyDKB.common.misc import execute_with_retry
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -189,10 +192,12 @@ def amiPhysValues(data):
     if not scope.startswith(SCOPES):
         return True
     ami_client = get_ami_client()
-    res = ami_client.execute(['GetPhysicsParamsForDataset',
-                              '--logicalDatasetName=%s' % container,
-                              '-scope=%s' % scope],
-                             format='json')
+    exec_params = {'command': ['GetPhysicsParamsForDataset',
+                               '--logicalDatasetName=%s' % container,
+                               '-scope=%s' % scope],
+                   'format': 'json'}
+    res = execute_with_retry(ami_client.execute, kwargs=exec_params, sleep=64,
+                             retry_on=(AMIError, http_client.HTTPException))
     json_str = json.loads(res)
     try:
         rowset = json_str['AMIMessage'][0]['Result'][0]['rowset']
