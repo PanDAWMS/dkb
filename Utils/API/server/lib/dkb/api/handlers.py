@@ -71,6 +71,29 @@ methods.add('/', None, server_info)
 methods.add('/', 'server_info', server_info)
 
 
+def nested(path, **kwargs):
+    """ Wrapper for methods called via 'nested' endpoint.
+
+    :param path: path to the called method
+    :type path: str
+
+    :return: method call results
+    :rtype: tuple(object, dict)
+    """
+    if not path.startswith('/nested/'):
+        raise MethodException("Method handler 'nested' is called for"
+                              " non-'nested' method path: '%s'" % path)
+    default_handler_path = path.replace('/nested', '', 1)
+
+    # Marker for alternative method's implementation usage
+    kwargs['_alt'] = 'nested'
+
+    return methods.handler(default_handler_path)(path, **kwargs)
+
+
+methods.add('/nested', '.*', nested)
+
+
 # ===================
 # API method handlers
 # ===================
