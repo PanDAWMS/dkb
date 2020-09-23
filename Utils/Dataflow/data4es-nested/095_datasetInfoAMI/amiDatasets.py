@@ -7,6 +7,8 @@ try:
     import pyAMI.client
     import pyAMI.atlas.api as AtlasAPI
     import pyAMI.config
+    from pyAMI.exception import Error as AMIError
+    from pyAMI.httpclient import http_client
 except ImportError:
     sys.stderr.write("(ERROR) Unable to find pyAMI client.\n")
 
@@ -18,6 +20,8 @@ try:
     import pyDKB
     from pyDKB.dataflow import messageType
     from pyDKB.dataflow.exceptions import DataflowException
+    from pyDKB import atlas
+    from pyDKB.common.misc import execute_with_retry
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -33,6 +37,9 @@ PHYS_VALUES = [{'ami': 'genFiltEff', 'es': 'gen_filt_eff'},
                {'ami': 'mePDF', 'es': 'me_pdf'},
                ]
 FILTER = ['AOD', 'EVNT', 'HITS']
+# Scope parts - AMI only has data for datasets with scopes that start
+# with something from this list.
+SCOPES = ('mc15', 'mc16')
 
 
 def main(argv):
@@ -175,10 +182,16 @@ def amiPhysValues(data):
     container = container_name(data)
     if not container:
         return False
+    scope = pyDKB.atlas.misc.dataset_scope(container)
+    if not scope.startswith(SCOPES):
+        return True
     ami_client = get_ami_client()
-    res = ami_client.execute(['GetPhysicsParamsForDataset',
-                              '--logicalDatasetName=%s' % container],
-                             format='json')
+    exec_params = {'command': ['GetPhysicsParamsForDataset',
+                               '--logicalDatasetName=%s' % container,
+                               '-scope=%s' % scope],
+                   'format': 'json'}
+    res = execute_with_retry(ami_client.execute, kwargs=exec_params, sleep=64,
+                             retry_on=(AMIError, http_client.HTTPException))
     json_str = json.loads(res)
     try:
         rowset = json_str['AMIMessage'][0]['Result'][0]['rowset']
@@ -219,7 +232,7 @@ def change_key_names(data):
 def container_name(data):
     """ Retrieve container name from information about dataset.
 
-    The container name is extracted from dataset name by removing
+    The container name is extracted from normalized dataset name by removing
     the '_tid...' part.
 
     :param data: dataset information, must contain 'name' field
@@ -243,6 +256,7 @@ def container_name(data):
     if len(dataset) == 0:
         sys.stderr.write("(WARN) Required field 'name' is empty"
                          " in data: %r\n" % data)
+    dataset = pyDKB.atlas.misc.normalize_dataset_name(dataset)
     return re.sub('_tid(.)+', '', dataset)
 
 
