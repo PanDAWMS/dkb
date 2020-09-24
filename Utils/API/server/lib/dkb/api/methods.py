@@ -33,6 +33,7 @@ from exceptions import (InvalidCategoryName,
                         DkbApiException,
                         DkbApiNotImplemented,
                         NotFoundException)
+from misc import standardize_path
 
 # Hash representation of method categories structure.
 # Keys are:
@@ -162,7 +163,8 @@ def add(category, name, handler):
                 cat[name] = handler
             else:
                 m['/'] = handler
-            API_METHOD_HANDLERS['/'.join([cat['__path'], name])] = handler
+            path = standardize_path('/'.join([cat['__path'], name]))
+            API_METHOD_HANDLERS[path] = handler
     if exists_in:
         raise MethodAlreadyExists(name, exists_in)
     if added_to:
@@ -195,6 +197,7 @@ def handler(path, method=None):
     full_path = path
     if method:
         full_path = '/'.join(full_path, method)
+    full_path = standardize_path(full_path)
 
     h = API_METHOD_HANDLERS.get(full_path)
     if not h:
