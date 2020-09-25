@@ -505,8 +505,10 @@ def campaign_stat(path, rtype='json', step_type=None, events_src=None,
                                             events_src_values))
 
     params = {}
-    for param in kwargs:
-        vals = kwargs[param]
+    for param in kwargs.keys():
+        if param.startswith('_'):
+            continue
+        vals = kwargs.pop(param)
         if not isinstance(vals, list):
             vals = [vals]
         if vals:
@@ -514,7 +516,7 @@ def campaign_stat(path, rtype='json', step_type=None, events_src=None,
         params[param] = vals
 
     return storages.campaign_stat(step_type=step_type, selection_params=params,
-                                  events_src=events_src)
+                                  events_src=events_src, **kwargs)
 
 
 methods.add('/campaign', 'stat', campaign_stat)
@@ -598,8 +600,10 @@ def step_stat(path, rtype='json', step_type=None, **kwargs):
         raise InvalidArgument(method_name, ('step_type', step_type,
                                             allowed_types))
     params = {}
-    for param in kwargs:
-        vals = kwargs[param]
+    for param in kwargs.keys():
+        if param.startswith('_'):
+            continue
+        vals = kwargs.pop(param)
         if not isinstance(vals, list):
             vals = [vals]
         if vals:
@@ -608,7 +612,8 @@ def step_stat(path, rtype='json', step_type=None, **kwargs):
     logging.debug('(%s) parsed parameters:\n%s' % (method_name,
                                                    json.dumps(params,
                                                               indent=2)))
-    rdata, m = storages.step_stat(step_type=step_type, selection_params=params)
+    rdata, m = storages.step_stat(step_type=step_type, selection_params=params,
+                           **kwargs)
     if step_type == 'step':
         def steps_cmp(x, y):
             """ Compare processing steps for ordering. """
