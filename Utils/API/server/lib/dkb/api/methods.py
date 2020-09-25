@@ -25,6 +25,8 @@ methods.add('/path/to/category', 'method_name', my_method_handler)
 
 import traceback
 import logging
+import re
+from operator import attrgetter
 
 from exceptions import (InvalidCategoryName,
                         CategoryNotFound,
@@ -46,6 +48,11 @@ WILDCARD = '*'
 
 # Hash of method handlers: {'/path/to/method': method_handler}
 API_METHOD_HANDLERS = {}
+
+# NOTE: Wildcarded methods are falling into a sub-hash `__regex`:
+# { re.compile('^/path/to/.*$'): method_handler,
+#   re.compile('^/path/.*/to/method$'): method_handler }
+API_METHOD_HANDLERS['__regex'] = {}
 
 
 def get_category(path, create=False, analyze_wildcard=False):
@@ -147,7 +154,10 @@ def add(category, name, handler):
     :return: True on success, False on failure
     :rtype: bool
     """
-    categories = get_category(category, create=True, analyze_wildcard=True)
+    try:
+        categories = get_category(category, create=True, analyze_wildcard=True)
+    except NotImplementedError:
+        categories = []
     exists_in = []
     added_to = []
     if not name:
@@ -163,8 +173,16 @@ def add(category, name, handler):
                 cat[name] = handler
             else:
                 m['/'] = handler
-            path = standardize_path('/'.join([cat['__path'], name]))
-            API_METHOD_HANDLERS[path] = handler
+    if name == WILDCARD:
+        logging.warn("Invalid regex: '%(w)s' -- fixed to '.%(w)s'."
+                     % {'w': WILDCARD})
+        name = '.*'
+    path = standardize_path('/'.join([category, name]))
+    if WILDCARD in path:
+        regex = '^' + path + '$'
+        API_METHOD_HANDLERS['__regex'][re.compile(regex)] = handler
+    else:
+        API_METHOD_HANDLERS[path] = handler
     if exists_in:
         raise MethodAlreadyExists(name, exists_in)
     if added_to:
@@ -178,6 +196,12 @@ def handler(path, method=None):
     """ Get handler for given method.
 
     If method is not found, raise ``MethodNotFound`` exception.
+
+    NOTE: if some handlers are defined for 'wildcard' paths, first found
+          match will be used. Patterns are sorter alphanumerically in
+          reverse mode in attempt to first check more specific patterns,
+          but there's no guarantee that it will indeed be the "best
+          match".
 
     :param path: full path to method or category (if second parameter
                  specified)
@@ -200,6 +224,13 @@ def handler(path, method=None):
     full_path = standardize_path(full_path)
 
     h = API_METHOD_HANDLERS.get(full_path)
+    if not h:
+        # Try the wildcard paths handlers
+        for p in sorted(API_METHOD_HANDLERS['__regex'].keys(),
+                        key=attrgetter('pattern'), reverse=True):
+            if p.match(full_path):
+                h = API_METHOD_HANDLERS['__regex'][p]
+                break
     if not h:
         raise MethodNotFound(full_path)
     return h
