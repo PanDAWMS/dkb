@@ -112,7 +112,9 @@ def init_ami_client(userkey='', usercert=''):
                      " that AMI client works and the credentials are"
                      " correct...\n")
     try:
-        ami_client.execute('ListCommands')
+        execute_with_retry(ami_client.execute, args=['ListCommands'],
+                           retry_on=(AMIError, http_client.HTTPException),
+                           sleep=64)
     except Exception as e:
         sys.stderr.write("(ERROR) Test command ListCommands failed. Are you"
                          " sure you have a valid certificate?\n"
