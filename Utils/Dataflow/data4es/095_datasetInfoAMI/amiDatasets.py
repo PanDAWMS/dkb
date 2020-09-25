@@ -90,8 +90,8 @@ def init_ami_client(userkey='', usercert=''):
     """
     global ami_client
     try:
-        ami_client = pyAMI.client.Client('atlas', key_file=userkey,
-                                         cert_file=usercert)
+        ami_client = pyAMI.client.Client(['atlas-replica', 'atlas'],
+                                         key_file=userkey, cert_file=usercert)
         AtlasAPI.init()
     except NameError:
         sys.stderr.write("(FATAL) Failed to initialise AMI client:"
