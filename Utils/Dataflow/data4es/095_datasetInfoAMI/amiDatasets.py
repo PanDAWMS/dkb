@@ -90,8 +90,8 @@ def init_ami_client(userkey='', usercert=''):
     """
     global ami_client
     try:
-        ami_client = pyAMI.client.Client('atlas', key_file=userkey,
-                                         cert_file=usercert)
+        ami_client = pyAMI.client.Client(['atlas-replica', 'atlas'],
+                                         key_file=userkey, cert_file=usercert)
         AtlasAPI.init()
     except NameError:
         sys.stderr.write("(FATAL) Failed to initialise AMI client:"
@@ -112,7 +112,9 @@ def init_ami_client(userkey='', usercert=''):
                      " that AMI client works and the credentials are"
                      " correct...\n")
     try:
-        ami_client.execute('ListCommands')
+        execute_with_retry(ami_client.execute, args=['ListCommands'],
+                           retry_on=(AMIError, http_client.HTTPException),
+                           sleep=64)
     except Exception as e:
         sys.stderr.write("(ERROR) Test command ListCommands failed. Are you"
                          " sure you have a valid certificate?\n"
