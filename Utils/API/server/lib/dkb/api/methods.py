@@ -33,11 +33,19 @@ from exceptions import (InvalidCategoryName,
                         DkbApiException,
                         DkbApiNotImplemented,
                         NotFoundException)
+from misc import standardize_path
 
-# Hash of categories and methods
-API_METHODS = {'__path': '/'}
+# Hash representation of method categories structure.
+# Keys are:
+#  * special keys (see `KEYWORDS` below);
+#  * (sub)category names;
+#  * method names.
+API_METHODS_CATALOG = {'__path': '/'}
 KEYWORDS = ['__path']
 WILDCARD = '*'
+
+# Hash of method handlers: {'/path/to/method': method_handler}
+API_METHOD_HANDLERS = {}
 
 
 def get_category(path, create=False, analyze_wildcard=False):
@@ -63,7 +71,7 @@ def get_category(path, create=False, analyze_wildcard=False):
     """
     keys = path.strip('/').split('/')
     keys = [k for k in keys if k]
-    h = API_METHODS
+    h = API_METHODS_CATALOG
     category = h
     key = ''
     for idx, key in enumerate(keys):
@@ -155,6 +163,8 @@ def add(category, name, handler):
                 cat[name] = handler
             else:
                 m['/'] = handler
+            path = standardize_path('/'.join([cat['__path'], name]))
+            API_METHOD_HANDLERS[path] = handler
     if exists_in:
         raise MethodAlreadyExists(name, exists_in)
     if added_to:
@@ -183,27 +193,15 @@ def handler(path, method=None):
     except NameError:
         logging.error('Handlers not configured.')
         raise MethodNotFound(path)
-    if not method:
-        if path.endswith('/'):
-            method = '/'
-            category = path[:-1]
-        else:
-            pos = path.rfind('/')
-            method = path[(pos + 1):]
-            category = path[:pos]
-    else:
-        category = path
-    try:
-        c = get_category(category)
-    except CategoryNotFound, err:
-        raise MethodNotFound(category, method, str(err))
-    h = c.get(method)
+
+    full_path = path
+    if method:
+        full_path = '/'.join(full_path, method)
+    full_path = standardize_path(full_path)
+
+    h = API_METHOD_HANDLERS.get(full_path)
     if not h:
-        raise MethodNotFound(category, method)
-    if not callable(h):
-        h = h.get('/')
-    if not h:
-        raise MethodNotFound(category, method)
+        raise MethodNotFound(full_path)
     return h
 
 
