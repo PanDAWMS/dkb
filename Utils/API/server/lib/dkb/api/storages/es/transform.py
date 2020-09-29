@@ -211,7 +211,7 @@ def get_agg_values(data, units=[]):
     return result
 
 # <---
-# Common functions for ES respomse parsing
+# Common functions for ES response parsing
 
 # =====
 
