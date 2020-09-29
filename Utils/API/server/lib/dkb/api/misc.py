@@ -44,7 +44,7 @@ def standardize_path(path):
     """ Bring path to a method to a standard view.
 
     Standerd view is:
-     - starting with '/';
+     - starting with '/' (if not started with '.*');
      - not ending with '/';
      - repeating '/' (like '///') replaced with single '/'.
 
@@ -55,5 +55,7 @@ def standardize_path(path):
     :rtype: str
     """
     path.rstrip('/')
-    path = re.compile('/+').sub('/', '/' + path)
+    if not path.startswith('.*'):
+        path = '/' + path
+    path = re.compile('/+').sub('/', path)
     return path
