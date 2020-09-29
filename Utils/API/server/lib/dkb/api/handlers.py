@@ -57,7 +57,7 @@ def info(path, **kwargs):
     return response
 
 
-methods.add('/', 'info', info)
+methods.add('.*', 'info', info)
 
 
 def server_info(path, **kwargs):
