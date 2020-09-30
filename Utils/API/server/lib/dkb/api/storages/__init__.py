@@ -20,6 +20,11 @@ class DKBStorageMethod(object):
             pass
 
     def __call__(self, **kwargs):
+        """
+
+        TODO: replase `_alt` parameter usage with direct calls of `use_alt`
+              at the handlers' level.
+        """
         alt = kwargs.pop('_alt', None)
         if alt:
             try:
