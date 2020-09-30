@@ -5,6 +5,7 @@ Module responsible for interaction with DKB storages.
 import logging
 
 import es
+import es_nested
 
 
 class DKBStorageMethod(object):
@@ -93,3 +94,8 @@ methods = {
 # Define callable objects for public methods
 for m in methods:
     globals()[m] = DKBStorageMethod(m, methods[m])
+
+    # Define alternative implementation for ES methods (based on nested storage
+    # scheme)
+    if methods[m] == es:
+        globals()[m].alts['nested'] = DKBStorageMethod(m, es_nested)

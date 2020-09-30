@@ -10,5 +10,9 @@ lib/dkb/api/storages/es/
 lib/dkb/api/storages/es/*.py
 lib/dkb/api/storages/es/query/
 lib/dkb/api/storages/es/query/*
+lib/dkb/api/storages/es_nested/
+lib/dkb/api/storages/es_nested/*.py
+lib/dkb/api/storages/es_nested/query/
+lib/dkb/api/storages/es_nested/query/*
 conf/
 conf/dkb.yaml
