@@ -225,15 +225,16 @@ def task_steps_hist(data, start=None, end=None):
     :param data: ES response
     :type data: dict
 
-    :return: transformed data
-    :rtype: dict
+    :return: transformed data and method execution metadata
+    :rtype: tuple(dict, dict)
     """
-    result = {}
-    result['_data'] = {'legend': [], 'data': {'x': [], 'y': []}}
-    if data is None:
+    rdata, metadata = {}, {}
+    result = (rdata, metadata)
+    rdata.update({'legend': [], 'data': {'x': [], 'y': []}})
+    if not data:
         return result
-    result['_took_storage_ms'] = data.get('took')
-    result['_total'] = data.get('hits', {}).get('total')
+    metadata['took_storage_ms'] = data.get('took')
+    metadata['total'] = data.get('hits', {}).get('total')
     for step in data['aggregations']['steps']['buckets']:
         step_name = step['key']
         x = []
@@ -243,9 +244,9 @@ def task_steps_hist(data, start=None, end=None):
             if (not start or start <= dt) and (not end or end >= dt):
                 x.append(dt.date())
                 y.append(bucket['doc_count'])
-        result['_data']['legend'].append(step_name)
-        result['_data']['data']['x'].append(x)
-        result['_data']['data']['y'].append(y)
+        rdata['legend'].append(step_name)
+        rdata['data']['x'].append(x)
+        rdata['data']['y'].append(y)
     return result
 
 
@@ -261,10 +262,12 @@ def construct_chain(chain_data):
     :type chain_data: list
 
     :return: constructed chain in the format corresponding "data" part of the
-             ``task/chain`` method (see :py:func:`api.handlers.task_chain`)
-    :rtype: dict
+             ``task/chain`` method (see :py:func:`api.handlers.task_chain`) and
+             method execution metadata
+    :rtype: tuple(dict, dict)
     """
-    chain = {}
+    chain, metadata = {}, {}
+    result = (chain, metadata)
     # Order data from longest to shortest lists. Processing [1, 2, 3] is faster
     # than processing [1], then [1, 2] and then [1, 2, 3].
     # TODO: check this more extensively.
@@ -282,7 +285,7 @@ def construct_chain(chain_data):
                 if child:
                     chain[tid].append(child)
                 child = tid
-    return chain
+    return result
 
 
 def task_info(data):
@@ -292,13 +295,16 @@ def task_info(data):
     :type data: dict
 
     :return: task and related datasets metadata in format required
-             for :py:func:`api.handlers.task_kwsearch`
-    :rtype: list
+             for :py:func:`api.handlers.task_kwsearch` and method execution
+             metadata
+    :rtype: tuple(list, dict)
     """
-    result = {'_took_storage_ms': data['took'], '_data': []}
+    rdata, metadata = [], {}
+    result = (rdata, metadata)
+    metadata['took_storage_ms'] = data['took']
     if not data['hits']['hits']:
         return result
-    result['_total'] = data['hits']['total']
+    metadata['total'] = data['hits']['total']
     for hit in data['hits']['hits']:
         task = hit['_source']
         try:
@@ -306,7 +312,7 @@ def task_info(data):
         except KeyError:
             datasets = []
         task['output_dataset'] = [ds['_source'] for ds in datasets]
-        result['_data'].append(task)
+        rdata.append(task)
     return result
 
 
@@ -322,9 +328,12 @@ def derivation_statistics(data, format):
     :param format: data format to which ``data`` value is referred
     :type format: str
 
-    :return: derivation efficiency data for given format
-    :rtype: dict
+    :return: derivation efficiency data for given format and method
+             execution metadata
+    :rtype: tuple(dict, dict)
     """
+    rdata, metadata = {}, {}
+    result = (rdata, metadata)
     try:
         total = data['hits']['total']
         result_events = (data['aggregations']['output_datasets']['not_removed']
@@ -345,8 +354,9 @@ def derivation_statistics(data, format):
         ratio = 0
         events_ratio = 0
         task_ids = []
-    return {'output': format, 'tasks': total, 'task_ids': task_ids,
-            'ratio': ratio, 'events_ratio': events_ratio}
+    rdata.update({'output': format, 'tasks': total, 'task_ids': task_ids,
+                  'ratio': ratio, 'events_ratio': events_ratio})
+    return result
 
 
 def campaign_stat(stat_data, events_src=None):
@@ -364,19 +374,19 @@ def campaign_stat(stat_data, events_src=None):
     :type events_src: str
 
     :return: properly formatted response for ``campaign/stat`` method
-             (see :py:func:`api.handlers.campaign_stat`)
-    :rtype: dict
+             (see :py:func:`api.handlers.campaign_stat`) and method
+             execution metadata
+    :rtype: tuple(dict, dict)
     """
-    r = {}
-    data = {}
+    data, metadata = {}, {}
+    result = (data, metadata)
     events_src_values = ['ds', 'task', 'all']
     if not events_src:
         events_src = events_src_values[0]
     elif events_src not in events_src_values:
         raise ValueError('(events_src) unexpected value: %s' % events_src)
-    r['_took_storage_ms'] = stat_data.pop('took', None)
-    r['_total'] = stat_data.get('hits', {}).pop('total', None)
-    r['_data'] = data
+    metadata['took_storage_ms'] = stat_data.pop('took', None)
+    metadata['total'] = stat_data.get('hits', {}).pop('total', None)
 
     data['tasks_processing_summary'] = {}
     data['overall_events_processing_summary'] = {}
@@ -452,7 +462,7 @@ def campaign_stat(stat_data, events_src=None):
         data['overall_events_processing_summary'][step_name] = eps
         data['tasks_updated_24h'][step_name] = tu24h
         data['events_daily_progress'][step_name] = events_daily
-    return r
+    return result
 
 
 def step_stat(data, agg_units=[], step_type=None):
@@ -468,9 +478,13 @@ def step_stat(data, agg_units=[], step_type=None):
     :type step_type: str
 
     :returns: prepared response data for ``step/stat`` method
-              (see :py:func:`api.handlers.step_stat`)
-    :rtype: dict
+              (see :py:func:`api.handlers.step_stat`) and method execution
+              metadata
+    :rtype: tuple(list, dict)
     """
+    rdata, metadata = [], {}
+    result = (rdata, metadata)
+
     if not step_type:
         step_type = STEP_TYPES[0]
 
@@ -489,11 +503,9 @@ def step_stat(data, agg_units=[], step_type=None):
                 90: 'StepDone'
                 }
 
-    r = {}
-    r['_took_storage_ms'] = data.pop('took')
-    r['_total'] = data.get('hits', {}) \
-                      .get('total', None)
-    r['_data'] = []
+    metadata['took_storage_ms'] = data.pop('took')
+    metadata['total'] = data.get('hits', {}) \
+                            .get('total', None)
     logging.debug('ES response data:\n%s' % json.dumps(data, indent=2))
     steps = steps_iterator(data.get('aggregations', {}))
     for name, step_data in steps:
@@ -571,5 +583,5 @@ def step_stat(data, agg_units=[], step_type=None):
                 d.get(events_field, 0) < d.get('input_events', 0):
             d['percent_done'] = 99.99
 
-        r['_data'].append(d)
-    return r
+        rdata.append(d)
+    return result

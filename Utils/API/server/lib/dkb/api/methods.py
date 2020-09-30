@@ -247,12 +247,12 @@ def error_handler(exc_info):
         'exception': err.__class__.__name__,
     }
     if isinstance(err, DkbApiException):
-        response['_status'] = err.code
+        response['status'] = err.code
         response['details'] = err.details
     elif isinstance(err, DkbApiNotImplemented):
-        response['_status'] = 501
+        response['status'] = 501
     else:
-        response['_status'] = 500
+        response['status'] = 500
         response['details'] = str(err)
     if isinstance(err, NotFoundException):
         response['text_info'] = NotFoundException.details
@@ -261,7 +261,7 @@ def error_handler(exc_info):
         for line in lines.split('\n'):
             if line:
                 logging.debug(line)
-    return response
+    return {}, response
 
 
 def configure():

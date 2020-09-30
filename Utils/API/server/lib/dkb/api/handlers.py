@@ -13,9 +13,9 @@ def my_method_handler(path, **kwargs):
     :param rtype: response type (supported types: ...)
     :type rtype: str
 
-    :return: hash with method response.
-             Special field ``'_status'`` can be used to specify return code.
-    :rtype: dict
+    :return: method response and method execution metadata.
+             Metadata field ``'status'`` can be used to specify return code.
+    :rtype: tuple(object, dict)
     \"""
     <method implementation>
 ```
@@ -54,7 +54,7 @@ def info(path, **kwargs):
     """ Information about available methods and (sub)categories. """
     cat = path.rstrip('/')[:-len('info')]
     response = methods.list_category(cat)
-    return response
+    return response, {}
 
 
 methods.add('.*', 'info', info)
@@ -64,7 +64,7 @@ def server_info(path, **kwargs):
     """ Server info. """
     response = {"name": "DKB API server",
                 "version": __version__}
-    return response
+    return response, {}
 
 
 methods.add('/', None, server_info)
@@ -79,13 +79,11 @@ methods.add('/', 'server_info', server_info)
 def task_hist(path, **kwargs):
     """ Generate histogram with task steps distribution over time.
 
-    If ``rtype`` is set to 'json', the method returns JSON document
+    If ``rtype`` is set to 'json', the method returns data in JSON document
     of the following format:
 
     ```
     {
-      ...
-      "data": {
         "legend": ["series1_name", "series2_name", ...],
         "data": {
           "x": [
@@ -99,7 +97,6 @@ def task_hist(path, **kwargs):
             ...
           ]
         }
-      }
     }
     ```
 
@@ -122,7 +119,8 @@ def task_hist(path, **kwargs):
     :type bins: int
 
     :return: PNG image or JSON document with data for histogram
-    :rtype: object
+             and method execution metadata
+    :rtype: tuple(object, dict)
     """
     rtype = kwargs.get('rtype', 'img')
     if rtype == 'img':
@@ -139,7 +137,7 @@ def task_hist(path, **kwargs):
     if not isinstance(htags, list):
         kwargs['htags'] = htags.split(',')
     result = storages.task_steps_hist(**kwargs)
-    data = result.pop('_data', {})
+    data, metadata = result
     if 'detailed' not in kwargs:
         # Join all '* Merge' steps under common label 'Merge'
         if 'Merge' not in data['legend']:
@@ -163,7 +161,6 @@ def task_hist(path, **kwargs):
         for i, _ in enumerate(x_data):
             for j, d in enumerate(x_data[i]):
                 x_data[i][j] = str(d)
-        result['_data'] = data
     if rtype == 'img':
         # Reorder data series according to the steps order
         steps_order = ['Evgen', 'Simul', 'Reco', 'Deriv', 'Merge']
@@ -206,7 +203,7 @@ def task_hist(path, **kwargs):
         img = StringIO()
         pyplot.savefig(img)
         img.seek(0)
-        result['img'] = img.read()
+        result = ({'img': img.read()}, metadata)
     return result
 
 
@@ -216,16 +213,13 @@ methods.add('/task', 'hist', task_hist)
 def task_chain(path, **kwargs):
     """ Get list of tasks belonging to same chain as ``tid``.
 
-    Returns JSON document of the following format:
+    Returns data in JSON document of the following format:
 
     ```
     {
-      ...
-      "data": {
         ...,
         taskidN: [childN1_id, childN2_id, ...],
         ...
-      }
     }
     ```
 
@@ -241,8 +235,8 @@ def task_chain(path, **kwargs):
     :param tid: task id
     :type tid: str, int
 
-    :return: task chain data
-    :rtype: dict
+    :return: task chain data and method execution metadata
+    :rtype: tuple(dict, dict)
     """
     method_name = '/task/chain'
     if kwargs.get('rtype', 'json') is not 'json':
@@ -266,13 +260,10 @@ def task_kwsearch(path, **kwargs):
 
     .. note: Wildcard search is performed by ``taskname`` only.
 
-    Returns JSON document of the following format:
+    Returns data in a list of JSON document of the following format:
 
     ```
-    {
-      ...
-      "data": [..., {..., "output_dataset": [{...}, ...], ...}, ...]
-    }
+    [..., {..., "output_dataset": [{...}, ...], ...}, ...]
     ```
 
     Each element of the ``"data"`` clause represents single task with
@@ -299,8 +290,8 @@ def task_kwsearch(path, **kwargs):
     :param timeout: request execution timeout (sec) (default: 120)
     :type timeout: str, int
 
-    :return: tasks and related datasets metadata
-    :rtype: dict
+    :return: tasks and related datasets metadata, and method execution metadata
+    :rtype: tuple(list, dict)
     """
     method_name = '/task/kwsearch'
     if kwargs.get('rtype', 'json') is not 'json':
@@ -342,12 +333,10 @@ methods.add('/task', 'kwsearch', task_kwsearch)
 def task_deriv(path, **kwargs):
     """ Calculate statistics of derivation efficiency.
 
-    Returns JSON document of the following format:
+    Returns data in a list of JSON documents of the following format:
 
     ```
-    {
-      ...
-      "data": [
+    [
         {
           "output": <output_format>,
           "tasks": <n_tasks>,
@@ -356,8 +345,7 @@ def task_deriv(path, **kwargs):
           "events_ratio": <output_to_input_events_ratio>
         },
         ...
-      ]
-    }
+    ]
     ```
 
     Elements of the ``"data"`` clause are ordered by the
@@ -373,8 +361,8 @@ def task_deriv(path, **kwargs):
     :param amitag: amitag (or several)
     :type amitag: str or list
 
-    :return: calculated statistics
-    :rtype: dict
+    :return: calculated statistics and method execution metadata
+    :rtype: tuple(list, dict)
     """
     method_name = '/task/deriv'
     if kwargs.get('rtype', 'json') is not 'json':
@@ -394,12 +382,10 @@ def campaign_stat(path, rtype='json', step_type=None, events_src=None,
                   **kwargs):
     """ Calculate values for campaign progress overview.
 
-    Returns JSON document of the following format:
+    Returns data in JSON document of the following format:
 
     ```
     {
-      ...
-      "data": {
         "last_update": <last_registered_task_timestamp>,
         "date_format": <datetime_format>,
         "tasks_processing_summary": {
@@ -436,7 +422,6 @@ def campaign_stat(path, rtype='json', step_type=None, events_src=None,
           },
           ...
         }
-      }
     }
     ```
 
@@ -475,8 +460,8 @@ def campaign_stat(path, rtype='json', step_type=None, events_src=None,
                        * 'all'  -- provide all possible values as hash.
     :type events_src: str
 
-    :return: calculated campaign statistics
-    :rtype: dict
+    :return: calculated campaign statistics and method execution metadata
+    :rtype: tuple(dict, dict)
     """
     method_name = '/campaign/stat'
     if kwargs.get('rtype', 'json') is not 'json':
@@ -515,12 +500,10 @@ methods.add('/campaign', 'stat', campaign_stat)
 def step_stat(path, rtype='json', step_type=None, **kwargs):
     """ Get tasks statistics.
 
-    Returns JSON document of the following format:
+    Returns data as a list of JSON documents of the following format:
 
     ```
-    {
-      ...
-      "data": [
+    [
         {
           'name': ...,
           'total_events': ...,
@@ -543,8 +526,7 @@ def step_stat(path, rtype='json', step_type=None, **kwargs):
           'percent_pending': ...
         },
         ...
-      ]
-   }
+    ]
     ```
 
     :param path: full path to the method
@@ -573,13 +555,14 @@ def step_stat(path, rtype='json', step_type=None, **kwargs):
                                   * list of field values (prefixed or not).
     :type <selection_parameter>: NoneType, str, number, list
 
-    :return: calculated statistics for selected tasks by steps.
-             Steps in "data" list are sorted according to:
+    :return: calculated statistics for selected tasks by steps
+             and method execution metadata.
+             Steps in the returned list with data are sorted according to:
              * for 'step' steps: the MC campaign steps order
                (see `common.MC_STEPS`);
              * else: number of step input events (desc).
 
-    :rtype: dict
+    :rtype: tuple(list, dict)
     """
     method_name = '/step/stat'
     if rtype is not 'json':
@@ -602,7 +585,7 @@ def step_stat(path, rtype='json', step_type=None, **kwargs):
     logging.debug('(%s) parsed parameters:\n%s' % (method_name,
                                                    json.dumps(params,
                                                               indent=2)))
-    r = storages.step_stat(step_type=step_type, selection_params=params)
+    rdata, m = storages.step_stat(step_type=step_type, selection_params=params)
     if step_type == 'step':
         def steps_cmp(x, y):
             """ Compare processing steps for ordering. """
@@ -623,9 +606,9 @@ def step_stat(path, rtype='json', step_type=None, **kwargs):
             except KeyError:
                 pass
             return 0
-    r['_data'].sort(steps_cmp)
+    rdata.sort(steps_cmp)
 
-    return r
+    return rdata, m
 
 
 methods.add('/step', 'stat', step_stat)
