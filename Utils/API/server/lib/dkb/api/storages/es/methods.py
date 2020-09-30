@@ -30,8 +30,8 @@ import transform
 def task_steps_hist(**kwargs):
     """ Implementation of :py:func:`storages.task_steps_hist` for ES.
 
-    :return: hash with histogram data
-    :rtype: dict
+    :return: hash with histogram data and method execution metadata
+    :rtype: tuple(dict, dict)
     """
     init()
     q = dict(TASK_KWARGS)
@@ -64,8 +64,8 @@ def task_chain(**kwargs):
     :param tid: task ID
     :type tid: int, str
 
-    :return: task chain data
-    :rtype: dict
+    :return: task chain data and method execution metadata
+    :rtype: tuple(dict, dict)
     """
     init()
     tid = kwargs.get('tid')
@@ -91,6 +91,7 @@ def _chain_data(chain_id):
                  [chain_id, other_taskid_1, other_taskid_2, ..., taskid],
                  ...
              ]
+             And method execution metadata
     :rtype: list
     """
     kwargs = dict(TASK_KWARGS)
@@ -120,7 +121,7 @@ def _task_kwsearch_query(kw, ds_size=100):
                     (default: 100)
     :type ds_size: int
 
-    :return: constructed query
+    :return: constructed query and method execution metadata
     :rtype: dict
     """
     qs_args = []
@@ -175,8 +176,8 @@ def task_kwsearch(**kwargs):
     :param timeout: request execution timeout (sec)
     :type timeout: int
 
-    :return: tasks and related datasets metadata
-    :rtype: dict
+    :return: tasks and related datasets metadata, and method execution metadata
+    :rtype: tuple(list, dict)
     """
     init()
     q = _task_kwsearch_query(kwargs['kw'], kwargs['ds_size'])
@@ -199,10 +200,11 @@ def task_kwsearch(**kwargs):
         logging.warn(msg)
     r = client().search(index=idx, body={'query': q}, size=kwargs['size'],
                         request_timeout=kwargs['timeout'], doc_type='task')
-    result = transform.task_info(r)
+    data, metadata = transform.task_info(r)
     if warn:
-        result['_errors'] = warn
-    return result
+        # TODO: more accurate metadata join
+        metadata['errors'] = warn
+    return data, metadata
 
 
 def get_derivation_statistics_for_output(project, tags, output_format):
@@ -215,8 +217,8 @@ def get_derivation_statistics_for_output(project, tags, output_format):
     :param output_format: output format
     :type output_format: str
 
-    :return: calculated efficiency
-    :rtype: dict
+    :return: calculated efficiency and method execution metadata
+    :rtype: tuple(dict, dict)
 
     """
     query = dict(TASK_KWARGS)
@@ -236,8 +238,8 @@ def task_derivation_statistics(**kwargs):
     :type amitag: str or list
 
     :return: calculated statistics in format required by
-             :py:func:`api.handlers.task_deriv`
-    :rtype: dict
+             :py:func:`api.handlers.task_deriv` and method execution metadata
+    :rtype: tuple(list, dict)
     """
     init()
     project = kwargs.get('project').lower()
@@ -246,14 +248,23 @@ def task_derivation_statistics(**kwargs):
         tags = [tags]
     outputs = output_formats(project=project, amitag=tags)
     outputs.sort()
-    data = []
+
+    data, metadata = [], {}
+    result = (data, metadata)
     for output in outputs:
-        r = get_derivation_statistics_for_output(project, tags, output)
-        if r['tasks'] > 0:
-            data.append(r)
-    result = {'_data': data}
+        d, m = get_derivation_statistics_for_output(project, tags, output)
+        if d['tasks'] > 0:
+            data.append(d)
+        # TODO: more accurate metadata join (see below for 'warning')
+        metadata.update(m)
     if WARNINGS.get('output_formats'):
-        result['_warning'] = WARNINGS['output_formats']
+        if not metadata.get('warning'):
+            metadata['warning'] = WARNINGS['output_formats']
+        elif type(metadata['warinig']) is list:
+            metadata['warning'].append(WARNINGS['output_formats'])
+        else:
+            metadata['warning'] = [metadata['warning'],
+                                   WARNINGS['output_formats']]
     return result
 
 
@@ -298,8 +309,8 @@ def campaign_stat(selection_params, step_type='step', events_src=None):
                        * 'all'  -- provide all possible values as hash.
     :type events_src: str
 
-    :return: calculated campaign statistics
-    :rtype: dict
+    :return: calculated campaign statistics and method execution metadata
+    :rtype: tuple(dict, dict)
     """
     init()
     # Construct query
@@ -333,8 +344,8 @@ def campaign_stat(selection_params, step_type='step', events_src=None):
 
     query['body'] = q_body
 
-    r = {}
-    data = {}
+    rdata, metadata = {}, {}
+    result = (rdata, metadata)
     try:
         data = client().search(**query)
     except Exception, err:
@@ -342,13 +353,19 @@ def campaign_stat(selection_params, step_type='step', events_src=None):
                                                             str(err))
         raise MethodException(reason=msg)
     try:
-        data = transform.campaign_stat(data, events_src)
+        data, m = transform.campaign_stat(data, events_src)
     except Exception, err:
         msg = "Failed to parse storage response: %s." % str(err)
         raise MethodException(reason=msg)
 
-    r.update(data)
-    return r
+    try:
+        rdata.update(data)
+        metadata.update(m)
+    except NameError:
+        # One of the previously tried operations didn't work
+        pass
+
+    return result
 
 
 def step_stat(selection_params, step_type='step'):
@@ -363,8 +380,9 @@ def step_stat(selection_params, step_type='step'):
     :type step_type: str
 
     :return: hash with calculated statistics for ``step/stat`` method
-             (see :py:func:`api.handlers.step_stat`)
-    :rtype: hash
+             (see :py:func:`api.handlers.step_stat`) and method execution
+             metadata
+    :rtype: tuple(dict, dict)
     """
     init()
     # Aborted/failed/broken/obsolete tasks should be excluded from statistics
@@ -409,7 +427,8 @@ def step_stat(selection_params, step_type='step'):
     r = client().search(**query)
     logging.debug('ES response:\n%s' % json.dumps(r, indent=2))
     # ...and parse its response
-    r = transform.step_stat(r, agg_units, step_type)
+    r, m = transform.step_stat(r, agg_units, step_type)
     if step_type == 'ctag_format' and WARNINGS.get('output_formats'):
-        r['_warning'] = WARNINGS['output_formats']
-    return r
+        # TODO: more accurate metadata join
+        m['warning'] = WARNINGS['output_formats']
+    return r, m
