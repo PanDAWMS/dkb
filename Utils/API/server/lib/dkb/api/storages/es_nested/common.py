@@ -21,7 +21,7 @@ from api import config
 
 
 # To ensure storages are named same way in all messages
-STORAGE_NAME = 'Elasticsearch'
+STORAGE_NAME = 'Elasticsearch (nested)'
 
 try:
     import elasticsearch
@@ -79,8 +79,6 @@ def init():
     :return: ES client
     :rtype: elasticsearch.client.Elasticsearch
     """
-    raise NotImplementedError('init')
-
     global CONFIG
     global es
     if es and es.ping():
@@ -91,10 +89,8 @@ def init():
         raise StorageClientException(STORAGE_NAME,
                                      "driver module is not loaded")
 
-    #if not CONFIG:
-    # TODO: implement storage client configuration that will make it 
-    #       to use nested indices instead of default ones
-    #    CONFIG = config.get_config('storages', STORAGE_NAME)
+    if not CONFIG:
+        CONFIG = config.get_config('storages', STORAGE_NAME)
 
     hosts = CONFIG.get('hosts', None)
     user = CONFIG.get('user', '')
