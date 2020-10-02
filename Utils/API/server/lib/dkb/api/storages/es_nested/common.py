@@ -57,8 +57,8 @@ FIELD_ALIASES = {'amitag': 'ctag',
 # NOTE: all intermediate aggregations MUST be named after the prefix name
 PREFIX_AGGS = {
     'status': {'terms': {'field': 'status'}},
-    'output': {'children': {'type': 'output_dataset'},
-               'aggs': {'output': {'filter': {'term': {'deleted': False}}}}},
+#    'output': {'children': {'type': 'output_dataset'},
+#               'aggs': {'output': {'filter': {'term': {'deleted': False}}}}},
     'input': {'filter': {'range': {'input_bytes': {'gt': 0}}}}
 }
 
@@ -79,6 +79,8 @@ def init():
     :return: ES client
     :rtype: elasticsearch.client.Elasticsearch
     """
+    raise NotImplementedError('init')
+
     global CONFIG
     global es
     if es and es.ping():
@@ -88,8 +90,12 @@ def init():
     except NameError:
         raise StorageClientException(STORAGE_NAME,
                                      "driver module is not loaded")
-    if not CONFIG:
-        CONFIG = config.get_config('storages', STORAGE_NAME)
+
+    #if not CONFIG:
+    # TODO: implement storage client configuration that will make it 
+    #       to use nested indices instead of default ones
+    #    CONFIG = config.get_config('storages', STORAGE_NAME)
+
     hosts = CONFIG.get('hosts', None)
     user = CONFIG.get('user', '')
     passwd = CONFIG.get('passwd', '')
@@ -309,29 +315,6 @@ def tokens(text, index='', field=None, analyzer=None):
     return result
 
 
-def output_formats(**kwargs):
-    """ Get output formats corresponding to given project and amitags.
-
-    Accepts keyword parameters in form supported by
-    :py:func:`get_selection_query`.
-
-    :return: output formats
-    :rtype: list
-    """
-    formats = []
-    query = dict(TASK_KWARGS)
-    task_q = get_selection_query(**kwargs)
-    ds_q = {'has_parent': {'type': 'task', 'query': task_q}}
-    agg = {'formats': {'terms': {'field': 'data_format', 'size': 500}}}
-    agg['formats']['terms']['exclude'] = ['DAOD', 'DRAW']
-    query['body'] = {'query': ds_q, 'aggs': agg}
-    query['doc_type'] = 'output_dataset'
-    query['size'] = 0
-    r = client().search(**query)
-    return [bucket['key'] for bucket in
-            r['aggregations']['formats']['buckets']]
-
-
 def get_step_aggregation_query(step_type=None, selection_params={}):
     """ Construct "aggs" part of ES query for steps aggregation.
 
@@ -354,19 +337,7 @@ def get_step_aggregation_query(step_type=None, selection_params={}):
     elif step_type not in STEP_TYPES:
         raise ValueError(step_type, "Unknown step type (expected one of: %s)"
                                     % STEP_TYPES)
-    if step_type == 'ctag_format':
-        formats = output_formats(**selection_params)
-        filters = {}
-        for f in formats:
-            filters[f] = {
-                'has_child': {
-                    'type': 'output_dataset',
-                    'query': {'term': {'data_format': f}}
-                }
-            }
-        aggs = {'steps': {'filters': {'filters': filters},
-                          'aggs': {'substeps': {'terms': {'field': 'ctag'}}}}}
-    elif step_type == 'step':
+    if step_type == 'step':
         aggs = {'steps': {'terms': {'field': 'step_name.keyword'}}}
     else:
         raise DkbApiNotImplemented("Aggregation by steps of type '%s' is not"
