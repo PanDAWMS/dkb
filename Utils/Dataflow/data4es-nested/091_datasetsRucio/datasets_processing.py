@@ -82,6 +82,7 @@ def main(argv):
 
     stage.configure(argv)
     stage.process = process
+    stage.skip_process = skip_process
     exit_code = stage.run()
 
     if exit_code == 0:
@@ -122,6 +123,42 @@ def get_rucio_client():
     if not rucio_client:
         init_rucio_client()
     return rucio_client
+
+
+def skip_process(stage, message):
+    """ Single message processing in case of 'skip' scenario.
+
+    Convert message's `output` field into nested `output_dataset` documents.
+
+    Implementation of `ProcessorStage.skip_process()` method.
+
+    :param stage: Processor stage for which this function is a method
+    :type stage: :py:class:`pyDKB.dataflow.stage.ProcessorStage`
+    :param message: input message to be processed
+    :type message: :py:class:
+                   `pyDKB.dataflow.communication.messages.AbstractMessage`
+
+    :return: processing status: True(success)/False(failure)
+    :rtype: bool
+    """
+    data = message.content()
+    output_datasets = []
+    output = data.pop('output', [])
+    if not output:
+        # It could be `None`, not missed
+        output = []
+    elif type(output) is not list:
+        output = [output]
+    for ds in output:
+        output_datasets.append({'name': ds})
+    if output_datasets:
+        data['output_datasets'] = output_datasets
+        out_msg = stage.output_message_class()(data)
+        out_msg.incomplete(True)
+    else:
+        out_msg = message
+    stage.output(out_msg)
+    return True
 
 
 def process(stage, message):
