@@ -77,6 +77,9 @@ def main(argv):
     stage.set_input_message_type(messageType.JSON)
     stage.set_output_message_type(messageType.JSON)
 
+    global log
+    log = stage.log
+
     stage.configure(argv)
     stage.process = process
     exit_code = stage.run()
@@ -209,10 +212,10 @@ def process_ds(datasets, ds_type):
         try:
             ds = get_ds_info(ds_name, mfields)
         except RucioException, err:
-            stage.log(["Failed to get information"
-                       " from Rucio for: %s." % ds_name,
-                       "Reason: %s." % str(err)],
-                      logLevel.WARN)
+            log(["Failed to get information"
+                 " from Rucio for: %s." % ds_name,
+                 "Reason: %s." % str(err)],
+                logLevel.WARN)
             status = False
             ds = {}
         if ds_type == OUTPUT:
