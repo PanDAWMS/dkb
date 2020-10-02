@@ -1,0 +1,59 @@
+#!/usr/bin/env python
+
+import json
+import datetime
+import traceback
+import os
+import sys
+import logging
+
+base_dir = os.path.dirname(os.path.abspath(__file__))
+cfg_dir = os.path.join(base_dir, os.pardir, os.pardir)
+lib_dir = os.path.join(cfg_dir, 'lib', 'dkb')
+
+try:
+    sys.path.append(lib_dir)
+    import api
+except ImportError:
+    logging.error("Failed to import 'api' library module from: %s"
+                  % lib_dir)
+
+api.CONFIG_DIR = cfg_dir
+api.configure()
+
+tests = {
+    'Chain data': {
+        'path': '/task/chain',
+        'params': {'tid': 21774573}
+    },
+    'Histogram': {
+        'path': '/task/hist',
+        'params': {'htags': 'returnofrpvllreprocessingdata16',
+                   'rtype': 'json',
+                   'start': datetime.datetime(2020, 9, 1)}
+    }
+}
+
+
+def test(cfg, nested=False):
+    test_type = 'Nested' if nested else 'Default'
+    print '-----\n%s\n-----' % test_type
+    path = '/nested' * nested + cfg['path']
+    params = cfg['params']
+    data, metadata = api.methods.handler(path)(path, **params)
+    try:
+        data = json.dumps(data, indent=2)
+    except Exception:
+        pass
+    print "Data: %s\n" % data
+    print "Meta: %s\n" % json.dumps(metadata, indent=2)
+
+
+for t in tests:
+    print '\n=== %s ===>' % t
+    for nested in (False, True):
+        try:
+            test(tests[t], nested)
+        except Exception, err:
+            traceback.print_exc()
+    print '<=== %s ===' % t
