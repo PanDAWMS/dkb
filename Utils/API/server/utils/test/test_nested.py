@@ -37,6 +37,10 @@ tests = {
         'params': {'kw': ['mc16e', '346899', 'gingrich'],
                    'timeout': 60, 'production': True,
                    'analysis': False}
+    },
+    'Derivation statistics': {
+        'path': '/task/deriv',
+        'params': {'project': 'mc16_13TeV', 'amitag': 'r11748'}
     }
 }
 
