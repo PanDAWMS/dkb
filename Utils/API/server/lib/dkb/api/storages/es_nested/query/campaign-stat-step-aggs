@@ -1,0 +1,72 @@
+{
+  "status": {
+    "terms": {
+      "field": "status",
+      "size": 20
+    },
+    "aggs": {
+      "updated_24h": {
+        "filter": {
+          "range": {
+            "task_timestamp": {"gte": "now-1d"}
+          }
+        }
+      }
+    }
+  },
+  "input_events": {
+    "filter": {
+      "bool": {"must_not": {"terms": {"status": ["aborted", "failed", "broken", "obsolete"]}}}
+    },
+    "aggs": {
+      "input_events": {
+        "sum": {"field": "input_events"}
+      }
+    }
+  },
+  "output_events": {
+    "children": {"type": "output_dataset"},
+    "aggs": {
+      "output_events": {
+        "sum": {"field": "events"}
+      }
+    }
+  },
+  "finished": {
+    "filter": {
+      "terms": {"status": ["done", "finished"]}
+    },
+    "aggs": {
+      "processed_events": {
+        "sum": {"field": "processed_events"}
+      },
+      "daily": {
+        "date_histogram": {
+          "interval": "day",
+          "field": "end_time",
+          "keyed": true,
+          "min_doc_count" : 1
+        },
+        "aggs": {
+          "output": {
+            "children": {"type": "output_dataset"},
+            "aggs": {
+              "events": {
+                "sum": {"field": "events"}
+              }
+            }
+          },
+          "processed_events": {
+            "sum": {"field": "processed_events"}
+          }
+        }
+      }
+    }
+  },
+  "start": {
+    "min": {"field": "start_time"}
+  },
+  "end": {
+    "max": {"field": "end_time"}
+  }
+}
