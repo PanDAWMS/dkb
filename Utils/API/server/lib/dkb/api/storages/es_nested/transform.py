@@ -290,52 +290,45 @@ def task_info(data):
     return result
 
 
-def derivation_statistics(data, format):
+def derivation_statistics(data):
     """ Transform ES response to be used in the API method response.
-
-    Format of the returned values corresponds the format of a single
-    element of returned data for method ``task/deriv`` (see
-    :py:func:`api.handlers.task_deriv`).
 
     :param data: ES response
     :type data: dict
-    :param format: data format to which ``data`` value is referred
-    :type format: str
 
-    :return: derivation efficiency data for given format and method
-             execution metadata
-    :rtype: tuple(dict, dict)
+    :return: derivation efficiency data in form required by method
+             ``task/deriv`` (see :py:func:`api.handlers.task_deriv`)
+             and method execution metadata
+    :rtype: tuple(list, dict)
     """
-    raise NotImplementedError('derivation_statistics')
-
-    # TODO: reimplement according to what a new query response format
-    #       (most likely it will be whole set of data, not for a single
-    #       format)
-
-    rdata, metadata = {}, {}
+    rdata, metadata = [], {}
     result = (rdata, metadata)
-    try:
-        total = data['hits']['total']
-        result_events = (data['aggregations']['output_datasets']['not_removed']
-                         ['format']['sum_events']['value'])
-        result_bytes = (data['aggregations']['output_datasets']['not_removed']
-                        ['format']['sum_bytes']['value'])
-        input_events = data['aggregations']['input_events']['value']
-        input_bytes = data['aggregations']['input_bytes']['value']
-        ratio = 0
-        if input_bytes != 0:
-            ratio = float(result_bytes) / float(input_bytes)
-        events_ratio = 0
-        if input_events != 0:
-            events_ratio = float(result_events) / float(input_events)
-        task_ids = [hit['_id'] for hit in data['hits']['hits']]
-    except Exception:
-        total = 0
-        ratio = 0
-        events_ratio = 0
-        task_ids = []
-    rdata.update({'output': format, 'tasks': total, 'task_ids': task_ids,
-                  'ratio': ratio, 'events_ratio': events_ratio})
+    output = data['aggregations']['output']['not_deleted']
+    formats = output['formats']['buckets']
+    for bucket in formats:
+        try:
+            format = bucket['key']
+            total = bucket['doc_count']
+            result_events = bucket['sum_events']['value']
+            result_bytes = bucket['sum_bytes']['value']
+            input_events = bucket['task']['input_events']['value']
+            input_bytes = bucket['task']['input_bytes']['value']
+            ratio = 0
+            if input_bytes != 0:
+                ratio = float(result_bytes) / float(input_bytes)
+            events_ratio = 0
+            if input_events != 0:
+                events_ratio = float(result_events) / float(input_events)
+            ids = bucket['task']['ids']['buckets']
+            task_ids = [task['key'].replace('task#', '') for task in ids]
+        except Exception:
+            total = 0
+            ratio = 0
+            events_ratio = 0
+            task_ids = []
+        r = {'output': format, 'tasks': total, 'task_ids': task_ids,
+             'ratio': ratio, 'events_ratio': events_ratio}
+        rdata.append(r)
     return result
 
 

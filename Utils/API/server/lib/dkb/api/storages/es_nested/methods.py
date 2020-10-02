@@ -217,25 +217,28 @@ def task_derivation_statistics(**kwargs):
              :py:func:`api.handlers.task_deriv` and method execution metadata
     :rtype: tuple(list, dict)
     """
-    raise NotImplementedError('task_derivetion_statistics')
-
     init()
     project = kwargs.get('project').lower()
     tags = kwargs.get('amitag')
     if isinstance(tags, (str, unicode)):
         tags = [tags]
 
-    # TODO: implement statistics extraction & calculation
+    q = dict(TASK_KWARGS)
+    q['body'] = get_query('deriv', project=project, ctag=tags)
+    q['request_timeout'] = 30
+
+    data = client().search(**q)
+    data, metadata = transform.derivation_statistics(data)
 
     if WARNINGS.get('output_formats'):
         if not metadata.get('warning'):
             metadata['warning'] = WARNINGS['output_formats']
-        elif type(metadata['warinig']) is list:
+        elif type(metadata['warning']) is list:
             metadata['warning'].append(WARNINGS['output_formats'])
         else:
             metadata['warning'] = [metadata['warning'],
                                    WARNINGS['output_formats']]
-    return result
+    return data, metadata
 
 
 def campaign_stat(selection_params, step_type='step', events_src=None):
