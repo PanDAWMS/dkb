@@ -18,7 +18,6 @@ from common import (TASK_KWARGS,
 from common import (init,
                     client,
                     task_info,
-                    output_formats,
                     tokens,
                     get_query,
                     get_selection_query,
@@ -124,6 +123,8 @@ def _task_kwsearch_query(kw, ds_size=100):
     :return: constructed query and method execution metadata
     :rtype: dict
     """
+    raise NotImplementedError('_task_kwsearch_query')
+
     qs_args = []
     wildcard = False
     for w in kw:
@@ -146,14 +147,14 @@ def _task_kwsearch_query(kw, ds_size=100):
                     'all_fields': True,
                     'default_operator': 'AND'
                 }
-            },
-            'should': {
-                'has_child': {
-                    'type': 'output_dataset',
-                    'score_mode': 'sum',
-                    'query': {'match_all': {}},
-                    'inner_hits': {'size': ds_size}
-                }
+#            },
+#            'should': {
+#                'has_child': {
+#                    'type': 'output_dataset',
+#                    'score_mode': 'sum',
+#                    'query': {'match_all': {}},
+#                    'inner_hits': {'size': ds_size}
+#                }
             }
         }
     }
@@ -207,28 +208,6 @@ def task_kwsearch(**kwargs):
     return data, metadata
 
 
-def get_derivation_statistics_for_output(project, tags, output_format):
-    """ Calculate derivation efficiency for given output format.
-
-    :param project: project name
-    :type project: str
-    :param amitag: amitags
-    :type amitag: list
-    :param output_format: output format
-    :type output_format: str
-
-    :return: calculated efficiency and method execution metadata
-    :rtype: tuple(dict, dict)
-
-    """
-    query = dict(TASK_KWARGS)
-    kwargs = {'project': project, 'ctag': tags, 'output': output_format}
-    query['body'] = get_query('deriv', **kwargs)
-    query['_source'] = False
-    r = client().search(**query)
-    return transform.derivation_statistics(r, output_format)
-
-
 def task_derivation_statistics(**kwargs):
     """ Calculate statistics of derivation efficiency.
 
@@ -241,22 +220,16 @@ def task_derivation_statistics(**kwargs):
              :py:func:`api.handlers.task_deriv` and method execution metadata
     :rtype: tuple(list, dict)
     """
+    raise NotImplementedError('task_derivetion_statistics')
+
     init()
     project = kwargs.get('project').lower()
     tags = kwargs.get('amitag')
     if isinstance(tags, (str, unicode)):
         tags = [tags]
-    outputs = output_formats(project=project, amitag=tags)
-    outputs.sort()
 
-    data, metadata = [], {}
-    result = (data, metadata)
-    for output in outputs:
-        d, m = get_derivation_statistics_for_output(project, tags, output)
-        if d['tasks'] > 0:
-            data.append(d)
-        # TODO: more accurate metadata join (see below for 'warning')
-        metadata.update(m)
+    # TODO: implement statistics extraction & calculation
+
     if WARNINGS.get('output_formats'):
         if not metadata.get('warning'):
             metadata['warning'] = WARNINGS['output_formats']

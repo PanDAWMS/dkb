@@ -31,31 +31,10 @@ def steps_iterator(data):
               (``step_name``, ``step_data``)
     :rtype: iterable object
     """
-    if data.get('steps'):
-        # `data` contains information about steps
-        # (first or recursive calls of the generator)
-        buckets = data['steps'].get('buckets', None)
-    elif data.get('substeps'):
-        # `data` contains information about substeps
-        # (recursive calls of the generator)
-        buckets = data['substeps'].get('buckets', None)
-    else:
-        # `data` is data of a single step
-        yield None, data
-        raise StopIteration
+    raise NotImplementedError('steps_iterator')
 
-    # Call `steps_iterator` for each bucket
-    # (in case there are some sub-steps)
-    for bucket in buckets:
-        if isinstance(buckets, list):
-            bucket_name = bucket.get('key', None)
-        elif isinstance(buckets, dict):
-            bucket_name = bucket
-            bucket = buckets[bucket_name]
-        for step_name, step in steps_iterator(bucket):
-            step_name = ':'.join([bucket_name, step_name]) if step_name \
-                        else bucket_name
-            yield step_name, step
+    # TODO: implement new version or get rid of this function
+    #       for steps are properly tagged in the nested scheme
 
 
 def get_single_agg_value(data, unit):
@@ -299,6 +278,10 @@ def task_info(data):
              metadata
     :rtype: tuple(list, dict)
     """
+    raise NotImplementedError('task_info')
+
+    # TODO: implement parsing according to a new scheme.
+
     rdata, metadata = [], {}
     result = (rdata, metadata)
     metadata['took_storage_ms'] = data['took']
@@ -307,11 +290,11 @@ def task_info(data):
     metadata['total'] = data['hits']['total']
     for hit in data['hits']['hits']:
         task = hit['_source']
-        try:
-            datasets = hit['inner_hits']['output_dataset']['hits']['hits']
-        except KeyError:
-            datasets = []
-        task['output_dataset'] = [ds['_source'] for ds in datasets]
+#        try:
+#            datasets = hit['inner_hits']['output_dataset']['hits']['hits']
+#        except KeyError:
+#            datasets = []
+#        task['output_dataset'] = [ds['_source'] for ds in datasets]
         rdata.append(task)
     return result
 
@@ -332,6 +315,12 @@ def derivation_statistics(data, format):
              execution metadata
     :rtype: tuple(dict, dict)
     """
+    raise NotImplementedError('derivation_statistics')
+
+    # TODO: reimplement according to what a new query response format
+    #       (most likely it will be whole set of data, not for a single
+    #       format)
+
     rdata, metadata = {}, {}
     result = (rdata, metadata)
     try:
@@ -378,6 +367,10 @@ def campaign_stat(stat_data, events_src=None):
              execution metadata
     :rtype: tuple(dict, dict)
     """
+    raise NotImplementedError('campaign_stat')
+
+    # TODO: check the code, it _might_ need to be changed.
+
     data, metadata = {}, {}
     result = (data, metadata)
     events_src_values = ['ds', 'task', 'all']

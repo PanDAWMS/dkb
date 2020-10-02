@@ -24,14 +24,14 @@
       }
     }
   },
-  "output_events": {
-    "children": {"type": "output_dataset"},
-    "aggs": {
-      "output_events": {
-        "sum": {"field": "events"}
-      }
-    }
-  },
+#  "output_events": {
+#    "children": {"type": "output_dataset"},
+#    "aggs": {
+#      "output_events": {
+#        "sum": {"field": "events"}
+#      }
+#    }
+#  },
   "finished": {
     "filter": {
       "terms": {"status": ["done", "finished"]}
@@ -48,14 +48,14 @@
           "min_doc_count" : 1
         },
         "aggs": {
-          "output": {
-            "children": {"type": "output_dataset"},
-            "aggs": {
-              "events": {
-                "sum": {"field": "events"}
-              }
-            }
-          },
+#          "output": {
+#            "children": {"type": "output_dataset"},
+#            "aggs": {
+#              "events": {
+#                "sum": {"field": "events"}
+#              }
+#            }
+#          },
           "processed_events": {
             "sum": {"field": "processed_events"}
           }
