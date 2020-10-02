@@ -31,6 +31,12 @@ tests = {
         'params': {'htags': 'returnofrpvllreprocessingdata16',
                    'rtype': 'json',
                    'start': datetime.datetime(2020, 9, 1)}
+    },
+    'Kwsearch': {
+        'path': '/task/kwsearch',
+        'params': {'kw': ['mc16e', '346899', 'gingrich'],
+                   'timeout': 60, 'production': True,
+                   'analysis': False}
     }
 }
 
