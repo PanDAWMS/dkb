@@ -123,8 +123,6 @@ def _task_kwsearch_query(kw, ds_size=100):
     :return: constructed query and method execution metadata
     :rtype: dict
     """
-    raise NotImplementedError('_task_kwsearch_query')
-
     qs_args = []
     wildcard = False
     for w in kw:
@@ -147,14 +145,13 @@ def _task_kwsearch_query(kw, ds_size=100):
                     'all_fields': True,
                     'default_operator': 'AND'
                 }
-#            },
-#            'should': {
-#                'has_child': {
-#                    'type': 'output_dataset',
-#                    'score_mode': 'sum',
-#                    'query': {'match_all': {}},
-#                    'inner_hits': {'size': ds_size}
-#                }
+            },
+            'should': {
+                'nested': {
+                    'path': 'output_dataset',
+                    'score_mode': 'sum',
+                    'query': {'match_all': {}},
+                }
             }
         }
     }

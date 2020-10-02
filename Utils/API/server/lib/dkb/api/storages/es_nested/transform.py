@@ -278,10 +278,6 @@ def task_info(data):
              metadata
     :rtype: tuple(list, dict)
     """
-    raise NotImplementedError('task_info')
-
-    # TODO: implement parsing according to a new scheme.
-
     rdata, metadata = [], {}
     result = (rdata, metadata)
     metadata['took_storage_ms'] = data['took']
@@ -290,11 +286,6 @@ def task_info(data):
     metadata['total'] = data['hits']['total']
     for hit in data['hits']['hits']:
         task = hit['_source']
-#        try:
-#            datasets = hit['inner_hits']['output_dataset']['hits']['hits']
-#        except KeyError:
-#            datasets = []
-#        task['output_dataset'] = [ds['_source'] for ds in datasets]
         rdata.append(task)
     return result
 
