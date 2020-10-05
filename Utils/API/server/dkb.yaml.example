@@ -7,3 +7,11 @@ storages:
     index:
       production_tasks: index_name_1
       analysis_tasks: index_name_2
+  Elasticsearch (nested):
+    hosts:
+      - 127.0.0.1:9200
+    user: username
+    passwd: supersecretpassword
+    index:
+      production_tasks: nested_index_name_1
+      analysis_tasks: nested_index_name_2
