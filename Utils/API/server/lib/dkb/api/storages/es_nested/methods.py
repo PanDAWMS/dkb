@@ -231,14 +231,6 @@ def task_derivation_statistics(**kwargs):
     data = client().search(**q)
     data, metadata = transform.derivation_statistics(data)
 
-    if WARNINGS.get('output_formats'):
-        if not metadata.get('warning'):
-            metadata['warning'] = WARNINGS['output_formats']
-        elif type(metadata['warning']) is list:
-            metadata['warning'].append(WARNINGS['output_formats'])
-        else:
-            metadata['warning'] = [metadata['warning'],
-                                   WARNINGS['output_formats']]
     return data, metadata
 
 
@@ -398,7 +390,4 @@ def step_stat(selection_params, step_type='step'):
     logging.debug('ES response:\n%s' % json.dumps(r, indent=2))
     # ...and parse its response
     r, m = transform.step_stat(r, agg_units, step_type)
-    if step_type == 'ctag_format' and WARNINGS.get('output_formats'):
-        # TODO: more accurate metadata join
-        m['warning'] = WARNINGS['output_formats']
     return r, m
