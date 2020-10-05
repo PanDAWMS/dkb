@@ -41,6 +41,12 @@ tests = {
     'Derivation statistics': {
         'path': '/task/deriv',
         'params': {'project': 'mc16_13TeV', 'amitag': 'r11748'}
+    },
+    'Campaign statistics': {
+        'path': '/campaign/stat',
+        'params': {'events_src': 'all',
+                   'htag': 'returnofrpvllreprocessingdata16',
+                   'step_type': 'ctag_format'}
     }
 }
 
