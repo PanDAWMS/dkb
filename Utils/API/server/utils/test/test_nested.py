@@ -47,6 +47,11 @@ tests = {
         'params': {'events_src': 'all',
                    'htag': 'returnofrpvllreprocessingdata16',
                    'step_type': 'ctag_format'}
+    },
+    'Step statistics': {
+        'path': '/step/stat',
+        'params': {'htag': 'returnofrpvllreprocessingdata16',
+                   'step_type': 'ctag_format'}
     }
 }
 
