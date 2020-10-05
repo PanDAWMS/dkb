@@ -298,18 +298,16 @@ def campaign_stat(selection_params, step_type='step', events_src=None):
     #  - select tasks
     q = get_selection_query(**selection_params)
     #  - divide them into 'steps'
-    step_agg = get_step_aggregation_query(step_type, selection_params)
+    step_agg = get_step_aggregation_query(step_type)
     #  - get agg values for each step ('instep' aggs)
     instep_aggs = get_query('campaign-stat-step-aggs')
     #  - construct 'last_update' part
     last_update = get_agg_units_query(['last_update'])
     #  - put 'instep' aggs into the innermost (sub) step clause
     instep_clause = step_agg['steps']
-    while instep_clause.get('aggs'):
-        instep_clause = instep_clause['aggs'].get('substeps')
-    if instep_clause:
+    if not instep_clause.get('aggs'):
         instep_clause['aggs'] = {}
-        instep_clause = instep_clause['aggs']
+    instep_clause = instep_clause['aggs']
     instep_clause.update(instep_aggs)
     #  - join 'query' and 'aggs' parts within request body
     q_body = {'query': q, 'aggs': step_agg}

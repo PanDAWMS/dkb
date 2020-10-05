@@ -53,6 +53,9 @@ FIELD_ALIASES = {'amitag': 'ctag',
                  'htag': 'hashtag_list',
                  'pr': 'pr_id'}
 
+STEP_FIELDS = {STEP_TYPES[0]: 'step_name',
+               STEP_TYPES[1]: 'ctag_format_step'}
+
 # ES prefix aggregations
 # NOTE: all intermediate aggregations MUST be named after the prefix name
 PREFIX_AGGS = {
@@ -311,7 +314,7 @@ def tokens(text, index='', field=None, analyzer=None):
     return result
 
 
-def get_step_aggregation_query(step_type=None, selection_params={}):
+def get_step_aggregation_query(step_type=None):
     """ Construct "aggs" part of ES query for steps aggregation.
 
     :raises: `ValueError`: unknown step type.
@@ -319,10 +322,6 @@ def get_step_aggregation_query(step_type=None, selection_params={}):
     :param step_type: what should be considered as step:
                       'step', 'ctag_format' (default: 'step')
     :type step_type: str
-    :param selection_params: parameters that define set of tasks for which
-                             the aggregation will be performed
-                             (see :py:func:`get_selection_query`)
-    :type selection_params: dict
 
     :return: "aggs" part of ES query
     :rtype: dict
@@ -333,8 +332,9 @@ def get_step_aggregation_query(step_type=None, selection_params={}):
     elif step_type not in STEP_TYPES:
         raise ValueError(step_type, "Unknown step type (expected one of: %s)"
                                     % STEP_TYPES)
-    if step_type == 'step':
-        aggs = {'steps': {'terms': {'field': 'step_name.keyword'}}}
+    step_field = STEP_FIELDS.get(step_type)
+    if step_field:
+        aggs = {'steps': {'terms': {'field': '%s.keyword' % step_field}}}
     else:
         raise DkbApiNotImplemented("Aggregation by steps of type '%s' is not"
                                    " implemented yet.")
