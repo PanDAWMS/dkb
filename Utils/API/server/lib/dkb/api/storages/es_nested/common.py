@@ -67,10 +67,7 @@ PREFIX_AGGS = {
 }
 
 # Frequently used warning messages
-WARNINGS = {
-    'output_formats': "Formats 'DAOD', 'DRAW' are excluded from"
-                      " the statistics."
-}
+WARNINGS = {}
 
 
 def init():
