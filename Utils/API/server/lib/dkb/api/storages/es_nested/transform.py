@@ -17,11 +17,9 @@ from common import (ES_DATE_FORMAT,
 def steps_iterator(data):
     """ Generator for iterator over steps data.
 
-    Recursively check all buckets within `steps` and `substeps`
-    clauses of the ``data``.
+    Recursively check all buckets within `steps` clause of the ``data``.
 
-    Input ``data`` are supposed to have outer key "steps" and may have
-    nested keys "substeps" or "steps".
+    Input ``data`` are supposed to have outer key "steps".
 
     :param data: full data to extract steps information from
     :type data: dict
@@ -31,10 +29,14 @@ def steps_iterator(data):
               (``step_name``, ``step_data``)
     :rtype: iterable object
     """
-    raise NotImplementedError('steps_iterator')
+    steps = data.get('steps', {}).get('buckets', [])
 
-    # TODO: implement new version or get rid of this function
-    #       for steps are properly tagged in the nested scheme
+    for s in steps:
+        if type(steps) is dict:
+            result = (s, steps[s])
+        else:
+            result = (s.get('key'), s)
+        yield result
 
 
 def get_single_agg_value(data, unit):
@@ -351,10 +353,6 @@ def campaign_stat(stat_data, events_src=None):
              execution metadata
     :rtype: tuple(dict, dict)
     """
-    raise NotImplementedError('campaign_stat')
-
-    # TODO: check the code, it _might_ need to be changed.
-
     data, metadata = {}, {}
     result = (data, metadata)
     events_src_values = ['ds', 'task', 'all']
