@@ -372,19 +372,17 @@ def step_stat(selection_params, step_type='step'):
     query['size'] = 0
     # * and query body...
     q = get_selection_query(**selection_params)
-    step_agg = get_step_aggregation_query(step_type, selection_params)
+    step_agg = get_step_aggregation_query(step_type)
     agg_units = ['input_events', 'input', 'input__input_bytes',
                  'processed_events', 'total_events', 'hs06', 'hs06_failed',
-                 'task_duration', 'output', 'output__bytes', 'output__events',
-                 'status', 'status__input_events', 'status__processed_events',
-                 'status__input__input_bytes']
+                 'task_duration', 'output_dataset', 'output_dataset__bytes',
+                 'output_dataset__events', 'status', 'status__input_events',
+                 'status__processed_events', 'status__input__input_bytes']
     instep_aggs = get_agg_units_query(agg_units)
     instep_clause = step_agg['steps']
-    while instep_clause.get('aggs'):
-        instep_clause = instep_clause['aggs'].get('substeps')
-    if instep_clause:
+    if not instep_clause.get('aggs'):
         instep_clause['aggs'] = {}
-        instep_clause = instep_clause['aggs']
+    instep_clause = instep_clause['aggs']
     instep_clause.update(instep_aggs)
     query['body'] = {'query': q, 'aggs': step_agg}
 
