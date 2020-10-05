@@ -162,6 +162,8 @@ def get_agg_values(data, units=[]):
             if unit.startswith(p + '__'):
                 clean_units.remove(unit)
                 u = unit[(len(p) + 2):]
+                if PREFIX_AGGS[p].get('nested'):
+                    u = '.'.join([p, u])
                 prefixed_units[p] = prefixed_units.get(p, [])
                 prefixed_units[p].append(u)
                 break
@@ -494,8 +496,8 @@ def step_stat(data, agg_units=[], step_type=None):
         d['input_bytes'] = input_ds_data.get('input_bytes', None)
         d['input_not_removed_tasks'] = input_ds_data.get('total', None)
 
-        output_ds_data = step.pop('output', {})
-        d['output_bytes'] = output_ds_data.get('bytes', None)
+        output_ds_data = step.pop('output_dataset', {})
+        d['output_bytes'] = output_ds_data.get('output_dataset.bytes', None)
         d['output_not_removed_tasks'] = output_ds_data.get('total', None)
 
         d['cpu_failed'] = step.pop('hs06_failed', None)

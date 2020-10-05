@@ -60,8 +60,9 @@ STEP_FIELDS = {STEP_TYPES[0]: 'step_name',
 # NOTE: all intermediate aggregations MUST be named after the prefix name
 PREFIX_AGGS = {
     'status': {'terms': {'field': 'status'}},
-#    'output': {'children': {'type': 'output_dataset'},
-#               'aggs': {'output': {'filter': {'term': {'deleted': False}}}}},
+    'output_dataset': {'nested': {'path': 'output_dataset'},
+                       'aggs': {'output_dataset': {'filter': {
+                           'term': {'output_dataset.deleted': False}}}}},
     'input': {'filter': {'range': {'input_bytes': {'gt': 0}}}}
 }
 
@@ -351,8 +352,8 @@ def get_agg_units_query(units):
                     (e.g. 'task_duration', 'last_update');
                   * prefixed values (prefix is separated from the rest of the
                     value with '__'). Supported prefixes are:
-                    - 'output': for not removed output datasets
-                                (ds size (bytes) > 0);
+                    - 'output_dataset': for not removed output datasets
+                                        (ds size (bytes) > 0);
                     - 'input': same for input datasets;
                     - 'status': for values calculated separately for tasks
                                 with different task statuses;
@@ -390,6 +391,8 @@ def get_agg_units_query(units):
             if unit.startswith(p + '__'):
                 clean_units.remove(unit)
                 u = unit[(len(p) + 2):]
+                if prefix_aggs[p].get('nested'):
+                    u = '.'.join([p, u])
                 prefixed_units[p] = prefixed_units.get(p, [])
                 prefixed_units[p].append(u)
                 break
