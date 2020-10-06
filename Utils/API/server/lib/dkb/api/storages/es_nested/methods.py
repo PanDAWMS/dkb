@@ -18,7 +18,6 @@ from common import (TASK_KWARGS,
 from common import (init,
                     client,
                     task_info,
-                    output_formats,
                     tokens,
                     get_query,
                     get_selection_query,
@@ -148,11 +147,10 @@ def _task_kwsearch_query(kw, ds_size=100):
                 }
             },
             'should': {
-                'has_child': {
-                    'type': 'output_dataset',
+                'nested': {
+                    'path': 'output_dataset',
                     'score_mode': 'sum',
                     'query': {'match_all': {}},
-                    'inner_hits': {'size': ds_size}
                 }
             }
         }
@@ -207,28 +205,6 @@ def task_kwsearch(**kwargs):
     return data, metadata
 
 
-def get_derivation_statistics_for_output(project, tags, output_format):
-    """ Calculate derivation efficiency for given output format.
-
-    :param project: project name
-    :type project: str
-    :param amitag: amitags
-    :type amitag: list
-    :param output_format: output format
-    :type output_format: str
-
-    :return: calculated efficiency and method execution metadata
-    :rtype: tuple(dict, dict)
-
-    """
-    query = dict(TASK_KWARGS)
-    kwargs = {'project': project, 'ctag': tags, 'output': output_format}
-    query['body'] = get_query('deriv', **kwargs)
-    query['_source'] = False
-    r = client().search(**query)
-    return transform.derivation_statistics(r, output_format)
-
-
 def task_derivation_statistics(**kwargs):
     """ Calculate statistics of derivation efficiency.
 
@@ -246,26 +222,15 @@ def task_derivation_statistics(**kwargs):
     tags = kwargs.get('amitag')
     if isinstance(tags, (str, unicode)):
         tags = [tags]
-    outputs = output_formats(project=project, amitag=tags)
-    outputs.sort()
 
-    data, metadata = [], {}
-    result = (data, metadata)
-    for output in outputs:
-        d, m = get_derivation_statistics_for_output(project, tags, output)
-        if d['tasks'] > 0:
-            data.append(d)
-        # TODO: more accurate metadata join (see below for 'warning')
-        metadata.update(m)
-    if WARNINGS.get('output_formats'):
-        if not metadata.get('warning'):
-            metadata['warning'] = WARNINGS['output_formats']
-        elif type(metadata['warinig']) is list:
-            metadata['warning'].append(WARNINGS['output_formats'])
-        else:
-            metadata['warning'] = [metadata['warning'],
-                                   WARNINGS['output_formats']]
-    return result
+    q = dict(TASK_KWARGS)
+    q['body'] = get_query('deriv', project=project, ctag=tags)
+    q['request_timeout'] = 30
+
+    data = client().search(**q)
+    data, metadata = transform.derivation_statistics(data)
+
+    return data, metadata
 
 
 def campaign_stat(selection_params, step_type='step', events_src=None):
@@ -324,18 +289,16 @@ def campaign_stat(selection_params, step_type='step', events_src=None):
     #  - select tasks
     q = get_selection_query(**selection_params)
     #  - divide them into 'steps'
-    step_agg = get_step_aggregation_query(step_type, selection_params)
+    step_agg = get_step_aggregation_query(step_type)
     #  - get agg values for each step ('instep' aggs)
     instep_aggs = get_query('campaign-stat-step-aggs')
     #  - construct 'last_update' part
     last_update = get_agg_units_query(['last_update'])
     #  - put 'instep' aggs into the innermost (sub) step clause
     instep_clause = step_agg['steps']
-    while instep_clause.get('aggs'):
-        instep_clause = instep_clause['aggs'].get('substeps')
-    if instep_clause:
+    if not instep_clause.get('aggs'):
         instep_clause['aggs'] = {}
-        instep_clause = instep_clause['aggs']
+    instep_clause = instep_clause['aggs']
     instep_clause.update(instep_aggs)
     #  - join 'query' and 'aggs' parts within request body
     q_body = {'query': q, 'aggs': step_agg}
@@ -401,19 +364,17 @@ def step_stat(selection_params, step_type='step'):
     query['size'] = 0
     # * and query body...
     q = get_selection_query(**selection_params)
-    step_agg = get_step_aggregation_query(step_type, selection_params)
+    step_agg = get_step_aggregation_query(step_type)
     agg_units = ['input_events', 'input', 'input__input_bytes',
                  'processed_events', 'total_events', 'hs06', 'hs06_failed',
-                 'task_duration', 'output', 'output__bytes', 'output__events',
-                 'status', 'status__input_events', 'status__processed_events',
-                 'status__input__input_bytes']
+                 'task_duration', 'output_dataset', 'output_dataset__bytes',
+                 'output_dataset__events', 'status', 'status__input_events',
+                 'status__processed_events', 'status__input__input_bytes']
     instep_aggs = get_agg_units_query(agg_units)
     instep_clause = step_agg['steps']
-    while instep_clause.get('aggs'):
-        instep_clause = instep_clause['aggs'].get('substeps')
-    if instep_clause:
+    if not instep_clause.get('aggs'):
         instep_clause['aggs'] = {}
-        instep_clause = instep_clause['aggs']
+    instep_clause = instep_clause['aggs']
     instep_clause.update(instep_aggs)
     query['body'] = {'query': q, 'aggs': step_agg}
 
@@ -428,7 +389,4 @@ def step_stat(selection_params, step_type='step'):
     logging.debug('ES response:\n%s' % json.dumps(r, indent=2))
     # ...and parse its response
     r, m = transform.step_stat(r, agg_units, step_type)
-    if step_type == 'ctag_format' and WARNINGS.get('output_formats'):
-        # TODO: more accurate metadata join
-        m['warning'] = WARNINGS['output_formats']
     return r, m

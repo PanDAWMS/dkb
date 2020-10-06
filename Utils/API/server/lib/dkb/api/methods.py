@@ -25,6 +25,8 @@ methods.add('/path/to/category', 'method_name', my_method_handler)
 
 import traceback
 import logging
+import re
+from operator import attrgetter
 
 from exceptions import (InvalidCategoryName,
                         CategoryNotFound,
@@ -33,11 +35,24 @@ from exceptions import (InvalidCategoryName,
                         DkbApiException,
                         DkbApiNotImplemented,
                         NotFoundException)
+from misc import standardize_path
 
-# Hash of categories and methods
-API_METHODS = {'__path': '/'}
+# Hash representation of method categories structure.
+# Keys are:
+#  * special keys (see `KEYWORDS` below);
+#  * (sub)category names;
+#  * method names.
+API_METHODS_CATALOG = {'__path': '/'}
 KEYWORDS = ['__path']
 WILDCARD = '*'
+
+# Hash of method handlers: {'/path/to/method': method_handler}
+API_METHOD_HANDLERS = {}
+
+# NOTE: Wildcarded methods are falling into a sub-hash `__regex`:
+# { re.compile('^/path/to/.*$'): method_handler,
+#   re.compile('^/path/.*/to/method$'): method_handler }
+API_METHOD_HANDLERS['__regex'] = {}
 
 
 def get_category(path, create=False, analyze_wildcard=False):
@@ -63,7 +78,7 @@ def get_category(path, create=False, analyze_wildcard=False):
     """
     keys = path.strip('/').split('/')
     keys = [k for k in keys if k]
-    h = API_METHODS
+    h = API_METHODS_CATALOG
     category = h
     key = ''
     for idx, key in enumerate(keys):
@@ -139,7 +154,10 @@ def add(category, name, handler):
     :return: True on success, False on failure
     :rtype: bool
     """
-    categories = get_category(category, create=True, analyze_wildcard=True)
+    try:
+        categories = get_category(category, create=True, analyze_wildcard=True)
+    except NotImplementedError:
+        categories = []
     exists_in = []
     added_to = []
     if not name:
@@ -155,6 +173,16 @@ def add(category, name, handler):
                 cat[name] = handler
             else:
                 m['/'] = handler
+    if name == WILDCARD:
+        logging.warn("Invalid regex: '%(w)s' -- fixed to '.%(w)s'."
+                     % {'w': WILDCARD})
+        name = '.*'
+    path = standardize_path('/'.join([category, name]))
+    if WILDCARD in path:
+        regex = '^' + path + '$'
+        API_METHOD_HANDLERS['__regex'][re.compile(regex)] = handler
+    else:
+        API_METHOD_HANDLERS[path] = handler
     if exists_in:
         raise MethodAlreadyExists(name, exists_in)
     if added_to:
@@ -168,6 +196,12 @@ def handler(path, method=None):
     """ Get handler for given method.
 
     If method is not found, raise ``MethodNotFound`` exception.
+
+    NOTE: if some handlers are defined for 'wildcard' paths, first found
+          match will be used. Patterns are sorter alphanumerically in
+          reverse mode in attempt to first check more specific patterns,
+          but there's no guarantee that it will indeed be the "best
+          match".
 
     :param path: full path to method or category (if second parameter
                  specified)
@@ -183,27 +217,22 @@ def handler(path, method=None):
     except NameError:
         logging.error('Handlers not configured.')
         raise MethodNotFound(path)
-    if not method:
-        if path.endswith('/'):
-            method = '/'
-            category = path[:-1]
-        else:
-            pos = path.rfind('/')
-            method = path[(pos + 1):]
-            category = path[:pos]
-    else:
-        category = path
-    try:
-        c = get_category(category)
-    except CategoryNotFound, err:
-        raise MethodNotFound(category, method, str(err))
-    h = c.get(method)
+
+    full_path = path
+    if method:
+        full_path = '/'.join(full_path, method)
+    full_path = standardize_path(full_path)
+
+    h = API_METHOD_HANDLERS.get(full_path)
     if not h:
-        raise MethodNotFound(category, method)
-    if not callable(h):
-        h = h.get('/')
+        # Try the wildcard paths handlers
+        for p in sorted(API_METHOD_HANDLERS['__regex'].keys(),
+                        key=attrgetter('pattern'), reverse=True):
+            if p.match(full_path):
+                h = API_METHOD_HANDLERS['__regex'][p]
+                break
     if not h:
-        raise MethodNotFound(category, method)
+        raise MethodNotFound(full_path)
     return h
 
 
@@ -218,12 +247,12 @@ def error_handler(exc_info):
         'exception': err.__class__.__name__,
     }
     if isinstance(err, DkbApiException):
-        response['_status'] = err.code
+        response['status'] = err.code
         response['details'] = err.details
     elif isinstance(err, DkbApiNotImplemented):
-        response['_status'] = 501
+        response['status'] = 501
     else:
-        response['_status'] = 500
+        response['status'] = 500
         response['details'] = str(err)
     if isinstance(err, NotFoundException):
         response['text_info'] = NotFoundException.details
@@ -232,7 +261,7 @@ def error_handler(exc_info):
         for line in lines.split('\n'):
             if line:
                 logging.debug(line)
-    return response
+    return {}, response
 
 
 def configure():
