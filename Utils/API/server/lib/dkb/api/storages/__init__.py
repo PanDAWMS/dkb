@@ -41,7 +41,7 @@ class DKBStorageMethod(object):
                 warn = "Default method implementation is used: %s" % str(e)
                 if 'warning' not in metadata:
                     metadata['warning'] = warn
-                elif type(metadata['warnin']) is list:
+                elif type(metadata['warning']) is list:
                     metadata['warning'].append(warn)
                 else:
                     metadata['warning'] = [metadata['warning'], warn]
