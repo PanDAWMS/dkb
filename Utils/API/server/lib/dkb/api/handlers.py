@@ -83,13 +83,12 @@ def nested(path, **kwargs):
     if not path.startswith('/nested/'):
         raise MethodException("Method handler 'nested' is called for"
                               " non-'nested' method path: '%s'" % path)
-    default_handler_path = path.replace('/nested', '', 1)
+    default_path = path.replace('/nested', '', 1)
 
     # Marker for alternative method's implementation usage
     kwargs['_alt'] = 'nested'
 
-    return methods.handler(default_handler_path)(default_handler_path,
-                                                 **kwargs)
+    return methods.handler(default_path)(default_path, **kwargs)
 
 
 methods.add('/nested', '.*', nested)
