@@ -83,13 +83,24 @@ def nested(path, **kwargs):
     if not path.startswith('/nested/'):
         raise MethodException("Method handler 'nested' is called for"
                               " non-'nested' method path: '%s'" % path)
-    default_handler_path = path.replace('/nested', '', 1)
+    default_path = path.replace('/nested', '', 1)
 
     # Marker for alternative method's implementation usage
     kwargs['_alt'] = 'nested'
 
-    return methods.handler(default_handler_path)(default_handler_path,
-                                                 **kwargs)
+    data, metadata = methods.handler(default_path)(default_path, **kwargs)
+
+    warn = 'Completeness of data in the response is not guaranteed' \
+           ' (used ES indices can contain incomplete set of metadata).'
+
+    if 'warning' not in metadata:
+        metadata['warning'] = warn
+    elif type(metadata['warning']) is list:
+        metadata['warning'].append(warn)
+    else:
+        metadata['warning'] = [metadata['warning'], warn]
+
+    return data, metadata
 
 
 methods.add('/nested', '.*', nested)
