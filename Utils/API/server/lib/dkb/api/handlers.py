@@ -148,8 +148,8 @@ def task_hist(path, **kwargs):
     :type detailed: bool
     :param start: left border of the time interval
     :type start: datetime.datetime
-    :param stop: right border of the time interval
-    :type stop: datetime.datetime
+    :param end: right border of the time interval
+    :type end: datetime.datetime
     :param bins: number of bins in the histogram
     :type bins: int
 
