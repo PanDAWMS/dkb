@@ -61,7 +61,7 @@ def parse_params(qs):
                 params[key][idx] = False
             else:
                 # Try to detect and parse date/datetime parameter values
-                formats = ['%Y-%m%dT%H:%M:%S', '%Y-%m-%d']
+                formats = ['%Y-%m-%dT%H:%M:%S', '%Y-%m-%d']
                 for f in formats:
                     try:
                         params[key][idx] = datetime.strptime(val, f)
