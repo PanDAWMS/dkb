@@ -128,8 +128,8 @@ def _task_kwsearch_query(kw, ds_size=100):
     wildcard = False
     for w in kw:
         if '?' in w or '*' in w:
-            tokens = tokens(w, analyzer='dsname_fields_wildcarded')
-            for t in tokens:
+            toks = tokens(w, analyzer='dsname_fields_wildcarded')
+            for t in toks:
                 if '?' in t or '*' in t:
                     qs_args.append('taskname.fields:%s' % t)
                     wildcard = True
