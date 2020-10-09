@@ -1,6 +1,7 @@
 """ Miscellaneous functions. """
 
 from collections import defaultdict
+import re
 
 
 def sort_by_prefixes(values, prefixes, default=0):
@@ -37,3 +38,24 @@ def sort_by_prefixes(values, prefixes, default=0):
             # Value is an empty string
             pass
     return result
+
+
+def standardize_path(path):
+    """ Bring path to a method to a standard view.
+
+    Standerd view is:
+     - starting with '/' (if not started with '.*');
+     - not ending with '/';
+     - repeating '/' (like '///') replaced with single '/'.
+
+    :param path: path to a method
+    :type path: str
+
+    :return: standardized path
+    :rtype: str
+    """
+    path.rstrip('/')
+    if not path.startswith('.*'):
+        path = '/' + path
+    path = re.compile('/+').sub('/', path)
+    return path

@@ -2,108 +2,99 @@
 Module responsible for interaction with DKB storages.
 """
 
+import logging
+
 import es
+import es_nested
 
 
-def task_steps_hist(**kwargs):
-    """ Get data for histogram of task distribution over time.
+class DKBStorageMethod(object):
+    """ Wrapper class for all storage methods. """
 
-    :return: hash of data for the histogram
-    :rtype: dict
-    """
-    return es.task_steps_hist(**kwargs)
+    def __init__(self, name, storage):
+        self.name = name
+        self.alts = {}
+        try:
+            self.action = getattr(storage, name)
+        except AttributeError:
+            # Not defined
+            pass
 
+    def __call__(self, **kwargs):
+        """
 
-def task_chain(**kwargs):
-    """ Reconstruct task chain from given task ID.
+        TODO: replase `_alt` parameter usage with direct calls of `use_alt`
+              at the handlers' level.
+        """
+        alt = kwargs.pop('_alt', None)
+        if alt:
+            try:
+                res = self.use_alt(alt, **kwargs)
+            except NotImplementedError, e:
+                logging.warn(e)
 
-    :param tid: task ID
-    :type tid: int, str
+                # Try default implementation instead
+                res = self.action(**kwargs)
 
-    :return: task chain data
-    :rtype: dict
-    """
-    return es.task_chain(**kwargs)
+                # ...and add warning to metadata
+                data, metadata = res
+                warn = "Default method implementation is used: %s" % str(e)
+                if 'warning' not in metadata:
+                    metadata['warning'] = warn
+                elif type(metadata['warning']) is list:
+                    metadata['warning'].append(warn)
+                else:
+                    metadata['warning'] = [metadata['warning'], warn]
+        else:
+            res = self.action(**kwargs)
+        return res
 
+    def use_alt(self, alt, **kwargs):
+        """ Try alternative implementation of current method.
 
-def task_kwsearch(**kwargs):
-    """ Search tasks and related datasets by keywords.
+        :raises: ``NotImplementedError`` (requested alternative is not defined)
 
-    .. note: For wildcard keywords only the ``taskname`` field is used.
+        :param alt: alternative implementation that should be tried
+        :type alt: str
+        """
+        try:
+            alt_method = self.alts[alt]
+        except (AttributeError, KeyError):
+            raise NotImplementedError("Alternative '%s' implementation for"
+                                      " method '%s' is not defined."
+                                      % (alt, self.name))
 
-    :param kw: list of (string) keywords
-    :type kw: list
-    :param analysis: if analysis tasks should be searched
-    :type analysis: str, bool
-    :param production: if production tasks should be searched
-    :type production: str, bool
-    :param size: number of documents in response
-    :type size: str, int
-    :param ds_size: max number of datasets returned for each task
-    :type ds_size: str, int
-    :param timeout: request execution timeout (sec)
-    :type timeout: str, int
+        try:
+            res = alt_method(**kwargs)
+        except NotImplementedError:
+            raise NotImplementedError("Alternative '%s' implementation for"
+                                      " method '%s' is not implemented yet."
+                                      % (alt, self.name))
 
-    :return: task and related datasets metadata
-    :rtype: dict
-    """
-    return es.task_kwsearch(**kwargs)
+        return res
 
-
-def task_derivation_statistics(**kwargs):
-    """ Calculate statistics of derivation efficiency.
-
-    :param project: project name
-    :type project: str
-    :param amitag: amitag (or several)
-    :type amitag: str or list
-
-    :return: calculated statistics in format required by
-             :py:func:`api.handlers.task_deriv`
-    :rtype: dict
-    """
-    return es.task_derivation_statistics(**kwargs)
-
-
-def campaign_stat(**kwargs):
-    """ Calculate values for campaign progress overview.
-
-    :param selection_params: hash of parameters defining task selections
-                             (for details see
-                              :py:func:`es.common.get_selection_query`)
-    :type selection_params: dict
-    :param step_type: step definition type: 'step', 'ctag_format'
-                      (default: 'step')
-    :type step_type: str
-
-    :param events_src: source of data for 'output' events.
-                       Possible values:
-                       * 'ds'   -- number of events in output datasets;
-                       * 'task' -- number of processed events of 'done'
-                                   and 'finished' tasks;
-                       * 'all'  -- provide all possible values as hash.
-    :type events_src: str
-
-    :return: hash with calculated statistics for ``campaign/stat`` method
-             (see :py:func:`api.handlers.campaign_stat`)
-    :rtype: dict
-    """
-    return es.campaign_stat(**kwargs)
+    def action(self, **kwargs):
+        """ Method action placeholder. """
+        raise NotImplementedError("Method '%(name)s' is not implemented yet."
+                                  % {'name': self.name})
 
 
-def step_stat(**kwargs):
-    """ Calculate statistics for tasks by execution steps.
+# Hash of public method names and storage submodules in which to look for them
+methods = {
+    'task_steps_hist': es,
+    'task_chain': es,
+    'task_kwsearch': es,
+    'task_derivation_statistics': es,
+    'campaign_stat': es,
+    'step_stat': es
+}
 
-    :param selection_params: hash of parameters defining task selections
-                             (for details see
-                              :py:func:`es.common.get_selection_query`)
-    :type selection_params: dict
-    :param step_type: step definition type: 'step', 'ctag_format'
-                      (default: 'step')
-    :type step_type: str
 
-    :return: hash with calculated statistics for ``step/stat`` method
-             (see :py:func:`api.handlers.step_stat`)
-    :rtype: hash
-    """
-    return es.step_stat(**kwargs)
+# Define callable objects for public methods
+for m in methods:
+    globals()[m] = DKBStorageMethod(m, methods[m])
+
+    # Define alternative implementation for ES methods (based on nested storage
+    # scheme)
+    if methods[m] == es:
+        globals()[m].alts['nested'] = DKBStorageMethod(m, es_nested)

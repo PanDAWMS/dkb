@@ -74,11 +74,11 @@ def parse_params(qs):
     return params
 
 
-def construct_response(data, rtime=None, rtype='json', pretty=False):
+def construct_response(handler_response, rtime=None, rtype='json', pretty=False):
     """ Construct HTTP response according to the requested type.
 
-    :param data: response content
-    :type data: dict
+    :param handler_response: response data and method execution metadata
+    :type handler_response: tuple(object, dict)
     :param rtime: request timestamp (when processing started)
     :type rtime: float
     :param rtype: requested content type (default: 'json')
@@ -89,7 +89,8 @@ def construct_response(data, rtime=None, rtype='json', pretty=False):
     :returns: status, response
     :rtype: tuple(int, str)
     """
-    status = data.pop('_status', 200)
+    data, metadata = handler_response
+    status = metadata.pop('status', 200)
     if status/100 != 2:
         # Some error occured, so we need to return error info,
         # not the request results
@@ -97,21 +98,12 @@ def construct_response(data, rtime=None, rtype='json', pretty=False):
     if rtype == 'json':
         if status/100 == 2:
             str_status = 'OK'
-            body = 'data'
         else:
             str_status = 'failed'
-            body = 'error'
         result = {'status': str_status}
-        for k in data.keys():
-            try:
-                if k.startswith('_'):
-                    item = data.pop(k)
-                    result[k[1:]] = item
-            except AttributeError:
-                # If key is not a string, we can simply skip
-                pass
-        if body not in result:
-            result[body] = data
+        result.update(metadata)
+        if data:
+            result['data'] = data
         if rtime and result.get('took_total_ms') is None:
             result['took_total_ms'] = int((time.time() - rtime)*1000)
         indent = None

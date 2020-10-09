@@ -1,0 +1,106 @@
+=======================
+* DKB REST API server *
+=======================
+
+Directory content
+-----------------
+
+cgi-bin/dkb.fcgi -- WSGI application
+
+lib/dkb/api/     -- Python library used by the WSGI application
+
+.files           -- list of files to be managed via installation
+
+dkb-api.service  -- systemd service definition (template)
+
+dkb.yaml.example -- application configuration file (example)
+
+nginx.dkb.conf   -- Nginx server configuration (template)
+
+setup.sh         -- setup util
+
+
+Configuration files
+-------------------
+
+.files -- must contain a full list of files that should be automatically
+          managed by the setup util. Supports shell globs (like '*.py'). In
+          other words: when a new subdirectory is added in the library -- it
+          should be listed here (the directory itself and its content).
+
+
+conf/dkb.yaml -- cloned from the dkb.yaml.example web-server application
+                 configuration file. It will be copied to the instance's
+                 configuration directory as-is and loaded by the instance at
+                 start and during operation.
+
+
+dkb-api.service -- templates used by setup util to create system files
+nginx.dkb.conf     (not supposed to be changed).
+
+
+Installation
+------------
+
+To install the application with default settings, simply run:
+
+  ./setup.sh install
+
+Then the installed instance may be managed by the same `setup.sh`:
+
+  ./setup.sh start|stop|restart|status
+
+
+In order to configure Nginx and/or systemd service, use corresponding command
+line options:
+
+  ./setup.sh -n install      # WWW and Nginx
+  ./setup.sh -W -n install   # Nginx only
+  ./setup.sh -S install      # WWW and systemd service
+  ./setup.sh -W -S install   # Systemd service only
+
+
+Systemd managed instance can still be managed via `setup.sh`:
+
+  ./setup.sh -S start|stop|restart|status
+
+
+Instance installation settings (specified via parameters like `-d|--dest` or
+`-S`) are stored locally for further usage and once specified -- will be
+automatically used on the next run of `setup.sh`. Note that:
+ - explicitly specified values will rewrite the loaded ones;
+ - last stored configuration can be reviewed with `--show-cfg`;
+ - `--restore-cfg` will restore the previous (different from the last stored)
+   configuration; the current one will be stored as "previous" one and can be
+   restored later;
+ - `--restore-defaults` will reset the configuration to default values.
+
+
+For the full list of supported options and commands use:
+
+  ./setup.sh --help
+
+
+The installation process can manage any of the following components:
+
+ - WWW application files   -- (-w|-www), (-W|--no-www): managed by default, but
+                                                        can be disabled;
+ - Nginx configuration     -- (-n|--nginx);
+ - Systemd configuration   -- (-S|--service);
+ - SELinux customisaton    -- (--sel): make sure that WWW application execution
+                                       is allowed.
+
+
+There are two main steps of the installation process: building and installation
+itself. At the building step some special strings in managed files (templates
+of system files and in the application files, listed in .files) are replaced
+with real values:
+
+ - %%SOCK%%    -- full path to socket file:
+                  - directory is hardcoded ($SOCK_DIR);
+                  - file name may be altered via parameter -s|--sock;
+ - %%ADDR%%    -- bind address (-l|--listen);
+ - %%WWW_DIR%% -- installation directory for the application (-d|--dest);
+ - %%CFG_DIR%% -- directory with app's configuration files (-c|--cfg-dir).
+
+At the installation step built files are copied to system directories.
