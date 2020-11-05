@@ -51,29 +51,25 @@ extract_query='
 
 scroll_query() {
   log "Getting records $N-$((N+SCROLL_SIZE))."
-  {
-    [ -z "$1" ] \
-    && {
-      log "Creating scroll query."
-      cmd="
-        curl -X POST '${SRC_ENDPOINT}?scroll=5m&size=$SCROLL_SIZE'
-          -H 'Content-Type: application/json'
-          -d '${extract_query}'
-      "
-      log DEBUG "cURL: $cmd"
-      $cmd
-    }
-    || {
-      log TRACE "Querying scroll API with ID: ${scroll_id}."
-      cmd="
-        curl -X POST '${SCROLL_ENDPOINT}'
-          -H 'Content-Type: application/json'
-          -d '{\"scroll_id\": $1, \"scroll\": \"5m\"}'
-      "
-      log DEBUG "cURL: $cmd"
-      $cmd
-    }
-  } \
+  if [ -z "$1" ]; then
+    log "Creating scroll query."
+    cmd="
+      curl -X POST '${SRC_ENDPOINT}?scroll=5m&size=$SCROLL_SIZE'
+        -H 'Content-Type: application/json'
+        -d '${extract_query}'
+    "
+    log DEBUG "cURL: $cmd"
+    $cmd
+  else
+    log TRACE "Querying scroll API with ID: ${scroll_id}."
+    cmd="
+      curl -X POST '${SCROLL_ENDPOINT}'
+        -H 'Content-Type: application/json'
+        -d '{\"scroll_id\": $1, \"scroll\": \"5m\"}'
+    "
+    log DEBUG "cURL: $cmd"
+    $cmd
+  fi \
   | tee "$transfer_file" \
   | jq '._scroll_id'
 }
