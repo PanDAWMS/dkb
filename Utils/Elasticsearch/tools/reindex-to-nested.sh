@@ -53,22 +53,18 @@ scroll_query() {
   log "Getting records $N-$((N+SCROLL_SIZE))."
   if [ -z "$1" ]; then
     log "Creating scroll query."
-    cmd="
-      curl -X POST '${SRC_ENDPOINT}?scroll=5m&size=$SCROLL_SIZE'
-        -H 'Content-Type: application/json'
-        -d '${extract_query}'
-    "
-    log DEBUG "cURL: $cmd"
-    $cmd
+    set -x
+    curl -X POST "${SRC_ENDPOINT}?scroll=5m&size=$SCROLL_SIZE" \
+         -H 'Content-Type: application/json' \
+         -d '${extract_query}'
+    set +x
   else
     log TRACE "Querying scroll API with ID: ${scroll_id}."
-    cmd="
-      curl -X POST '${SCROLL_ENDPOINT}'
-        -H 'Content-Type: application/json'
-        -d '{\"scroll_id\": $1, \"scroll\": \"5m\"}'
-    "
-    log DEBUG "cURL: $cmd"
-    $cmd
+    set -x
+    curl -X POST "${SCROLL_ENDPOINT}" \
+         -H 'Content-Type: application/json' \
+         -d "{\"scroll_id\": $1, \"scroll\": \"5m\"}"
+    set +x
   fi \
   | tee "$transfer_file" \
   | jq '._scroll_id'
@@ -98,13 +94,11 @@ transform_and_index() {
 delete_scroll() {
   [ -z "$1" ] \
     || {
-         cmd="
-               curl -X DELETE '${SCROLL_ENDPOINT}/?pretty'
-                    -H 'Content-Type: application/json'
-                    -d'{"'"scroll_id"'": [$1]}'
-         "
-         log DEBUG "cURL: $cmd"
-         $cmd
+         set -x
+         curl -X DELETE ${SCROLL_ENDPOINT}/?pretty \
+              -H 'Content-Type: application/json' \
+              -d'{"scroll_id": ['"$1"']}'
+         set +x
        }
 }
 
