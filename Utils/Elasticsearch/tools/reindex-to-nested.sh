@@ -76,14 +76,14 @@ scroll_query() {
 
 transform_to_nested() {
   log TRACE "Transforming data."
-  jq --arg TGT_INDEX "${TGT_INDEX}" -c -f reindex-transform.jq && echo ''
+  jq --arg TGT_INDEX "${TGT_INDEX}" -c -f reindex-transform.jq
 }
 
 load_nested() {
   log TRACE "Loading data."
   curl -sS -X POST "$TGT_ENDPOINT" \
     -H 'Content-Type: application/json' \
-    -d @-
+    --data-binary @-
 }
 
 transform_and_index() {
