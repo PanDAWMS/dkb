@@ -24,6 +24,8 @@ SRC_ENDPOINT="http://127.0.0.1:9200/${SRC_INDEX}/task/_search"
 TGT_ENDPOINT="http://127.0.0.1:9200/_bulk"
 SCROLL_ENDPOINT="http://127.0.0.1:9200/_search/scroll"
 
+SCROLL_SIZE=500
+
 # Functions
 # ---------
 
@@ -48,13 +50,13 @@ extract_query='
 '
 
 scroll_query() {
-  log "Getting records $N-$((N+500))."
+  log "Getting records $N-$((N+SCROLL_SIZE))."
   {
     [ -z "$1" ] \
     && {
       log "Creating scroll query."
       cmd="
-        curl -X POST '${SRC_ENDPOINT}?scroll=5m&size=500'
+        curl -X POST '${SRC_ENDPOINT}?scroll=5m&size=$SCROLL_SIZE'
           -H 'Content-Type: application/json'
           -d '${extract_query}'
       "
@@ -125,7 +127,7 @@ echo "$scroll_id" > "$scroll_log"
 errors=$(transform_and_index)
 
 while [ "$errors" = "false" ]; do
-  N=$((N+500))
+  N=$((N+SCROLL_SIZE))
   scroll_id=$(scroll_query "$scroll_id")
   echo "$scroll_id" > "$scroll_log"
   errors=$(transform_and_index)
