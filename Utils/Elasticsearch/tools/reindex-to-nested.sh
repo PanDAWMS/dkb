@@ -10,7 +10,8 @@ functions="${base_dir}/../../Dataflow/shell_lib"
 transfer_file="${base_dir}/transfer_pipe"
 
 scroll_log="${base_dir}/last_scroll_id"
-load_log="${base_dir}/last_load_loop"
+load_data_log="${base_dir}/last_load_data"
+load_log="${base_dir}/last_load_response"
 
 # STDERR will be redirected to this file if specified
 logfile=
@@ -90,9 +91,9 @@ load_nested() {
 transform_and_index() {
   cat "$transfer_file" \
     | transform_to_nested \
-    | tee "$load_log" \
+    | tee "$load_data_log" \
     | load_nested \
-    | tee -a "$load_log" \
+    | tee "$load_log" \
     | jq ".errors"
 }
 
