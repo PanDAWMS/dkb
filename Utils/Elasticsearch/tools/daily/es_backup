@@ -1,0 +1,70 @@
+#!/bin/sh
+
+# Creates local snapshots for ES indices and takes care of creating
+# weekly backups for the snapshot directory.
+#
+# For this script to work, ES snapshots should be configured:
+# * (/etc/elasticsearch/elasticsearch.yml) path.repo: $base_dir/$data_dir
+# * mkdir -p $base_dir/$data_dir
+# * chown elasticsearch:elasticsearch $base_dir/$data_dir
+# * service elasticsearch restart
+# * cat <<EOF | curl -X PUT 'http://127.0.0.1:9200/_snapshot/backup?pretty' -H 'Content-Type: application/json' -d@-
+# {
+#   "type": "fs",
+#   "settings": {
+#       "compress" : true,
+#       "location": "$base_dir/$data_dir"
+#   }
+# }
+# EOF
+
+base_dir=/var/es
+data_dir=snapshot
+backup_dir="$base_dir"/backup
+backup_olddir=weekly
+backup_file="${data_dir}.tar.gz"
+backup_path="${backup_dir}/${backup_file}"
+
+[ -d "$backup_dir" ] \
+  || mkdir -p -m 0700 "$backup_dir" \
+  || exit 1
+
+create_snapshot() {
+  snapshot_name=`date +%Y%m%d`
+  response=`curl -s -X PUT "http://127.0.0.1:9200/_snapshot/backup/${snapshot_name}?pretty&wait_for_completion=true"`
+  code=$?
+  error=`echo "$response" | jq ".error"`
+
+  [ $code -ne 0 -o "$error" != "null" ] \
+    && { echo "Failed to create ES snapshot (${code}): ${error}" >&2 ;
+         exit 1;
+       }
+}
+
+rotate_backup() {
+  conf="$0.logrotate"
+  tmp_conf=`mktemp`
+  mkdir -p "${backup_dir}/${backup_olddir}"
+  sed -e "s#%%DIR%%#${backup_dir}#g" \
+      -e "s#%%OLDDIR%%#${backup_olddir}#g" \
+      -e "s#%%FILE%%#${backup_file}#g" \
+      "$conf" > "$tmp_conf"
+  logrotate "${tmp_conf}"
+  rm -rf "$tmp_conf"
+}
+
+create_snapshot || exit $?
+
+rotate_backup
+
+# Create backup only if the previous one was rotated
+[ -f "$backup_path" ] && exit 0
+
+# Create backup file
+tar -C "$base_dir" -zcf "$backup_path" "$data_dir"
+EXIT_CODE=$?
+
+[ "$EXIT_CODE" -ne 0 ] \
+  && echo "Failed to create backup file for ES data ($EXIT_CODE)." >&2
+
+exit "$EXIT_CODE"
