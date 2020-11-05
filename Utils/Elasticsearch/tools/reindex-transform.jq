@@ -18,7 +18,7 @@ def input_events_v2:
   end;
 
 def processed_events_v2:
-  if (.input_events_v2 and .processed_events and .requested_events) then
+  if (.input_events_v2 and .processed_events and .requested_events and .requested_events > 0) then
     (.input_events_v2 * .processed_events / .requested_events) | round
   else
     if (.step_name|tostring|ascii_downcase) == "evgen" then
