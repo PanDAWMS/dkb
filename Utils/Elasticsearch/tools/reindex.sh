@@ -14,6 +14,8 @@ load_data_log="${base_dir}/last_load_data"
 load_log="${base_dir}/last_load_response"
 tid_log="${base_dir}/last_tid"
 
+transform_jq="${base_dir}/transform-to-nested.jq"
+
 # STDERR will be redirected to this file if specified
 logfile=
 
@@ -92,9 +94,9 @@ scroll_query() {
   | jq '._scroll_id'
 }
 
-transform_to_nested() {
+transform() {
   log TRACE "Transforming data."
-  jq --arg TGT_INDEX "${TGT_INDEX}" -c -f reindex-transform.jq
+  jq --arg TGT_INDEX "${TGT_INDEX}" -c -f "$transform_jq"
 }
 
 load_nested() {
@@ -106,7 +108,7 @@ load_nested() {
 
 transform_and_index() {
   cat "$transfer_file" \
-    | transform_to_nested \
+    | transform \
     | tee "$load_data_log" \
     | load_nested \
     | tee "$load_log" \
