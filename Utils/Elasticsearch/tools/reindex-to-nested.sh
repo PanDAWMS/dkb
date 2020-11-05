@@ -12,6 +12,7 @@ transfer_file="${base_dir}/transfer_pipe"
 scroll_log="${base_dir}/last_scroll_id"
 load_data_log="${base_dir}/last_load_data"
 load_log="${base_dir}/last_load_response"
+tid_log="${base_dir}/last_tid"
 
 # STDERR will be redirected to this file if specified
 logfile=
@@ -43,20 +44,41 @@ extract_query='
             "size": 100
           }
         }}
-      ]
+      ],
+      "must": {
+        "range": {
+          "taskid": {"gt": %%LAST_TID%%}
+        }
+      }
     }
-  }
+  },
+  "sort": [
+    {"taskid": {"order": "asc"}}
+  ]
 }
 '
 
+last_tid() {
+  [ -s "$tid_log" ] && cat "$tid_log" || echo 0
+}
+
+save_tid() {
+  [ -s "$load_data_log" ] || { log "Failed to save last tid: load log" \
+                              "not found (${load_data_log})." && exit 1; }
+
+  tail -n 1 "$load_data_log" | jq ".taskid" > "$tid_log"
+}
+
 scroll_query() {
-  log "Getting records $N-$((N+SCROLL_SIZE))."
+  LAST_TID=$(last_tid)
+  log "Getting records $N-$((N+SCROLL_SIZE)) (tid > $LAST_TID)."
   if [ -z "$1" ]; then
     log "Creating scroll query."
     set -x
-    curl -X POST "${SRC_ENDPOINT}?scroll=5m&size=$SCROLL_SIZE" \
-         -H 'Content-Type: application/json' \
-         -d '${extract_query}'
+    echo "$extract_query" | sed -e "s/%%LAST_TID%%/$LAST_TID/" \
+      | curl -X POST "${SRC_ENDPOINT}?scroll=5m&size=$SCROLL_SIZE" \
+             -H 'Content-Type: application/json' \
+             -d @-
     set +x
   else
     log TRACE "Querying scroll API with ID: ${scroll_id}."
@@ -117,6 +139,7 @@ echo "$scroll_id" > "$scroll_log"
 errors=$(transform_and_index)
 
 while [ "$errors" = "false" ]; do
+  save_tid
   N=$((N+SCROLL_SIZE))
   scroll_id=$(scroll_query "$scroll_id")
   echo "$scroll_id" > "$scroll_log"
