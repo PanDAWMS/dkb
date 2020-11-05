@@ -19,6 +19,8 @@ transform_jq="${base_dir}/transform-to-nested.jq"
 # STDERR will be redirected to this file if specified
 logfile=
 
+DEBUG=
+
 
 SRC_INDEX='production_tasks'
 TGT_INDEX='production_tasks-nested'
@@ -76,15 +78,15 @@ scroll_query() {
   log "Getting records $N-$((N+SCROLL_SIZE)) (tid > $LAST_TID)."
   if [ -z "$1" ]; then
     log "Creating scroll query."
-    set -x
+    [ -n "$DEBUG" ] && set -x
     echo "$extract_query" | sed -e "s/%%LAST_TID%%/$LAST_TID/" \
       | curl -X POST "${SRC_ENDPOINT}?scroll=5m&size=$SCROLL_SIZE" \
              -H 'Content-Type: application/json' \
              -d @-
     set +x
   else
-    log TRACE "Querying scroll API with ID: ${scroll_id}."
-    set -x
+    [ -n "$DEBUG" ] && log TRACE "Querying scroll API with ID: ${scroll_id}."
+    [ -n "$DEBUG" ] && set -x
     curl -X POST "${SCROLL_ENDPOINT}" \
          -H 'Content-Type: application/json' \
          -d "{\"scroll_id\": $1, \"scroll\": \"5m\"}"
@@ -95,13 +97,13 @@ scroll_query() {
 }
 
 transform() {
-  log TRACE "Transforming data."
+  [ -n "$DEBUG" ] && log TRACE "Transforming data."
   jq --arg TGT_INDEX "${TGT_INDEX}" -c -f "$transform_jq"
 }
 
 load_nested() {
-  log TRACE "Loading data."
-  curl -sS -X POST "$TGT_ENDPOINT" \
+  log INFO "Loading data."
+  curl -X POST "$TGT_ENDPOINT" \
     -H 'Content-Type: application/json' \
     --data-binary @-
 }
@@ -118,8 +120,9 @@ transform_and_index() {
 delete_scroll() {
   [ -z "$1" ] \
     || {
-         set -x
-         curl -X DELETE ${SCROLL_ENDPOINT}/?pretty \
+         log INFO "Removing scroll with ID: $1"
+         [ -n "$DEBUG" ] && set -x
+         curl -sS -X DELETE ${SCROLL_ENDPOINT}/?pretty \
               -H 'Content-Type: application/json' \
               -d'{"scroll_id": ['"$1"']}'
          set +x
