@@ -129,5 +129,7 @@ while [ "$errors" = "false" ]; do
   errors=$(transform_and_index)
 done
 
+[ "$errors" != "false" ] && log ERROR "$errors"
+
 delete_scroll "$scroll_id"
 rm "$transfer_file"
