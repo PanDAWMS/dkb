@@ -32,7 +32,11 @@ def processed_events_v2:
 
 .hits.hits[]
   | ._source as $task
-  | last((._source.taskname / ".")[]) as $ami_tags
+  | (if ._source.taskname then
+       last((._source.taskname / ".")[])
+     else
+       null
+     end) as $ami_tags
   | ($task | input_events_v2) as $input_events_v2
   | (($task + {"input_events_v2": $input_events_v2})
      | processed_events_v2) as $processed_events_v2
@@ -48,12 +52,18 @@ def processed_events_v2:
             | del(.datasetname)),
      "conditions_tag": $task.conditions_tags,
      "ctag_format_step":
-      ($task.output_formats
-       | map( . + ":" + $task.ctag)),
+      (if $task.output_formats then
+         $task.output_formats | map( . + ":" + $task.ctag)
+       else
+         null
+       end),
      "ami_tags": $ami_tags,
      "ami_tags_format_step":
-      ($task.output_formats
-       | map(. + ":" + $ami_tags)),
+      (if $ami_tags and $task.output_formats then
+         ($task.output_formats | map(. + ":" + $ami_tags))
+       else
+         null
+       end),
      "input_events_v2": $input_events_v2,
      "processed_events_v2": $processed_events_v2
     } + $task
