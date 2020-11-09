@@ -20,6 +20,7 @@ transform_jq="${base_dir}/transform-to-nested.jq"
 logfile=
 
 DEBUG=
+NOOP=
 
 
 SRC_INDEX='production_tasks'
@@ -103,10 +104,14 @@ transform() {
 }
 
 load_nested() {
-  log INFO "Loading data."
-  curl -X POST "$TGT_ENDPOINT" \
-    -H 'Content-Type: application/json' \
-    --data-binary @-
+  if [ -z "$NOOP" ]; then
+    log INFO "Loading data."
+    curl -X POST "$TGT_ENDPOINT" \
+      -H 'Content-Type: application/json' \
+      --data-binary @-
+  else
+    echo '{"errors": false}'
+  fi
 }
 
 transform_and_index() {
