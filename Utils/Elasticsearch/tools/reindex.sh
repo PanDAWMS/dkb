@@ -7,6 +7,14 @@ functions="${base_dir}/../../Dataflow/shell_lib"
 # Configuration
 # -------------
 
+# Import configuration
+[ -f "${base_dir}/reindex.ini" ] \
+  || { log ERROR "Configuration file not found (${base_dir}/reindex.ini)." \
+       && exit 1; }
+
+. "${base_dir}/reindex.ini"
+
+# Temporary and state-logging files
 transfer_file="${base_dir}/transfer_pipe"
 
 scroll_log="${base_dir}/last_scroll_id"
@@ -14,23 +22,11 @@ load_data_log="${base_dir}/last_load_data"
 load_log="${base_dir}/last_load_response"
 tid_log="${base_dir}/last_tid"
 
-transform_jq="${base_dir}/transform-to-nested.jq"
+transform_jq="${base_dir}/${TRANSFORMATION}.jq"
 
 # STDERR will be redirected to this file if specified
-logfile=
+logfile="$LOGFILE"
 
-DEBUG=
-NOOP=
-
-
-SRC_INDEX='production_tasks'
-TGT_INDEX='production_tasks-nested'
-
-SRC_ENDPOINT="http://127.0.0.1:9200/${SRC_INDEX}/task/_search"
-TGT_ENDPOINT="http://127.0.0.1:9200/_bulk"
-SCROLL_ENDPOINT="http://127.0.0.1:9200/_search/scroll"
-
-SCROLL_SIZE=500
 
 # Functions
 # ---------
