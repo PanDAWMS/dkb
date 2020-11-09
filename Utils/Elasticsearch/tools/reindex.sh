@@ -59,6 +59,14 @@ extract_query='
 }
 '
 
+log_config() {
+  params=$(cat "${base_dir}/reindex.ini" | grep -o '^[A-Z_]*')
+  log INFO "Reindex configuration:"
+  for p in $params; do
+    log INFO "$p: ${!p}"
+  done
+}
+
 last_tid() {
   [ -s "$tid_log" ] && cat "$tid_log" || echo 0
 }
@@ -138,6 +146,8 @@ delete_scroll() {
 
 # Redirect STDERR to logfile if specified
 [ -n "$logfile" ] && exec 2>>"$logfile"
+
+log_config
 
 N=0
 
