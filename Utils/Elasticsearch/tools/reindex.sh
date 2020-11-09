@@ -69,7 +69,7 @@ last_tid() {
 save_tid() {
   [ -s "$load_data_log" ] || { log "Failed to save last tid: load log" \
                                    "not found or empty (${load_data_log})." \
-                               && exit 1; }
+                               && return 1; }
 
   tail -n 1 "$load_data_log" | jq ".taskid" > "$tid_log"
 }
@@ -145,7 +145,7 @@ echo "$scroll_id" > "$scroll_log"
 errors=$(transform_and_index)
 
 while [ "$errors" = "false" ]; do
-  save_tid
+  save_tid || break
   N=$((N+SCROLL_SIZE))
   scroll_id=$(scroll_query "$scroll_id")
   echo "$scroll_id" > "$scroll_log"
