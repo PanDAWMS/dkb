@@ -110,6 +110,7 @@ load_nested() {
       -H 'Content-Type: application/json' \
       --data-binary @-
   else
+    cat > /dev/null
     echo '{"errors": false}'
   fi
 }
