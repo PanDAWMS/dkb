@@ -68,7 +68,8 @@ last_tid() {
 
 save_tid() {
   [ -s "$load_data_log" ] || { log "Failed to save last tid: load log" \
-                              "not found (${load_data_log})." && exit 1; }
+                                   "not found or empty (${load_data_log})." \
+                               && exit 1; }
 
   tail -n 1 "$load_data_log" | jq ".taskid" > "$tid_log"
 }
