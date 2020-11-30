@@ -205,7 +205,7 @@ def processed_events_v2(data):
     :param data: task metadata
     :type data: dict
 
-    :return: derived value 'input_events_v2'
+    :return: derived value 'processed_events_v2'
              (None if input data do not provide enough information)
     :rtype: int, NoneType
     """

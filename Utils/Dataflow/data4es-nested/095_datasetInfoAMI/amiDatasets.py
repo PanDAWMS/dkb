@@ -163,10 +163,11 @@ def process(stage, message):
             except Exception:
                 stage.output_error("Failed to process dataset '%s'"
                                    % ds['name'], sys.exc_info())
-            # Do not put this into try/except above:
-            #   any exception produced by it indicates a problem
-            #   with the stage code that demands a full stop.
-            change_key_names(ds)
+            else:
+                # Do not put this into try/except above:
+                #   any exception produced by it indicates a problem
+                #   with the stage code that demands a full stop.
+                change_key_names(ds)
     stage.output(pyDKB.dataflow.communication.messages.JSONMessage(data))
 
     return True
@@ -194,9 +195,11 @@ def amiPhysValues(data):
                    'format': 'json'}
     res = execute_with_retry(ami_client.execute, kwargs=exec_params, sleep=64,
                              retry_on=(AMIError, http_client.HTTPException))
-    json_str = json.loads(res)
     try:
+        json_str = json.loads(res)
         rowset = json_str['AMIMessage'][0]['Result'][0]['rowset']
+    except ValueError:
+        raise Exception("Non-JSON AMI response: %s" % res)
     except Exception:
         raise Exception("Unexpected AMI response: %s" % json_str)
     if not rowset:
