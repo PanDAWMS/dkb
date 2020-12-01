@@ -86,14 +86,14 @@ scroll_query() {
     log "Creating scroll query."
     [ -n "$DEBUG" ] && set -x
     echo "$extract_query" | sed -e "s/%%LAST_TID%%/$LAST_TID/" \
-      | curl -X POST "${SRC_ENDPOINT}?scroll=5m&size=$SCROLL_SIZE" \
+      | curl -sS -X POST "${SRC_ENDPOINT}?scroll=5m&size=$SCROLL_SIZE" \
              -H 'Content-Type: application/json' \
              -d @-
     set +x
   else
     [ -n "$DEBUG" ] && log TRACE "Querying scroll API with ID: ${scroll_id}."
     [ -n "$DEBUG" ] && set -x
-    curl -X POST "${SCROLL_ENDPOINT}" \
+    curl -sS -X POST "${SCROLL_ENDPOINT}" \
          -H 'Content-Type: application/json' \
          -d "{\"scroll_id\": $1, \"scroll\": \"5m\"}"
     set +x
@@ -110,7 +110,7 @@ transform() {
 load_nested() {
   if [ -z "$NOOP" ]; then
     log INFO "Loading data."
-    curl -X POST "$TGT_ENDPOINT" \
+    curl -sS -X POST "$TGT_ENDPOINT" \
       -H 'Content-Type: application/json' \
       --data-binary @-
   else
