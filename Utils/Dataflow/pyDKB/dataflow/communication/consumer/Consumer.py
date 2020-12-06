@@ -114,9 +114,23 @@ class Consumer(LoggableObject):
             msg = s.next()
         return msg
 
+    def get_item(self):
+        """ Get next processing item (constructed of raw items).
+
+        Processing item is the smallest data unit for stage processing loop
+        (e.g. ``ProcessorStage``).
+
+        :returns: parsed next item,
+                  False -- parsing failed,
+                  None -- no messages left
+        :rtype: pyDKB.dataflow.communication.messages.AbstractMessage,
+                bool, NoneType
+        """
+        return self.get_message()
+
     def next(self):
         """ Get next processing item (Message) from current source. """
-        msg = self.get_message()
+        msg = self.get_item()
         if msg is None:
             raise StopIteration
         return msg
