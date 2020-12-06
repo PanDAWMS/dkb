@@ -99,8 +99,8 @@ class Consumer(LoggableObject):
         """ Return current source info. """
         raise NotImplementedError
 
-    def get_message(self):
-        """ Get new message from current source.
+    def get_raw_item(self):
+        """ Get new raw item (message) from current source.
 
         Return values:
             Message object
@@ -126,7 +126,7 @@ class Consumer(LoggableObject):
         :rtype: pyDKB.dataflow.communication.messages.AbstractMessage,
                 bool, NoneType
         """
-        return self.get_message()
+        return self.get_raw_item()
 
     def next(self):
         """ Get next processing item (Message) from current source. """
