@@ -114,9 +114,20 @@ class Consumer(LoggableObject):
             msg = s.next()
         return msg
 
+    def get_item(self):
+        """ Get next stream item (constructed of raw items).
+
+        :returns: parsed next item,
+                  False -- parsing failed,
+                  None -- no messages left
+        :rtype: pyDKB.dataflow.communication.messages.AbstractMessage,
+                bool, NoneType
+        """
+        return self.get_raw_item()
+
     def next(self):
         """ Return new Message, read from input stream. """
-        msg = self.get_raw_item()
+        msg = self.get_item()
         if msg is None:
             raise StopIteration
         return msg
