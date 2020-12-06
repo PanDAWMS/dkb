@@ -163,19 +163,9 @@ class InputStream(Stream):
                 bool, NoneType
         """
         try:
-            result = self.next()
+            msg = self.get_raw_item()
         except StopIteration:
-            result = None
-        return result
-
-    def next(self):
-        """ Get next message from the input stream.
-
-        :returns: parsed next message,
-                  False -- parsing failed or unexpected end of stream occurred
-        :rtype: pyDKB.dataflow.communication.messages.AbstractMessage, bool
-        """
-        msg = self.get_raw_item()
+            return None
         if not msg.endswith(self.EOM):
             log_msg = msg[:10] + '<...>' * (len(msg) > 20)
             log_msg += msg[-min(len(msg) - 10, 10):]
@@ -188,3 +178,16 @@ class InputStream(Stream):
                 msg = msg[:-len(self.EOM)]
             result = self.parse_message(msg)
         return result
+
+    def next(self):
+        """ Get next message from the input stream.
+
+        :returns: parsed next message,
+                  False -- parsing failed or unexpected end of stream occurred
+        :rtype: pyDKB.dataflow.communication.messages.AbstractMessage, bool
+        """
+        result = self.get_message()
+        if result is None:
+            raise StopIteration
+        else:
+            return result

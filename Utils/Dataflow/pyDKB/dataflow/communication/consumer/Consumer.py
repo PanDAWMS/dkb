@@ -111,7 +111,7 @@ class Consumer(LoggableObject):
         if not s:
             msg = None
         else:
-            msg = s.get_message()
+            msg = s.next()
         return msg
 
     def next(self):
