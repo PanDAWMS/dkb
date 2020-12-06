@@ -141,6 +141,11 @@ class InputStream(Stream):
     def get_raw_item(self):
         """ Get next raw item from the input stream.
 
+        Raw item is a sequence of symbols that corresponds
+        to the supervisor/worker communication protocol object.
+        Known objects:
+        * message (``<raw_data>+<EOM>``).
+
         :returns: next raw item
         :rtype: str
         """
