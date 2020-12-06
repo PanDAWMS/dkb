@@ -138,6 +138,21 @@ class InputStream(Stream):
                      logLevel.WARN)
             return False
 
+    def get_raw_item(self):
+        """ Get next raw item from the input stream.
+
+        Raw item is a sequence of symbols that corresponds
+        to the supervisor/worker communication protocol object.
+        Known objects:
+        * message (``<raw_data>+<EOM>``).
+
+        :returns: next raw item
+        :rtype: str
+        """
+        if not self.__iterator:
+            self._reset_iterator()
+        return self.__iterator.next()
+
     def get_message(self):
         """ Get next message from the input stream.
 
@@ -160,9 +175,7 @@ class InputStream(Stream):
                   False -- parsing failed or unexpected end of stream occurred
         :rtype: pyDKB.dataflow.communication.messages.AbstractMessage, bool
         """
-        if not self.__iterator:
-            self._reset_iterator()
-        msg = self.__iterator.next()
+        msg = self.get_raw_item()
         if not msg.endswith(self.EOM):
             log_msg = msg[:10] + '<...>' * (len(msg) > 20)
             log_msg += msg[-min(len(msg) - 10, 10):]
