@@ -148,7 +148,7 @@ class InputStream(Stream):
             self._reset_iterator()
         return self.__iterator.next()
 
-    def get_message(self):
+    def get_item(self):
         """ Get next stream item (constructed of raw items).
 
         :returns: parsed next item,
@@ -182,7 +182,7 @@ class InputStream(Stream):
                   False -- parsing failed or unexpected end of stream occurred
         :rtype: pyDKB.dataflow.communication.messages.AbstractMessage, bool
         """
-        result = self.get_message()
+        result = self.get_item()
         if result is None:
             raise StopIteration
         else:
