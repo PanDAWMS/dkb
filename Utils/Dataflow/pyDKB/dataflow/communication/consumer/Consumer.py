@@ -99,8 +99,8 @@ class Consumer(LoggableObject):
         """ Return current source info. """
         raise NotImplementedError
 
-    def get_message(self):
-        """ Get new message from current source.
+    def get_raw_item(self):
+        """ Get new raw item (message) from current source.
 
         Return values:
             Message object
@@ -116,7 +116,7 @@ class Consumer(LoggableObject):
 
     def next(self):
         """ Return new Message, read from input stream. """
-        msg = self.get_message()
+        msg = self.get_raw_item()
         if msg is None:
             raise StopIteration
         return msg
