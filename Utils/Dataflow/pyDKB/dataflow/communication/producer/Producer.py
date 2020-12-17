@@ -102,6 +102,10 @@ class Producer(LoggableObject):
         """ Write EOP marker to the current dest. """
         self.get_stream().eop()
 
+    def bnc(self):
+        """ Write BNC marker to the current dest. """
+        self.get_stream().bnc()
+
     def flush(self):
         """ Flush buffered messages to the current dest. """
         self.get_stream().flush()

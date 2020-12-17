@@ -132,6 +132,18 @@ class AbstractStage(LoggableObject):
                           default=None,
                           dest='eop'
                           )
+        self.add_argument('--batch-not-complete', action='store', type=str,
+                          help=u'custom batch-not-complete marker\n'
+                          'DEFAULT: \'BNC\'',
+                          default=None,
+                          dest='bnc'
+                          )
+        self.add_argument('--end-of-batch', action='store', type=str,
+                          help=u'custom end-of-batch marker\n'
+                          'DEFAULT: \'EOB\'',
+                          default=None,
+                          dest='eob'
+                          )
 
     def _is_flag_option(self, **kwargs):
         """ Check if added argument is a flag option. """
@@ -223,6 +235,12 @@ class AbstractStage(LoggableObject):
                 self.log("Failed to read arguments.\n"
                          "Case: %s" % (err), logLevel.ERROR)
                 sys.exit(1)
+
+        if self.ARGS.bnc is None:
+            self.ARGS.bnc = 'BNC'
+
+        if self.ARGS.eob is None:
+            self.ARGS.eob = 'EOB'
 
         if self.ARGS.mode == 'm':
             if 'f' in (self.ARGS.source, self.ARGS.dest):

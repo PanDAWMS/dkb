@@ -100,10 +100,11 @@ class Consumer(LoggableObject):
         raise NotImplementedError
 
     def get_message(self):
-        """ Get new message from current source.
+        """ Get new message or marker from current source.
 
         Return values:
             Message object
+            marker (str)
             False (failed to parse message)
             None  (all input sources are empty)
         """

@@ -67,6 +67,9 @@ class ProcessorStage(AbstractStage):
 
     * List of objects to be "stopped"
         __stoppable
+
+    * The stage will try to process messages in batches of this size.
+        _batch_size
     """
 
     __input_message_type = None
@@ -92,6 +95,7 @@ class ProcessorStage(AbstractStage):
         * ...
         """
         self.__stoppable = []
+        self._batch_size = 1
         super(ProcessorStage, self).__init__(description)
 
     def set_input_message_type(self, Type=None):
@@ -201,6 +205,23 @@ class ProcessorStage(AbstractStage):
         super(ProcessorStage, self).set_default_arguments(**kwargs)
         if ignore_on_skip:
             self._reset_on_skip += kwargs.keys()
+
+    def set_batch_size(self, size):
+        """ Set batch size.
+
+        :param size: size
+        :type size: int
+        """
+        if type(size) != int:
+            self.log("Cannot set batch size to %s: non-integer value." % size,
+                     logLevel.WARN)
+            return False
+        if size < 1:
+            self.log("Cannot set batch size to %d: value must"
+                     " be positive." % size,
+                     logLevel.WARN)
+            return False
+        self._batch_size = size
 
     def configure(self, args=None):
         """ Configure stage according to the config parameters.
@@ -352,8 +373,36 @@ class ProcessorStage(AbstractStage):
         Returns iterable object.
         Every iteration returns single input message to be processed.
         """
-        for r in self.__input:
-            yield r
+        if self._batch_size == 1 or self.ARGS.skip_process:
+            for r in self.__input:
+                if type(r) == str:
+                    # Normal processing mode expects no markers.
+                    raise DataflowException("Unexpected marker"
+                                            " received: %s." % r)
+                yield r
+        else:
+            batch = []
+            for r in self.__input:
+                if type(r) != str:
+                    # Message was received.
+                    if r:
+                        batch.append(r)
+                    if len(batch) == self._batch_size:
+                        yield batch
+                        batch = []
+                    else:
+                        self.bnc()
+                else:
+                    # Marker was received.
+                    if r == 'eob':
+                        yield batch
+                        batch = []
+                    else:
+                        raise DataflowException("Unexpected marker"
+                                                " received: %s." % r)
+            if batch:
+                # There is no more input, but there is an unfinished batch.
+                yield batch
 
     def output(self, message):
         """ Put the (list of) message(s) to the output buffer. """
@@ -362,6 +411,10 @@ class ProcessorStage(AbstractStage):
     def forward(self):
         """ Send EOPMarker to the output stream. """
         self.__output.eop()
+
+    def bnc(self):
+        """ Send BNCMarker to the output stream. """
+        self.__output.bnc()
 
     def flush_buffer(self):
         """ Flush message buffer to the output. """

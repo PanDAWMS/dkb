@@ -16,6 +16,23 @@ class InputStream(Stream):
 
     __iterator = None
 
+    # Names of markers that the stream knows how to process.
+    # Values are taken from config, markers with empty values are ignored.
+    marker_names = ['eob']
+
+    def configure(self, config={}):
+        """ Configure instance. """
+        super(InputStream, self).configure(config)
+        self.markers = {}
+        # If batch size is 1, meaning non-batch mode will be used, then
+        # markers are unnecessary (and even can be a hindrance by forcing
+        # usage of custom_readline() without need).
+        if config.get('bsize', 1) > 1:
+            for name in self.marker_names:
+                value = config.get(name)
+                if value:
+                    self.markers[name] = value
+
     def __iter__(self):
         """ Initialize iteration. """
         self._reset_iterator()
@@ -24,14 +41,14 @@ class InputStream(Stream):
     def _reset_iterator(self):
         """ Reset inner iterator on a new file descriptor. """
         fd = self.get_fd()
-        if self.EOM == '\n':
+        if self.EOM == '\n' and not self.markers:
             self.__iterator = iter(fd.readline, "")
             self.is_readable = self._fd_is_readable
-        elif self.EOM == '':
+        elif self.EOM == '' and not self.markers:
             self.__iterator = iter(fd.read, "")
             self.is_readable = self._fd_is_readable
         else:
-            self.__iterator = custom_readline(fd, self.EOM)
+            self.__iterator = custom_readline(fd, self.EOM, self.markers)
             self.is_readable = self._gi_is_readable
 
     def reset(self, fd, close=True, force=False):
@@ -139,9 +156,10 @@ class InputStream(Stream):
             return False
 
     def get_message(self):
-        """ Get next message from the input stream.
+        """ Get next message or marker from the input stream.
 
         :returns: parsed next message,
+                  next marker,
                   False -- parsing failed,
                   None -- no messages left
         :rtype: pyDKB.dataflow.communication.messages.AbstractMessage,
@@ -154,16 +172,22 @@ class InputStream(Stream):
         return result
 
     def next(self):
-        """ Get next message from the input stream.
+        """ Get next message or marker from the input stream.
 
         :returns: parsed next message,
+                  next marker,
                   False -- parsing failed or unexpected end of stream occurred
-        :rtype: pyDKB.dataflow.communication.messages.AbstractMessage, bool
+        :rtype: pyDKB.dataflow.communication.messages.AbstractMessage,
+                str, bool
         """
         if not self.__iterator:
             self._reset_iterator()
         msg = self.__iterator.next()
         if not msg.endswith(self.EOM):
+            # Check whether an expected marker was received.
+            for key in self.markers:
+                if msg == key:
+                    return key
             log_msg = msg[:10] + '<...>' * (len(msg) > 20)
             log_msg += msg[-min(len(msg) - 10, 10):]
             log_msg = log_msg.replace('\n', r'\n')

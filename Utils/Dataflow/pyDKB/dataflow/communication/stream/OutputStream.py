@@ -15,6 +15,7 @@ class OutputStream(Stream):
         """ Configure instance. """
         super(OutputStream, self).configure(config)
         self.EOP = config.get('eop', '')
+        self.BNC = config.get('bnc', '')
 
     def write(self, message):
         """ Add message to the buffer. """
@@ -39,6 +40,10 @@ class OutputStream(Stream):
     def eop(self):
         """ Signalize Supervisor about end of process. """
         self.get_fd().write(self.EOP)
+
+    def bnc(self):
+        """ Signalize Supervisor about batch being incomplete. """
+        self.get_fd().write(self.BNC)
 
     def drop(self):
         """ Drop buffer without sending messages anywhere. """
