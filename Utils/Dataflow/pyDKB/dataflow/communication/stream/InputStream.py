@@ -180,7 +180,7 @@ class InputStream(Stream):
         return result
 
     def next(self):
-        """ Get next item from the input stream.
+        """ Get next item (message) from the input stream.
 
         :raises: StopIteration: no items left
         :returns: parsed next item,
