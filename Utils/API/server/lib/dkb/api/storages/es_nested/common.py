@@ -104,7 +104,8 @@ def init():
         TASK_KWARGS['index'] = index
         CONFIG['index'] = {'production_tasks': index}
     try:
-        es = elasticsearch.Elasticsearch(hosts, http_auth=(user, passwd))
+        es = elasticsearch.Elasticsearch(hosts, http_auth=(user, passwd),
+                                         timeout=600)
     except Exception, err:
         trace = traceback.format_exception(*sys.exc_info())
         for lines in trace:
