@@ -154,9 +154,9 @@ class InputStream(Stream):
         return self.__iterator.next()
 
     def get_message(self):
-        """ Get next message from the input stream.
+        """ Get next stream item (constructed of raw items).
 
-        :returns: parsed next message,
+        :returns: parsed next item,
                   False -- parsing failed,
                   None -- no messages left
         :rtype: pyDKB.dataflow.communication.messages.AbstractMessage,
@@ -180,9 +180,10 @@ class InputStream(Stream):
         return result
 
     def next(self):
-        """ Get next message from the input stream.
+        """ Get next item (message) from the input stream.
 
-        :returns: parsed next message,
+        :raises: StopIteration: no items left
+        :returns: parsed next item,
                   False -- parsing failed or unexpected end of stream occurred
         :rtype: pyDKB.dataflow.communication.messages.AbstractMessage, bool
         """
