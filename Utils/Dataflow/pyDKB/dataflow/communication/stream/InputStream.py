@@ -156,6 +156,9 @@ class InputStream(Stream):
     def get_item(self):
         """ Get next stream item (constructed of raw items).
 
+        Stream item is an object representing some of the supervisor/worker
+        communication protocol objects (e.g. ``Message``).
+
         :returns: parsed next item,
                   False -- parsing failed,
                   None -- no messages left
