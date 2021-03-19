@@ -22,6 +22,7 @@ try:
     from pyDKB.dataflow.exceptions import DataflowException
     from pyDKB import atlas
     from pyDKB.common.misc import execute_with_retry
+    from pyDKB.common.types import logLevel
 except Exception, err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
@@ -160,9 +161,10 @@ def process(stage, message):
                 amiPhysValues(ds)
             except DataflowException:
                 raise
-            except Exception:
-                stage.output_error("Failed to process dataset '%s'"
-                                   % ds['name'], sys.exc_info())
+            except Exception, err:
+                stage.log(["Failed to process dataset '%s'" % ds['name'],
+                           "Reason: %s" % err],
+                          logLevel.WARN)
             else:
                 # Do not put this into try/except above:
                 #   any exception produced by it indicates a problem
@@ -199,9 +201,9 @@ def amiPhysValues(data):
         json_str = json.loads(res)
         rowset = json_str['AMIMessage'][0]['Result'][0]['rowset']
     except ValueError:
-        raise Exception("Non-JSON AMI response: %s" % res)
+        raise Exception("Non-JSON AMI response: %r" % res)
     except Exception:
-        raise Exception("Unexpected AMI response: %s" % json_str)
+        raise Exception("Unexpected AMI response: %r" % json_str)
     if not rowset:
         sys.stderr.write("(WARN) No values found in AMI for dataset '%s'\n"
                          % data['name'])
