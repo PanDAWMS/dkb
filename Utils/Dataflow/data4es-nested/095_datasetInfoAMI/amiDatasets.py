@@ -205,9 +205,7 @@ def amiPhysValues(data):
     except Exception:
         raise Exception("Unexpected AMI response: %r" % json_str)
     if not rowset:
-        sys.stderr.write("(WARN) No values found in AMI for dataset '%s'\n"
-                         % data['name'])
-        return False
+        raise Exception("No values found in AMI")
     for row in rowset[0]['row']:
         p_name, p_val = None, None
         for field in row['field']:
