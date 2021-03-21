@@ -115,7 +115,7 @@ class Consumer(LoggableObject):
         return msg
 
     def next(self):
-        """ Return new Message, read from input stream. """
+        """ Get next processing item (Message) from current source. """
         msg = self.get_message()
         if msg is None:
             raise StopIteration
