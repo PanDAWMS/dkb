@@ -117,6 +117,9 @@ class Consumer(LoggableObject):
     def get_item(self):
         """ Get next processing item (constructed of raw items).
 
+        Processing item is the smallest data unit for stage processing loop
+        (e.g. ``ProcessorStage``).
+
         :returns: parsed next item,
                   False -- parsing failed,
                   None -- no messages left
