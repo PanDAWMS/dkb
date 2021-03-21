@@ -115,7 +115,7 @@ class Consumer(LoggableObject):
         return msg
 
     def get_item(self):
-        """ Get next stream item (constructed of raw items).
+        """ Get next processing item (constructed of raw items).
 
         :returns: parsed next item,
                   False -- parsing failed,
