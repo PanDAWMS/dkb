@@ -1,0 +1,25 @@
+# Configuration parameters for reindex.sh
+
+# ES PARAMETERS
+SRC_INDEX=production_tasks
+TGT_INDEX=production_tasks-nested
+
+SRC_DOCTYPE=task
+
+SRC_ES_HOST=127.0.0.1:9200
+TGT_ES_HOST=$SRC_ES_HOST
+
+SRC_ENDPOINT="http://${SRC_ES_HOST}/${SRC_INDEX}/${SRC_DOCTYPE}/_search"
+SCROLL_ENDPOINT="http://${SRC_ES_HOST}/_search/scroll"
+TGT_ENDPOINT="http://${TGT_ES_HOST}/_bulk"
+
+# PROCESS PARAMETERS
+SCROLL_SIZE=500
+DEBUG=
+NOOP=
+
+TRANSFORMATION=transform-to-nested
+
+# LOGGING PARAMETERS
+# Uncomment this to output STDERR to file
+# LOGFILE=/path/to/logfile
