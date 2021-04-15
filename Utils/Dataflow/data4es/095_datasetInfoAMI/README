@@ -50,7 +50,7 @@ stage and its arguments, use:
 
 4. Samples
 ----------
-The 'output' directory contains 2 samples:
+The 'output' directory contains 2 samples of production data:
 
-datasets2016.ndjson - 2016 data (from 093's 2016 sample)
-datasets2018.ndjson - 2018 data (from 093's 2018 sample)
+  sample2016.ndjson - 2016 data (from 093's 2016 sample)
+  sample2020.ndjson - 2020 data (from 093's 2020 sample)

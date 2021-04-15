@@ -12,7 +12,7 @@
 -- ATLAS_DEFT.t_production_dataset
 --
 -- All fields:
--- architecture, campaign, cloud, conditions_tags, core_count, description, end_time,
+-- architecture, campaign, cloud, conditions_tag, core_count, description, end_time,
 -- energy_gev, evgen_job_opts, geometry_version, hashtag_list, job_config, physics_list, processed_events,
 -- phys_group, project, pr_id, requested_events, run_number, site, start_time, step_name, status, subcampaign,
 -- taskid, taskname, task_timestamp,  ticket_id, trans_home, trans_path, trans_uses, trigger_config, user_name, vo,
@@ -77,7 +77,7 @@ with tasks as (
                     '')) AS core_count,
         to_char(NVL(regexp_replace(regexp_substr(tt.jedi_task_parameters, '"--conditionsTag[ =]\\"default:[a-zA-Z0-9_\-]+[^\""]'),
                            '"--conditionsTag[ =]\\"default:', ''),
-                    '')) AS conditions_tags,
+                    '')) AS conditions_tag,
         to_char(NVL(regexp_replace(regexp_substr(tt.jedi_task_parameters, '"--geometryVersion[ =]\\"default:[a-zA-Z0-9_\-]+[^\""]'),
                             '"--geometryVersion[ =]\\"default:', ''),
                     '')) AS geometry_version,

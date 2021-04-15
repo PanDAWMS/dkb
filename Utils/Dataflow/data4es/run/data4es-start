@@ -106,11 +106,8 @@ define_stages() {
   cfg_69=`get_config "es"`
   cmd_69="${base_dir}/../069_upload2es/load_data.sh --config $cfg_69"
 
-  # Stage 91 (input)
-  cmd_91_in="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s -t i"
-
-  # Stage 91 (output)
-  cmd_91_out="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
+  # Stage 91
+  cmd_91="${base_dir}/../091_datasetsRucio/datasets_processing.py -m s"
 
   # Stage 93
   cmd_93="${base_dir}/../093_datasetsFormat/datasets_format.py -m s"
@@ -232,36 +229,30 @@ ret_code=$?
 [ $ret_code -ne 0 ] && exit $ret_code
 
 # Define entry points for the dataflow branches
-b_91=`branch b_91` && b_40=`branch b_40` \
-  || exit $?
+b_process=`branch b_process` || exit $?
 
 # Define subchains
 # Source subchain: Oracle Connector
 source_chain() {
-  run_stage '09' | tee $b_40 $b_91
+  run_stage '09' | tee $b_process
 }
 
-# Parallel subchains: 40 and 91
-chain_40() {
-  cat $b_40 | run_stage '91_in' | eop_filter \
-            | run_stage '25' | eop_filter \
-            | run_stage '16' | eop_filter \
-            | run_stage '17' | eop_filter \
-            | run_stage '40' | eop_filter
-}
-
-chain_91() {
-  cat $b_91 | run_stage '91_out' | eop_filter \
-            | run_stage '93' | eop_filter \
-            | run_stage '95' | eop_filter
+process_chain() {
+  cat $b_process | run_stage '91' | eop_filter \
+                 | run_stage '25' | eop_filter \
+                 | run_stage '16' | eop_filter \
+                 | run_stage '17' | eop_filter \
+                 | run_stage '40' | eop_filter \
+                 | run_stage '93' | eop_filter \
+                 | run_stage '95' | eop_filter 
 }
 
 # Sink chain
 sink_chain() {
   [ -n "$DEBUG" ] \
     && cmd_69="tee"
-  tr $'\n' $'\x1e' | run_stage '19' "$1" | tr -d $'\x1e' | eop_filter | mediator "$1" \
-                   | run_stage '69' "$1" > /dev/null
+  tr $'\n' $'\x1e' | run_stage '19' "$1" | tr -d $'\x1e' | eop_filter \
+                   | mediator "$1" | run_stage '69' "$1" > /dev/null
 }
 
 log "Starting process."
@@ -273,16 +264,12 @@ out=/dev/null
 source_chain > $out &
 
 [ -n "$DEBUG" ] \
-  && out='40.out'
-chain_40 | tee $out | sink_chain b40 &
-
-[ -n "$DEBUG" ] \
   && out='95.out'
-chain_91 | tee $out | sink_chain b91 &
+process_chain | tee $out | sink_chain from95 &
 
 ps ax | grep "$cmd_09" | grep -v grep | awk '{print $1 " source"}' >> $pidfile
-for cmd in "$cmd_25" "$cmd_16" "$cmd_17" "$cmd_40" "$cmd_91_in" \
-           "$cmd_91_out" "$cmd_93" "$cmd_95" "$cmd_19" "$cmd_69"; do
+for cmd in "$cmd_25" "$cmd_16" "$cmd_17" "$cmd_40" "$cmd_91" \
+           "$cmd_93" "$cmd_95" "$cmd_19" "$cmd_69"; do
   ps ax | grep "$cmd" | awk '{print $1}' >> $pidfile
 done
 

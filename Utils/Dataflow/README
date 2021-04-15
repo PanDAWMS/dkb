@@ -160,19 +160,6 @@ output one according to a set of rules common for all the stages.
 
 009 ---> *                                | Get task metadata from ProdSys2 DB
                                           |
-  * -> 091(in) -> 025 -> 016 -> 017 -> ** | Append task metadata with that from
-   \                    ** -> 040         |   Rucio (input DS) and Chicago ES
-    \                           \         |
-     \-> 091(out) -> 093 -> 095 ----> *** | Get DS metadata from Rucio and AMI
-                                          |
-  *** ----> 019 -> 069                    | Prepare and upload metadata to ES
-
-
-3. data4es-nested (data4es adapted for a new ES storage scheme)
-------------------------------------------------------------------------
-
-009 ---> *                                | Get task metadata from ProdSys2 DB
-                                          |
   * -> 091 -> 025 -> 016 -> 017 -> **     | Append task metadata with that from
                         ** -> 040 -> ***  |   Rucio and Chicago ES
                                           |
@@ -181,7 +168,7 @@ output one according to a set of rules common for all the stages.
   **** -> 019 -> 069                      | Prepare and upload metadata to ES
 
 
-4. data4es (Tasks metadata consistency check)
+3. data4es (Tasks metadata consistency check)
 ---------------------------------------------
 
 009 ---> 016 ---> 071
