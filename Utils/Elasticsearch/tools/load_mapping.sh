@@ -29,4 +29,4 @@ shift $((OPTIND-1))
   && echo "You must provide path to mapping file!" \
   || curl $ES_AUTH -H "Content-Type: application/x-ndjson" \
           -XPUT --data-binary "@${1}" \
-          "${ES_PROTO}://${ES_HOST}:${ES_PORT}${ES_PATH}/_template/`basename ${1%.*}`?pretty"
+          "${ES_PROTO}://${ES_HOST}:${ES_PORT}${ES_PATH}/_index_template/`basename ${1%.*}`?pretty"

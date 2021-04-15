@@ -1,10 +1,10 @@
 {
-  "template": "*_progress",
-  "settings": {
-    "number_of_shards": 4
-  },
-  "mappings": {
-    "task_progress": {
+  "index_patterns": "*_progress",
+  "template": {
+    "settings": {
+      "number_of_shards": 4
+    },
+    "mappings": {
       "properties": {
         "taskid": {
           "type": "integer",
