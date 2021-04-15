@@ -21,5 +21,8 @@ done
 [ -n "$ES_USER" -a "$ES_PASSWORD" ] && ES_AUTH="--user ${ES_USER}:${ES_PASSWORD}"
 shift $((OPTIND-1)) 
 
-[ -z "$1" -o ! -f "${1}" ] && echo "You must provide path to mapping file!" || \
-curl $ES_AUTH -H "Content-Type: application/x-ndjson" -XPUT "http://${ES_HOST}:${ES_PORT}/_template/`basename ${1%.*}`?pretty" --data-binary "@${1}"
+[ -z "$1" -o ! -f "${1}" ] \
+  && echo "You must provide path to mapping file!" \
+  || curl $ES_AUTH -H "Content-Type: application/x-ndjson" \
+          -XPUT --data-binary "@${1}" \
+          "http://${ES_HOST}:${ES_PORT}/_template/`basename ${1%.*}`?pretty"
