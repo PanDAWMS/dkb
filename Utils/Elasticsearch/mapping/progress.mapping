@@ -1,5 +1,5 @@
 {
-  "index_patterns": "*_progress",
+  "index_patterns": "progress_*",
   "template": {
     "settings": {
       "number_of_shards": 4
