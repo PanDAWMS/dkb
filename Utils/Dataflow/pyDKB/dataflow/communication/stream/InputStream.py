@@ -138,31 +138,37 @@ class InputStream(Stream):
                      logLevel.WARN)
             return False
 
-    def get_message(self):
-        """ Get next message from the input stream.
+    def get_raw_item(self):
+        """ Get next raw item from the input stream.
 
-        :returns: parsed next message,
+        Raw item is a sequence of symbols that corresponds
+        to the supervisor/worker communication protocol object.
+        Known objects:
+        * message (``<raw_data>+<EOM>``).
+
+        :returns: next raw item
+        :rtype: str
+        """
+        if not self.__iterator:
+            self._reset_iterator()
+        return self.__iterator.next()
+
+    def get_item(self):
+        """ Get next stream item (constructed of raw items).
+
+        Stream item is an object representing some of the supervisor/worker
+        communication protocol objects (e.g. ``Message``).
+
+        :returns: parsed next item,
                   False -- parsing failed,
                   None -- no messages left
         :rtype: pyDKB.dataflow.communication.messages.AbstractMessage,
                 bool, NoneType
         """
         try:
-            result = self.next()
+            msg = self.get_raw_item()
         except StopIteration:
-            result = None
-        return result
-
-    def next(self):
-        """ Get next message from the input stream.
-
-        :returns: parsed next message,
-                  False -- parsing failed or unexpected end of stream occurred
-        :rtype: pyDKB.dataflow.communication.messages.AbstractMessage, bool
-        """
-        if not self.__iterator:
-            self._reset_iterator()
-        msg = self.__iterator.next()
+            return None
         if not msg.endswith(self.EOM):
             log_msg = msg[:10] + '<...>' * (len(msg) > 20)
             log_msg += msg[-min(len(msg) - 10, 10):]
@@ -175,3 +181,17 @@ class InputStream(Stream):
                 msg = msg[:-len(self.EOM)]
             result = self.parse_message(msg)
         return result
+
+    def next(self):
+        """ Get next item (message) from the input stream.
+
+        :raises: StopIteration: no items left
+        :returns: parsed next item,
+                  False -- parsing failed or unexpected end of stream occurred
+        :rtype: pyDKB.dataflow.communication.messages.AbstractMessage, bool
+        """
+        result = self.get_item()
+        if result is None:
+            raise StopIteration
+        else:
+            return result

@@ -99,8 +99,11 @@ class Consumer(LoggableObject):
         """ Return current source info. """
         raise NotImplementedError
 
-    def get_message(self):
-        """ Get new message from current source.
+    def get_raw_item(self):
+        """ Get new raw (stream) item from current source.
+
+        Raw (stream) item is an object representing some of
+        the supervisor/worker communication protocol objects.
 
         Return values:
             Message object
@@ -111,12 +114,26 @@ class Consumer(LoggableObject):
         if not s:
             msg = None
         else:
-            msg = s.get_message()
+            msg = s.next()
         return msg
 
+    def get_item(self):
+        """ Get next processing item (constructed of raw items).
+
+        Processing item is the smallest data unit for stage processing loop
+        (e.g. ``ProcessorStage``).
+
+        :returns: parsed next item,
+                  False -- parsing failed,
+                  None -- no messages left
+        :rtype: pyDKB.dataflow.communication.messages.AbstractMessage,
+                bool, NoneType
+        """
+        return self.get_raw_item()
+
     def next(self):
-        """ Return new Message, read from input stream. """
-        msg = self.get_message()
+        """ Get next processing item (Message) from current source. """
+        msg = self.get_item()
         if msg is None:
             raise StopIteration
         return msg
