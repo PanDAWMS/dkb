@@ -100,7 +100,10 @@ class Consumer(LoggableObject):
         raise NotImplementedError
 
     def get_raw_item(self):
-        """ Get new raw item (message) from current source.
+        """ Get new raw (stream) item from current source.
+
+        Raw (stream) item is an object representing some of
+        the supervisor/worker communication protocol objects.
 
         Return values:
             Message object
