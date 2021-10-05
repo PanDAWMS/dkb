@@ -1,5 +1,0 @@
-[ami]
-# PEM certificate file
-usercert=%__auth_crt__%
-# PEM key file
-userkey=%__auth_key__%

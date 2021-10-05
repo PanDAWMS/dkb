@@ -317,8 +317,8 @@ def generate_step_names(data):
 
     There are different ways to tell one step from another:
     - MC production step name (already exists as 'step_name' field);
-    - current AMI tag + output data format;
-    - chain of AMI tags + output data format.
+    - output data format + current AMI tag;
+    - output data format + chain of AMI tags.
 
     The latter is supposed to be the most universal, but initially only the
     first one was used, then for some cases the second was invented, and...
@@ -345,9 +345,9 @@ def generate_step_names(data):
         if data_format in ignore_formats:
             continue
         if ctag:
-            data['ctag_format_step'].append(':'.join([ctag, data_format]))
+            data['ctag_format_step'].append(':'.join([data_format, ctag]))
         if tags:
-            data['ami_tags_format_step'].append(':'.join([tags, data_format]))
+            data['ami_tags_format_step'].append(':'.join([data_format, tags]))
     if not data['ctag_format_step']:
         del data['ctag_format_step']
     if not data['ami_tags_format_step']:
@@ -399,6 +399,8 @@ def process(stage, message):
         data['ami_tags'] = ami_tags
     # 9. Step names
     generate_step_names(data)
+    # 10. Remove not needed fields
+    data.pop('output', None)
 
     out_message = JSONMessage(data)
     stage.output(out_message)

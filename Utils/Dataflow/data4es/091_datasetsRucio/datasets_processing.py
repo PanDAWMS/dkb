@@ -76,21 +76,13 @@ def main(argv):
     stage = pyDKB.dataflow.stage.ProcessorStage()
     stage.set_input_message_type(messageType.JSON)
     stage.set_output_message_type(messageType.JSON)
-    stage.add_argument('-t', '--dataset-type', action='store', type=str,
-                       help=u'Type of datasets to work with: (i)nput'
-                             ' or (o)utput',
-                       nargs='?',
-                       default=OUTPUT,
-                       choices=[INPUT, OUTPUT],
-                       dest='ds_type'
-                       )
+
+    global log
+    log = stage.log
 
     stage.configure(argv)
-    if stage.ARGS.ds_type == OUTPUT:
-        stage.process = process_output_ds
-        stage.skip_process = skip_process_output_ds
-    elif stage.ARGS.ds_type == INPUT:
-        stage.process = process_input_ds
+    stage.process = process
+    stage.skip_process = skip_process
     exit_code = stage.run()
 
     if exit_code == 0:
@@ -133,127 +125,143 @@ def get_rucio_client():
     return rucio_client
 
 
-def process_output_ds(stage, message):
-    """ Process output datasets from input message.
+def skip_process(stage, message):
+    """ Single message processing in case of 'skip' scenario.
 
-    Generate output JSON document of the following structure:
-        { "datasetname": <DSNAME>
-          "deleted": <bool>,
-          "bytes": <...>,
-          ...
-          "_type": "output_dataset",
-          "_parent": <TASKID>,
-          "_id": <DSNAME>
-        }
-    """
-    json_str = message.content()
+    Convert message's `output` field into nested `output_dataset` documents.
 
-    if not json_str.get(SRC_FIELD[OUTPUT]):
-        # Nothing to process; over.
-        return True
+    Implementation of `ProcessorStage.skip_process()` method.
 
-    datasets = json_str[SRC_FIELD[OUTPUT]]
-    if type(datasets) != list:
-        datasets = [datasets]
+    :param stage: Processor stage for which this function is a method
+    :type stage: :py:class:`pyDKB.dataflow.stage.ProcessorStage`
+    :param message: input message to be processed
+    :type message: :py:class:
+                   `pyDKB.dataflow.communication.messages.AbstractMessage`
 
-    mfields = META_FIELDS[OUTPUT]
-    for ds_name in datasets:
-        incompl = None
-        try:
-            ds = get_ds_info(ds_name, mfields)
-        except RucioException, err:
-            stage.log(["Mark message as incomplete (failed to get information"
-                       " from Rucio for: %s)." % ds_name,
-                       "Reason: %s." % str(err)],
-                      logLevel.WARN)
-            incompl = True
-            ds = {}
-
-        ds['datasetname'] = ds_name
-        ds['taskid'] = json_str.get('taskid')
-        if not add_es_index_info(ds):
-            sys.stderr.write("(WARN) Skip message (not enough info"
-                             " for ES indexing).\n")
-            continue
-        del(ds['taskid'])
-
-        if not is_data_complete(ds, mfields.values()):
-            incompl = True
-
-        msg = pyDKB.dataflow.communication.messages.JSONMessage(ds)
-        msg.incomplete(incompl)
-        stage.output(msg)
-
-    return True
-
-
-def skip_process_output_ds(stage, message):
-    """ Implementation of `ProcessorStage.skip_process()` method.
-
-    Convert input message (representing task) into a set of messages
-    representing the task output datasets.
-    Each output message contains dataset UID (name) and service fields:
-        { "datasetname": <DSNAME>,
-          "_type": "output_dataset",
-          "_parent": <TASKID>,
-          "_id": <DSNAME>
-        }
-    """
-    json_str = message.content()
-
-    if not json_str.get(SRC_FIELD[OUTPUT]):
-        # Nothing to process; over.
-        return True
-
-    datasets = json_str[SRC_FIELD[OUTPUT]]
-    if type(datasets) != list:
-        datasets = [datasets]
-
-    for dataset in datasets:
-        ds = {'datasetname': dataset}
-        ds['taskid'] = json_str.get('taskid')
-        if not add_es_index_info(ds):
-            sys.stderr.write("(WARN) Skip message (not enough info"
-                             " for ES indexing).\n")
-            continue
-        del(ds['taskid'])
-        out_msg = pyDKB.dataflow.communication.messages.JSONMessage(ds)
-        out_msg.incomplete(True)
-        stage.output(out_msg)
-
-    return True
-
-
-def process_input_ds(stage, message):
-    """ Process input dataset from input message.
-
-    Add to original JSON fields:
-     * bytes
-     * deleted
+    :return: processing status: True(success)/False(failure)
+    :rtype: bool
     """
     data = message.content()
-    mfields = META_FIELDS[INPUT]
-    ds_name = data.get(SRC_FIELD[INPUT])
+    output_datasets = []
+    output = data.pop('output', [])
+    if not output:
+        # It could be `None`, not missed
+        output = []
+    elif type(output) is not list:
+        output = [output]
+    for ds in output:
+        output_datasets.append({'name': ds})
+    if output_datasets:
+        data['output_datasets'] = output_datasets
+        out_msg = stage.output_message_class()(data)
+        out_msg.incomplete(True)
+    else:
+        out_msg = message
+    stage.output(out_msg)
+    return True
+
+
+def process(stage, message):
+    """ Process input message (both input and output datasets).
+
+    Output JSON will contain same fields as the input and additional ones:
+
+    ```
+    {
+      "output_dataset": [
+        {"name": ..., "events": ..., "bytes": ..., "deleted": ...},
+        ...
+      ],
+      "input_bytes": ...,
+      "primary_input_events": ...,
+      "primary_input_deleted": ...
+    }
+    ```
+
+    :param stage: Processor stage for which this function is a method
+    :type stage: :py:class:`pyDKB.dataflow.stage.ProcessorStage`
+    :param message: input message to be processed
+    :type message: :py:class:
+                   `pyDKB.dataflow.communication.messages.AbstractMessage`
+
+    :return: processing status: True(success)/False(failure)
+    :rtype: bool
+    """
+    data = message.content()
+
     incompl = None
-    if ds_name:
+    input_ds = process_ds(data.get(SRC_FIELD[INPUT]), INPUT)
+    try:
+        input_ds = input_ds[0]
+        if not input_ds.pop('_status'):
+            incompl = True
+        data.update(input_ds)
+    except (TypeError, IndexError):
+        pass
+
+    output_ds = process_ds(data.get(SRC_FIELD[OUTPUT]), OUTPUT)
+    if output_ds:
+        data['output_dataset'] = output_ds
+        for ds in output_ds:
+            if not ds.pop('_status', True):
+                incompl = True
+
+    msg = stage.output_message_class()(data)
+    msg.incomplete(incompl)
+
+    stage.output(msg)
+    return True
+
+
+def process_ds(datasets, ds_type):
+    """ Process datasets.
+
+    Generate output JSON documents of the following structure (according
+    to ``ds_type``):
+        { "name": <DSNAME>, /* for ds_type == OUTPUT */
+          <deleted>: <bool>,
+          <events>: <...>,
+          <bytes>: <...>
+        }
+
+    :param datasets: list of DS names
+    :type datasets: list
+    :param ds_type: defines processing type (INPUT or OUTPUT)
+    :type ds_type: str
+
+    :return: list of documents with DS metadata,
+             each with service field ``_status``
+             representing processing status -- if it
+             was successful (True) or failed (False)
+    :rtype: list
+    """
+    if not datasets:
+        # Nothing to process; over.
+        return None
+
+    if type(datasets) != list:
+        datasets = [datasets]
+
+    mfields = META_FIELDS[ds_type]
+    result = []
+    for ds_name in datasets:
+        status = True
         try:
             ds = get_ds_info(ds_name, mfields)
         except RucioException, err:
-            stage.log(["Mark message as incomplete (failed to get information"
-                       " from Rucio for: %s)." % ds_name,
-                       "Reason: %s." % str(err)],
-                      logLevel.WARN)
-            incompl = True
+            log(["Failed to get information"
+                 " from Rucio for: %s." % ds_name,
+                 "Reason: %s." % str(err)],
+                logLevel.WARN)
+            status = False
             ds = {}
-        data.update(ds)
-        if not is_data_complete(data, mfields.values()):
-            incompl = True
-
-    msg = pyDKB.dataflow.communication.messages.JSONMessage(data)
-    msg.incomplete(incompl)
-    stage.output(msg)
-
-    return True
+        if ds_type == OUTPUT:
+            ds['name'] = ds_name
+        if not is_data_complete(ds, mfields.values()):
+            status = False
+        ds['_status'] = status
+        result.append(ds)
+    return result
 
 
 def get_ds_info(dataset, mfields):
@@ -349,28 +357,6 @@ def is_data_complete(data, fields):
     :rtype: bool
     """
     return set(fields).issubset(set(data.keys()))
-
-
-def add_es_index_info(data):
-    """ Update data with required for ES indexing info.
-
-    Add fields:
-      _id => datasetname
-      _type => 'output_dataset'
-      _parent => taskid
-
-    Return value:
-      False -- update failed, skip the record
-      True  -- update successful
-    """
-    if type(data) is not dict:
-        return False
-    if not (data.get('datasetname') and data.get('taskid')):
-        return False
-    data['_id'] = data['datasetname']
-    data['_type'] = 'output_dataset'
-    data['_parent'] = data['taskid']
-    return True
 
 
 if __name__ == '__main__':

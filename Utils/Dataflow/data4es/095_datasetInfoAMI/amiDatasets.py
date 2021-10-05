@@ -152,29 +152,22 @@ def process(stage, message):
     if not isinstance(data, dict):
         sys.stderr.write("(WARN) Cannot update non-dict data: %r\n" % data)
         return False
-    # 'data_format' field contains a list of strings,
-    # e.g. ['DAOD_SUSY5', 'DAOD']
-    formats = data.get('data_format', [])
-    update = False
-    for f in formats:
-        if f in FILTER:
-            update = True
-    # Update data with information from AMI only if
-    # 'data_format' list contains one of the allowed formats
-    # or not set at all.
-    if update or not formats:
-        try:
-            amiPhysValues(data)
-        except DataflowException:
-            raise
-        except Exception:
-            stage.output_error("Failed to process dataset '%s'"
-                               % data['datasetname'], sys.exc_info())
-        else:
-            # Do not put this into try/except above - any exception produced
-            # by it indicates a problem with the stage code that demands
-            # a full stop.
-            change_key_names(data)
+    datasets = data.get('output_dataset', [])
+    for ds in datasets:
+        ds_format = ds.get('data_format')
+        if ds_format in FILTER or not ds_format:
+            try:
+                amiPhysValues(ds)
+            except DataflowException:
+                raise
+            except Exception:
+                stage.output_error("Failed to process dataset '%s'"
+                                   % ds['name'], sys.exc_info())
+            else:
+                # Do not put this into try/except above:
+                #   any exception produced by it indicates a problem
+                #   with the stage code that demands a full stop.
+                change_key_names(ds)
     stage.output(pyDKB.dataflow.communication.messages.JSONMessage(data))
 
     return True
@@ -211,7 +204,7 @@ def amiPhysValues(data):
         raise Exception("Unexpected AMI response: %s" % json_str)
     if not rowset:
         sys.stderr.write("(WARN) No values found in AMI for dataset '%s'\n"
-                         % data['datasetname'])
+                         % data['name'])
         return False
     for row in rowset[0]['row']:
         p_name, p_val = None, None
@@ -247,26 +240,26 @@ def container_name(data):
     The container name is extracted from normalized dataset name by removing
     the '_tid...' part.
 
-    :param data: dataset information, must contain 'datasetname' field
+    :param data: dataset information, must contain 'name' field
     :type data: dict
 
     :return: container name if it was determined successfully, False otherwise
     :rtype: str or bool
     """
-    if 'datasetname' in data:
-        dataset = data['datasetname']
+    if 'name' in data:
+        dataset = data['name']
     else:
-        sys.stderr.write("(WARN) Required field 'datasetname' not found"
+        sys.stderr.write("(WARN) Required field 'name' not found"
                          " in data: %r\n" % data)
         return False
     if not isinstance(dataset, (str, unicode)):
-        sys.stderr.write("(WARN) Invalid type of 'datasetname' field:"
+        sys.stderr.write("(WARN) Invalid type of 'name' field:"
                          " expected string, got %s.\n"
                          "(==) Data:"
                          " %r\n" % (dataset.__class__.__name__, data))
         return False
     if len(dataset) == 0:
-        sys.stderr.write("(WARN) Required field 'datasetname' is empty"
+        sys.stderr.write("(WARN) Required field 'name' is empty"
                          " in data: %r\n" % data)
     dataset = pyDKB.atlas.misc.normalize_dataset_name(dataset)
     return re.sub('_tid(.)+', '', dataset)
