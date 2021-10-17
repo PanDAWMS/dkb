@@ -93,13 +93,11 @@ def es_connect(cfg):
         return False
 
     global es
+    s = '%s:%s' % (cfg['ES_HOST'], cfg['ES_PORT'])
     if cfg['ES_USER'] and cfg['ES_PASSWORD']:
-        s = 'http://%s:%s@%s:%s/' % (cfg['ES_USER'],
-                                     cfg['ES_PASSWORD'],
-                                     cfg['ES_HOST'],
-                                     cfg['ES_PORT'])
-    else:
-        s = '%s:%s' % (cfg['ES_HOST'], cfg['ES_PORT'])
+        s = 'http://%s:%s@%s/' % (cfg['ES_USER'],
+                                  cfg['ES_PASSWORD'],
+                                  s)
     es = elasticsearch.Elasticsearch([s])
     return True
 
