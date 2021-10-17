@@ -6,7 +6,6 @@
 --------------
 Add ES-specific service fields to task metadata:
 * _id = taskid
-* _type = 'task'
 
 2. Samples
 ----------

@@ -31,7 +31,6 @@ def add_es_index_info(data):
 
     Add fields:
       _id => taskid
-      _type => 'task'
 
     Return value:
       False -- update failed, skip the record
@@ -42,7 +41,6 @@ def add_es_index_info(data):
     if not data.get('taskid'):
         return False
     data['_id'] = data['taskid']
-    data['_type'] = 'task'
     return True
 
 
