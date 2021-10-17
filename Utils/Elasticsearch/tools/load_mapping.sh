@@ -11,6 +11,7 @@ ES_CONFIG="$(dirname $0)/../config/es"
 ES_HOST='127.0.0.1'
 ES_PORT='9200'
 ES_PATH=''
+ES_PROTO='http'
 
 while getopts c: opt; do
   case $opt in		
@@ -28,4 +29,4 @@ shift $((OPTIND-1))
   && echo "You must provide path to mapping file!" \
   || curl $ES_AUTH -H "Content-Type: application/x-ndjson" \
           -XPUT --data-binary "@${1}" \
-          "http://${ES_HOST}:${ES_PORT}${ES_PATH}/_template/`basename ${1%.*}`?pretty"
+          "${ES_PROTO}://${ES_HOST}:${ES_PORT}${ES_PATH}/_template/`basename ${1%.*}`?pretty"
