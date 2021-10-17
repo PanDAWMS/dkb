@@ -63,7 +63,7 @@ function check_input($row) {
   :return: TRUE if input is correct, FALSE if it is not
   :rtype: bool
   */
-  $required_fields = array('_id', '_type');
+  $required_fields = array('_id');
 
   if (!is_array($row)) {
     fwrite(STDERR, "(WARN) Failed to decode message.\n");
@@ -181,7 +181,6 @@ function constructActionJson($row) {
   $action = Array(
     $act => Array(
       '_index' => $index,
-      '_type'  => $row['_type'],
       '_id'    => $row['_id'],
     )
   );
