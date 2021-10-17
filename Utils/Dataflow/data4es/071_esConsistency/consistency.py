@@ -54,8 +54,10 @@ def load_config(fname):
     :type fname: str
     '''
     cfg = {
+        'ES_PROTO': 'http',
         'ES_HOST': '',
         'ES_PORT': '',
+        'ES_PATH': '',
         'ES_USER': '',
         'ES_PASSWORD': '',
         'ES_INDEX': ''
@@ -95,9 +97,11 @@ def es_connect(cfg):
     global es
     s = '%s:%s' % (cfg['ES_HOST'], cfg['ES_PORT'])
     if cfg['ES_USER'] and cfg['ES_PASSWORD']:
-        s = 'http://%s:%s@%s/' % (cfg['ES_USER'],
-                                  cfg['ES_PASSWORD'],
-                                  s)
+        s = '%s://%s:%s@%s/%s/' % (cfg['ES_PROTO'],
+                                   cfg['ES_USER'],
+                                   cfg['ES_PASSWORD'],
+                                   s,
+                                   cfg['ES_PATH'])
     es = elasticsearch.Elasticsearch([s])
     return True
 
