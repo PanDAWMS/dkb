@@ -74,16 +74,19 @@ done
 log "Loading defaults and config $ES_CONFIG if any"
 ES_HOST='127.0.0.1'
 ES_PORT='9200'
+ES_PATH=''
+ES_PROTO='http'
 
 [ -f "$ES_CONFIG" ] && source "$ES_CONFIG"
 [ -n "$ES_USER" -a "$ES_PASSWORD" ] && ES_AUTH="--user ${ES_USER}:${ES_PASSWORD}"
+[ "$ES_PATH" == '/' ] && ES_PATH=''
 
 CURL_N_MAX=10
 SLEEP=5
 DELIMITER=`echo -e -n "\x00"`
 EOProcess=`echo -e -n "\x06"`
 
-cmd="curl -sS $ES_AUTH http://$ES_HOST:$ES_PORT/_bulk?pretty --data-binary @"
+cmd="curl -sS $ES_AUTH $ES_PROTO://$ES_HOST:${ES_PORT}${ES_PATH}/_bulk?pretty -H Content-Type:application/x-ndjson --data-binary @"
 
 load_files () {
   [ -z "$1" -o ! -f "$1" ] && log $(usage) && exit 1

@@ -1,7 +1,10 @@
 ES_HOST=%__es_host__%           #elasticsearch host
 ES_PORT=%__es_port__%           #elasticsearch port
+ES_PATH=%__es_path__%           #path to ES entry point (e.g. '/' (default), '/es', etc)
+ES_PROTO=%__es_proto__%         #protocol (http,https)
 ES_USER=%__es_user__%           #elasticsearch username for basic auth
 ES_PASSWORD=%__es_password__%   #password for basic auth
+ES_CA_CERTS=%__es_ca_certs__%   #path to CA certs
 
 ES_INDEX_TASKS=tasks_production  #default index for tasks metadata
                                  # avail: tasks_production, tasks_analysis
