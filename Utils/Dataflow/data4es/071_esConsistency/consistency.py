@@ -54,10 +54,13 @@ def load_config(fname):
     :type fname: str
     '''
     cfg = {
+        'ES_PROTO': 'http',
         'ES_HOST': '',
         'ES_PORT': '',
+        'ES_PATH': '',
         'ES_USER': '',
         'ES_PASSWORD': '',
+        'ES_CA_CERTS': '/etc/pki/tls/certs/CERN-bundle.pem',
         'ES_INDEX': ''
     }
     with open(fname) as f:
@@ -95,10 +98,15 @@ def es_connect(cfg):
     global es
     s = '%s:%s' % (cfg['ES_HOST'], cfg['ES_PORT'])
     if cfg['ES_USER'] and cfg['ES_PASSWORD']:
-        s = 'http://%s:%s@%s/' % (cfg['ES_USER'],
-                                  cfg['ES_PASSWORD'],
-                                  s)
-    es = elasticsearch.Elasticsearch([s])
+        s = '%s://%s:%s@%s/%s/' % (cfg['ES_PROTO'],
+                                   cfg['ES_USER'],
+                                   cfg['ES_PASSWORD'],
+                                   s,
+                                   cfg['ES_PATH'])
+
+    ca_certs = cfg['ES_CA_CERTS'] if cfg['ES_PROTO'] == 'https' else None
+
+    es = elasticsearch.Elasticsearch([s], ca_certs=ca_certs)
     return True
 
 
