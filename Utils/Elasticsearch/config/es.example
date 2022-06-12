@@ -15,10 +15,3 @@ ES_INDEX_PROGRESS=production_progress
                                  # avail: production_progress,
                                  #        analysis_progress
 
-
-# ---
-#
-# This variable is left for backwards compatibility:
-# some stages of the `data4es` dataflow rely on it.
-# TODO: replace with ES_INDEX_TASKS everywhere
-ES_INDEX=tasks_production        #default index to work with
