@@ -35,7 +35,7 @@ QUERY_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)),
                          'query')
 
 # Default datetime format for ES
-ES_DATE_FORMAT = '%d-%m-%y %H:%M:%S'
+ES_DATE_FORMAT = '%d-%m-%Y %H:%M:%S'
 
 # ES configuration
 CONFIG = None

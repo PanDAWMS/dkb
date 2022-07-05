@@ -1,10 +1,10 @@
 {
-  "template": "*_progress",
-  "settings": {
-    "number_of_shards": 4
-  },
-  "mappings": {
-    "task_progress": {
+  "index_patterns": "progress_*",
+  "template": {
+    "settings": {
+      "number_of_shards": 4
+    },
+    "mappings": {
       "properties": {
         "taskid": {
           "type": "integer",
@@ -16,7 +16,7 @@
         },
         "date": {
           "type": "date",
-          "format": "dd-MM-yy HH:mm:ss||epoch_millis"
+          "format": "dd-MM-yyyy HH:mm:ss||epoch_millis"
         },
         "processed_events": {
           "type": "long"

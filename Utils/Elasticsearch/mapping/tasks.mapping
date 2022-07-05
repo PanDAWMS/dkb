@@ -1,51 +1,51 @@
 {
-  "template": "tasks_*",
-  "settings": {
-    "number_of_shards": 4,
-    "analysis": {
-      "analyzer": {
-        "dsname": {
-          "char_filter": ["dsname_wildcarded", "remove_wildcard"],
-          "tokenizer": "dsname_tokenizer",
-          "filter": ["lowercase"]
+  "index_patterns": ["tasks_*"],
+  "template": {
+    "settings": {
+      "number_of_shards": 4,
+      "analysis": {
+        "analyzer": {
+          "dsname": {
+            "char_filter": ["dsname_wildcarded", "remove_wildcard"],
+            "tokenizer": "dsname_tokenizer",
+            "filter": ["lowercase"]
+          },
+          "dsname_fields": {
+            "char_filter": ["dsname_wildcarded", "remove_wildcard"],
+            "tokenizer": "dsname_field_tokenizer",
+            "filter": "lowercase"
+          },
+          "dsname_fields_wildcarded": {
+            "char_filter": ["dsname_wildcarded"],
+            "tokenizer": "dsname_field_tokenizer",
+            "filter": "lowercase"
+          }
         },
-        "dsname_fields": {
-          "char_filter": ["dsname_wildcarded", "remove_wildcard"],
-          "tokenizer": "dsname_field_tokenizer",
-          "filter": "lowercase"
+        "tokenizer": {
+          "dsname_tokenizer": {
+            "type": "pattern",
+            "pattern": "\\.+|_+"
+          },
+          "dsname_field_tokenizer": {
+            "type": "pattern",
+            "pattern": "\\.+"
+          }
         },
-        "dsname_fields_wildcarded": {
-          "char_filter": ["dsname_wildcarded"],
-          "tokenizer": "dsname_field_tokenizer",
-          "filter": "lowercase"
-        }
-      },
-      "tokenizer": {
-        "dsname_tokenizer": {
-          "type": "pattern",
-          "pattern": "\\.+|_+"
-        },
-        "dsname_field_tokenizer": {
-          "type": "pattern",
-          "pattern": "\\.+"
-        }
-      },
-      "char_filter": {
-        "dsname_wildcarded": {
-          "type": "pattern_replace",
-          "pattern": "[^a-zA-Z0-9_/.*?-]",
-          "replacement": ""
-        },
-        "remove_wildcard": {
-          "type": "pattern_replace",
-          "pattern": "[?*]",
-          "replacement": ""
+        "char_filter": {
+          "dsname_wildcarded": {
+            "type": "pattern_replace",
+            "pattern": "[^a-zA-Z0-9_/.*?-]",
+            "replacement": ""
+          },
+          "remove_wildcard": {
+            "type": "pattern_replace",
+            "pattern": "[?*]",
+            "replacement": ""
+          }
         }
       }
-    }
-  },
-  "mappings": {
-    "task": {
+    },
+    "mappings": {
       "properties": {
         "site": {
           "type": "text",
@@ -192,15 +192,15 @@
         },
         "task_timestamp": {
           "type": "date",
-          "format": "dd-MM-yy HH:mm:ss"
+          "format": "dd-MM-yyyy HH:mm:ss"
         },
         "start_time": {
           "type": "date",
-          "format": "dd-MM-yy HH:mm:ss"
+          "format": "dd-MM-yyyy HH:mm:ss"
         },
         "end_time": {
           "type": "date",
-          "format": "dd-MM-yy HH:mm:ss"
+          "format": "dd-MM-yyyy HH:mm:ss"
         },
         "hashtag_list": {
           "type": "keyword",
