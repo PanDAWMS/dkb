@@ -61,7 +61,7 @@ def load_config(fname):
         'ES_USER': '',
         'ES_PASSWORD': '',
         'ES_CA_CERTS': '/etc/pki/tls/certs/CERN-bundle.pem',
-        'ES_INDEX': ''
+        'ES_INDEX_TASKS': ''
     }
     with open(fname) as f:
         lines = f.readlines()
@@ -76,7 +76,7 @@ def load_config(fname):
             if key in cfg:
                 cfg[key] = value
     global INDEX
-    INDEX = cfg['ES_INDEX']
+    INDEX = cfg['ES_INDEX_TASKS']
     return cfg
 
 
