@@ -87,7 +87,8 @@ define_stages() {
   cmd_09="$cmd_09 --config $cfg_09"
 
   # Stage 25
-  cmd_25="${base_dir}/../025_chicagoES/stage.py -m s"
+  cfg_25=`get_config "025.cfg"`
+  cmd_25="${base_dir}/../025_chicagoES/stage.py -m s --config $cfg_25"
 
   # Stage 16
   cmd_16="${base_dir}/../016_task2es/task2es.py -m s"
