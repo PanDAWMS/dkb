@@ -152,7 +152,7 @@ def process(stage, message):
         return False
     try:
         _id = data.pop('_id')
-        _type = data.pop('_type')
+        _type = data.pop('_type', '_doc')
     except KeyError:
         log('Insufficient ES info in data:' + str(data), 'WARN')
         return False
