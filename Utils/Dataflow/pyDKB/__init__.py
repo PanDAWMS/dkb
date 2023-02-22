@@ -130,8 +130,8 @@ documentation.
 
 """
 
-import dataflow
-import common
+from . import dataflow
+from . import common
 
 import os
 

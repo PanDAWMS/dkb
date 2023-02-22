@@ -21,7 +21,7 @@ try:
     from pyDKB.dataflow.communication.messages import JSONMessage
     from pyDKB.dataflow import messageType
     from pyDKB.dataflow.exceptions import DataflowException
-except Exception, err:
+except Exception as err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
 
@@ -36,7 +36,7 @@ def add_es_index_info(data):
       False -- update failed, skip the record
       True  -- update successful
     """
-    if type(data) is not dict:
+    if not isinstance(data, dict):
         return False
     if not data.get('taskid'):
         return False

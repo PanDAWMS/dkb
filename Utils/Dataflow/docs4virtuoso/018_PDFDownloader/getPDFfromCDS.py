@@ -6,7 +6,7 @@ Stage 018: download PDF files from CDS and upload them to HDFS
 
 import sys
 import os
-from urlparse import urlparse
+from urllib.parse import urlparse
 import subprocess
 
 import traceback
@@ -20,7 +20,7 @@ try:
     from pyDKB.dataflow.stage import ProcessorStage
     from pyDKB.dataflow import messageType
     from pyDKB.common import hdfs, HDFSException
-except Exception, err:
+except Exception as err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
 
@@ -43,7 +43,7 @@ def transfer(url, hdfs_name):
         if out:
             out = out.strip()
         return out
-    except (subprocess.CalledProcessError, OSError, HDFSException), err:
+    except (subprocess.CalledProcessError, OSError, HDFSException) as err:
         sys.stderr.write("(ERROR) Failed to transfer data from CDS to HDSF:"
                          " %s\n" % err)
         return None

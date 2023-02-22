@@ -13,12 +13,13 @@ TODO: think about:
 import sys
 import os
 
-import Consumer
+from . import Consumer
+from .Consumer import ConsumerException
 from pyDKB.common.types import logLevel
 from .. import Message
 
 
-class FileConsumer(Consumer.Consumer):
+class FileConsumer(Consumer):
     """ Data consumer implementation for HDFS data source. """
 
     # Current file
@@ -32,7 +33,7 @@ class FileConsumer(Consumer.Consumer):
 
         if not (config.get('input_files', None)
                 or config.get('input_dir', None)):
-            raise Consumer.ConsumerException("No input files specified.")
+            raise ConsumerException("No input files specified.")
 
         if not self.config.get('input_dir'):
             self.config['input_dir'] = os.path.curdir
@@ -84,7 +85,7 @@ class FileConsumer(Consumer.Consumer):
         if not self.input_files:
             self.init_sources()
         try:
-            self.current_file = self.input_files.next()
+            self.current_file = next(self.input_files)
             result = self.get_source()
         except StopIteration:
             self.current_file = None
@@ -112,14 +113,13 @@ class FileConsumer(Consumer.Consumer):
         files = []
         ext = Message(self.message_type).extension()
         try:
-            dir_content = os.listdir(dirname)
+            dir_content = sorted(os.listdir(dirname))
             # Make files order predictable
-            dir_content.sort()
             for f in dir_content:
                 if os.path.isfile(os.path.join(dirname, f)) \
                         and f.lower().endswith(ext):
                     files.append(f)
-        except OSError, err:
+        except OSError as err:
             raise Consumer.ConsumerException(err)
         return files
 

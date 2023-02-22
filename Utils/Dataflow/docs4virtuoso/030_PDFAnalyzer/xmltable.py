@@ -28,7 +28,7 @@ class TextLine:
     re_text_space = re.compile("<text> </text>")
 
     def __init__(self, params=False, text_symbols=None):
-        if isinstance(params, str) or isinstance(params, unicode):
+        if isinstance(params, str) or isinstance(params, str):
             lines = params.split("\n")
 
             self.text = ""

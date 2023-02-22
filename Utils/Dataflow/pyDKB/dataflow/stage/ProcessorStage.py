@@ -120,13 +120,13 @@ class ProcessorStage(AbstractStage):
         """ Default parser configuration. """
         super(ProcessorStage, self).defaultArguments()
         self.add_argument('input_files', type=str, nargs='*',
-                          help=u'source data file\n'
+                          help='source data file\n'
                           'NOTE: required in (f)ile, '
                           'ignored in other modes',
-                          metavar=u'FILE'
+                          metavar='FILE'
                           )
         self.add_argument('-s', '--source', action='store', type=str,
-                          help=u'where to get data from:\n'
+                          help='where to get data from:\n'
                           '    f -- local files\n'
                           '    s -- stdin\n'
                           '    h -- hdfs files\n'
@@ -136,7 +136,7 @@ class ProcessorStage(AbstractStage):
                           dest='source'
                           )
         self.add_argument('-i', '--input-dir', action='store', type=str,
-                          help=u'directory with input files (local or HDFS), '
+                          help='directory with input files (local or HDFS), '
                           'or initial directory for relative FILE names. '
                           'If no FILE is specified, all files with '
                           'extension matching input message type will '
@@ -147,7 +147,7 @@ class ProcessorStage(AbstractStage):
                           dest='input_dir'
                           )
         self.add_argument('-d', '--dest', action='store', type=str,
-                          help=u'where to write results:\n'
+                          help='where to write results:\n'
                           '    f -- local files\n'
                           '    s -- stdout\n'
                           '    h -- hdfs files\n'
@@ -157,7 +157,7 @@ class ProcessorStage(AbstractStage):
                           dest='dest'
                           )
         self.add_argument('-o', '--output-dir', action='store', type=str,
-                          help=u'directory for output files '
+                          help='directory for output files '
                           '(local or HDFS). %%(metavar)s can be:\n'
                           ' * absolute path\n'
                           ' * relative path (for local files)\n'
@@ -173,7 +173,7 @@ class ProcessorStage(AbstractStage):
                           dest='output_dir'
                           )
         self.add_argument('--hdfs', action='store_true',
-                          help=u'equivalent to "--source h --dest h".\n'
+                          help='equivalent to "--source h --dest h".\n'
                           'Explicit specification of '
                           '"--source" and "--dest" as well as the default '
                           'values for current processing mode ("--mode") will '
@@ -182,7 +182,7 @@ class ProcessorStage(AbstractStage):
                           dest='hdfs'
                           )
         self.add_argument(self._skip_option, action='store_true',
-                          help=u'Skip process and push input message '
+                          help='Skip process and push input message '
                           'forward as-is (marking it as "incomplete").',
                           default=False,
                           dest='skip_process'
@@ -200,7 +200,7 @@ class ProcessorStage(AbstractStage):
         """
         super(ProcessorStage, self).set_default_arguments(**kwargs)
         if ignore_on_skip:
-            self._reset_on_skip += kwargs.keys()
+            self._reset_on_skip += list(kwargs.keys())
 
     def configure(self, args=None):
         """ Configure stage according to the config parameters.
@@ -226,7 +226,7 @@ class ProcessorStage(AbstractStage):
                 .setSourceInfoMethod(self.get_source_info) \
                 .build()
             self.__stoppable_append(self.__output, producer.Producer)
-        except (consumer.ConsumerException, producer.ProducerException), err:
+        except (consumer.ConsumerException, producer.ProducerException) as err:
             self.log(str(err), logLevel.ERROR)
             self.stop()
             sys.exit(1)
@@ -249,7 +249,7 @@ class ProcessorStage(AbstractStage):
             process = self.process
             self.log("Starting stage execution.")
         exit_code = 0
-        err = None
+        process_err = None
         try:
             for msg in self.input():
                 if msg and process(self, msg):
@@ -257,10 +257,11 @@ class ProcessorStage(AbstractStage):
                 else:
                     self.clear_buffer()
                 self.forward()
-        except BaseException, err:
+        except BaseException as err:
             # Catch everything for uniform exception handling
             # Clear buffer -- just in case someone will decide
             # to reuse the object.
+            process_err = err
             if isinstance(err, SystemExit):
                 exit_code = err.code
             else:
@@ -278,7 +279,7 @@ class ProcessorStage(AbstractStage):
             # NOTE: If something went wrong in `except` clause, we will still
             # get here and return, so the exceptions from there will never
             # reach the user
-            if err and not isinstance(err, Exception):
+            if process_err and not isinstance(process_err, Exception):
                 sys.exit(exit_code)
             return exit_code
 
@@ -290,10 +291,10 @@ class ProcessorStage(AbstractStage):
         for p in self.__stoppable:
             try:
                 p.close()
-            except AttributeError, e:
+            except AttributeError as e:
                 self.log("Close method is not defined for %s." % p,
                          logLevel.WARN)
-            except Exception, e:
+            except Exception as e:
                 failures.append((p, sys.exc_info()))
         if failures:
             for f in failures:

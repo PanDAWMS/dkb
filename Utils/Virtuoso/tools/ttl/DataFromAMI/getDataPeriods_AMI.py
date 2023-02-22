@@ -35,6 +35,6 @@ for year in range(year_start, year_end):
             tmp.append(",".join(str(json.dumps(item, indent=4))
                                 for item in result))
         except pyAMI.exception.Error:
-            print "No periods found!"
+            print("No periods found!")
 f.write("[" + ",".join(str(x) for x in tmp) + "]")
 f.close()

@@ -22,7 +22,7 @@ try:
     from pyDKB.dataflow.communication.messages import JSONMessage
     from pyDKB.dataflow.exceptions import DataflowException
     from pyDKB.dataflow import messageType
-except Exception, err:
+except Exception as err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
 

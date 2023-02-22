@@ -6,13 +6,13 @@ from .. import messageType
 from .. import codeType
 from .. import DataflowException
 from .. import Message
-from InputStream import InputStream
+from .InputStream import InputStream
 
-from Stream import Stream
-from InputStream import InputStream
-from OutputStream import OutputStream
+from .Stream import Stream
+from .InputStream import InputStream
+from .OutputStream import OutputStream
 
-from exceptions import StreamException
+from .exceptions import StreamException
 
 __all__ = ['StreamBuilder', 'Stream', 'InputStream', 'OutputStream']
 

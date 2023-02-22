@@ -1,1 +1,1 @@
-{u'A': u'B'}EOM{u'C': u'D', u'E': u'F'}EOM{u'A': u'B'}EOM{u'C': u'D', u'E': u'F'}EOM
+{'A': 'B'}EOM{'C': 'D', 'E': 'F'}EOM{'A': 'B'}EOM{'C': 'D', 'E': 'F'}EOM

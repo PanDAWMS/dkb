@@ -4,7 +4,7 @@ Definition of an abstract class for Dataflow Stages.
 
 import sys
 import traceback
-import ConfigParser
+import configparser
 from collections import defaultdict
 import textwrap
 
@@ -15,7 +15,7 @@ from pyDKB.common.misc import (log,
 
 try:
     import argparse
-except ImportError, e:
+except ImportError as e:
     log("argparse package is not installed.", logLevel.ERROR)
     raise e
 
@@ -48,7 +48,7 @@ class AbstractStage(LoggableObject):
         * ...
         """
         self.CONFIG = None
-        self.__config = ConfigParser.SafeConfigParser()
+        self.__config = configparser.SafeConfigParser()
         self.ARGS = None
         self.__parser = argparse.ArgumentParser(
             formatter_class=argparse.RawTextHelpFormatter,
@@ -63,7 +63,7 @@ class AbstractStage(LoggableObject):
         """ Log stage configuration. """
         self.log("Configuration parameters:")
         args = vars(self.ARGS)
-        key_len = len(max(args.keys(), key=len))
+        key_len = len(max(list(args.keys()), key=len))
         pattern = "  %%-%ds : '%%s'" % key_len
         for arg in args:
             self.log((pattern % (arg, args[arg])).replace("\n", r"\n"))
@@ -71,7 +71,7 @@ class AbstractStage(LoggableObject):
     def defaultArguments(self):
         """ Config argument parser with parameters common for all stages. """
         self.add_argument('-m', '--mode', action='store', type=str,
-                          help=u'processing mode: (f)ile, (s)tream'
+                          help='processing mode: (f)ile, (s)tream'
                           ' or (m)ap-reduce.\n'
                           'Processing mode is a shortcut for a combination '
                           'of four parameters: '
@@ -107,13 +107,13 @@ class AbstractStage(LoggableObject):
                           )
         self.add_argument('-c', '--config', action='store',
                           type=argparse.FileType('r'),
-                          help=u'stage configuration file',
+                          help='stage configuration file',
                           default=None,
                           metavar='CONFIG',
                           dest='config'
                           )
         self.add_argument('-e', '--end-of-message', action='store', type=str,
-                          help=u'custom end of message marker\n'
+                          help='custom end of message marker\n'
                           'NOTE: for (f)ile sources EOM can be set to empty '
                           'string to read input file as a single message, '
                           'not a number of NL-delimited messages. '
@@ -126,7 +126,7 @@ class AbstractStage(LoggableObject):
                           dest='eom'
                           )
         self.add_argument('-E', '--end-of-process', action='store', type=str,
-                          help=u'custom end of process marker\n'
+                          help='custom end of process marker\n'
                           'NOTE: in case of empty EOM will be set to \'\\n\'\n'
                           'DEFAULT: \'\'',
                           default=None,
@@ -203,8 +203,8 @@ class AbstractStage(LoggableObject):
             self.log("Empty EOM marker specified!", logLevel.WARN)
         else:
             try:
-                self.ARGS.eom = self.ARGS.eom.decode('string_escape')
-            except (ValueError), err:
+                self.ARGS.eom = self.ARGS.eom.encode().decode('unicode_escape')
+            except (ValueError) as err:
                 self.log("Failed to read arguments.\n"
                          "Case: %s" % (err), logLevel.ERROR)
                 sys.exit(1)
@@ -218,8 +218,8 @@ class AbstractStage(LoggableObject):
                 self.ARGS.eop = ''
         else:
             try:
-                self.ARGS.eop = self.ARGS.eop.decode('string_escape')
-            except (ValueError), err:
+                self.ARGS.eop = self.ARGS.eop.encode().decode('unicode_escape')
+            except (ValueError) as err:
                 self.log("Failed to read arguments.\n"
                          "Case: %s" % (err), logLevel.ERROR)
                 sys.exit(1)
@@ -256,7 +256,7 @@ class AbstractStage(LoggableObject):
 
         try:
             c.readfp(self.ARGS.config)
-        except (AttributeError, ConfigParser.Error), err:
+        except (AttributeError, configparser.Error) as err:
             self.set_error(*sys.exc_info())
             return False
 

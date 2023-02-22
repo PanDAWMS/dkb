@@ -26,7 +26,7 @@ try:
     from pyDKB.dataflow import messageType
     from pyDKB.dataflow.communication.messages import Message
     from pyDKB.dataflow.exceptions import DataflowException
-except Exception, err:
+except Exception as err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
 
@@ -34,7 +34,7 @@ try:
     import elasticsearch
     from elasticsearch.exceptions import (ElasticsearchException,
                                           ConnectionTimeout)
-except ImportError, err:
+except ImportError as err:
     sys.stderr.write("(ERROR) Failed to import elasticsearch module: %s\n"
                      % err)
 finally:
@@ -134,7 +134,7 @@ def task_metadata(task_data, fields=[], retry=3):
     }
     try:
         r = chicago_es.search(**kwargs)
-    except ElasticsearchException, err:
+    except ElasticsearchException as err:
         sys.stderr.write("(ERROR) ES search error (id=%r): %s\n"
                          % (taskid, err))
         kwargs_str = json.dumps(kwargs, indent=2)
@@ -305,7 +305,7 @@ def agg_metadata(task_data, agg_names, retry=3, es_args=None):
 
     try:
         r = chicago_es.search(**es_args)
-    except ElasticsearchException, err:
+    except ElasticsearchException as err:
         sys.stderr.write("(ERROR) ES search error (id=%r): %s\n"
                          % (taskid, err))
         args_str = json.dumps(es_args, indent=2)
@@ -343,19 +343,19 @@ def process(stage, message):
     data = message.content()
 
     # Get task metadata (direct values)
-    mdata = task_metadata(data, META_FIELDS.keys())
+    mdata = task_metadata(data, list(META_FIELDS.keys()))
     if mdata is None:
         return False
     for key in mdata:
         data[META_FIELDS[key]] = mdata.get(key)
 
     # Get metadata as aggregation by jobs
-    mdata = agg_metadata(data, AGG_FIELDS.keys())
+    mdata = agg_metadata(data, list(AGG_FIELDS.keys()))
     if mdata is None:
         return False
     if mdata:
         buckets = mdata['status']['buckets']
-        for f in AGG_FIELDS.keys():
+        for f in list(AGG_FIELDS.keys()):
             total = 0
             for b in buckets:
                 status = b['key']
@@ -393,7 +393,7 @@ def main(args):
         if not stage.ARGS.skip_process:
             init_es_client(stage.CONFIG['ChicagoES'])
         stage.run()
-    except (DataflowException, RuntimeError), err:
+    except (DataflowException, RuntimeError) as err:
         if str(err):
             sys.stderr.write("(ERROR) %s\n" % err)
         exit_code = 2

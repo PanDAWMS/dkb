@@ -5,12 +5,13 @@ Producer submodule init file.
 from .. import messageType
 from .. import DataflowException
 
-from Producer import Producer
-from FileProducer import FileProducer
-from HDFSProducer import HDFSProducer
-from StreamProducer import StreamProducer
+from .Producer import Producer
+from .FileProducer import FileProducer
+from .HDFSProducer import HDFSProducer
+from .StreamProducer import StreamProducer
 
-from Producer import ProducerException
+from .Producer import ProducerException
+import collections
 
 __all__ = ['ProducerBuilder']
 
@@ -48,7 +49,7 @@ class ProducerBuilder(object):
         if dest not in dests:
             raise ValueError("ProducerBuilder.setDest() expects one of the"
                              " following values: %s (got '%s')"
-                             % (dests.keys(), dest))
+                             % (list(dests.keys()), dest))
 
         self.producerClass = dests[dest]
         self.config['dest'] = dest
@@ -63,7 +64,7 @@ class ProducerBuilder(object):
 
     def setSourceInfoMethod(self, src_info):
         """ Set method to get current source info. """
-        if not callable(src_info):
+        if not isinstance(src_info, collections.Callable):
             raise TypeError("setSourceInfoMethod() expects callable object.")
         self.src_info = src_info
         return self

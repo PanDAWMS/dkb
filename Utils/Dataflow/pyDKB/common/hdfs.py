@@ -10,7 +10,7 @@ import posixpath as path
 import tempfile
 
 from . import HDFSException
-from misc import (log, logLevel)
+from .misc import (log, logLevel)
 
 DEVNULL = open(os.path.devnull, "w")
 DKB_HOME = "/user/DKB/"
@@ -49,7 +49,7 @@ def makedirs(dirname):
                                 stderr=subprocess.PIPE,
                                 stdout=DEVNULL)
         check_stderr(proc)
-    except (subprocess.CalledProcessError, OSError), err:
+    except (subprocess.CalledProcessError, OSError) as err:
         if isinstance(err, subprocess.CalledProcessError):
             err.cmd = ' '.join(cmd)
         raise HDFSException("Failed to create HDFS directory: %s\n"
@@ -65,7 +65,7 @@ def putfile(fname, dest):
                                 stderr=subprocess.PIPE,
                                 stdout=DEVNULL)
         check_stderr(proc)
-    except (subprocess.CalledProcessError, OSError), err:
+    except (subprocess.CalledProcessError, OSError) as err:
         if isinstance(err, subprocess.CalledProcessError):
             err.cmd = ' '.join(cmd)
         raise HDFSException("Failed to put file to HDFS: %s\n"
@@ -78,7 +78,7 @@ def movefile(fname, dest):
         putfile(fname, dest)
         try:
             os.remove(fname)
-        except OSError, err:
+        except OSError as err:
             log("Failed to remove local copy of HDFS file"
                 " (%s): %s" % (fname, err), logLevel.WARN)
 
@@ -96,7 +96,7 @@ def getfile(fname):
                                 stderr=subprocess.PIPE,
                                 stdout=DEVNULL)
         check_stderr(proc)
-    except (subprocess.CalledProcessError, OSError), err:
+    except (subprocess.CalledProcessError, OSError) as err:
         if isinstance(err, subprocess.CalledProcessError):
             err.cmd = ' '.join(cmd)
         raise HDFSException("Failed to get file from HDFS: %s\n"
@@ -118,7 +118,7 @@ def File(fname):
                                 stdout=tmp_file)
         check_stderr(proc)
         tmp_file.seek(0)
-    except (subprocess.CalledProcessError, OSError), err:
+    except (subprocess.CalledProcessError, OSError) as err:
         if isinstance(err, subprocess.CalledProcessError):
             err.cmd = ' '.join(cmd)
         tmp_file.close()
@@ -156,7 +156,7 @@ def listdir(dirname, mode='a'):
                 out.append(proc.stdout.readline().strip())
         if proc.poll():
             raise subprocess.CalledProcessError(proc.returncode, ' '.join(cmd))
-    except (subprocess.CalledProcessError, OSError), err:
+    except (subprocess.CalledProcessError, OSError) as err:
         if isinstance(err, subprocess.CalledProcessError):
             err.cmd = ' '.join(cmd)
         raise HDFSException("Failed to list the HDFS directory: %s\n"

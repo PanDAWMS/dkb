@@ -21,19 +21,19 @@ def my_method_handler(path, **kwargs):
 ```
 """
 
-import methods
-from exceptions import (DkbApiNotImplemented,
+from . import methods
+from .exceptions import (DkbApiNotImplemented,
                         MethodException,
                         MissedArgument,
                         InvalidArgument
                         )
 from . import __version__
-import storages
-from common import (MC_STEPS,
+from . import storages
+from .common import (MC_STEPS,
                     STEP_TYPES)
-from misc import sort_by_prefixes
+from .misc import sort_by_prefixes
 
-from cStringIO import StringIO
+from io import StringIO
 import logging
 import json
 
@@ -95,7 +95,7 @@ def nested(path, **kwargs):
 
     if 'warning' not in metadata:
         metadata['warning'] = warn
-    elif type(metadata['warning']) is list:
+    elif isinstance(metadata['warning'], list):
         metadata['warning'].append(warn)
     else:
         metadata['warning'] = [metadata['warning'], warn]
@@ -517,7 +517,7 @@ def campaign_stat(path, rtype='json', step_type=None, events_src=None,
                                             events_src_values))
 
     params = {}
-    for param in kwargs.keys():
+    for param in list(kwargs.keys()):
         if param.startswith('_'):
             continue
         vals = kwargs.pop(param)
@@ -612,7 +612,7 @@ def step_stat(path, rtype='json', step_type=None, **kwargs):
         raise InvalidArgument(method_name, ('step_type', step_type,
                                             allowed_types))
     params = {}
-    for param in kwargs.keys():
+    for param in list(kwargs.keys()):
         if param.startswith('_'):
             continue
         vals = kwargs.pop(param)
@@ -633,7 +633,7 @@ def step_stat(path, rtype='json', step_type=None, **kwargs):
                 x = MC_STEPS.index(x['name'])
                 y = MC_STEPS.index(y['name'])
                 return cmp(x, y)
-            except KeyError, ValueError:
+            except KeyError as ValueError:
                 pass
             return 0
     else:

@@ -2,7 +2,7 @@
 pyDKB.dataflow.communication.stream.OutputStream
 """
 
-from Stream import Stream
+from .Stream import Stream
 from . import Message
 
 
@@ -21,7 +21,7 @@ class OutputStream(Stream):
         messageClass = Message(self.message_type)
         if isinstance(message, messageClass):
             self.msg_buffer.append(message)
-        elif type(message) == list:
+        elif isinstance(message, list):
             for m in message:
                 self.write(m)
         else:

@@ -9,7 +9,7 @@ TODO: think about multiple streams (like a number of named
 
 import sys
 
-from Producer import Producer
+from .Producer import Producer
 
 
 class StreamProducer(Producer):

@@ -20,14 +20,14 @@ sys.path.insert(0, os.path.abspath('../../Utils/Dataflow'))
 
 # -- Project information -----------------------------------------------------
 
-project = u'Data Knowledge Base'
-copyright = u'2018, DKB team'
-author = u'DKB team'
+project = 'Data Knowledge Base'
+copyright = '2018, DKB team'
+author = 'DKB team'
 
 # The short X.Y version
-version = u''
+version = ''
 # The full version, including alpha/beta/rc tags
-release = u''
+release = ''
 
 
 # -- General configuration ---------------------------------------------------
@@ -134,8 +134,8 @@ latex_elements = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class]).
 latex_documents = [
-    (master_doc, 'DKB.tex', u'DKB Documentation',
-     u'DKB team', 'manual'),
+    (master_doc, 'DKB.tex', 'DKB Documentation',
+     'DKB team', 'manual'),
 ]
 
 
@@ -144,7 +144,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    (master_doc, 'dkb', u'DKB Documentation',
+    (master_doc, 'dkb', 'DKB Documentation',
      [author], 1)
 ]
 
@@ -155,7 +155,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'DKB', u'DKB Documentation',
+    (master_doc, 'DKB', 'DKB Documentation',
      author, 'DKB', 'One line description of project.',
      'Miscellaneous'),
 ]

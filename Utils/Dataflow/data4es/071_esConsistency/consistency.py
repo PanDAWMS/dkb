@@ -33,7 +33,7 @@ try:
     from pyDKB.dataflow.stage import ProcessorStage
     from pyDKB.dataflow.communication.messages import JSONMessage
     from pyDKB.dataflow.exceptions import DataflowException
-except Exception, err:
+except Exception as err:
     log('Failed to import pyDKB library: %s' % err, 'ERROR')
     sys.exit(1)
 
@@ -129,7 +129,7 @@ def get_fields(index, _id, _type, fields, _parent):
     '''
     try:
         results = es.get(index=index, doc_type=_type, id=_id,
-                         _source=fields, parent=_parent)
+                         _source=fields)
     except elasticsearch.exceptions.NotFoundError:
         return False
     return results['_source']
@@ -147,7 +147,7 @@ def process(stage, message):
     :type msg: pyDKB.dataflow.communication.messages.JSONMessage
     '''
     data = message.content()
-    if type(data) is not dict:
+    if not isinstance(data, dict):
         log('Incorrect data:' + str(data), 'WARN')
         return False
     try:
@@ -171,7 +171,7 @@ def process(stage, message):
         log('Nothing to check for document (%s, %r)' % (_type, _id), 'WARN')
         return False
 
-    es_data = get_fields(INDEX, _id, _type, data.keys(), _parent)
+    es_data = get_fields(INDEX, _id, _type, list(data.keys()), _parent)
     if data != es_data:
         log('Document (%s, %r) differs between Oracle and ES: Oracle:%s ES:%s'
             % (_type, _id, data, es_data), 'WARN')

@@ -17,12 +17,12 @@ def valueByKey(json_data, key):
         val = val.get(k)
         if not val:
             return None
-        if type(val) == list:
+        if isinstance(val, list):
             values = []
             for j in range(len(val)):
                 values.append(valueByKey(val[j], nested_keys[i + 1:]))
             return values
-        if type(val) != dict and i < len(nested_keys) - 1:
+        if not isinstance(val, dict) and i < len(nested_keys) - 1:
             return None
     return val
 
@@ -35,7 +35,7 @@ def nestedKeys(key):
                       If a key contains dot itself, the key must be put between
                       quotation marks.
     """
-    if type(key) == list:
+    if isinstance(key, list):
         return key
 
     # Resulting list of keys

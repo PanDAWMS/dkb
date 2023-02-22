@@ -15,7 +15,7 @@ try:
     import pyDKB
     from pyDKB.dataflow import messageType
     from pyDKB import atlas
-except Exception, err:
+except Exception as err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
 

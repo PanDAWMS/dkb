@@ -14,7 +14,7 @@ try:
     sys.path.append(dkb_dir)
     import pyDKB
     from pyDKB.dataflow import messageType
-except Exception, err:
+except Exception as err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
 
@@ -39,7 +39,7 @@ def process(stage, msg):
     """
     cls = pyDKB.dataflow.communication.Message(pyDKB.dataflow.messageType.JSON)
     content = msg.content()
-    if isinstance(content, (str, unicode)):
+    if isinstance(content, str):
         content = '"%s"' % content
     myMessage = cls(content)
     try:
@@ -60,7 +60,7 @@ def main(args):
     stage.set_output_message_type(messageType.JSON)
 
     stage.add_argument('--decode', action='store_true',
-                       help=u"Try to decode generated output messages"
+                       help="Try to decode generated output messages"
                             " during 'process()'",
                        default=False)
 

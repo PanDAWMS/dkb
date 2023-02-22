@@ -2,8 +2,8 @@
 pyDKB.common.LoggableObject
 """
 
-from types import logLevel
-from misc import log
+from .types import logLevel
+from .misc import log
 
 
 class LoggableObject(object):

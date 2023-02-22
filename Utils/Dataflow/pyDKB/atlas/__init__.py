@@ -2,4 +2,4 @@
 Functionality required only for ATLAS metadata processing.
 """
 
-import misc
+from . import misc

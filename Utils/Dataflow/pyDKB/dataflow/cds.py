@@ -19,7 +19,7 @@ except ImportError:
 try:
     from invenio_client.contrib import cds
     import splinter
-except ImportError, e:
+except ImportError as e:
     log("Submodule failed (%s)" % e, logLevel.WARN)
     __all__ = []
 else:
@@ -105,6 +105,6 @@ else:
                 self.browser.visit(self.server_url)
                 self.browser.find_link_by_partial_text("Sign in").click()
 
-            except kerberos.GSSError, e:
+            except kerberos.GSSError as e:
                 log("%s" % str(e), logLevel.ERROR)
                 sys.exit(3)

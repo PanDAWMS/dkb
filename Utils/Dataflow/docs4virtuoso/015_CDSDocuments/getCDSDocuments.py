@@ -17,7 +17,7 @@ output metadata:
 """
 
 import json
-from urlparse import urlparse
+from urllib.parse import urlparse
 import sys
 import os
 
@@ -34,7 +34,7 @@ try:
     from pyDKB.dataflow.stage import ProcessorStage
     from pyDKB.dataflow import DataflowException
     from pyDKB.dataflow import messageType
-except Exception, err:
+except Exception as err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
 
@@ -43,15 +43,15 @@ counter = 0
 
 def collection_verification(collection):
     """ Check primary collection. """
-    if type(collection) == dict:
+    if isinstance(collection, dict):
         collection = [collection]
-    elif type(collection) != list:
+    elif not isinstance(collection, list):
         sys.stderr.write("(WARN) Collection is expected to be of type"
                          " '%s' or '%s' (get '%s')\n"
                          % (list, dict, type(collection)))
         return False
     if len(collection) > 0 \
-            and type(collection[0]) is dict \
+            and isinstance(collection[0], dict) \
             and collection[0].get('primary', '')\
             in ("ARTICLE", "ATLAS_Papers"):
         return True
@@ -107,7 +107,7 @@ def search_paper(cds, paper_info):
                          of="recjson")
     try:
         res = json.loads(results)
-        if type(res) == list:
+        if isinstance(res, list):
             if len(res) > 1:
                 sys.stderr.write("(WARN) Paper search returned more than one"
                                  " result (%s)\n"
@@ -119,7 +119,7 @@ def search_paper(cds, paper_info):
                     r = item
                     break
             res = r
-        if type(res) == dict:
+        if isinstance(res, dict):
             res['glance_id'] = paper_info['id']
         else:
             sys.stderr.write("(WARN) Paper search result is of wrong type"
@@ -139,7 +139,7 @@ def search_notes(cds, notes):
     """
     if notes is None:
         return {}
-    if type(notes) != list:
+    if not isinstance(notes, list):
         return None
     results = {}
     for note in notes:
@@ -155,7 +155,7 @@ def search_note(cds, note):
     Returns (dict|NoneType) note_metadata
     """
     global counter
-    if type(note) != dict:
+    if not isinstance(note, dict):
         return None
     url = note.get('url', None)
     if not url:
@@ -193,14 +193,14 @@ def search_note(cds, note):
     else:
         results = None
 
-    if type(results) == list:
+    if isinstance(results, list):
         if len(results) > 1:
             sys.stderr.write("(WARN) Supporting document search returned more"
                              " than one result (%s)\n"
                              "(WARN) Will be taken the first of the list\n"
                              % str(len(results)))
         results = results[0]
-    if type(results) != dict:
+    if not isinstance(results, dict):
         results = None
 
     return results
@@ -235,7 +235,7 @@ def form_output_data(GLANCEdata, ppCDSdata, sdCDSdata):
     sd_results = []
     result['supporting_notes'] = sd_results
 
-    if type(sdGLANCEdata) != list:
+    if not isinstance(sdGLANCEdata, list):
         sys.stderr.write("(WARN) GLANCE info for supporting_notes supposed to"
                          " be of type %s (get %s)\n"
                          % (list, type(sdGLANCEdata)))
@@ -251,7 +251,7 @@ def form_output_data(GLANCEdata, ppCDSdata, sdCDSdata):
             sys.stderr.write("(WARN) No CDS data for GLANCE id: %s\n"
                              % glance_item.get('id'))
             continue
-        if type(cds_item) != dict:
+        if not isinstance(cds_item, dict):
             sys.stderr.write("(WARN) CDS item for GLANCE id: %s is of wrong"
                              " type (expected '%s', get '%s')\n"
                              % (glance_item.get('id'), dict, type(cds_item)))
@@ -272,9 +272,9 @@ def input_json_handle(json_data, cds):
     """
     ds_results = search_notes(cds, json_data.get('supporting_notes', None))
     pp_results = search_paper(cds, json_data)
-    if type(ds_results) != dict:
+    if not isinstance(ds_results, dict):
         ds_results = {}
-    if type(pp_results) != dict:
+    if not isinstance(pp_results, dict):
         pp_results = {}
     if not pp_results and not ds_results:
         return None

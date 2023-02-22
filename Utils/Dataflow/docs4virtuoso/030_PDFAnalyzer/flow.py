@@ -21,7 +21,7 @@ try:
     dkb_dir = os.path.join(base_dir, os.pardir)
     sys.path.append(dkb_dir)
     import pyDKB
-except Exception, err:
+except Exception as err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
 

@@ -4,8 +4,8 @@ DKB API server module.
 
 import logging
 
-from exceptions import DkbApiException
-import methods
+from .exceptions import DkbApiException
+from . import methods
 
 CONFIG_DIR = '%%CFG_DIR%%'
 
@@ -47,7 +47,7 @@ def configure():
     retval = True
     try:
         methods.configure()
-    except DkbApiException, err:
+    except DkbApiException as err:
         logging.fatal("Server configuration failed: %s." % err)
         trace = traceback.format_exception(*sys.exc_info())
         for line in trace:

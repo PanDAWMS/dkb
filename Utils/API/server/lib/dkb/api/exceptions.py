@@ -99,7 +99,7 @@ class MethodAlreadyExists(MethodException):
     code = 472
 
     def __init__(self, method, category):
-        if type(category) == list:
+        if isinstance(category, list):
             category = "categories (%s)" % category
         else:
             category = "category ('%s')" % category

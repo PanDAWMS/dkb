@@ -2,7 +2,7 @@
 Module for handling configuration files.
 """
 
-from exceptions import (DkbApiNotImplemented,
+from .exceptions import (DkbApiNotImplemented,
                         ConfigurationNotFound,
                         ConfigurationError)
 from . import CONFIG_DIR
@@ -49,6 +49,6 @@ def read_config(fname):
     with open(full_path) as f:
         try:
             parsed = yaml.load(f)
-        except yaml.YAMLError, e:
+        except yaml.YAMLError as e:
             raise ConfigurationError('Format error: %s' % e)
     return parsed

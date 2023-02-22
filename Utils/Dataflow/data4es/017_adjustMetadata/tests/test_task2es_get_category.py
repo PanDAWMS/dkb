@@ -23,7 +23,7 @@ class Case(unittest.TestCase):
     def test_multiple_tags(self):
         self.task['hashtag_list'] = ['btagging', 'diphoton', 'qcd']
         result_function = set(adjustMetadata.get_category(self.task))
-        result_known = set(['BTag', 'GammaJets', 'Multijet'])
+        result_known = {'BTag', 'GammaJets', 'Multijet'}
         self.assertEqual(result_function, result_known)
 
     def test_multiple_tags_same_category(self):
@@ -33,7 +33,7 @@ class Case(unittest.TestCase):
     def test_multiple_phys_shorts(self):
         self.task['taskname'] = 'nothing.nothing.3topjetstanb_wenu_'
         result_function = set(adjustMetadata.get_category(self.task))
-        result_known = set(['TTbarX', 'Multijet', 'SUSY', 'Wjets'])
+        result_known = {'TTbarX', 'Multijet', 'SUSY', 'Wjets'}
         self.assertEqual(result_function, result_known)
 
     def test_phys_short_wrong_field(self):

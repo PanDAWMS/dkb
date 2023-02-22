@@ -12,7 +12,7 @@ TODO: think about:
 import os
 import time
 
-from FileProducer import FileProducer
+from .FileProducer import FileProducer
 from pyDKB.common import hdfs
 
 

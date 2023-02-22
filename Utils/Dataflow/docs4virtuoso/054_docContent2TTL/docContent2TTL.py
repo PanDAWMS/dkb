@@ -13,7 +13,7 @@ try:
     sys.path.append(dkb_dir)
     import pyDKB
     from pyDKB.dataflow.communication import messages
-except Exception, err:
+except Exception as err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
 

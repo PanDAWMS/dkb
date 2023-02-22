@@ -7,7 +7,7 @@ import json
 from datetime import datetime
 
 from api.common import STEP_TYPES
-from common import (ES_DATE_FORMAT,
+from .common import (ES_DATE_FORMAT,
                     PREFIX_AGGS)
 
 
@@ -120,7 +120,7 @@ def get_bucketed_agg_values(data, units=[]):
             raise MethodException("Failed to parse ES response.")
         r = result[bucket_name] = {}
         r.update(get_agg_values(bucket, units))
-        if set(r.keys()) == set(['total']):
+        if set(r.keys()) == {'total'}:
             result[bucket_name] = r['total']
     return result
 
@@ -166,7 +166,7 @@ def get_agg_values(data, units=[]):
               unit names as keys, and values -- as values
     :rtype: dict
     """
-    prefixes = PREFIX_AGGS.keys()
+    prefixes = list(PREFIX_AGGS.keys())
     result = {}
     orig_data = data
     prefixed_units = {}
@@ -206,7 +206,7 @@ def get_agg_values(data, units=[]):
     for b in bucketed:
         r = result.get(b, {})
         r.update(bucketed[b])
-        if set(r.keys()) == set(['total']):
+        if set(r.keys()) == {'total'}:
             result[b] = r['total']
     return result
 
@@ -528,7 +528,7 @@ def step_stat(data, agg_units=[], step_type=None):
 
         try:
             d['duration'] = step.pop('task_duration') / 86400.0 / 1000
-        except KeyError, TypeError:
+        except KeyError as TypeError:
             d['duration'] = None
 
         # Calculate completion percentage and step status
@@ -547,7 +547,7 @@ def step_stat(data, agg_units=[], step_type=None):
             try:
                 run = step['status']['running']
                 running_events = run['input_events'] - run[events_field]
-            except KeyError, TypeError:
+            except KeyError as TypeError:
                 running_events = 0
             fin = step.get('status', {}).get('finished', {})
             done = step.get('status', {}).get('done', {})
@@ -565,8 +565,7 @@ def step_stat(data, agg_units=[], step_type=None):
                 + done.get('input', {}).get('input_bytes', 0)
 
             # Step status
-            tres = statuses.keys()
-            tres.sort()
+            tres = sorted(list(statuses.keys()))
             tres.reverse()
             d['step_status'] = statuses[tres[-1]]
             for t in tres:

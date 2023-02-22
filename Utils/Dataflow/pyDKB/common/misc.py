@@ -9,7 +9,7 @@ import inspect
 from datetime import datetime
 import time
 
-from types import logLevel
+from .types import logLevel
 
 # Datetime format for log messages
 DTFORMAT = '%Y-%m-%d %H:%M:%S'
@@ -37,7 +37,7 @@ def log(message, level=logLevel.INFO, *args):
     if not logLevel.hasMember(level):
         log("Unknown log level: %s" % level, logLevel.WARN)
         level = logLevel.INFO
-    if type(message) != list:
+    if not isinstance(message, list):
         message = [message]
     lines = []
     for m in message:
@@ -143,7 +143,7 @@ def execute_with_retry(f, args=[], kwargs={}, retry_on=(Exception,),
         try:
             result = f(*args, **kwargs)
             break
-        except retry_on, e:
+        except retry_on as e:
             if attempt >= max_tries:
                 raise e
             log("Function call failed ('%s': %i/%i).\n"

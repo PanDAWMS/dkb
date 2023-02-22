@@ -9,10 +9,10 @@ TODO: think about multiple streams (like a number of named
 
 import sys
 
-import Consumer
+from . import Consumer
+from .Consumer import ConsumerException
 
-
-class StreamConsumer(Consumer.Consumer):
+class StreamConsumer(Consumer):
     """ Data consumer implementation for Stream data source. """
 
     fd = None
@@ -23,7 +23,7 @@ class StreamConsumer(Consumer.Consumer):
         self.fd = sys.stdin
         super(StreamConsumer, self).reconfigure(config)
         if self.config['eom'] == '':
-            raise Consumer.ConsumerException("Empty EOM is not allowed "
+            raise ConsumerException("Empty EOM is not allowed "
                                              "for stream input.")
 
     def get_source_info(self):

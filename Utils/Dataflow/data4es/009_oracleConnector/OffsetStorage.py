@@ -35,9 +35,9 @@ class FileOffsetStorage(OffsetStorage):
         """ Create and open storage. """
         try:
             if os.path.exists(filename):
-                self.storage = open(filename, 'r+', 0)
+                self.storage = open(filename, 'r+')
             else:
-                self.storage = open(filename, 'w+', 0)
+                self.storage = open(filename, 'w+')
         except IOError:
             sys.stderr.write("(ERROR) Failed to initialize offset storage"
                              " (%s)\n" % self.__class__.__name__)

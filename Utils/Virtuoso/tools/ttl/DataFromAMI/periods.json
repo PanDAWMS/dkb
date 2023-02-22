@@ -4,2785 +4,2785 @@
     "projectName": "data10_7TeV", 
     "description": "NULL", 
     "status": "frozen"
-},{
+}, {
     "period": "B1", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "NULL", 
     "status": "locked"
-},{
+}, {
     "period": "B2", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "NULL", 
     "status": "locked"
-},{
+}, {
     "period": "C1", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "NULL", 
     "status": "locked"
-},{
+}, {
     "period": "C2", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> different configuration for L1Calo in eta region near crack at 1.45: previously L1Calo was sampling only from the Endcap while now it is sampling from the barrel in this difficult region. See <A HREF=\"https://twiki.cern.ch/twiki/pub/AtlasProtected/DataPeriods/l1calo.txt\">explanation by Trigger Coordination</A> for details.\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "D1", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> 158045, 158116  (LAr): HECC is YELLOW in the head tag, but GREEN in the analysis tag. There is an unmasked noisy channel (3/5/90) creating clusters at (eta,phi) = (-1.65;2.50), seen both by tau and Jet CP groups.\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "D2", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> 158466 (LAr): HECC, hot spot at eta=1.85, phi = 1.92 seen in both express and bulk processing due to FT 3 SL 6 CH 115.\n<li> 158545 (LAr): Hot spot in EMECC at eta=-1.75, phi = -1.132. \"Misbehaving channel\" tool identified it as in LB 256 only.\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "D3", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "NULL", 
     "status": "locked"
-},{
+}, {
     "period": "D4", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "NULL", 
     "status": "locked"
-},{
+}, {
     "period": "D5", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "NULL", 
     "status": "locked"
-},{
+}, {
     "period": "D6", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> 159224: 1 ROD disabled during the run (48 modules in the barrel). These modules are located at phi around 0.4 and positive eta in the barrel.\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "E1", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> run 160479 was taken after an improvement in the RPC timing was made. So, the muon trigger efficiency for this and the following runs will generally differ from that in previous runs.\n<li> TGC: for runs 160469 - 160472 a narrower timing gate was applied: 25 (25) ns for wire (strip) instead of the nominal 35 (45) ns. This can affect the muon efficiency in the TGC region. See also the <A HREF=\"https://atlasop.cern.ch/elog/ATLAS/ATLAS/108465\">Elog entry by Masaya</A>.\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "E2", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> same as E1\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "E3", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> for the Tier0 reconstruction the *frozen* Tier0 policy was violated deliberately. The \"TRT irreproducibility bug\" was finally fixed. This will affect secondary tracks reconstructed by the backtracking algorithm and TRT standalone tracks. It does not affect prompt tracks reconstructed by the inside-out algorithm.\n<li> the egamma HLT triggers were changed to recover a previous inefficiency of ~10%: the calo shower shape cuts reta and weta2 were relaxed. For more info see <A HREF=\"http://indico.cern.ch/getFile.py/access?contribId=1&resId=0&materialId=slides&confId=77974\">Valerios talk</A>\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "E4", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> the L2_mu6/10 trigger chains are now seeded by L1_MU0 to recover from the unexpectedly low L1_MU6/10 efficiency. For more info see <A HREF=\"http://indico.cern.ch/getFile.py/access?contribId=6&resId=1&materialId=slides&confId=74196\">Alex Ohs talk</A>\n<li> TGC: for runs 160972-161118 a narrower timing gate was applied: 25 (25) ns for wire (strip) instead of the nominal 35 (45) ns. In addition the delay was changed by -5ns (+5ns) for the wires (strips). This can affect the muon efficiency in the TGC region. See also the <A HREF=\"https://atlasop.cern.ch/elog/ATLAS/ATLAS/108465\">Elog entry by Masaya</A>.\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "E5", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> L1Calo trigger was reconfigured in the crack region to now include only the Endcap again as it was in periods A-C1.\n<li> TGC: see period E4 for run 161118. For runs 161379 and onwards the clock phase was adjusted by 4ns (see <A HREF=\"https://atlasop.cern.ch/elog/ATLAS/ATLAS/108831\">Elog entry by Masaya</A>)\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "E6", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> no changes w.r.t. E5 (TGC clock settings as in run 161379)\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "E7", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> run 161948: TGC trigger-roads for L1_MU6 ... 20 increased, see this <A HREF=\"https://atlasop.cern.ch/elog/ATLAS/ATLAS/109454\">Elog entry</A>. The efficiency should be improved by 4% compared to previously.\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "F1", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> starting with run 162526 the Pixel readout window was decreased from 3 to 2 BCs.\n<li> RPC: timing configuration was adjusted for runs >162526. The effect should be ~2% (see <A HREF=\"https://atlasop.cern.ch/elog/ATLAS/ATLAS/110536\">this Elog entry</A>)\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "F2", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> same as F1\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "G1", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "NULL", 
     "status": "locked"
-},{
+}, {
     "period": "G2", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> RPC timing configuration reverted to the one before run 162526 (problems in readout window)\n<li> L1Calo: Tile drawer EBC42 calibration constants rolled back\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "G3", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> TGC went from 3-station to 2-station coincidence to recover 2-3% efficiency loss. Triggers seeded by L1_MU0 are unaffected, since it always had 2-station coincidence; triggers seeded by L1_MU6 or L1_MU10 are affected.\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "G4", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> Tile RAW data were not written and instead the online information was used for reconstruction. The exact consequences of this are still under study. For this period the Tile reconstruction of out-of-time is biased. These data should not be used for analyses exploiting beta measurements based on Tile data. \n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "G5", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> Tile raw data are again being written as usual.\n<li> during runs 165954, 165956 and 166142 ATLAS experienced a large beam-halo background. The BCM measured a rate of about 800 Hz. This caused operational problems. The DQ system and CP groups have so far judged the performance of the detector to be not affected strongly. Further work is ongoing to assess this statement. Please, report any issues you find with these runs.\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "G6", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> update to <A HREF=\"https://pc-atlas-www.cern.ch/elog/ATLAS/ATLAS/116915\">RPC timing</A>\n<li> Pixel readout speed changed to 80 Mbit/s. Should have no impact on physics.\n<li> Use ATLAS-GEO-10-00-02 and COMCOND-BLK*-004-01 to fix minor cabling bug in the muon system.\n<li> run 168198: during the start of the run many events were written into the debug stream due to a trigger menu misconfiguration. The impact on physics has been estimated to be small (0.4%). The trigger DQ flags are thus set to <font color=\"GREEN\">green</font> as the run is perfectly good for physics. All analyses are in any case strongly encouraged to run on the debug stream always.\n<li> run 168305-168383: 6 (out of 16) CSC sectors were not operational on the A-side.\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "H1", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> run 166850 was the run where a Van-der-Meer scan was done at the CMS, LHCb and ALICE experiments and ATLAS ran with a rather special trigger menu. The luminosity of this run is only 7.5 nb<sup>-1</sup> and a large bandwidth was given to a special high-multiplicity trigger.\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "H2", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "<ul>\n<li> new RPC timing calibration, see <A HREF=\"https://atlasop.cern.ch/elog/ATLAS/ATLAS/119051\">this elog entry</A>\n</ul>", 
     "status": "locked"
-},{
+}, {
     "period": "I1", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "NULL", 
     "status": "locked"
-},{
+}, {
     "period": "I2", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "NULL", 
     "status": "locked"
-},{
+}, {
     "period": "VdM1", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "NULL", 
     "status": "locked"
-},{
+}, {
     "period": "VdM2", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "NULL", 
     "status": "locked"
-},{
+}, {
     "period": "VdM3", 
     "periodLevel": "1", 
     "projectName": "data10_7TeV", 
     "description": "NULL", 
     "status": "locked"
-},{
+}, {
     "period": "B1", 
     "periodLevel": "1", 
     "projectName": "data10_900GeV", 
     "description": "NULL", 
     "status": "unlocked"
-},{
+}, {
     "period": "J1", 
     "periodLevel": "1", 
     "projectName": "data10_hi", 
     "description": "<ul>\n<li> readout problem in pixel B-layer in run 168875 (possible impact still being assessed for tracking and/or dE/dx measurement), set to GREEN in DetStatus-v03-pass1-analysis-2010J-Pixelloose tag\n</ul>", 
     "status": "frozen"
-},{
+}, {
     "period": "J2", 
     "periodLevel": "1", 
     "projectName": "data10_hi", 
     "description": "<ul>\n<li> same as J1 but more bunches (up to 113 bunches colliding in ATLAS)\n</ul>", 
     "status": "frozen"
-},{
+}, {
     "period": "J3", 
     "periodLevel": "1", 
     "projectName": "data10_hi", 
     "description": "<ul>\n<li> same as J2\n</ul>", 
     "status": "frozen"
-},{
+}, {
     "period": "J4", 
     "periodLevel": "1", 
     "projectName": "data10_hi", 
     "description": "<ul>\n<li> same as J2 and J3\n<li> data processing done at Tier1\n</ul>", 
     "status": "frozen"
-},{
+}, {
     "period": "J5", 
     "periodLevel": "1", 
     "projectName": "data10_hi", 
     "description": "<ul>\n<li> solenoid off\n<li> data processing done at Tier0\n</ul>", 
     "status": "frozen"
-},{
+}, {
     "period": "J6", 
     "periodLevel": "1", 
     "projectName": "data10_hi", 
     "description": "<ul>\n<li> solenoid back on\n<li> data processing done at Tier1\n</ul>", 
     "status": "frozen"
-},{
+}, {
     "period": "J7", 
     "periodLevel": "1", 
     "projectName": "data10_hi", 
     "description": "<ul>\n<li> data processing at Tier0\n</ul>", 
     "status": "frozen"
-},{
+}, {
     "period": "A", 
     "periodLevel": "2", 
     "projectName": "data10_7TeV", 
     "description": "unsqueezed stable beam data (beta*=10m): typical beam spot width in x and y is 50-60 microns.", 
     "status": "locked"
-},{
+}, {
     "period": "B", 
     "periodLevel": "2", 
     "projectName": "data10_7TeV", 
     "description": "first squeezed stable beams (beta*=2m): typical beam spot width in x and y is 30-40 microns.", 
     "status": "locked"
-},{
+}, {
     "period": "C", 
     "periodLevel": "2", 
     "projectName": "data10_7TeV", 
     "description": "very similar to period B but higher luminosity due to more bunches in machine", 
     "status": "locked"
-},{
+}, {
     "period": "D", 
     "periodLevel": "2", 
     "projectName": "data10_7TeV", 
     "description": "<li> \"nominal\" LHC bunches (~0.9E11 p/bunch), beta*=3.5m\n<li> pileup now significant: about 1.3 interactions per crossing (was &lt; 0.15 before)\n<li> z-vertex distribution about 50% longer than previously\n<li> L1Calo configuration as in period C2", 
     "status": "locked"
-},{
+}, {
     "period": "E", 
     "periodLevel": "2", 
     "projectName": "data10_7TeV", 
     "description": "<li> different L1 Calo configuration near eta region of 1.45: it is now using just the presampler. See <A HREF=\"https://twiki.cern.ch/twiki/pub/AtlasProtected/DataPeriods/l1calo.txt\">explanation by Trigger Coordination</A> for details.\n<li> during the technical stop an improved RPC timing was installed.\n<li> *brand new trigger menu*: the previous data were taken with the *InitialBeams* menu while these data are now taken with the *Physics* menu. *This also affects the streams*: the main physics streams are now physics_JetTauEtmiss, physics_Egamma, physics_MinBias and physics_Muons. The streams called physics_L1Calo, physics_L1MinBias etc. now only contain data outside the stablebeams period and are generally not useful for physics analyses.", 
     "status": "locked"
-},{
+}, {
     "period": "F", 
     "periodLevel": "2", 
     "projectName": "data10_7TeV", 
     "description": "36 colliding bunches in ATLAS", 
     "status": "locked"
-},{
+}, {
     "period": "G", 
     "periodLevel": "2", 
     "projectName": "data10_7TeV", 
     "description": "<li> bunch trains with 150ns spacing from LHC\n<li> CSC 6mm alignment fix\n<li> muon HLT alignment fix (was unaligned before in HLT)\n<li> definition of unpaired bunch group has changed\n<li> L1Calo calibration update (minor effect on trigger expected)\n<li> L2 jet HLT is activated, jetNoCut are migrated to jetNoEF", 
     "status": "locked"
-},{
+}, {
     "period": "H", 
     "periodLevel": "2", 
     "projectName": "data10_7TeV", 
     "description": "<li> 233 colliding bunches in ATLAS\n<li> the CSC problem that affected the last two runs in periodG6 got fixed", 
     "status": "locked"
-},{
+}, {
     "period": "I", 
     "periodLevel": "2", 
     "projectName": "data10_7TeV", 
     "description": "<li> 295 colliding bunches in ATLAS\n<li> the RPC window was unstretched in the L1 trigger, i.e. now only one BC contributes to L1 decisions", 
     "status": "locked"
-},{
+}, {
     "period": "VdM", 
     "periodLevel": "2", 
     "projectName": "data10_7TeV", 
     "description": "All 2010 pp 7 TeV collision runs with Van der Meer scans", 
     "status": "locked"
-},{
+}, {
     "period": "B", 
     "periodLevel": "2", 
     "projectName": "data10_900GeV", 
     "description": "All 2010 pp 900 GeV collision runs", 
     "status": "locked"
-},{
+}, {
     "period": "J", 
     "periodLevel": "2", 
     "projectName": "data10_hi", 
     "description": "First Heavy Ion running", 
     "status": "frozen"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data10_7TeV", 
     "description": "All 2010 pp 7 TeV collision runs", 
     "status": "locked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data10_900GeV", 
     "description": "Added by S.A. June 2011 to make this set consistent with the rest", 
     "status": "locked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data10_hi", 
     "description": "all year's 2010 PbPb collidion data", 
     "status": "frozen"
-},{
+}, {
     "period": "C1", 
     "periodLevel": "1", 
     "projectName": "data11_2p76TeV", 
     "description": "medium-energy LHC running. run 178229 contains vdM scan and low-pileup data.", 
     "status": "locked"
-},{
+}, {
     "period": "A1", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "first 2011 stable beams. Trigger being commissioned. No bunch trains: 2 nominal bunches 1 pilot bunch colliding in ATLAS", 
     "status": "frozen"
-},{
+}, {
     "period": "A2", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "bunch train running at 75ns; solenoid and toroid off", 
     "status": "frozen"
-},{
+}, {
     "period": "B1", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "solenoid field is on and toroid field is off", 
     "status": "frozen"
-},{
+}, {
     "period": "B2", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "both magnets are fully on and ATLAS is running in standard physics setup", 
     "status": "frozen"
-},{
+}, {
     "period": "D1", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "50ns bunch spacing; 214 colliding bunches; L1Calo changed timing mostly for new LAr and Tile channels", 
     "status": "frozen"
-},{
+}, {
     "period": "D2", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "322 colliding bunches", 
     "status": "frozen"
-},{
+}, {
     "period": "D3", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "322-424 colliding bunches; 50ns", 
     "status": "frozen"
-},{
+}, {
     "period": "D4", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "more data", 
     "status": "frozen"
-},{
+}, {
     "period": "D5", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "more data", 
     "status": "frozen"
-},{
+}, {
     "period": "D6", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "more data", 
     "status": "frozen"
-},{
+}, {
     "period": "D7", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "L1Calo update the receiver gain to compensate the changes on the LArg HV over last weeks. Affects 1%25 of trigger towers, see elog entry 144656", 
     "status": "frozen"
-},{
+}, {
     "period": "E1", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "LAr problem in EMBA: 6 FEB's not operational", 
     "status": "frozen"
-},{
+}, {
     "period": "F1", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "special runs mostly for luminosity calibration purposes, not useful for generic physics analyses.", 
     "status": "frozen"
-},{
+}, {
     "period": "F2", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "back to physics data taking with 50ns bunch separation", 
     "status": "frozen"
-},{
+}, {
     "period": "F3", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "more data", 
     "status": "frozen"
-},{
+}, {
     "period": "G1", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "new trigger cache which uses pileup noise suppression EMEC sagging correction. In particular the jet and tau trigger thresholds should be sharper w.r.t. the offline. SCT is now also in X1X readout mode (but this should not impact physics as the detector is well timed in).", 
     "status": "frozen"
-},{
+}, {
     "period": "G2", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "no change w.r.t. previous", 
     "status": "frozen"
-},{
+}, {
     "period": "G3", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "no change w.r.t. previous", 
     "status": "frozen"
-},{
+}, {
     "period": "G4", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "no change w.r.t. previous", 
     "status": "frozen"
-},{
+}, {
     "period": "G5", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "no change w.r.t. previous period", 
     "status": "frozen"
-},{
+}, {
     "period": "G6", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "no change w.r.t. previous period", 
     "status": "frozen"
-},{
+}, {
     "period": "H1", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "see comment for period H", 
     "status": "frozen"
-},{
+}, {
     "period": "H2", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "no changes", 
     "status": "frozen"
-},{
+}, {
     "period": "H3", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "fix to trigger chain EF_b10_medium_4j30_a4tc_EFFS", 
     "status": "frozen"
-},{
+}, {
     "period": "H4", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "no known changes w.r.t. previous", 
     "status": "frozen"
-},{
+}, {
     "period": "I1", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "data after the July technical stop: the 4 Layer2 LAr Febs have been recovered!", 
     "status": "frozen"
-},{
+}, {
     "period": "I2", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "ramp-up after TS nearly complete; more than 1000 bunches in the machine", 
     "status": "frozen"
-},{
+}, {
     "period": "I3", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "some TRT ROD problems", 
     "status": "frozen"
-},{
+}, {
     "period": "I4", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "same as before", 
     "status": "frozen"
-},{
+}, {
     "period": "J1", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "primary unprescaled muon triggers changed ", 
     "status": "frozen"
-},{
+}, {
     "period": "J2", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "no change w.r.t. J1", 
     "status": "frozen"
-},{
+}, {
     "period": "K1", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "new trigger menu with many changes that affect most triggers (so-called 3E33 menu)", 
     "status": "frozen"
-},{
+}, {
     "period": "K2", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "same as K1", 
     "status": "frozen"
-},{
+}, {
     "period": "K3", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "no changes w.r.t. K2\n", 
     "status": "frozen"
-},{
+}, {
     "period": "K4", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "no change w.r.t. K3", 
     "status": "frozen"
-},{
+}, {
     "period": "K5", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "for runs 187811 and 187812 L1_MU4 was used instead of L1_MU0 to see the low pt muon triggers", 
     "status": "frozen"
-},{
+}, {
     "period": "K6", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "same as K5", 
     "status": "frozen"
-},{
+}, {
     "period": "L1", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "see comments for periodL for trigger changes. In this L1 period the Toroid was off.", 
     "status": "frozen"
-},{
+}, {
     "period": "L2", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "first data with toroid on after July TS", 
     "status": "frozen"
-},{
+}, {
     "period": "L3", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "Faulty version (v10.8) of readout latencies and input pipeline delays for L1_RPC timing configuration. Reduces L1_MU11 Barrel Muon trigger efficiency by 20%25. Affects all runs >=189205 in this subperiod.", 
     "status": "frozen"
-},{
+}, {
     "period": "L4", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "Faulty version (v10.8) of readout latencies and input pipeline delays for L1_RPC timing configuration. \nReduces L1_MU11 Barrel Muon trigger efficiency by 20%25. Affects all runs in this subperiod.", 
     "status": "frozen"
-},{
+}, {
     "period": "L5", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "L1 RPC configuration fixed again (i.e. muon trigger efficiencies should be the same again as e.g. periodL2)", 
     "status": "frozen"
-},{
+}, {
     "period": "L6", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "no changes w.r.t. L5", 
     "status": "frozen"
-},{
+}, {
     "period": "L7", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "no changes w.r.t. L6", 
     "status": "frozen"
-},{
+}, {
     "period": "M1", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "25ns data", 
     "status": "frozen"
-},{
+}, {
     "period": "M10", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "normal physics data taking", 
     "status": "frozen"
-},{
+}, {
     "period": "M2", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "normal 50ns running again", 
     "status": "frozen"
-},{
+}, {
     "period": "M3", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "high pileup run", 
     "status": "frozen"
-},{
+}, {
     "period": "M4", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "normal data taking again (like e.g. M2)", 
     "status": "frozen"
-},{
+}, {
     "period": "M5", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "change in LHC filling pattern (1331 instead of 1317 colliding bunches and larger gap between subtrains)", 
     "status": "frozen"
-},{
+}, {
     "period": "M6", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "change in the RPC trigger timing to improve muon efficiency", 
     "status": "frozen"
-},{
+}, {
     "period": "M7", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "beta*=90m runs for ALFA", 
     "status": "frozen"
-},{
+}, {
     "period": "M8", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "normal physics running", 
     "status": "frozen"
-},{
+}, {
     "period": "M9", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "another very high pileupo run with few bunches", 
     "status": "frozen"
-},{
+}, {
     "period": "VdM1", 
     "periodLevel": "1", 
     "projectName": "data11_7TeV", 
     "description": "May vdM scan data", 
     "status": "locked"
-},{
+}, {
     "period": "N1", 
     "periodLevel": "1", 
     "projectName": "data11_hi", 
     "description": "first 2011 heavy ion data", 
     "status": "locked"
-},{
+}, {
     "period": "N2", 
     "periodLevel": "1", 
     "projectName": "data11_hi", 
     "description": "more bunches", 
     "status": "locked"
-},{
+}, {
     "period": "N3", 
     "periodLevel": "1", 
     "projectName": "data11_hi", 
     "description": "more Pb Pb data", 
     "status": "unlocked"
-},{
+}, {
     "period": "N4", 
     "periodLevel": "1", 
     "projectName": "data11_hi", 
     "description": "new trigger menu", 
     "status": "locked"
-},{
+}, {
     "period": "N5", 
     "periodLevel": "1", 
     "projectName": "data11_hi", 
     "description": "more heavy ion data", 
     "status": "locked"
-},{
+}, {
     "period": "N6", 
     "periodLevel": "1", 
     "projectName": "data11_hi", 
     "description": "heavy ion runs after recovery of power cut 06/12/2011", 
     "status": "locked"
-},{
+}, {
     "period": "M1", 
     "periodLevel": "1", 
     "projectName": "data11_tilecomm", 
     "description": "no change w.r.t. M", 
     "status": "unlocked"
-},{
+}, {
     "period": "C", 
     "periodLevel": "2", 
     "projectName": "data11_2p76TeV", 
     "description": "intermediate energy run", 
     "status": "unlocked"
-},{
+}, {
     "period": "A", 
     "periodLevel": "2", 
     "projectName": "data11_7TeV", 
     "description": "first 2011 stable beams. HLT commissioning ongoing at the start.A large fraction of data taken with solenoid and toroid field off", 
     "status": "frozen"
-},{
+}, {
     "period": "B", 
     "periodLevel": "2", 
     "projectName": "data11_7TeV", 
     "description": "data taken just before the 2.76TeV running. Partly with toroid field off, see comments for sub-periods for details.", 
     "status": "frozen"
-},{
+}, {
     "period": "D", 
     "periodLevel": "2", 
     "projectName": "data11_7TeV", 
     "description": "50ns bunch train running", 
     "status": "frozen"
-},{
+}, {
     "period": "E", 
     "periodLevel": "2", 
     "projectName": "data11_7TeV", 
     "description": "LAr problem in EMBA: 6 FEB's not operational", 
     "status": "frozen"
-},{
+}, {
     "period": "F", 
     "periodLevel": "2", 
     "projectName": "data11_7TeV", 
     "description": "50ns data after the technical stop. The MDT's switched to \"MROD trailer suppression mode\" but this is not expected to impact physics. For Tier0 reconstruction improved conditions were applied to correct for the EMEC sagging and for the tilt of the ID w.r.t. the solenoid field.", 
     "status": "frozen"
-},{
+}, {
     "period": "G", 
     "periodLevel": "2", 
     "projectName": "data11_7TeV", 
     "description": "new trigger cache which uses pileup noise suppression EMEC sagging correction. In particular jet and tau trigger threshold should be sharper w.r.t. the offline. SCT is now also in X1X readout mode (but this should not impact physics as the detector is well timed in).", 
     "status": "frozen"
-},{
+}, {
     "period": "H", 
     "periodLevel": "2", 
     "projectName": "data11_7TeV", 
     "description": "update to L1 muon firmware to fix problem with misconfiguration affecting A-side only. The muon trigger efficiency is expected to be improved at eta=0.8-1.0 with respect to previous data periods.\n\nStarting at H3 a b-jet trigger was fixed. See comment in H3.", 
     "status": "frozen"
-},{
+}, {
     "period": "I", 
     "periodLevel": "2", 
     "projectName": "data11_7TeV", 
     "description": "data after the July technical stop: the 4 LAr FEBs in Layer2 are recovered!", 
     "status": "frozen"
-},{
+}, {
     "period": "J", 
     "periodLevel": "2", 
     "projectName": "data11_7TeV", 
     "description": "LHC increasing beam currents adiabatically. Changes to primary high pt triggers in trigger menu in reaction to this.", 
     "status": "frozen"
-},{
+}, {
     "period": "K", 
     "periodLevel": "2", 
     "projectName": "data11_7TeV", 
     "description": "new trigger menu with many changes (so-called 3e33 menu)", 
     "status": "frozen"
-},{
+}, {
     "period": "L", 
     "periodLevel": "2", 
     "projectName": "data11_7TeV", 
     "description": "new Physics_pp_v3 menu is deployed, which includes variable eta cuts for electrons at L1 with hadronic veto (L1_EMxxVH), new L1_MU11 road and L1_MU0->L1_MU4 change", 
     "status": "frozen"
-},{
+}, {
     "period": "LHCComm", 
     "periodLevel": "2", 
     "projectName": "data11_7TeV", 
     "description": "runs at 25ns and with super-fat bunches", 
     "status": "unlocked"
-},{
+}, {
     "period": "M", 
     "periodLevel": "2", 
     "projectName": "data11_7TeV", 
     "description": "no known special feature", 
     "status": "frozen"
-},{
+}, {
     "period": "VdM", 
     "periodLevel": "2", 
     "projectName": "data11_7TeV", 
     "description": "vdM scan data", 
     "status": "unlocked"
-},{
+}, {
     "period": "N", 
     "periodLevel": "2", 
     "projectName": "data11_hi", 
     "description": "Heavy Ion data", 
     "status": "locked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data11_2p76TeV", 
     "description": "2.76 TeV data", 
     "status": "locked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data11_7TeV", 
     "description": "all 2011 7 TeV data", 
     "status": "frozen"
-},{
+}, {
     "period": "BtoG", 
     "periodLevel": "3", 
     "projectName": "data11_7TeV", 
     "description": "periods B-G: used by some analyses for EPS 2011 conference results", 
     "status": "locked"
-},{
+}, {
     "period": "BtoH", 
     "periodLevel": "3", 
     "projectName": "data11_7TeV", 
     "description": "periods B-H: all data with bunch trains for 2011 EPS conference", 
     "status": "locked"
-},{
+}, {
     "period": "DtoG", 
     "periodLevel": "3", 
     "projectName": "data11_7TeV", 
     "description": "periods D-G: data with 50ns bunch trains used by some analyses for EPS 2011 conference", 
     "status": "frozen"
-},{
+}, {
     "period": "DtoH", 
     "periodLevel": "3", 
     "projectName": "data11_7TeV", 
     "description": "period D-H: all data with 50ns bunch trains used for EPS 2011 conference", 
     "status": "unlocked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data11_hi", 
     "description": "Heavy Ion data", 
     "status": "locked"
-},{
+}, {
     "period": "A1", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "data period for first 2012 8 TeV stable beam collisions. 2 colliding bunches in ATLAS", 
     "status": "frozen"
-},{
+}, {
     "period": "A2", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "low mu run for MinBias and luminosity transfer", 
     "status": "frozen"
-},{
+}, {
     "period": "A3", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Start of number of bunches ramp up.\nLAr OFC optimized for pileup noise", 
     "status": "frozen"
-},{
+}, {
     "period": "A4", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Ramp up in number of bunches", 
     "status": "frozen"
-},{
+}, {
     "period": "A5", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "ramp up in number of bunches (1092)", 
     "status": "frozen"
-},{
+}, {
     "period": "A6", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "special filling scheme for VdM scan (48b_35_3_6) (3 colliding bunches in Atlas during the LHCb/Alice scan) . Special trigger menu (VdM stream, MBTS for low et jets for part of the data)", 
     "status": "frozen"
-},{
+}, {
     "period": "A7", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "First collisions with 1331 colliding bunches", 
     "status": "frozen"
-},{
+}, {
     "period": "A8", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "last sub period before technical stop April 2012, 1331 colliding bunches", 
     "status": "frozen"
-},{
+}, {
     "period": "B1", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "first data taking after April technical stop. Starting with 75 colliding bunches, then 471.\n\nPart of run 202660 includes the length scale calibration for luminosity.", 
     "status": "frozen"
-},{
+}, {
     "period": "B10", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "data taking starting June 1st", 
     "status": "frozen"
-},{
+}, {
     "period": "B11", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "3 unpaired bunches back in LHC filling scheme.\nSolenoid cycle between B10 and B11.", 
     "status": "frozen"
-},{
+}, {
     "period": "B12", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking staring June 8th, 2012", 
     "status": "frozen"
-},{
+}, {
     "period": "B13", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting June 15th.\nBunch filling pattern slightly changed. 1368 colliding bunches, 6 bunches in each beam unpaired.", 
     "status": "frozen"
-},{
+}, {
     "period": "B14", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "last fills before June technical stop", 
     "status": "frozen"
-},{
+}, {
     "period": "B2", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "second week of period B\n\nSignificant ID alignment change between B1 and B2, interpreted as 150 microns vertical shift of ID reference frame", 
     "status": "frozen"
-},{
+}, {
     "period": "B3", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking 10-11 May (after ID cooling plant stop/start masking of noisy Tile cell)", 
     "status": "frozen"
-},{
+}, {
     "period": "B4", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Period starting 11/05/2012. Some relaxed electron trigger cuts to recover efficiency at large eta\nRun 203258 has L1Calo/HLT inefficiency (factor 2 n energy) in dEta=1.4*dphi=0.4 region due to LarHV issue.", 
     "status": "frozen"
-},{
+}, {
     "period": "B5", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "period starting 18/05/2012.", 
     "status": "frozen"
-},{
+}, {
     "period": "B6", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "start producing physics_HadDelayed stream", 
     "status": "frozen"
-},{
+}, {
     "period": "B7", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "No unpaired bunch in the LHC filling scheme (1380 colliding bunches)", 
     "status": "frozen"
-},{
+}, {
     "period": "B8", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking period starting 25/05/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "B9", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "re-tuned EM shower shape EF cuts at high eta for egamma triggers", 
     "status": "frozen"
-},{
+}, {
     "period": "C1", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "First sub period of C.\nRuns with toroid off for muon alignment (special trigger setup, not for physics).\nSome LAr HV tests in parasitic mode.", 
     "status": "frozen"
-},{
+}, {
     "period": "C2", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking in regular physics mode, after ramping up for toroid.", 
     "status": "frozen"
-},{
+}, {
     "period": "C3", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 07/July/2012. Toroid is off for run 206564 and ramping during run 206573", 
     "status": "frozen"
-},{
+}, {
     "period": "C4", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "High mu (single bunch) runs (not for standard physics analysis), stable beam data during MD 10/07/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "C5", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "beta*=90m runs (alpha).\n112 colliding bunches with deltaT=650ns.\nSpecial trigger menu.", 
     "status": "frozen"
-},{
+}, {
     "period": "C6", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 13th of July 2012. Regular pp physics run.\nNew muon EC alignment used in the HLT. L2 electron tracking going back to period B settings.\nExtra chains with L2StarB tracking for Bphysics", 
     "status": "frozen"
-},{
+}, {
     "period": "C7", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking during VdM fills (special runs)", 
     "status": "frozen"
-},{
+}, {
     "period": "C8", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 20/07/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "C9", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking after fix of two FCAL HV modules.\n\nOne Tile LB module (LBC56) starting to be masked in reco.", 
     "status": "frozen"
-},{
+}, {
     "period": "D1", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 24/07/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "D2", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 27/07/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "D3", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 03/08/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "D4", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "small bug fix in egamma triggers, period starting the 07/08/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "D5", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "new triggers in JetCalibDelayed stream. Period starting 08/08/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "D6", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "data taking starting 12/08/2012.\nReduced CSC readout window.\nRun 208484 has one LAR crate not readout.\nHigh rate test at beginning of run 208485.", 
     "status": "frozen"
-},{
+}, {
     "period": "D7", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "data taking staring 15/08/2012.\nBack to normal CSC readout window.", 
     "status": "frozen"
-},{
+}, {
     "period": "D8", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 17/08/2012\nCSC latency changed before run 208982 (impacts efficiency)", 
     "status": "frozen"
-},{
+}, {
     "period": "E1", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "data taking starting 23/08/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "E2", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 24/08/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "E3", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 30/08/2012.\nCSC threshold changes.", 
     "status": "frozen"
-},{
+}, {
     "period": "E4", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "data taking starting 07/09/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "E5", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking staring 15/09/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "G1", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 27/09/2012.\nIntensity ramp up after TS3.\nOne fill (run 211522) with 72 colliding bunches (Pixel HV scan during this fill), one fill (run 211541) with 375 colliding bunches (failed vdm scan during this fill).", 
     "status": "frozen"
-},{
+}, {
     "period": "G2", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 28/09/2012.\nContinuation of intensity ramp up after TS3.\nCSC eta thresholds changed (decreased).\nFill with 801 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "G3", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 28/09/2012.\nAll LAR Barrel Presampler HV lowered to 1200V.", 
     "status": "frozen"
-},{
+}, {
     "period": "G4", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 29/09/2012.\nCSC latency changed.", 
     "status": "frozen"
-},{
+}, {
     "period": "G5", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 05/10/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "H1", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 13/10/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "H2", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 16/10/2012:\n\nNew AtlasP1HLT 17.1.5.19, trigger menu with new VBF triggers (new L1 menu).\n\n6 more EMB presampler HV regions reduced to 800V. Few EMEC presampler HV lines lowered to 1200V.", 
     "status": "frozen"
-},{
+}, {
     "period": "H3", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 19/10/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "H4", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 23/10/2012.\nCSC firmware change (reducing phi strip readout)", 
     "status": "frozen"
-},{
+}, {
     "period": "H5", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "beta*=1km runs, 24 and 25 october 2012.\nQuiet beam data with ATLAS ready for part of these runs.", 
     "status": "frozen"
-},{
+}, {
     "period": "H6", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "data taking starting 25/10/2012.\nUsing new TGC firmware.", 
     "status": "frozen"
-},{
+}, {
     "period": "I1", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking staring 27/10.\nNew TGC firmware (like in H6)", 
     "status": "frozen"
-},{
+}, {
     "period": "I2", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "TGC firwmware reverted to old version", 
     "status": "frozen"
-},{
+}, {
     "period": "I3", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 01/11/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "J1", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "cf comment for period J", 
     "status": "frozen"
-},{
+}, {
     "period": "J2", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 08/11/2012.\nTGC firmware change (switch to new version)\nATLAS P1 HLT 17.1.5.21,low Pt electron L2* chain, di-tau topological chain, 2mu6_Bmumux_BcMuMuDs_loose2_L2StarB", 
     "status": "frozen"
-},{
+}, {
     "period": "J3", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 11/11/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "J4", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 16/11/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "J5", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "VdM fills, 22-23 november 2012. 29 colliding bunches (no bunch train).\nFirst fill is for ATLAS VdM scan (run 214984).\nSecond fill is CMS aborted scan, RPC timing tests (run 214989).\nLast fill is CMS scan last ATLAS x-y scan, RPC timing tests (run 215021).", 
     "status": "frozen"
-},{
+}, {
     "period": "J6", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 24/11/2012.", 
     "status": "frozen"
-},{
+}, {
     "period": "J7", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 25/11/2012:\nTwo Layer 1 EMECC Febs switched off near LB 301 or run 215063 (affected region eta -1.6 to -1.5 and phi -1.6 to -0.8 in layer 1)", 
     "status": "frozen"
-},{
+}, {
     "period": "J8", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 25/11/2012.\nIn addition to J7, one more EMECC layer 1 Feb switched off (covering eta -1.6 to -1.5, phi -0.4 to 0 in layer1).\n\nNew ATLAS P1 Hlt menu 17.1.5.22 (enabling of e12_L2StarB chains)", 
     "status": "frozen"
-},{
+}, {
     "period": "L1", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "data taking starting 29/11/2012.\nSee period L comments.", 
     "status": "frozen"
-},{
+}, {
     "period": "L2", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "special fill with some high brightness bunches (24 bunches with mu~45 and 36 normal bunches with mu~30).", 
     "status": "frozen"
-},{
+}, {
     "period": "L3", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starating 04/12/2012\nSame conditions as L1.", 
     "status": "frozen"
-},{
+}, {
     "period": "M1", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "25 ns stable beam data, starting 15/12/2012.\nRun 216399: 2 trains of 48 colliding bunches.\nRun 216419: 3 trains of 48 bunches, one of 42.\nRun 216432: 3 trains (48b-9e-48b), 1 train (42b-15e-42b)", 
     "status": "frozen"
-},{
+}, {
     "period": "VdM1", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "runs containing (at least partially) the data taken at mu=0.5 with the high rate VdM stream for luminosity calibration transfer using vertex counting", 
     "status": "unlocked"
-},{
+}, {
     "period": "VdM2", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "full VdM scan April 16th 2012.\n", 
     "status": "unlocked"
-},{
+}, {
     "period": "VdM3", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "run containing (partially) length scale calibration data (02/05/2012 fill 2765) with high rate VdM stream", 
     "status": "unlocked"
-},{
+}, {
     "period": "VdM4", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "July 2012 VdM scans, LHC fills 2855 2856.\n\nFill 2855, run 207216 : scan 2012-IV x/y, 2012-V x/y, 2012-VI x/y, 2012-VII x/y with offset\n\nFill 2855, run 207217 : lenght scale calib B1x,B2x,B1y\n\nFill 2856, run 207219 : length scale (B2y), scan 2012-VIII x/y, 2012-IX x/y with offset", 
     "status": "unlocked"
-},{
+}, {
     "period": "VdM5", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "Beam separation scan, 28/09/2012.\nRun 211670 LB 345-493", 
     "status": "unlocked"
-},{
+}, {
     "period": "VdM6", 
     "periodLevel": "1", 
     "projectName": "data12_8TeV", 
     "description": "VDM scan November 22nd 2012.\nbeta*=11m, 29 colliding bunches (no train).\n\nFirst fill (run214984): Centered and offset scans for ATLAS.\nThird fill (run 215012): last x-y ATLAS centered scan (after CMS scan).\n\nRun 214984: scans 10-X (y centered) 10-Y (x centered), 11-X (y centered), 11-Y (x centered), 12-X (y offset), 12-Y (x offset), 13-X (smaller y offset), 13-Y (smaller x offset) 14-X (y centered), 14-Y (x centered)\n\nRun 215021: scans 15-X and 15-Y (centered)", 
     "status": "locked"
-},{
+}, {
     "period": "K1", 
     "periodLevel": "1", 
     "projectName": "data12_cos", 
     "description": "Cosmic run 9-10 November 2012.\nRun 214281 has Pixel out. 214303 has all detectors.\nMain trigger MU4_EMPTY (CosmicMuon stream) RD0_EMPTY (MinBias stream).", 
     "status": "locked"
-},{
+}, {
     "period": "K2", 
     "periodLevel": "1", 
     "projectName": "data12_cos", 
     "description": "Cosmics run 20-21 November 2012", 
     "status": "locked"
-},{
+}, {
     "period": "F1", 
     "periodLevel": "1", 
     "projectName": "data12_hip", 
     "description": "p-Pb pilot runs 12 and 13 September 2012. 210184 has <z>=0, -50cm for 210185 and 50 for 210186", 
     "status": "frozen"
-},{
+}, {
     "period": "A4", 
     "periodLevel": "1", 
     "projectName": "data12_tilecomm", 
     "description": "Ramp up in number of bunches", 
     "status": "unlocked"
-},{
+}, {
     "period": "A", 
     "periodLevel": "2", 
     "projectName": "data12_8TeV", 
     "description": "First 2012 collisions period.\n\nXS triggers misconfigured", 
     "status": "frozen"
-},{
+}, {
     "period": "B", 
     "periodLevel": "2", 
     "projectName": "data12_8TeV", 
     "description": "data taking after April technical stop.\n\nTrigger menu changes: switch to isolated single lepton trigger, deploy pileup noise cuts at L1, fixes for tau trigger and b-tag trigger, dropped some high rate extra triggers.\n\nXS triggers misconfigured in B1 to B5 included", 
     "status": "frozen"
-},{
+}, {
     "period": "Ba", 
     "periodLevel": "2", 
     "projectName": "data12_8TeV", 
     "description": "subset of period B with B1 to B11", 
     "status": "frozen"
-},{
+}, {
     "period": "C", 
     "periodLevel": "2", 
     "projectName": "data12_8TeV", 
     "description": "Data taking after June 2012 technical stop. Some changes in trigger (L1 muon timing, L2 muon tracking, L2 electron tracking)\nC1 to C8 had one quadrant in FCAL1 on each side with lower response (~10%25), due to a problem with new HV modules (could be recovered in reprocessing)", 
     "status": "frozen"
-},{
+}, {
     "period": "D", 
     "periodLevel": "2", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 24/07/2012.\n2nd CSC layer in one phi sector (out of 16) in C-side is permanently dead.", 
     "status": "frozen"
-},{
+}, {
     "period": "E", 
     "periodLevel": "2", 
     "projectName": "data12_8TeV", 
     "description": "Change in trigger. New AtlasP1HLT. L1_XE35 additions to the HadDelayed stream and new prescale rules to optimize trigger menu.\nStarting 23/08/2012", 
     "status": "frozen"
-},{
+}, {
     "period": "G", 
     "periodLevel": "2", 
     "projectName": "data12_8TeV", 
     "description": "Data taking after TS3 (September 2012).\n\nSome RPC timing changes TGC changes.\n\nNew monopole trigger.\n\nTile module LBA18 off.", 
     "status": "frozen"
-},{
+}, {
     "period": "H", 
     "periodLevel": "2", 
     "projectName": "data12_8TeV", 
     "description": "Data taking after October 2012 MD.\n\n14 EMBPresampler regions (0.4*0.2 each) lowered further to 800V\nAll EMECPresampler lowered to 1600V\n\nOne new tile module off ( LBA35)", 
     "status": "frozen"
-},{
+}, {
     "period": "I", 
     "periodLevel": "2", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 27/10, no significant change compared to last period", 
     "status": "frozen"
-},{
+}, {
     "period": "J", 
     "periodLevel": "2", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 2/11/2012.\nOne FEB in LAr-HEC switched off (4 layers, deltaEta=0.4*DeltaPhi=0.8)", 
     "status": "frozen"
-},{
+}, {
     "period": "L", 
     "periodLevel": "2", 
     "projectName": "data12_8TeV", 
     "description": "Data taking starting 29/11/2012, after MD4.\nLAr cooling leak fixed and all LAr Febs that were switched off previously are now on.", 
     "status": "frozen"
-},{
+}, {
     "period": "M", 
     "periodLevel": "2", 
     "projectName": "data12_8TeV", 
     "description": "25ns stable beam data, 15-16 december 2012.", 
     "status": "frozen"
-},{
+}, {
     "period": "VdM", 
     "periodLevel": "2", 
     "projectName": "data12_8TeV", 
     "description": "collection of runs containing (at least partially) data used for luminosity calibration (full VdM scan, mu-scan, length scale calibration, data with high rate VdM stream)", 
     "status": "unlocked"
-},{
+}, {
     "period": "K", 
     "periodLevel": "2", 
     "projectName": "data12_cos", 
     "description": "Cosmic run November 2012", 
     "status": "locked"
-},{
+}, {
     "period": "F", 
     "periodLevel": "2", 
     "projectName": "data12_hip", 
     "description": "p-Pb pilot runs, september 2012", 
     "status": "unlocked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data12_8TeV", 
     "description": "2011 data pp collisions at 8 TeV", 
     "status": "frozen"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data12_cos", 
     "description": "Dedicated cosmics data 2012", 
     "status": "unlocked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data12_hip", 
     "description": "2012 p-Pb runs", 
     "status": "unlocked"
-},{
+}, {
     "period": "C1", 
     "periodLevel": "1", 
     "projectName": "data13_2p76TeV", 
     "description": "Data taking with ALFA in quiet mode (ATLAS ready). LB527-612 of run 219171.\n2 colliding bunches.\n", 
     "status": "frozen"
-},{
+}, {
     "period": "C2", 
     "periodLevel": "1", 
     "projectName": "data13_2p76TeV", 
     "description": "data taking starting 11/02/2013.\nFill with one colliding train of 36 bunches 10 single colliding bunches. Physics bunch group defined to contain only the 10 single colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "C3", 
     "periodLevel": "1", 
     "projectName": "data13_2p76TeV", 
     "description": "Data taking starting 12/02/2013.\n2.76 TeV intensity ramp up: run 219257 has 504 colliding bunches. 1278 colliding bunches for the following runs.", 
     "status": "frozen"
-},{
+}, {
     "period": "C4", 
     "periodLevel": "1", 
     "projectName": "data13_2p76TeV", 
     "description": "Fills for 2.76 pp VdM scans. 29 colliding bunches (no train). Run 219336 is all ATLAS scans. Run 219364 has some physics data taking ATLAS length scale calibration /last VdM scan", 
     "status": "frozen"
-},{
+}, {
     "period": "C5", 
     "periodLevel": "1", 
     "projectName": "data13_2p76TeV", 
     "description": "Last physics fill (1278) colliding bunches at 2.76 TeV.\nMagnet was in slow dump during this run.", 
     "status": "frozen"
-},{
+}, {
     "period": "A1", 
     "periodLevel": "1", 
     "projectName": "data13_hip", 
     "description": "First p-Pb stable beam collisions. Run 217946 has 8 colliding bunches ( no train), Run 217948 has 72 colliding bunches (3 trains of 24 bunches spaced by 200n).\nAround 70%25 of RPC triggers disabled from L1 input.", 
     "status": "frozen"
-},{
+}, {
     "period": "A2", 
     "periodLevel": "1", 
     "projectName": "data13_hip", 
     "description": "p-Pb data taking starting 21/01/2013.\nRPC trigger problem fixed.\n206 colliding bunches.\nCSC ROD issues affecting part of 218006,218024,218035", 
     "status": "frozen"
-},{
+}, {
     "period": "A3", 
     "periodLevel": "1", 
     "projectName": "data13_hip", 
     "description": "Data taking starting 22/01/2013.\nTile LBA63 dead.", 
     "status": "frozen"
-},{
+}, {
     "period": "A4", 
     "periodLevel": "1", 
     "projectName": "data13_hip", 
     "description": "Data taking starting 25/01/2013. Same conditions as A3.\nRuns 218463 (and 218473) include partially VdM scans and lenght scale calibration.\nCSC issues affecting (at least part) of runs 218197 to 218279.", 
     "status": "frozen"
-},{
+}, {
     "period": "AR2", 
     "periodLevel": "1", 
     "projectName": "data13_hip", 
     "description": "Special periods for recovered run 218024 (all events in debug) that should have been in A2", 
     "status": "frozen"
-},{
+}, {
     "period": "B1", 
     "periodLevel": "1", 
     "projectName": "data13_hip", 
     "description": "Data taking starting 02/02/2013", 
     "status": "frozen"
-},{
+}, {
     "period": "B2", 
     "periodLevel": "1", 
     "projectName": "data13_hip", 
     "description": "Data taking starting 06/02/2013.\n24 channels in LAr HEC-A layer 0 dead (LVPS probem).Affected region: eta between 1.5 and 3.2, phi between 0 and 0.2 in layer 0 of HECA", 
     "status": "frozen"
-},{
+}, {
     "period": "B3", 
     "periodLevel": "1", 
     "projectName": "data13_hip", 
     "description": "Data taking 7-8 Feb 2013: Luminosity 1%25 of nominal (separated beams).\n\nSame detector conditions as B2.", 
     "status": "frozen"
-},{
+}, {
     "period": "B4", 
     "periodLevel": "1", 
     "projectName": "data13_hip", 
     "description": "Data taking starting 08/02/2013.\nRun 219039 contains ATLAS VdM scans (2 x-y scan)", 
     "status": "frozen"
-},{
+}, {
     "period": "VdM1", 
     "periodLevel": "1", 
     "projectName": "data13_hip", 
     "description": "VdM scan during p-Pb run, 28-29/01/2013\nBeam1=P, Beam2=Pb\n\nRun 218391: ATLAS VdM 2 set of scans x-y,x-y (lb<416) then another x-y scan after CMS scan and start of length scale calibration (LB>539).\nRun 218436: End of length scale calibration (B2Y) (LB 506-550).", 
     "status": "unlocked"
-},{
+}, {
     "period": "VdM2", 
     "periodLevel": "1", 
     "projectName": "data13_hip", 
     "description": "VdM scan for beam1=Pb, beam2=p.\nRun 219039: 2x-y scan pairs. LB117-221", 
     "status": "unlocked"
-},{
+}, {
     "period": "C", 
     "periodLevel": "2", 
     "projectName": "data13_2p76TeV", 
     "description": "pp run at Ecm=2.76 TeV, February 2013", 
     "status": "frozen"
-},{
+}, {
     "period": "A", 
     "periodLevel": "2", 
     "projectName": "data13_hip", 
     "description": "p-Pb stable beam collision starting Jan.20\nBeam1=p, Beam2=Pb82", 
     "status": "frozen"
-},{
+}, {
     "period": "B", 
     "periodLevel": "2", 
     "projectName": "data13_hip", 
     "description": "p-Pb run after beam reversal. Beam1=Pb, beam2=p", 
     "status": "frozen"
-},{
+}, {
     "period": "VdM", 
     "periodLevel": "2", 
     "projectName": "data13_hip", 
     "description": "Collection of runs with VdM scans during 2013 p-Pb run", 
     "status": "unlocked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data13_2p76TeV", 
     "description": "Data taking at 2.76 TeV Ecm in 2013", 
     "status": "locked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data13_hip", 
     "description": "Jan-Feb 2013 p-Pb run", 
     "status": "frozen"
-},{
+}, {
     "period": "G1", 
     "periodLevel": "1", 
     "projectName": "data14_cos", 
     "description": "Solenoid on, Toroid off, production runs from 25.11.2014 to midday 4.12.2014 during M7", 
     "status": "locked"
-},{
+}, {
     "period": "G2", 
     "periodLevel": "1", 
     "projectName": "data14_cos", 
     "description": "Toroid on/Solenoid on data during M7 from evening 04.12.2014 to morning 07.12.2014", 
     "status": "locked"
-},{
+}, {
     "period": "G3", 
     "periodLevel": "1", 
     "projectName": "data14_cos", 
     "description": "Toroid off/Solenoid off data taken on 07.12.2014 during M7", 
     "status": "locked"
-},{
+}, {
     "period": "G", 
     "periodLevel": "2", 
     "projectName": "data14_cos", 
     "description": "M7 data taken from 25.11.2014 to 08.12.2014", 
     "status": "locked"
-},{
+}, {
     "period": "A1", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Collision data with 2 bunches colliding from 3-5 June", 
     "status": "frozen"
-},{
+}, {
     "period": "A2", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Collision data with 8 bunches colliding from 6-7 June. Toroid is OFF.", 
     "status": "frozen"
-},{
+}, {
     "period": "A3", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Collisions with 6 bunches in a 50ns trains from 7-8 June. Toroid is ON", 
     "status": "frozen"
-},{
+}, {
     "period": "A4", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Collisions with 38 bunches in a 50ns trains from 13-14 June.", 
     "status": "frozen"
-},{
+}, {
     "period": "B1", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Low-mu/LHCf runs, starting 10 June", 
     "status": "frozen"
-},{
+}, {
     "period": "C1", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "13 TeV collisions at 50ns taken with low numbers of colliding bunches with toroid-off from 5-6 July. Primary goal of this data is muon endcap alignment.", 
     "status": "frozen"
-},{
+}, {
     "period": "C2", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "13 TeV collisions at 50ns taken with 110 colliding bunches with toroid-on from 6-9 July.", 
     "status": "frozen"
-},{
+}, {
     "period": "C3", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "13 TeV collisions at 50ns taken with 254 colliding bunches from 10-12 July.", 
     "status": "frozen"
-},{
+}, {
     "period": "C4", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "13 TeV collisions at 50ns taken with 414 colliding bunches from 13-15 July.", 
     "status": "frozen"
-},{
+}, {
     "period": "C5", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "13 TeV collisions at 50ns taken with 256 colliding bunches on 16 July.", 
     "status": "frozen"
-},{
+}, {
     "period": "C6", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "13 TeV collisions at 50ns taken with 420 colliding bunches on 20 July. TRT readout issues make both runs problematic.", 
     "status": "frozen"
-},{
+}, {
     "period": "D1", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing, 26-74 colliding bunches, and toroid off from 13-14 August", 
     "status": "frozen"
-},{
+}, {
     "period": "D2", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing, toroid off, and 146 colliding bunches on 15 August", 
     "status": "frozen"
-},{
+}, {
     "period": "D3", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing, toroid on, 145 colliding bunches, from 15-17 August", 
     "status": "frozen"
-},{
+}, {
     "period": "D4", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing, toroid on, 303 colliding bunches, from 18-20 August", 
     "status": "frozen"
-},{
+}, {
     "period": "D5", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 50ns bunch spacing, toroid on, 303 colliding bunches, on 22 August", 
     "status": "frozen"
-},{
+}, {
     "period": "D6", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing, toroid on, 450 colliding bunches, from 22-23 August", 
     "status": "frozen"
-},{
+}, {
     "period": "E1", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing, 49 colliding bunches, on 06-07 September. Toroid was ramping for part of fill, and wrong pixel cabling map running at HLT", 
     "status": "frozen"
-},{
+}, {
     "period": "E2", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing, 207-447 colliding bunches, from 7-9 September.", 
     "status": "frozen"
-},{
+}, {
     "period": "E3", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing, 733 colliding bunches, from 9-14 September.", 
     "status": "frozen"
-},{
+}, {
     "period": "E4", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing, 877-1021 colliding bunches, from 14-18 September.", 
     "status": "frozen"
-},{
+}, {
     "period": "E5", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing, 1165 colliding bunches, from 18-20 September.", 
     "status": "frozen"
-},{
+}, {
     "period": "F1", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing with 1165 colliding bunches from 21 September. RF cogging recenters beamspot at z ~ 0. T0 reco with 20.1.8. DAOD_IDTIDE being produced.", 
     "status": "frozen"
-},{
+}, {
     "period": "F2", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25 ns bunch spacing with 1165 colliding bunches. Runs reprocessed at Tier0 because the wrong lumi information was used the first time.", 
     "status": "frozen"
-},{
+}, {
     "period": "F3", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25 ns bunch spacing with 1309 colliding bunches. ", 
     "status": "frozen"
-},{
+}, {
     "period": "G1", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing, 1309 bunches. For these runs no update to the alignment was made in bulk processing.", 
     "status": "frozen"
-},{
+}, {
     "period": "G2", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing, 1309 bunches. Run dependent alignment updates were made.", 
     "status": "frozen"
-},{
+}, {
     "period": "G3", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Data taking with 1452 bunches. Run dependent alignments were made.", 
     "status": "frozen"
-},{
+}, {
     "period": "G4", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Data taking with 1452 bunches. Run dependent alignments were made. Change in LHC bunch structure to 72g72.", 
     "status": "frozen"
-},{
+}, {
     "period": "H1", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 1596 bunches. IBL turned off.", 
     "status": "frozen"
-},{
+}, {
     "period": "H2", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 1813 bunches. IBL back on. Toroid off for runs 281381 and 281385.", 
     "status": "frozen"
-},{
+}, {
     "period": "H3", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 1813 bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "I1", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Runs with beta*=90 m for Alfa.", 
     "status": "frozen"
-},{
+}, {
     "period": "I2", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Runs with beta*=90 m, with 50, 250 and 750 bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "I3", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "1 colliding bunch in the machine.", 
     "status": "frozen"
-},{
+}, {
     "period": "J1", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Proton-proton-physics.", 
     "status": "frozen"
-},{
+}, {
     "period": "J2", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Runs with 8b4e filling scheme.", 
     "status": "frozen"
-},{
+}, {
     "period": "J3", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Runs with 1813 and 2029 bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "J4", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Runs with 2029 and 2232 colliding bunches. LHC made modifications to the filling scheme.", 
     "status": "frozen"
-},{
+}, {
     "period": "J5", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Fill for BCMS studies, 589 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "J6", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Physics data taking with 2232 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "VdM1", 
     "periodLevel": "1", 
     "projectName": "data15_13TeV", 
     "description": "Runs containing vdM scans peak mu around 0.5 on 24-25 August 2015", 
     "status": "locked"
-},{
+}, {
     "period": "A1", 
     "periodLevel": "1", 
     "projectName": "data15_1beam", 
     "description": "First beam splashes in 2015", 
     "status": "unlocked"
-},{
+}, {
     "period": "K1", 
     "periodLevel": "1", 
     "projectName": "data15_5TeV", 
     "description": "\t\npp collisions at 5 TeV (pp reference runs for the Heavy Ion running).", 
     "status": "frozen"
-},{
+}, {
     "period": "VdM1", 
     "periodLevel": "1", 
     "projectName": "data15_5TeV", 
     "description": "VdM runs taken at 5 TeV energy (the pp reference runs for Heavy Ion).", 
     "status": "frozen"
-},{
+}, {
     "period": "D1", 
     "periodLevel": "1", 
     "projectName": "data15_comm", 
     "description": "Collision events taken 5 and 6 May at 900 GeV", 
     "status": "locked"
-},{
+}, {
     "period": "D2", 
     "periodLevel": "1", 
     "projectName": "data15_comm", 
     "description": "13TeV collision events on 20-21 May", 
     "status": "frozen"
-},{
+}, {
     "period": "D3", 
     "periodLevel": "1", 
     "projectName": "data15_comm", 
     "description": "13 TeV collisions at beta*=80cm from 28-30 May", 
     "status": "unlocked"
-},{
+}, {
     "period": "A1", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "M8 data from 09 Feb. - 12 Feb. 2015 with solenoid and toroid off. No pixels in any runs.", 
     "status": "locked"
-},{
+}, {
     "period": "A2", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "M8 data 12-14 Feb. 2015 with solenoid at half field, toroid off. No pixels for any runs.", 
     "status": "locked"
-},{
+}, {
     "period": "A3", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "M8 data 14-17 Feb. 2015 with solenoid at full field, toroid off. All runs without Pixels.", 
     "status": "locked"
-},{
+}, {
     "period": "A4", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "M8 data 17 - 21 Feb. 2015 with solenoid at full field, toroid off. All runs with Pixels.", 
     "status": "frozen"
-},{
+}, {
     "period": "A5", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "M8 data from 21-25 Feb. 2015 with solenoid off, toroid off. All runs with Pixels.", 
     "status": "locked"
-},{
+}, {
     "period": "B1", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken during M9 from 9-10 March, 2015 with solenoid and toroid off", 
     "status": "locked"
-},{
+}, {
     "period": "B2", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken during M9 from 10-18 March, 2015 with the solenoid on and toroid off", 
     "status": "frozen"
-},{
+}, {
     "period": "B3", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken during M9 from 18-21 March, 2015 with the solenoid and toroid off", 
     "status": "locked"
-},{
+}, {
     "period": "B4", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken during M9 from 21 March, 2015 with the solenoid and toroid fields ramping", 
     "status": "locked"
-},{
+}, {
     "period": "B5", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken during M9 starting 21 March, 2015 with the solenoid and toroid fields on", 
     "status": "frozen"
-},{
+}, {
     "period": "C1", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken after M9 from March 22-26, 2015 with solenoid and toroid fields on", 
     "status": "frozen"
-},{
+}, {
     "period": "C10", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken after M9 on May 27 - June 2, 2015 with solenoid on and toroid on", 
     "status": "locked"
-},{
+}, {
     "period": "C2", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken after M9 from March 26 - April 2, 2015 with solenoid on and toroid off", 
     "status": "frozen"
-},{
+}, {
     "period": "C3", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken after M9 from April 2 - 9, 2015 with solenoid on and toroid on", 
     "status": "locked"
-},{
+}, {
     "period": "C4", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken after M9 from April 9-13, 2015 with solenoid on and toroid off", 
     "status": "locked"
-},{
+}, {
     "period": "C5", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken after M9 from April 13-17, 2015 with solenoid off and toroid off", 
     "status": "locked"
-},{
+}, {
     "period": "C6", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken after M9 from April 17-23, 2015 with solenoid on and toroid off", 
     "status": "locked"
-},{
+}, {
     "period": "C7", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken after M9 on April 23, 2015 with solenoid off or ramping and toroid off", 
     "status": "unlocked"
-},{
+}, {
     "period": "C8", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken after M9 on April 23 - May 6, 2015 with solenoid on and toroid off", 
     "status": "unlocked"
-},{
+}, {
     "period": "C9", 
     "periodLevel": "1", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken after M9 on May 7-26, 2015 with solenoid on and toroid off", 
     "status": "unlocked"
-},{
+}, {
     "period": "L1", 
     "periodLevel": "1", 
     "projectName": "data15_hi", 
     "description": "Heavy ion collisions at 6369 ZTeV with 5 or 33 colliding bunches. ESDs are produced for the physics_Main stream.", 
     "status": "frozen"
-},{
+}, {
     "period": "L2", 
     "periodLevel": "1", 
     "projectName": "data15_hi", 
     "description": "Heavy ion collisions at 6369 ZTeV. with 216 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "L3", 
     "periodLevel": "1", 
     "projectName": "data15_hi", 
     "description": "Heavy ion collisions at 6369 ZTeV. with 400 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "L4", 
     "periodLevel": "1", 
     "projectName": "data15_hi", 
     "description": "Heavy ion collisions at 6369 ZTeV. with 424 colliding bunches. Change in gas for ID (CO2->Dry air) required alignment change.", 
     "status": "frozen"
-},{
+}, {
     "period": "L5", 
     "periodLevel": "1", 
     "projectName": "data15_hi", 
     "description": "Heavy ion collisions at 6369 ZTeV. with 32 colliding bunches after the ALICE magnet polarity switch. ", 
     "status": "frozen"
-},{
+}, {
     "period": "L6", 
     "periodLevel": "1", 
     "projectName": "data15_hi", 
     "description": "\t\nHeavy ion collisions at 6369 ZTeV. with 424 and 492 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "VdM1", 
     "periodLevel": "1", 
     "projectName": "data15_hi", 
     "description": "VdM runs with PbPb collisions.", 
     "status": "unlocked"
-},{
+}, {
     "period": "A", 
     "periodLevel": "2", 
     "projectName": "data15_13TeV", 
     "description": "Week 1 data with low numbers of colliding bunches from 3-14 June", 
     "status": "frozen"
-},{
+}, {
     "period": "B", 
     "periodLevel": "2", 
     "projectName": "data15_13TeV", 
     "description": "Low-mu MinBias/LHC-f runs", 
     "status": "frozen"
-},{
+}, {
     "period": "C", 
     "periodLevel": "2", 
     "projectName": "data15_13TeV", 
     "description": "13TeV collision data taken with 50ns bunch spacing from 5-19 July", 
     "status": "frozen"
-},{
+}, {
     "period": "D", 
     "periodLevel": "2", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing from 13-23 August", 
     "status": "frozen"
-},{
+}, {
     "period": "E", 
     "periodLevel": "2", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing from 6-20 September", 
     "status": "frozen"
-},{
+}, {
     "period": "F", 
     "periodLevel": "2", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing, 1165 or 1309 colliding bunches. Sep 21-27.", 
     "status": "frozen"
-},{
+}, {
     "period": "G", 
     "periodLevel": "2", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 25ns bunch spacing with between 1309 and 1596 bunches. This period starts when a significant run dependence of the IBL bowing was observed. Run dependent alignment corrections from run 281500. Beamspot updated from run 280950.", 
     "status": "frozen"
-},{
+}, {
     "period": "H", 
     "periodLevel": "2", 
     "projectName": "data15_13TeV", 
     "description": "Physics collisions with 1596 to 1800 bunches. IBL turned off for period H1. Magnet slow dump during period H2.", 
     "status": "frozen"
-},{
+}, {
     "period": "I", 
     "periodLevel": "2", 
     "projectName": "data15_13TeV", 
     "description": "Runs with beta*=90 m.", 
     "status": "frozen"
-},{
+}, {
     "period": "J", 
     "periodLevel": "2", 
     "projectName": "data15_13TeV", 
     "description": "Proton-proton physics with typically 1600-2200 bunches. Period J1 contains the BCMS run.", 
     "status": "frozen"
-},{
+}, {
     "period": "VdM", 
     "periodLevel": "2", 
     "projectName": "data15_13TeV", 
     "description": "Runs containing (at least partially) data used for luminosity calibration (full VdM scan, mu-scan, length scale calibration, data with high rate VdM stream) in 2015", 
     "status": "unlocked"
-},{
+}, {
     "period": "K", 
     "periodLevel": "2", 
     "projectName": "data15_5TeV", 
     "description": "pp collisions at 5 TeV (pp reference runs for the Heavy Ion running).", 
     "status": "frozen"
-},{
+}, {
     "period": "VdM", 
     "periodLevel": "2", 
     "projectName": "data15_5TeV", 
     "description": "VdM runs at 5 TeV.", 
     "status": "frozen"
-},{
+}, {
     "period": "D", 
     "periodLevel": "2", 
     "projectName": "data15_comm", 
     "description": "Non-stable colliding beams recorded 5-6 May, 2015", 
     "status": "unlocked"
-},{
+}, {
     "period": "A", 
     "periodLevel": "2", 
     "projectName": "data15_cos", 
     "description": "M8 Cosmic data from 9 Feb - 25 Feb 2015", 
     "status": "locked"
-},{
+}, {
     "period": "B", 
     "periodLevel": "2", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken during M9, from March 9-22, 2015", 
     "status": "locked"
-},{
+}, {
     "period": "C", 
     "periodLevel": "2", 
     "projectName": "data15_cos", 
     "description": "Cosmic data taken after M9 from March 22, 2015", 
     "status": "unlocked"
-},{
+}, {
     "period": "L", 
     "periodLevel": "2", 
     "projectName": "data15_hi", 
     "description": "Heavy ion collisions at 6369 ZTeV.", 
     "status": "frozen"
-},{
+}, {
     "period": "VdM", 
     "periodLevel": "2", 
     "projectName": "data15_hi", 
     "description": "VdM runs with PbPb, 400 bunches.", 
     "status": "unlocked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data15_13TeV", 
     "description": "13TeV pp collision data for 2015", 
     "status": "frozen"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data15_5TeV", 
     "description": "5 TeV collisions during 2015.", 
     "status": "frozen"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data15_cos", 
     "description": "Cosmics in 2015", 
     "status": "unlocked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data15_hi", 
     "description": "Heavy ion collisions at 6369 ZTeV.", 
     "status": "frozen"
-},{
+}, {
     "period": "A1", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "First collisions with 2 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "A10", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Collisions with 1165 and 589 bunches (after the PS downtime).", 
     "status": "frozen"
-},{
+}, {
     "period": "A2", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Collisions during the first week with 8 colliding bunches. HLT enabled in general, except for run 297041.", 
     "status": "frozen"
-},{
+}, {
     "period": "A3", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Collisions with trains, 49 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "A4", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Resuming intensity ramp-up after the week-long power outage. 2 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "A5", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Intensity ramp-up with trains, 49, 50, 74, 301, 589 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "A6", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics data with 589 colliding bunches. Toroid ramping down during the last hour of the fill.", 
     "status": "frozen"
-},{
+}, {
     "period": "A7", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics collisions with 589, 877 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "A8", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics data with 877 and 1165 colliding bunches. Several problems with magnets, both toroid and solenoid.", 
     "status": "frozen"
-},{
+}, {
     "period": "A9", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "VdM scans, and other single bunch collisions before and just after the PS problem which caused a 5 day downtime.", 
     "status": "frozen"
-},{
+}, {
     "period": "B1", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Collisions with 1165 and 1453 bunches. Quick ramp-up after the PS downtime in May.", 
     "status": "frozen"
-},{
+}, {
     "period": "B2", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Collisions with 1740, 1812 and 2028 bunches. The rate is causing severe problems for the Pixel detector.", 
     "status": "frozen"
-},{
+}, {
     "period": "B3", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Collisions with 2028 bunches. New firmware for Pixel L2.", 
     "status": "frozen"
-},{
+}, {
     "period": "B4", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Fill with 590 colliding bunches, after TS1. Mu scan and pressure bump studies.", 
     "status": "frozen"
-},{
+}, {
     "period": "B5", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics with 2028 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "C1", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Fill with 590 colliding bunches, after TS1. Mu scan and pressure bump studies.", 
     "status": "frozen"
-},{
+}, {
     "period": "C2", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics with 2028 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "C3", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics with 2028 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "C4", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics with 2028 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "D1", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2028 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "D2", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2064 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "D3", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2064 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "D4", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2064 colliding bunches. Luminosity start going over 10e34, meaning that new trigger primaries are used for a couple of lumi blocks at beginning of fills.", 
     "status": "frozen"
-},{
+}, {
     "period": "D5", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Collisions with 2064 bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "D6", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Collisions with 2064 bunches. Toroid at half field, trigger with toroid off configuration.", 
     "status": "frozen"
-},{
+}, {
     "period": "D7", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics with 2064 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "D8", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics with 2064 colliding bunches. BCMS (with increased emittance) starts to be used.", 
     "status": "frozen"
-},{
+}, {
     "period": "D9", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "NULL", 
     "status": "unlocked"
-},{
+}, {
     "period": "E1", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Runs after the closure of DS2, will be used by some analyses for ICHEP.", 
     "status": "frozen"
-},{
+}, {
     "period": "E2", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics with 2064 bunches, severe CTP problems.", 
     "status": "frozen"
-},{
+}, {
     "period": "E3", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics with 2064 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "F1", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Move to the 1.2e34 trigger menu permanently, will be used from now on.", 
     "status": "frozen"
-},{
+}, {
     "period": "F2", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Reduced emittance with the BCMS scheme, luminosity above 1.2e34. Change in threshold for the lowest MET trigger from 100 to 110 GeV. ", 
     "status": "frozen"
-},{
+}, {
     "period": "F3", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "\t\nReduced emittance with the BCMS scheme, luminosity above 1.2e34. ", 
     "status": "frozen"
-},{
+}, {
     "period": "G1", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Ramp-up after MD1, 2 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "G2", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 578 bunches, AFP run. This run was instead moved to period H1, now the G2 period is empty instead.", 
     "status": "frozen"
-},{
+}, {
     "period": "G3", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2064 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "G4", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "New filling scheme (225 ns between trains). 2060 or 2061 bunches colliding.", 
     "status": "frozen"
-},{
+}, {
     "period": "G5", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Special run, 2 bunches colliding.", 
     "status": "frozen"
-},{
+}, {
     "period": "G6", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "\t\nL1 muon MU4 change, low pt muon triggers affected.", 
     "status": "frozen"
-},{
+}, {
     "period": "G7", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Runs with toroid and solenoid off, after fast dump of the toroid and slow dump of the solenoid.", 
     "status": "frozen"
-},{
+}, {
     "period": "H1", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Low-mu runs in beginning of August and for AFP after TS2 in September and October.", 
     "status": "unlocked"
-},{
+}, {
     "period": "I1", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2 colliding bunches, after the end of MD2.", 
     "status": "frozen"
-},{
+}, {
     "period": "I2", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 578 (1 run) and 2208 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "I3", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2208 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "I4", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2208 colliding bunches. Change in prescales for multi-muon trigger.", 
     "status": "frozen"
-},{
+}, {
     "period": "I5", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2208 colliding bunches. Change in prescales for Upsilon trigger.", 
     "status": "frozen"
-},{
+}, {
     "period": "J1", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Runs taken with beta*=2.5 km for ALFA, after TS2 in September. ", 
     "status": "frozen"
-},{
+}, {
     "period": "K1", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Special fill with 3 colliding bunches where a special lumi scan was performed to try to understand the ATLAS/CMS lumi ratio.", 
     "status": "frozen"
-},{
+}, {
     "period": "K2", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 1165 colliding bunches. Length-scale calibrations during run, and also SCT HV scan.", 
     "status": "frozen"
-},{
+}, {
     "period": "K3", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2208 colliding bunches, and smaller crossing angle compared to before TS2.", 
     "status": "frozen"
-},{
+}, {
     "period": "L1", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Run with strange bunch structure taken in the middle of MD4.", 
     "status": "frozen"
-},{
+}, {
     "period": "L10", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics data taking with 2208 colliding bunches, luminosity levelling at 8e33.", 
     "status": "frozen"
-},{
+}, {
     "period": "L11", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics data taking with 2208 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "L2", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Run with single bunches, 9 colliding.", 
     "status": "frozen"
-},{
+}, {
     "period": "L3", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2208 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "L4", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Special high-mu run, 99 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "L5", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics data taking with 2208 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "L6", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Special run with 4 colliding bunches going down to zero crossing angle.", 
     "status": "frozen"
-},{
+}, {
     "period": "L7", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics data taking with 2208 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "L8", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics data taking with 2028 colliding bunches. No BCMS filling scheme, lower lumi and mu.", 
     "status": "frozen"
-},{
+}, {
     "period": "L9", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Physics data taking with 2208 colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "VdM1", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "VdM runs taken in May and June 2016.", 
     "status": "unlocked"
-},{
+}, {
     "period": "Z1", 
     "periodLevel": "1", 
     "projectName": "data16_13TeV", 
     "description": "Runs taken with AFP in 2016.", 
     "status": "unlocked"
-},{
+}, {
     "period": "A1", 
     "periodLevel": "1", 
     "projectName": "data16_comm", 
     "description": "One run taken with the wrong project tag.", 
     "status": "unlocked"
-},{
+}, {
     "period": "A1", 
     "periodLevel": "1", 
     "projectName": "data16_cos", 
     "description": "Runs taken during M10, Feb 8 to Feb 11. LAr and MDT endcaps not part of the data taking.", 
     "status": "unlocked"
-},{
+}, {
     "period": "A2", 
     "periodLevel": "1", 
     "projectName": "data16_cos", 
     "description": "Runs taken during M10, Feb 12 to Feb 14. LAr back in for these runs.", 
     "status": "unlocked"
-},{
+}, {
     "period": "A3", 
     "periodLevel": "1", 
     "projectName": "data16_cos", 
     "description": "Collisions with trains, 49 colliding bunches.", 
     "status": "unlocked"
-},{
+}, {
     "period": "B1", 
     "periodLevel": "1", 
     "projectName": "data16_cos", 
     "description": "Runs taken during M11, Mar 7 to Mar 13.", 
     "status": "unlocked"
-},{
+}, {
     "period": "B2", 
     "periodLevel": "1", 
     "projectName": "data16_cos", 
     "description": "Special runs for LAr, only Standby stream written out.", 
     "status": "unlocked"
-},{
+}, {
     "period": "B3", 
     "periodLevel": "1", 
     "projectName": "data16_cos", 
     "description": "Cosmic data taking in M11.", 
     "status": "unlocked"
-},{
+}, {
     "period": "A1", 
     "periodLevel": "1", 
     "projectName": "data16_hip5TeV", 
     "description": "pPb data taking at 5 TeV in 2016", 
     "status": "unlocked"
-},{
+}, {
     "period": "A2", 
     "periodLevel": "1", 
     "projectName": "data16_hip5TeV", 
     "description": "One run taken at 5 TeV again at the end of HI running.", 
     "status": "unlocked"
-},{
+}, {
     "period": "B1", 
     "periodLevel": "1", 
     "projectName": "data16_hip8TeV", 
     "description": "pPb data taking at 8 TeV in 2016", 
     "status": "unlocked"
-},{
+}, {
     "period": "C1", 
     "periodLevel": "1", 
     "projectName": "data16_hip8TeV", 
     "description": "Pbp data taking at 8 TeV in 2016, beams reversed compared to period B.", 
     "status": "unlocked"
-},{
+}, {
     "period": "A", 
     "periodLevel": "2", 
     "projectName": "data16_13TeV", 
     "description": "First collisions of 2016. Starting with 2, 8 and so on number of colliding bunches.", 
     "status": "frozen"
-},{
+}, {
     "period": "B", 
     "periodLevel": "2", 
     "projectName": "data16_13TeV", 
     "description": "Collisions at 13 TeV, close to maximum number of bunches, towards the end of the intensity ramp-up. The high rate start to cause severe problems in the Pixel.", 
     "status": "frozen"
-},{
+}, {
     "period": "C", 
     "periodLevel": "2", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2028 colliding bunches, starting after the TS1 and ending when the change was made for the MET triggers.", 
     "status": "frozen"
-},{
+}, {
     "period": "D", 
     "periodLevel": "2", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2028 and 2064 colliding bunches, starting June 24 after the change in the lowest unprescaled MET trigger.", 
     "status": "frozen"
-},{
+}, {
     "period": "E", 
     "periodLevel": "2", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2064 colliding bunches, starting after the DS2 dataset on July 10.", 
     "status": "frozen"
-},{
+}, {
     "period": "F", 
     "periodLevel": "2", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2064 colliding bunches. Period starting with the permanent move to the 1.2e34 trigger menu on July 16, that menu will be used from now on.", 
     "status": "frozen"
-},{
+}, {
     "period": "G", 
     "periodLevel": "2", 
     "projectName": "data16_13TeV", 
     "description": "Data taking with 2064 bunches. Period starting after MD1, on August 1.", 
     "status": "frozen"
-},{
+}, {
     "period": "H", 
     "periodLevel": "2", 
     "projectName": "data16_13TeV", 
     "description": "Low-mu runs for the forward physics program.", 
     "status": "unlocked"
-},{
+}, {
     "period": "I", 
     "periodLevel": "2", 
     "projectName": "data16_13TeV", 
     "description": "Data taking after the end of MD2, starting on August 24.", 
     "status": "frozen"
-},{
+}, {
     "period": "J", 
     "periodLevel": "2", 
     "projectName": "data16_13TeV", 
     "description": "Runs taken with beta*=2.5 km for ALFA, after TS2 in September. ", 
     "status": "frozen"
-},{
+}, {
     "period": "K", 
     "periodLevel": "2", 
     "projectName": "data16_13TeV", 
     "description": "Runs at high-luminosity and normal beta* after the ALFA runs and the low-mu runs for AFP. ", 
     "status": "frozen"
-},{
+}, {
     "period": "L", 
     "periodLevel": "2", 
     "projectName": "data16_13TeV", 
     "description": "Data taking after MD4.", 
     "status": "frozen"
-},{
+}, {
     "period": "VdM", 
     "periodLevel": "2", 
     "projectName": "data16_13TeV", 
     "description": "VdM runs taken during 2016.", 
     "status": "unlocked"
-},{
+}, {
     "period": "Z", 
     "periodLevel": "2", 
     "projectName": "data16_13TeV", 
     "description": "Runs taken with AFP in 2016.", 
     "status": "unlocked"
-},{
+}, {
     "period": "A", 
     "periodLevel": "2", 
     "projectName": "data16_comm", 
     "description": "One run taken with the wrong project tag.", 
     "status": "unlocked"
-},{
+}, {
     "period": "A", 
     "periodLevel": "2", 
     "projectName": "data16_cos", 
     "description": "Cosmic runs during M10, Feb 8 to Feb 14.", 
     "status": "unlocked"
-},{
+}, {
     "period": "B", 
     "periodLevel": "2", 
     "projectName": "data16_cos", 
     "description": "Runs taken during M11, Mar 7 to Mar 13.", 
     "status": "unlocked"
-},{
+}, {
     "period": "A", 
     "periodLevel": "2", 
     "projectName": "data16_hip5TeV", 
     "description": "pPb data taking at 5 TeV in 2016", 
     "status": "unlocked"
-},{
+}, {
     "period": "B", 
     "periodLevel": "2", 
     "projectName": "data16_hip8TeV", 
     "description": "pPb data taking at 8 TeV in 2016", 
     "status": "unlocked"
-},{
+}, {
     "period": "C", 
     "periodLevel": "2", 
     "projectName": "data16_hip8TeV", 
     "description": "Pbp data taking at 8 TeV in 2016, beams reversed compared to period B.", 
     "status": "unlocked"
-},{
+}, {
     "period": "AFP", 
     "periodLevel": "3", 
     "projectName": "data16_13TeV", 
     "description": "Runs taken with AFP in 2016.", 
     "status": "unlocked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data16_13TeV", 
     "description": "13 TeV pp collisions data for 2016", 
     "status": "unlocked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data16_comm", 
     "description": "One run taken with the wrong project tag.", 
     "status": "unlocked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data16_cos", 
     "description": "Cosmic data runs during 2016.", 
     "status": "unlocked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data16_hip5TeV", 
     "description": "pPb data taking at 5 TeV in 2016", 
     "status": "unlocked"
-},{
+}, {
     "period": "AllYear", 
     "periodLevel": "3", 
     "projectName": "data16_hip8TeV", 

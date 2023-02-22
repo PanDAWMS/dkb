@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#set -x
+
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 NC='\033[0m' # No Color
@@ -7,7 +9,7 @@ NC='\033[0m' # No Color
 exit_code=0
 # Test stage run modes.
 
-base_dir=$(cd "$(dirname "$(readlink -f "$0")")"; pwd)
+base_dir=$(cd "$(dirname "$(readlink -f "$(echo $0|sed -e 's/^-//')")")"; pwd)
 orig_dir=`pwd`
 
 cd $base_dir
@@ -47,22 +49,27 @@ test_case() {
   case=$1
   case_id=`basename $case`
 
+  base_dir_mod=`echo $base_dir | sed -e "s|test/pyDKB||g"`
+
   before=`cat $case/before 2>/dev/null`
   [ -n "$before" ] && before="$before;"
   cmd=`cat $case/cmd`
   after=`cat $case/after 2>/dev/null`
-
   eval "$before $cmd; $after"  2>&1 1> out.tmp | \
-    grep -a -v '(WARN) (pyDKB.dataflow.cds) Submodule failed (No module named invenio_client.contrib)' | \
+    grep -a -v "(WARN) (pyDKB.dataflow.cds) Submodule failed (No module named 'invenio_client')" | \
     sed -E -e"s#$base_dir#\$base_dir#" \
+           -e"s#$base_dir_mod##" \
+           -e's#\$base_dir/./../../##g' \
            -e"s#^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2} ##" \
-           -e"s#, line [0-9]+#, line <NNN>#" > err.tmp
+           -e"s#, line [0-9]+#, line <NNN>#" \
+           -e"s#/.*/os.py#os.py#" | sort > err.tmp
 
   err_correct=0
   out_correct=0
-
+   
+  cat $case/err | sort > err2.tmp 
   diff -a -u $case/out out.tmp &> "${case_id}_out.diff"
-  diff -a -u $case/err err.tmp &> "${case_id}_err.diff"
+  diff -a -u err2.tmp err.tmp &> "${case_id}_err.diff"
 
   if [ -s "${case_id}_out.diff" ]; then
     echo -e "${RED}FAIL${NC}: $case_id (STDOUT) (cmd: '$cmd')"

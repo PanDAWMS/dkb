@@ -71,7 +71,7 @@ try:
     dkb_dir = os.path.join(base_dir, os.pardir)
     sys.path.append(dkb_dir)
     import pyDKB
-except Exception, err:
+except Exception as err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
 
@@ -246,7 +246,7 @@ def doi2ttl(doi, doc_iri):
     """
     ttl = ''
     dois = []
-    if isinstance(doi, str) or isinstance(doi, unicode):
+    if isinstance(doi, str) or isinstance(doi, str):
         dois.append(doi)
     elif isinstance(doi, list):
         dois = doi
@@ -392,11 +392,11 @@ def abstract_extraction(data):
     result = None
     if 'abstract' in data:
         abstract = data['abstract']
-        if type(abstract) == dict:
+        if isinstance(abstract, dict):
             result = abstract.get('summary')
-        elif type(abstract) == list:
+        elif isinstance(abstract, list):
             for abstr in abstract:
-                if type(abstr) == dict and 'summary' in abstr:
+                if isinstance(abstr, dict) and 'summary' in abstr:
                     result = abstr['summary']
                     break
     if not result:
@@ -458,7 +458,7 @@ def arxiv_extraction(data):
         # if we don't find any string, started with 'arXiv' -
         # it means that there is no arXiv code and
         # we don't need to add it to TTL
-        if isinstance(report_number, (str, unicode)):
+        if isinstance(report_number, str):
             if report_number.startswith('arXiv'):
                 return fix_string(report_number)
         elif isinstance(report_number, list):
@@ -532,7 +532,7 @@ def fix_string(wrong_string):
     :return: fixed string, or unchanged non-string object
     :rtype: object
     """
-    if type(wrong_string) not in (str, unicode):
+    if type(wrong_string) not in (str, str):
         return wrong_string
     return wrong_string.encode('ascii', 'ignore').replace("'", "\\'")\
         .replace("\n", "\\n").replace("\\", r"\\").replace('\"', '')
