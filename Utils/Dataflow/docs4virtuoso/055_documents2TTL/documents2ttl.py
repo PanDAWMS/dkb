@@ -246,7 +246,7 @@ def doi2ttl(doi, doc_iri):
     """
     ttl = ''
     dois = []
-    if isinstance(doi, str) or isinstance(doi, str):
+    if isinstance(doi, str):
         dois.append(doi)
     elif isinstance(doi, list):
         dois = doi
@@ -532,7 +532,7 @@ def fix_string(wrong_string):
     :return: fixed string, or unchanged non-string object
     :rtype: object
     """
-    if type(wrong_string) not in (str, str):
+    if not isinstance(wrong_string, str):
         return wrong_string
     return wrong_string.encode('ascii', 'ignore').replace("'", "\\'")\
         .replace("\n", "\\n").replace("\\", r"\\").replace('\"', '')

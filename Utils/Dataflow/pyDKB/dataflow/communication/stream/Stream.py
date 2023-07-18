@@ -47,7 +47,7 @@ class Stream(LoggableObject):
         :return: previous file descriptor (or None)
         """
         if not isinstance(fd, (IOBase, None.__class__)):
-            raise TypeError("Stream.reset() expects first parameter of type"
+            raise TypeError("Stream.reset() expects first parameter of type 'IOBase'"
                             " 'file' (got '%s')" % fd.__class__.__name__)
         old_fd = self._fd
         if close and old_fd != fd:

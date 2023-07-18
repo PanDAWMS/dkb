@@ -196,13 +196,11 @@ def config_get(config, section, param, default=None):
         raise TypeError("config_get() expects first parameter to be"
                         " an instance of 'ConfigParser' (get '%s')."
                         % config.__class__.__name__)
-    if not isinstance(section, str) and \
-            (sys.version_info.major > 2 or not isinstance(section, str)):
+    if not isinstance(section, str):
         raise TypeError("config_get() expects second parameter to be"
                         " string (get '%s')."
                         % section.__class__.__name__)
-    if not isinstance(param, str) and \
-            (sys.version_info.major > 2 or not isinstance(param, str)):
+    if not isinstance(param, str):
         raise TypeError("config_get() expects third parameter to be"
                         " string (get '%s')."
                         % section.__class__.__name__)

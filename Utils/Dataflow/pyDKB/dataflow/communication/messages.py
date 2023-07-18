@@ -172,7 +172,7 @@ class TTLMessage(AbstractMessage):
     msg_type = messageType.TTL
 
     try:
-        native_types = [str, str]
+        native_types = [str]
     except NameError:
         native_types = [str]
 
