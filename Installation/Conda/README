@@ -1,0 +1,13 @@
+# Setup conda environment to use DKB
+
+## Get latest Miniconda and install it
+  ```
+  wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+  sh Miniconda3-latest-Linux-x86_64.sh
+  #install into /opt/dkb3/miniconda3
+  #add to init
+  ```
+
+## Create environment
+  conda env create -n dkb_python_3_9 -f environment.yaml
+

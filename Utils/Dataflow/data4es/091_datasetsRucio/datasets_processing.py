@@ -27,9 +27,9 @@ try:
     import rucio.client
     from rucio.common.exception import (RucioException,
                                         DataIdentifierNotFound)
-except ImportError, err:
+except ImportError as err:
     sys.stderr.write("(ERROR) Failed to import Rucio module: %s\n" % err)
-except Exception, err:
+except Exception as err:
     # rucio.client tries to read Rucio config file, and if it is not found,
     # throws plain Exception
     sys.stderr.write("(ERROR) %s.\n" % err.message)
@@ -48,7 +48,7 @@ try:
     from pyDKB.dataflow.exceptions import DataflowException
     from pyDKB.common.types import logLevel
     from pyDKB import atlas
-except Exception, err:
+except Exception as err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
 
@@ -147,7 +147,7 @@ def skip_process(stage, message):
     if not output:
         # It could be `None`, not missed
         output = []
-    elif type(output) is not list:
+    elif not isinstance(output, list):
         output = [output]
     for ds in output:
         output_datasets.append({'name': ds})
@@ -239,7 +239,7 @@ def process_ds(datasets, ds_type):
         # Nothing to process; over.
         return None
 
-    if type(datasets) != list:
+    if not isinstance(datasets, list):
         datasets = [datasets]
 
     mfields = META_FIELDS[ds_type]
@@ -248,7 +248,7 @@ def process_ds(datasets, ds_type):
         status = True
         try:
             ds = get_ds_info(ds_name, mfields)
-        except RucioException, err:
+        except RucioException as err:
             log(["Failed to get information"
                  " from Rucio for: %s." % ds_name,
                  "Reason: %s." % str(err)],
@@ -257,7 +257,7 @@ def process_ds(datasets, ds_type):
             ds = {}
         if ds_type == OUTPUT:
             ds['name'] = ds_name
-        if not is_data_complete(ds, mfields.values()):
+        if not is_data_complete(ds, list(mfields.values())):
             status = False
         ds['_status'] = status
         result.append(ds)
@@ -285,12 +285,12 @@ def get_ds_info(dataset, mfields):
     """
     ds_dict = {}
     try:
-        mdata = get_metadata(dataset, mfields.keys())
+        mdata = get_metadata(dataset, list(mfields.keys()))
         adjust_metadata(mdata)
         for mkey in mdata:
             if mkey in mfields:
                 ds_dict[mfields[mkey]] = mdata[mkey]
-    except DataIdentifierNotFound, err:
+    except DataIdentifierNotFound as err:
         ds_dict[mfields['deleted']] = True
     return ds_dict
 
@@ -310,7 +310,7 @@ def get_metadata(dsn, attributes=None):
     dataset = pyDKB.atlas.misc.normalize_dataset_name(dsn)
     try:
         metadata = rucio_client.get_metadata(scope=scope, name=dataset)
-    except ValueError, err:
+    except ValueError as err:
         raise RucioException(err)
     if attributes is None:
         result = metadata
@@ -333,7 +333,7 @@ def adjust_metadata(mdata):
     for key in mdata:
         if mdata[key] == 'null':
             del(mdata[key])
-    if 'bytes' in mdata.keys():
+    if 'bytes' in list(mdata.keys()):
         val = mdata['bytes']
         if val is None:
             # 'bytes' is None when, e.g., dataset is a container, and all the

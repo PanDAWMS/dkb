@@ -3,7 +3,7 @@ Utils to generate unique yet meaningful identifier for DKB objects.
 """
 
 from . import dataType
-from exceptions import DataflowException
+from .exceptions import DataflowException
 from ..common.json_utils import valueByKey
 
 import os
@@ -15,22 +15,22 @@ __all__ = ["dkbID"]
 
 try:
     dir_ = os.path.dirname(__file__)
-    CONFIG = json.load(file(os.path.join(dir_, "dkbID.conf")))
+    CONFIG = json.load(open(os.path.join(dir_, "dkbID.conf")))
     # Check required fields
     for src in CONFIG["document"]["priority"]:
         CONFIG["document"][src]["keywords"]
-except IOError, err:
+except IOError as err:
     raise DataflowException("Failed to read configuration for dkbID: %s" % err)
-except ValueError, err:
+except ValueError as err:
     raise DataflowException("dkbID misconfigured: %s" % err)
-except KeyError, err:
+except KeyError as err:
     raise DataflowException(
         "dkbID misconfigured: \"%s\" is not defined." % err)
 
 
 def firstValue(nestedList):
     """ Return first value from nested lists which isn't None/empty string. """
-    if type(nestedList) != list:
+    if not isinstance(nestedList, list):
         return nestedList
     val = None
     for val in nestedList:
@@ -84,7 +84,7 @@ __dataTypeFunc = {
 
 def dkbID(json_data, data_type):
     """ Return unique identifier for object of TYPE based on DATA. """
-    if type(json_data) != dict:
+    if not isinstance(json_data, dict):
         raise DataflowException("dkbID() expects first argument of type %s "
                                 "(get %s)" % (dict, type(json_data)))
 

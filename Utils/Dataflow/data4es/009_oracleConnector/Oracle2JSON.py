@@ -2,7 +2,7 @@
 import os
 import json
 import argparse
-import ConfigParser
+import configparser
 import sys
 from datetime import datetime, timedelta
 import time
@@ -25,7 +25,7 @@ SQUASH_POLICY = 'SQUASH'
 # Global variables
 # ---
 # Output stream
-OUT = os.fdopen(sys.stdout.fileno(), 'w', 0)
+OUT = os.fdopen(sys.stdout.fileno(), 'w')
 
 # Timezone of the data timestamps in the source DB
 # (used to adjust 'now' to the proper value)
@@ -92,7 +92,7 @@ def log_config(config):
     sys.stderr.write("(INFO) Stage 009 configuration (%s):\n"
                      % config['__file__'])
 
-    key_len = len(max(config.keys(), key=len))
+    key_len = len(max(list(config.keys()), key=len))
     pattern = "(INFO)  %%-%ds : '%%s'\n" % key_len
     sys.stderr.write("(INFO) ---\n")
     for p in config:
@@ -114,7 +114,7 @@ def read_config(config_file):
     """
     result = {'__path__': os.path.dirname(os.path.abspath(config_file))}
     result['__file__'] = os.path.join(result['__path__'], config_file)
-    config = ConfigParser.SafeConfigParser()
+    config = configparser.SafeConfigParser()
     try:
         config.read(config_file)
         # Required parameters (with no defaults)
@@ -122,7 +122,7 @@ def read_config(config_file):
         step = config.get('timestamps', 'step')
         result['step_seconds'] = interval_seconds(step)
         if result['step_seconds'] == 0:
-            raise ConfigParser.Error("'timestamps.step': unacceptable value")
+            raise configparser.Error("'timestamps.step': unacceptable value")
         queries_in_use = config.get('queries', 'use').split(',')
         qtype = config.get('queries', 'type')
         queries = {}
@@ -139,7 +139,7 @@ def read_config(config_file):
                 # it must be changed to `dict(qparams)` or smth like this.
                 queries[q]['params'] = qparams
         result['queries'] = queries
-    except (IOError, ConfigParser.Error), e:
+    except (IOError, configparser.Error) as e:
         sys.stderr.write('Failed to read config file (%s): %s\n'
                          % (config_file, e))
         return None
@@ -192,24 +192,22 @@ def config_get(config, section, param, default=None):
     :return: param value from config or default value
     :rtype: object
     """
-    if not isinstance(config, ConfigParser.ConfigParser):
+    if not isinstance(config, configparser.ConfigParser):
         raise TypeError("config_get() expects first parameter to be"
                         " an instance of 'ConfigParser' (get '%s')."
                         % config.__class__.__name__)
-    if type(section) != str and \
-            (sys.version_info.major > 2 or type(section) != unicode):
+    if not isinstance(section, str):
         raise TypeError("config_get() expects second parameter to be"
                         " string (get '%s')."
                         % section.__class__.__name__)
-    if type(param) != str and \
-            (sys.version_info.major > 2 or type(param) != unicode):
+    if not isinstance(param, str):
         raise TypeError("config_get() expects third parameter to be"
                         " string (get '%s')."
                         % section.__class__.__name__)
 
     try:
         result = config.get(section, param)
-    except ConfigParser.Error:
+    except configparser.Error:
         if default is not None:
             sys.stderr.write("(INFO) Config: parameter '%s' (section '%s')"
                              " is not configured. Using default value: %s\n"
@@ -309,7 +307,7 @@ def init_offset_storage(config):
                                 'reverse' if reverse else 'normal'))
             current_offset = initial_date
         commit_offset(offset_storage, current_offset)
-    except IOError, err:
+    except IOError as err:
         sys.stderr.write("(ERROR) %s\n" % err)
 
     return offset_storage
@@ -470,7 +468,7 @@ def squash_records(rec):
                 continue
             if d[f]:
                 if result.get(f):
-                    if type(result[f]) != list:
+                    if not isinstance(result[f], list):
                         result[f] = [result[f]]
                     result[f].append(d[f])
                 else:

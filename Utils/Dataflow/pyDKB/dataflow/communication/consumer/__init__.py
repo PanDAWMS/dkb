@@ -5,12 +5,12 @@ Consumer submodule init file.
 from .. import messageType
 from .. import DataflowException
 
-from Consumer import Consumer
-from FileConsumer import FileConsumer
-from HDFSConsumer import HDFSConsumer
-from StreamConsumer import StreamConsumer
+from .Consumer import Consumer
+from .FileConsumer import FileConsumer
+from .HDFSConsumer import HDFSConsumer
+from .StreamConsumer import StreamConsumer
 
-from Consumer import ConsumerException
+from .Consumer import ConsumerException
 
 __all__ = ['ConsumerBuilder']
 
@@ -46,7 +46,7 @@ class ConsumerBuilder(object):
         if source not in sources:
             raise ValueError("ConsumerBuilder.setSource() expects one of the"
                              " following values: %s (got '%s')"
-                             % (sources.keys(), source))
+                             % (list(sources.keys()), source))
 
         self.consumerClass = sources[source]
         self.config['source'] = source

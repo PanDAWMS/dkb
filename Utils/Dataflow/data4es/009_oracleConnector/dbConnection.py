@@ -81,7 +81,7 @@ class OracleConnection(dbConnection):
             sys.stderr.write("(INFO) Establish connection to the DB...\n")
             self.connection = cx_Oracle.connect(self.dsn)
             sys.stderr.write("(INFO) Connection established.\n")
-        except cx_Oracle.DatabaseError, err:
+        except cx_Oracle.DatabaseError as err:
             sys.stderr.write("(ERROR) %s\n" % err)
             return False
 
@@ -94,13 +94,13 @@ class OracleConnection(dbConnection):
                         { qname: { 'file': filename } }
         :type queries: dict
         """
-        if type(queries) != dict:
+        if not isinstance(queries, dict):
             raise TypeError("%s.save_queries(): parameter of type 'dict'"
                             " is expected; got: '%s'" % (
                                 self.__class__.__name__, type(queries)))
         succeed = True
         for qname in queries:
-            if type(queries[qname]) != dict:
+            if not isinstance(queries[qname], dict):
                 raise TypeError("%s.save_queries(): hash of 'dict' values"
                                 " is expected; got: '%s'" % (
                                     self.__class__.__name__, type(queries)))
@@ -129,10 +129,10 @@ class OracleConnection(dbConnection):
                                  "This can result in "
                                  "'ORA-00911' error.\n" % qname)
             self.queries[qname]['query'] = q
-        except IOError, err:
+        except IOError as err:
             sys.stderr.write("(ERROR) Failed to read query file: %s\n" % err)
             return False
-        except KeyError, err:
+        except KeyError as err:
             sys.stderr.write("(ERROR) Query parameter missing: %s\n" % err)
             return False
 
@@ -148,7 +148,7 @@ class OracleConnection(dbConnection):
             c = self.connection.cursor()
             try:
                 c.prepare(self.queries[qname]['query'])
-            except cx_Oracle.DatabaseError, err:
+            except cx_Oracle.DatabaseError as err:
                 sys.stderr.write("(ERROR) Failed to compile query '%s': %s\n"
                                  % (qname, err))
             self.queries[qname]['cursor'] = c
@@ -166,7 +166,7 @@ class OracleConnection(dbConnection):
             c.execute(None, params)
             t2 = time.time()
             sys.stderr.write("(TIMING) (%s) (sec): %s\n" % (qname, t2 - t1))
-        except cx_Oracle.DatabaseError, err:
+        except cx_Oracle.DatabaseError as err:
             sys.stderr.write("(WARN) Failed to execute query '%s': %s\n"
                              % (qname, err))
             return self.query_retry(qname, **params)
@@ -221,7 +221,7 @@ class OracleConnection(dbConnection):
         while results:
             for row in results:
                 if rows_as_dict:
-                    yield dict(zip(self.queries[qname]['columns'], row))
+                    yield dict(list(zip(self.queries[qname]['columns'], row)))
                 else:
                     yield row
             results = c.fetchmany(arraysize)

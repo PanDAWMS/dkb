@@ -16,21 +16,28 @@
 (ERROR) (FileProducer) Failed to create output directory
 (==) Error message: [Errno 17] File exists: './input/out'
 (DEBUG) (ProcessorStage) Traceback (most recent call last):
-(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line <NNN>, in run
+(==)   File "pyDKB/dataflow/communication/producer/FileProducer.py", line <NNN>, in ensure_dir
+(==)     os.makedirs(path, 0o770)
+(==)   File "os.py", line <NNN>, in makedirs
+(==)     mkdir(name, mode)
+(==) FileExistsError: [Errno 17] File exists: './input/out'
+(==) During handling of the above exception, another exception occurred:
+(==) Traceback (most recent call last):
+(==)   File "pyDKB/dataflow/stage/ProcessorStage.py", line <NNN>, in run
 (==)     self.flush_buffer()
-(==)   File "./../../pyDKB/dataflow/stage/ProcessorStage.py", line <NNN>, in flush_buffer
+(==)   File "pyDKB/dataflow/stage/ProcessorStage.py", line <NNN>, in flush_buffer
 (==)     self.__output.flush()
-(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line <NNN>, in flush
+(==)   File "pyDKB/dataflow/communication/producer/Producer.py", line <NNN>, in flush
 (==)     self.get_stream().flush()
-(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line <NNN>, in get_stream
+(==)   File "pyDKB/dataflow/communication/producer/Producer.py", line <NNN>, in get_stream
 (==)     self.reset_stream()
-(==)   File "./../../pyDKB/dataflow/communication/producer/Producer.py", line <NNN>, in reset_stream
+(==)   File "pyDKB/dataflow/communication/producer/Producer.py", line <NNN>, in reset_stream
 (==)     dest = self.get_dest()
-(==)   File "./../../pyDKB/dataflow/communication/producer/FileProducer.py", line <NNN>, in get_dest
+(==)   File "pyDKB/dataflow/communication/producer/FileProducer.py", line <NNN>, in get_dest
 (==)     self.reset_file()
-(==)   File "./../../pyDKB/dataflow/communication/producer/FileProducer.py", line <NNN>, in reset_file
+(==)   File "pyDKB/dataflow/communication/producer/FileProducer.py", line <NNN>, in reset_file
 (==)     self.ensure_dir()
-(==)   File "./../../pyDKB/dataflow/communication/producer/FileProducer.py", line <NNN>, in ensure_dir
+(==)   File "pyDKB/dataflow/communication/producer/FileProducer.py", line <NNN>, in ensure_dir
 (==)     raise ProducerException
-(==) ProducerException
+(==) pyDKB.dataflow.communication.producer.Producer.ProducerException
 (INFO) (ProcessorStage) Stopping stage.

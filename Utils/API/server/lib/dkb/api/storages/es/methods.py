@@ -12,10 +12,10 @@ from api.storages.exceptions import NoDataFound
 from api.common import DATE_FORMAT
 
 from . import STORAGE_NAME
-import common
-from common import (TASK_KWARGS,
+from . import common
+from .common import (TASK_KWARGS,
                     WARNINGS)
-from common import (init,
+from .common import (init,
                     client,
                     task_info,
                     output_formats,
@@ -24,7 +24,7 @@ from common import (init,
                     get_selection_query,
                     get_step_aggregation_query,
                     get_agg_units_query)
-import transform
+from . import transform
 
 
 def task_steps_hist(**kwargs):
@@ -194,7 +194,7 @@ def task_kwsearch(**kwargs):
                     msg = "Index name not configured (%s_tasks)." % name
                     warn.append(msg)
                     logging.warn(msg)
-    except KeyError, err:
+    except KeyError as err:
         msg = "Missed parameter in server configuration: %s" % str(err)
         warn.append(msg)
         logging.warn(msg)
@@ -244,10 +244,9 @@ def task_derivation_statistics(**kwargs):
     init()
     project = kwargs.get('project').lower()
     tags = kwargs.get('amitag')
-    if isinstance(tags, (str, unicode)):
+    if isinstance(tags, str):
         tags = [tags]
-    outputs = output_formats(project=project, amitag=tags)
-    outputs.sort()
+    outputs = sorted(output_formats(project=project, amitag=tags))
 
     data, metadata = [], {}
     result = (data, metadata)
@@ -260,7 +259,7 @@ def task_derivation_statistics(**kwargs):
     if WARNINGS.get('output_formats'):
         if not metadata.get('warning'):
             metadata['warning'] = WARNINGS['output_formats']
-        elif type(metadata['warinig']) is list:
+        elif isinstance(metadata['warinig'], list):
             metadata['warning'].append(WARNINGS['output_formats'])
         else:
             metadata['warning'] = [metadata['warning'],
@@ -348,13 +347,13 @@ def campaign_stat(selection_params, step_type='step', events_src=None):
     result = (rdata, metadata)
     try:
         data = client().search(**query)
-    except Exception, err:
+    except Exception as err:
         msg = "(%s) Failed to execute search query: %s." % (STORAGE_NAME,
                                                             str(err))
         raise MethodException(reason=msg)
     try:
         data, m = transform.campaign_stat(data, events_src)
-    except Exception, err:
+    except Exception as err:
         msg = "Failed to parse storage response: %s." % str(err)
         raise MethodException(reason=msg)
 

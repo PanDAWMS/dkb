@@ -102,7 +102,7 @@ def init():
         CONFIG['index'] = {'production_tasks': index}
     try:
         es = elasticsearch.Elasticsearch(hosts, http_auth=(user, passwd))
-    except Exception, err:
+    except Exception as err:
         trace = traceback.format_exception(*sys.exc_info())
         for lines in trace:
             for line in lines.split('\n'):
@@ -139,7 +139,7 @@ def get_query(qname, **kwargs):
     for key in kwargs:
         try:
             params[key] = json.dumps(kwargs[key])
-        except TypeError, err:
+        except TypeError as err:
             if 'datetime' in str(err):
                 params[key] = json.dumps(kwargs[key].strftime(DATE_FORMAT))
             else:
@@ -150,7 +150,7 @@ def get_query(qname, **kwargs):
         query = json.loads(query)
     except IOError:
         raise QueryNotFound(qname, fname)
-    except KeyError, err:
+    except KeyError as err:
         raise MissedParameter(qname, str(err))
     return query
 
@@ -190,7 +190,7 @@ def get_selection_query(**kwargs):
 
     logging.debug('Selection params: %s' % kwargs)
     # Change and/or/not fields representation
-    for (key, val) in kwargs.items():
+    for (key, val) in list(kwargs.items()):
         if not isinstance(val, dict):
             continue
         if val.get('&'):
@@ -203,7 +203,7 @@ def get_selection_query(**kwargs):
         else:
             del params[key]
 
-    for (key, val) in params.items():
+    for (key, val) in list(params.items()):
         must_not = False
         if str(key).startswith('!'):
             must_not = True
@@ -261,7 +261,7 @@ def task_info(tid, fields=None):
         kwargs['_source'] = fields
     try:
         r = client().get(**kwargs)
-    except NotFoundError, err:
+    except NotFoundError as err:
         kwargs.update({'storage': STORAGE_NAME})
         logging.warn("Failed to get information from %(storage)s: id='%(id)s',"
                      " index='%(index)s', doctype='%(doc_type)s'" % kwargs)
@@ -302,7 +302,7 @@ def tokens(text, index='', field=None, analyzer=None):
         res = client().indices.analyze(index=index, body=body)
         for r in res['tokens']:
             result.append(r['token'])
-    except Exception, err:
+    except Exception as err:
         logging.error("Failed to tokenize string: %r (index: %r). Reason: %s"
                       % (body, index, err))
         result = [text]

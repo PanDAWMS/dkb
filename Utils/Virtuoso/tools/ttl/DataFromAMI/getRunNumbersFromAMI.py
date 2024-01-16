@@ -29,7 +29,7 @@ for item in json_content:
         tmp.append(",".join(str(json.dumps(item, indent=4))
                             for item in result))
     except pyAMI.exception.Error:
-        print "Cannot find results for period = " + str(period)
+        print(("Cannot find results for period = " + str(period)))
 
 runs_file.write("[" + ",".join(str(x) for x in tmp) + "]")
 runs_file.close()

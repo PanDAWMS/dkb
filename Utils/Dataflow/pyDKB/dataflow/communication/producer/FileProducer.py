@@ -12,7 +12,7 @@ TODO: think about:
 import os
 import time
 
-from Producer import Producer, ProducerException
+from .Producer import Producer, ProducerException
 from pyDKB.common.types import logLevel
 
 
@@ -116,8 +116,8 @@ class FileProducer(Producer):
         path = self.get_dir()
         if not os.path.isdir(path):
             try:
-                os.makedirs(path, 0770)
-            except OSError, err:
+                os.makedirs(path, 0o770)
+            except OSError as err:
                 self.log("Failed to create output directory\n"
                          "Error message: %s\n" % err, logLevel.ERROR)
                 raise ProducerException
@@ -172,7 +172,7 @@ class FileProducer(Producer):
         else:
             self.close_file()
             self.ensure_dir()
-            cur['fd'] = open(cur['local_path'], 'w', 0)
+            cur['fd'] = open(cur['local_path'], 'w')
         self.current_file = cur
         return cur
 

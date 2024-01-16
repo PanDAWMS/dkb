@@ -2,7 +2,7 @@
 pyDKB.dataflow.communication.stream.InputStream
 """
 
-from Stream import Stream
+from .Stream import Stream
 from pyDKB.common.types import logLevel
 from . import Message
 from pyDKB.common import custom_readline
@@ -130,7 +130,7 @@ class InputStream(Stream):
             msg = messageClass(message)
             msg.decode()
             return msg
-        except (ValueError, TypeError), err:
+        except (ValueError, TypeError) as err:
             self.log("Failed to read input message as %s.\n"
                      "Cause: %s\n"
                      "Original message: '%s'"
@@ -151,7 +151,7 @@ class InputStream(Stream):
         """
         if not self.__iterator:
             self._reset_iterator()
-        return self.__iterator.next()
+        return next(self.__iterator)
 
     def get_item(self):
         """ Get next stream item (constructed of raw items).
@@ -182,7 +182,7 @@ class InputStream(Stream):
             result = self.parse_message(msg)
         return result
 
-    def next(self):
+    def __next__(self):
         """ Get next item (message) from the input stream.
 
         :raises: StopIteration: no items left

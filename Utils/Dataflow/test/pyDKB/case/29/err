@@ -14,7 +14,7 @@
 (INFO) (ProcessorStage)   input_files  : '['input/NDjson.json']'
 (INFO) (ProcessorStage) Starting stage execution.
 (WARN) (InputStream) Failed to read input message as JSON.
-(==) Cause: Extra data: line 2 column 1 - line 4 column 1 (char 10 - 39)
+(==) Cause: Extra data: line 2 column 1 (char 10)
 (==) Original message: '{"a": 11}
 (==) {"b": 22, "c": 33}
 (==) {"d": 44}

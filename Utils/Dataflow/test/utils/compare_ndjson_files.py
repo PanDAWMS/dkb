@@ -18,7 +18,7 @@ def main(file1, file2):
         line = f.readline()
         while line:
             parsed = json.loads(line)
-            if parsed.keys() == ['index']:
+            if list(parsed.keys()) == ['index']:
                 line = f.readline()
                 continue
             if not UID_KEY:
@@ -29,7 +29,7 @@ def main(file1, file2):
         line = f.readline()
         while line:
             parsed = json.loads(line)
-            if parsed.keys() == ['index']:
+            if list(parsed.keys()) == ['index']:
                 line = f.readline()
                 continue
             uid = parsed[UID_KEY]
@@ -41,7 +41,7 @@ def main(file1, file2):
             stored = r1.pop(uid)
             if stored != parsed:
                 sys.stderr.write("Record seem to differ for uid=%s\n" % uid)
-                for key in stored.keys():
+                for key in list(stored.keys()):
                     v1 = stored.pop(key)
                     try:
                         v2 = parsed.pop(key)
@@ -50,9 +50,9 @@ def main(file1, file2):
                         continue
                     if v1 != v2:
                         header1 = "key = %s:\n" % key
-                        if type(v1) is not list:
+                        if not isinstance(v1, list):
                             v1 = [v1]
-                        if type(v2) is not list:
+                        if not isinstance(v2, list):
                             v2 = [v2]
                         header2 = "Items missed in (2):\n"
                         for v in v1:

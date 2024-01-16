@@ -17,7 +17,7 @@ import getopt
 import json
 import requests
 import os
-from urlparse import urlparse
+from urllib.parse import urlparse
 
 
 def main(argv):

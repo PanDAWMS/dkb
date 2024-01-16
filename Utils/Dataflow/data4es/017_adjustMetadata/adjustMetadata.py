@@ -23,7 +23,7 @@ try:
     from pyDKB.dataflow.communication.messages import JSONMessage
     from pyDKB.dataflow import messageType
     from pyDKB.dataflow.exceptions import DataflowException
-except Exception, err:
+except Exception as err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
 
@@ -240,7 +240,7 @@ def transform_chain_data(data):
     :return: True if update was completely successful, False otherwise
     :rtype: bool
     """
-    if type(data) is not dict:
+    if not isinstance(data, dict):
         sys.stderr.write('(WARN) Function transform_chain_data() received '
                          'non-dict data: %s. Skipping.\n' % str(data))
         return False
@@ -276,7 +276,7 @@ def transform_chain_data(data):
         chain_data = [int(i) for i in chain_items]
         data['chain_id'] = chain_data[0]
         data['chain_data'] = chain_data
-    except ValueError, err:
+    except ValueError as err:
         sys.stderr.write('(WARN) Invalid chain_data item: %s (tid: %s).\n'
                          % (err, data.get('taskid')))
         taskid = data.get('taskid')
@@ -358,7 +358,7 @@ def process(stage, message):
     """ Single message processing. """
     data = message.content()
 
-    if type(data) is not dict:
+    if not isinstance(data, dict):
         sys.stderr.write('(WARN) Message contains non-dict data: %r. '
                          'Skipping.\n' % data)
         return False

@@ -2,13 +2,13 @@
 pyDKB.dataflow.communication.consumer.HDFSConsumer
 """
 
-import FileConsumer
-import Consumer
+from . import FileConsumer
+from . import Consumer
 from pyDKB.common import hdfs
 from pyDKB.common import HDFSException
 
 
-class HDFSConsumer(FileConsumer.FileConsumer):
+class HDFSConsumer(FileConsumer):
     """ Data consumer implementation for HDFS data source. """
 
     # Override
@@ -41,10 +41,9 @@ class HDFSConsumer(FileConsumer.FileConsumer):
         Raises pyDKB.common.HDFSException
         """
         try:
-            files = hdfs.listdir(dirname, "f")
+            files = sorted(hdfs.listdir(dirname, "f"))
             # Make files order predictable
-            files.sort()
-        except HDFSException, err:
+        except HDFSException as err:
             raise Consumer.ConsumerException(err)
         return files
 

@@ -145,7 +145,7 @@ def check(chain, chain_data, task_id, indent=0):
         if cd[-1] == task_id:
             task_cd = cd
             break
-    print ' ' * indent + str(task_id), indent, task_cd
+    print((' ' * indent + str(task_id), indent, task_cd))
     for tid in chain[task_id]:
         check(chain, chain_data, tid, indent + 1)
 

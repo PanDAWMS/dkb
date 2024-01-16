@@ -3,10 +3,11 @@ pyDKB.dataflow.commuication.stream.Stream
 """
 
 import sys
+from io import IOBase
 
 from pyDKB.common import LoggableObject
 from . import messageType
-from exceptions import StreamException
+from .exceptions import StreamException
 
 
 class Stream(LoggableObject):
@@ -45,8 +46,8 @@ class Stream(LoggableObject):
                    TODO: IOBase objects
         :return: previous file descriptor (or None)
         """
-        if not isinstance(fd, (file, None.__class__)):
-            raise TypeError("Stream.reset() expects first parameter of type"
+        if not isinstance(fd, (IOBase, None.__class__)):
+            raise TypeError("Stream.reset() expects first parameter of type 'IOBase'"
                             " 'file' (got '%s')" % fd.__class__.__name__)
         old_fd = self._fd
         if close and old_fd != fd:

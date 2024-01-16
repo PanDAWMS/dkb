@@ -5,7 +5,7 @@ import sys
 import os
 try:
     import pyAMI.client
-    import pyAMI.atlas.api as AtlasAPI
+    import pyAMI_atlas.api as AtlasAPI
     import pyAMI.config
     from pyAMI.exception import Error as AMIError
     from pyAMI.httpclient import http_client
@@ -22,7 +22,7 @@ try:
     from pyDKB.dataflow.exceptions import DataflowException
     from pyDKB import atlas
     from pyDKB.common.misc import execute_with_retry
-except Exception, err:
+except Exception as err:
     sys.stderr.write("(ERROR) Failed to import pyDKB library: %s\n" % err)
     sys.exit(1)
 
@@ -97,7 +97,7 @@ def init_ami_client(userkey='', usercert=''):
         sys.stderr.write("(FATAL) Failed to initialise AMI client:"
                          " pyAMI module is not loaded.\n")
         raise DataflowException("Module not found: 'pyAMI'")
-    except Exception, err:
+    except Exception as err:
         sys.stderr.write(
             "(ERROR) Could not establish pyAMI session."
             " Are you sure you have a valid certificate?\n")
@@ -252,7 +252,7 @@ def container_name(data):
         sys.stderr.write("(WARN) Required field 'name' not found"
                          " in data: %r\n" % data)
         return False
-    if not isinstance(dataset, (str, unicode)):
+    if not isinstance(dataset, str):
         sys.stderr.write("(WARN) Invalid type of 'name' field:"
                          " expected string, got %s.\n"
                          "(==) Data:"

@@ -4,8 +4,8 @@ Module responsible for interaction with DKB storages.
 
 import logging
 
-import es
-import es_nested
+from . import es
+from . import es_nested
 
 
 class DKBStorageMethod(object):
@@ -30,7 +30,7 @@ class DKBStorageMethod(object):
         if alt:
             try:
                 res = self.use_alt(alt, **kwargs)
-            except NotImplementedError, e:
+            except NotImplementedError as e:
                 logging.warn(e)
 
                 # Try default implementation instead
@@ -41,7 +41,7 @@ class DKBStorageMethod(object):
                 warn = "Default method implementation is used: %s" % str(e)
                 if 'warning' not in metadata:
                     metadata['warning'] = warn
-                elif type(metadata['warning']) is list:
+                elif isinstance(metadata['warning'], list):
                     metadata['warning'].append(warn)
                 else:
                     metadata['warning'] = [metadata['warning'], warn]

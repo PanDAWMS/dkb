@@ -28,14 +28,15 @@ import logging
 import re
 from operator import attrgetter
 
-from exceptions import (InvalidCategoryName,
+from .exceptions import (InvalidCategoryName,
                         CategoryNotFound,
                         MethodNotFound,
                         MethodAlreadyExists,
                         DkbApiException,
                         DkbApiNotImplemented,
                         NotFoundException)
-from misc import standardize_path
+from .misc import standardize_path
+import collections
 
 # Hash representation of method categories structure.
 # Keys are:
@@ -91,16 +92,16 @@ def get_category(path, create=False, analyze_wildcard=False):
                 raise NotImplementedError("Wildcard categories lookup is not"
                                           " implemented yet")
         h = h.get(key, False)
-        if not h or callable(h):
+        if not h or isinstance(h, collections.Callable):
             if not create:
                 break
             category[key] = {}
-            if callable(h):
+            if isinstance(h, collections.Callable):
                 category[key]['/'] = h
             h = category[key]
             h['__path'] = '/' + '/'.join(keys[:(idx + 1)])
         category = h
-    if h is False or callable(h):
+    if h is False or isinstance(h, collections.Callable):
         cat_name = category.get('__path', '')
         if cat_name == '/':
             cat_name = ''
@@ -126,10 +127,10 @@ def list_category(path):
     """
     c = get_category(path)
     cat = {'path': c.get('__path'), 'methods': [], 'categories': []}
-    for k in c.keys():
+    for k in list(c.keys()):
         if k in KEYWORDS:
             continue
-        if callable(c[k]):
+        if isinstance(c[k], collections.Callable):
             cat['methods'].append(k)
         if isinstance(c[k], dict):
             cat['categories'].append(k)
@@ -164,7 +165,7 @@ def add(category, name, handler):
         name = '/'
     for cat in categories:
         m = cat.get(name, None)
-        if m and (callable(m) or '/' in m):
+        if m and (isinstance(m, collections.Callable) or '/' in m):
             exists_in.append(cat['__path'])
             break
         else:
@@ -226,7 +227,7 @@ def handler(path, method=None):
     h = API_METHOD_HANDLERS.get(full_path)
     if not h:
         # Try the wildcard paths handlers
-        for p in sorted(API_METHOD_HANDLERS['__regex'].keys(),
+        for p in sorted(list(API_METHOD_HANDLERS['__regex'].keys()),
                         key=attrgetter('pattern'), reverse=True):
             if p.match(full_path):
                 h = API_METHOD_HANDLERS['__regex'][p]
@@ -270,4 +271,4 @@ def configure():
     Raise exceptions: MethodAlreadyExists, DkbApiNotImplemented
     """
     global handlers
-    import handlers
+    from . import handlers

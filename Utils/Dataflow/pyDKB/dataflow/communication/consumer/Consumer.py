@@ -114,7 +114,7 @@ class Consumer(LoggableObject):
         if not s:
             msg = None
         else:
-            msg = s.next()
+            msg = next(s)
         return msg
 
     def get_item(self):
@@ -131,7 +131,7 @@ class Consumer(LoggableObject):
         """
         return self.get_raw_item()
 
-    def next(self):
+    def __next__(self):
         """ Get next processing item (Message) from current source. """
         msg = self.get_item()
         if msg is None:
