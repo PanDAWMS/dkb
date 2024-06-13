@@ -43,7 +43,7 @@ RUN mkdir ${DKB_DIR} \
   && \
     conda activate dkb_python_3_9 \
   && \
-    conda install -y Elasticsearch cchardet cchardet cx_Oracle \
+    conda install -y Elasticsearch cchardet cchardet cx_Oracle pytz\
   && \
     pip install pyAMI_core \
   && \
