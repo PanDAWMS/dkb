@@ -24,7 +24,9 @@ ENV DKB_DIR="/opt/dkb3" \
 RUN yum install -y \
       git \
       wget \
-      diffutils 
+      diffutils \
+      libnsl \
+      libaio 
 
 # Prepare DKB software
 RUN mkdir ${DKB_DIR} \
