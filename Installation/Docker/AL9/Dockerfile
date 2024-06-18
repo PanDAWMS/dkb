@@ -61,6 +61,9 @@ RUN mkdir ${DKB_DIR} \
   && \
     ./test.sh
 
+# Patched version of pyAMI
+COPY httpclient.py /opt/dkb3/miniconda3/envs/dkb_python_3_9/lib/python3.9/site-packages/pyAMI/httpclient.py
+
 # Cleanup image
 RUN yum clean all ; \
   rm -rf ${DKB_DIR}/Miniconda3-latest-Linux-x86_64.sh
