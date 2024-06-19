@@ -26,7 +26,9 @@ RUN yum install -y \
       wget \
       diffutils \
       libnsl \
-      libaio 
+      libaio \
+      php \
+      php-cli
 
 # Prepare DKB software
 RUN mkdir ${DKB_DIR} \
