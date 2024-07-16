@@ -39,7 +39,7 @@ PHYS_VALUES = [{'ami': 'genFiltEff', 'es': 'gen_filt_eff'},
 FILTER = ['AOD', 'EVNT', 'HITS']
 # Scope parts - AMI only has data for datasets with scopes that start
 # with something from this list.
-SCOPES = ('mc15', 'mc16')
+SCOPES = ('mc15', 'mc16', 'mc23')
 
 
 def main(argv):
