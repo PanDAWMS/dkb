@@ -1,0 +1,35 @@
+nocreate
+nocompress
+nomail
+missingok
+dateext
+extension .tar.gz
+
+%%DIR%%/%%FILE%% {
+    weekly
+    olddir %%OLDDIR%%
+    rotate 4
+    prerotate
+        base_dir=%%DIR%%
+
+        # handle monthly/yearly copies
+        for d in monthly yearly; do
+            mkdir -p -m 0700 "${base_dir}/$d"
+            fname="${base_dir}/$d/`basename $1`"
+            [ -f "${fname}" ] || ln "$1" "$fname"
+        done
+
+        # make sure we return "success"
+        true
+    endscript
+}
+
+%%DIR%%/monthly/%%FILE%% {
+    monthly
+    rotate 6
+}
+
+%%DIR%%/yearly/%%FILE%% {
+    yearly
+    rotate 3
+}
