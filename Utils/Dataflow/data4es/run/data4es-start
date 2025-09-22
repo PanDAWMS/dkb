@@ -240,7 +240,6 @@ source_chain() {
 
 process_chain() {
   cat $b_process | run_stage '91' | eop_filter \
-                 | run_stage '25' | eop_filter \
                  | run_stage '16' | eop_filter \
                  | run_stage '17' | eop_filter \
                  | run_stage '40' | eop_filter \
