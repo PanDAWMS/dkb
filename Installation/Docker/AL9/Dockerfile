@@ -41,7 +41,11 @@ RUN mkdir ${DKB_DIR} \
   && \
     sh ./Miniconda3-latest-Linux-x86_64.sh -b -p /opt/dkb3/miniconda3 -s -m \
   && \
-    source "/opt/dkb3/miniconda3/etc/profile.d/conda.sh" \ 
+    source "/opt/dkb3/miniconda3/etc/profile.d/conda.sh" \
+  && \
+    conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main \
+  && \
+    conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r \
   && \
     conda create -y -n dkb_python_3_9 python=3.9 \
   && \
