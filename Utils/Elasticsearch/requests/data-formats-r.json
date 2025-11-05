@@ -1,0 +1,357 @@
+{
+  "took" : 45,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 4,
+    "successful" : 4,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 3145,
+    "max_score" : 0.0,
+    "hits" : [ ]
+  },
+  "aggregations" : {
+    "dataset" : {
+      "doc_count" : 16179,
+      "format" : {
+        "doc_count_error_upper_bound" : 0,
+        "sum_other_doc_count" : 0,
+        "buckets" : [
+          {
+            "key" : "DAOD",
+            "doc_count" : 16179
+          },
+          {
+            "key" : "DAOD_BPHY1",
+            "doc_count" : 210
+          },
+          {
+            "key" : "DAOD_BPHY4",
+            "doc_count" : 210
+          },
+          {
+            "key" : "DAOD_EGAM9",
+            "doc_count" : 210
+          },
+          {
+            "key" : "DAOD_EXOT0",
+            "doc_count" : 210
+          },
+          {
+            "key" : "DAOD_EXOT6",
+            "doc_count" : 210
+          },
+          {
+            "key" : "DAOD_EXOT7",
+            "doc_count" : 210
+          },
+          {
+            "key" : "DAOD_HIGG4D5",
+            "doc_count" : 210
+          },
+          {
+            "key" : "DAOD_JETM9",
+            "doc_count" : 210
+          },
+          {
+            "key" : "DAOD_STDM4",
+            "doc_count" : 210
+          },
+          {
+            "key" : "DAOD_SUSY11",
+            "doc_count" : 210
+          },
+          {
+            "key" : "DAOD_TAUP1",
+            "doc_count" : 210
+          },
+          {
+            "key" : "DAOD_TOPQ2",
+            "doc_count" : 210
+          },
+          {
+            "key" : "DAOD_TOPQ4",
+            "doc_count" : 210
+          },
+          {
+            "key" : "DAOD_TOPQ5",
+            "doc_count" : 210
+          },
+          {
+            "key" : "DAOD_BPHY5",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_BPHY7",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_EGAM1",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_EGAM3",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_EGAM4",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_EGAM5",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_EGAM7",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_EXOT10",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_EXOT12",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_EXOT15",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_EXOT19",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_EXOT2",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_EXOT21",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_EXOT22",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_EXOT5",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_FTAG1",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_FTAG3",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_HIGG1D2",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_HIGG2D5",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_HIGG4D4",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_HIGG4D6",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_HIGG6D1",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_HIGG6D2",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_HIGG8D1",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_JETM1",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_JETM10",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_JETM11",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_JETM12",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_JETM6",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_JETM7",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_MUON0",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_MUON1",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_MUON2",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_STDM2",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_STDM3",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_STDM5",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_STDM7",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_SUSY10",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_SUSY12",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_SUSY18",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_SUSY3",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_SUSY4",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_SUSY6",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_SUSY8",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_SUSY9",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_TAUP3",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_TCAL1",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_TOPQ1",
+            "doc_count" : 209
+          },
+          {
+            "key" : "DAOD_EXOT13",
+            "doc_count" : 208
+          },
+          {
+            "key" : "DAOD_EXOT17",
+            "doc_count" : 208
+          },
+          {
+            "key" : "DAOD_HIGG1D1",
+            "doc_count" : 208
+          },
+          {
+            "key" : "DAOD_HIGG2D1",
+            "doc_count" : 208
+          },
+          {
+            "key" : "DAOD_SUSY5",
+            "doc_count" : 208
+          },
+          {
+            "key" : "DAOD_SUSY7",
+            "doc_count" : 208
+          },
+          {
+            "key" : "DAOD_FTAG4",
+            "doc_count" : 205
+          },
+          {
+            "key" : "DAOD_SUSY16",
+            "doc_count" : 188
+          },
+          {
+            "key" : "DAOD_SUSY2",
+            "doc_count" : 188
+          },
+          {
+            "key" : "DAOD_JETM3",
+            "doc_count" : 170
+          },
+          {
+            "key" : "DAOD_JETM4",
+            "doc_count" : 170
+          },
+          {
+            "key" : "DAOD_HIGG4D1",
+            "doc_count" : 165
+          },
+          {
+            "key" : "DAOD_HIGG4D2",
+            "doc_count" : 165
+          },
+          {
+            "key" : "DAOD_HIGG4D3",
+            "doc_count" : 165
+          },
+          {
+            "key" : "DAOD_EGAM2",
+            "doc_count" : 159
+          },
+          {
+            "key" : "DAOD_EXOT9",
+            "doc_count" : 159
+          },
+          {
+            "key" : "DAOD_EXOT4",
+            "doc_count" : 112
+          },
+          {
+            "key" : "DAOD_EXOT3",
+            "doc_count" : 111
+          },
+          {
+            "key" : "DAOD_EXOT8",
+            "doc_count" : 1
+          },
+          {
+            "key" : "DAOD_FTAG2",
+            "doc_count" : 1
+          }
+        ]
+      }
+    }
+  }
+}

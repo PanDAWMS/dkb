@@ -1,0 +1,26 @@
+/* Get list of output dataset formats for given production request ID.
+
+Parameter values:
+  PR_ID -- production request ID (18030)
+
+GET <index>/task/_search
+*/
+{
+  "size": 0,
+  "query": {
+    "term": {"pr_id": %%PR_ID%%}
+  },
+  "aggs": {
+    "dataset": {
+      "children": {"type": "output_dataset"},
+      "aggs": {
+        "format": {
+          "terms": {
+            "field": "data_format",
+            "size": 1000
+          }
+        }
+      }
+    }
+  }
+}

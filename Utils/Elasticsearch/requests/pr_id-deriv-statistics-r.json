@@ -1,0 +1,105 @@
+{
+  "took" : 77,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 4,
+    "successful" : 4,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : 58,
+    "max_score" : 0.0,
+    "hits" : [ ]
+  },
+  "aggregations" : {
+    "formats" : {
+      "buckets" : {
+        "NTUP_FCS" : {
+          "doc_count" : 0,
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [ ]
+          }
+        },
+        "NTUP_PILEUP" : {
+          "doc_count" : 58,
+          "status" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : "done",
+                "doc_count" : 49,
+                "output" : {
+                  "doc_count" : 49,
+                  "not_removed" : {
+                    "doc_count" : 0,
+                    "bytes" : {
+                      "value" : 0.0
+                    }
+                  }
+                },
+                "processed_events" : {
+                  "value" : 1.452E7
+                },
+                "input_events" : {
+                  "value" : 1.452E7
+                },
+                "not_deleted" : {
+                  "doc_count" : 49,
+                  "input_bytes" : {
+                    "value" : 3.822591483227E12
+                  }
+                },
+                "timestamp_defined" : {
+                  "doc_count" : 49,
+                  "walltime" : {
+                    "value" : 3.091687755102041E7
+                  }
+                },
+                "cpu" : {
+                  "value" : 0.0
+                }
+              },
+              {
+                "key" : "finished",
+                "doc_count" : 9,
+                "output" : {
+                  "doc_count" : 9,
+                  "not_removed" : {
+                    "doc_count" : 0,
+                    "bytes" : {
+                      "value" : 0.0
+                    }
+                  }
+                },
+                "processed_events" : {
+                  "value" : 8750000.0
+                },
+                "input_events" : {
+                  "value" : 8730900.0
+                },
+                "not_deleted" : {
+                  "doc_count" : 9,
+                  "input_bytes" : {
+                    "value" : 2.274068365716E12
+                  }
+                },
+                "timestamp_defined" : {
+                  "doc_count" : 9,
+                  "walltime" : {
+                    "value" : 1.383718888888889E8
+                  }
+                },
+                "cpu" : {
+                  "value" : 0.0
+                }
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}
